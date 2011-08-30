@@ -16,6 +16,8 @@ from WMCore.DataStructs.Workflow import Workflow
 from WMCore.JobSplitting.SplitterFactory import SplitterFactory
 from WMCore.Services.UUID import makeUUID
 
+from WMQuality.TestInit import TestInit
+
 class RepackTest(unittest.TestCase):
     """
     _RepackTest_
@@ -28,6 +30,13 @@ class RepackTest(unittest.TestCase):
         _setUp_
 
         """
+        self.testInit = TestInit(__file__)
+        self.testInit.setLogging()
+        self.testInit.setDatabaseConnection()
+        self.testInit.setSchema(customModules = ["WMCore.WMBS",
+                                                 "T0.WMBS"],
+                                useDefault = False)
+
         self.splitterFactory = SplitterFactory(package = "T0.JobSplitting")
 
         return
@@ -36,9 +45,10 @@ class RepackTest(unittest.TestCase):
         """
         _tearDown_
 
-        Nothing to do...
         """
-        pass
+        self.testInit.clearDatabase()
+
+        return
 
     def test00(self):
         """
