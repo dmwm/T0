@@ -42,6 +42,11 @@ class Repack(JobFactory):
                                 logger = logging,
                                 dbinterface = myThread.dbi)
 
+        # keep for later
+        self.insertSplitLumisDAO = daoFactory(classname = "JobSplitting.InsertSplitLumis")
+        self.maxLumiWithJobDAO = daoFactory(classname = "Subscriptions.MaxLumiWithJob")
+        self.getClosedEmptyLumisDAO = daoFactory(classname = "JobSplitting.GetClosedEmptyLumis")
+
         # data discovery
         getFilesDAO = daoFactory(classname = "Subscriptions.GetAvailableRepackFiles")
         availableFiles = getFilesDAO.execute(self.subscription["id"])
@@ -59,8 +64,7 @@ class Repack(JobFactory):
         # highest lumi with a job
         maxLumiWithJob = 0
         if lumiList[0] > 1:
-            maxLumiWithJobDAO = daoFactory(classname = "Subscriptions.MaxLumiWithJob")
-            maxLumiWithJob = getFilesDAO.execute(self.subscription["id"])
+            maxLumiWithJob = self.maxLumiWithJobDAO.execute(self.subscription["id"])
 
         # do we have lumi holes ?
         detectEmptyLumis = False
@@ -77,8 +81,7 @@ class Repack(JobFactory):
         # empty and closed lumis
         emptyLumis = []
         if detectEmptyLumis:
-            getClosedEmptyLumisDAO = daoFactory(classname = "GetClosedEmptyLumis")
-            emptyLumis = getClosedEmptyLumisDAO.execute(self.subscription["id"])
+            emptyLumis = self.getClosedEmptyLumisDAO.execute(self.subscription["id"])
 
         # figure out lumi range to create jobs for
         streamersByLumi = {}
@@ -101,7 +104,7 @@ class Repack(JobFactory):
         fileset = self.subscription.getFileset()
         fileset.load()
 
-        self.defineJobs(streamersByRun, fileset.open)
+        self.defineJobs(streamersByLumi, fileset.open)
 
         return
 
@@ -222,8 +225,7 @@ class Repack(JobFactory):
             self.createJob(jobStreamerList)
 
         if len(splitLumis) > 0:
-            insertSplitLumisDAO = daoFactory(classname = "InsertSplitLumis")
-            insertSplitLumisDAO.execute(binds = splitLumis)
+            self.insertSplitLumisDAO.execute(binds = splitLumis)
 
         return
 
