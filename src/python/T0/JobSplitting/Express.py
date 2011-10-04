@@ -38,8 +38,11 @@ class Express(JobFactory):
                                 logger = logging,
                                 dbinterface = myThread.dbi)
 
+        # keep for later
+        self.insertSplitLumisDAO = daoFactory(classname = "JobSplitting.InsertSplitLumis")
+
         # data discovery
-        getFilesDAO = t0astDaoFactory(classname = "Subscriptions.GetAvailableExpressFiles")
+        getFilesDAO = daoFactory(classname = "Subscriptions.GetAvailableExpressFiles")
         availableFiles = getFilesDAO.execute(self.subscription["id"])
 
         # nothing to do, stop immediately
@@ -106,8 +109,7 @@ class Express(JobFactory):
                     lumiStreamerList.remove(streamer)
 
         if len(splitLumis) > 0:
-            insertSplitLumisDAO = daoFactory(classname = "InsertSplitLumis")
-            insertSplitLumisDAO.execute(binds = splitLumis)
+            self.insertSplitLumisDAO.execute(binds = splitLumis)
 
         return
 
