@@ -27,7 +27,7 @@ class Create(DBCreator):
         DBCreator.__init__(self, logger, dbi)
 
         #
-        # Tables, functions and procedures
+        # Tables, functions, procedures and sequences
         #
         self.create[len(self.create)] = \
             """CREATE TABLE t0_config (
@@ -41,7 +41,7 @@ class Create(DBCreator):
                  id      int           not null,
                  name    varchar(25)   not null,
                  primary key(id),
-                 constraint ctr_run_sta_name unique(name)
+                 constraint run_sta_name_uq unique(name)
                )"""
 
         self.create[len(self.create)] = \
@@ -49,7 +49,7 @@ class Create(DBCreator):
                  id    int         not null,
                  name  varchar(25) not null,
                  primary key(id),
-                 constraint ctr_pro_sty_name unique(name)
+                 constraint pro_sty_name_uq unique(name)
                )"""
 
         self.create[len(self.create)] = \
@@ -57,7 +57,15 @@ class Create(DBCreator):
                  id      int           not null,
                  name    varchar(25)   not null,
                  primary key(id),
-                 constraint ctr_eve_sce_name unique(name)
+                 constraint eve_sce_name_uq unique(name)
+               )"""
+
+        self.create[len(self.create)] = \
+            """CREATE TABLE data_tier (
+                 id      int           not null,
+                 name    varchar(25)   not null,
+                 primary key(id),
+                 constraint dat_tie_name_uq unique(name)
                )"""
 
         self.create[len(self.create)] = \
@@ -65,7 +73,7 @@ class Create(DBCreator):
                  id   int          not null,
                  name varchar(255) not null,
                  primary key(id),
-                 constraint ctr_cms_ver_name unique(name)
+                 constraint cms_ver_name_uq unique(name)
                )"""
 
         self.create[len(self.create)] = \
@@ -73,7 +81,7 @@ class Create(DBCreator):
                  id    int            not null,
                  name  varchar(255)   not null,
                  primary key(id),
-                 constraint ctr_str_name unique(name)
+                 constraint str_name_uq unique(name)
                )"""
 
         self.create[len(self.create)] = \
@@ -81,7 +89,7 @@ class Create(DBCreator):
                  id      int           not null,
                  name    varchar(255)  not null,
                  primary key(id),
-                 constraint ctr_tri_lab_name unique(name)
+                 constraint tri_lab_name_uq unique(name)
                )"""
 
         self.create[len(self.create)] = \
@@ -89,15 +97,22 @@ class Create(DBCreator):
                  id      int           not null,
                  name    varchar(255)  not null,
                  primary key(id),
-                 constraint ctr_pri_dat_name unique(name)
+                 constraint pri_dat_name_uq unique(name)
+               )"""
+
+        self.create[len(self.create)] = \
+            """CREATE TABLE storage_node (
+                 id      int           not null,
+                 name    varchar(255)  not null,
+                 primary key(id),
+                 constraint sto_nod_name_uq unique(name)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE run (
                  run_id             int            not null,
-                 online_version     int            not null,
-                 status             int            not null,
-                 last_updated       int            default 0 not null,
+                 status             int            default 1 not null,
+                 last_updated       int            not null,
                  reco_started       int            default 0 not null,
                  express_started    int            default 0 not null,
                  hltkey             varchar(255)   not null,
@@ -115,9 +130,9 @@ class Create(DBCreator):
         self.create[len(self.create)] = \
             """CREATE TABLE run_trig_primds_assoc (
                  run_id     int   not null,
-                 trig_id    int   not null,
                  primds_id  int   not null,
-                 primary key(run_id, trig_id)
+                 trig_id    int   not null,
+                 primary key(run_id, primds_id, trig_id)
                )"""
 
         self.create[len(self.create)] = \
@@ -223,62 +238,74 @@ class Create(DBCreator):
 
         self.create[len(self.create)] = \
             """CREATE TABLE express_config (
-                 run_id                  int          not null,
-                 stream_id               int          not null,
-                 splitInProcessing       int          not null,
-                 proc_version            varchar(255) not null,
-                 write_tiers             varchar(255) not null,
-                 global_tag              varchar(255),
-                 processing_config_url   varchar(255),
-                 alcamerge_config_url    varchar(255),
+                 run_id         int           not null,
+                 stream_id      int           not null,
+                 proc_version   varchar(255)  not null,
+                 write_tiers    varchar(255)  not null,
+                 write_skims    varchar(1000),
+                 global_tag     varchar(255),
+                 proc_url       varchar(255),
+                 merge_url      varchar(255),
                  primary key (run_id, stream_id)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE reco_config (
-                  run_id            int not null,
-                  primds_id         int not null,
-                  do_reco           int not null,
-                  cmssw_version_id  int not null,
-                  reco_split        int not null,
-                  write_reco        int not null,
-                  write_dqm         int not null,
-                  write_aod         int not null,
-                  proc_version      varchar(255) not null,
-                  global_tag        varchar(255),
-                  config_url        varchar(255),
-                  pset_hash         varchar(700),
-                  branch_hash       varchar(700),
+                  run_id         int           not null,
+                  primds_id      int           not null,
+                  do_reco        int           not null,
+                  cmssw_id       int           not null,
+                  reco_split     int           not null,
+                  write_reco     int           not null,
+                  write_dqm      int           not null,
+                  write_aod      int           not null,
+                  proc_version   varchar(255)  not null,
+                  write_skims    varchar(1000),
+                  global_tag     varchar(255),
+                  config_url     varchar(255),
+                  pset_hash      varchar(700),
+                  branch_hash    varchar(700),
                   primary key (run_id, primds_id)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE alca_config (
-                  run_id            int not null,
-                  primds_id         int not null,
-                  do_alca           int not null,
-                  cmssw_version_id  int not null,
-                  proc_version      varchar(255) not null,
-                  write_skims       varchar(1000),
-                  config_url        varchar(255),
-                  pset_hash         varchar(700),
-                  branch_hash       varchar(700),
+                  run_id         int not null,
+                  primds_id      int not null,
+                  do_alca        int not null,
+                  cmssw_id       int not null,
+                  proc_version   varchar(255) not null,
+                  write_skims    varchar(1000),
+                  config_url     varchar(255),
+                  pset_hash      varchar(700),
+                  branch_hash    varchar(700),
                   primary key (run_id, primds_id)
                )"""
 
         self.create[len(self.create)] = \
+            """CREATE TABLE phedex_config (
+                  run_id         int not null,
+                  primds_id      int not null,
+                  node_id        int not null,
+                  custodial      int not null,
+                  request_only   varchar(1)  not null,
+                  priority       varchar(10) not null,
+                  primary key (run_id, primds_id, node_id)
+               )"""
+
+        self.create[len(self.create)] = \
             """CREATE TABLE promptskim_config (
-                  run_id            int not null,
-                  primds_id         int not null,
-                  data_tier_id      int not null,
-                  node_id           int not null,
-                  cmssw_version_id  int not null,
-                  two_file_read     int not null,
-                  proc_version      varchar(255) not null,
-                  skim_name         varchar(255) not null,
-                  global_tag        varchar(255),
-                  config_url        varchar(255),
-                  primary key (run_id, primds_id, data_tier_id, skim_name)
+                  run_id          int not null,
+                  primds_id       int not null,
+                  tier_id         int not null,
+                  skim_name       varchar(255) not null,
+                  node_id         int not null,
+                  cmssw_id        int not null,
+                  two_file_read   int not null,
+                  proc_version    varchar(255) not null,
+                  global_tag      varchar(255),
+                  config_url      varchar(255),
+                  primary key (run_id, primds_id, tier_id, skim_name)
                )"""
 
         self.create[len(self.create)] = \
@@ -305,6 +332,46 @@ class Create(DBCreator):
                    RETURN NULL;
                  END IF;
                END checkForZeroOneState;
+               """
+
+        self.create[len(self.create)] = \
+            """CREATE SEQUENCE cmssw_version_SEQ
+               START WITH 1
+               INCREMENT BY 1
+               NOMAXVALUE
+               CACHE 10
+               """
+
+        self.create[len(self.create)] = \
+            """CREATE SEQUENCE stream_SEQ
+               START WITH 1
+               INCREMENT BY 1
+               NOMAXVALUE
+               CACHE 10
+               """
+
+        self.create[len(self.create)] = \
+            """CREATE SEQUENCE trigger_label_SEQ
+               START WITH 1
+               INCREMENT BY 1
+               NOMAXVALUE
+               CACHE 100
+               """
+
+        self.create[len(self.create)] = \
+            """CREATE SEQUENCE primary_dataset_SEQ
+               START WITH 1
+               INCREMENT BY 1
+               NOMAXVALUE
+               CACHE 100
+               """
+
+        self.create[len(self.create)] = \
+            """CREATE SEQUENCE storage_node_SEQ
+               START WITH 1
+               INCREMENT BY 1
+               NOMAXVALUE
+               CACHE 100
                """
 
         #
@@ -342,12 +409,6 @@ class Create(DBCreator):
 
         self.constraints[len(self.constraints)] = \
             """ALTER TABLE run
-                 ADD CONSTRAINT run_onl_ver_fk
-                 FOREIGN KEY (online_version)
-                 REFERENCES cmssw_version(id)"""
-
-        self.constraints[len(self.constraints)] = \
-            """ALTER TABLE run
                  ADD CONSTRAINT run_sta_fk
                  FOREIGN KEY (status)
                  REFERENCES run_status(id)"""
@@ -360,15 +421,15 @@ class Create(DBCreator):
 
         self.constraints[len(self.constraints)] = \
             """ALTER TABLE run_trig_primds_assoc
-                 ADD CONSTRAINT run_tri_pri_tri_id_fk
-                 FOREIGN KEY (trig_id)
-                 REFERENCES trigger_label(id)"""
-
-        self.constraints[len(self.constraints)] = \
-            """ALTER TABLE run_trig_primds_assoc
                  ADD CONSTRAINT run_tri_pri_pri_id_fk
                  FOREIGN KEY (primds_id)
                  REFERENCES primary_dataset(id)"""
+
+        self.constraints[len(self.constraints)] = \
+            """ALTER TABLE run_trig_primds_assoc
+                 ADD CONSTRAINT run_tri_pri_tri_id_fk
+                 FOREIGN KEY (trig_id)
+                 REFERENCES trigger_label(id)"""
 
         self.constraints[len(self.constraints)] = \
             """ALTER TABLE run_primds_stream_assoc
@@ -577,7 +638,7 @@ class Create(DBCreator):
         self.constraints[len(self.constraints)] = \
             """ALTER TABLE reco_config
                  ADD CONSTRAINT rec_con_cms_id_fk
-                 FOREIGN KEY (cmssw_version_id)
+                 FOREIGN KEY (cmssw_id)
                  REFERENCES cmssw_version(id)"""
 
         self.constraints[len(self.constraints)] = \
@@ -595,8 +656,26 @@ class Create(DBCreator):
         self.constraints[len(self.constraints)] = \
             """ALTER TABLE alca_config
                  ADD CONSTRAINT alc_con_cms_id_fk
-                 FOREIGN KEY (cmssw_version_id)
+                 FOREIGN KEY (cmssw_id)
                  REFERENCES cmssw_version(id)"""
+
+        self.constraints[len(self.constraints)] = \
+            """ALTER TABLE phedex_config
+                 ADD CONSTRAINT phe_con_run_id_fk
+                 FOREIGN KEY (run_id)
+                 REFERENCES run(run_id)"""
+
+        self.constraints[len(self.constraints)] = \
+            """ALTER TABLE phedex_config
+                 ADD CONSTRAINT phe_con_primds_id_fk
+                 FOREIGN KEY (primds_id)
+                 REFERENCES primary_dataset(id)"""
+
+        self.constraints[len(self.constraints)] = \
+            """ALTER TABLE phedex_config
+                 ADD CONSTRAINT phe_con_nod_id_fk
+                 FOREIGN KEY (node_id)
+                 REFERENCES storage_node(id)"""
 
         self.constraints[len(self.constraints)] = \
             """ALTER TABLE promptskim_config
@@ -612,8 +691,20 @@ class Create(DBCreator):
 
         self.constraints[len(self.constraints)] = \
             """ALTER TABLE promptskim_config
+                 ADD CONSTRAINT pro_con_tie_id_fk
+                 FOREIGN KEY (tier_id)
+                 REFERENCES data_tier(id)"""
+
+        self.constraints[len(self.constraints)] = \
+            """ALTER TABLE promptskim_config
+                 ADD CONSTRAINT pro_con_nod_id_fk
+                 FOREIGN KEY (node_id)
+                 REFERENCES storage_node(id)"""
+
+        self.constraints[len(self.constraints)] = \
+            """ALTER TABLE promptskim_config
                  ADD CONSTRAINT pro_con_cms_id_fk
-                 FOREIGN KEY (cmssw_version_id)
+                 FOREIGN KEY (cmssw_id)
                  REFERENCES cmssw_version(id)"""
 
         runStates = { 1 : "Active",
@@ -656,6 +747,21 @@ class Create(DBCreator):
                            8 : "AlCaP0" }
         for id, name in eventScenarios.items():
             sql = """INSERT INTO event_scenario
+                     (ID, NAME)
+                     VALUES (%d, '%s')
+                     """ % (id, name)
+            self.inserts[len(self.inserts)] = sql
+
+        dataTiers = { 1 : "RAW",
+                      2 : "RECO",
+                      3 : "FEVT",
+                      4 : "FEVTHLTALL",
+                      5 : "AOD",
+                      6 : "ALCARECO",
+                      7 : "DQM",
+                      8 : "ALCAPROMPT" }
+        for id, name in dataTiers.items():
+            sql = """INSERT INTO data_tier
                      (ID, NAME)
                      VALUES (%d, '%s')
                      """ % (id, name)
