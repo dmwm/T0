@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 """
-_RunConfig_t_
+_Tier0Feeder_t_
 
-Testing the RunConfig code
+Testing the Tier0Feeder code
 
 """
 import unittest
@@ -19,11 +19,11 @@ from WMCore.Configuration import loadConfigurationFile
 from T0.RunConfig import RunConfigAPI
 
 
-class RunConfigTest(unittest.TestCase):
+class Tier0FeederTest(unittest.TestCase):
     """
-    _RunConfigTest_
+    _Tier0FeederTest_
 
-    Testing the RunConfig code
+    Testing the Tier0Feeder code
     """
 
     def setUp(self):
@@ -77,17 +77,6 @@ class RunConfigTest(unittest.TestCase):
         insertCMSSVersionDAO.execute(binds = { 'VERSION' : "CMSSW_4_2_7" },
                                      transaction = False)
 
-        insertRunDAO = daoFactory(classname = "RunConfig.InsertRun")
-        insertRunDAO.execute(binds = { 'RUN' : 176161,
-                                       'TIME' : int(time.time()),
-                                       'HLTKEY' : self.hltkey },
-                             transaction = False)
-
-        insertLumiDAO = daoFactory(classname = "RunConfig.InsertLumiSection")
-        insertLumiDAO.execute(binds = { 'RUN' : 176161,
-                                        'LUMI' : 1 },
-                              transaction = False)
-
         insertStreamDAO = daoFactory(classname = "RunConfig.InsertStream")
         insertStreamDAO.execute(binds = { 'STREAM' : "A" },
                                 transaction = False)
@@ -96,54 +85,7 @@ class RunConfigTest(unittest.TestCase):
         insertStreamDAO.execute(binds = { 'STREAM' : "HLTMON" },
                                 transaction = False)
 
-        insertStreamCMSSWVersionDAO = daoFactory(classname = "RunConfig.InsertStreamCMSSWVersion")
-        insertStreamCMSSWVersionDAO.execute(binds = { 'RUN' : 176161,
-                                                      'STREAM' : "A",
-                                                      'VERSION' : "CMSSW_4_2_7" },
-                                            transaction = False)
-        insertStreamCMSSWVersionDAO.execute(binds = { 'RUN' : 176161,
-                                                      'STREAM' : "Express",
-                                                      'VERSION' : "CMSSW_4_2_7" },
-                                            transaction = False)
-        insertStreamCMSSWVersionDAO.execute(binds = { 'RUN' : 176161,
-                                                      'STREAM' : "HLTMON",
-                                                      'VERSION' : "CMSSW_4_2_7" },
-                                            transaction = False)
-
-        insertStreamerDAO = daoFactory(classname = "RunConfig.InsertStreamer")
-        insertStreamerDAO.execute(binds = { 'RUN' : 176161,
-                                            'LUMI' : 1,
-                                            'STREAM' : "A",
-                                            'LFN' : "/testLFN/A",
-                                            'FILESIZE' : 100,
-                                            'EVENTS' : 100,
-                                            'TIME' : int(time.time()) },
-                                  transaction = False)
-        insertStreamerDAO.execute(binds = { 'RUN' : 176161,
-                                            'LUMI' : 1,
-                                            'STREAM' : "Express",
-                                            'LFN' : "/testLFN/Express",
-                                            'FILESIZE' : 100,
-                                            'EVENTS' : 100,
-                                            'TIME' : int(time.time()) },
-                                  transaction = False)
-        insertStreamerDAO.execute(binds = { 'RUN' : 176161,
-                                            'LUMI' : 1,
-                                            'STREAM' : "HLTMON",
-                                            'LFN' : "/testLFN/HLTMON",
-                                            'FILESIZE' : 100,
-                                            'EVENTS' : 100,
-                                            'TIME' : int(time.time()) },
-                                  transaction = False)
-
         self.tier0Config = loadConfigurationFile("ExampleConfig.py")
-
-        self.referenceRunInfo = [ { 'status': 1,
-                                    'process': 'HLT',
-                                    'reco_lock_timeout': 30,
-                                    'reco_timeout': 60,
-                                    'hltkey': self.hltkey,
-                                    'acq_era': 'ExampleConfig_UnitTest' } ]
 
         self.referenceMapping = {}
         self.referenceMapping['A'] = {}
@@ -999,15 +941,13 @@ class RunConfigTest(unittest.TestCase):
         self.referenceMapping['TrackerCalibration']['TestEnablesTracker'].append("HLT_TrackerCalibration_v2")
 
         # remember for later
-        self.getRunInfoDAO = daoFactory(classname = "RunConfig.GetRunInfo")
-        self.getStreamDatasetTriggersDAO = daoFactory(classname = "RunConfig.GetStreamDatasetTriggers")
-        self.getStreamDatasetsDAO = daoFactory(classname = "RunConfig.GetStreamDatasets")
-        self.getStreamStylesDAO = daoFactory(classname = "RunConfig.GetStreamStyles")
-        self.getRepackConfigDAO = daoFactory(classname = "RunConfig.GetRepackConfig")
-        self.getExpressConfigDAO = daoFactory(classname = "RunConfig.GetExpressConfig")
-        self.getRecoConfigDAO = daoFactory(classname = "RunConfig.GetRecoConfig")
-        self.getPhEDExConfigDAO = daoFactory(classname = "RunConfig.GetPhEDExConfig")
-        self.getPromptSkimConfigDAO = daoFactory(classname = "RunConfig.GetPromptSkimConfig")
+        self.insertRunDAO = daoFactory(classname = "RunConfig.InsertRun")
+        self.insertLumiDAO = daoFactory(classname = "RunConfig.InsertLumiSection")
+        self.insertStreamCMSSWVersionDAO = daoFactory(classname = "RunConfig.InsertStreamCMSSWVersion")
+        self.insertStreamerDAO = daoFactory(classname = "RunConfig.InsertStreamer")
+        self.findNewRunsDAO = daoFactory(classname = "Tier0Feeder.FindNewRuns")
+        self.findNewRunStreamsDAO = daoFactory(classname = "Tier0Feeder.FindNewRunStreams")
+        self.feedStreamersDAO = daoFactory(classname = "Tier0Feeder.FeedStreamers")
 
         return
 
@@ -1020,450 +960,217 @@ class RunConfigTest(unittest.TestCase):
 
         return
 
+    def insertRun(self, run):
+        """
+        _insertRun_
+
+        insert run and lumi records for given run
+
+        """
+        self.insertRunDAO.execute(binds = { 'RUN' : run,
+                                            'TIME' : int(time.time()),
+                                            'HLTKEY' : self.hltkey },
+                                  transaction = False)
+
+        self.insertLumiDAO.execute(binds = { 'RUN' : run,
+                                             'LUMI' : 1 },
+                                   transaction = False)
+
+        return
+
+    def insertRunStream(self, run, stream):
+        """
+        _insertRunStream_
+
+        insert run/stream/cmssw assoc and single streamer
+
+        """
+        self.insertStreamCMSSWVersionDAO.execute(binds = { 'RUN' : run,
+                                                           'STREAM' : stream,
+                                                           'VERSION' : "CMSSW_4_2_7" },
+                                                 transaction = False)
+
+        self.insertStreamerDAO.execute(binds = { 'RUN' : run,
+                                                 'LUMI' : 1,
+                                                 'STREAM' : stream,
+                                                 'LFN' : "/testLFN/%d/%s" % (run, stream),
+                                                 'FILESIZE' : 100,
+                                                 'EVENTS' : 100,
+                                                 'TIME' : int(time.time()) },
+                                       transaction = False)
+
+        return
+
+    def getNumFeedStreamers(self):
+        """
+        _getNumFeedStreamers_
+
+        helper function that counts the number of feed streamers
+
+        """
+        myThread = threading.currentThread()
+
+        results = myThread.dbi.processData("""SELECT COUNT(*)
+                                              FROM wmbs_sub_files_available
+                                              """, transaction = False)[0].fetchall()
+
+        return results[0][0]
+
     def test00(self):
         """
         _test00_
 
-        Test configureRun and configureRunStream methods
-        by calling them the same way as from Tier0Feeder
+        Test the FindNewRuns, FindNewRunStreams and FeedStreamers DAOs
+        and their interaction with the RunConfigAPI.configureRun and
+        RunConfigAPI.configureRunStream methods
 
         """
-        myThread = threading.currentThread()
+        runs = self.findNewRunsDAO.execute(transaction = False)
+        self.assertEqual(len(runs), 0,
+                         "ERROR: there should be no new run")
+
+        runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
+        self.assertEqual(len(runStreams.keys()), 0,
+                         "ERROR: there should be no new run/stream")
+
+        self.feedStreamersDAO.execute(transaction = False)
+        self.assertEqual(self.getNumFeedStreamers(), 0,
+                         "ERROR: there should be no streamers feed")
+
+        self.insertRun(176161)
+        self.insertRunStream(176161, "A")
+
+        runs = self.findNewRunsDAO.execute(transaction = False)
+        self.assertEqual(len(runs), 1,
+                         "ERROR: there should be one new run")
+        runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
+        self.assertEqual(len(runStreams.keys()), 0,
+                         "ERROR: there should be no new run/stream")
 
         RunConfigAPI.configureRun(self.tier0Config, 176161, self.hltConfig,
                                   { 'process' : "HLT",
                                     'mapping' : self.referenceMapping })
 
-        runInfo = self.getRunInfoDAO.execute(176161,
-                                             transaction = False)
+        runs = self.findNewRunsDAO.execute(transaction = False)
+        self.assertEqual(len(runs), 0,
+                         "ERROR: there should be no new run")
 
-        self.assertEqual(runInfo, self.referenceRunInfo,
-                         "ERROR: run info does not match reference")
+        self.feedStreamersDAO.execute(transaction = False)
+        self.assertEqual(self.getNumFeedStreamers(), 0,
+                         "ERROR: there should be no streamers feed")
 
-        mapping = self.getStreamDatasetTriggersDAO.execute(176161,
-                                                           transaction = False)
-
-        self.assertEqual(sorted(mapping.keys()), sorted(self.referenceMapping.keys()),
-                         "ERROR: streams do not match reference") 
-        for stream in mapping.keys():
-            self.assertEqual(sorted(mapping[stream].keys()), sorted(self.referenceMapping[stream].keys()),
-                             "ERROR: primary datasets do not match reference")
-            for primds in mapping[stream].keys():
-                self.assertEqual(sorted(mapping[stream][primds]), sorted(self.referenceMapping[stream][primds]),
-                                 "ERROR: trigger paths do not match reference")
+        runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
+        self.assertEqual(set(runStreams.keys()), set([176161]),
+                         "ERROR: there should be new run/stream for run 176161")
+        self.assertEqual(set(runStreams[176161]), set(["A"]),
+                         "ERROR: there should be new run/stream for run 176161 and stream A")
 
         RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A")
-        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "Express")
-        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "HLTMON")
 
-        datasets = self.getStreamDatasetsDAO.execute(176161, "A",
-                                                     transaction = False)
-
-        for primds in datasets:
-            if not primds.endswith("-Error"):
-                self.assertTrue(('%s-Error' % primds) in datasets,
-                                "ERROR: error datasets for bulk not setup correctly")
-
-        datasets = self.getStreamDatasetsDAO.execute(176161, "Express",
-                                                     transaction = False)
-
-        self.assertTrue('StreamExpress' in datasets,
-                        "ERROR: special express datasets not setup correctly")
-        for primds in datasets:
-            if not primds.endswith("-Error"):
-                self.assertFalse(('%s-Error' % primds) in datasets,
-                                "ERROR: error datasets for express setup incorrectly")
-
-        datasets = self.getStreamDatasetsDAO.execute(176161, "HLTMON",
-                                                     transaction = False)
-
-        self.assertTrue('StreamHLTMON' in datasets,
-                        "ERROR: special express datasets not setup correctly")
-        for primds in datasets:
-            if not primds.endswith("-Error"):
-                self.assertFalse(('%s-Error' % primds) in datasets,
-                                "ERROR: error datasets for express setup incorrectly")
-
-        streamStyles = self.getStreamStylesDAO.execute(176161,
-                                                       transaction = False)
-
-        self.assertEquals(streamStyles['A'], "Bulk",
-                          "ERROR: stream A is not Bulk style")
-        self.assertEquals(streamStyles['Express'], "Express",
-                          "ERROR: stream Express is not Express style")
-        self.assertEquals(streamStyles['HLTMON'], "Express",
-                          "ERROR: stream HLTMON is not Express style")
-
-        repackConfig = self.getRepackConfigDAO.execute(176161, "A",
-                                                       transaction = False)
-
-        self.assertEqual(repackConfig['proc_ver'], "v1",
-                         "ERROR: wrong processing version for stream A")
-
-        self.assertEqual(repackConfig['cmssw'], "CMSSW_4_2_7",
-                         "ERROR: wrong CMSSW version for stream A")
-
-        expressConfig = self.getExpressConfigDAO.execute(176161, "Express",
-                                                         transaction = False)
-
-        self.assertEqual(expressConfig['proc_ver'], "v2" ,
-                         "ERROR: wrong processing version for stream Express")
-
-        self.assertEqual(expressConfig['cmssw'], "CMSSW_4_2_8_patch6" ,
-                         "ERROR: wrong CMSSW version for stream Express")
-
-        writeTiers = expressConfig['write_tiers'].split(',')
-        self.assertEqual(set(writeTiers), set([ "FEVT", "ALCARECO", "DQM" ]),
-                         "ERROR: wrong data tiers for stream Express")
-
-        writeSkims = []
-        if expressConfig['write_skims'] != None:
-            writeSkims = expressConfig['write_skims'].split(',')
-        self.assertEqual(set(writeSkims), set([ "SiStripCalZeroBias", "PromptCalibProd" ]),
-                         "ERROR: wrong alca skims for stream Express")
-
-        self.assertEqual(expressConfig['global_tag'], "GlobalTag1" ,
-                         "ERROR: wrong global tag for stream Express")
-
-        self.assertEqual(expressConfig['scenario'], "pp" ,
-                         "ERROR: wrong scenario for stream Express")
-
-        expressConfig = self.getExpressConfigDAO.execute(176161, "HLTMON",
-                                                         transaction = False)
-
-        self.assertEqual(expressConfig['proc_ver'], "v3" ,
-                         "ERROR: wrong processing version for stream HLTMON")
-
-        self.assertEqual(expressConfig['cmssw'], "CMSSW_4_2_8_patch7" ,
-                         "ERROR: wrong CMSSW version for stream HLTMON")
-
-        writeTiers = expressConfig['write_tiers'].split(',')
-        self.assertEqual(set(writeTiers), set([ "FEVTHLTALL" ]),
-                         "ERROR: wrong data tiers for stream HLTMON")
-
-        writeSkims = []
-        if expressConfig['write_skims'] != None:
-            writeSkims = expressConfig['write_skims'].split(',')
-        self.assertEqual(set(writeSkims), set([]),
-                         "ERROR: wrong alca skims for stream HLTMON")
-
-        self.assertEqual(expressConfig['global_tag'], "GlobalTag2" ,
-                         "ERROR: wrong global tag for stream HLTMON")
-
-        self.assertEqual(expressConfig['scenario'], "cosmics" ,
-                         "ERROR: wrong scenario for stream HLTMON")
-
-        
-        datasets = self.getStreamDatasetsDAO.execute(176161, "A",
-                                                     transaction = False)
-        recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
-                                                   transaction = False)
-
-        self.assertEquals(datasets, set(recoConfigs.keys()),
-                          "ERROR: problems retrieving reco configs for stream A")
-
-        for primds, recoConfig in recoConfigs.items():
-
-            if primds == "Cosmics" or primds == "Cosmics-Error":
-
-                if primds == "Cosmics":
-                    self.assertEquals(recoConfig['do_reco'], 1,
-                                      "ERROR: problem in reco configuration")
-                else:
-                    self.assertEquals(recoConfig['do_reco'], 0,
-                                      "ERROR: problem in reco configuration")
-
-                self.assertEquals(recoConfig['cmssw'], "CMSSW_4_2_8_patch2",
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['reco_split'], 100,
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['write_reco'], 1,
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['write_aod'], 1,
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['write_dqm'], 1,
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['proc_ver'], "v5",
-                                  "ERROR: problem in reco configuration")
-
-                writeSkims = []
-                if recoConfig['write_skims'] != None:
-                    writeSkims = recoConfig['write_skims'].split(',')
-                self.assertEquals(set(writeSkims), set([ "Skim1", "Skim2", "Skim3" ]),
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['global_tag'], "GlobalTag4",
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['scenario'], "cosmics",
-                                  "ERROR: problem in reco configuration")
-
-            elif primds == "MinimumBias" or primds == "MinimumBias-Error":
-
-                self.assertEquals(recoConfig['do_reco'], 0,
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['cmssw'], "CMSSW_4_2_8_patch3",
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['reco_split'], 200,
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['write_reco'], 0,
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['write_aod'], 0,
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['write_dqm'], 0,
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['proc_ver'], "v6",
-                                  "ERROR: problem in reco configuration")
-
-                writeSkims = []
-                if recoConfig['write_skims'] != None:
-                    writeSkims = recoConfig['write_skims'].split(',')
-                self.assertEquals(set(writeSkims), set([]),
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['global_tag'], "GlobalTag5",
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['scenario'], "pp",
-                                  "ERROR: problem in reco configuration")
-
-            else:
-
-                self.assertEquals(recoConfig['do_reco'], 0,
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['cmssw'], "CMSSW_4_2_8_patch1",
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['reco_split'], 2000,
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['write_reco'], 1,
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['write_aod'], 1,
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['write_dqm'], 1,
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['proc_ver'], "v4",
-                                  "ERROR: problem in reco configuration")
-
-                writeSkims = []
-                if recoConfig['write_skims'] != None:
-                    writeSkims = recoConfig['write_skims'].split(',')
-                self.assertEquals(set(writeSkims), set([]),
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['global_tag'], "GlobalTag3",
-                                  "ERROR: problem in reco configuration")
-            
-                self.assertEquals(recoConfig['scenario'], "pp",
-                                  "ERROR: problem in reco configuration")
-                
-        
-        phedexConfigs = self.getPhEDExConfigDAO.execute(176161, "A",
-                                                        transaction = False)
-
-        self.assertEquals(datasets, set(phedexConfigs.keys()),
-                          "ERROR: problems retrieving PhEDEx configs for stream A")
-
-        for primds, phedexConfig in phedexConfigs.items():
-
-            if primds == "Cosmics":
-
-                self.assertEquals(set(phedexConfig.keys()), set([ "Node2", "Node3" ]),
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node2']['custodial'], 1,
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node2']['request_only'], "y",
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node2']['priority'], "high",
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node3']['custodial'], 0,
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node3']['request_only'], "n",
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node3']['priority'], "high",
-                                  "ERROR: problem in phedex configuration")
-
-            elif primds == "Cosmics-Error":
-
-                self.assertEquals(set(phedexConfig.keys()), set([ "Node3" ]),
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node3']['custodial'], 0,
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node3']['request_only'], "n",
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node3']['priority'], "high",
-                                  "ERROR: problem in phedex configuration")
-
-            elif primds == "MinimumBias":
-
-                self.assertEquals(set(phedexConfig.keys()), set([ "Node4", "Node5" ]),
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node4']['custodial'], 1,
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node4']['request_only'], "n",
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node4']['priority'], "normal",
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node5']['custodial'], 0,
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node5']['request_only'], "n",
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node5']['priority'], "high",
-                                  "ERROR: problem in phedex configuration")
-
-            elif primds == "MinimumBias-Error":
-
-                self.assertEquals(set(phedexConfig.keys()), set([ "Node5" ]),
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node5']['custodial'], 0,
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node5']['request_only'], "n",
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node5']['priority'], "high",
-                                  "ERROR: problem in phedex configuration")
-
-            else:
-
-                self.assertEquals(set(phedexConfig.keys()), set([ "Node1" ]),
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node1']['custodial'], 0,
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node1']['request_only'], "n",
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node1']['priority'], "high",
-                                  "ERROR: problem in phedex configuration")
-
-        promptSkimConfigs = self.getPromptSkimConfigDAO.execute(176161, "A",
-                                                                transaction = False)
-
-        self.assertEquals(set(promptSkimConfigs.keys()), set([ "Cosmics", "MinimumBias" ]),
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(set(promptSkimConfigs['Cosmics'].keys()), set([ "RECO" ]),
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(set(promptSkimConfigs['MinimumBias'].keys()), set([ "AOD" ]),
-                          "ERROR: problem in promptskim configuration")
-
-        promptSkimConfig = promptSkimConfigs['Cosmics']['RECO']
-
-        self.assertEquals(set(promptSkimConfig.keys()), set([ "Skim1" ]),
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim1']['node'], "Node2",
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim1']['cmssw'], "CMSSW_4_2_8_patch4",
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim1']['two_file_read'], 1,
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim1']['proc_ver'], "v7",
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim1']['global_tag'], "GlobalTag6",
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim1']['config_url'], "exampleurl1",
-                          "ERROR: problem in promptskim configuration")
-
-        promptSkimConfig = promptSkimConfigs['MinimumBias']['AOD']
-
-        self.assertEquals(set(promptSkimConfig.keys()), set([ "Skim2" ]),
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim2']['node'], "Node6",
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim2']['cmssw'], "CMSSW_4_2_8_patch5",
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim2']['two_file_read'], 0,
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim2']['proc_ver'], "v8",
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim2']['global_tag'], "GlobalTag7",
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim2']['config_url'], "exampleurl2",
-                          "ERROR: problem in promptskim configuration")
-
-        #
-        # no DAO for this check because the query is only used here
-        #
-        results = myThread.dbi.processData("""SELECT run_stream_fileset_assoc.run_id,
-                                                     stream.name,
-                                                     wmbs_fileset.name
-                                              FROM run_stream_fileset_assoc
-                                              INNER JOIN wmbs_fileset ON
-                                                wmbs_fileset.id = run_stream_fileset_assoc.fileset
-                                              INNER JOIN wmbs_subscription ON
-                                                wmbs_subscription.fileset = wmbs_fileset.id
-                                              INNER JOIN stream ON
-                                                stream.id = run_stream_fileset_assoc.stream_id
-                                              ORDER BY run_stream_fileset_assoc.run_id,
-                                                       stream.name,
-                                                       wmbs_fileset.name
-                                              """, transaction = False)[0].fetchall()
-
-        self.assertEqual(results[0][0], 176161,
-                         "ERROR: problem in setting up run/stream fileset/subscription")
-        self.assertEqual(results[1][0], 176161,
-                         "ERROR: problem in setting up run/stream fileset/subscription")
-        self.assertEqual(results[2][0], 176161,
-                         "ERROR: problem in setting up run/stream fileset/subscription")
-        self.assertEqual(results[0][1], "A",
-                         "ERROR: problem in setting up run/stream fileset/subscription")
-        self.assertEqual(results[1][1], "Express",
-                         "ERROR: problem in setting up run/stream fileset/subscription")
-        self.assertEqual(results[2][1], "HLTMON",
-                         "ERROR: problem in setting up run/stream fileset/subscription")
-        self.assertEqual(results[0][2], "Run176161_StreamA",
-                         "ERROR: problem in setting up run/stream fileset/subscription")
-        self.assertEqual(results[1][2], "Run176161_StreamExpress",
-                         "ERROR: problem in setting up run/stream fileset/subscription")
-        self.assertEqual(results[2][2], "Run176161_StreamHLTMON",
-                         "ERROR: problem in setting up run/stream fileset/subscription")
+        runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
+        self.assertEqual(len(runStreams.keys()), 0,
+                         "ERROR: there should be no new run/stream")
+
+        self.feedStreamersDAO.execute(transaction = False)
+        self.assertEqual(self.getNumFeedStreamers(), 1,
+                         "ERROR: there should be 1 streamers feed")
+
+        self.insertRun(176162)
+        self.insertRunStream(176162, "A")
+        self.insertRunStream(176162, "Express")
+        self.insertRunStream(176162, "HLTMON")
+
+        self.insertRun(176163)
+        self.insertRunStream(176163, "A")
+        self.insertRunStream(176163, "Express")
+
+        runs = self.findNewRunsDAO.execute(transaction = False)
+        self.assertEqual(len(runs), 2,
+                         "ERROR: there should be two new runs")
+
+        runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
+        self.assertEqual(len(runStreams.keys()), 0,
+                         "ERROR: there should be no new run/stream")
+
+        self.feedStreamersDAO.execute(transaction = False)
+        self.assertEqual(self.getNumFeedStreamers(), 1,
+                         "ERROR: there should be 1 streamers feed")
+
+        RunConfigAPI.configureRun(self.tier0Config, 176162, self.hltConfig,
+                                  { 'process' : "HLT",
+                                    'mapping' : self.referenceMapping })
+
+        runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
+        self.assertEqual(set(runStreams.keys()), set([176162]),
+                         "ERROR: there should be new run/stream for run 176162")
+        self.assertEqual(set(runStreams[176162]), set(["A", "Express", "HLTMON"]),
+                         "ERROR: there should be new run/stream for run 176162 and stream A,Express,HLTMON")
+
+        runs = self.findNewRunsDAO.execute(transaction = False)
+        self.assertEqual(len(runs), 1,
+                         "ERROR: there should be one new run")
+
+        self.feedStreamersDAO.execute(transaction = False)
+        self.assertEqual(self.getNumFeedStreamers(), 1,
+                         "ERROR: there should be 1 streamers feed")
+
+        RunConfigAPI.configureRun(self.tier0Config, 176163, self.hltConfig,
+                                  { 'process' : "HLT",
+                                    'mapping' : self.referenceMapping })
+
+        runs = self.findNewRunsDAO.execute(transaction = False)
+        self.assertEqual(len(runs), 0,
+                         "ERROR: there should be no new run")
+
+        runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
+        self.assertEqual(set(runStreams.keys()), set([176162, 176163]),
+                         "ERROR: there should be new run/stream for run 176162 and 176163")
+        self.assertEqual(set(runStreams[176162]), set(["A","Express","HLTMON"]),
+                         "ERROR: there should be new run/stream for run 176162 and stream A, Express and HLTMON")
+        self.assertEqual(set(runStreams[176163]), set(["A","Express"]),
+                         "ERROR: there should be new run/stream for run 176162 and stream A and Express")
+
+        self.feedStreamersDAO.execute(transaction = False)
+        self.assertEqual(self.getNumFeedStreamers(), 1,
+                         "ERROR: there should be 1 streamers feed")
+
+        RunConfigAPI.configureRunStream(self.tier0Config, 176162, "A")
+        RunConfigAPI.configureRunStream(self.tier0Config, 176163, "Express")
+
+        runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
+        self.assertEqual(set(runStreams.keys()), set([176162, 176163]),
+                         "ERROR: there should be new run/stream for run 176162 and 176163")
+        self.assertEqual(set(runStreams[176162]), set(["Express","HLTMON"]),
+                         "ERROR: there should be new run/stream for run 176162 and stream Express and HLTMON")
+        self.assertEqual(set(runStreams[176163]), set(["A"]),
+                         "ERROR: there should be new run/stream for run 176162 and stream A")
+
+        self.feedStreamersDAO.execute(transaction = False)
+        self.assertEqual(self.getNumFeedStreamers(), 3,
+                         "ERROR: there should be 3 streamers feed")
+
+        RunConfigAPI.configureRunStream(self.tier0Config, 176162, "Express")
+        RunConfigAPI.configureRunStream(self.tier0Config, 176162, "HLTMON")
+
+        runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
+        self.assertEqual(set(runStreams.keys()), set([176163]),
+                         "ERROR: there should be new run/stream for run 176163")
+        self.assertEqual(set(runStreams[176163]), set(["A"]),
+                         "ERROR: there should be new run/stream for run 176163 and stream A")
+
+        self.feedStreamersDAO.execute(transaction = False)
+        self.assertEqual(self.getNumFeedStreamers(), 5,
+                         "ERROR: there should be 5 streamers feed")
+
+        RunConfigAPI.configureRunStream(self.tier0Config, 176163, "A")
+
+        runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
+        self.assertEqual(len(runStreams.keys()), 0,
+                         "ERROR: there should be no new run/stream")
+
+        self.feedStreamersDAO.execute(transaction = False)
+        self.assertEqual(self.getNumFeedStreamers(), 6,
+                         "ERROR: there should be 6 streamers feed")
 
         return
 

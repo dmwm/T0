@@ -8,14 +8,19 @@ import logging
 import threading
 
 from WMCore.DAOFactory import DAOFactory
+from WMCore.WorkQueue.WMBSHelper import WMBSHelper
 
-from T0.RunConfig import ConfDB
 from T0.RunConfig.Tier0Config import retrieveDatasetConfig
 from T0.RunConfig.Tier0Config import addRepackConfig
 from T0.RunConfig.Tier0Config import deleteStreamConfig
 
+from T0.WMSpec.StdSpecs.Repack import getTestArguments as getRepackArguments
+from T0.WMSpec.StdSpecs.Repack import repackWorkload
+from T0.WMSpec.StdSpecs.Express import getTestArguments as getExpressArguments
+from T0.WMSpec.StdSpecs.Express import expressWorkload
 
-def configureRun(tier0Config, run, referenceHltConfig = None):
+
+def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
     """
     _configureRun_
 
@@ -29,29 +34,20 @@ def configureRun(tier0Config, run, referenceHltConfig = None):
     myThread = threading.currentThread()
 
     daoFactory = DAOFactory(package = "T0.WMBS",
-                            logger = myThread.logger,
+                            logger = logging,
                             dbinterface = myThread.dbi)
 
-    getHLTKeyForRunDAO = daoFactory(classname = "RunConfig.GetHLTKeyForRun")
-    hltkey = getHLTKeyForRunDAO.execute(run, transaction = False)
+    # dao to update global run settings
+    updateRunDAO = daoFactory(classname = "RunConfig.UpdateRun")
 
-    logging.debug("HLT key: %s" % hltkey)
+    # workaround to make unit test work without HLTConfDatabase
+    if hltConfig == None and referenceHltConfig != None:
+        hltConfig = referenceHltConfig
 
     #
     # treat centralDAQ or miniDAQ runs (have an HLT key) different from local runs
     #
-    if hltkey != None:
-
-        hltConfig = ConfDB.getConfiguration(hltkey)
-        if hltConfig == None:
-            # workaround to make unit test work outside CERN
-            if referenceHltConfig != None:
-                hltConfig = referenceHltConfig
-            else:
-                raise RuntimeError, "Could not retrieve HLT config for run %d" % run
-
-        # update global run settings
-        updateRunDAQ = daoFactory(classname = "RunConfig.UpdateRun")
+    if hltConfig != None:
 
         # write stream/dataset/trigger mapping
         insertStreamDAO = daoFactory(classname = "RunConfig.InsertStream")
@@ -59,7 +55,6 @@ def configureRun(tier0Config, run, referenceHltConfig = None):
         insertStreamDatasetDAO = daoFactory(classname = "RunConfig.InsertStreamDataset")
         insertTriggerDAO = daoFactory(classname = "RunConfig.InsertTrigger")
         insertDatasetTriggerDAO = daoFactory(classname = "RunConfig.InsertDatasetTrigger")
-        updateRunDAO = daoFactory(classname = "RunConfig.UpdateRun")
 
         bindsStream = []
         bindsDataset = []
@@ -80,43 +75,42 @@ def configureRun(tier0Config, run, referenceHltConfig = None):
                                                   'PRIMDS' : dataset } )
 
         try:
-
             myThread.transaction.begin()
-
             updateRunDAO.execute(run, hltConfig['process'],
                                  tier0Config.Global.AcquisitionEra,
                                  tier0Config.Global.RecoTimeout,
-                                 tier0Config.Global.RecoLockTimeout)
-            insertStreamDAO.execute(bindsStream)
-            insertDatasetDAO.execute(bindsDataset)
-            insertStreamDatasetDAO.execute(bindsStreamDataset)
-            insertTriggerDAO.execute(bindsTrigger)
-            insertDatasetTriggerDAO.execute(bindsDatasetTrigger)
-
-            myThread.transaction.commit()
-
-        except Exception, e:
-
+                                 tier0Config.Global.RecoLockTimeout,
+                                 transaction = True)
+            insertStreamDAO.execute(bindsStream,
+                                    transaction = True)
+            insertDatasetDAO.execute(bindsDataset,
+                                     transaction = True)
+            insertStreamDatasetDAO.execute(bindsStreamDataset,
+                                           transaction = True)
+            insertTriggerDAO.execute(bindsTrigger,
+                                     transaction = True)
+            insertDatasetTriggerDAO.execute(bindsDatasetTrigger,
+                                            transaction = True)
+        except:
             myThread.transaction.rollback()
             raise
+        else:
+            myThread.transaction.commit()
 
     else:
 
-        # update global run settings
-        updateRunDAO = daoFactory(classname = "RunConfig.UpdateRun")
-
         try:
-
-            updateRunDAQ.execute(run, "FakeProcessName",
+            myThread.transaction.begin()
+            updateRunDAO.execute(run, "FakeProcessName",
                                  "FakeAcquisitionEra",
-                                 transaction = False)
-
-        except Exception, e:
-
+                                 transaction = True)
+        except:
             myThread.transaction.rollback()
             raise
+        else:
+            myThread.transaction.commit()
 
-        return
+    return
 
 def configureRunStream(tier0Config, run, stream):
     """
@@ -136,7 +130,7 @@ def configureRunStream(tier0Config, run, stream):
     myThread = threading.currentThread()
 
     daoFactory = DAOFactory(package = "T0.WMBS",
-                            logger = myThread.logger,
+                            logger = logging,
                             dbinterface = myThread.dbi)
 
     getHLTKeyForRunDAO = daoFactory(classname = "RunConfig.GetHLTKeyForRun")
@@ -170,6 +164,7 @@ def configureRunStream(tier0Config, run, stream):
         insertStorageNodeDAO = daoFactory(classname = "RunConfig.InsertStorageNode")
         insertPhEDExConfigDAO = daoFactory(classname = "RunConfig.InsertPhEDExConfig")
         insertPromptSkimConfigDAO = daoFactory(classname = "RunConfig.InsertPromptSkimConfig")
+        insertStreamFilesetDAO = daoFactory(classname = "RunConfig.InsertStreamFileset")
 
         bindsDataset = []
         bindsStreamDataset = []
@@ -193,11 +188,15 @@ def configureRunStream(tier0Config, run, stream):
         #
         if streamConfig.ProcessingStyle == "Bulk":
 
+            wmSpec = repackWorkload("TestWorkload", getRepackArguments())
+
             bindsRepackConfig = { 'RUN' : run,
                                   'STREAM' : stream,
                                   'PROC_VER': streamConfig.Repack.ProcessingVersion }
 
         elif streamConfig.ProcessingStyle == "Express":
+
+            wmSpec = expressWorkload("TestWorkload", getExpressArguments())
 
             writeSkims = None
             if len(streamConfig.Express.Producers) > 0:
@@ -360,41 +359,49 @@ def configureRunStream(tier0Config, run, stream):
 ##                 insertPhEDExConfig(dbConn, runNumber, errorDataset,
 ##                                    None, "T2_CH_CAF", None, False)
 
+        
+        wmSpec.setSpecUrl("somespec")
+        wmSpec.setOwnerDetails("Dirk.Hufnagel@cern.ch", "T0",
+                               { 'vogroup': 'DEFAULT', 'vorole': 'DEFAULT' } )
+        wmbsHelper = WMBSHelper(wmSpec)
+
+        #
+        # create workflow (currently either repack or express)
+        #
         try:
-
             myThread.transaction.begin()
-
-            insertDatasetDAO.execute(bindsDataset)
-            insertStreamDatasetDAO.execute(bindsStreamDataset)
-            insertStreamStyleDAO.execute(bindsStreamStyle)
+            insertDatasetDAO.execute(bindsDataset, transaction = True)
+            insertStreamDatasetDAO.execute(bindsStreamDataset, transaction = True)
+            insertStreamStyleDAO.execute(bindsStreamStyle, transaction = True)
             if len(bindsRepackConfig) > 0:
-                insertRepackConfigDAO.execute(bindsRepackConfig)
+                insertRepackConfigDAO.execute(bindsRepackConfig, transaction = True)
             if len(bindsExpressConfig) > 0:
-                insertExpressConfigDAO.execute(bindsExpressConfig)
+                insertExpressConfigDAO.execute(bindsExpressConfig, transaction = True)
             if len(bindsSpecialDataset) > 0:
-                insertSpecialDatasetDAO.execute(bindsSpecialDataset)
-            insertDatasetScenarioDAO.execute(bindsDatasetScenario)
+                insertSpecialDatasetDAO.execute(bindsSpecialDataset, transaction = True)
+            insertDatasetScenarioDAO.execute(bindsDatasetScenario, transaction = True)
             if len(bindsCMSSWVersion):
-                insertCMSSWVersionDAO.execute(bindsCMSSWVersion)
+                insertCMSSWVersionDAO.execute(bindsCMSSWVersion, transaction = True)
             if len(bindsStreamOverride) > 0:
-                updateStreamOverrideDAO.execute(bindsStreamOverride)
+                updateStreamOverrideDAO.execute(bindsStreamOverride, transaction = True)
             if len(bindsErrorDataset):
-                insertErrorDatasetDAO.execute(bindsErrorDataset)
+                insertErrorDatasetDAO.execute(bindsErrorDataset, transaction = True)
             if len(bindsRecoConfig) > 0:
-                insertRecoConfigDAO.execute(bindsRecoConfig)
+                insertRecoConfigDAO.execute(bindsRecoConfig, transaction = True)
             if len(bindsStorageNode) > 0:
-                insertStorageNodeDAO.execute(bindsStorageNode)
+                insertStorageNodeDAO.execute(bindsStorageNode, transaction = True)
             if len(bindsPhEDExConfig) > 0:
-                insertPhEDExConfigDAO.execute(bindsPhEDExConfig)
+                insertPhEDExConfigDAO.execute(bindsPhEDExConfig, transaction = True)
             if len(bindsPromptSkimConfig) > 0:
-                insertPromptSkimConfigDAO.execute(bindsPromptSkimConfig)
-
-            myThread.transaction.commit()
-
-        except Exception, e:
-
+                insertPromptSkimConfigDAO.execute(bindsPromptSkimConfig, transaction = True)
+            filesetName = "Run%d_Stream%s" % (run, stream)
+            insertStreamFilesetDAO.execute(run, stream, filesetName, transaction = True)
+            wmbsHelper.createSubscription(topLevelFilesetName = filesetName)
+        except:
             myThread.transaction.rollback()
             raise
+        else:
+            myThread.transaction.commit()
 
     else:
 

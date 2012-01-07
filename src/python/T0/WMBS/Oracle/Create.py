@@ -11,7 +11,7 @@ from WMCore.Database.DBCreator import DBCreator
 
 class Create(DBCreator):
 
-    def __init__(self, logger = None, dbi = None):
+    def __init__(self, logger = None, dbi = None, params = None):
         """
         _init_
 
@@ -169,10 +169,10 @@ class Create(DBCreator):
                 )"""
 
         self.create[len(self.create)] = \
-            """CREATE TABLE run_stream_sub_assoc (
+            """CREATE TABLE run_stream_fileset_assoc (
                  run_id       int   not null,
                  stream_id    int   not null,
-                 subscription int   not null,
+                 fileset      int   not null,
                  primary key(run_id, stream_id)
                )"""
 
@@ -268,19 +268,19 @@ class Create(DBCreator):
                   primary key (run_id, primds_id)
                )"""
 
-        self.create[len(self.create)] = \
-            """CREATE TABLE alca_config (
-                  run_id         int not null,
-                  primds_id      int not null,
-                  do_alca        int not null,
-                  cmssw_id       int not null,
-                  proc_version   varchar(255) not null,
-                  write_skims    varchar(1000),
-                  config_url     varchar(255),
-                  pset_hash      varchar(700),
-                  branch_hash    varchar(700),
-                  primary key (run_id, primds_id)
-               )"""
+##         self.create[len(self.create)] = \
+##             """CREATE TABLE alca_config (
+##                   run_id         int not null,
+##                   primds_id      int not null,
+##                   do_alca        int not null,
+##                   cmssw_id       int not null,
+##                   proc_version   varchar(255) not null,
+##                   write_skims    varchar(1000),
+##                   config_url     varchar(255),
+##                   pset_hash      varchar(700),
+##                   branch_hash    varchar(700),
+##                   primary key (run_id, primds_id)
+##                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE phedex_config (
@@ -510,22 +510,22 @@ class Create(DBCreator):
                  REFERENCES cmssw_version(id)"""
 
         self.constraints[len(self.constraints)] = \
-            """ALTER TABLE run_stream_sub_assoc
-                 ADD CONSTRAINT run_str_sub_run_id_fk
+            """ALTER TABLE run_stream_fileset_assoc
+                 ADD CONSTRAINT run_str_fil_run_id_fk
                  FOREIGN KEY (run_id)
                  REFERENCES run(run_id)"""
 
         self.constraints[len(self.constraints)] = \
-            """ALTER TABLE run_stream_sub_assoc
-                 ADD CONSTRAINT run_str_sub_str_id_fk
+            """ALTER TABLE run_stream_fileset_assoc
+                 ADD CONSTRAINT run_str_fil_str_id_fk
                  FOREIGN KEY (stream_id)
                  REFERENCES stream(id)"""
 
         self.constraints[len(self.constraints)] = \
-            """ALTER TABLE run_stream_sub_assoc
-                 ADD CONSTRAINT run_str_sub_sub_id_fk
-                 FOREIGN KEY (subscription)
-                 REFERENCES wmbs_subscription(id)"""
+            """ALTER TABLE run_stream_fileset_assoc
+                 ADD CONSTRAINT run_str_fil_fil_id_fk
+                 FOREIGN KEY (fileset)
+                 REFERENCES wmbs_fileset(id)"""
 
         self.constraints[len(self.constraints)] = \
             """ALTER TABLE stream_special_primds_assoc
@@ -641,23 +641,23 @@ class Create(DBCreator):
                  FOREIGN KEY (cmssw_id)
                  REFERENCES cmssw_version(id)"""
 
-        self.constraints[len(self.constraints)] = \
-            """ALTER TABLE alca_config
-                 ADD CONSTRAINT alc_con_run_id_fk
-                 FOREIGN KEY (run_id)
-                 REFERENCES run(run_id)"""
+##         self.constraints[len(self.constraints)] = \
+##             """ALTER TABLE alca_config
+##                  ADD CONSTRAINT alc_con_run_id_fk
+##                  FOREIGN KEY (run_id)
+##                  REFERENCES run(run_id)"""
 
-        self.constraints[len(self.constraints)] = \
-            """ALTER TABLE alca_config
-                 ADD CONSTRAINT alc_con_primds_id_fk
-                 FOREIGN KEY (primds_id)
-                 REFERENCES primary_dataset(id)"""
+##         self.constraints[len(self.constraints)] = \
+##             """ALTER TABLE alca_config
+##                  ADD CONSTRAINT alc_con_primds_id_fk
+##                  FOREIGN KEY (primds_id)
+##                  REFERENCES primary_dataset(id)"""
 
-        self.constraints[len(self.constraints)] = \
-            """ALTER TABLE alca_config
-                 ADD CONSTRAINT alc_con_cms_id_fk
-                 FOREIGN KEY (cmssw_id)
-                 REFERENCES cmssw_version(id)"""
+##         self.constraints[len(self.constraints)] = \
+##             """ALTER TABLE alca_config
+##                  ADD CONSTRAINT alc_con_cms_id_fk
+##                  FOREIGN KEY (cmssw_id)
+##                  REFERENCES cmssw_version(id)"""
 
         self.constraints[len(self.constraints)] = \
             """ALTER TABLE phedex_config
@@ -706,6 +706,21 @@ class Create(DBCreator):
                  ADD CONSTRAINT pro_con_cms_id_fk
                  FOREIGN KEY (cmssw_id)
                  REFERENCES cmssw_version(id)"""
+
+        subTypes = [ "Processing",
+                     "Merge",
+                     "Express",
+                     "Harvest" ]
+        for name in subTypes:
+            sql = """INSERT INTO wmbs_sub_types
+                     (ID, NAME)
+                     SELECT wmbs_sub_types_SEQ.nextval, '%s'
+                     FROM DUAL
+                     WHERE NOT EXISTS (
+                       SELECT id FROM wmbs_sub_types WHERE name = '%s'
+                     )
+                     """ % (name, name)
+            self.inserts[len(self.inserts)] = sql
 
         runStates = { 1 : "Active",
                       2 : "CloseOutRepack",
