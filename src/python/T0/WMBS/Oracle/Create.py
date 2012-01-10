@@ -173,7 +173,8 @@ class Create(DBCreator):
                  run_id       int   not null,
                  stream_id    int   not null,
                  fileset      int   not null,
-                 primary key(run_id, stream_id)
+                 primary key(run_id, stream_id),
+                 constraint run_str_fil_ass_fil_uq unique(fileset)
                )"""
 
         self.create[len(self.create)] = \
