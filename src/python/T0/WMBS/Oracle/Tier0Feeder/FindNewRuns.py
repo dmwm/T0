@@ -3,6 +3,9 @@ _FindNewRuns_
 
 Oracle implementation of FindNewRuns
 
+Return a dictionary of run:hltkey for all runs
+that are not configured.
+
 """
 
 from WMCore.Database.DBFormatter import DBFormatter

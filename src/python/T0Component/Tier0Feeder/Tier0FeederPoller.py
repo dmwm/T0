@@ -21,6 +21,7 @@ from WMCore.WMException import WMException
 from WMCore.Configuration import loadConfigurationFile
 
 from T0.RunConfig import RunConfigAPI
+from T0.RunLumiCloseout import RunLumiCloseoutAPI
 
 
 class Tier0FeederPoller(BaseWorkerThread):
@@ -49,6 +50,10 @@ class Tier0FeederPoller(BaseWorkerThread):
                                        dbinterface = dbInterfaceHltConf)
 
         self.getHLTConfigDAO = daoFactoryHltConf(classname = "RunConfig.GetHLTConfig")
+
+        storageManagerConnectUrl = config.StorageManagerDatabase.connectUrl
+        dbFactoryStorageManager = DBFactory(logging, dburl = storageManagerConnectUrl, options = {})
+        self.dbInterfaceStorageManager = dbFactoryStorageManager.connect()
 
         return
 
@@ -110,6 +115,11 @@ class Tier0FeederPoller(BaseWorkerThread):
                         RunConfigAPI.configureRunStream(tier0Config, run, stream)
                     except:
                         logging.exception("Can't configure for run %d and stream %s" % (run, stream))
+
+        #
+        # close stream/lumis for run/streams that are configured and where the run is active
+        #
+        RunLumiCloseoutAPI.closeLumiSections(self.dbInterfaceStorageManager)
 
         #
         # feed new data into exisiting filesets

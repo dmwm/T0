@@ -8,7 +8,9 @@ import logging
 import threading
 
 from WMCore.DAOFactory import DAOFactory
+
 from WMCore.WorkQueue.WMBSHelper import WMBSHelper
+from WMCore.WMBS.Fileset import Fileset
 
 from T0.RunConfig.Tier0Config import retrieveDatasetConfig
 from T0.RunConfig.Tier0Config import addRepackConfig
@@ -188,6 +190,7 @@ def configureRunStream(tier0Config, run, stream):
         #
         if streamConfig.ProcessingStyle == "Bulk":
 
+            taskName = "Repack"
             wmSpec = repackWorkload("TestWorkload", getRepackArguments())
 
             bindsRepackConfig = { 'RUN' : run,
@@ -196,6 +199,7 @@ def configureRunStream(tier0Config, run, stream):
 
         elif streamConfig.ProcessingStyle == "Express":
 
+            taskName = "Express"
             wmSpec = expressWorkload("TestWorkload", getExpressArguments())
 
             writeSkims = None
@@ -363,7 +367,10 @@ def configureRunStream(tier0Config, run, stream):
         wmSpec.setSpecUrl("somespec")
         wmSpec.setOwnerDetails("Dirk.Hufnagel@cern.ch", "T0",
                                { 'vogroup': 'DEFAULT', 'vorole': 'DEFAULT' } )
-        wmbsHelper = WMBSHelper(wmSpec)
+        wmbsHelper = WMBSHelper(wmSpec, taskName)
+
+        filesetName = "Run%d_Stream%s" % (run, stream)
+        fileset = Fileset(filesetName)
 
         #
         # create workflow (currently either repack or express)
@@ -394,9 +401,9 @@ def configureRunStream(tier0Config, run, stream):
                 insertPhEDExConfigDAO.execute(bindsPhEDExConfig, transaction = True)
             if len(bindsPromptSkimConfig) > 0:
                 insertPromptSkimConfigDAO.execute(bindsPromptSkimConfig, transaction = True)
-            filesetName = "Run%d_Stream%s" % (run, stream)
             insertStreamFilesetDAO.execute(run, stream, filesetName, transaction = True)
-            wmbsHelper.createSubscription(topLevelFilesetName = filesetName)
+            fileset.load()
+            wmbsHelper.createSubscription(wmSpec.getTask(taskName), fileset)
         except:
             myThread.transaction.rollback()
             raise

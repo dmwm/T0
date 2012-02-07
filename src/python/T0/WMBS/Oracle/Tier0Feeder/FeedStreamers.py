@@ -3,6 +3,12 @@ _FeedStreamers_
 
 Oracle implementation of FeedStreamers
 
+For all run and stream combinations that are
+configured and active (run/stream fileset is open),
+check for new streamers and insert them into the
+appropriate fileset. Also mark streamers as used.
+Only consider streamers that are in closed lumis.
+
 """
 
 import time
@@ -32,6 +38,14 @@ class FeedStreamers(DBFormatter):
                  INNER JOIN run_stream_fileset_assoc ON
                    run_stream_fileset_assoc.run_id = streamer.run_id AND
                    run_stream_fileset_assoc.stream_id = streamer.stream_id
+                 INNER JOIN wmbs_fileset ON
+                   wmbs_fileset.id = run_stream_fileset_assoc.fileset AND
+                   wmbs_fileset.open = 1
+                 INNER JOIN lumi_section_closed ON
+                   lumi_section_closed.run_id = streamer.run_id AND
+                   lumi_section_closed.stream_id = streamer.stream_id AND
+                   lumi_section_closed.lumi_id = streamer.lumi_id AND
+                   lumi_section_closed.close_time > 0
                  INNER JOIN wmbs_subscription ON
                    wmbs_subscription.fileset = run_stream_fileset_assoc.fileset
                  WHERE checkForZeroState(streamer.used) = 0

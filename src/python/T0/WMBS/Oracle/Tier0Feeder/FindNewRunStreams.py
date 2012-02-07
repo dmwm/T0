@@ -3,6 +3,9 @@ _FindNewRunStreams_
 
 Oracle implementation of FindNewRunStreams
 
+Returns a dictionary of run:streams for all run
+and stream combinations that are not configured.
+
 """
 
 from WMCore.Database.DBFormatter import DBFormatter

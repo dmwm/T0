@@ -15,8 +15,10 @@ from WMQuality.TestInit import TestInit
 from WMCore.DAOFactory import DAOFactory
 from WMCore.Database.DBFactory import DBFactory
 from WMCore.Configuration import loadConfigurationFile
+from WMCore.Services.UUID import makeUUID
 
 from T0.RunConfig import RunConfigAPI
+from T0.RunLumiCloseout import RunLumiCloseoutAPI
 
 
 class Tier0FeederTest(unittest.TestCase):
@@ -948,6 +950,8 @@ class Tier0FeederTest(unittest.TestCase):
         self.findNewRunsDAO = daoFactory(classname = "Tier0Feeder.FindNewRuns")
         self.findNewRunStreamsDAO = daoFactory(classname = "Tier0Feeder.FindNewRunStreams")
         self.feedStreamersDAO = daoFactory(classname = "Tier0Feeder.FeedStreamers")
+        self.insertClosedLumiDAO = daoFactory(classname = "RunLumiCloseout.InsertClosedLumi")
+        self.finalCloseLumiDAO = daoFactory(classname = "RunLumiCloseout.FinalCloseLumi")
 
         return
 
@@ -972,17 +976,17 @@ class Tier0FeederTest(unittest.TestCase):
                                             'HLTKEY' : self.hltkey },
                                   transaction = False)
 
-        self.insertLumiDAO.execute(binds = { 'RUN' : run,
-                                             'LUMI' : 1 },
-                                   transaction = False)
+##         self.insertLumiDAO.execute(binds = { 'RUN' : run,
+##                                              'LUMI' : 1 },
+##                                    transaction = False)
 
         return
 
-    def insertRunStream(self, run, stream):
+    def insertRunStreamLumi(self, run, stream, lumi):
         """
-        _insertRunStream_
+        _insertRunStreamLumi_
 
-        insert run/stream/cmssw assoc and single streamer
+        insert run/stream/cmssw assoc and single streamer with given lumi
 
         """
         self.insertStreamCMSSWVersionDAO.execute(binds = { 'RUN' : run,
@@ -990,10 +994,14 @@ class Tier0FeederTest(unittest.TestCase):
                                                            'VERSION' : "CMSSW_4_2_7" },
                                                  transaction = False)
 
+        self.insertLumiDAO.execute(binds = { 'RUN' : run,
+                                             'LUMI' : lumi },
+                                   transaction = False)
+
         self.insertStreamerDAO.execute(binds = { 'RUN' : run,
-                                                 'LUMI' : 1,
+                                                 'LUMI' : lumi,
                                                  'STREAM' : stream,
-                                                 'LFN' : "/testLFN/%d/%s" % (run, stream),
+                                                 'LFN' : makeUUID(),
                                                  'FILESIZE' : 100,
                                                  'EVENTS' : 100,
                                                  'TIME' : int(time.time()) },
@@ -1016,6 +1024,43 @@ class Tier0FeederTest(unittest.TestCase):
 
         return results[0][0]
 
+    def getClosedLumis(self):
+        """
+        _getClosedLumis_
+
+        helper function that retrieves the closed lumis
+
+        """
+        myThread = threading.currentThread()
+
+        results = myThread.dbi.processData("""SELECT lumi_section_closed.run_id,
+                                                     stream.name,
+                                                     lumi_section_closed.lumi_id,
+                                                     lumi_section_closed.filecount
+                                              FROM lumi_section_closed
+                                              INNER JOIN stream ON
+                                                stream.id = lumi_section_closed.stream_id
+                                              """, transaction = False)[0].fetchall()
+
+        runStreamLumiDict = {}
+        for result in results:
+
+            run = result[0]
+            stream = result[1]
+            lumi = result[2]
+            filecount = result[3]
+
+            if not runStreamLumiDict.has_key(run):
+                runStreamLumiDict[run] = {}
+            if not runStreamLumiDict[run].has_key(stream):
+                runStreamLumiDict[run][stream] = {}
+
+            runStreamLumiDict[run][stream][lumi] = filecount
+
+        return runStreamLumiDict
+
+
+
     def test00(self):
         """
         _test00_
@@ -1023,6 +1068,10 @@ class Tier0FeederTest(unittest.TestCase):
         Test the FindNewRuns, FindNewRunStreams and FeedStreamers DAOs
         and their interaction with the RunConfigAPI.configureRun and
         RunConfigAPI.configureRunStream methods
+
+        Don't test the interaction with the StorageManager DB to close
+        lumis, we instead close lumis directly and just test that
+        the system behaves correctly with open/closed lumis.
 
         """
         runs = self.findNewRunsDAO.execute(transaction = False)
@@ -1038,7 +1087,7 @@ class Tier0FeederTest(unittest.TestCase):
                          "ERROR: there should be no streamers feed")
 
         self.insertRun(176161)
-        self.insertRunStream(176161, "A")
+        self.insertRunStreamLumi(176161, "A", 1)
 
         runs = self.findNewRunsDAO.execute(transaction = False)
         self.assertEqual(len(runs), 1,
@@ -1072,17 +1121,85 @@ class Tier0FeederTest(unittest.TestCase):
                          "ERROR: there should be no new run/stream")
 
         self.feedStreamersDAO.execute(transaction = False)
+        self.assertEqual(self.getNumFeedStreamers(), 0,
+                         "ERROR: there should be no streamers feed")
+
+        self.insertClosedLumiDAO.execute(binds = { 'RUN' : 176161,
+                                                   'STREAM' : 'A',
+                                                   'LUMI' : 1,
+                                                   'INSERT_TIME' : int(time.time()),
+                                                   'CLOSE_TIME' : 0,
+                                                   'FILECOUNT' : 1 },
+                                         transaction = False)
+
+        self.feedStreamersDAO.execute(transaction = False)
+        self.assertEqual(self.getNumFeedStreamers(), 0,
+                         "ERROR: there should be no streamers feed")
+
+        self.finalCloseLumiDAO.execute(int(time.time()), transaction = False)
+                                       
+        self.feedStreamersDAO.execute(transaction = False)
         self.assertEqual(self.getNumFeedStreamers(), 1,
                          "ERROR: there should be 1 streamers feed")
 
+        self.insertRunStreamLumi(176161, "A", 2)
+
+        self.feedStreamersDAO.execute(transaction = False)
+        self.assertEqual(self.getNumFeedStreamers(), 1,
+                         "ERROR: there should be 1 streamers feed")
+
+        self.insertClosedLumiDAO.execute(binds = { 'RUN' : 176161,
+                                                   'STREAM' : 'A',
+                                                   'LUMI' : 2,
+                                                   'INSERT_TIME' : int(time.time()),
+                                                   'CLOSE_TIME' : int(time.time()),
+                                                   'FILECOUNT' : 1 },
+                                         transaction = False)
+
+        self.feedStreamersDAO.execute(transaction = False)
+        self.assertEqual(self.getNumFeedStreamers(), 2,
+                         "ERROR: there should be 2 streamers feed")
+
+        self.insertRunStreamLumi(176161, "A", 3)
+
+        self.feedStreamersDAO.execute(transaction = False)
+        self.assertEqual(self.getNumFeedStreamers(), 2,
+                         "ERROR: there should be 2 streamers feed")
+
+        self.insertClosedLumiDAO.execute(binds = { 'RUN' : 176161,
+                                                   'STREAM' : 'A',
+                                                   'LUMI' : 3,
+                                                   'INSERT_TIME' : int(time.time()),
+                                                   'CLOSE_TIME' : 0,
+                                                   'FILECOUNT' : 2 },
+                                         transaction = False)
+
+        self.feedStreamersDAO.execute(transaction = False)
+        self.assertEqual(self.getNumFeedStreamers(), 2,
+                         "ERROR: there should be 2 streamers feed")
+
+        self.finalCloseLumiDAO.execute(int(time.time()), transaction = False)
+                                       
+        self.feedStreamersDAO.execute(transaction = False)
+        self.assertEqual(self.getNumFeedStreamers(), 2,
+                         "ERROR: there should be 2 streamers feed")
+
+        self.insertRunStreamLumi(176161, "A", 3)
+
+        self.finalCloseLumiDAO.execute(int(time.time()), transaction = False)
+
+        self.feedStreamersDAO.execute(transaction = False)
+        self.assertEqual(self.getNumFeedStreamers(), 4,
+                         "ERROR: there should be 4 streamers feed")
+
         self.insertRun(176162)
-        self.insertRunStream(176162, "A")
-        self.insertRunStream(176162, "Express")
-        self.insertRunStream(176162, "HLTMON")
+        self.insertRunStreamLumi(176162, "A", 1)
+        self.insertRunStreamLumi(176162, "Express", 1)
+        self.insertRunStreamLumi(176162, "HLTMON", 1)
 
         self.insertRun(176163)
-        self.insertRunStream(176163, "A")
-        self.insertRunStream(176163, "Express")
+        self.insertRunStreamLumi(176163, "A", 1)
+        self.insertRunStreamLumi(176163, "Express", 1)
 
         runs = self.findNewRunsDAO.execute(transaction = False)
         self.assertEqual(len(runs), 2,
@@ -1093,8 +1210,8 @@ class Tier0FeederTest(unittest.TestCase):
                          "ERROR: there should be no new run/stream")
 
         self.feedStreamersDAO.execute(transaction = False)
-        self.assertEqual(self.getNumFeedStreamers(), 1,
-                         "ERROR: there should be 1 streamers feed")
+        self.assertEqual(self.getNumFeedStreamers(), 4,
+                         "ERROR: there should be 4 streamers feed")
 
         RunConfigAPI.configureRun(self.tier0Config, 176162, self.hltConfig,
                                   { 'process' : "HLT",
@@ -1111,8 +1228,8 @@ class Tier0FeederTest(unittest.TestCase):
                          "ERROR: there should be one new run")
 
         self.feedStreamersDAO.execute(transaction = False)
-        self.assertEqual(self.getNumFeedStreamers(), 1,
-                         "ERROR: there should be 1 streamers feed")
+        self.assertEqual(self.getNumFeedStreamers(), 4,
+                         "ERROR: there should be 4 streamers feed")
 
         RunConfigAPI.configureRun(self.tier0Config, 176163, self.hltConfig,
                                   { 'process' : "HLT",
@@ -1131,8 +1248,8 @@ class Tier0FeederTest(unittest.TestCase):
                          "ERROR: there should be new run/stream for run 176162 and stream A and Express")
 
         self.feedStreamersDAO.execute(transaction = False)
-        self.assertEqual(self.getNumFeedStreamers(), 1,
-                         "ERROR: there should be 1 streamers feed")
+        self.assertEqual(self.getNumFeedStreamers(), 4,
+                         "ERROR: there should be 4 streamers feed")
 
         RunConfigAPI.configureRunStream(self.tier0Config, 176162, "A")
         RunConfigAPI.configureRunStream(self.tier0Config, 176163, "Express")
@@ -1146,8 +1263,33 @@ class Tier0FeederTest(unittest.TestCase):
                          "ERROR: there should be new run/stream for run 176162 and stream A")
 
         self.feedStreamersDAO.execute(transaction = False)
-        self.assertEqual(self.getNumFeedStreamers(), 3,
-                         "ERROR: there should be 3 streamers feed")
+        self.assertEqual(self.getNumFeedStreamers(), 4,
+                         "ERROR: there should be 4 streamers feed")
+
+        self.insertClosedLumiDAO.execute(binds = { 'RUN' : 176162,
+                                                   'STREAM' : 'A',
+                                                   'LUMI' : 1,
+                                                   'INSERT_TIME' : int(time.time()),
+                                                   'CLOSE_TIME' : int(time.time()),
+                                                   'FILECOUNT' : 1 },
+                                         transaction = False)
+
+        self.feedStreamersDAO.execute(transaction = False)
+        self.assertEqual(self.getNumFeedStreamers(), 5,
+                         "ERROR: there should be 5 streamers feed")
+
+
+        self.insertClosedLumiDAO.execute(binds = { 'RUN' : 176163,
+                                                   'STREAM' : 'Express',
+                                                   'LUMI' : 1,
+                                                   'INSERT_TIME' : int(time.time()),
+                                                   'CLOSE_TIME' : int(time.time()),
+                                                   'FILECOUNT' : 1 },
+                                         transaction = False)
+
+        self.feedStreamersDAO.execute(transaction = False)
+        self.assertEqual(self.getNumFeedStreamers(), 6,
+                         "ERROR: there should be 6 streamers feed")
 
         RunConfigAPI.configureRunStream(self.tier0Config, 176162, "Express")
         RunConfigAPI.configureRunStream(self.tier0Config, 176162, "HLTMON")
@@ -1159,8 +1301,32 @@ class Tier0FeederTest(unittest.TestCase):
                          "ERROR: there should be new run/stream for run 176163 and stream A")
 
         self.feedStreamersDAO.execute(transaction = False)
-        self.assertEqual(self.getNumFeedStreamers(), 5,
-                         "ERROR: there should be 5 streamers feed")
+        self.assertEqual(self.getNumFeedStreamers(), 6,
+                         "ERROR: there should be 6 streamers feed")
+
+        self.insertClosedLumiDAO.execute(binds = { 'RUN' : 176162,
+                                                   'STREAM' : 'Express',
+                                                   'LUMI' : 1,
+                                                   'INSERT_TIME' : int(time.time()),
+                                                   'CLOSE_TIME' : int(time.time()),
+                                                   'FILECOUNT' : 1 },
+                                         transaction = False)
+
+        self.feedStreamersDAO.execute(transaction = False)
+        self.assertEqual(self.getNumFeedStreamers(), 7,
+                         "ERROR: there should be 7 streamers feed")
+
+        self.insertClosedLumiDAO.execute(binds = { 'RUN' : 176162,
+                                                   'STREAM' : 'HLTMON',
+                                                   'LUMI' : 1,
+                                                   'INSERT_TIME' : int(time.time()),
+                                                   'CLOSE_TIME' : int(time.time()),
+                                                   'FILECOUNT' : 1 },
+                                         transaction = False)
+
+        self.feedStreamersDAO.execute(transaction = False)
+        self.assertEqual(self.getNumFeedStreamers(), 8,
+                         "ERROR: there should be 8 streamers feed")
 
         RunConfigAPI.configureRunStream(self.tier0Config, 176163, "A")
 
@@ -1169,8 +1335,121 @@ class Tier0FeederTest(unittest.TestCase):
                          "ERROR: there should be no new run/stream")
 
         self.feedStreamersDAO.execute(transaction = False)
-        self.assertEqual(self.getNumFeedStreamers(), 6,
-                         "ERROR: there should be 6 streamers feed")
+        self.assertEqual(self.getNumFeedStreamers(), 8,
+                         "ERROR: there should be 8 streamers feed")
+
+        self.insertClosedLumiDAO.execute(binds = { 'RUN' : 176163,
+                                                   'STREAM' : 'A',
+                                                   'LUMI' : 1,
+                                                   'INSERT_TIME' : int(time.time()),
+                                                   'CLOSE_TIME' : int(time.time()),
+                                                   'FILECOUNT' : 1 },
+                                         transaction = False)
+
+        self.feedStreamersDAO.execute(transaction = False)
+        self.assertEqual(self.getNumFeedStreamers(), 9,
+                         "ERROR: there should be 9 streamers feed")
+
+        return
+
+    def test01(self):
+        """
+        _test01_
+
+        Test the interaction with StorageManager DB to close lumis
+        for real run examples with full run and run/stream configuration
+
+        """
+
+        dbInterfaceStorageManager = None
+        if os.environ.has_key('WMAGENT_CONFIG'):
+
+            wmAgentConfig = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
+            if hasattr(wmAgentConfig, "StorageManagerDatabase"):
+
+                connectUrl = getattr(wmAgentConfig.StorageManagerDatabase, "connectUrl", None)
+
+                dbFactory = DBFactory(logging, dburl = connectUrl, options = {})
+                dbInterfaceStorageManager = dbFactory.connect()
+
+            else:
+                print "Your config is missing the StorageManagerDatabase section"
+                print "Skipping lumi closing test"
+                return
+
+        else:
+            print "You do not have WMAGENT_CONFIG in your environment"
+            print "Skipping lumi closing test"
+            return
+
+        RunLumiCloseoutAPI.closeLumiSections(dbInterfaceStorageManager)
+        self.assertEqual(len(self.getClosedLumis()), 0,
+                         "ERROR: there should be no closed lumis")
+
+        self.insertRun(176161)
+
+        RunLumiCloseoutAPI.closeLumiSections(dbInterfaceStorageManager)
+        self.assertEqual(len(self.getClosedLumis()), 0,
+                         "ERROR: there should be no closed lumis")
+
+        self.insertRunStreamLumi(176161, "A", 1)
+
+        RunLumiCloseoutAPI.closeLumiSections(dbInterfaceStorageManager)
+        self.assertEqual(len(self.getClosedLumis()), 0,
+                         "ERROR: there should be no closed lumis")
+
+        RunConfigAPI.configureRun(self.tier0Config, 176161, self.hltConfig,
+                                  { 'process' : "HLT",
+                                    'mapping' : self.referenceMapping })
+
+        RunLumiCloseoutAPI.closeLumiSections(dbInterfaceStorageManager)
+        self.assertEqual(len(self.getClosedLumis()), 0,
+                         "ERROR: there should be no closed lumis")
+
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A")
+
+        RunLumiCloseoutAPI.closeLumiSections(dbInterfaceStorageManager)
+
+        runStreamLumiDict = self.getClosedLumis()
+        self.assertEqual(runStreamLumiDict.keys(), [176161],
+                         "ERROR: there should be closed lumis for run 176161")
+        self.assertEqual(runStreamLumiDict[176161].keys(), ['A'],
+                         "ERROR: there should be closed lumis for run 176161 and stream A")
+        self.assertEqual(sorted(runStreamLumiDict[176161]['A'].keys()), range(1,24),
+                         "ERROR: there should be closed lumis for run 176161, stream A and lumi 1 to 23")
+
+        for lumi in range(1,24):
+            self.assertEqual(runStreamLumiDict[176161]['A'][lumi], 14,
+                             "ERROR: there should be 14 closed lumis for run 176161, stream A and lumi %d" % lumi)
+
+        self.insertRunStreamLumi(176161, "HLTMON", 1)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "HLTMON")
+
+        RunLumiCloseoutAPI.closeLumiSections(dbInterfaceStorageManager)
+
+        runStreamLumiDict = self.getClosedLumis()
+        self.assertEqual(runStreamLumiDict.keys(), [176161],
+                         "ERROR: there should be closed lumis for run 176161")
+        self.assertEqual(sorted(runStreamLumiDict[176161].keys()), ['A', 'HLTMON'],
+                         "ERROR: there should be closed lumis for run 176161 and stream A and HLTMON")
+        self.assertEqual(sorted(runStreamLumiDict[176161]['A'].keys()), range(1,24),
+                         "ERROR: there should be closed lumis for run 176161, stream A and lumi 1 to 23")
+        self.assertEqual(sorted(runStreamLumiDict[176161]['HLTMON'].keys()), range(1,24),
+                         "ERROR: there should be closed lumis for run 176161, stream HLTMON and lumi 1 to 23")
+
+        for lumi in range(1,24):
+            self.assertEqual(runStreamLumiDict[176161]['A'][lumi], 14,
+                             "ERROR: there should be 14 closed lumis for run 176161, stream A and lumi %d" % lumi)
+
+        self.assertEqual(runStreamLumiDict[176161]['HLTMON'][1], 9,
+                         "ERROR: there should be 9 closed lumis for run 176161, stream HLTMON and lumi 1")
+        self.assertEqual(runStreamLumiDict[176161]['HLTMON'][2], 1,
+                         "ERROR: there should be 1 closed lumis for run 176161, stream HLTMON and lumi 2")
+        for lumi in range(3,23):
+            self.assertEqual(runStreamLumiDict[176161]['HLTMON'][lumi], 14,
+                             "ERROR: there should be 14 closed lumis for run 176161, stream HLTMON and lumi %d" % lumi)
+        self.assertEqual(runStreamLumiDict[176161]['HLTMON'][23], 6,
+                         "ERROR: there should be 6 closed lumis for run 176161, stream HLTMON and lumi 23")
 
         return
 
