@@ -1059,7 +1059,51 @@ class Tier0FeederTest(unittest.TestCase):
 
         return runStreamLumiDict
 
+    def getEndedRuns(self):
+        """
+        _getEndedRuns_
 
+        helper function that retrieves the ended runs
+
+        """
+        myThread = threading.currentThread()
+
+        results = myThread.dbi.processData("""SELECT run_id, lumicount
+                                              FROM run
+                                              WHERE end_time > 0
+                                              """, transaction = False)[0].fetchall()
+
+        runLumiDict = {}
+        for result in results:
+            runLumiDict[result[0]] = result[1]
+
+        return runLumiDict
+
+    def getClosedRunStreamFilesets(self):
+        """
+        _getClosedRunStreamFilesets_
+
+        helper function that retrieves closed run/stream filesets
+
+        """
+        myThread = threading.currentThread()
+
+        results = myThread.dbi.processData("""SELECT run_stream_fileset_assoc.run_id,
+                                                     stream.name
+                                              FROM run_stream_fileset_assoc
+                                              INNER JOIN wmbs_fileset ON
+                                                wmbs_fileset.id = run_stream_fileset_assoc.fileset AND
+                                                wmbs_fileset.open = 0
+                                              INNER JOIN stream ON
+                                                stream.id = run_stream_fileset_assoc.stream_id
+                                              """, transaction = False)[0].fetchall()
+
+        runStreamDict = {}
+        for result in results:
+            runStreamDict[result[0]] = result[1]
+
+        return runStreamDict
+                                              
 
     def test00(self):
         """
@@ -1356,11 +1400,10 @@ class Tier0FeederTest(unittest.TestCase):
         """
         _test01_
 
-        Test the interaction with StorageManager DB to close lumis
+        Test the interaction with StorageManager DB to end runs and close lumis
         for real run examples with full run and run/stream configuration
 
         """
-
         dbInterfaceStorageManager = None
         if os.environ.has_key('WMAGENT_CONFIG'):
 
@@ -1374,19 +1417,30 @@ class Tier0FeederTest(unittest.TestCase):
 
             else:
                 print "Your config is missing the StorageManagerDatabase section"
-                print "Skipping lumi closing test"
+                print "Skipping run/lumi closing test"
                 return
 
         else:
             print "You do not have WMAGENT_CONFIG in your environment"
-            print "Skipping lumi closing test"
+            print "Skipping run/lumi closing test"
             return
+
+        RunLumiCloseoutAPI.endRuns(dbInterfaceStorageManager)
+        self.assertEqual(len(self.getEndedRuns()), 0,
+                         "ERROR: there should be no ended runs")
 
         RunLumiCloseoutAPI.closeLumiSections(dbInterfaceStorageManager)
         self.assertEqual(len(self.getClosedLumis()), 0,
                          "ERROR: there should be no closed lumis")
 
         self.insertRun(176161)
+
+        RunLumiCloseoutAPI.endRuns(dbInterfaceStorageManager)
+        endedRuns = self.getEndedRuns()
+        self.assertEqual(endedRuns.keys(), [176161],
+                         "ERROR: there should be 1 ended run: 176161")
+        self.assertEqual(endedRuns[176161], 23,
+                         "ERROR: there should be 23 lumis in run 176161")
 
         RunLumiCloseoutAPI.closeLumiSections(dbInterfaceStorageManager)
         self.assertEqual(len(self.getClosedLumis()), 0,
@@ -1450,6 +1504,81 @@ class Tier0FeederTest(unittest.TestCase):
                              "ERROR: there should be 14 closed lumis for run 176161, stream HLTMON and lumi %d" % lumi)
         self.assertEqual(runStreamLumiDict[176161]['HLTMON'][23], 6,
                          "ERROR: there should be 6 closed lumis for run 176161, stream HLTMON and lumi 23")
+
+        return
+
+
+    def test02(self):
+        """
+        _test02_
+
+        Test closeout code for run/stream filesets
+
+        """
+        dbInterfaceStorageManager = None
+        if os.environ.has_key('WMAGENT_CONFIG'):
+
+            wmAgentConfig = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
+            if hasattr(wmAgentConfig, "StorageManagerDatabase"):
+
+                connectUrl = getattr(wmAgentConfig.StorageManagerDatabase, "connectUrl", None)
+
+                dbFactory = DBFactory(logging, dburl = connectUrl, options = {})
+                dbInterfaceStorageManager = dbFactory.connect()
+
+            else:
+                print "Your config is missing the StorageManagerDatabase section"
+                print "Skipping run/lumi closing test"
+                return
+
+        else:
+            print "You do not have WMAGENT_CONFIG in your environment"
+            print "Skipping run/lumi closing test"
+            return
+
+        RunLumiCloseoutAPI.closeRunStreamFilesets()
+        self.assertEqual(len(self.getClosedRunStreamFilesets()), 0,
+                         "ERROR: there should be no closed run/stream filesets")
+
+        self.insertRun(176161)
+        for count in range(14):
+            self.insertRunStreamLumi(176161, "A", 1)
+
+        RunConfigAPI.configureRun(self.tier0Config, 176161, self.hltConfig,
+                                  { 'process' : "HLT",
+                                    'mapping' : self.referenceMapping })
+
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A")
+
+        RunLumiCloseoutAPI.endRuns(dbInterfaceStorageManager)
+        RunLumiCloseoutAPI.closeLumiSections(dbInterfaceStorageManager)
+        
+        RunLumiCloseoutAPI.closeRunStreamFilesets()
+        self.assertEqual(len(self.getClosedRunStreamFilesets()), 0,
+                         "ERROR: there should be no closed run/stream filesets")
+
+        self.feedStreamersDAO.execute(transaction = False)
+
+        RunLumiCloseoutAPI.closeRunStreamFilesets()
+        self.assertEqual(len(self.getClosedRunStreamFilesets()), 0,
+                         "ERROR: there should be no closed run/stream filesets")
+
+        for lumi in range(2,24):
+            for count in range(14):
+                self.insertRunStreamLumi(176161, "A", lumi)
+
+        RunLumiCloseoutAPI.endRuns(dbInterfaceStorageManager)
+        RunLumiCloseoutAPI.closeLumiSections(dbInterfaceStorageManager)
+
+        RunLumiCloseoutAPI.closeRunStreamFilesets()
+        self.assertEqual(len(self.getClosedRunStreamFilesets()), 0,
+                         "ERROR: there should be no closed run/stream filesets")
+
+        self.feedStreamersDAO.execute(transaction = False)
+
+        RunLumiCloseoutAPI.closeRunStreamFilesets()
+        self.assertEqual(self.getClosedRunStreamFilesets(), { 176161 : 'A' },
+                         "ERROR: there should be 1 closed run/stream filesets for run 176161 and stream A")
 
         return
 

@@ -117,7 +117,12 @@ class Tier0FeederPoller(BaseWorkerThread):
                         logging.exception("Can't configure for run %d and stream %s" % (run, stream))
 
         #
-        # close stream/lumis for run/streams that are configured and where the run is active
+        # end runs which are active and have ended according to the EoR StorageManager records
+        #
+        RunLumiCloseoutAPI.endRuns(self.dbInterfaceStorageManager)
+
+        #
+        # close stream/lumis for run/streams that are active (fileset exists and open)
         #
         RunLumiCloseoutAPI.closeLumiSections(self.dbInterfaceStorageManager)
 
@@ -129,6 +134,13 @@ class Tier0FeederPoller(BaseWorkerThread):
         except:
             logging.exception("Can't feed data, bailing out...")
             raise
+
+        #
+        # run ended and run/stream fileset open
+        #    => check for complete lumi_closed record, all lumis finally closed and all data feed
+        #          => if all conditions satisfied, close the run/stream fileset
+        #
+        RunLumiCloseoutAPI.closeRunStreamFilesets()
 
         return
 
