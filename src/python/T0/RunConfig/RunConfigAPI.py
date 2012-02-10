@@ -114,7 +114,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
 
     return
 
-def configureRunStream(tier0Config, run, stream):
+def configureRunStream(tier0Config, workloadDirectory, run, stream):
     """
     _configureRunStream_
 
@@ -191,7 +191,8 @@ def configureRunStream(tier0Config, run, stream):
         if streamConfig.ProcessingStyle == "Bulk":
 
             taskName = "Repack"
-            wmSpec = repackWorkload("TestWorkload", getRepackArguments())
+            workflowName = "Repack_Run%d_Stream%s" % (run, stream)
+            wmSpec = repackWorkload(taskName, getRepackArguments())
 
             bindsRepackConfig = { 'RUN' : run,
                                   'STREAM' : stream,
@@ -200,7 +201,8 @@ def configureRunStream(tier0Config, run, stream):
         elif streamConfig.ProcessingStyle == "Express":
 
             taskName = "Express"
-            wmSpec = expressWorkload("TestWorkload", getExpressArguments())
+            workflowName = "Express_Run%d_Stream%s" % (run, stream)
+            wmSpec = expressWorkload(taskName, getExpressArguments())
 
             writeSkims = None
             if len(streamConfig.Express.Producers) > 0:
@@ -364,10 +366,9 @@ def configureRunStream(tier0Config, run, stream):
 ##                                    None, "T2_CH_CAF", None, False)
 
         
-        wmSpec.setSpecUrl("somespec")
         wmSpec.setOwnerDetails("Dirk.Hufnagel@cern.ch", "T0",
                                { 'vogroup': 'DEFAULT', 'vorole': 'DEFAULT' } )
-        wmbsHelper = WMBSHelper(wmSpec, taskName)
+        wmbsHelper = WMBSHelper(wmSpec, taskName, cachepath = workloadDirectory)
 
         filesetName = "Run%d_Stream%s" % (run, stream)
         fileset = Fileset(filesetName)

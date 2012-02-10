@@ -9,14 +9,19 @@ from WMCore.Database.DBFormatter import DBFormatter
 
 class InsertSplitLumis(DBFormatter):
 
-    sql = """INSERT INTO lumi_section_split_active
-             (RUN_ID, LUMI_ID, STREAM_ID)
-             SELECT run_stream_fileset_assoc.run_id,
-                    :lumi,
-                    run_stream_fileset_assoc.stream_id
-             FROM run_stream_fileset_assoc
-             WHERE run_stream_fileset_assoc.fileset =
-               (SELECT fileset FROM wmbs_subscription WHERE id = :sub)
+    sql = """MERGE INTO lumi_section_split_active a
+             USING (
+               SELECT run_id AS run_id,
+                      stream_id AS stream_id,
+                      :LUMI AS lumi
+               FROM run_stream_fileset_assoc
+               WHERE fileset =
+                 (SELECT fileset FROM wmbs_subscription WHERE id = :SUB)
+             ) b ON ( b.run_id = a.run_ID AND
+                      b.stream_id = a.stream_id )
+             WHEN NOT MATCHED THEN
+               INSERT (a.run_id, a.stream_id, a.lumi_id)
+               VALUES (b.run_id, b.stream_id, b.lumi)
              """
 
     def execute(self, binds, conn = None, transaction = False):

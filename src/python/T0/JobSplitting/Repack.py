@@ -144,8 +144,8 @@ class Repack(JobFactory):
             if lumiSizeTotal > self.maxStreamerSizeSingleLumi or \
                    lumiEventsTotal > self.maxStreamerEventsSingleLumi:
 
-                splitLumis.append( { 'sub' : self.subscription["id"],
-                                     'lumi' : lumi } )
+                splitLumis.append( { 'SUB' : self.subscription["id"],
+                                     'LUMI' : lumi } )
 
                 # repack what we have to preserve order
                 if len(jobStreamerList) > 0:

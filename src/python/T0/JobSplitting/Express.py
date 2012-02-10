@@ -99,8 +99,8 @@ class Express(JobFactory):
                             streamerList.append(streamer)
 
                 if createdJob:
-                    splitLumis.append( { 'sub' : self.subscription["id"],
-                                         'lumi' : lumi } )
+                    splitLumis.append( { 'SUB' : self.subscription["id"],
+                                         'LUMI' : lumi } )
 
                 self.createJob(streamerList)
                 createdJob = True

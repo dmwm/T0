@@ -38,15 +38,15 @@ class CloseRunStreamFilesets(DBFormatter):
                               END) = MAX(lumi_section_closed.lumi_id)
                    AND MAX(lumi_section_closed.lumi_id) = MAX(run.lumicount)
                  ) b ON ( b.fileset = a.id )
-                 WHEN MATCHED THEN UPDATE
-                 SET a.open = 0,
-                     a.last_update = :CLOSE_TIME
-                 WHERE NOT EXISTS (
-                   SELECT * FROM streamer
-                   WHERE checkForZeroState(used) = 0
-                   AND run_id = b.run_id
-                   AND stream_id = b.stream_id
-                 )
+                 WHEN MATCHED THEN
+                   UPDATE SET a.open = 0,
+                              a.last_update = :CLOSE_TIME
+                   WHERE NOT EXISTS (
+                     SELECT * FROM streamer
+                     WHERE checkForZeroState(used) = 0
+                     AND run_id = b.run_id
+                     AND stream_id = b.stream_id
+                   )
                  """
 
         binds = { 'CLOSE_TIME' : int(time.time()) }

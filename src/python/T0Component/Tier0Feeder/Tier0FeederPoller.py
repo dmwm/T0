@@ -40,6 +40,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                                      dbinterface = myThread.dbi)
 
         self.tier0ConfigFile = config.Tier0Feeder.tier0ConfigFile
+        self.workloadDirectory = config.Tier0Feeder.workloadDirectory
 
         hltConfConnectUrl = config.HLTConfDatabase.connectUrl
         dbFactoryHltConf = DBFactory(logging, dburl = hltConfConnectUrl, options = {})
@@ -112,7 +113,7 @@ class Tier0FeederPoller(BaseWorkerThread):
             for run in sorted(runStreams.keys()):
                 for stream in sorted(runStreams[run]):
                     try:
-                        RunConfigAPI.configureRunStream(tier0Config, run, stream)
+                        RunConfigAPI.configureRunStream(tier0Config, self.workloadDirectory, run, stream)
                     except:
                         logging.exception("Can't configure for run %d and stream %s" % (run, stream))
 

@@ -104,7 +104,7 @@ class ExpressWorkloadFactory(StdBase):
         expressTask.setSiteWhitelist(self.siteWhitelist)
         expressTask.setSiteBlacklist(self.siteBlacklist)
 
-        newSplitArgs = {}
+        newSplitArgs = { 'algo_package' : "T0.JobSplitting" }
         for argName in self.procJobSplitArgs.keys():
             newSplitArgs[str(argName)] = self.procJobSplitArgs[argName]
 
