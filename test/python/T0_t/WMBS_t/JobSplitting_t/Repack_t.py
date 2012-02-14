@@ -50,6 +50,11 @@ class RepackTest(unittest.TestCase):
                                 logger = logging,
                                 dbinterface = myThread.dbi)
 
+        myThread.dbi.processData("""INSERT INTO wmbs_location
+                                    (id, site_name, se_name)
+                                    VALUES (wmbs_location_SEQ.nextval, 'SomeSite', 'SomeSE')
+                                    """, transaction = False)
+
         # keep for later
         #self.insertRunStreamSubAssocDAO = daoFactory(classname = "RunConfig.InsertRunStreamSubAssoc")
         self.getSplitLumisDAO = daoFactory(classname = "JobSplitting.GetSplitLumis")
@@ -80,6 +85,7 @@ class RepackTest(unittest.TestCase):
         for i in range(8):
             newFile = File(makeUUID(), size = 1000, events = 100)
             newFile.addRun(Run(1, *[1 + i/2]))
+            newFile.setLocation("SomeSE", immediateSave = False)
             newFile.create()
             fileset1.addFile(newFile)
         fileset1.commit()
@@ -154,6 +160,7 @@ class RepackTest(unittest.TestCase):
         for i in range(8):
             newFile = File(makeUUID(), size = 1000, events = 100)
             newFile.addRun(Run(1, *[1 + i/2]))
+            newFile.setLocation("SomeSE", immediateSave = False)
             newFile.create()
             fileset1.addFile(newFile)
         fileset1.commit()
@@ -222,6 +229,7 @@ class RepackTest(unittest.TestCase):
         for i in range(8):
             newFile = File(makeUUID(), size = 1000, events = 100)
             newFile.addRun(Run(1, *[1]))
+            newFile.setLocation("SomeSE", immediateSave = False)
             newFile.create()
             fileset1.addFile(newFile)
         fileset1.commit()
@@ -280,6 +288,7 @@ class RepackTest(unittest.TestCase):
         for i in range(8):
             newFile = File(makeUUID(), size = 1000, events = 100)
             newFile.addRun(Run(1, *[1]))
+            newFile.setLocation("SomeSE", immediateSave = False)
             newFile.create()
             fileset1.addFile(newFile)
         fileset1.commit()
@@ -338,6 +347,7 @@ class RepackTest(unittest.TestCase):
         for i in range(8):
             newFile = File(makeUUID(), size = 1000, events = 100)
             newFile.addRun(Run(1, *[1 + i/2]))
+            newFile.setLocation("SomeSE", immediateSave = False)
             newFile.create()
             fileset1.addFile(newFile)
         fileset1.commit()

@@ -242,4 +242,6 @@ class Repack(JobFactory):
         self.newJob(name = "%s-%s" % (self.jobNamePrefix, makeUUID()))
 
         for streamer in streamerList:
-            self.currentJob.addFile( File(id = streamer['id']) )
+            f = File(id = streamer['id'])
+            f.setLocation(streamer['location'], immediateSave = False)
+            self.currentJob.addFile(f)

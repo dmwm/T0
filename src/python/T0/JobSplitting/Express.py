@@ -10,8 +10,8 @@ import threading
 from WMCore.WMBS.File import File
 
 from WMCore.JobSplitting.JobFactory import JobFactory
-from WMCore.Services.UUID import makeUUID
 from WMCore.DAOFactory import DAOFactory
+from WMCore.Services.UUID import makeUUID
 
 
 class Express(JobFactory):
@@ -129,4 +129,6 @@ class Express(JobFactory):
         self.newJob(name = "%s-%s" % (self.jobNamePrefix, makeUUID()))
 
         for streamer in streamerList:
-            self.currentJob.addFile( File(id = streamer['id']) )
+            f = File(id = streamer['id'])
+            f.setLocation(streamer['location'], immediateSave = False)
+            self.currentJob.addFile(f)
