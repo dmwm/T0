@@ -31,18 +31,19 @@ def getTestArguments():
     arguments = {
         "AcquisitionEra": "Tier0Commissioning11",
         "Requestor": "Dirk.Hufnagel@cern.ch",
-        "CMSSWVersion": "CMSSW_4_4_2",
+
         "ScramArch": "slc5_amd64_gcc434",
-        "ProcessingVersion": "v1",
         
         "CouchURL": os.environ.get("COUCHURL", None),
         "CouchDBName": "scf_wmagent_configcache",
-        
-        "ProcScenario": "cosmics",
-        #"ProcConfigCacheID": "03da10e20c7b98c79f9d6a5c8900f83b",
 
+        # these must be overridden
+        "CMSSWVersion": None,
+        "ProcessingVersion": None,
+        "ProcScenario": None,
         "GlobalTag" : None,
 
+        # optional for now
         "Multicore" : None,
         }
 
@@ -126,7 +127,7 @@ class ExpressWorkloadFactory(StdBase):
                                                        )
 
         self.addOutputModule(expressTask,
-                             "write_FEVT",
+                             "outputFEVTFEVT",
                              "FakePrimaryDataset",
                              "FEVT",
                              None)
@@ -203,13 +204,8 @@ class ExpressWorkloadFactory(StdBase):
         self.requireValidateFields(fields = requiredFields,
                                    schema = schema,
                                    validate = False)
-        if schema.has_key('ProcConfigCacheID') and schema.has_key('CouchURL') and schema.has_key('CouchDBName'):
-            outMod = self.validateConfigCacheExists(configID = schema['ProcConfigCacheID'],
-                                                    couchURL = schema["CouchURL"],
-                                                    couchDBName = schema["CouchDBName"],
-                                                    getOutputModules = True)
-        elif not schema.has_key('ProcScenario'):
-            self.raiseValidationException(msg = "No Scenario or Config in Processing Request!")
+        if not schema.has_key('ProcScenario'):
+            self.raiseValidationException(msg = "No Scenario defined!")
             
         return
 

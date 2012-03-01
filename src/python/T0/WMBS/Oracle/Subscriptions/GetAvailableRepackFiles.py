@@ -20,6 +20,7 @@ class GetAvailableRepackFiles(DBFormatter):
                         wmbs_file_runlumi_map.lumi AS lumi,
                         wmbs_file_details.events AS events,
                         wmbs_file_details.filesize AS filesize,
+                        wmbs_file_details.lfn AS lfn,
                         wmbs_location.se_name AS location
                  FROM wmbs_sub_files_available
                  INNER JOIN wmbs_file_runlumi_map ON

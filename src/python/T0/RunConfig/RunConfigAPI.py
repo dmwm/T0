@@ -188,11 +188,17 @@ def configureRunStream(tier0Config, workloadDirectory, run, stream):
         #
         # first take care of all stream settings
         #
+        getStreamOnlineVersionDAO = daoFactory(classname = "RunConfig.GetStreamOnlineVersion")
+        onlineVersion = getStreamOnlineVersionDAO.execute(run, stream, transaction = False)
+
         if streamConfig.ProcessingStyle == "Bulk":
 
             taskName = "Repack"
             workflowName = "Repack_Run%d_Stream%s" % (run, stream)
-            wmSpec = repackWorkload(taskName, getRepackArguments())
+            repackArguments = getRepackArguments()
+            repackArguments['CMSSWVersion'] = streamConfig.VersionOverride.get(onlineVersion, onlineVersion)
+            repackArguments['ProcessingVersion'] = streamConfig.Repack.ProcessingVersion
+            wmSpec = repackWorkload(workflowName, repackArguments)
 
             bindsRepackConfig = { 'RUN' : run,
                                   'STREAM' : stream,
@@ -202,7 +208,12 @@ def configureRunStream(tier0Config, workloadDirectory, run, stream):
 
             taskName = "Express"
             workflowName = "Express_Run%d_Stream%s" % (run, stream)
-            wmSpec = expressWorkload(taskName, getExpressArguments())
+            expressArguments = getExpressArguments()
+            expressArguments['CMSSWVersion'] = streamConfig.VersionOverride.get(onlineVersion, onlineVersion)
+            expressArguments['ProcessingVersion'] = streamConfig.Express.ProcessingVersion
+            expressArguments['ProcScenario'] = streamConfig.Express.Scenario
+            expressArguments['GlobalTag'] = streamConfig.Express.GlobalTag
+            wmSpec = expressWorkload(workflowName, expressArguments)
 
             writeSkims = None
             if len(streamConfig.Express.Producers) > 0:
@@ -227,9 +238,6 @@ def configureRunStream(tier0Config, workloadDirectory, run, stream):
             bindsDatasetScenario.append( { 'RUN' : run,
                                            'PRIMDS' : specialDataset,
                                            'SCENARIO' : streamConfig.Express.Scenario } )
-
-        getStreamOnlineVersionDAO = daoFactory(classname = "RunConfig.GetStreamOnlineVersion")
-        onlineVersion = getStreamOnlineVersionDAO.execute(run, stream, transaction = False)
 
         overrideVersion = streamConfig.VersionOverride.get(onlineVersion, None)
         if overrideVersion != None:
