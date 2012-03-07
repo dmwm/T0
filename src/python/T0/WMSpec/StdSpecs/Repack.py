@@ -91,7 +91,6 @@ class RepackWorkloadFactory(StdBase):
         repackTaskStageOut.setStepType("StageOut")
         repackTaskStageOut.setUserDN(None)
         repackTaskStageOut.setAsyncDest(None)
-        repackTaskStageOut.setPublishName(None)
         repackTaskStageOut.setUserRoleAndGroup(self.owner_vogroup, self.owner_vorole)
         repackTaskLogArch = repackTaskCmssw.addStep("logArch1")
         repackTaskLogArch.setStepType("LogArchive")

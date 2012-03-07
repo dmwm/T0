@@ -94,7 +94,6 @@ class ExpressWorkloadFactory(StdBase):
         expressTaskStageOut.setStepType("StageOut")
         expressTaskStageOut.setUserDN(None)
         expressTaskStageOut.setAsyncDest(None)
-        expressTaskStageOut.setPublishName(None)
         expressTaskStageOut.setUserRoleAndGroup(self.owner_vogroup, self.owner_vorole)
         expressTaskLogArch = expressTaskCmssw.addStep("logArch1")
         expressTaskLogArch.setStepType("LogArchive")
