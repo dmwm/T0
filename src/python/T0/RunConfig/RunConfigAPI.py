@@ -375,7 +375,8 @@ def configureRunStream(tier0Config, workloadDirectory, run, stream):
 
         
         wmSpec.setOwnerDetails("Dirk.Hufnagel@cern.ch", "T0",
-                               { 'vogroup': 'DEFAULT', 'vorole': 'DEFAULT' } )
+                               { 'vogroup': 'DEFAULT', 'vorole': 'DEFAULT',
+                                 'dn' : "Dirk.Hufnagel@cern.ch" } )
         wmbsHelper = WMBSHelper(wmSpec, taskName, cachepath = workloadDirectory)
 
         filesetName = "Run%d_Stream%s" % (run, stream)
