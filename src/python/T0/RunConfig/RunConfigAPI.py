@@ -186,6 +186,11 @@ def configureRunStream(tier0Config, workloadDirectory, run, stream):
         bindsPromptSkimConfig = []
 
         #
+        # for spec creation, details for all outputs
+        #
+        outputModuleDetails = []
+
+        #
         # first take care of all stream settings
         #
         getStreamOnlineVersionDAO = daoFactory(classname = "RunConfig.GetStreamOnlineVersion")
@@ -193,40 +198,11 @@ def configureRunStream(tier0Config, workloadDirectory, run, stream):
 
         if streamConfig.ProcessingStyle == "Bulk":
 
-            taskName = "Repack"
-            workflowName = "Repack_Run%d_Stream%s" % (run, stream)
-            repackArguments = getRepackArguments()
-            repackArguments['CMSSWVersion'] = streamConfig.VersionOverride.get(onlineVersion, onlineVersion)
-            repackArguments['ProcessingVersion'] = streamConfig.Repack.ProcessingVersion
-            wmSpec = repackWorkload(workflowName, repackArguments)
-
             bindsRepackConfig = { 'RUN' : run,
                                   'STREAM' : stream,
                                   'PROC_VER': streamConfig.Repack.ProcessingVersion }
 
         elif streamConfig.ProcessingStyle == "Express":
-
-            taskName = "Express"
-            workflowName = "Express_Run%d_Stream%s" % (run, stream)
-            expressArguments = getExpressArguments()
-            expressArguments['CMSSWVersion'] = streamConfig.VersionOverride.get(onlineVersion, onlineVersion)
-            expressArguments['ProcessingVersion'] = streamConfig.Express.ProcessingVersion
-            expressArguments['ProcScenario'] = streamConfig.Express.Scenario
-            expressArguments['GlobalTag'] = streamConfig.Express.GlobalTag
-            wmSpec = expressWorkload(workflowName, expressArguments)
-
-            writeSkims = None
-            if len(streamConfig.Express.Producers) > 0:
-                writeSkims = ",".join(streamConfig.Express.Producers)
-
-            bindsExpressConfig = { 'RUN' : run,
-                                   'STREAM' : stream,
-                                   'PROC_VER' : streamConfig.Express.ProcessingVersion,
-                                   'WRITE_TIERS' : ",".join(streamConfig.Express.DataTiers),
-                                   'WRITE_SKIMS' : writeSkims,
-                                   'GLOBAL_TAG' : streamConfig.Express.GlobalTag,
-                                   'PROC_URL' : streamConfig.Express.ProcessingConfigURL,
-                                   'MERGE_URL' : streamConfig.Express.AlcaMergeConfigURL }
 
             specialDataset = "Stream%s" % stream
             bindsDataset.append( { 'PRIMDS' : specialDataset } )
@@ -238,6 +214,29 @@ def configureRunStream(tier0Config, workloadDirectory, run, stream):
             bindsDatasetScenario.append( { 'RUN' : run,
                                            'PRIMDS' : specialDataset,
                                            'SCENARIO' : streamConfig.Express.Scenario } )
+
+            if "DQM" in streamConfig.Express.DataTiers:
+                outputModuleDetails.append( { 'dataTier' : "DQM",
+                                              'eventContent' : "DQM",
+                                              'primaryDataset' : specialDataset } )
+
+            writeSkims = None
+            if "ALCARECO" in streamConfig.Express.DataTiers:
+                if len(streamConfig.Express.Producers) > 0:
+                    outputModuleDetails.append( { 'dataTier' : "ALCARECO",
+                                                  'eventContent' : "ALCARECO",
+                                                  'primaryDataset' : specialDataset } )
+                    writeSkims = ",".join(streamConfig.Express.Producers)
+
+            bindsExpressConfig = { 'RUN' : run,
+                                   'STREAM' : stream,
+                                   'PROC_VER' : streamConfig.Express.ProcessingVersion,
+                                   'WRITE_TIERS' : ",".join(streamConfig.Express.DataTiers),
+                                   'WRITE_SKIMS' : writeSkims,
+                                   'GLOBAL_TAG' : streamConfig.Express.GlobalTag,
+                                   'PROC_URL' : streamConfig.Express.ProcessingConfigURL,
+                                   'MERGE_URL' : streamConfig.Express.AlcaMergeConfigURL }
+
 
         overrideVersion = streamConfig.VersionOverride.get(onlineVersion, None)
         if overrideVersion != None:
@@ -252,11 +251,26 @@ def configureRunStream(tier0Config, workloadDirectory, run, stream):
         getStreamDatasetsDAO = daoFactory(classname = "RunConfig.GetStreamDatasets")
         datasets = getStreamDatasetsDAO.execute(run, stream, transaction = False)
 
+        getRunInfoDAO = daoFactory(classname = "RunConfig.GetRunInfo")
+        runInfo = getRunInfoDAO.execute(run, transaction = False)[0]
+
+        getStreamDatasetTriggersDAO = daoFactory(classname = "RunConfig.GetStreamDatasetTriggers")
+        datasetTriggers = getStreamDatasetTriggersDAO.execute(run, stream, transaction = False)[stream]
+
         for dataset in datasets:
 
             datasetConfig = retrieveDatasetConfig(tier0Config, dataset)
 
+            selectEvents = []
+            for path in datasetTriggers[datasetConfig.Name]:
+                selectEvents.append("%s:%s" % (path, runInfo['process']))
+
             if streamConfig.ProcessingStyle == "Bulk":
+
+                outputModuleDetails.append( { 'dataTier' : "RAW",
+                                              'eventContent' : "ALL",
+                                              'selectEvents' : selectEvents,
+                                              'primaryDataset' : datasetConfig.Name } )
 
                 bindsDatasetScenario.append( { 'RUN' : run,
                                                'PRIMDS' : datasetConfig.Name,
@@ -365,15 +379,55 @@ def configureRunStream(tier0Config, workloadDirectory, run, stream):
                                                     'GLOBAL_TAG' : tier1Skim.GlobalTag,
                                                     "CONFIG_URL" : tier1Skim.ConfigURL } )
 
-##             elif streamConfig.ProcessingStyle == "Express":
+            elif streamConfig.ProcessingStyle == "Express":
 
-##                 insertPhEDExConfig(dbConn, runNumber, datasetConfig.Name,
-##                                    None, "T2_CH_CAF", None, False)
+                for dataTier in streamConfig.Express.DataTiers:
+                    if dataTier not in [ "ALCARECO", "DQM" ]:
+                        outputModuleDetails.append( { 'dataTier' : dataTier,
+                                                      'eventContent' : dataTier,
+                                                      'selectEvents' : selectEvents,
+                                                      'primaryDataset' : datasetConfig.Name } )
 
-##                 insertPhEDExConfig(dbConn, runNumber, errorDataset,
-##                                    None, "T2_CH_CAF", None, False)
+                #insertPhEDExConfig(dbConn, runNumber, datasetConfig.Name,
+                #                   None, "T2_CH_CAF", None, False)
 
-        
+                #insertPhEDExConfig(dbConn, runNumber, errorDataset,
+                #                   None, "T2_CH_CAF", None, False)
+
+
+
+
+        #
+        # finally create WMSpec
+        #
+        outputs = {}
+        if streamConfig.ProcessingStyle == "Bulk":
+            taskName = "Repack"
+            workflowName = "Repack_Run%d_Stream%s" % (run, stream)
+            specArguments = getRepackArguments()
+            specArguments['ProcessingVersion'] = streamConfig.Repack.ProcessingVersion
+            specArguments['UnmergedLFNBase'] = "/store/backfill/1/t0temp/data"
+            specArguments['MergedLFNBase'] = "/store/backfill/1/data"
+        elif streamConfig.ProcessingStyle == "Express":
+            taskName = "Express"
+            workflowName = "Express_Run%d_Stream%s" % (run, stream)
+            specArguments = getExpressArguments()
+            specArguments['ProcessingVersion'] = streamConfig.Express.ProcessingVersion
+            specArguments['ProcScenario'] = streamConfig.Express.Scenario
+            specArguments['GlobalTag'] = streamConfig.Express.GlobalTag
+            specArguments['GlobalTagTransaction'] = "Express_%d" % run
+            specArguments['AlcaSkims'] = streamConfig.Express.Producers
+            specArguments['UnmergedLFNBase'] = "/store/backfill/1/t0temp/express"
+            specArguments['MergedLFNBase'] = "/store/backfill/1/express"
+
+        specArguments['CMSSWVersion'] = streamConfig.VersionOverride.get(onlineVersion, onlineVersion)
+	specArguments['Outputs'] = outputModuleDetails
+
+        if streamConfig.ProcessingStyle == "Bulk":
+            wmSpec = repackWorkload(workflowName, specArguments)
+        elif streamConfig.ProcessingStyle == "Express":
+            wmSpec = expressWorkload(workflowName, specArguments)
+
         wmSpec.setOwnerDetails("Dirk.Hufnagel@cern.ch", "T0",
                                { 'vogroup': 'DEFAULT', 'vorole': 'DEFAULT',
                                  'dn' : "Dirk.Hufnagel@cern.ch" } )

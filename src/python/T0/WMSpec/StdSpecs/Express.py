@@ -29,19 +29,19 @@ def getTestArguments():
     to hunt you down and kill you.
     """
     arguments = {
-        "AcquisitionEra": "Tier0Commissioning11",
-        "Requestor": "Dirk.Hufnagel@cern.ch",
+        "AcquisitionEra" : "Tier0Testing",
+        "Requestor" : "Dirk.Hufnagel@cern.ch",
 
-        "ScramArch": "slc5_amd64_gcc434",
+        "ScramArch" : "slc5_amd64_gcc462",
         
-        "CouchURL": os.environ.get("COUCHURL", None),
-        "CouchDBName": "scf_wmagent_configcache",
-
         # these must be overridden
-        "CMSSWVersion": None,
-        "ProcessingVersion": None,
-        "ProcScenario": None,
+        "CMSSWVersion" : None,
+        "ProcessingVersion" : None,
+        "ProcScenario" : None,
         "GlobalTag" : None,
+        "GlobalTagTransaction" : None,
+        "Outputs" : None,
+        "AlcaSkims" : None,
 
         # optional for now
         "Multicore" : None,
@@ -65,9 +65,7 @@ class ExpressWorkloadFactory(StdBase):
         """
         _buildWorkload_
 
-        Build the workload given all of the input parameters.  At the very least
-        this will create a processing task and merge tasks for all the outputs
-        of the processing task.
+        Build the workload given all of the input parameters.
 
         Not that there will be LogCollect tasks created for each processing
         task and Cleanup tasks created for each merge task.
@@ -79,63 +77,58 @@ class ExpressWorkloadFactory(StdBase):
         cmsswStepType = "CMSSW"
         taskType = "Processing"
         if self.multicore:
-            cmsswStepType = "MulticoreCMSSW"
             taskType = "MultiProcessing"
 
+        # complete output configuration
+        # figure out alca primary dataset
+        alcaPrimaryDataset = None
+        for output in self.outputs:
+            output['filterName'] = "Express"
+            output['moduleLabel'] = "write_%s_%s" % (output['primaryDataset'],
+                                                     output['dataTier'])
+            if output['dataTier'] == "ALCARECO":
+                alcaPrimaryDataset = output['primaryDataset']
+
         #
-        # setup express processing task
+        # different datasets for different outputs, how to handle ?
+        # self.inputDataset replacement
         #
         expressTask = workload.newTask("Express")
-        self.addDashboardMonitoring(expressTask)
-
-        expressTaskCmssw = expressTask.makeStep("cmsRun1")
-        expressTaskCmssw.setStepType(cmsswStepType)
-        expressTaskStageOut = expressTaskCmssw.addStep("stageOut1")
-        expressTaskStageOut.setStepType("StageOut")
-        expressTaskStageOut.setUserDN(None)
-        expressTaskStageOut.setAsyncDest(None)
-        expressTaskStageOut.setUserRoleAndGroup(self.owner_vogroup, self.owner_vorole)
-        expressTaskLogArch = expressTaskCmssw.addStep("logArch1")
-        expressTaskLogArch.setStepType("LogArchive")
-        expressTask.applyTemplates()
-        expressTask.setTaskPriority(self.priority)
-
-        expressTask.setTaskLogBaseLFN(self.unmergedLFNBase)
-        expressTask.setSiteWhitelist(self.siteWhitelist)
-        expressTask.setSiteBlacklist(self.siteBlacklist)
-
-        newSplitArgs = { 'algo_package' : "T0.JobSplitting" }
-        for argName in self.procJobSplitArgs.keys():
-            newSplitArgs[str(argName)] = self.procJobSplitArgs[argName]
-
-        expressTask.setSplittingAlgorithm(self.procJobSplitAlgo, **newSplitArgs)
-        expressTask.setTaskType(taskType)
-
-        expressTaskCmsswHelper = expressTaskCmssw.getTypeHelper()
-        expressTaskCmsswHelper.setUserSandbox(None)
-        expressTaskCmsswHelper.setUserFiles(None)
-        expressTaskCmsswHelper.setGlobalTag(self.globalTag)
-        expressTaskCmsswHelper.setErrorDestinationStep(stepName = expressTaskLogArch.name())
-        expressTaskCmsswHelper.cmsswSetup(self.frameworkVersion,
-                                          softwareEnvironment = "",
-                                          scramArch = self.scramArch)
-
-        expressTaskCmsswHelper.setDataProcessingConfig(self.procScenario, "expressProcessing",
-                                                       globalTag = self.globalTag,
-                                                       writeTiers = [ 'FEVT' ]
-                                                       )
-
-        self.addOutputModule(expressTask,
-                             "outputFEVTFEVT",
-                             "FakePrimaryDataset",
-                             "FEVT",
-                             None)
-
+        expressOutMods = self.setupProcessingTask(expressTask, taskType,
+                                                  scenarioName = self.procScenario,
+                                                  scenarioFunc = "expressProcessing",
+                                                  scenarioArgs = { 'globalTag' : self.globalTag,
+                                                                   'globalTagTransaction' : self.globalTagTransaction,
+                                                                   'skims' : self.alcaSkims,
+                                                                   'outputs' : self.outputs },
+                                                  splitAlgo = "Express",
+                                                  splitArgs = { 'algo_package' : "T0.JobSplitting" },
+                                                  stepType = cmsswStepType)
         self.addLogCollectTask(expressTask)
-        if self.multicore:
-            cmsswStep = procTask.getStep("cmsRun1")
-            multicoreHelper = cmsswStep.getTypeHelper()
-            multicoreHelper.setMulticoreCores(self.multicoreNCores)
+
+        for expressOutLabel, expressOutInfo in expressOutMods.items():
+            if expressOutInfo['dataTier'] == "ALCARECO":
+                alcaTask = expressTask.addTask("AlcaSkim")
+                alcaOutMods = self.setupProcessingTask(alcaTask, taskType,
+                                                       inputStep = expressTask.getStep("cmsRun1"),
+                                                       inputModule = expressOutLabel,
+                                                       scenarioName = self.procScenario,
+                                                       scenarioFunc = "alcaSkim",
+                                                       scenarioArgs = { 'globalTag' : self.globalTag,
+                                                                        'globalTagTransaction' : self.globalTagTransaction,
+                                                                        'skims' : self.alcaSkims,
+                                                                        'primaryDataset' : alcaPrimaryDataset },
+                                                       splitAlgo = "FileBased",
+                                                       splitArgs = {},
+                                                       stepType = cmsswStepType)
+##                 for alcaOutLabel in alcaOutMods.keys():
+##                     self.addMergeTask(alcaTask,
+##                                       "FileBased",
+##                                       alcaOutLabel)
+##             else:
+##                 self.addMergeTask(expressTask,
+##                                   "FileBased",
+##                                   expressOutLabel)
 
         return workload
 
@@ -150,22 +143,10 @@ class ExpressWorkloadFactory(StdBase):
         # Required parameters that must be specified by the Requestor.
         self.frameworkVersion = arguments["CMSSWVersion"]
         self.globalTag = arguments["GlobalTag"]
-
-        # The CouchURL and name of the ConfigCache database must be passed in
-        # by the ReqMgr or whatever is creating this workflow.
-        self.couchURL = arguments["CouchURL"]
-        self.couchDBName = arguments["CouchDBName"]        
-
-        # One of these parameters must be set.
-        if arguments.has_key("ProdConfigCacheID"):
-            self.procConfigCacheID = arguments["ProdConfigCacheID"]
-        else:
-            self.procConfigCacheID = arguments.get("ProcConfigCacheID", None)
-
-        if arguments.has_key("Scenario"):
-            self.procScenario = arguments.get("Scenario", None)
-        else:
-            self.procScenario = arguments.get("ProcScenario", None)
+	self.globalTagTransaction = arguments["GlobalTagTransaction"]
+        self.procScenario = arguments['ProcScenario']
+        self.alcaSkims = arguments['AlcaSkims']
+        self.outputs = arguments['Outputs']
 
         if arguments.has_key("Multicore"):
             numCores = arguments.get("Multicore")
@@ -186,27 +167,7 @@ class ExpressWorkloadFactory(StdBase):
         self.runWhitelist = arguments.get("RunWhitelist", [])
         self.emulation = arguments.get("Emulation", False)
 
-        # These are mostly place holders because the job splitting algo and
-        # parameters will be updated after the workflow has been created.
-        self.procJobSplitAlgo  = arguments.get("StdJobSplitAlgo", "Express")
-        self.procJobSplitArgs  = arguments.get("StdJobSplitArgs", {})
-
         return self.buildWorkload()
-
-    def validateSchema(self, schema):
-        """
-        _validateSchema_
-        
-        Check for required fields
-        """
-        requiredFields = ["CMSSWVersion", "ScramArch", "GlobalTag"]
-        self.requireValidateFields(fields = requiredFields,
-                                   schema = schema,
-                                   validate = False)
-        if not schema.has_key('ProcScenario'):
-            self.raiseValidationException(msg = "No Scenario defined!")
-            
-        return
 
 def expressWorkload(workloadName, arguments):
     """
