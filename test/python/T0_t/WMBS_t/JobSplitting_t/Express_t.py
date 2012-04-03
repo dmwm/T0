@@ -9,6 +9,7 @@ Express job splitting test
 import unittest
 import threading
 import logging
+import time
 
 from WMCore.WMBS.File import File
 from WMCore.WMBS.Fileset import Fileset
@@ -55,8 +56,26 @@ class ExpressTest(unittest.TestCase):
                                     VALUES (wmbs_location_SEQ.nextval, 'SomeSite', 'SomeSE')
                                     """, transaction = False)
 
+        insertRunDAO = daoFactory(classname = "RunConfig.InsertRun")
+        insertRunDAO.execute(binds = { 'RUN' : 1,
+                                       'TIME' : int(time.time()),
+                                       'HLTKEY' : "someHLTKey" },
+                             transaction = False)
+
+        insertLumiDAO = daoFactory(classname = "RunConfig.InsertLumiSection")
+        insertLumiDAO.execute(binds = { 'RUN' : 1,
+                                        'LUMI' : 1 },
+                              transaction = False)
+        insertLumiDAO.execute(binds = { 'RUN' : 1,
+                                        'LUMI' : 2 },
+                              transaction = False)
+
+        insertStreamDAO = daoFactory(classname = "RunConfig.InsertStream")
+        insertStreamDAO.execute(binds = { 'STREAM' : "A" },
+                                transaction = False)
+
         # keep for later
-        #self.insertRunStreamSubAssocDAO = daoFactory(classname = "RunConfig.InsertRunStreamSubAssoc")
+        self.insertStreamFilesetDAO = daoFactory(classname = "RunConfig.InsertStreamFileset")
         self.getSplitLumisDAO = daoFactory(classname = "JobSplitting.GetSplitLumis")
 
         return
@@ -78,8 +97,10 @@ class ExpressTest(unittest.TestCase):
         Test event threshold (single job creation)
 
         """
+        self.insertStreamFilesetDAO.execute(1, "A", "TestFileset1")
+
         fileset1 = Fileset(name = "TestFileset1")
-        fileset1.create()
+        fileset1.load()
 
         for i in range(2):
             newFile = File(makeUUID(), size = 1000, events = 100)
@@ -94,10 +115,6 @@ class ExpressTest(unittest.TestCase):
                                       split_algo = "Express",
                                       type = "Express")
         subscription1.create()
-
-        #self.insertRunStreamSubAssocDAO.execute(
-        #    binds = { 'run' : 1, 'stream' : 'A', 'sub' : subscription1['id'] }
-        #    )
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = subscription1)
@@ -114,9 +131,9 @@ class ExpressTest(unittest.TestCase):
         self.assertTrue(job['name'].startswith("Express-"),
                         "ERROR: Job has wrong name.")
 
-        #splitLumis = self.getSplitLumisDAO.execute()
-        #self.assertEqual(len(splitLumis), 0,
-        #                 "ERROR: Split lumis were created.")
+        splitLumis = self.getSplitLumisDAO.execute()
+        self.assertEqual(len(splitLumis), 0,
+                         "ERROR: Split lumis were created.")
 
         return
 
@@ -127,8 +144,10 @@ class ExpressTest(unittest.TestCase):
         Test event threshold (multiple job creation)
 
         """
+        self.insertStreamFilesetDAO.execute(1, "A", "TestFileset1")
+
         fileset1 = Fileset(name = "TestFileset1")
-        fileset1.create()
+        fileset1.load()
 
         for i in range(2):
             newFile = File(makeUUID(), size = 1000, events = 100)
@@ -144,10 +163,6 @@ class ExpressTest(unittest.TestCase):
                                       type = "Express")
         subscription1.create()
 
-        #self.insertRunStreamSubAssocDAO.execute(
-        #    binds = { 'run' : 1, 'stream' : 'A', 'sub' : subscription1['id'] }
-        #    )
-
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = subscription1)
 
@@ -156,9 +171,9 @@ class ExpressTest(unittest.TestCase):
         self.assertEqual(len(jobGroups[0].jobs), 2,
                          "ERROR: JobFactory didn't create two jobs.")
 
-        #splitLumis = self.getSplitLumisDAO.execute()
-        #self.assertEqual(len(splitLumis), 1,
-        #                 "ERROR: Didn't create a single split lumi.")
+        splitLumis = self.getSplitLumisDAO.execute()
+        self.assertEqual(len(splitLumis), 1,
+                         "ERROR: Didn't create a single split lumi.")
 
         return
 
@@ -169,8 +184,10 @@ class ExpressTest(unittest.TestCase):
         Test multi lumis
 
         """
+        self.insertStreamFilesetDAO.execute(1, "A", "TestFileset1")
+
         fileset1 = Fileset(name = "TestFileset1")
-        fileset1.create()
+        fileset1.load()
 
         for i in range(2):
             newFile = File(makeUUID(), size = 1000, events = 100)
@@ -186,10 +203,6 @@ class ExpressTest(unittest.TestCase):
                                       type = "Express")
         subscription1.create()
 
-        #self.insertRunStreamSubAssocDAO.execute(
-        #    binds = { 'run' : 1, 'stream' : 'A', 'sub' : subscription1['id'] }
-        #    )
-
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = subscription1)
 
@@ -198,9 +211,9 @@ class ExpressTest(unittest.TestCase):
         self.assertEqual(len(jobGroups[0].jobs), 2,
                          "ERROR: JobFactory didn't create two jobs.")
 
-        #splitLumis = self.getSplitLumisDAO.execute()
-        #self.assertEqual(len(splitLumis), 0,
-        #                 "ERROR: Split lumis were created.")
+        splitLumis = self.getSplitLumisDAO.execute()
+        self.assertEqual(len(splitLumis), 0,
+                         "ERROR: Split lumis were created.")
 
         return
 

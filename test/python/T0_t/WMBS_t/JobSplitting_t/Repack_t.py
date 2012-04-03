@@ -9,6 +9,7 @@ Repack job splitting test
 import unittest
 import threading
 import logging
+import time
 
 from WMCore.WMBS.File import File
 from WMCore.WMBS.Fileset import Fileset
@@ -55,8 +56,32 @@ class RepackTest(unittest.TestCase):
                                     VALUES (wmbs_location_SEQ.nextval, 'SomeSite', 'SomeSE')
                                     """, transaction = False)
 
+        insertRunDAO = daoFactory(classname = "RunConfig.InsertRun")
+        insertRunDAO.execute(binds = { 'RUN' : 1,
+                                       'TIME' : int(time.time()),
+                                       'HLTKEY' : "someHLTKey" },
+                             transaction = False)
+
+        insertLumiDAO = daoFactory(classname = "RunConfig.InsertLumiSection")
+        insertLumiDAO.execute(binds = { 'RUN' : 1,
+                                        'LUMI' : 1 },
+                              transaction = False)
+        insertLumiDAO.execute(binds = { 'RUN' : 1,
+                                        'LUMI' : 2 },
+                              transaction = False)
+        insertLumiDAO.execute(binds = { 'RUN' : 1,
+                                        'LUMI' : 3 },
+                              transaction = False)
+        insertLumiDAO.execute(binds = { 'RUN' : 1,
+                                        'LUMI' : 4 },
+                              transaction = False)
+
+        insertStreamDAO = daoFactory(classname = "RunConfig.InsertStream")
+        insertStreamDAO.execute(binds = { 'STREAM' : "A" },
+                                transaction = False)
+
         # keep for later
-        #self.insertRunStreamSubAssocDAO = daoFactory(classname = "RunConfig.InsertRunStreamSubAssoc")
+        self.insertStreamFilesetDAO = daoFactory(classname = "RunConfig.InsertStreamFileset")
         self.getSplitLumisDAO = daoFactory(classname = "JobSplitting.GetSplitLumis")
 
         return
@@ -79,8 +104,10 @@ class RepackTest(unittest.TestCase):
         Multi lumi input
 
         """
+        self.insertStreamFilesetDAO.execute(1, "A", "TestFileset1")
+
         fileset1 = Fileset(name = "TestFileset1")
-        fileset1.create()
+        fileset1.load()
 
         for i in range(8):
             newFile = File(makeUUID(), size = 1000, events = 100)
@@ -95,10 +122,6 @@ class RepackTest(unittest.TestCase):
                                       split_algo = "Repack",
                                       type = "Repack")
         subscription1.create()
-
-        #self.insertRunStreamSubAssocDAO.execute(
-        #    binds = { 'run' : 1, 'stream' : 'A', 'sub' : subscription1['id'] }
-        #    )
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = subscription1)
@@ -140,9 +163,9 @@ class RepackTest(unittest.TestCase):
         self.assertEqual(len(job.getFiles()), 4,
                          "ERROR: Job does not process 4 files.")
 
-        #splitLumis = self.getSplitLumisDAO.execute()
-        #self.assertEqual(len(splitLumis), 0,
-        #                 "ERROR: Split lumis were created.")
+        splitLumis = self.getSplitLumisDAO.execute()
+        self.assertEqual(len(splitLumis), 0,
+                         "ERROR: Split lumis were created.")
 
         return
 
@@ -154,8 +177,10 @@ class RepackTest(unittest.TestCase):
         Multi lumi input
 
         """
+        self.insertStreamFilesetDAO.execute(1, "A", "TestFileset1")
+
         fileset1 = Fileset(name = "TestFileset1")
-        fileset1.create()
+        fileset1.load()
 
         for i in range(8):
             newFile = File(makeUUID(), size = 1000, events = 100)
@@ -170,10 +195,6 @@ class RepackTest(unittest.TestCase):
                                       split_algo = "Repack",
                                       type = "Repack")
         subscription1.create()
-
-        #self.insertRunStreamSubAssocDAO.execute(
-        #    binds = { 'run' : 1, 'stream' : 'A', 'sub' : subscription1['id'] }
-        #    )
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = subscription1)
@@ -209,9 +230,9 @@ class RepackTest(unittest.TestCase):
         self.assertEqual(len(job.getFiles()), 4,
                          "ERROR: Job does not process 4 files.")
 
-        #splitLumis = self.getSplitLumisDAO.execute()
-        #self.assertEqual(len(splitLumis), 0,
-        #                 "ERROR: Split lumis were created.")
+        splitLumis = self.getSplitLumisDAO.execute()
+        self.assertEqual(len(splitLumis), 0,
+                         "ERROR: Split lumis were created.")
 
         return
 
@@ -223,8 +244,10 @@ class RepackTest(unittest.TestCase):
         Single lumi input
 
         """
+        self.insertStreamFilesetDAO.execute(1, "A", "TestFileset1")
+
         fileset1 = Fileset(name = "TestFileset1")
-        fileset1.create()
+        fileset1.load()
 
         for i in range(8):
             newFile = File(makeUUID(), size = 1000, events = 100)
@@ -239,10 +262,6 @@ class RepackTest(unittest.TestCase):
                                       split_algo = "Repack",
                                       type = "Repack")
         subscription1.create()
-
-        #self.insertRunStreamSubAssocDAO.execute(
-        #    binds = { 'run' : 1, 'stream' : 'A', 'sub' : subscription1['id'] }
-        #    )
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = subscription1)
@@ -268,9 +287,9 @@ class RepackTest(unittest.TestCase):
         self.assertEqual(len(job.getFiles()), 2,
                          "ERROR: Job does not process 2 files.")
 
-        #splitLumis = self.getSplitLumisDAO.execute()
-        #self.assertEqual(len(splitLumis), 1,
-        #                 "ERROR: Split lumis were not created.")
+        splitLumis = self.getSplitLumisDAO.execute()
+        self.assertEqual(len(splitLumis), 1,
+                         "ERROR: Split lumis were not created.")
 
         return
 
@@ -282,8 +301,10 @@ class RepackTest(unittest.TestCase):
         Single lumi input
 
         """
+        self.insertStreamFilesetDAO.execute(1, "A", "TestFileset1")
+
         fileset1 = Fileset(name = "TestFileset1")
-        fileset1.create()
+        fileset1.load()
 
         for i in range(8):
             newFile = File(makeUUID(), size = 1000, events = 100)
@@ -298,10 +319,6 @@ class RepackTest(unittest.TestCase):
                                       split_algo = "Repack",
                                       type = "Repack")
         subscription1.create()
-
-        #self.insertRunStreamSubAssocDAO.execute(
-        #    binds = { 'run' : 1, 'stream' : 'A', 'sub' : subscription1['id'] }
-        #    )
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = subscription1)
@@ -327,9 +344,9 @@ class RepackTest(unittest.TestCase):
         self.assertEqual(len(job.getFiles()), 2,
                          "ERROR: Job does not process 2 files.")
 
-        #splitLumis = self.getSplitLumisDAO.execute()
-        #self.assertEqual(len(splitLumis), 1,
-        #                 "ERROR: Split lumis were not created.")
+        splitLumis = self.getSplitLumisDAO.execute()
+        self.assertEqual(len(splitLumis), 1,
+                         "ERROR: Split lumis were not created.")
 
         return
 
@@ -341,8 +358,10 @@ class RepackTest(unittest.TestCase):
         Multi lumi input
 
         """
+        self.insertStreamFilesetDAO.execute(1, "A", "TestFileset1")
+
         fileset1 = Fileset(name = "TestFileset1")
-        fileset1.create()
+        fileset1.load()
 
         for i in range(8):
             newFile = File(makeUUID(), size = 1000, events = 100)
@@ -357,10 +376,6 @@ class RepackTest(unittest.TestCase):
                                       split_algo = "Repack",
                                       type = "Repack")
         subscription1.create()
-
-        #self.insertRunStreamSubAssocDAO.execute(
-        #    binds = { 'run' : 1, 'stream' : 'A', 'sub' : subscription1['id'] }
-        #    )
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = subscription1)
@@ -396,9 +411,9 @@ class RepackTest(unittest.TestCase):
         self.assertEqual(len(job.getFiles()), 4,
                          "ERROR: Job does not process 4 files.")
 
-        #splitLumis = self.getSplitLumisDAO.execute()
-        #self.assertEqual(len(splitLumis), 0,
-        #                 "ERROR: Split lumis were created.")
+        splitLumis = self.getSplitLumisDAO.execute()
+        self.assertEqual(len(splitLumis), 0,
+                         "ERROR: Split lumis were created.")
 
         return
 
