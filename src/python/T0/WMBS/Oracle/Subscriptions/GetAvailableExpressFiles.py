@@ -4,7 +4,7 @@ _GetAvailableExpressFiles_
 Oracle implementation of GetAvailableExpressFiles
 
 Similar to Subscriptions.GetAvailableFiles,
-except also return run and lumi information
+except also returns lumi information
 """
 
 from WMCore.Database.DBFormatter import DBFormatter

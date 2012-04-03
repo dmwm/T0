@@ -43,9 +43,6 @@ class RepackTest(unittest.TestCase):
 
         self.splitterFactory = SplitterFactory(package = "T0.JobSplitting")
 
-        self.testWorkflow = Workflow(spec = "spec.xml", owner = "mnorman", name = "wf001", task="Test")
-        self.testWorkflow.create()
-
         myThread = threading.currentThread()
         daoFactory = DAOFactory(package = "T0.WMBS",
                                 logger = logging,
@@ -80,8 +77,22 @@ class RepackTest(unittest.TestCase):
         insertStreamDAO.execute(binds = { 'STREAM' : "A" },
                                 transaction = False)
 
+        insertStreamFilesetDAO = daoFactory(classname = "RunConfig.InsertStreamFileset")
+        insertStreamFilesetDAO.execute(1, "A", "TestFileset1")
+
+        self.fileset1 = Fileset(name = "TestFileset1")
+        self.fileset1.load()
+
+        workflow1 = Workflow(spec = "spec.xml", owner = "hufnagel", name = "TestWorkflow1", task="Test")
+        workflow1.create()
+
+        self.subscription1  = Subscription(fileset = self.fileset1,
+                                           workflow = workflow1,
+                                           split_algo = "Repack",
+                                           type = "Repack")
+        self.subscription1.create()
+
         # keep for later
-        self.insertStreamFilesetDAO = daoFactory(classname = "RunConfig.InsertStreamFileset")
         self.getSplitLumisDAO = daoFactory(classname = "JobSplitting.GetSplitLumis")
 
         return
@@ -104,27 +115,16 @@ class RepackTest(unittest.TestCase):
         Multi lumi input
 
         """
-        self.insertStreamFilesetDAO.execute(1, "A", "TestFileset1")
-
-        fileset1 = Fileset(name = "TestFileset1")
-        fileset1.load()
-
         for i in range(8):
             newFile = File(makeUUID(), size = 1000, events = 100)
             newFile.addRun(Run(1, *[1 + i/2]))
             newFile.setLocation("SomeSE", immediateSave = False)
             newFile.create()
-            fileset1.addFile(newFile)
-        fileset1.commit()
-
-        subscription1  = Subscription(fileset = fileset1,
-                                      workflow = self.testWorkflow,
-                                      split_algo = "Repack",
-                                      type = "Repack")
-        subscription1.create()
+            self.fileset1.addFile(newFile)
+        self.fileset1.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
-                                          subscription = subscription1)
+                                          subscription = self.subscription1)
 
         jobGroups = jobFactory(maxStreamerSizeMultiLumi = 9000)
 
@@ -146,7 +146,7 @@ class RepackTest(unittest.TestCase):
         self.assertEqual(len(job.getFiles()), 4,
                          "ERROR: Job does not process 4 files.")
 
-        fileset1.markOpen(False)
+        self.fileset1.markOpen(False)
 
         jobGroups = jobFactory(maxStreamerSizeMultiLumi = 5000)
 
@@ -177,27 +177,16 @@ class RepackTest(unittest.TestCase):
         Multi lumi input
 
         """
-        self.insertStreamFilesetDAO.execute(1, "A", "TestFileset1")
-
-        fileset1 = Fileset(name = "TestFileset1")
-        fileset1.load()
-
         for i in range(8):
             newFile = File(makeUUID(), size = 1000, events = 100)
             newFile.addRun(Run(1, *[1 + i/2]))
             newFile.setLocation("SomeSE", immediateSave = False)
             newFile.create()
-            fileset1.addFile(newFile)
-        fileset1.commit()
-
-        subscription1  = Subscription(fileset = fileset1,
-                                      workflow = self.testWorkflow,
-                                      split_algo = "Repack",
-                                      type = "Repack")
-        subscription1.create()
+            self.fileset1.addFile(newFile)
+        self.fileset1.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
-                                          subscription = subscription1)
+                                          subscription = self.subscription1)
 
         jobGroups = jobFactory(maxStreamerEventsMultiLumi = 900)
 
@@ -216,7 +205,7 @@ class RepackTest(unittest.TestCase):
         self.assertEqual(len(job.getFiles()), 4,
                          "ERROR: Job does not process 4 files.")
 
-        fileset1.markOpen(False)
+        self.fileset1.markOpen(False)
 
         jobGroups = jobFactory(maxStreamerEventsMultiLumi = 500)
 
@@ -244,27 +233,16 @@ class RepackTest(unittest.TestCase):
         Single lumi input
 
         """
-        self.insertStreamFilesetDAO.execute(1, "A", "TestFileset1")
-
-        fileset1 = Fileset(name = "TestFileset1")
-        fileset1.load()
-
         for i in range(8):
             newFile = File(makeUUID(), size = 1000, events = 100)
             newFile.addRun(Run(1, *[1]))
             newFile.setLocation("SomeSE", immediateSave = False)
             newFile.create()
-            fileset1.addFile(newFile)
-        fileset1.commit()
-
-        subscription1  = Subscription(fileset = fileset1,
-                                      workflow = self.testWorkflow,
-                                      split_algo = "Repack",
-                                      type = "Repack")
-        subscription1.create()
+            self.fileset1.addFile(newFile)
+        self.fileset1.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
-                                          subscription = subscription1)
+                                          subscription = self.subscription1)
 
         jobGroups = jobFactory(maxStreamerSizeSingleLumi = 9000)
 
@@ -301,27 +279,16 @@ class RepackTest(unittest.TestCase):
         Single lumi input
 
         """
-        self.insertStreamFilesetDAO.execute(1, "A", "TestFileset1")
-
-        fileset1 = Fileset(name = "TestFileset1")
-        fileset1.load()
-
         for i in range(8):
             newFile = File(makeUUID(), size = 1000, events = 100)
             newFile.addRun(Run(1, *[1]))
             newFile.setLocation("SomeSE", immediateSave = False)
             newFile.create()
-            fileset1.addFile(newFile)
-        fileset1.commit()
-
-        subscription1  = Subscription(fileset = fileset1,
-                                      workflow = self.testWorkflow,
-                                      split_algo = "Repack",
-                                      type = "Repack")
-        subscription1.create()
+            self.fileset1.addFile(newFile)
+        self.fileset1.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
-                                          subscription = subscription1)
+                                          subscription = self.subscription1)
 
         jobGroups = jobFactory(maxStreamerEventsSingleLumi = 900)
 
@@ -358,27 +325,16 @@ class RepackTest(unittest.TestCase):
         Multi lumi input
 
         """
-        self.insertStreamFilesetDAO.execute(1, "A", "TestFileset1")
-
-        fileset1 = Fileset(name = "TestFileset1")
-        fileset1.load()
-
         for i in range(8):
             newFile = File(makeUUID(), size = 1000, events = 100)
             newFile.addRun(Run(1, *[1 + i/2]))
             newFile.setLocation("SomeSE", immediateSave = False)
             newFile.create()
-            fileset1.addFile(newFile)
-        fileset1.commit()
-
-        subscription1  = Subscription(fileset = fileset1,
-                                      workflow = self.testWorkflow,
-                                      split_algo = "Repack",
-                                      type = "Repack")
-        subscription1.create()
+            self.fileset1.addFile(newFile)
+        self.fileset1.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
-                                          subscription = subscription1)
+                                          subscription = self.subscription1)
 
         jobGroups = jobFactory(maxStreamerCount = 9)
 
@@ -397,7 +353,7 @@ class RepackTest(unittest.TestCase):
         self.assertEqual(len(job.getFiles()), 4,
                          "ERROR: Job does not process 4 files.")
 
-        fileset1.markOpen(False)
+        self.fileset1.markOpen(False)
 
         jobGroups = jobFactory(maxStreamerCount = 5)
 

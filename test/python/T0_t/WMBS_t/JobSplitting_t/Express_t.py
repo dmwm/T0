@@ -43,9 +43,6 @@ class ExpressTest(unittest.TestCase):
 
         self.splitterFactory = SplitterFactory(package = "T0.JobSplitting")
 
-        self.testWorkflow = Workflow(spec = "spec.xml", owner = "mnorman", name = "wf001", task="Test")
-        self.testWorkflow.create()
-
         myThread = threading.currentThread()
         daoFactory = DAOFactory(package = "T0.WMBS",
                                 logger = logging,
@@ -74,8 +71,22 @@ class ExpressTest(unittest.TestCase):
         insertStreamDAO.execute(binds = { 'STREAM' : "A" },
                                 transaction = False)
 
+        insertStreamFilesetDAO = daoFactory(classname = "RunConfig.InsertStreamFileset")
+        insertStreamFilesetDAO.execute(1, "A", "TestFileset1")
+
+        self.fileset1 = Fileset(name = "TestFileset1")
+        self.fileset1.load()
+
+        workflow1 = Workflow(spec = "spec.xml", owner = "hufnagel", name = "TestWorkflow1", task="Test")
+        workflow1.create()
+
+        self.subscription1  = Subscription(fileset = self.fileset1,
+                                           workflow = workflow1,
+                                           split_algo = "Express",
+                                           type = "Express")
+        self.subscription1.create()
+
         # keep for later
-        self.insertStreamFilesetDAO = daoFactory(classname = "RunConfig.InsertStreamFileset")
         self.getSplitLumisDAO = daoFactory(classname = "JobSplitting.GetSplitLumis")
 
         return
@@ -97,27 +108,16 @@ class ExpressTest(unittest.TestCase):
         Test event threshold (single job creation)
 
         """
-        self.insertStreamFilesetDAO.execute(1, "A", "TestFileset1")
-
-        fileset1 = Fileset(name = "TestFileset1")
-        fileset1.load()
-
         for i in range(2):
             newFile = File(makeUUID(), size = 1000, events = 100)
             newFile.addRun(Run(1, *[1]))
             newFile.setLocation("SomeSE", immediateSave = False)
             newFile.create()
-            fileset1.addFile(newFile)
-        fileset1.commit()
-
-        subscription1  = Subscription(fileset = fileset1,
-                                      workflow = self.testWorkflow,
-                                      split_algo = "Express",
-                                      type = "Express")
-        subscription1.create()
+            self.fileset1.addFile(newFile)
+        self.fileset1.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
-                                          subscription = subscription1)
+                                          subscription = self.subscription1)
 
         jobGroups = jobFactory(maxInputEvents = 200)
 
@@ -144,27 +144,16 @@ class ExpressTest(unittest.TestCase):
         Test event threshold (multiple job creation)
 
         """
-        self.insertStreamFilesetDAO.execute(1, "A", "TestFileset1")
-
-        fileset1 = Fileset(name = "TestFileset1")
-        fileset1.load()
-
         for i in range(2):
             newFile = File(makeUUID(), size = 1000, events = 100)
             newFile.addRun(Run(1, *[1]))
             newFile.setLocation("SomeSE", immediateSave = False)
             newFile.create()
-            fileset1.addFile(newFile)
-        fileset1.commit()
-
-        subscription1  = Subscription(fileset = fileset1,
-                                      workflow = self.testWorkflow,
-                                      split_algo = "Express",
-                                      type = "Express")
-        subscription1.create()
+            self.fileset1.addFile(newFile)
+        self.fileset1.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
-                                          subscription = subscription1)
+                                          subscription = self.subscription1)
 
         jobGroups = jobFactory(maxInputEvents = 199)
 
@@ -184,27 +173,16 @@ class ExpressTest(unittest.TestCase):
         Test multi lumis
 
         """
-        self.insertStreamFilesetDAO.execute(1, "A", "TestFileset1")
-
-        fileset1 = Fileset(name = "TestFileset1")
-        fileset1.load()
-
         for i in range(2):
             newFile = File(makeUUID(), size = 1000, events = 100)
             newFile.addRun(Run(1, *[1+i]))
             newFile.setLocation("SomeSE", immediateSave = False)
             newFile.create()
-            fileset1.addFile(newFile)
-        fileset1.commit()
-
-        subscription1  = Subscription(fileset = fileset1,
-                                      workflow = self.testWorkflow,
-                                      split_algo = "Express",
-                                      type = "Express")
-        subscription1.create()
+            self.fileset1.addFile(newFile)
+        self.fileset1.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
-                                          subscription = subscription1)
+                                          subscription = self.subscription1)
 
         jobGroups = jobFactory(maxInputEvents = 100)
 
