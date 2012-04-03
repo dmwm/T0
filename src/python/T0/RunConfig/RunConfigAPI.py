@@ -114,7 +114,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
 
     return
 
-def configureRunStream(tier0Config, workloadDirectory, run, stream):
+def configureRunStream(tier0Config, workloadDirectory, lfnBase, run, stream):
     """
     _configureRunStream_
 
@@ -406,8 +406,8 @@ def configureRunStream(tier0Config, workloadDirectory, run, stream):
             workflowName = "Repack_Run%d_Stream%s" % (run, stream)
             specArguments = getRepackArguments()
             specArguments['ProcessingVersion'] = streamConfig.Repack.ProcessingVersion
-            specArguments['UnmergedLFNBase'] = "/store/backfill/1/t0temp/data"
-            specArguments['MergedLFNBase'] = "/store/backfill/1/data"
+            specArguments['UnmergedLFNBase'] = "%s/t0temp/data" % lfnBase
+            specArguments['MergedLFNBase'] = "%s/data" % lfnBase
         elif streamConfig.ProcessingStyle == "Express":
             taskName = "Express"
             workflowName = "Express_Run%d_Stream%s" % (run, stream)
@@ -417,8 +417,8 @@ def configureRunStream(tier0Config, workloadDirectory, run, stream):
             specArguments['GlobalTag'] = streamConfig.Express.GlobalTag
             specArguments['GlobalTagTransaction'] = "Express_%d" % run
             specArguments['AlcaSkims'] = streamConfig.Express.Producers
-            specArguments['UnmergedLFNBase'] = "/store/backfill/1/t0temp/express"
-            specArguments['MergedLFNBase'] = "/store/backfill/1/express"
+            specArguments['UnmergedLFNBase'] = "%s/t0temp/express" % lfnBase
+            specArguments['MergedLFNBase'] = "%s/express" % lfnBase
 
         specArguments['CMSSWVersion'] = streamConfig.VersionOverride.get(onlineVersion, onlineVersion)
 	specArguments['Outputs'] = outputModuleDetails
