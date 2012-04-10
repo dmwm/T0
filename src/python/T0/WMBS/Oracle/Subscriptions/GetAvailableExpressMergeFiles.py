@@ -13,6 +13,7 @@ class GetAvailableExpressMergeFiles(DBFormatter):
 
     def execute(self, subscription, conn = None, transaction = False):
 
+        #
         # express merge input files always have one and
         # only one run/lumi (it's how they are produced)
         #
