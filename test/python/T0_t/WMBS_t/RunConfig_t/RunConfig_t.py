@@ -1052,9 +1052,9 @@ class RunConfigTest(unittest.TestCase):
                 self.assertEqual(sorted(mapping[stream][primds]), sorted(self.referenceMapping[stream][primds]),
                                  "ERROR: trigger paths do not match reference")
 
-        RunConfigAPI.configureRunStream(self.tier0Config, ".", 176161, "A")
-        RunConfigAPI.configureRunStream(self.tier0Config, ".", 176161, "Express")
-        RunConfigAPI.configureRunStream(self.tier0Config, ".", 176161, "HLTMON")
+        RunConfigAPI.configureRunStream(self.tier0Config, ".", "/store", 176161, "A")
+        RunConfigAPI.configureRunStream(self.tier0Config, ".", "/store", 176161, "Express")
+        RunConfigAPI.configureRunStream(self.tier0Config, ".", "/store", 176161, "HLTMON")
 
         datasets = self.getStreamDatasetsDAO.execute(176161, "A",
                                                      transaction = False)
@@ -1429,7 +1429,7 @@ class RunConfigTest(unittest.TestCase):
                           "ERROR: problem in promptskim configuration")
 
         #
-        # no DAO for this check because the query is only used here
+        # check created run/stream filesets/subscriptions
         #
         results = myThread.dbi.processData("""SELECT run_stream_fileset_assoc.run_id,
                                                      stream.name,
@@ -1464,6 +1464,17 @@ class RunConfigTest(unittest.TestCase):
                          "ERROR: problem in setting up run/stream fileset/subscription")
         self.assertEqual(results[2][2], "Run176161_StreamHLTMON",
                          "ERROR: problem in setting up run/stream fileset/subscription")
+
+        #
+        # check created workflows
+        #
+        results = myThread.dbi.processData("""SELECT COUNT(*), MIN(wmbs_workflow.injected)
+                                              FROM wmbs_workflow
+                                              """, transaction = False)[0].fetchall()
+        self.assertEqual(results[0][0], 12,
+                         "ERROR: wrong number of created workflows")
+        self.assertEqual(results[0][1], 1,
+                         "ERROR: not all created workflows marked as injected")
 
         return
 
