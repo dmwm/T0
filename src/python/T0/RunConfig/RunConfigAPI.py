@@ -168,6 +168,12 @@ def configureRunStream(tier0Config, workloadDirectory, lfnBase, run, stream):
         insertPromptSkimConfigDAO = daoFactory(classname = "RunConfig.InsertPromptSkimConfig")
         insertStreamFilesetDAO = daoFactory(classname = "RunConfig.InsertStreamFileset")
 
+        # mark workflows as injected
+        wmbsDaoFactory = DAOFactory(package = "WMCore.WMBS",
+                                    logger = logging,
+                                    dbinterface = myThread.dbi)
+        markWorkflowsInjectedDAO   = wmbsDaoFactory(classname = "Workflow.MarkInjectedWorkflows")
+
         bindsDataset = []
         bindsStreamDataset = []
         bindsStreamStyle = {'RUN' : run,
@@ -468,6 +474,18 @@ def configureRunStream(tier0Config, workloadDirectory, lfnBase, run, stream):
             insertStreamFilesetDAO.execute(run, stream, filesetName, transaction = True)
             fileset.load()
             wmbsHelper.createSubscription(wmSpec.getTask(taskName), fileset)
+        except:
+            myThread.transaction.rollback()
+            raise
+        else:
+            myThread.transaction.commit()
+
+        #
+        # set the workflows to injected
+        # (this should really be in the other try/except...)
+        #
+        try:
+            markWorkflowsInjectedDAO.execute([workflowName], injected = True, transaction = True)
         except:
             myThread.transaction.rollback()
             raise
