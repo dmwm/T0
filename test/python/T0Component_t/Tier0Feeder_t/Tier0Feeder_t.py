@@ -952,6 +952,8 @@ class Tier0FeederTest(unittest.TestCase):
         self.feedStreamersDAO = daoFactory(classname = "Tier0Feeder.FeedStreamers")
         self.insertClosedLumiDAO = daoFactory(classname = "RunLumiCloseout.InsertClosedLumi")
         self.finalCloseLumiDAO = daoFactory(classname = "RunLumiCloseout.FinalCloseLumi")
+        self.insertSplitLumisDAO = daoFactory(classname = "JobSplitting.InsertSplitLumis")
+        self.getSplitLumisDAO = daoFactory(classname = "JobSplitting.GetSplitLumis")
 
         return
 
@@ -1581,6 +1583,89 @@ class Tier0FeederTest(unittest.TestCase):
                          "ERROR: there should be 1 closed run/stream filesets for run 176161 and stream A")
 
         return
+
+
+    def test03(self):
+        """
+        _test03_
+
+        Test active split lumi checks
+
+        """
+        myThread = threading.currentThread()
+
+        self.insertRun(176161)
+        self.insertRunStreamLumi(176161, "A", 1)
+        self.insertRunStreamLumi(176161, "A", 1)
+        self.insertRunStreamLumi(176161, "A", 1)
+
+        RunConfigAPI.configureRun(self.tier0Config, 176161, self.hltConfig,
+                                  { 'process' : "HLT",
+                                    'mapping' : self.referenceMapping })
+
+        RunConfigAPI.configureRunStream(self.tier0Config, ".", "/store", 176161, "A")
+
+        self.insertClosedLumiDAO.execute(binds = { 'RUN' : 176161,
+                                                   'STREAM' : 'A',
+                                                   'LUMI' : 1,
+                                                   'INSERT_TIME' : int(time.time()),
+                                                   'CLOSE_TIME' : int(time.time()),
+                                                   'FILECOUNT' : 3 },
+                                         transaction = False)
+
+        self.feedStreamersDAO.execute(transaction = False)
+
+        subID = myThread.dbi.processData("""SELECT wmbs_subscription.id
+                                            FROM run_stream_fileset_assoc
+                                            INNER JOIN stream ON
+                                              stream.id = run_stream_fileset_assoc.stream_id
+                                            INNER JOIN wmbs_subscription ON
+                                              wmbs_subscription.fileset = run_stream_fileset_assoc.fileset
+                                            WHERE run_stream_fileset_assoc.run_id = 176161
+                                            AND stream.name = 'A'
+                                            """, transaction = False)[0].fetchall()[0][0]
+
+        self.insertSplitLumisDAO.execute( binds = { 'SUB' : subID,
+                                                    'LUMI' : 1 } )
+
+        RunLumiCloseoutAPI.checkActiveSplitLumis()
+
+        splitLumis = self.getSplitLumisDAO.execute()
+        self.assertEqual(len(splitLumis), 1,
+                         "ERROR: there should be one split lumi.")
+
+        myThread.dbi.processData("""DELETE FROM wmbs_sub_files_available
+                                    WHERE fileid = 1
+                                    """, transaction = False)
+        
+        RunLumiCloseoutAPI.checkActiveSplitLumis()
+
+        splitLumis = self.getSplitLumisDAO.execute()
+        self.assertEqual(len(splitLumis), 1,
+                         "ERROR: there should be one split lumi.")
+
+        myThread.dbi.processData("""DELETE FROM wmbs_sub_files_available
+                                    WHERE fileid = 2
+                                    """, transaction = False)
+        
+        RunLumiCloseoutAPI.checkActiveSplitLumis()
+
+        splitLumis = self.getSplitLumisDAO.execute()
+        self.assertEqual(len(splitLumis), 1,
+                         "ERROR: there should be one split lumi.")
+
+        myThread.dbi.processData("""DELETE FROM wmbs_sub_files_available
+                                    WHERE fileid = 3
+                                    """, transaction = False)
+        
+        RunLumiCloseoutAPI.checkActiveSplitLumis()
+
+        splitLumis = self.getSplitLumisDAO.execute()
+        self.assertEqual(len(splitLumis), 0,
+                         "ERROR: there should be no split lumi.")
+
+        return
+
 
 if __name__ == '__main__':
     unittest.main()

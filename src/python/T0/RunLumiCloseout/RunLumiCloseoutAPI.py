@@ -156,3 +156,31 @@ def closeRunStreamFilesets():
     closeRunStreamFilesetsDAO.execute(transaction = False)
 
     return
+
+
+def checkActiveSplitLumis():
+    """
+    _checkActiveSplitLumis_
+
+    Called by Tier0Feeder
+
+    For active split lumis, check if all streamers in
+    the run/lumi/stream have been fully processed, ie.
+    none of the streamers are available, acquired or
+    failed. If this is the case, delete the split lumi.
+
+    This is all done in a single query.
+
+    """
+    logging.debug("checkActiveSplitLumi()")
+    myThread = threading.currentThread()
+
+    daoFactory = DAOFactory(package = "T0.WMBS",
+                            logger = logging,
+                            dbinterface = myThread.dbi)
+
+    checkActiveSplitLumisDAO = daoFactory(classname = "RunLumiCloseout.CheckActiveSplitLumis")
+
+    checkActiveSplitLumisDAO.execute(transaction = False)
+
+    return

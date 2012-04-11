@@ -147,6 +147,11 @@ class Tier0FeederPoller(BaseWorkerThread):
         #
         RunLumiCloseoutAPI.closeRunStreamFilesets()
 
+        #
+        # check and delete active split lumis
+        #
+        RunLumiCloseoutAPI.checkActiveSplitLumis()
+
         return
 
     def terminate(self, params):
