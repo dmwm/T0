@@ -25,20 +25,18 @@ def getTestArguments():
     to hunt you down and kill you.
     """
     arguments = {
-        "AcquisitionEra": "Tier0Commissioning11",
+        "AcquisitionEra": "Tier0Testing",
         "Requestor": "Dirk.Hufnagel@cern.ch",
 
-        "ScramArch": "slc5_amd64_gcc434",
-        
-        "CouchURL": os.environ.get("COUCHURL", None),
-        "CouchDBName": "scf_wmagent_configcache",
+        "ScramArch": "slc5_amd64_gcc462",
+
+        # needed, but ultimately not used for anything
+        "ProcScenario": "not_used_but_cannot_be_none",
 
         # these must be overridden
         "CMSSWVersion": None,
         "ProcessingVersion": None,
-
-        # needed parameter, but ultimately not used
-        "ProcScenario": None,
+        "Outputs" : None,
 
         # optional for now
         "Multicore" : None,
@@ -76,61 +74,25 @@ class RepackWorkloadFactory(StdBase):
         cmsswStepType = "CMSSW"
         taskType = "Processing"
         if self.multicore:
-            cmsswStepType = "MulticoreCMSSW"
             taskType = "MultiProcessing"
 
-        #
-        # setup repack processing task
-        #
+        # complete output configuration
+        for output in self.outputs:
+            output['moduleLabel'] = "write_%s_%s" % (output['primaryDataset'],
+                                                     output['dataTier'])
+
         repackTask = workload.newTask("Repack")
-        self.addDashboardMonitoring(repackTask)
+        repackOutMods = self.setupProcessingTask(repackTask, taskType,
+                                                 scenarioName = self.procScenario,
+                                                 scenarioFunc = "repack",
+                                                 scenarioArgs = { 'outputs' : self.outputs },
+                                                 splitAlgo = "Repack",
+                                                 splitArgs = { 'algo_package' : "T0.JobSplitting" },
+                                                 stepType = cmsswStepType)
 
-        repackTaskCmssw = repackTask.makeStep("cmsRun1")
-        repackTaskCmssw.setStepType(cmsswStepType)
-        repackTaskStageOut = repackTaskCmssw.addStep("stageOut1")
-        repackTaskStageOut.setStepType("StageOut")
-        repackTaskStageOut.setUserDN(None)
-        repackTaskStageOut.setAsyncDest(None)
-        repackTaskStageOut.setUserRoleAndGroup(self.owner_vogroup, self.owner_vorole)
-        repackTaskLogArch = repackTaskCmssw.addStep("logArch1")
-        repackTaskLogArch.setStepType("LogArchive")
-        repackTask.applyTemplates()
-        repackTask.setTaskPriority(self.priority)
-
-        repackTask.setTaskLogBaseLFN(self.unmergedLFNBase)
-        repackTask.setSiteWhitelist(self.siteWhitelist)
-        repackTask.setSiteBlacklist(self.siteBlacklist)
-
-        newSplitArgs = { 'algo_package' : "T0.JobSplitting" }
-        for argName in self.procJobSplitArgs.keys():
-            newSplitArgs[str(argName)] = self.procJobSplitArgs[argName]
-
-        repackTask.setSplittingAlgorithm(self.procJobSplitAlgo, **newSplitArgs)
-        repackTask.setTaskType(taskType)
-
-        repackTaskCmsswHelper = repackTaskCmssw.getTypeHelper()
-        repackTaskCmsswHelper.setUserSandbox(None)
-        repackTaskCmsswHelper.setUserFiles(None)
-        repackTaskCmsswHelper.setErrorDestinationStep(stepName = repackTaskLogArch.name())
-        repackTaskCmsswHelper.cmsswSetup(self.frameworkVersion,
-                                          softwareEnvironment = "",
-                                          scramArch = self.scramArch)
-
-        repackTaskCmsswHelper.setDataProcessingConfig(self.procScenario, "expressProcessing",
-                                                      writeTiers = [ 'RAW' ]
-                                                      )
-
-        self.addOutputModule(repackTask,
-                             "write_FEVT",
-                             "FakePrimaryDataset",
-                             "FEVT",
-                             None)
-
-        self.addLogCollectTask(repackTask)
-        if self.multicore:
-            cmsswStep = procTask.getStep("cmsRun1")
-            multicoreHelper = cmsswStep.getTypeHelper()
-            multicoreHelper.setMulticoreCores(self.multicoreNCores)
+        for repackOutLabel, repackOutInfo in repackOutMods.items():
+            self.addMergeTask(repackTask, "Repack", repackOutLabel,
+                              "cmsRun1", doLogCollect = False)
 
         return workload
 
@@ -144,22 +106,11 @@ class RepackWorkloadFactory(StdBase):
 
         # Required parameters that must be specified by the Requestor.
         self.frameworkVersion = arguments["CMSSWVersion"]
+        self.procScenario = arguments['ProcScenario']
+        self.outputs = arguments['Outputs']
 
-        # The CouchURL and name of the ConfigCache database must be passed in
-        # by the ReqMgr or whatever is creating this workflow.
-        self.couchURL = arguments["CouchURL"]
-        self.couchDBName = arguments["CouchDBName"]        
-
-        # One of these parameters must be set.
-        if arguments.has_key("ProdConfigCacheID"):
-            self.procConfigCacheID = arguments["ProdConfigCacheID"]
-        else:
-            self.procConfigCacheID = arguments.get("ProcConfigCacheID", None)
-
-        if arguments.has_key("Scenario"):
-            self.procScenario = arguments.get("Scenario", None)
-        else:
-            self.procScenario = arguments.get("ProcScenario", None)
+        # crashes if this isn't set
+        self.globalTag = "NOTSET"
 
         if arguments.has_key("Multicore"):
             numCores = arguments.get("Multicore")
@@ -180,27 +131,7 @@ class RepackWorkloadFactory(StdBase):
         self.runWhitelist = arguments.get("RunWhitelist", [])
         self.emulation = arguments.get("Emulation", False)
 
-        # These are mostly place holders because the job splitting algo and
-        # parameters will be updated after the workflow has been created.
-        self.procJobSplitAlgo  = arguments.get("StdJobSplitAlgo", "Repack")
-        self.procJobSplitArgs  = arguments.get("StdJobSplitArgs", {})
-
         return self.buildWorkload()
-
-    def validateSchema(self, schema):
-        """
-        _validateSchema_
-        
-        Check for required fields
-        """
-        requiredFields = ["CMSSWVersion", "ScramArch"]
-        self.requireValidateFields(fields = requiredFields,
-                                   schema = schema,
-                                   validate = False)
-        if not schema.has_key('ProcScenario'):
-            self.raiseValidationException(msg = "No Scenario defined!")
-            
-        return
 
 def repackWorkload(workloadName, arguments):
     """

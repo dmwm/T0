@@ -1471,7 +1471,7 @@ class RunConfigTest(unittest.TestCase):
         results = myThread.dbi.processData("""SELECT COUNT(*), MIN(wmbs_workflow.injected)
                                               FROM wmbs_workflow
                                               """, transaction = False)[0].fetchall()
-        self.assertEqual(results[0][0], 12,
+        self.assertEqual(results[0][0], 61,
                          "ERROR: wrong number of created workflows")
         self.assertEqual(results[0][1], 1,
                          "ERROR: not all created workflows marked as injected")
