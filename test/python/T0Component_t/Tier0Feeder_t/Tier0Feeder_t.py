@@ -39,6 +39,8 @@ class Tier0FeederTest(unittest.TestCase):
 
         self.testInit.setSchema(customModules = ["T0.WMBS"])
 
+        self.testDir  = self.testInit.generateWorkDir()
+
         self.hltkey = "/cdaq/physics/Run2011/3e33/v2.1/HLT/V2"
         self.hltConfig = None
 
@@ -1160,7 +1162,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(set(runStreams[176161]), set(["A"]),
                          "ERROR: there should be new run/stream for run 176161 and stream A")
 
-        RunConfigAPI.configureRunStream(self.tier0Config, ".", "/store", 176161, "A")
+        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176161, "A")
 
         runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
         self.assertEqual(len(runStreams.keys()), 0,
@@ -1297,8 +1299,8 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(self.getNumFeedStreamers(), 4,
                          "ERROR: there should be 4 streamers feed")
 
-        RunConfigAPI.configureRunStream(self.tier0Config, ".", "/store", 176162, "A")
-        RunConfigAPI.configureRunStream(self.tier0Config, ".", "/store", 176163, "Express")
+        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176162, "A")
+        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176163, "Express")
 
         runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
         self.assertEqual(set(runStreams.keys()), set([176162, 176163]),
@@ -1337,8 +1339,8 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(self.getNumFeedStreamers(), 6,
                          "ERROR: there should be 6 streamers feed")
 
-        RunConfigAPI.configureRunStream(self.tier0Config, ".", "/store", 176162, "Express")
-        RunConfigAPI.configureRunStream(self.tier0Config, ".", "/store", 176162, "HLTMON")
+        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176162, "Express")
+        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176162, "HLTMON")
 
         runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
         self.assertEqual(set(runStreams.keys()), set([176163]),
@@ -1374,7 +1376,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(self.getNumFeedStreamers(), 8,
                          "ERROR: there should be 8 streamers feed")
 
-        RunConfigAPI.configureRunStream(self.tier0Config, ".", "/store", 176163, "A")
+        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176163, "A")
 
         runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
         self.assertEqual(len(runStreams.keys()), 0,
@@ -1462,7 +1464,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(len(self.getClosedLumis()), 0,
                          "ERROR: there should be no closed lumis")
 
-        RunConfigAPI.configureRunStream(self.tier0Config, ".", "/store", 176161, "A")
+        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176161, "A")
 
         RunLumiCloseoutAPI.closeLumiSections(dbInterfaceStorageManager)
 
@@ -1479,7 +1481,7 @@ class Tier0FeederTest(unittest.TestCase):
                              "ERROR: there should be 14 closed lumis for run 176161, stream A and lumi %d" % lumi)
 
         self.insertRunStreamLumi(176161, "HLTMON", 1)
-        RunConfigAPI.configureRunStream(self.tier0Config, ".", "/store", 176161, "HLTMON")
+        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176161, "HLTMON")
 
         RunLumiCloseoutAPI.closeLumiSections(dbInterfaceStorageManager)
 
@@ -1550,7 +1552,7 @@ class Tier0FeederTest(unittest.TestCase):
                                   { 'process' : "HLT",
                                     'mapping' : self.referenceMapping })
 
-        RunConfigAPI.configureRunStream(self.tier0Config, ".", "/store", 176161, "A")
+        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176161, "A")
 
         RunLumiCloseoutAPI.endRuns(dbInterfaceStorageManager)
         RunLumiCloseoutAPI.closeLumiSections(dbInterfaceStorageManager)
@@ -1603,7 +1605,7 @@ class Tier0FeederTest(unittest.TestCase):
                                   { 'process' : "HLT",
                                     'mapping' : self.referenceMapping })
 
-        RunConfigAPI.configureRunStream(self.tier0Config, ".", "/store", 176161, "A")
+        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176161, "A")
 
         self.insertClosedLumiDAO.execute(binds = { 'RUN' : 176161,
                                                    'STREAM' : 'A',
