@@ -119,17 +119,33 @@ def find_packages(relativedir):
         packages.append(package)
     return packages
 
-def datafiles(idir):
+def datafiles(idir, recursive=True):
     """Return list of data files in provided relative dir"""
     files = []
+    if  idir[0] != '/':
+        idir = os.path.join(os.getcwd(), idir)
     for dirname, dirnames, filenames in os.walk(idir):
-        for subdirname in dirnames:
-            files.append(os.path.join(dirname, subdirname))
+        if  dirname != idir:
+            continue
+        if  recursive:
+            for subdirname in dirnames:
+                files.append(os.path.join(dirname, subdirname))
         for filename in filenames:
             if  filename[-1] == '~':
                 continue
             files.append(os.path.join(dirname, filename))
     return files
+
+def install_prefix(idir=None):
+    "Return install prefix"
+    inst_prefix = sys.prefix
+    for arg in sys.argv:
+        if  arg.startswith('--prefix='):
+            inst_prefix = os.path.expandvars(arg.replace('--prefix=', ''))
+            break
+    if  idir:
+        return os.path.join(inst_prefix, idir)
+    return inst_prefix
 
 def main():
     "Main function"
@@ -146,6 +162,7 @@ def main():
         {"T0": "src/python/T0", "T0Component": "src/python/T0Component"}
     packages     = find_packages('src/python')
     data_files   = [] # list of tuples whose entries are (dir, [data_files])
+    data_files   = [(install_prefix('etc'), datafiles('etc', recursive=False))]
     cms_license  = "CMS experiment software"
     classifiers  = [
         "Development Status :: 3 - Production/Beta",
