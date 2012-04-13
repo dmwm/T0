@@ -40,7 +40,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                                      dbinterface = myThread.dbi)
 
         self.tier0ConfigFile = config.Tier0Feeder.tier0ConfigFile
-        self.workloadDirectory = config.Tier0Feeder.workloadDirectory
+        self.specDirectory = config.Tier0Feeder.specDirectory
         self.lfnBase = getattr(config.Tier0Feeder, "lfnBase", "/store")
 
         hltConfConnectUrl = config.HLTConfDatabase.connectUrl
@@ -115,7 +115,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                 for stream in sorted(runStreams[run]):
                     try:
                         RunConfigAPI.configureRunStream(tier0Config,
-                                                        self.workloadDirectory,
+                                                        self.specDirectory,
                                                         self.lfnBase,
                                                         run, stream)
                     except:

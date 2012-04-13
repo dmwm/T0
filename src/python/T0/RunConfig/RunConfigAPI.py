@@ -114,7 +114,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
 
     return
 
-def configureRunStream(tier0Config, workloadDirectory, lfnBase, run, stream):
+def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
     """
     _configureRunStream_
 
@@ -437,7 +437,7 @@ def configureRunStream(tier0Config, workloadDirectory, lfnBase, run, stream):
         wmSpec.setOwnerDetails("Dirk.Hufnagel@cern.ch", "T0",
                                { 'vogroup': 'DEFAULT', 'vorole': 'DEFAULT',
                                  'dn' : "Dirk.Hufnagel@cern.ch" } )
-        wmbsHelper = WMBSHelper(wmSpec, taskName, cachepath = workloadDirectory)
+        wmbsHelper = WMBSHelper(wmSpec, taskName, cachepath = specDirectory)
 
         filesetName = "Run%d_Stream%s" % (run, stream)
         fileset = Fileset(filesetName)

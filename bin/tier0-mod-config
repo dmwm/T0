@@ -1,0 +1,148 @@
+#!/usr/bin/env python
+# encoding: utf-8
+"""
+tier0-mod-config.py
+
+Created by Dirk Hufnagel on 2012-04-12.
+Copyright (c) 2011 Fermilab. All rights reserved.
+"""
+
+import sys
+import getopt
+import imp
+import socket
+import traceback
+import os
+
+from WMCore.Configuration import saveConfigurationFile
+from WMCore.Configuration import Configuration
+from WMCore.Lexicon import sanitizeURL
+
+help_message = '''
+The help message goes here.
+'''
+
+
+class Usage(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+
+def importConfigTemplate(filename):
+    """
+    _importConfigTemplate_
+    
+    Given filename, load it and grab the configuration object from it
+    
+    """
+    mod = imp.load_module("wmcore_config_input", open(filename, 'r'), filename, (".py", "r", imp.PY_SOURCE)   )
+    config = getattr(mod, 'config', None)
+    if config == None:
+        msg = "No config attribute found in %s" % filename
+        raise RuntimeError, msg
+    return config
+
+def saveConfiguration(configObject, outputPath):
+    """
+    _saveConfiguration_
+    
+    Save the configuration to the output path provided
+    
+    """
+    saveConfigurationFile(configObject, outputPath)
+    os.chmod(outputPath, 0600)
+
+    
+def modifyConfiguration(config, **args):
+    """
+    _modifyConfiguration_
+    
+    Given the dictionary of key: value, look up the entry matching the key in the configuration
+    and set it to that value in the config
+    
+    """
+##     mapping = {
+##         "somevalue" : [("Tier0Feeder","someparameter")],
+##     }
+
+##     for k,v in args.items():
+##         parameters = mapping.get(k, [])
+##         for p in parameters:
+##             if hasattr(config, p[0]):
+##                 section = getattr(config, p[0])
+##                 setattr(section, p[1], v)
+
+    config.BossAir.pluginNames = ["LsfPlugin"]
+
+    if 'confdb_url' in args:
+        config.section_("HLTConfDatabase")
+        config.HLTConfDatabase.connectUrl = args['confdb_url']
+
+    if 'smdb_url' in args:
+        config.section_("StorageManagerDatabase")
+        config.StorageManagerDatabase.connectUrl = args['smdb_url']
+
+    config.JobCreator.pollInterval = 30
+    config.JobSubmitter.pollInterval = 30
+    config.JobAccountant.pollInterval = 30
+
+    return config
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv
+    
+    inputFile = None
+    outputFile = None
+    parameters = {}
+
+    try:
+        try:
+            opts, args = getopt.getopt(argv[1:], "h", 
+            ["help", "input=", "output=", "confdb_url=", "smdb_url="])
+
+        except getopt.error, msg:
+            raise Usage(msg)
+    
+        # option processing
+        for option, value in opts:
+            if option in ("-h", "--help"):
+                raise Usage(help_message)
+            if option == "--output":
+                outputFile = value
+            if option == "--input":
+                inputFile = value
+            if option in ('--confdb_url', '--smdb_url'):
+
+                parameters[option[2:]] = value
+    
+    
+    except Usage, err:
+        print >> sys.stderr, sys.argv[0].split("/")[-1] + ": " + str(err.msg)
+        print >> sys.stderr, "\t for help use --help"
+        return 2
+
+    try:
+        cfg = importConfigTemplate(inputFile)
+    except Exception, ex:
+        msg = "Failed to import template config: %s\n" % inputFile
+        msg += str(ex)
+        print >> sys.stderr, msg
+        return 3
+    try:
+        cfg = modifyConfiguration(cfg, **parameters)
+    except Exception, ex:
+        msg = "Error modifying configuration:\n %s" % str(ex)
+        print >> sys.stderr, msg
+        print >> sys.stderr, traceback.format_exc()
+        return 4
+    try:
+        saveConfiguration(cfg, outputFile)
+    except Exception, ex:
+        msg = "Error saving output configuration file:\n %s\n" % outputFile
+        msg += str(ex)
+        print >> sys.stderr, msg
+        return 5 
+
+if __name__ == "__main__":
+    sys.exit(main())
