@@ -161,8 +161,10 @@ def main():
     package_dir  = \
         {"T0": "src/python/T0", "T0Component": "src/python/T0Component"}
     packages     = find_packages('src/python')
+    scriptfiles  = [] # list of scripts
     data_files   = [] # list of tuples whose entries are (dir, [data_files])
-    data_files   = [(install_prefix('etc'), datafiles('etc', recursive=False))]
+    data_files   = [(install_prefix('etc'), datafiles('etc', recursive=False)),
+                    (install_prefix('bin'), datafiles('bin', recursive=False))]
     cms_license  = "CMS experiment software"
     classifiers  = [
         "Development Status :: 3 - Production/Beta",
@@ -194,7 +196,7 @@ def main():
         packages             = packages,
         package_dir          = package_dir,
         data_files           = data_files,
-        scripts              = datafiles('bin'),
+        scripts              = scriptfiles,
         requires             = ['python (>=2.6)'],
         classifiers          = classifiers,
         cmdclass             = {'test': TestCommand, 'clean': CleanCommand},
