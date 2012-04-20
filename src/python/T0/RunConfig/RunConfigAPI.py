@@ -167,6 +167,7 @@ def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
         insertPhEDExConfigDAO = daoFactory(classname = "RunConfig.InsertPhEDExConfig")
         insertPromptSkimConfigDAO = daoFactory(classname = "RunConfig.InsertPromptSkimConfig")
         insertStreamFilesetDAO = daoFactory(classname = "RunConfig.InsertStreamFileset")
+        insertDatasetFilesetDAO = daoFactory(classname = "RunConfig.InsertDatasetFileset")
 
         # mark workflows as injected
         wmbsDaoFactory = DAOFactory(package = "WMCore.WMBS",
@@ -190,6 +191,7 @@ def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
         bindsStorageNode = []
         bindsPhEDExConfig = []
         bindsPromptSkimConfig = []
+        bindsDatasetFileset = []
 
         #
         # for spec creation, details for all outputs
@@ -447,45 +449,40 @@ def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
         #
         try:
             myThread.transaction.begin()
-            insertDatasetDAO.execute(bindsDataset, transaction = True)
-            insertStreamDatasetDAO.execute(bindsStreamDataset, transaction = True)
-            insertStreamStyleDAO.execute(bindsStreamStyle, transaction = True)
+            insertDatasetDAO.execute(bindsDataset, conn = myThread.transaction.conn, transaction = True)
+            insertStreamDatasetDAO.execute(bindsStreamDataset, conn = myThread.transaction.conn, transaction = True)
+            insertStreamStyleDAO.execute(bindsStreamStyle, conn = myThread.transaction.conn, transaction = True)
             if len(bindsRepackConfig) > 0:
-                insertRepackConfigDAO.execute(bindsRepackConfig, transaction = True)
+                insertRepackConfigDAO.execute(bindsRepackConfig, conn = myThread.transaction.conn, transaction = True)
             if len(bindsExpressConfig) > 0:
-                insertExpressConfigDAO.execute(bindsExpressConfig, transaction = True)
+                insertExpressConfigDAO.execute(bindsExpressConfig, conn = myThread.transaction.conn, transaction = True)
             if len(bindsSpecialDataset) > 0:
-                insertSpecialDatasetDAO.execute(bindsSpecialDataset, transaction = True)
-            insertDatasetScenarioDAO.execute(bindsDatasetScenario, transaction = True)
+                insertSpecialDatasetDAO.execute(bindsSpecialDataset, conn = myThread.transaction.conn, transaction = True)
+            insertDatasetScenarioDAO.execute(bindsDatasetScenario, conn = myThread.transaction.conn, transaction = True)
             if len(bindsCMSSWVersion):
-                insertCMSSWVersionDAO.execute(bindsCMSSWVersion, transaction = True)
+                insertCMSSWVersionDAO.execute(bindsCMSSWVersion, conn = myThread.transaction.conn, transaction = True)
             if len(bindsStreamOverride) > 0:
-                updateStreamOverrideDAO.execute(bindsStreamOverride, transaction = True)
+                updateStreamOverrideDAO.execute(bindsStreamOverride, conn = myThread.transaction.conn, transaction = True)
             if len(bindsErrorDataset):
-                insertErrorDatasetDAO.execute(bindsErrorDataset, transaction = True)
+                insertErrorDatasetDAO.execute(bindsErrorDataset, conn = myThread.transaction.conn, transaction = True)
             if len(bindsRecoConfig) > 0:
-                insertRecoConfigDAO.execute(bindsRecoConfig, transaction = True)
+                insertRecoConfigDAO.execute(bindsRecoConfig, conn = myThread.transaction.conn, transaction = True)
             if len(bindsStorageNode) > 0:
-                insertStorageNodeDAO.execute(bindsStorageNode, transaction = True)
+                insertStorageNodeDAO.execute(bindsStorageNode, conn = myThread.transaction.conn, transaction = True)
             if len(bindsPhEDExConfig) > 0:
-                insertPhEDExConfigDAO.execute(bindsPhEDExConfig, transaction = True)
+                insertPhEDExConfigDAO.execute(bindsPhEDExConfig, conn = myThread.transaction.conn, transaction = True)
             if len(bindsPromptSkimConfig) > 0:
-                insertPromptSkimConfigDAO.execute(bindsPromptSkimConfig, transaction = True)
-            insertStreamFilesetDAO.execute(run, stream, filesetName, transaction = True)
+                insertPromptSkimConfigDAO.execute(bindsPromptSkimConfig, conn = myThread.transaction.conn, transaction = True)
+            insertStreamFilesetDAO.execute(run, stream, filesetName, conn = myThread.transaction.conn, transaction = True)
             fileset.load()
             wmbsHelper.createSubscription(wmSpec.getTask(taskName), fileset)
-        except:
-            myThread.transaction.rollback()
-            raise
-        else:
-            myThread.transaction.commit()
-
-        #
-        # set the workflows to injected
-        # (this should really be in the other try/except...)
-        #
-        try:
-            markWorkflowsInjectedDAO.execute([workflowName], injected = True, transaction = True)
+            if streamConfig.ProcessingStyle == "Bulk":
+                for fileset, primds in wmbsHelper.getMergeOutputMapping().items():
+                    bindsDatasetFileset.append( { 'RUN' : run,
+                                                  'PRIMDS' : primds,
+                                                  'FILESET' : fileset } )
+                insertDatasetFilesetDAO.execute(bindsDatasetFileset, conn = myThread.transaction.conn, transaction = True)
+            markWorkflowsInjectedDAO.execute([workflowName], injected = True, conn = myThread.transaction.conn, transaction = True)
         except:
             myThread.transaction.rollback()
             raise

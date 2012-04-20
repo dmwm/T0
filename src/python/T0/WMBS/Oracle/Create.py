@@ -178,6 +178,15 @@ class Create(DBCreator):
                )"""
 
         self.create[len(self.create)] = \
+            """CREATE TABLE run_primds_fileset_assoc (
+                 run_id       int   not null,
+                 primds_id    int   not null,
+                 fileset      int   not null,
+                 primary key(run_id, primds_id),
+                 constraint run_pri_fil_ass_fil_uq unique(fileset)
+               )"""
+
+        self.create[len(self.create)] = \
             """CREATE TABLE stream_special_primds_assoc (
                  stream_id    int   not null,
                  primds_id    int   not null,
@@ -268,20 +277,6 @@ class Create(DBCreator):
                   branch_hash    varchar(700),
                   primary key (run_id, primds_id)
                )"""
-
-##         self.create[len(self.create)] = \
-##             """CREATE TABLE alca_config (
-##                   run_id         int not null,
-##                   primds_id      int not null,
-##                   do_alca        int not null,
-##                   cmssw_id       int not null,
-##                   proc_version   varchar(255) not null,
-##                   write_skims    varchar(1000),
-##                   config_url     varchar(255),
-##                   pset_hash      varchar(700),
-##                   branch_hash    varchar(700),
-##                   primary key (run_id, primds_id)
-##                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE phedex_config (
@@ -529,6 +524,24 @@ class Create(DBCreator):
                  REFERENCES wmbs_fileset(id)"""
 
         self.constraints[len(self.constraints)] = \
+            """ALTER TABLE run_primds_fileset_assoc
+                 ADD CONSTRAINT run_pri_fil_run_id_fk
+                 FOREIGN KEY (run_id)
+                 REFERENCES run(run_id)"""
+
+        self.constraints[len(self.constraints)] = \
+            """ALTER TABLE run_primds_fileset_assoc
+                 ADD CONSTRAINT run_pri_fil_str_id_fk
+                 FOREIGN KEY (primds_id)
+                 REFERENCES primary_dataset(id)"""
+
+        self.constraints[len(self.constraints)] = \
+            """ALTER TABLE run_primds_fileset_assoc
+                 ADD CONSTRAINT run_pri_fil_fil_id_fk
+                 FOREIGN KEY (fileset)
+                 REFERENCES wmbs_fileset(id)"""
+
+        self.constraints[len(self.constraints)] = \
             """ALTER TABLE stream_special_primds_assoc
                  ADD CONSTRAINT str_spe_pri_str_id_fk
                  FOREIGN KEY (stream_id)
@@ -642,24 +655,6 @@ class Create(DBCreator):
                  FOREIGN KEY (cmssw_id)
                  REFERENCES cmssw_version(id)"""
 
-##         self.constraints[len(self.constraints)] = \
-##             """ALTER TABLE alca_config
-##                  ADD CONSTRAINT alc_con_run_id_fk
-##                  FOREIGN KEY (run_id)
-##                  REFERENCES run(run_id)"""
-
-##         self.constraints[len(self.constraints)] = \
-##             """ALTER TABLE alca_config
-##                  ADD CONSTRAINT alc_con_primds_id_fk
-##                  FOREIGN KEY (primds_id)
-##                  REFERENCES primary_dataset(id)"""
-
-##         self.constraints[len(self.constraints)] = \
-##             """ALTER TABLE alca_config
-##                  ADD CONSTRAINT alc_con_cms_id_fk
-##                  FOREIGN KEY (cmssw_id)
-##                  REFERENCES cmssw_version(id)"""
-
         self.constraints[len(self.constraints)] = \
             """ALTER TABLE phedex_config
                  ADD CONSTRAINT phe_con_run_id_fk
@@ -757,10 +752,10 @@ class Create(DBCreator):
                            2 : "cosmics",
                            3 : "hcalnzs",
                            4 : "HeavyIons",
-                           5 : "HeavyIonsAlcaOnly",
-                           6 : "AlCaTestEnable",
+                           5 : "AlCaTestEnable",
+                           6 : "AlCaP0",
                            7 : "AlCaPhiSymEcal",
-                           8 : "AlCaP0" }
+                           8 : "AlcaLumiPixels" }
         for id, name in eventScenarios.items():
             sql = """INSERT INTO event_scenario
                      (ID, NAME)
