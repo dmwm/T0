@@ -1013,6 +1013,22 @@ class Tier0FeederTest(unittest.TestCase):
 
         return
 
+    def feedStreamers(self):
+        """
+        _feedStreamers_
+
+        helper function to wrap the feedStreamersDAO
+        call into an transaction
+
+        """
+        myThread = threading.currentThread()
+
+        myThread.transaction.begin()
+        self.feedStreamersDAO.execute(conn = myThread.transaction.conn, transaction = True)
+        myThread.transaction.commit()
+
+        return
+
     def getNumFeedStreamers(self):
         """
         _getNumFeedStreamers_
@@ -1130,7 +1146,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(len(runStreams.keys()), 0,
                          "ERROR: there should be no new run/stream")
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 0,
                          "ERROR: there should be no streamers feed")
 
@@ -1152,7 +1168,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(len(runs), 0,
                          "ERROR: there should be no new run")
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 0,
                          "ERROR: there should be no streamers feed")
 
@@ -1168,7 +1184,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(len(runStreams.keys()), 0,
                          "ERROR: there should be no new run/stream")
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 0,
                          "ERROR: there should be no streamers feed")
 
@@ -1180,19 +1196,19 @@ class Tier0FeederTest(unittest.TestCase):
                                                    'FILECOUNT' : 1 },
                                          transaction = False)
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 0,
                          "ERROR: there should be no streamers feed")
 
         self.finalCloseLumiDAO.execute(int(time.time()), transaction = False)
                                        
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 1,
                          "ERROR: there should be 1 streamers feed")
 
         self.insertRunStreamLumi(176161, "A", 2)
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 1,
                          "ERROR: there should be 1 streamers feed")
 
@@ -1204,13 +1220,13 @@ class Tier0FeederTest(unittest.TestCase):
                                                    'FILECOUNT' : 1 },
                                          transaction = False)
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 2,
                          "ERROR: there should be 2 streamers feed")
 
         self.insertRunStreamLumi(176161, "A", 3)
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 2,
                          "ERROR: there should be 2 streamers feed")
 
@@ -1222,13 +1238,13 @@ class Tier0FeederTest(unittest.TestCase):
                                                    'FILECOUNT' : 2 },
                                          transaction = False)
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 2,
                          "ERROR: there should be 2 streamers feed")
 
         self.finalCloseLumiDAO.execute(int(time.time()), transaction = False)
                                        
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 2,
                          "ERROR: there should be 2 streamers feed")
 
@@ -1236,7 +1252,7 @@ class Tier0FeederTest(unittest.TestCase):
 
         self.finalCloseLumiDAO.execute(int(time.time()), transaction = False)
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 4,
                          "ERROR: there should be 4 streamers feed")
 
@@ -1257,7 +1273,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(len(runStreams.keys()), 0,
                          "ERROR: there should be no new run/stream")
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 4,
                          "ERROR: there should be 4 streamers feed")
 
@@ -1275,7 +1291,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(len(runs), 1,
                          "ERROR: there should be one new run")
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 4,
                          "ERROR: there should be 4 streamers feed")
 
@@ -1295,7 +1311,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(set(runStreams[176163]), set(["A","Express"]),
                          "ERROR: there should be new run/stream for run 176162 and stream A and Express")
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 4,
                          "ERROR: there should be 4 streamers feed")
 
@@ -1310,7 +1326,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(set(runStreams[176163]), set(["A"]),
                          "ERROR: there should be new run/stream for run 176162 and stream A")
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 4,
                          "ERROR: there should be 4 streamers feed")
 
@@ -1322,7 +1338,7 @@ class Tier0FeederTest(unittest.TestCase):
                                                    'FILECOUNT' : 1 },
                                          transaction = False)
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 5,
                          "ERROR: there should be 5 streamers feed")
 
@@ -1335,7 +1351,7 @@ class Tier0FeederTest(unittest.TestCase):
                                                    'FILECOUNT' : 1 },
                                          transaction = False)
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 6,
                          "ERROR: there should be 6 streamers feed")
 
@@ -1348,7 +1364,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(set(runStreams[176163]), set(["A"]),
                          "ERROR: there should be new run/stream for run 176163 and stream A")
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 6,
                          "ERROR: there should be 6 streamers feed")
 
@@ -1360,7 +1376,7 @@ class Tier0FeederTest(unittest.TestCase):
                                                    'FILECOUNT' : 1 },
                                          transaction = False)
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 7,
                          "ERROR: there should be 7 streamers feed")
 
@@ -1372,7 +1388,7 @@ class Tier0FeederTest(unittest.TestCase):
                                                    'FILECOUNT' : 1 },
                                          transaction = False)
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 8,
                          "ERROR: there should be 8 streamers feed")
 
@@ -1382,7 +1398,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(len(runStreams.keys()), 0,
                          "ERROR: there should be no new run/stream")
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 8,
                          "ERROR: there should be 8 streamers feed")
 
@@ -1394,7 +1410,7 @@ class Tier0FeederTest(unittest.TestCase):
                                                    'FILECOUNT' : 1 },
                                          transaction = False)
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 9,
                          "ERROR: there should be 9 streamers feed")
 
@@ -1561,7 +1577,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(len(self.getClosedRunStreamFilesets()), 0,
                          "ERROR: there should be no closed run/stream filesets")
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
 
         RunLumiCloseoutAPI.closeRunStreamFilesets()
         self.assertEqual(len(self.getClosedRunStreamFilesets()), 0,
@@ -1578,7 +1594,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(len(self.getClosedRunStreamFilesets()), 0,
                          "ERROR: there should be no closed run/stream filesets")
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
 
         RunLumiCloseoutAPI.closeRunStreamFilesets()
         self.assertEqual(self.getClosedRunStreamFilesets(), { 176161 : 'A' },
@@ -1615,7 +1631,7 @@ class Tier0FeederTest(unittest.TestCase):
                                                    'FILECOUNT' : 3 },
                                          transaction = False)
 
-        self.feedStreamersDAO.execute(transaction = False)
+        self.feedStreamers()
 
         subID = myThread.dbi.processData("""SELECT wmbs_subscription.id
                                             FROM run_stream_fileset_assoc

@@ -135,10 +135,13 @@ class Tier0FeederPoller(BaseWorkerThread):
         # feed new data into exisiting filesets
         #
         try:
-            feedStreamersDAO.execute(transaction = False)
+            myThread.transaction.begin()
+            feedStreamersDAO.execute(conn = myThread.transaction.conn, transaction = True)
         except:
             logging.exception("Can't feed data, bailing out...")
             raise
+        else:
+            myThread.transaction.commit()
 
         #
         # run ended and run/stream fileset open
