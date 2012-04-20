@@ -124,7 +124,6 @@ class ExpressWorkloadFactory(StdBase):
 
         mergeTask.setTaskLogBaseLFN(self.unmergedLFNBase)
 
-        mergeTask.setTaskType("Merge")
         mergeTask.applyTemplates()
         mergeTask.setTaskPriority(self.priority + 5)
 
@@ -146,6 +145,8 @@ class ExpressWorkloadFactory(StdBase):
         maxInputSize = 2 * 1024 * 1024 * 1024
 
         if getattr(parentOutputModule, "dataTier") == "ALCARECO":
+
+            mergeTask.setTaskType("Processing")
 
             scenarioFunc = "alcaSkim"
             scenarioArgs = { 'globalTag' : self.globalTag,
@@ -169,6 +170,8 @@ class ExpressWorkloadFactory(StdBase):
                                                     forceMerged = True)
 
         else:
+
+            mergeTask.setTaskType("Merge")
 
             # DQM is handled differently
             #  merging does not increase size
