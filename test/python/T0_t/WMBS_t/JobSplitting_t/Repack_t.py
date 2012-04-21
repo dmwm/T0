@@ -373,5 +373,37 @@ class RepackTest(unittest.TestCase):
 
         return
 
+    def test05(self):
+        """
+        _test05_
+
+        Test repacking of multiple lumis with holes in the lumi sequence
+        Multi lumi input
+
+        """
+        for i in range(2,4):
+            newFile = File(makeUUID(), size = 1000, events = 100)
+            newFile.addRun(Run(1, *[1 + i/2]))
+            newFile.setLocation("SomeSE", immediateSave = False)
+            newFile.create()
+            self.fileset1.addFile(newFile)
+        for i in range(6,8):
+            newFile = File(makeUUID(), size = 1000, events = 100)
+            newFile.addRun(Run(1, *[1 + i/2]))
+            newFile.setLocation("SomeSE", immediateSave = False)
+            newFile.create()
+            self.fileset1.addFile(newFile)
+        self.fileset1.commit()
+
+        jobFactory = self.splitterFactory(package = "WMCore.WMBS",
+                                          subscription = self.subscription1)
+
+        jobGroups = jobFactory(maxStreamerCount = 3)
+
+        self.assertEqual(len(jobGroups), 0,
+                         "ERROR: JobFactory should have returned no JobGroup.")
+
+        return
+
 if __name__ == '__main__':
     unittest.main()
