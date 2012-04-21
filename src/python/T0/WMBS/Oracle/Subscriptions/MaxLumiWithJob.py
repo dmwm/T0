@@ -24,10 +24,10 @@ class MaxLumiWithJob(DBFormatter):
                  WHERE wmbs_jobgroup.subscription = :subscription
                  """
 
-        results = self.dbi.processData(sql, { 'subscription' : subscription },
-                                       conn = conn, transaction = transaction)
+        result = self.dbi.processData(sql, { 'subscription' : subscription },
+                                       conn = conn, transaction = transaction)[0].fetchall()[0][0]
 
-        for result in self.formatDict(results):
-            return result['max_lumi']
-
-        return 0
+        if result != None:
+            return result
+        else:
+            return 0

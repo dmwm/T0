@@ -12,7 +12,7 @@ from WMCore.Database.DBFormatter import DBFormatter
 
 class GetClosedEmptyLumis(DBFormatter):
 
-    sql = """SELECT lumi_section_closed.lumi AS lumi
+    sql = """SELECT lumi_section_closed.lumi_id
              FROM run_stream_fileset_assoc
              INNER JOIN lumi_section_closed ON
                lumi_section_closed.run_id = run_stream_fileset_assoc.run_id AND
@@ -26,7 +26,7 @@ class GetClosedEmptyLumis(DBFormatter):
     def execute(self, subscription, conn = None, transaction = False):
 
         results = self.dbi.processData(self.sql, { 'subscription' : subscription },
-                                       conn = conn, transaction = transaction).fetchall()
+                                       conn = conn, transaction = transaction)[0].fetchall()
 
         lumiList = []
         for result in results:
