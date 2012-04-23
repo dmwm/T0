@@ -149,7 +149,7 @@ class Repack(JobFactory):
 
                 # repack what we have to preserve order
                 if len(jobStreamerList) > 0:
-                    self.createJob(streamerList)
+                    self.createJob(jobStreamerList)
                     jobSizeTotal = 0
                     jobEventsTotal = 0
                     jobStreamerList = []
