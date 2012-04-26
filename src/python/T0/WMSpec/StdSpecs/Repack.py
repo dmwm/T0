@@ -25,7 +25,6 @@ def getTestArguments():
     to hunt you down and kill you.
     """
     arguments = {
-        "AcquisitionEra": "Tier0Testing",
         "Requestor": "Dirk.Hufnagel@cern.ch",
 
         "ScramArch": "slc5_amd64_gcc462",
@@ -34,6 +33,7 @@ def getTestArguments():
         "ProcScenario": "not_used_but_cannot_be_none",
 
         # these must be overridden
+        "AcquisitionEra": None,
         "CMSSWVersion": None,
         "ProcessingVersion": None,
         "Outputs" : None,

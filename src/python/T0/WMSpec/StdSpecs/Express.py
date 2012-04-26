@@ -28,12 +28,12 @@ def getTestArguments():
     to hunt you down and kill you.
     """
     arguments = {
-        "AcquisitionEra" : "Tier0Testing",
         "Requestor" : "Dirk.Hufnagel@cern.ch",
 
         "ScramArch" : "slc5_amd64_gcc462",
         
         # these must be overridden
+        "AcquisitionEra" : None,
         "CMSSWVersion" : None,
         "ProcessingVersion" : None,
         "ProcScenario" : None,

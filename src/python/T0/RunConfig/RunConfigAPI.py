@@ -428,6 +428,7 @@ def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
             specArguments['UnmergedLFNBase'] = "%s/t0temp/express" % lfnBase
             specArguments['MergedLFNBase'] = "%s/express" % lfnBase
 
+        specArguments['AcquisitionEra'] = tier0Config.Global.AcquisitionEra
         specArguments['CMSSWVersion'] = streamConfig.VersionOverride.get(onlineVersion, onlineVersion)
 	specArguments['Outputs'] = outputModuleDetails
 
