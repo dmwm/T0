@@ -29,7 +29,7 @@ class Express(JobFactory):
         """
         # extract some global scheduling parameters
         self.jobNamePrefix = kwargs.get('jobNamePrefix', "Express")
-        self.maxInputEvents = kwargs.get('maxInputEvents', 100)
+        self.maxInputEvents = kwargs['maxInputEvents']
 
         self.createdGroup = False
 

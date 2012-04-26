@@ -30,9 +30,9 @@ class ExpressMerge(JobFactory):
         """
         # extract some global scheduling parameters
         self.jobNamePrefix = kwargs.get('jobNamePrefix', "ExpressMerge")
-        self.maxLatency = kwargs['maxLatency']
-        self.maxInputFiles = kwargs['maxInputFiles']
         self.maxInputSize = kwargs['maxInputSize']
+        self.maxInputFiles = kwargs['maxInputFiles']
+        self.maxLatency = kwargs['maxLatency']
         self.currentTime = time.time()
 
         self.createdGroup = False

@@ -29,11 +29,10 @@ class Repack(JobFactory):
         """
         # extract some global scheduling parameters
         self.jobNamePrefix = kwargs.get('jobNamePrefix', "Repack")
-        self.maxStreamerSizeSingleLumi = kwargs.get('maxStreamerSizeSingleLumi', 20*1024*1024*1024)
-        self.maxStreamerEventsSingleLumi = kwargs.get('maxStreamerEventsSingleLumi', 500000)
-        self.maxStreamerSizeMultiLumi = kwargs.get('maxStreamerSizeMultiLumi', 10*1024*1024*1024)
-        self.maxStreamerEventsMultiLumi = kwargs.get('maxStreamerEventsMultiLumi', 500000)
-        self.maxStreamerCount = kwargs.get('maxStreamerCount', 1000)
+        self.maxSizeSingleLumi = kwargs['maxSizeSingleLumi']
+        self.maxSizeMultiLumi = kwargs['maxSizeMultiLumi']
+        self.maxEvents = kwargs['maxEvents']
+        self.maxInputFiles = kwargs['maxInputFiles']
 
         self.createdGroup = False
 
@@ -91,14 +90,13 @@ class Repack(JobFactory):
             if (lumi in lumiList) or (lumi in emptyLumis):
                 streamersByLumi[lumi] = []
             else:
-                lastLumi = lumi
                 break
 
         # figure out what data to create jobs for
-        for result in availableFiles:
-            lumi = result['lumi']
+        for fileInfo in availableFiles:
+            lumi = fileInfo['lumi']
             if streamersByLumi.has_key(lumi):
-                streamersByLumi[lumi].append(result)
+                streamersByLumi[lumi].append(fileInfo)
 
         # check if fileset is closed
         fileset = self.subscription.getFileset()
@@ -116,7 +114,7 @@ class Repack(JobFactory):
         schedule jobs
 
         """
-        logging.debug("defineStrictJobs(): Running...")
+        logging.debug("defineJobs(): Running...")
 
         jobSizeTotal = 0
         jobEventsTotal = 0
@@ -141,8 +139,8 @@ class Repack(JobFactory):
             #
             # => handle lumi individually and split
             #
-            if lumiSizeTotal > self.maxStreamerSizeSingleLumi or \
-                   lumiEventsTotal > self.maxStreamerEventsSingleLumi:
+            if lumiSizeTotal > self.maxSizeSingleLumi or \
+                   lumiEventsTotal > self.maxEvents:
 
                 splitLumis.append( { 'SUB' : self.subscription["id"],
                                      'LUMI' : lumi } )
@@ -171,8 +169,8 @@ class Repack(JobFactory):
                             newEventsTotal = eventsTotal + streamer['events']
                             newSizeTotal = sizeTotal + streamer['filesize']                        
 
-                            if newSizeTotal <= self.maxStreamerSizeSingleLumi and \
-                                   newEventsTotal <= self.maxStreamerEventsSingleLumi:
+                            if newSizeTotal <= self.maxSizeSingleLumi and \
+                                   newEventsTotal <= self.maxEvents:
                                 eventsTotal = newEventsTotal
                                 sizeTotal = newSizeTotal
                                 streamerList.append(streamer)
@@ -193,7 +191,7 @@ class Repack(JobFactory):
 
                 newSizeTotal = jobSizeTotal + lumiSizeTotal
                 newEventsTotal = jobEventsTotal + lumiEventsTotal
-                newStreamerCount = len(jobStreamerList) + len(lumiStreamerList)
+                newInputfiles = len(jobStreamerList) + len(lumiStreamerList)
 
                 # always take the first one
                 if len(jobStreamerList) == 0:
@@ -203,9 +201,9 @@ class Repack(JobFactory):
                     jobStreamerList.extend(lumiStreamerList)
 
                 # still safe with new lumi, just add it
-                elif newSizeTotal <= self.maxStreamerSizeMultiLumi and \
-                       newEventsTotal <= self.maxStreamerEventsMultiLumi and \
-                       newStreamerCount <= self.maxStreamerCount:
+                elif newSizeTotal <= self.maxSizeMultiLumi and \
+                       newEventsTotal <= self.maxEvents and \
+                       newInputfiles <= self.maxInputFiles:
 
                     jobSizeTotal = newSizeTotal
                     jobEventsTotal = newEventsTotal

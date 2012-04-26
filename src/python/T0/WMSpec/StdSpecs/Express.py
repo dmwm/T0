@@ -88,6 +88,10 @@ class ExpressWorkloadFactory(StdBase):
             if output['dataTier'] == "ALCARECO":
                 self.alcaPrimaryDataset = output['primaryDataset']
 
+        # finalize splitting parameters
+        mySplitArgs = self.expressSplitArgs.copy()
+        mySplitArgs['algo_package'] = "T0.JobSplitting"
+
         expressTask = workload.newTask("Express")
         expressOutMods = self.setupProcessingTask(expressTask, taskType,
                                                   scenarioName = self.procScenario,
@@ -97,7 +101,7 @@ class ExpressWorkloadFactory(StdBase):
                                                                    'skims' : self.alcaSkims,
                                                                    'outputs' : self.outputs },
                                                   splitAlgo = "Express",
-                                                  splitArgs = { 'algo_package' : "T0.JobSplitting" },
+                                                  splitArgs = mySplitArgs,
                                                   stepType = cmsswStepType,
                                                   forceUnmerged = True)
 
@@ -110,7 +114,8 @@ class ExpressWorkloadFactory(StdBase):
         """
         _addExpressMergeTask_
 
-        Create an expressmerge task for files produced by the parent task.
+        Create an expressmerge task for files produced by the parent task
+
         """
         mergeTask = parentTask.addTask("%sMerge%s" % (parentTask.name(), parentOutputModuleName))
         self.addDashboardMonitoring(mergeTask)
@@ -139,10 +144,9 @@ class ExpressWorkloadFactory(StdBase):
         mergeTaskCmsswHelper.setErrorDestinationStep(stepName = mergeTaskLogArch.name())
         mergeTaskCmsswHelper.setGlobalTag(self.globalTag)
 
-        # job splitting parameters
-        maxLatency = 15 * 23
-        maxInputFiles = 500
-        maxInputSize = 2 * 1024 * 1024 * 1024
+        # finalize splitting parameters
+        mySplitArgs = self.expressMergeSplitArgs.copy()
+        mySplitArgs['algo_package'] = "T0.JobSplitting"
 
         if getattr(parentOutputModule, "dataTier") == "ALCARECO":
 
@@ -154,10 +158,7 @@ class ExpressWorkloadFactory(StdBase):
                              'skims' : self.alcaSkims,
                              'primaryDataset' : self.alcaPrimaryDataset }
             mergeTask.setSplittingAlgorithm("ExpressMerge",
-                                            algo_package = "T0.JobSplitting",
-                                            maxLatency = maxLatency,
-                                            maxInputFiles = maxInputFiles,
-                                            maxInputSize = maxInputSize)
+                                            **mySplitArgs)
             mergeTaskCmsswHelper.setDataProcessingConfig(self.procScenario, scenarioFunc, **scenarioArgs)
 
             configOutput = self.determineOutputModules(scenarioFunc, scenarioArgs)
@@ -180,13 +181,10 @@ class ExpressWorkloadFactory(StdBase):
             #                => higher limits for latency (disabled for now)
             dqm_format = getattr(parentOutputModule, "dataTier") == "DQM"
             if dqm_format:
-                maxInputSize = maxInputSize * 100
+                mySplitArgs['maxInputSize'] *= 100
 
             mergeTask.setSplittingAlgorithm("ExpressMerge",
-                                            algo_package = "T0.JobSplitting",
-                                            maxLatency = maxLatency,
-                                            maxInputFiles = maxInputFiles,
-                                            maxInputSize = maxInputSize)
+                                            **mySplitArgs)
             mergeTaskCmsswHelper.setDataProcessingConfig(self.procScenario, "merge", dqm_format = dqm_format)
 
             self.addOutputModule(mergeTask, "Merged",
@@ -214,6 +212,14 @@ class ExpressWorkloadFactory(StdBase):
         self.procScenario = arguments['ProcScenario']
         self.alcaSkims = arguments['AlcaSkims']
         self.outputs = arguments['Outputs']
+
+        # job splitting parameters
+        self.expressSplitArgs = {}
+        self.expressSplitArgs['maxInputEvents'] = 200
+        self.expressMergeSplitArgs = {}
+        self.expressMergeSplitArgs['maxInputSize'] = 2 * 1024 * 1024 * 1024
+        self.expressMergeSplitArgs['maxInputFiles'] = 500
+        self.expressMergeSplitArgs['maxLatency'] = 15 * 23,
 
         if arguments.has_key("Multicore"):
             numCores = arguments.get("Multicore")

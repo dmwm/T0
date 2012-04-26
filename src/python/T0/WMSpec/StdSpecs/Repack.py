@@ -81,20 +81,77 @@ class RepackWorkloadFactory(StdBase):
             output['moduleLabel'] = "write_%s_%s" % (output['primaryDataset'],
                                                      output['dataTier'])
 
+        # finalize splitting parameters
+        mySplitArgs = self.repackSplitArgs.copy()
+        mySplitArgs['algo_package'] = "T0.JobSplitting"
+
         repackTask = workload.newTask("Repack")
         repackOutMods = self.setupProcessingTask(repackTask, taskType,
                                                  scenarioName = self.procScenario,
                                                  scenarioFunc = "repack",
                                                  scenarioArgs = { 'outputs' : self.outputs },
                                                  splitAlgo = "Repack",
-                                                 splitArgs = { 'algo_package' : "T0.JobSplitting" },
+                                                 splitArgs = mySplitArgs,
                                                  stepType = cmsswStepType)
 
         for repackOutLabel, repackOutInfo in repackOutMods.items():
-            self.addMergeTask(repackTask, "Repack", repackOutLabel,
-                              "cmsRun1", doLogCollect = False)
+            self.addRepackMergeTask(repackTask, repackOutLabel)
 
         return workload
+
+    def addRepackMergeTask(self, parentTask, parentOutputModuleName):
+        """
+        _addRepackMergeTask_
+
+        Create an repackmerge task for files produced by the parent task.
+
+        """
+        mergeTask = parentTask.addTask("%sMerge%s" % (parentTask.name(), parentOutputModuleName))
+        self.addDashboardMonitoring(mergeTask)
+        mergeTaskCmssw = mergeTask.makeStep("cmsRun1")
+        mergeTaskCmssw.setStepType("CMSSW")
+
+        mergeTaskStageOut = mergeTaskCmssw.addStep("stageOut1")
+        mergeTaskStageOut.setStepType("StageOut")
+        mergeTaskLogArch = mergeTaskCmssw.addStep("logArch1")
+        mergeTaskLogArch.setStepType("LogArchive")
+
+        mergeTask.setTaskLogBaseLFN(self.unmergedLFNBase)
+
+        mergeTask.applyTemplates()
+        mergeTask.setTaskPriority(self.priority + 5)
+
+        parentTaskCmssw = parentTask.getStep("cmsRun1")
+        parentOutputModule = parentTaskCmssw.getOutputModule(parentOutputModuleName)
+
+        mergeTask.setInputReference(parentTaskCmssw, outputModule = parentOutputModuleName)
+
+        mergeTaskCmsswHelper = mergeTaskCmssw.getTypeHelper()
+        mergeTaskCmsswHelper.cmsswSetup(self.frameworkVersion, softwareEnvironment = "",
+                                        scramArch = self.scramArch)
+
+        mergeTaskCmsswHelper.setErrorDestinationStep(stepName = mergeTaskLogArch.name())
+        mergeTaskCmsswHelper.setGlobalTag(self.globalTag)
+
+        # finalize splitting parameters
+        mySplitArgs = self.repackMergeSplitArgs.copy()
+        mySplitArgs['algo_package'] = "T0.JobSplitting"
+
+        mergeTask.setTaskType("Merge")
+
+        mergeTask.setSplittingAlgorithm("RepackMerge",
+                                        **mySplitArgs)
+        mergeTaskCmsswHelper.setDataProcessingConfig(self.procScenario, "merge")
+
+        self.addOutputModule(mergeTask, "Merged",
+                             primaryDataset = getattr(parentOutputModule, "primaryDataset"),
+                             dataTier = getattr(parentOutputModule, "dataTier"),
+                             filterName = getattr(parentOutputModule, "filterName"),
+                             forceMerged = True)
+
+        self.addCleanupTask(parentTask, parentOutputModuleName)
+
+        return mergeTask
 
     def __call__(self, workloadName, arguments):
         """
@@ -111,6 +168,23 @@ class RepackWorkloadFactory(StdBase):
 
         # crashes if this isn't set
         self.globalTag = "NOTSET"
+
+        # job splitting parameters
+        self.repackSplitArgs = {}
+        self.repackSplitArgs['maxSizeSingleLumi'] = 20*1024*1024*1024
+        self.repackSplitArgs['maxSizeMultiLumi'] = 10*1024*1024*1024
+        self.repackSplitArgs['maxEvents'] = 500000
+        self.repackSplitArgs['maxInputFiles'] = 1000
+        self.repackMergeSplitArgs = {}
+        self.repackMergeSplitArgs['minSize'] = 2.1 * 1024 * 1024 * 1024
+        self.repackMergeSplitArgs['maxSize'] = 4.0 * 1024 * 1024 * 1024
+        self.repackMergeSplitArgs['maxEvents'] = 100000000
+        self.repackMergeSplitArgs['maxInputFiles'] = 1000
+        self.repackMergeSplitArgs['maxEdmSize'] = 20 * 1024 * 1024 * 1024
+        self.repackMergeSplitArgs['maxOverSize'] = 10 * 1024 * 1024 * 1024
+
+        if self.repackMergeSplitArgs['maxOverSize'] > self.repackMergeSplitArgs['maxEdmSize']:
+            self.repackMergeSplitArgs['maxOverSize'] = self.repackMergeSplitArgs['maxEdmSize']
 
         if arguments.has_key("Multicore"):
             numCores = arguments.get("Multicore")

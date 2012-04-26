@@ -60,25 +60,17 @@ class ExpressTest(unittest.TestCase):
                              transaction = False)
 
         insertLumiDAO = daoFactory(classname = "RunConfig.InsertLumiSection")
-        insertLumiDAO.execute(binds = { 'RUN' : 1,
-                                        'LUMI' : 1 },
-                              transaction = False)
-        insertLumiDAO.execute(binds = { 'RUN' : 1,
-                                        'LUMI' : 2 },
-                              transaction = False)
-        insertLumiDAO.execute(binds = { 'RUN' : 1,
-                                        'LUMI' : 3 },
-                              transaction = False)
-        insertLumiDAO.execute(binds = { 'RUN' : 1,
-                                        'LUMI' : 4 },
-                              transaction = False)
+        for lumi in range(1,5):
+            insertLumiDAO.execute(binds = { 'RUN' : 1,
+                                            'LUMI' : lumi },
+                                  transaction = False)
 
         insertStreamDAO = daoFactory(classname = "RunConfig.InsertStream")
-        insertStreamDAO.execute(binds = { 'STREAM' : "A" },
+        insertStreamDAO.execute(binds = { 'STREAM' : "Express" },
                                 transaction = False)
 
         insertStreamFilesetDAO = daoFactory(classname = "RunConfig.InsertStreamFileset")
-        insertStreamFilesetDAO.execute(1, "A", "TestFileset1")
+        insertStreamFilesetDAO.execute(1, "Express", "TestFileset1")
 
         fileset1 = Fileset(name = "TestFileset1")
         self.fileset2 = Fileset(name = "TestFileset2")
@@ -109,6 +101,12 @@ class ExpressTest(unittest.TestCase):
 
         # keep for later
         self.insertSplitLumisDAO = daoFactory(classname = "JobSplitting.InsertSplitLumis")
+
+        # default split parameters
+        self.splitArgs = {}
+        self.splitArgs['maxInputSize'] = 2 * 1024 * 1024 * 1024
+        self.splitArgs['maxInputFiles'] = 500,
+        self.splitArgs['maxLatency'] = 15 * 23
 
         return
 
@@ -142,37 +140,37 @@ class ExpressTest(unittest.TestCase):
         Test latency trigger (wait and 0)
 
         """
-        for i in range(2):
-            newFile = File(makeUUID(), size = 1000, events = 100)
-            newFile.addRun(Run(1, *[1]))
-            newFile.setLocation("SomeSE", immediateSave = False)
-            newFile.create()
-            self.fileset2.addFile(newFile)
+        mySplitArgs = self.splitArgs.copy()
+
+        for lumi in [1]:
+            for i in range(2):
+                newFile = File(makeUUID(), size = 1000, events = 100)
+                newFile.addRun(Run(1, *[lumi]))
+                newFile.setLocation("SomeSE", immediateSave = False)
+                newFile.create()
+                self.fileset2.addFile(newFile)
         self.fileset2.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription2)
 
-        jobGroups = jobFactory(maxInputSize = 2 * 1024 * 1024 * 1024,
-                               maxInputFiles = 1000,
-                               maxLatency = 3)
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
-                         "ERROR: JobFactory should have returned no JobGroup.")
+                         "ERROR: JobFactory should have returned no JobGroup")
 
-        jobGroups = jobFactory(maxInputSize = 2 * 1024 * 1024,
-                               maxInputFiles = 1000,
-                               maxLatency = 0)
+        mySplitArgs['maxLatency'] = 0
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
-                         "ERROR: JobFactory didn't return one JobGroup.")
+                         "ERROR: JobFactory didn't return one JobGroup")
 
         self.assertEqual(len(jobGroups[0].jobs), 1,
-                         "ERROR: JobFactory didn't create a single job.")
+                         "ERROR: JobFactory didn't create a single job")
 
-        job = jobGroups[0].jobs.pop()
+        job = jobGroups[0].jobs[0]
         self.assertTrue(job['name'].startswith("ExpressMerge-"),
-                        "ERROR: Job has wrong name.")
+                        "ERROR: Job has wrong name")
 
         return
 
@@ -184,35 +182,37 @@ class ExpressTest(unittest.TestCase):
         Test latency trigger (timed out)
 
         """
-        for i in range(2):
-            newFile = File(makeUUID(), size = 1000, events = 100)
-            newFile.addRun(Run(1, *[1]))
-            newFile.setLocation("SomeSE", immediateSave = False)
-            newFile.create()
-            self.fileset2.addFile(newFile)
+        mySplitArgs = self.splitArgs.copy()
+
+        for lumi in [1]:
+            for i in range(2):
+                newFile = File(makeUUID(), size = 1000, events = 100)
+                newFile.addRun(Run(1, *[lumi]))
+                newFile.setLocation("SomeSE", immediateSave = False)
+                newFile.create()
+                self.fileset2.addFile(newFile)
         self.fileset2.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription2)
 
-        jobGroups = jobFactory(maxInputSize = 1,
-                               maxInputFiles = 1,
-                               maxLatency = 3)
+        mySplitArgs['maxInputSize'] = 1
+        mySplitArgs['maxInputFiles'] = 1
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
-                         "ERROR: JobFactory should have returned no JobGroup.")
+                         "ERROR: JobFactory should have returned no JobGroup")
 
         time.sleep(1)
 
-        jobGroups = jobFactory(maxInputSize = 1,
-                               maxInputFiles = 1,
-                               maxLatency = 1)
+        mySplitArgs['maxLatency'] = 1
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
-                         "ERROR: JobFactory didn't return one JobGroup.")
+                         "ERROR: JobFactory didn't return one JobGroup")
 
         self.assertEqual(len(jobGroups[0].jobs), 1,
-                         "ERROR: JobFactory didn't create a single job.")
+                         "ERROR: JobFactory didn't create a single job")
 
         return
 
@@ -223,35 +223,36 @@ class ExpressTest(unittest.TestCase):
         Test input files threshold on multi lumis
 
         """
-        for i in range(4):
-            newFile = File(makeUUID(), size = 1000, events = 100)
-            newFile.addRun(Run(1, *[1+i/2]))
-            newFile.setLocation("SomeSE", immediateSave = False)
-            newFile.create()
-            self.fileset2.addFile(newFile)
+        mySplitArgs = self.splitArgs.copy()
+
+        for lumi in [1,2]:
+            for i in range(2):
+                newFile = File(makeUUID(), size = 1000, events = 100)
+                newFile.addRun(Run(1, *[lumi]))
+                newFile.setLocation("SomeSE", immediateSave = False)
+                newFile.create()
+                self.fileset2.addFile(newFile)
         self.fileset2.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription2)
 
-        jobGroups = jobFactory(maxInputSize = 2 * 1024 * 1024 * 1024,
-                               maxInputFiles = 1,
-                               maxLatency = 3)
+        mySplitArgs['maxInputFiles'] = 1
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
-                         "ERROR: JobFactory should have returned no JobGroup.")
+                         "ERROR: JobFactory should have returned no JobGroup")
 
         time.sleep(1)
 
-        jobGroups = jobFactory(maxInputSize = 2 * 1024 * 1024 * 1024,
-                               maxInputFiles = 1,
-                               maxLatency = 1)
+        mySplitArgs['maxLatency'] = 1
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
-                         "ERROR: JobFactory didn't return one JobGroup.")
+                         "ERROR: JobFactory didn't return one JobGroup")
 
         self.assertEqual(len(jobGroups[0].jobs), 2,
-                         "ERROR: JobFactory didn't create two jobs.")
+                         "ERROR: JobFactory didn't create two jobs")
 
         return
 
@@ -262,35 +263,36 @@ class ExpressTest(unittest.TestCase):
         Test input size threshold on multi lumis
 
         """
-        for i in range(4):
-            newFile = File(makeUUID(), size = 1000, events = 100)
-            newFile.addRun(Run(1, *[1+i/2]))
-            newFile.setLocation("SomeSE", immediateSave = False)
-            newFile.create()
-            self.fileset2.addFile(newFile)
+        mySplitArgs = self.splitArgs.copy()
+
+        for lumi in [1,2]:
+            for i in range(2):
+                newFile = File(makeUUID(), size = 1000, events = 100)
+                newFile.addRun(Run(1, *[lumi]))
+                newFile.setLocation("SomeSE", immediateSave = False)
+                newFile.create()
+                self.fileset2.addFile(newFile)
         self.fileset2.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription2)
 
-        jobGroups = jobFactory(maxInputSize = 1,
-                               maxInputFiles = 1000,
-                               maxLatency = 3)
+        mySplitArgs['maxInputSize'] = 1
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
-                         "ERROR: JobFactory should have returned no JobGroup.")
+                         "ERROR: JobFactory should have returned no JobGroup")
 
         time.sleep(1)
 
-        jobGroups = jobFactory(maxInputSize = 1,
-                               maxInputFiles = 1000,
-                               maxLatency = 1)
+        mySplitArgs['maxLatency'] = 1
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
-                         "ERROR: JobFactory didn't return one JobGroup.")
+                         "ERROR: JobFactory didn't return one JobGroup")
 
         self.assertEqual(len(jobGroups[0].jobs), 2,
-                         "ERROR: JobFactory didn't create two jobs.")
+                         "ERROR: JobFactory didn't create two jobs")
 
         return
 
@@ -301,12 +303,15 @@ class ExpressTest(unittest.TestCase):
         Test multi lumis express merges
 
         """
-        for i in range(4):
-            newFile = File(makeUUID(), size = 1000, events = 100)
-            newFile.addRun(Run(1, *[1+i/2]))
-            newFile.setLocation("SomeSE", immediateSave = False)
-            newFile.create()
-            self.fileset2.addFile(newFile)
+        mySplitArgs = self.splitArgs.copy()
+
+        for lumi in [1,2]:
+            for i in range(2):
+                newFile = File(makeUUID(), size = 1000, events = 100)
+                newFile.addRun(Run(1, *[lumi]))
+                newFile.setLocation("SomeSE", immediateSave = False)
+                newFile.create()
+                self.fileset2.addFile(newFile)
         self.fileset2.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
@@ -314,15 +319,14 @@ class ExpressTest(unittest.TestCase):
 
         time.sleep(1)
 
-        jobGroups = jobFactory(maxInputSize = 2 * 1024 * 1024 * 1024,
-                               maxInputFiles = 1000,
-                               maxLatency = 1)
+        mySplitArgs['maxLatency'] = 1
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
-                         "ERROR: JobFactory didn't return one JobGroup.")
+                         "ERROR: JobFactory didn't return one JobGroup")
 
         self.assertEqual(len(jobGroups[0].jobs), 1,
-                         "ERROR: JobFactory didn't create a single job.")
+                         "ERROR: JobFactory didn't create a single job")
 
         return
 
@@ -333,18 +337,15 @@ class ExpressTest(unittest.TestCase):
         Test multi lumis express merges with holes
 
         """
-        for i in range(4):
-            newFile = File(makeUUID(), size = 1000, events = 100)
-            newFile.addRun(Run(1, *[1+i/2]))
-            newFile.setLocation("SomeSE", immediateSave = False)
-            newFile.create()
-            self.fileset2.addFile(newFile)
-        for i in range(6,8):
-            newFile = File(makeUUID(), size = 1000, events = 100)
-            newFile.addRun(Run(1, *[1+i/2]))
-            newFile.setLocation("SomeSE", immediateSave = False)
-            newFile.create()
-            self.fileset2.addFile(newFile)
+        mySplitArgs = self.splitArgs.copy()
+
+        for lumi in [1,2,4]:
+            for i in range(2):
+                newFile = File(makeUUID(), size = 1000, events = 100)
+                newFile.addRun(Run(1, *[lumi]))
+                newFile.setLocation("SomeSE", immediateSave = False)
+                newFile.create()
+                self.fileset2.addFile(newFile)
         self.fileset2.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
@@ -352,15 +353,14 @@ class ExpressTest(unittest.TestCase):
 
         time.sleep(1)
 
-        jobGroups = jobFactory(maxInputSize = 2 * 1024 * 1024 * 1024,
-                               maxInputFiles = 1000,
-                               maxLatency = 1)
+        mySplitArgs['maxLatency'] = 1
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
-                         "ERROR: JobFactory didn't return one JobGroup.")
+                         "ERROR: JobFactory didn't return one JobGroup")
 
         self.assertEqual(len(jobGroups[0].jobs), 2,
-                         "ERROR: JobFactory didn't create two jobs.")
+                         "ERROR: JobFactory didn't create two jobs")
 
         return
 
@@ -371,12 +371,15 @@ class ExpressTest(unittest.TestCase):
         Test active split lumis
 
         """
-        for i in range(2):
-            newFile = File(makeUUID(), size = 1000, events = 100)
-            newFile.addRun(Run(1, *[1]))
-            newFile.setLocation("SomeSE", immediateSave = False)
-            newFile.create()
-            self.fileset2.addFile(newFile)
+        mySplitArgs = self.splitArgs.copy()
+
+        for lumi in [1]:
+            for i in range(2):
+                newFile = File(makeUUID(), size = 1000, events = 100)
+                newFile.addRun(Run(1, *[lumi]))
+                newFile.setLocation("SomeSE", immediateSave = False)
+                newFile.create()
+                self.fileset2.addFile(newFile)
         self.fileset2.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
@@ -385,24 +388,21 @@ class ExpressTest(unittest.TestCase):
         self.insertSplitLumisDAO.execute( binds = { 'SUB' : self.subscription1['id'],
                                                     'LUMI' : 1 } )
 
-        jobGroups = jobFactory(maxInputSize = 2 * 1024 * 1024 * 1024,
-                               maxInputFiles = 1000,
-                               maxLatency = 0)
+        mySplitArgs['maxLatency'] = 0
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
-                         "ERROR: JobFactory should have returned no JobGroup.")
+                         "ERROR: JobFactory should have returned no JobGroup")
 
         self.deleteSplitLumis()
 
-        jobGroups = jobFactory(maxInputSize = 2 * 1024 * 1024 * 1024,
-                               maxInputFiles = 1000,
-                               maxLatency = 0)
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
-                         "ERROR: JobFactory didn't return one JobGroup.")
+                         "ERROR: JobFactory didn't return one JobGroup")
 
         self.assertEqual(len(jobGroups[0].jobs), 1,
-                         "ERROR: JobFactory didn't create a single job.")
+                         "ERROR: JobFactory didn't create a single job")
 
         return
 

@@ -87,6 +87,13 @@ class RepackTest(unittest.TestCase):
         # keep for later
         self.getSplitLumisDAO = daoFactory(classname = "JobSplitting.GetSplitLumis")
 
+        # default split parameters
+        self.splitArgs = {}
+        self.splitArgs['maxSizeSingleLumi'] = 20*1024*1024*1024
+        self.splitArgs['maxSizeMultiLumi'] = 10*1024*1024*1024
+        self.splitArgs['maxEvents'] = 500000
+        self.splitArgs['maxInputFiles'] = 1000
+
         return
 
     def tearDown(self):
@@ -107,8 +114,9 @@ class RepackTest(unittest.TestCase):
         Multi lumi input
 
         """
-        # create 2 files for each of the first 3 lumis
-        for lumi in range(1,5):
+        mySplitArgs = self.splitArgs.copy()
+
+        for lumi in [1,2,3,4]:
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
@@ -120,12 +128,13 @@ class RepackTest(unittest.TestCase):
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription1)
 
-        jobGroups = jobFactory(maxStreamerSizeMultiLumi = 9000)
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
                          "ERROR: JobFactory should have returned no JobGroup")
 
-        jobGroups = jobFactory(maxStreamerSizeMultiLumi = 5000)
+        mySplitArgs['maxSizeMultiLumi'] = 5000
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
                          "ERROR: JobFactory didn't return one JobGroup")
@@ -142,7 +151,7 @@ class RepackTest(unittest.TestCase):
 
         self.fileset1.markOpen(False)
 
-        jobGroups = jobFactory(maxStreamerSizeMultiLumi = 5000)
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
                          "ERROR: JobFactory didn't return one JobGroup")
@@ -171,8 +180,9 @@ class RepackTest(unittest.TestCase):
         Multi lumi input
 
         """
-        # create 2 files for each of the first 3 lumis
-        for lumi in range(1,5):
+        mySplitArgs = self.splitArgs.copy()
+
+        for lumi in [1,2,3,4]:
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
@@ -184,12 +194,13 @@ class RepackTest(unittest.TestCase):
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription1)
 
-        jobGroups = jobFactory(maxStreamerEventsMultiLumi = 900)
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
                          "ERROR: JobFactory should have returned no JobGroup")
 
-        jobGroups = jobFactory(maxStreamerEventsMultiLumi = 500)
+        mySplitArgs['maxEvents'] = 500
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
                          "ERROR: JobFactory didn't return one JobGroup")
@@ -203,7 +214,7 @@ class RepackTest(unittest.TestCase):
 
         self.fileset1.markOpen(False)
 
-        jobGroups = jobFactory(maxStreamerEventsMultiLumi = 500)
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
                          "ERROR: JobFactory didn't return one JobGroup")
@@ -229,24 +240,27 @@ class RepackTest(unittest.TestCase):
         Single lumi input
 
         """
-        # create 8 files for a single lumi
-        for i in range(8):
-            newFile = File(makeUUID(), size = 1000, events = 100)
-            newFile.addRun(Run(1, *[1]))
-            newFile.setLocation("SomeSE", immediateSave = False)
-            newFile.create()
-            self.fileset1.addFile(newFile)
+        mySplitArgs = self.splitArgs.copy()
+
+        for lumi in [1]:
+            for i in range(8):
+                newFile = File(makeUUID(), size = 1000, events = 100)
+                newFile.addRun(Run(1, *[lumi]))
+                newFile.setLocation("SomeSE", immediateSave = False)
+                newFile.create()
+                self.fileset1.addFile(newFile)
         self.fileset1.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription1)
 
-        jobGroups = jobFactory(maxStreamerSizeSingleLumi = 9000)
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
                          "ERROR: JobFactory should have returned no JobGroup")
 
-        jobGroups = jobFactory(maxStreamerSizeSingleLumi = 6500)
+        mySplitArgs['maxSizeSingleLumi'] = 6500
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
                          "ERROR: JobFactory didn't return one JobGroup")
@@ -276,24 +290,27 @@ class RepackTest(unittest.TestCase):
         Single lumi input
 
         """
-        # create 8 files for a single lumi
-        for i in range(8):
-            newFile = File(makeUUID(), size = 1000, events = 100)
-            newFile.addRun(Run(1, *[1]))
-            newFile.setLocation("SomeSE", immediateSave = False)
-            newFile.create()
-            self.fileset1.addFile(newFile)
+        mySplitArgs = self.splitArgs.copy()
+
+        for lumi in [1]:
+            for i in range(8):
+                newFile = File(makeUUID(), size = 1000, events = 100)
+                newFile.addRun(Run(1, *[lumi]))
+                newFile.setLocation("SomeSE", immediateSave = False)
+                newFile.create()
+                self.fileset1.addFile(newFile)
         self.fileset1.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription1)
 
-        jobGroups = jobFactory(maxStreamerEventsSingleLumi = 900)
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
                          "ERROR: JobFactory should have returned no JobGroup")
 
-        jobGroups = jobFactory(maxStreamerEventsSingleLumi = 650)
+        mySplitArgs['maxEvents'] = 650
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
                          "ERROR: JobFactory didn't return one JobGroup")
@@ -323,8 +340,9 @@ class RepackTest(unittest.TestCase):
         Multi lumi input
 
         """
-        # create 2 files for each of the first 3 lumis
-        for lumi in range(1,5):
+        mySplitArgs = self.splitArgs.copy()
+
+        for lumi in [1,2,3,4]:
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
@@ -336,12 +354,13 @@ class RepackTest(unittest.TestCase):
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription1)
 
-        jobGroups = jobFactory(maxStreamerCount = 9)
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
                          "ERROR: JobFactory should have returned no JobGroup")
 
-        jobGroups = jobFactory(maxStreamerCount = 5)
+        mySplitArgs['maxInputFiles'] = 5
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
                          "ERROR: JobFactory didn't return one JobGroup")
@@ -355,7 +374,7 @@ class RepackTest(unittest.TestCase):
 
         self.fileset1.markOpen(False)
 
-        jobGroups = jobFactory(maxStreamerCount = 5)
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
                          "ERROR: JobFactory didn't return one JobGroup")
@@ -381,11 +400,12 @@ class RepackTest(unittest.TestCase):
         Multi lumi input
 
         """
-        # create 2 files for lumis 1,2 and 4 each
-        for lumi in [1, 2, 4]:
+        mySplitArgs = self.splitArgs.copy()
+
+        for lumi in [1,2,4]:
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000, events = 100)
-                newFile.addRun(Run(1, *[1 + i/2]))
+                newFile.addRun(Run(1, *[lumi]))
                 newFile.setLocation("SomeSE", immediateSave = False)
                 newFile.create()
                 self.fileset1.addFile(newFile)
@@ -394,7 +414,8 @@ class RepackTest(unittest.TestCase):
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription1)
 
-        jobGroups = jobFactory(maxStreamerCount = 3)
+        mySplitArgs['maxInputFiles'] = 5
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
                          "ERROR: JobFactory should have returned no JobGroup")
@@ -408,11 +429,13 @@ class RepackTest(unittest.TestCase):
         Test repacking of 3 lumis
         2 small lumis (single job), followed by a big one (multiple jobs)
 
+        files for lumi 1 and 2 are below multi-lumi thresholds
+        files for lumi 3 are above single-lumi threshold
+
         """
-        # create 2 files for the each of the first 3 lumis
-        # files for lumi 1 and 2 are below multi-lumi thresholds
-        # files for lumi 3 are above single-lumi threshold
-        for lumi in range(1,4):
+        mySplitArgs = self.splitArgs.copy()
+
+        for lumi in [1,2,3]:
             for i in range(2):
                 if lumi == 3:
                     nevents = 500
@@ -428,7 +451,8 @@ class RepackTest(unittest.TestCase):
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription1)
 
-        jobGroups = jobFactory(maxStreamerEventsSingleLumi = 900)
+        mySplitArgs['maxEvents'] = 900
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
                          "ERROR: JobFactory didn't return one JobGroup")

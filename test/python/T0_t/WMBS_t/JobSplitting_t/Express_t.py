@@ -122,18 +122,18 @@ class ExpressTest(unittest.TestCase):
         jobGroups = jobFactory(maxInputEvents = 200)
 
         self.assertEqual(len(jobGroups), 1,
-                         "ERROR: JobFactory didn't return one JobGroup.")
+                         "ERROR: JobFactory didn't return one JobGroup")
 
         self.assertEqual(len(jobGroups[0].jobs), 1,
-                         "ERROR: JobFactory didn't create a single job.")
+                         "ERROR: JobFactory didn't create a single job")
 
-        job = jobGroups[0].jobs.pop()
+        job = jobGroups[0].jobs[0]
         self.assertTrue(job['name'].startswith("Express-"),
-                        "ERROR: Job has wrong name.")
+                        "ERROR: Job has wrong name")
 
         splitLumis = self.getSplitLumisDAO.execute()
         self.assertEqual(len(splitLumis), 0,
-                         "ERROR: Split lumis were created.")
+                         "ERROR: Split lumis were created")
 
         return
 
@@ -158,11 +158,11 @@ class ExpressTest(unittest.TestCase):
         jobGroups = jobFactory(maxInputEvents = 199)
 
         self.assertEqual(len(jobGroups[0].jobs), 2,
-                         "ERROR: JobFactory didn't create two jobs.")
+                         "ERROR: JobFactory didn't create two jobs")
 
         splitLumis = self.getSplitLumisDAO.execute()
         self.assertEqual(len(splitLumis), 1,
-                         "ERROR: Didn't create a single split lumi.")
+                         "ERROR: Didn't create a single split lumi")
 
         return
 
@@ -187,11 +187,11 @@ class ExpressTest(unittest.TestCase):
         jobGroups = jobFactory(maxInputEvents = 100)
 
         self.assertEqual(len(jobGroups[0].jobs), 2,
-                         "ERROR: JobFactory didn't create two jobs.")
+                         "ERROR: JobFactory didn't create two jobs")
 
         splitLumis = self.getSplitLumisDAO.execute()
         self.assertEqual(len(splitLumis), 0,
-                         "ERROR: Split lumis were created.")
+                         "ERROR: Split lumis were created")
 
         return
 
