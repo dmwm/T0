@@ -220,10 +220,10 @@ class Create(DBCreator):
 
         self.create[len(self.create)] = \
             """CREATE TABLE lumi_section_split_active (
-                 run_id      int   not null,
-                 stream_id   int   not null,
-                 lumi_id     int   not null,
-                 primary key(run_id, stream_id, lumi_id)
+                 run_id       int   not null,
+                 subscription int   not null,
+                 lumi_id      int   not null,
+                 primary key(run_id, subscription, lumi_id)
                )"""
 
         self.create[len(self.create)] = \
@@ -592,8 +592,8 @@ class Create(DBCreator):
         self.constraints[len(self.constraints)] = \
             """ALTER TABLE lumi_section_split_active
                  ADD CONSTRAINT lum_sec_spli_act_stre_id_fk
-                 FOREIGN KEY (stream_id)
-                 REFERENCES stream(id)"""
+                 FOREIGN KEY (subscription)
+                 REFERENCES wmbs_subscription(id)"""
 
         self.constraints[len(self.constraints)] = \
             """ALTER TABLE streamer

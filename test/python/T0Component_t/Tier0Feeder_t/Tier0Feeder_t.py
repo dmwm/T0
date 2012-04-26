@@ -955,7 +955,6 @@ class Tier0FeederTest(unittest.TestCase):
         self.insertClosedLumiDAO = daoFactory(classname = "RunLumiCloseout.InsertClosedLumi")
         self.finalCloseLumiDAO = daoFactory(classname = "RunLumiCloseout.FinalCloseLumi")
         self.insertSplitLumisDAO = daoFactory(classname = "JobSplitting.InsertSplitLumis")
-        self.getSplitLumisDAO = daoFactory(classname = "JobSplitting.GetSplitLumis")
 
         return
 
@@ -979,10 +978,6 @@ class Tier0FeederTest(unittest.TestCase):
                                             'TIME' : int(time.time()),
                                             'HLTKEY' : self.hltkey },
                                   transaction = False)
-
-##         self.insertLumiDAO.execute(binds = { 'RUN' : run,
-##                                              'LUMI' : 1 },
-##                                    transaction = False)
 
         return
 
@@ -1040,6 +1035,20 @@ class Tier0FeederTest(unittest.TestCase):
 
         results = myThread.dbi.processData("""SELECT COUNT(*)
                                               FROM wmbs_sub_files_available
+                                              """, transaction = False)[0].fetchall()
+
+        return results[0][0]
+
+    def getNumActiveSplitLumis(self):
+        """
+        _getNumActiveSplitLumis_
+
+        helper function that counts the number of active split lumis
+        """
+        myThread = threading.currentThread()
+
+        results = myThread.dbi.processData("""SELECT COUNT(*)
+                                              FROM lumi_section_split_active
                                               """, transaction = False)[0].fetchall()
 
         return results[0][0]
@@ -1648,8 +1657,7 @@ class Tier0FeederTest(unittest.TestCase):
 
         RunLumiCloseoutAPI.checkActiveSplitLumis()
 
-        splitLumis = self.getSplitLumisDAO.execute()
-        self.assertEqual(len(splitLumis), 1,
+        self.assertEqual(self.getNumActiveSplitLumis(), 1,
                          "ERROR: there should be one split lumi.")
 
         myThread.dbi.processData("""DELETE FROM wmbs_sub_files_available
@@ -1658,8 +1666,7 @@ class Tier0FeederTest(unittest.TestCase):
         
         RunLumiCloseoutAPI.checkActiveSplitLumis()
 
-        splitLumis = self.getSplitLumisDAO.execute()
-        self.assertEqual(len(splitLumis), 1,
+        self.assertEqual(self.getNumActiveSplitLumis(), 1,
                          "ERROR: there should be one split lumi.")
 
         myThread.dbi.processData("""DELETE FROM wmbs_sub_files_available
@@ -1668,8 +1675,7 @@ class Tier0FeederTest(unittest.TestCase):
         
         RunLumiCloseoutAPI.checkActiveSplitLumis()
 
-        splitLumis = self.getSplitLumisDAO.execute()
-        self.assertEqual(len(splitLumis), 1,
+        self.assertEqual(self.getNumActiveSplitLumis(), 1,
                          "ERROR: there should be one split lumi.")
 
         myThread.dbi.processData("""DELETE FROM wmbs_sub_files_available
@@ -1678,8 +1684,7 @@ class Tier0FeederTest(unittest.TestCase):
         
         RunLumiCloseoutAPI.checkActiveSplitLumis()
 
-        splitLumis = self.getSplitLumisDAO.execute()
-        self.assertEqual(len(splitLumis), 0,
+        self.assertEqual(self.getNumActiveSplitLumis(), 0,
                          "ERROR: there should be no split lumi.")
 
         return

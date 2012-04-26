@@ -86,9 +86,6 @@ class ExpressTest(unittest.TestCase):
                                            type = "Express")
         self.subscription1.create()
 
-        # keep for later
-        self.getSplitLumisDAO = daoFactory(classname = "JobSplitting.GetSplitLumis")
-
         return
 
     def tearDown(self):
@@ -99,6 +96,20 @@ class ExpressTest(unittest.TestCase):
         self.testInit.clearDatabase()
 
         return
+
+    def getNumActiveSplitLumis(self):
+        """
+        _getNumActiveSplitLumis_
+
+        helper function that counts the number of active split lumis
+        """
+        myThread = threading.currentThread()
+
+        results = myThread.dbi.processData("""SELECT COUNT(*)
+                                              FROM lumi_section_split_active
+                                              """, transaction = False)[0].fetchall()
+
+        return results[0][0]
 
     def test00(self):
         """
@@ -131,8 +142,7 @@ class ExpressTest(unittest.TestCase):
         self.assertTrue(job['name'].startswith("Express-"),
                         "ERROR: Job has wrong name")
 
-        splitLumis = self.getSplitLumisDAO.execute()
-        self.assertEqual(len(splitLumis), 0,
+        self.assertEqual(self.getNumActiveSplitLumis(), 0,
                          "ERROR: Split lumis were created")
 
         return
@@ -160,8 +170,7 @@ class ExpressTest(unittest.TestCase):
         self.assertEqual(len(jobGroups[0].jobs), 2,
                          "ERROR: JobFactory didn't create two jobs")
 
-        splitLumis = self.getSplitLumisDAO.execute()
-        self.assertEqual(len(splitLumis), 1,
+        self.assertEqual(self.getNumActiveSplitLumis(), 1,
                          "ERROR: Didn't create a single split lumi")
 
         return
@@ -189,8 +198,7 @@ class ExpressTest(unittest.TestCase):
         self.assertEqual(len(jobGroups[0].jobs), 2,
                          "ERROR: JobFactory didn't create two jobs")
 
-        splitLumis = self.getSplitLumisDAO.execute()
-        self.assertEqual(len(splitLumis), 0,
+        self.assertEqual(self.getNumActiveSplitLumis(), 0,
                          "ERROR: Split lumis were created")
 
         return

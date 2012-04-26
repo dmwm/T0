@@ -84,9 +84,6 @@ class RepackTest(unittest.TestCase):
                                            type = "Repack")
         self.subscription1.create()
 
-        # keep for later
-        self.getSplitLumisDAO = daoFactory(classname = "JobSplitting.GetSplitLumis")
-
         # default split parameters
         self.splitArgs = {}
         self.splitArgs['maxSizeSingleLumi'] = 20*1024*1024*1024
@@ -104,6 +101,20 @@ class RepackTest(unittest.TestCase):
         self.testInit.clearDatabase()
 
         return
+
+    def getNumActiveSplitLumis(self):
+        """
+        _getNumActiveSplitLumis_
+
+        helper function that counts the number of active split lumis
+        """
+        myThread = threading.currentThread()
+
+        results = myThread.dbi.processData("""SELECT COUNT(*)
+                                              FROM lumi_section_split_active
+                                              """, transaction = False)[0].fetchall()
+
+        return results[0][0]
 
     def test00(self):
         """
@@ -166,8 +177,7 @@ class RepackTest(unittest.TestCase):
         self.assertEqual(len(job.getFiles()), 4,
                          "ERROR: Job does not process 4 files")
 
-        splitLumis = self.getSplitLumisDAO.execute()
-        self.assertEqual(len(splitLumis), 0,
+        self.assertEqual(self.getNumActiveSplitLumis(), 0,
                          "ERROR: Split lumis were created")
 
         return
@@ -226,8 +236,7 @@ class RepackTest(unittest.TestCase):
         self.assertEqual(len(job.getFiles()), 4,
                          "ERROR: Job does not process 4 files")
 
-        splitLumis = self.getSplitLumisDAO.execute()
-        self.assertEqual(len(splitLumis), 0,
+        self.assertEqual(self.getNumActiveSplitLumis(), 0,
                          "ERROR: Split lumis were created")
 
         return
@@ -276,8 +285,7 @@ class RepackTest(unittest.TestCase):
         self.assertEqual(len(job.getFiles()), 2,
                          "ERROR: Job does not process 2 files")
 
-        splitLumis = self.getSplitLumisDAO.execute()
-        self.assertEqual(len(splitLumis), 1,
+        self.assertEqual(self.getNumActiveSplitLumis(), 1,
                          "ERROR: Split lumis were not created")
 
         return
@@ -326,8 +334,7 @@ class RepackTest(unittest.TestCase):
         self.assertEqual(len(job.getFiles()), 2,
                          "ERROR: Job does not process 2 files")
 
-        splitLumis = self.getSplitLumisDAO.execute()
-        self.assertEqual(len(splitLumis), 1,
+        self.assertEqual(self.getNumActiveSplitLumis(), 1,
                          "ERROR: Split lumis were not created")
 
         return
@@ -386,8 +393,7 @@ class RepackTest(unittest.TestCase):
         self.assertEqual(len(job.getFiles()), 4,
                          "ERROR: Job does not process 4 files")
 
-        splitLumis = self.getSplitLumisDAO.execute()
-        self.assertEqual(len(splitLumis), 0,
+        self.assertEqual(self.getNumActiveSplitLumis(), 0,
                          "ERROR: Split lumis were created")
 
         return
