@@ -219,7 +219,7 @@ class ExpressWorkloadFactory(StdBase):
         self.expressMergeSplitArgs = {}
         self.expressMergeSplitArgs['maxInputSize'] = 2 * 1024 * 1024 * 1024
         self.expressMergeSplitArgs['maxInputFiles'] = 500
-        self.expressMergeSplitArgs['maxLatency'] = 15 * 23,
+        self.expressMergeSplitArgs['maxLatency'] = 15 * 23
 
         if arguments.has_key("Multicore"):
             numCores = arguments.get("Multicore")
