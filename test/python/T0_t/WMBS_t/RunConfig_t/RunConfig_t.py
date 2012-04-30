@@ -1156,17 +1156,26 @@ class RunConfigTest(unittest.TestCase):
                          "ERROR: wrong scenario for stream HLTMON")
 
         
-        datasets = self.getStreamDatasetsDAO.execute(176161, "A",
-                                                     transaction = False)
         recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
                                                    transaction = False)
 
-        self.assertEquals(datasets, set(recoConfigs.keys()),
+        self.assertEquals(len(recoConfigs.keys()), 0,
+                          "ERROR: there are reco configs present")
+
+        RunConfigAPI.configurePromptReco(self.tier0Config, self.testDir, "/store", 176161, "A")
+
+        recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
+                                                   transaction = False)
+
+        datasets = self.getStreamDatasetsDAO.execute(176161, "A",
+                                                     transaction = False)
+
+        self.assertEquals(set(recoConfigs.keys()), datasets,
                           "ERROR: problems retrieving reco configs for stream A")
 
         for primds, recoConfig in recoConfigs.items():
 
-            if primds == "Cosmics" or primds == "Cosmics-Error":
+            if primds == "Cosmics":
 
                 if primds == "Cosmics":
                     self.assertEquals(recoConfig['do_reco'], 1,
@@ -1205,7 +1214,7 @@ class RunConfigTest(unittest.TestCase):
                 self.assertEquals(recoConfig['scenario'], "cosmics",
                                   "ERROR: problem in reco configuration")
 
-            elif primds == "MinimumBias" or primds == "MinimumBias-Error":
+            elif primds == "MinimumBias":
 
                 self.assertEquals(recoConfig['do_reco'], 0,
                                   "ERROR: problem in reco configuration")
@@ -1307,20 +1316,6 @@ class RunConfigTest(unittest.TestCase):
                 self.assertEquals(phedexConfig['Node3']['priority'], "high",
                                   "ERROR: problem in phedex configuration")
 
-            elif primds == "Cosmics-Error":
-
-                self.assertEquals(set(phedexConfig.keys()), set([ "Node3" ]),
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node3']['custodial'], 0,
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node3']['request_only'], "n",
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node3']['priority'], "high",
-                                  "ERROR: problem in phedex configuration")
-
             elif primds == "MinimumBias":
 
                 self.assertEquals(set(phedexConfig.keys()), set([ "Node4", "Node5" ]),
@@ -1333,20 +1328,6 @@ class RunConfigTest(unittest.TestCase):
                                   "ERROR: problem in phedex configuration")
 
                 self.assertEquals(phedexConfig['Node4']['priority'], "normal",
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node5']['custodial'], 0,
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node5']['request_only'], "n",
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node5']['priority'], "high",
-                                  "ERROR: problem in phedex configuration")
-
-            elif primds == "MinimumBias-Error":
-
-                self.assertEquals(set(phedexConfig.keys()), set([ "Node5" ]),
                                   "ERROR: problem in phedex configuration")
 
                 self.assertEquals(phedexConfig['Node5']['custodial'], 0,

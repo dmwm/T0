@@ -162,10 +162,6 @@ def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
         insertCMSSWVersionDAO = daoFactory(classname = "RunConfig.InsertCMSSWVersion")
         updateStreamOverrideDAO = daoFactory(classname = "RunConfig.UpdateStreamOverride")
         insertErrorDatasetDAO = daoFactory(classname = "RunConfig.InsertErrorDataset")
-        insertRecoConfigDAO = daoFactory(classname = "RunConfig.InsertRecoConfig")
-        insertStorageNodeDAO = daoFactory(classname = "RunConfig.InsertStorageNode")
-        insertPhEDExConfigDAO = daoFactory(classname = "RunConfig.InsertPhEDExConfig")
-        insertPromptSkimConfigDAO = daoFactory(classname = "RunConfig.InsertPromptSkimConfig")
         insertStreamFilesetDAO = daoFactory(classname = "RunConfig.InsertStreamFileset")
         insertDatasetFilesetDAO = daoFactory(classname = "RunConfig.InsertDatasetFileset")
 
@@ -187,10 +183,6 @@ def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
         bindsCMSSWVersion = []
         bindsStreamOverride = {}
         bindsErrorDataset = []
-        bindsRecoConfig = []
-        bindsStorageNode = []
-        bindsPhEDExConfig = []
-        bindsPromptSkimConfig = []
         bindsDatasetFileset = []
 
         #
@@ -280,10 +272,6 @@ def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
                                               'selectEvents' : selectEvents,
                                               'primaryDataset' : datasetConfig.Name } )
 
-                bindsDatasetScenario.append( { 'RUN' : run,
-                                               'PRIMDS' : datasetConfig.Name,
-                                               'SCENARIO' : datasetConfig.Scenario } )
-
                 errorDataset = "%s-%s" % (datasetConfig.Name, "Error")
                 bindsDataset.append( { 'PRIMDS' : errorDataset } )
                 bindsStreamDataset.append( { 'RUN' : run,
@@ -291,101 +279,6 @@ def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
                                              'STREAM' : stream } )
                 bindsErrorDataset.append( { 'PARENT' : datasetConfig.Name,
                                             'ERROR' : errorDataset } )
-
-                bindsDatasetScenario.append( { 'RUN' : run,
-                                               'PRIMDS' : errorDataset,
-                                               'SCENARIO' : datasetConfig.Scenario } )
-
-                bindsCMSSWVersion.append( { 'VERSION' : datasetConfig.Reco.CMSSWVersion } )
-
-                writeSkims = None
-                if len(datasetConfig.Alca.Producers) > 0:
-                    writeSkims = ",".join(datasetConfig.Alca.Producers)
-
-                bindsRecoConfig.append( { 'RUN' : run,
-                                          'PRIMDS' : datasetConfig.Name,
-                                          'DO_RECO' : int(datasetConfig.Reco.DoReco),
-                                          'CMSSW' : datasetConfig.Reco.CMSSWVersion,
-                                          'RECO_SPLIT' : datasetConfig.Reco.EventSplit,
-                                          'WRITE_RECO' : int(datasetConfig.Reco.WriteRECO),
-                                          'WRITE_DQM' : int(datasetConfig.Reco.WriteDQM),
-                                          'WRITE_AOD' : int(datasetConfig.Reco.WriteAOD),
-                                          'PROC_VER' : datasetConfig.Reco.ProcessingVersion,
-                                          'WRITE_SKIMS' : writeSkims,
-                                          'GLOBAL_TAG' : datasetConfig.Reco.GlobalTag,
-                                          'CONFIG_URL' : datasetConfig.Reco.ConfigURL } )
-
-                bindsRecoConfig.append( { 'RUN' : run,
-                                          'PRIMDS' : errorDataset,
-                                          'DO_RECO' : int(False),
-                                          'CMSSW' : datasetConfig.Reco.CMSSWVersion,
-                                          'RECO_SPLIT' : datasetConfig.Reco.EventSplit,
-                                          'WRITE_RECO' : int(datasetConfig.Reco.WriteRECO),
-                                          'WRITE_DQM' : int(datasetConfig.Reco.WriteDQM),
-                                          'WRITE_AOD' : int(datasetConfig.Reco.WriteAOD),
-                                          'PROC_VER' : datasetConfig.Reco.ProcessingVersion,
-                                          'WRITE_SKIMS' : writeSkims,
-                                          'GLOBAL_TAG' : datasetConfig.Reco.GlobalTag,
-                                          'CONFIG_URL' : datasetConfig.Reco.ConfigURL } )
-
-                # leave out for now, might not be needed
-                #insertAlcaConfig(dbConn, runNumber, datasetConfig)
-
-                requestOnly = "y"
-                if datasetConfig.CustodialAutoApprove:
-                    requestOnly = "n"
-
-                if datasetConfig.CustodialNode != None:
-
-                    bindsStorageNode.append( { 'NODE' : datasetConfig.CustodialNode } )
-
-                    bindsPhEDExConfig.append( { 'RUN' : run,
-                                                'PRIMDS' : datasetConfig.Name,
-                                                'NODE' : datasetConfig.CustodialNode,
-                                                'CUSTODIAL' : 1,
-                                                'REQ_ONLY' : requestOnly,
-                                                'PRIO' : datasetConfig.CustodialPriority } )
-
-                if datasetConfig.ArchivalNode != None:
-
-                    bindsStorageNode.append( { 'NODE' : datasetConfig.ArchivalNode } )
-
-                    bindsPhEDExConfig.append( { 'RUN' : run,
-                                                'PRIMDS' : datasetConfig.Name,
-                                                'NODE' : datasetConfig.ArchivalNode,
-                                                'CUSTODIAL' : 0,
-                                                'REQ_ONLY' : "n",
-                                                'PRIO' : "high" } )
-                
-                    bindsPhEDExConfig.append( { 'RUN' : run,
-                                                'PRIMDS' : errorDataset,
-                                                'NODE' : datasetConfig.ArchivalNode,
-                                                'CUSTODIAL' : 0,
-                                                'REQ_ONLY' : "n",
-                                                'PRIO' : "high" } )
-
-                for tier1Skim in datasetConfig.Tier1Skims:
-
-                    bindsCMSSWVersion.append( { 'VERSION' : tier1Skim.CMSSWVersion } )
-
-                    if tier1Skim.Node == None:
-                        tier1Skim.Node = datasetConfig.CustodialNode
-                    else:
-                        bindsStorageNode.append( { 'NODE' : tier1Skim.Node } )
-
-                    if tier1Skim.Node == None:
-                        raise RuntimeError, "Configured a skim without providing a skim node or a custodial site\n"
-
-                    bindsPromptSkimConfig.append( { 'RUN' : run,
-                                                    'PRIMDS' : datasetConfig.Name,
-                                                    'TIER' : tier1Skim.DataTier,
-                                                    'NODE' : tier1Skim.Node,
-                                                    'CMSSW' : tier1Skim.CMSSWVersion,
-                                                    'TWO_FILE_READ' : int(tier1Skim.TwoFileRead),
-                                                    'PROC_VER' : tier1Skim.ProcessingVersion,
-                                                    'SKIM_NAME' : tier1Skim.SkimName,
-                                                    'GLOBAL_TAG' : tier1Skim.GlobalTag,
-                                                    "CONFIG_URL" : tier1Skim.ConfigURL } )
 
             elif streamConfig.ProcessingStyle == "Express":
 
@@ -459,21 +352,14 @@ def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
                 insertExpressConfigDAO.execute(bindsExpressConfig, conn = myThread.transaction.conn, transaction = True)
             if len(bindsSpecialDataset) > 0:
                 insertSpecialDatasetDAO.execute(bindsSpecialDataset, conn = myThread.transaction.conn, transaction = True)
-            insertDatasetScenarioDAO.execute(bindsDatasetScenario, conn = myThread.transaction.conn, transaction = True)
-            if len(bindsCMSSWVersion):
+            if len(bindsDatasetScenario) > 0:
+                insertDatasetScenarioDAO.execute(bindsDatasetScenario, conn = myThread.transaction.conn, transaction = True)
+            if len(bindsCMSSWVersion) > 0:
                 insertCMSSWVersionDAO.execute(bindsCMSSWVersion, conn = myThread.transaction.conn, transaction = True)
             if len(bindsStreamOverride) > 0:
                 updateStreamOverrideDAO.execute(bindsStreamOverride, conn = myThread.transaction.conn, transaction = True)
-            if len(bindsErrorDataset):
+            if len(bindsErrorDataset) > 0:
                 insertErrorDatasetDAO.execute(bindsErrorDataset, conn = myThread.transaction.conn, transaction = True)
-            if len(bindsRecoConfig) > 0:
-                insertRecoConfigDAO.execute(bindsRecoConfig, conn = myThread.transaction.conn, transaction = True)
-            if len(bindsStorageNode) > 0:
-                insertStorageNodeDAO.execute(bindsStorageNode, conn = myThread.transaction.conn, transaction = True)
-            if len(bindsPhEDExConfig) > 0:
-                insertPhEDExConfigDAO.execute(bindsPhEDExConfig, conn = myThread.transaction.conn, transaction = True)
-            if len(bindsPromptSkimConfig) > 0:
-                insertPromptSkimConfigDAO.execute(bindsPromptSkimConfig, conn = myThread.transaction.conn, transaction = True)
             insertStreamFilesetDAO.execute(run, stream, filesetName, conn = myThread.transaction.conn, transaction = True)
             fileset.load()
             wmbsHelper.createSubscription(wmSpec.getTask(taskName), fileset)
@@ -494,5 +380,142 @@ def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
 
         # should we do anything for local runs ?
         pass
+
+    return
+
+def configurePromptReco(tier0Config, specDirectory, lfnBase, run, stream):
+    """
+    _configurePromptReco_
+
+    Called by Tier0Feeder for run/streams when releasing PromptReco
+
+    Retrieve global run settings and build the part of the configuration
+    relevant to PromptReco for run/stream and write it to the database.
+
+    Create workflows, filesets and subscriptions for
+    the processing of runs/datasets.
+
+    This will also loop over the error datasets ! If you want to do
+    something special with them, just configure appropriately.
+
+    """
+    logging.debug("configureRunStream() : %d , %s" % (run, stream))
+    myThread = threading.currentThread()
+
+    daoFactory = DAOFactory(package = "T0.WMBS",
+                            logger = logging,
+                            dbinterface = myThread.dbi)
+
+    insertDatasetScenarioDAO = daoFactory(classname = "RunConfig.InsertDatasetScenario")
+    insertCMSSWVersionDAO = daoFactory(classname = "RunConfig.InsertCMSSWVersion")
+    insertRecoConfigDAO = daoFactory(classname = "RunConfig.InsertRecoConfig")
+    insertStorageNodeDAO = daoFactory(classname = "RunConfig.InsertStorageNode")
+    insertPhEDExConfigDAO = daoFactory(classname = "RunConfig.InsertPhEDExConfig")
+    insertPromptSkimConfigDAO = daoFactory(classname = "RunConfig.InsertPromptSkimConfig")
+
+    bindsDatasetScenario = []
+    bindsCMSSWVersion = []
+    bindsRecoConfig = []
+    bindsStorageNode = []
+    bindsPhEDExConfig = []
+    bindsPromptSkimConfig = []
+
+    getStreamDatasetsDAO = daoFactory(classname = "RunConfig.GetStreamDatasets")
+    datasets = getStreamDatasetsDAO.execute(run, stream, transaction = False)
+
+    for dataset in datasets:
+
+        datasetConfig = retrieveDatasetConfig(tier0Config, dataset)
+
+        bindsDatasetScenario.append( { 'RUN' : run,
+                                       'PRIMDS' : datasetConfig.Name,
+                                       'SCENARIO' : datasetConfig.Scenario } )
+
+        bindsCMSSWVersion.append( { 'VERSION' : datasetConfig.Reco.CMSSWVersion } )
+
+        writeSkims = None
+        if len(datasetConfig.Alca.Producers) > 0:
+            writeSkims = ",".join(datasetConfig.Alca.Producers)
+
+        bindsRecoConfig.append( { 'RUN' : run,
+                                  'PRIMDS' : datasetConfig.Name,
+                                  'DO_RECO' : int(datasetConfig.Reco.DoReco),
+                                  'CMSSW' : datasetConfig.Reco.CMSSWVersion,
+                                  'RECO_SPLIT' : datasetConfig.Reco.EventSplit,
+                                  'WRITE_RECO' : int(datasetConfig.Reco.WriteRECO),
+                                  'WRITE_DQM' : int(datasetConfig.Reco.WriteDQM),
+                                  'WRITE_AOD' : int(datasetConfig.Reco.WriteAOD),
+                                  'PROC_VER' : datasetConfig.Reco.ProcessingVersion,
+                                  'WRITE_SKIMS' : writeSkims,
+                                  'GLOBAL_TAG' : datasetConfig.Reco.GlobalTag,
+                                  'CONFIG_URL' : datasetConfig.Reco.ConfigURL } )
+
+        requestOnly = "y"
+        if datasetConfig.CustodialAutoApprove:
+            requestOnly = "n"
+
+        if datasetConfig.CustodialNode != None:
+
+            bindsStorageNode.append( { 'NODE' : datasetConfig.CustodialNode } )
+
+            bindsPhEDExConfig.append( { 'RUN' : run,
+                                        'PRIMDS' : datasetConfig.Name,
+                                        'NODE' : datasetConfig.CustodialNode,
+                                        'CUSTODIAL' : 1,
+                                        'REQ_ONLY' : requestOnly,
+                                        'PRIO' : datasetConfig.CustodialPriority } )
+
+        if datasetConfig.ArchivalNode != None:
+
+            bindsStorageNode.append( { 'NODE' : datasetConfig.ArchivalNode } )
+
+            bindsPhEDExConfig.append( { 'RUN' : run,
+                                        'PRIMDS' : datasetConfig.Name,
+                                        'NODE' : datasetConfig.ArchivalNode,
+                                        'CUSTODIAL' : 0,
+                                        'REQ_ONLY' : "n",
+                                        'PRIO' : "high" } )
+
+        for tier1Skim in datasetConfig.Tier1Skims:
+
+            bindsCMSSWVersion.append( { 'VERSION' : tier1Skim.CMSSWVersion } )
+
+            if tier1Skim.Node == None:
+                tier1Skim.Node = datasetConfig.CustodialNode
+            else:
+                bindsStorageNode.append( { 'NODE' : tier1Skim.Node } )
+
+            if tier1Skim.Node == None:
+                raise RuntimeError, "Configured a skim without providing a skim node or a custodial site\n"
+
+            bindsPromptSkimConfig.append( { 'RUN' : run,
+                                            'PRIMDS' : datasetConfig.Name,
+                                            'TIER' : tier1Skim.DataTier,
+                                            'NODE' : tier1Skim.Node,
+                                            'CMSSW' : tier1Skim.CMSSWVersion,
+                                            'TWO_FILE_READ' : int(tier1Skim.TwoFileRead),
+                                            'PROC_VER' : tier1Skim.ProcessingVersion,
+                                            'SKIM_NAME' : tier1Skim.SkimName,
+                                            'GLOBAL_TAG' : tier1Skim.GlobalTag,
+                                            "CONFIG_URL" : tier1Skim.ConfigURL } )
+
+    try:
+        myThread.transaction.begin()
+        insertDatasetScenarioDAO.execute(bindsDatasetScenario, conn = myThread.transaction.conn, transaction = True)
+        if len(bindsCMSSWVersion) > 0:
+            insertCMSSWVersionDAO.execute(bindsCMSSWVersion, conn = myThread.transaction.conn, transaction = True)
+        if len(bindsRecoConfig) > 0:
+            insertRecoConfigDAO.execute(bindsRecoConfig, conn = myThread.transaction.conn, transaction = True)
+        if len(bindsStorageNode) > 0:
+            insertStorageNodeDAO.execute(bindsStorageNode, conn = myThread.transaction.conn, transaction = True)
+        if len(bindsPhEDExConfig) > 0:
+            insertPhEDExConfigDAO.execute(bindsPhEDExConfig, conn = myThread.transaction.conn, transaction = True)
+        if len(bindsPromptSkimConfig) > 0:
+            insertPromptSkimConfigDAO.execute(bindsPromptSkimConfig, conn = myThread.transaction.conn, transaction = True)
+    except:
+        myThread.transaction.rollback()
+        raise
+    else:
+        myThread.transaction.commit()
 
     return

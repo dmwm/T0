@@ -118,6 +118,12 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                         self.specDirectory,
                                                         self.lfnBase,
                                                         run, stream)
+
+                        RunConfigAPI.configurePromptReco(tier0Config,
+                                                         self.specDirectory,
+                                                         self.lfnBase,
+                                                         run, stream)
+
                     except:
                         logging.exception("Can't configure for run %d and stream %s" % (run, stream))
 
