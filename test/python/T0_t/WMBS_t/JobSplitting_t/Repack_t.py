@@ -60,7 +60,7 @@ class RepackTest(unittest.TestCase):
                              transaction = False)
 
         insertLumiDAO = daoFactory(classname = "RunConfig.InsertLumiSection")
-        for lumi in range(1,4):
+        for lumi in [1,2,3,4]:
             insertLumiDAO.execute(binds = { 'RUN' : 1,
                                             'LUMI' : lumi },
                                   transaction = False)
@@ -91,6 +91,10 @@ class RepackTest(unittest.TestCase):
         self.splitArgs['maxEvents'] = 500000
         self.splitArgs['maxInputFiles'] = 1000
 
+        # keep for later
+        self.insertClosedLumiDAO = daoFactory(classname = "RunLumiCloseout.InsertClosedLumi")
+        self.currentTime = int(time.time())
+
         return
 
     def tearDown(self):
@@ -99,6 +103,19 @@ class RepackTest(unittest.TestCase):
 
         """
         self.testInit.clearDatabase()
+
+        return
+
+    def finalCloseLumis(self):
+        """
+        _finalCloseLumis_
+
+        """
+        myThread = threading.currentThread()
+
+        myThread.dbi.processData("""UPDATE lumi_section_closed
+                                    SET close_time = 1
+                                    """, transaction = False)
 
         return
 
@@ -124,21 +141,61 @@ class RepackTest(unittest.TestCase):
         Test multi lumi size threshold
         Multi lumi input
 
+        Test that only closed lumis are used
+
         """
         mySplitArgs = self.splitArgs.copy()
 
+        insertClosedLumiBinds = []
         for lumi in [1,2,3,4]:
-            for i in range(2):
+            filecount = 2
+            for i in range(filecount):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
                 newFile.setLocation("SomeSE", immediateSave = False)
                 newFile.create()
                 self.fileset1.addFile(newFile)
+                insertClosedLumiBinds.append( { 'RUN' : 1,
+                                                'LUMI' : lumi,
+                                                'STREAM' : "A",
+                                                'FILECOUNT' : filecount,
+                                                'INSERT_TIME' : self.currentTime,
+                                                'CLOSE_TIME' : 0 } )
         self.fileset1.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription1)
 
+        mySplitArgs['maxSizeMultiLumi'] = self.splitArgs['maxSizeMultiLumi']
+        jobGroups = jobFactory(**mySplitArgs)
+
+        self.assertEqual(len(jobGroups), 0,
+                         "ERROR: JobFactory should have returned no JobGroup")
+
+        mySplitArgs['maxSizeMultiLumi'] = 5000
+        jobGroups = jobFactory(**mySplitArgs)
+
+        self.assertEqual(len(jobGroups), 0,
+                         "ERROR: JobFactory should have returned no JobGroup")
+
+        self.insertClosedLumiDAO.execute(binds = insertClosedLumiBinds,
+                                         transaction = False)
+
+        mySplitArgs['maxSizeMultiLumi'] = self.splitArgs['maxSizeMultiLumi']
+        jobGroups = jobFactory(**mySplitArgs)
+
+        self.assertEqual(len(jobGroups), 0,
+                         "ERROR: JobFactory should have returned no JobGroup")
+
+        mySplitArgs['maxSizeMultiLumi'] = 5000
+        jobGroups = jobFactory(**mySplitArgs)
+
+        self.assertEqual(len(jobGroups), 0,
+                         "ERROR: JobFactory should have returned no JobGroup")
+
+        self.finalCloseLumis()
+
+        mySplitArgs['maxSizeMultiLumi'] = self.splitArgs['maxSizeMultiLumi']
         jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
@@ -192,17 +249,28 @@ class RepackTest(unittest.TestCase):
         """
         mySplitArgs = self.splitArgs.copy()
 
+        insertClosedLumiBinds = []
         for lumi in [1,2,3,4]:
-            for i in range(2):
+            filecount = 2
+            for i in range(filecount):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
                 newFile.setLocation("SomeSE", immediateSave = False)
                 newFile.create()
                 self.fileset1.addFile(newFile)
+                insertClosedLumiBinds.append( { 'RUN' : 1,
+                                                'LUMI' : lumi,
+                                                'STREAM' : "A",
+                                                'FILECOUNT' : filecount,
+                                                'INSERT_TIME' : self.currentTime,
+                                                'CLOSE_TIME' : self.currentTime } )
         self.fileset1.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription1)
+
+        self.insertClosedLumiDAO.execute(binds = insertClosedLumiBinds,
+                                         transaction = False)
 
         jobGroups = jobFactory(**mySplitArgs)
 
@@ -251,17 +319,28 @@ class RepackTest(unittest.TestCase):
         """
         mySplitArgs = self.splitArgs.copy()
 
+        insertClosedLumiBinds = []
         for lumi in [1]:
-            for i in range(8):
+            filecount = 8
+            for i in range(filecount):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
                 newFile.setLocation("SomeSE", immediateSave = False)
                 newFile.create()
                 self.fileset1.addFile(newFile)
+                insertClosedLumiBinds.append( { 'RUN' : 1,
+                                                'LUMI' : lumi,
+                                                'STREAM' : "A",
+                                                'FILECOUNT' : filecount,
+                                                'INSERT_TIME' : self.currentTime,
+                                                'CLOSE_TIME' : self.currentTime } )
         self.fileset1.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription1)
+
+        self.insertClosedLumiDAO.execute(binds = insertClosedLumiBinds,
+                                         transaction = False)
 
         jobGroups = jobFactory(**mySplitArgs)
 
@@ -300,17 +379,28 @@ class RepackTest(unittest.TestCase):
         """
         mySplitArgs = self.splitArgs.copy()
 
+        insertClosedLumiBinds = []
         for lumi in [1]:
-            for i in range(8):
+            filecount = 8
+            for i in range(filecount):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
                 newFile.setLocation("SomeSE", immediateSave = False)
                 newFile.create()
                 self.fileset1.addFile(newFile)
+                insertClosedLumiBinds.append( { 'RUN' : 1,
+                                                'LUMI' : lumi,
+                                                'STREAM' : "A",
+                                                'FILECOUNT' : filecount,
+                                                'INSERT_TIME' : self.currentTime,
+                                                'CLOSE_TIME' : self.currentTime } )
         self.fileset1.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription1)
+
+        self.insertClosedLumiDAO.execute(binds = insertClosedLumiBinds,
+                                         transaction = False)
 
         jobGroups = jobFactory(**mySplitArgs)
 
@@ -349,17 +439,28 @@ class RepackTest(unittest.TestCase):
         """
         mySplitArgs = self.splitArgs.copy()
 
+        insertClosedLumiBinds = []
         for lumi in [1,2,3,4]:
-            for i in range(2):
+            filecount = 2
+            for i in range(filecount):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
                 newFile.setLocation("SomeSE", immediateSave = False)
                 newFile.create()
                 self.fileset1.addFile(newFile)
+                insertClosedLumiBinds.append( { 'RUN' : 1,
+                                                'LUMI' : lumi,
+                                                'STREAM' : "A",
+                                                'FILECOUNT' : filecount,
+                                                'INSERT_TIME' : self.currentTime,
+                                                'CLOSE_TIME' : self.currentTime } )
         self.fileset1.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription1)
+
+        self.insertClosedLumiDAO.execute(binds = insertClosedLumiBinds,
+                                         transaction = False)
 
         jobGroups = jobFactory(**mySplitArgs)
 
@@ -408,23 +509,54 @@ class RepackTest(unittest.TestCase):
         """
         mySplitArgs = self.splitArgs.copy()
 
+        insertClosedLumiBinds = []
         for lumi in [1,2,4]:
-            for i in range(2):
+            filecount = 2
+            for i in range(filecount):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
                 newFile.setLocation("SomeSE", immediateSave = False)
                 newFile.create()
                 self.fileset1.addFile(newFile)
+                insertClosedLumiBinds.append( { 'RUN' : 1,
+                                                'LUMI' : lumi,
+                                                'STREAM' : "A",
+                                                'FILECOUNT' : filecount,
+                                                'INSERT_TIME' : self.currentTime,
+                                                'CLOSE_TIME' : self.currentTime } )
         self.fileset1.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription1)
+
+        self.insertClosedLumiDAO.execute(binds = insertClosedLumiBinds,
+                                         transaction = False)
 
         mySplitArgs['maxInputFiles'] = 5
         jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
                          "ERROR: JobFactory should have returned no JobGroup")
+
+        self.insertClosedLumiDAO.execute(binds = { 'RUN' : 1,
+                                                   'LUMI' : 3,
+                                                   'STREAM' : "A",
+                                                   'FILECOUNT' : 0,
+                                                   'INSERT_TIME' : self.currentTime,
+                                                   'CLOSE_TIME' : self.currentTime },
+                                         transaction = False)
+
+        jobGroups = jobFactory(**mySplitArgs)
+
+        self.assertEqual(len(jobGroups), 1,
+                         "ERROR: JobFactory didn't return one JobGroup")
+
+        self.assertEqual(len(jobGroups[0].jobs), 1,
+                         "ERROR: JobFactory didn't create one job")
+
+        self.assertEqual(len(jobGroups[0].jobs[0].getFiles()), 4,
+                         "ERROR: first job does not process 4 files")
+
 
         return
 
@@ -441,8 +573,10 @@ class RepackTest(unittest.TestCase):
         """
         mySplitArgs = self.splitArgs.copy()
 
+        insertClosedLumiBinds = []
         for lumi in [1,2,3]:
-            for i in range(2):
+            filecount = 2
+            for i in range(filecount):
                 if lumi == 3:
                     nevents = 500
                 else:
@@ -452,10 +586,19 @@ class RepackTest(unittest.TestCase):
                 newFile.setLocation("SomeSE", immediateSave = False)
                 newFile.create()
                 self.fileset1.addFile(newFile)
+                insertClosedLumiBinds.append( { 'RUN' : 1,
+                                                'LUMI' : lumi,
+                                                'STREAM' : "A",
+                                                'FILECOUNT' : filecount,
+                                                'INSERT_TIME' : self.currentTime,
+                                                'CLOSE_TIME' : self.currentTime } )
         self.fileset1.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription1)
+
+        self.insertClosedLumiDAO.execute(binds = insertClosedLumiBinds,
+                                         transaction = False)
 
         mySplitArgs['maxEvents'] = 900
         jobGroups = jobFactory(**mySplitArgs)

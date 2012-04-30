@@ -60,19 +60,17 @@ class ExpressTest(unittest.TestCase):
                              transaction = False)
 
         insertLumiDAO = daoFactory(classname = "RunConfig.InsertLumiSection")
-        insertLumiDAO.execute(binds = { 'RUN' : 1,
-                                        'LUMI' : 1 },
-                              transaction = False)
-        insertLumiDAO.execute(binds = { 'RUN' : 1,
-                                        'LUMI' : 2 },
-                              transaction = False)
+        for lumi in [1,2]:
+            insertLumiDAO.execute(binds = { 'RUN' : 1,
+                                            'LUMI' : lumi },
+                                  transaction = False)
 
         insertStreamDAO = daoFactory(classname = "RunConfig.InsertStream")
-        insertStreamDAO.execute(binds = { 'STREAM' : "A" },
+        insertStreamDAO.execute(binds = { 'STREAM' : "Express" },
                                 transaction = False)
 
         insertStreamFilesetDAO = daoFactory(classname = "RunConfig.InsertStreamFileset")
-        insertStreamFilesetDAO.execute(1, "A", "TestFileset1")
+        insertStreamFilesetDAO.execute(1, "Express", "TestFileset1")
 
         self.fileset1 = Fileset(name = "TestFileset1")
         self.fileset1.load()
@@ -86,6 +84,10 @@ class ExpressTest(unittest.TestCase):
                                            type = "Express")
         self.subscription1.create()
 
+        # keep for later
+        self.insertClosedLumiDAO = daoFactory(classname = "RunLumiCloseout.InsertClosedLumi")
+        self.currentTime = int(time.time())
+
         return
 
     def tearDown(self):
@@ -94,6 +96,19 @@ class ExpressTest(unittest.TestCase):
 
         """
         self.testInit.clearDatabase()
+
+        return
+
+    def finalCloseLumis(self):
+        """
+        _finalCloseLumis_
+
+        """
+        myThread = threading.currentThread()
+
+        myThread.dbi.processData("""UPDATE lumi_section_closed
+                                    SET close_time = 1
+                                    """, transaction = False)
 
         return
 
@@ -118,17 +133,43 @@ class ExpressTest(unittest.TestCase):
         Test that the job name prefix feature works
         Test event threshold (single job creation)
 
+        Test that only closed lumis are used
+
         """
-        for i in range(2):
-            newFile = File(makeUUID(), size = 1000, events = 100)
-            newFile.addRun(Run(1, *[1]))
-            newFile.setLocation("SomeSE", immediateSave = False)
-            newFile.create()
-            self.fileset1.addFile(newFile)
+        insertClosedLumiBinds = []
+        for lumi in [1]:
+            filecount = 2
+            for i in range(filecount):
+                newFile = File(makeUUID(), size = 1000, events = 100)
+                newFile.addRun(Run(1, *[lumi]))
+                newFile.setLocation("SomeSE", immediateSave = False)
+                newFile.create()
+                self.fileset1.addFile(newFile)
+                insertClosedLumiBinds.append( { 'RUN' : 1,
+                                                'LUMI' : lumi,
+                                                'STREAM' : "Express",
+                                                'FILECOUNT' : filecount,
+                                                'INSERT_TIME' : self.currentTime,
+                                                'CLOSE_TIME' : 0 } )
         self.fileset1.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription1)
+
+        jobGroups = jobFactory(maxInputEvents = 200)
+
+        self.assertEqual(len(jobGroups), 0,
+                         "ERROR: JobFactory should have returned no JobGroup")
+
+        self.insertClosedLumiDAO.execute(binds = insertClosedLumiBinds,
+                                         transaction = False)
+
+        jobGroups = jobFactory(maxInputEvents = 200)
+
+        self.assertEqual(len(jobGroups), 0,
+                         "ERROR: JobFactory should have returned no JobGroup")
+
+        self.finalCloseLumis()
 
         jobGroups = jobFactory(maxInputEvents = 200)
 
@@ -154,16 +195,28 @@ class ExpressTest(unittest.TestCase):
         Test event threshold (multiple job creation)
 
         """
-        for i in range(2):
-            newFile = File(makeUUID(), size = 1000, events = 100)
-            newFile.addRun(Run(1, *[1]))
-            newFile.setLocation("SomeSE", immediateSave = False)
-            newFile.create()
-            self.fileset1.addFile(newFile)
+        insertClosedLumiBinds = []
+        for lumi in [1]:
+            filecount = 2
+            for i in range(filecount):
+                newFile = File(makeUUID(), size = 1000, events = 100)
+                newFile.addRun(Run(1, *[lumi]))
+                newFile.setLocation("SomeSE", immediateSave = False)
+                newFile.create()
+                self.fileset1.addFile(newFile)
+                insertClosedLumiBinds.append( { 'RUN' : 1,
+                                                'LUMI' : lumi,
+                                                'STREAM' : "Express",
+                                                'FILECOUNT' : filecount,
+                                                'INSERT_TIME' : self.currentTime,
+                                                'CLOSE_TIME' : self.currentTime } )
         self.fileset1.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription1)
+
+        self.insertClosedLumiDAO.execute(binds = insertClosedLumiBinds,
+                                         transaction = False)
 
         jobGroups = jobFactory(maxInputEvents = 199)
 
@@ -182,16 +235,28 @@ class ExpressTest(unittest.TestCase):
         Test multi lumis
 
         """
-        for i in range(2):
-            newFile = File(makeUUID(), size = 1000, events = 100)
-            newFile.addRun(Run(1, *[1+i]))
-            newFile.setLocation("SomeSE", immediateSave = False)
-            newFile.create()
-            self.fileset1.addFile(newFile)
+        insertClosedLumiBinds = []
+        for lumi in [1,2]:
+            filecount = 1
+            for i in range(filecount):
+                newFile = File(makeUUID(), size = 1000, events = 100)
+                newFile.addRun(Run(1, *[lumi]))
+                newFile.setLocation("SomeSE", immediateSave = False)
+                newFile.create()
+                self.fileset1.addFile(newFile)
+                insertClosedLumiBinds.append( { 'RUN' : 1,
+                                                'LUMI' : lumi,
+                                                'STREAM' : "Express",
+                                                'FILECOUNT' : filecount,
+                                                'INSERT_TIME' : self.currentTime,
+                                                'CLOSE_TIME' : self.currentTime } )
         self.fileset1.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription1)
+
+        self.insertClosedLumiDAO.execute(binds = insertClosedLumiBinds,
+                                         transaction = False)
 
         jobGroups = jobFactory(maxInputEvents = 100)
 
