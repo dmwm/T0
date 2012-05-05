@@ -13,8 +13,6 @@ class GetRunInfo(DBFormatter):
 
         sql = """SELECT status,
                         hltkey,
-                        reco_timeout,
-                        reco_lock_timeout,
                         process,
                         acq_era
                  FROM run

@@ -142,8 +142,6 @@ class RunConfigTest(unittest.TestCase):
 
         self.referenceRunInfo = [ { 'status': 1,
                                     'process': 'HLT',
-                                    'reco_lock_timeout': 30,
-                                    'reco_timeout': 60,
                                     'hltkey': self.hltkey,
                                     'acq_era': 'ExampleConfig_UnitTest' } ]
 
@@ -1010,6 +1008,7 @@ class RunConfigTest(unittest.TestCase):
         self.getRecoConfigDAO = daoFactory(classname = "RunConfig.GetRecoConfig")
         self.getPhEDExConfigDAO = daoFactory(classname = "RunConfig.GetPhEDExConfig")
         self.getPromptSkimConfigDAO = daoFactory(classname = "RunConfig.GetPromptSkimConfig")
+        self.endRunsDAO = daoFactory(classname = "RunLumiCloseout.EndRuns")
 
         return
 
@@ -1019,6 +1018,29 @@ class RunConfigTest(unittest.TestCase):
 
         """
         self.testInit.clearDatabase()
+
+        return
+
+    def removeRecoDelay(self, dataset = None):
+        """
+        _updateRecoDelay_
+
+        """
+        myThread = threading.currentThread()
+
+        sql = """UPDATE reco_release_config
+                 SET delay = 0,
+                     delay_offset = 0
+                 """
+
+        binds = {}
+        if dataset != None:
+            sql += """WHERE primds_id =
+                        (SELECT id FROM primary_dataset WHERE name = :PRIMDS)
+                      """
+            binds['PRIMDS'] = dataset
+
+        myThread.dbi.processData(sql, binds, transaction = False)
 
         return
 
@@ -1063,8 +1085,8 @@ class RunConfigTest(unittest.TestCase):
 
         for primds in datasets:
             if not primds.endswith("-Error"):
-                self.assertTrue(('%s-Error' % primds) in datasets,
-                                "ERROR: error datasets for bulk not setup correctly")
+                self.assertFalse(('%s-Error' % primds) in datasets,
+                                 "ERROR: error datasets for bulk not setup correctly")
 
         datasets = self.getStreamDatasetsDAO.execute(176161, "Express",
                                                      transaction = False)
@@ -1162,7 +1184,53 @@ class RunConfigTest(unittest.TestCase):
         self.assertEquals(len(recoConfigs.keys()), 0,
                           "ERROR: there are reco configs present")
 
-        RunConfigAPI.configurePromptReco(self.tier0Config, self.testDir, "/store", 176161, "A")
+        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store")
+
+        recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
+                                                   transaction = False)
+
+        self.assertEquals(len(recoConfigs.keys()), 0,
+                          "ERROR: there are reco configs present")
+
+        self.removeRecoDelay("Cosmics")
+
+        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store")
+
+        recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
+                                                   transaction = False)
+
+        self.assertEquals(len(recoConfigs.keys()), 0,
+                          "ERROR: there are reco configs present")
+
+        self.endRunsDAO.execute(binds = { 'RUN' : 176161,
+                                          'LUMICOUNT' : 1,
+                                          'END_TIME' : int(time.time()) + 10 },
+                                transaction = False)
+
+        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store")
+
+        recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
+                                                   transaction = False)
+
+        self.assertEquals(len(recoConfigs.keys()), 0,
+                          "ERROR: there are reco configs present")
+
+        self.endRunsDAO.execute(binds = { 'RUN' : 176161,
+                                          'LUMICOUNT' : 1,
+                                          'END_TIME' : int(time.time()) - 10  },
+                                transaction = False)
+
+        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store")
+
+        recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
+                                                   transaction = False)
+
+        self.assertEquals(set(recoConfigs.keys()), set(["Cosmics"]),
+                          "ERROR: problems retrieving reco configs for stream A")
+
+        self.removeRecoDelay()
+
+        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store")
 
         recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
                                                    transaction = False)
@@ -1170,7 +1238,7 @@ class RunConfigTest(unittest.TestCase):
         datasets = self.getStreamDatasetsDAO.execute(176161, "A",
                                                      transaction = False)
 
-        self.assertEquals(set(recoConfigs.keys()), datasets,
+        self.assertEquals(set(recoConfigs.keys()), set(datasets),
                           "ERROR: problems retrieving reco configs for stream A")
 
         for primds, recoConfig in recoConfigs.items():

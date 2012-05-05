@@ -120,8 +120,6 @@ class Create(DBCreator):
                  end_time           int            default 0 not null,
                  close_time         int            default 0 not null,
                  lumicount          int            default 0 not null,
-                 reco_timeout       int            default 0 not null,
-                 reco_lock_timeout  int            default 0 not null,
                  process            varchar(255),
                  acq_era            varchar(255),
                  primary key(run_id)
@@ -178,12 +176,15 @@ class Create(DBCreator):
                )"""
 
         self.create[len(self.create)] = \
-            """CREATE TABLE run_primds_fileset_assoc (
+            """CREATE TABLE reco_release_config (
                  run_id       int   not null,
                  primds_id    int   not null,
                  fileset      int   not null,
+                 delay        int   not null,
+                 delay_offset int   not null,
+                 released     int   default 0 not null,
                  primary key(run_id, primds_id),
-                 constraint run_pri_fil_ass_fil_uq unique(fileset)
+                 constraint rec_rel_con_fil_uq unique(fileset)
                )"""
 
         self.create[len(self.create)] = \
@@ -254,8 +255,6 @@ class Create(DBCreator):
                  write_tiers    varchar(255)  not null,
                  write_skims    varchar(1000),
                  global_tag     varchar(255),
-                 proc_url       varchar(255),
-                 merge_url      varchar(255),
                  primary key (run_id, stream_id)
                )"""
 
@@ -272,9 +271,6 @@ class Create(DBCreator):
                   proc_version   int           not null,
                   write_skims    varchar(1000),
                   global_tag     varchar(255),
-                  config_url     varchar(255),
-                  pset_hash      varchar(700),
-                  branch_hash    varchar(700),
                   primary key (run_id, primds_id)
                )"""
 
@@ -393,6 +389,9 @@ class Create(DBCreator):
 
         self.indexes[len(self.indexes)] = \
             """CREATE INDEX idx_streamer_3 ON streamer (checkForZeroOneState(deleted))"""
+
+        self.indexes[len(self.indexes)] = \
+            """CREATE INDEX idx_reco_release_config_1 ON reco_release_config (checkForZeroState(released))"""
 
         #
         # Constraints
@@ -524,20 +523,20 @@ class Create(DBCreator):
                  REFERENCES wmbs_fileset(id)"""
 
         self.constraints[len(self.constraints)] = \
-            """ALTER TABLE run_primds_fileset_assoc
-                 ADD CONSTRAINT run_pri_fil_run_id_fk
+            """ALTER TABLE reco_release_config
+                 ADD CONSTRAINT rec_rel_con_run_id_fk
                  FOREIGN KEY (run_id)
                  REFERENCES run(run_id)"""
 
         self.constraints[len(self.constraints)] = \
-            """ALTER TABLE run_primds_fileset_assoc
-                 ADD CONSTRAINT run_pri_fil_str_id_fk
+            """ALTER TABLE reco_release_config
+                 ADD CONSTRAINT rec_rel_con_pri_id_fk
                  FOREIGN KEY (primds_id)
                  REFERENCES primary_dataset(id)"""
 
         self.constraints[len(self.constraints)] = \
-            """ALTER TABLE run_primds_fileset_assoc
-                 ADD CONSTRAINT run_pri_fil_fil_id_fk
+            """ALTER TABLE reco_release_config
+                 ADD CONSTRAINT rec_rel_con_fil_id_fk
                  FOREIGN KEY (fileset)
                  REFERENCES wmbs_fileset(id)"""
 

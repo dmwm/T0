@@ -6,6 +6,7 @@ API for anyting RunConfig related
 """
 import logging
 import threading
+import time
 
 from WMCore.DAOFactory import DAOFactory
 
@@ -20,7 +21,8 @@ from T0.WMSpec.StdSpecs.Repack import getTestArguments as getRepackArguments
 from T0.WMSpec.StdSpecs.Repack import repackWorkload
 from T0.WMSpec.StdSpecs.Express import getTestArguments as getExpressArguments
 from T0.WMSpec.StdSpecs.Express import expressWorkload
-
+from WMCore.WMSpec.StdSpecs.PromptReco import getTestArguments as getPromptRecoArguments
+from WMCore.WMSpec.StdSpecs.PromptReco import promptrecoWorkload
 
 def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
     """
@@ -80,8 +82,6 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
             myThread.transaction.begin()
             updateRunDAO.execute(run, hltConfig['process'],
                                  tier0Config.Global.AcquisitionEra,
-                                 tier0Config.Global.RecoTimeout,
-                                 tier0Config.Global.RecoLockTimeout,
                                  transaction = True)
             insertStreamDAO.execute(bindsStream,
                                     transaction = True)
@@ -163,7 +163,7 @@ def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
         updateStreamOverrideDAO = daoFactory(classname = "RunConfig.UpdateStreamOverride")
         insertErrorDatasetDAO = daoFactory(classname = "RunConfig.InsertErrorDataset")
         insertStreamFilesetDAO = daoFactory(classname = "RunConfig.InsertStreamFileset")
-        insertDatasetFilesetDAO = daoFactory(classname = "RunConfig.InsertDatasetFileset")
+        insertRecoReleaseConfigDAO = daoFactory(classname = "RunConfig.InsertRecoReleaseConfig")
 
         # mark workflows as injected
         wmbsDaoFactory = DAOFactory(package = "WMCore.WMBS",
@@ -183,12 +183,17 @@ def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
         bindsCMSSWVersion = []
         bindsStreamOverride = {}
         bindsErrorDataset = []
-        bindsDatasetFileset = []
 
         #
         # for spec creation, details for all outputs
         #
         outputModuleDetails = []
+
+        #
+        # for PromptReco delay settings
+        #
+        promptRecoDelay = {}
+        promptRecoDelayOffset = {}
 
         #
         # first take care of all stream settings
@@ -233,9 +238,7 @@ def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
                                    'PROC_VER' : streamConfig.Express.ProcessingVersion,
                                    'WRITE_TIERS' : ",".join(streamConfig.Express.DataTiers),
                                    'WRITE_SKIMS' : writeSkims,
-                                   'GLOBAL_TAG' : streamConfig.Express.GlobalTag,
-                                   'PROC_URL' : streamConfig.Express.ProcessingConfigURL,
-                                   'MERGE_URL' : streamConfig.Express.AlcaMergeConfigURL }
+                                   'GLOBAL_TAG' : streamConfig.Express.GlobalTag }
 
 
         overrideVersion = streamConfig.VersionOverride.get(onlineVersion, None)
@@ -261,6 +264,9 @@ def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
 
             datasetConfig = retrieveDatasetConfig(tier0Config, dataset)
 
+            promptRecoDelay[datasetConfig.Name] = datasetConfig.RecoDelay
+            promptRecoDelayOffset[datasetConfig.Name] = datasetConfig.RecoDelayOffset
+
             selectEvents = []
             for path in datasetTriggers[datasetConfig.Name]:
                 selectEvents.append("%s:%s" % (path, runInfo['process']))
@@ -272,13 +278,13 @@ def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
                                               'selectEvents' : selectEvents,
                                               'primaryDataset' : datasetConfig.Name } )
 
-                errorDataset = "%s-%s" % (datasetConfig.Name, "Error")
-                bindsDataset.append( { 'PRIMDS' : errorDataset } )
-                bindsStreamDataset.append( { 'RUN' : run,
-                                             'PRIMDS' : errorDataset,
-                                             'STREAM' : stream } )
-                bindsErrorDataset.append( { 'PARENT' : datasetConfig.Name,
-                                            'ERROR' : errorDataset } )
+##                 errorDataset = "%s-%s" % (datasetConfig.Name, "Error")
+##                 bindsDataset.append( { 'PRIMDS' : errorDataset } )
+##                 bindsStreamDataset.append( { 'RUN' : run,
+##                                              'PRIMDS' : errorDataset,
+##                                              'STREAM' : stream } )
+##                 bindsErrorDataset.append( { 'PARENT' : datasetConfig.Name,
+##                                             'ERROR' : errorDataset } )
 
             elif streamConfig.ProcessingStyle == "Express":
 
@@ -344,9 +350,10 @@ def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
         #
         try:
             myThread.transaction.begin()
-            insertDatasetDAO.execute(bindsDataset, conn = myThread.transaction.conn, transaction = True)
-            insertStreamDatasetDAO.execute(bindsStreamDataset, conn = myThread.transaction.conn, transaction = True)
-            insertStreamStyleDAO.execute(bindsStreamStyle, conn = myThread.transaction.conn, transaction = True)
+            if len(bindsDataset) > 0:
+                insertDatasetDAO.execute(bindsDataset, conn = myThread.transaction.conn, transaction = True)
+            if len(bindsStreamDataset) > 0:
+                insertStreamDatasetDAO.execute(bindsStreamDataset, conn = myThread.transaction.conn, transaction = True)
             if len(bindsRepackConfig) > 0:
                 insertRepackConfigDAO.execute(bindsRepackConfig, conn = myThread.transaction.conn, transaction = True)
             if len(bindsExpressConfig) > 0:
@@ -361,15 +368,19 @@ def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
                 updateStreamOverrideDAO.execute(bindsStreamOverride, conn = myThread.transaction.conn, transaction = True)
             if len(bindsErrorDataset) > 0:
                 insertErrorDatasetDAO.execute(bindsErrorDataset, conn = myThread.transaction.conn, transaction = True)
+            insertStreamStyleDAO.execute(bindsStreamStyle, conn = myThread.transaction.conn, transaction = True)
             insertStreamFilesetDAO.execute(run, stream, filesetName, conn = myThread.transaction.conn, transaction = True)
             fileset.load()
             wmbsHelper.createSubscription(wmSpec.getTask(taskName), fileset)
             if streamConfig.ProcessingStyle == "Bulk":
+                bindsRecoReleaseConfig = []
                 for fileset, primds in wmbsHelper.getMergeOutputMapping().items():
-                    bindsDatasetFileset.append( { 'RUN' : run,
-                                                  'PRIMDS' : primds,
-                                                  'FILESET' : fileset } )
-                insertDatasetFilesetDAO.execute(bindsDatasetFileset, conn = myThread.transaction.conn, transaction = True)
+                    bindsRecoReleaseConfig.append( { 'RUN' : run,
+                                                     'PRIMDS' : primds,
+                                                     'FILESET' : fileset,
+                                                     'RECODELAY' : promptRecoDelay[primds],
+                                                     'RECODELAYOFFSET' : promptRecoDelayOffset[primds] } )
+                insertRecoReleaseConfigDAO.execute(bindsRecoReleaseConfig, conn = myThread.transaction.conn, transaction = True)
             markWorkflowsInjectedDAO.execute([workflowName], injected = True, conn = myThread.transaction.conn, transaction = True)
         except:
             myThread.transaction.rollback()
@@ -384,23 +395,21 @@ def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
 
     return
 
-def configurePromptReco(tier0Config, specDirectory, lfnBase, run, stream):
+def releasePromptReco(tier0Config, specDirectory, lfnBase):
     """
-    _configurePromptReco_
+    _releasePromptReco_
 
-    Called by Tier0Feeder for run/streams when releasing PromptReco
+    Called by Tier0Feeder
 
-    Retrieve global run settings and build the part of the configuration
-    relevant to PromptReco for run/stream and write it to the database.
+    Finds all run/primds that need to be released for PromptReco
+    ( run.end_time + reco_release_config.delay > now
+      AND run.end_time > 0 )
 
-    Create workflows, filesets and subscriptions for
-    the processing of runs/datasets.
-
-    This will also loop over the error datasets ! If you want to do
-    something special with them, just configure appropriately.
+    Create workflows and subscriptions for the processing
+    of runs/datasets.
 
     """
-    logging.debug("configureRunStream() : %d , %s" % (run, stream))
+    logging.debug("releasePromptReco()")
     myThread = threading.currentThread()
 
     daoFactory = DAOFactory(package = "T0.WMBS",
@@ -413,6 +422,7 @@ def configurePromptReco(tier0Config, specDirectory, lfnBase, run, stream):
     insertStorageNodeDAO = daoFactory(classname = "RunConfig.InsertStorageNode")
     insertPhEDExConfigDAO = daoFactory(classname = "RunConfig.InsertPhEDExConfig")
     insertPromptSkimConfigDAO = daoFactory(classname = "RunConfig.InsertPromptSkimConfig")
+    releasePromptRecoDAO = daoFactory(classname = "RunConfig.ReleasePromptReco")
 
     bindsDatasetScenario = []
     bindsCMSSWVersion = []
@@ -420,16 +430,29 @@ def configurePromptReco(tier0Config, specDirectory, lfnBase, run, stream):
     bindsStorageNode = []
     bindsPhEDExConfig = []
     bindsPromptSkimConfig = []
+    bindsReleasePromptReco = []
 
-    getStreamDatasetsDAO = daoFactory(classname = "RunConfig.GetStreamDatasets")
-    datasets = getStreamDatasetsDAO.execute(run, stream, transaction = False)
+    # mark workflows as injected
+    wmbsDaoFactory = DAOFactory(package = "WMCore.WMBS",
+                                logger = logging,
+                                dbinterface = myThread.dbi)
+    markWorkflowsInjectedDAO   = wmbsDaoFactory(classname = "Workflow.MarkInjectedWorkflows")
 
-    for dataset in datasets:
+    recoSpecs = {}
+
+    findRecoReleaseDAO = daoFactory(classname = "RunConfig.FindRecoRelease")
+    recoRelease = findRecoReleaseDAO.execute(transaction = False)
+
+    for (run, dataset, fileset, acqEra, repackProcVer) in recoRelease:
+
+        bindsReleasePromptReco.append( { 'RUN' : run,
+                                         'PRIMDS' : dataset,
+                                         'NOW' : int(time.time()) } )
 
         datasetConfig = retrieveDatasetConfig(tier0Config, dataset)
 
         bindsDatasetScenario.append( { 'RUN' : run,
-                                       'PRIMDS' : datasetConfig.Name,
+                                       'PRIMDS' : dataset,
                                        'SCENARIO' : datasetConfig.Scenario } )
 
         bindsCMSSWVersion.append( { 'VERSION' : datasetConfig.Reco.CMSSWVersion } )
@@ -439,7 +462,7 @@ def configurePromptReco(tier0Config, specDirectory, lfnBase, run, stream):
             writeSkims = ",".join(datasetConfig.Alca.Producers)
 
         bindsRecoConfig.append( { 'RUN' : run,
-                                  'PRIMDS' : datasetConfig.Name,
+                                  'PRIMDS' : dataset,
                                   'DO_RECO' : int(datasetConfig.Reco.DoReco),
                                   'CMSSW' : datasetConfig.Reco.CMSSWVersion,
                                   'RECO_SPLIT' : datasetConfig.Reco.EventSplit,
@@ -448,8 +471,7 @@ def configurePromptReco(tier0Config, specDirectory, lfnBase, run, stream):
                                   'WRITE_AOD' : int(datasetConfig.Reco.WriteAOD),
                                   'PROC_VER' : datasetConfig.Reco.ProcessingVersion,
                                   'WRITE_SKIMS' : writeSkims,
-                                  'GLOBAL_TAG' : datasetConfig.Reco.GlobalTag,
-                                  'CONFIG_URL' : datasetConfig.Reco.ConfigURL } )
+                                  'GLOBAL_TAG' : datasetConfig.Reco.GlobalTag } )
 
         requestOnly = "y"
         if datasetConfig.CustodialAutoApprove:
@@ -460,7 +482,7 @@ def configurePromptReco(tier0Config, specDirectory, lfnBase, run, stream):
             bindsStorageNode.append( { 'NODE' : datasetConfig.CustodialNode } )
 
             bindsPhEDExConfig.append( { 'RUN' : run,
-                                        'PRIMDS' : datasetConfig.Name,
+                                        'PRIMDS' : dataset,
                                         'NODE' : datasetConfig.CustodialNode,
                                         'CUSTODIAL' : 1,
                                         'REQ_ONLY' : requestOnly,
@@ -471,7 +493,7 @@ def configurePromptReco(tier0Config, specDirectory, lfnBase, run, stream):
             bindsStorageNode.append( { 'NODE' : datasetConfig.ArchivalNode } )
 
             bindsPhEDExConfig.append( { 'RUN' : run,
-                                        'PRIMDS' : datasetConfig.Name,
+                                        'PRIMDS' : dataset,
                                         'NODE' : datasetConfig.ArchivalNode,
                                         'CUSTODIAL' : 0,
                                         'REQ_ONLY' : "n",
@@ -490,7 +512,7 @@ def configurePromptReco(tier0Config, specDirectory, lfnBase, run, stream):
                 raise RuntimeError, "Configured a skim without providing a skim node or a custodial site\n"
 
             bindsPromptSkimConfig.append( { 'RUN' : run,
-                                            'PRIMDS' : datasetConfig.Name,
+                                            'PRIMDS' : dataset,
                                             'TIER' : tier1Skim.DataTier,
                                             'NODE' : tier1Skim.Node,
                                             'CMSSW' : tier1Skim.CMSSWVersion,
@@ -500,9 +522,54 @@ def configurePromptReco(tier0Config, specDirectory, lfnBase, run, stream):
                                             'GLOBAL_TAG' : tier1Skim.GlobalTag,
                                             "CONFIG_URL" : tier1Skim.ConfigURL } )
 
+        writeTiers = []
+        if datasetConfig.Reco.WriteRECO:
+            writeTiers.append("RECO")
+        if datasetConfig.Reco.WriteAOD:
+            writeTiers.append("AOD")
+        if datasetConfig.Reco.WriteDQM:
+            writeTiers.append("DQM")
+        if len(datasetConfig.Alca.Producers) > 0:
+            writeTiers.append("ALCARECO")
+
+        if datasetConfig.Reco.DoReco and len(writeTiers) > 0:
+
+            #
+            # create WMSpec
+            #
+            taskName = "Reco"
+            workflowName = "PromptReco_Run%d_%s" % (run, dataset)
+            specArguments = getPromptRecoArguments()
+
+            specArguments['AcquisitionEra'] = acqEra
+            specArguments['CMSSWVersion'] = datasetConfig.Reco.CMSSWVersion
+
+            specArguments['ProcessingString'] = "PromptReco"
+            specArguments['ProcessingVersion'] = datasetConfig.Reco.ProcessingVersion
+            specArguments['ProcScenario'] = datasetConfig.Scenario
+            specArguments['GlobalTag'] = datasetConfig.Reco.GlobalTag
+
+            specArguments['InputDataset'] = "/%s/%s-%s/RAW" % (dataset, acqEra, repackProcVer)
+
+            specArguments['WriteTiers'] = writeTiers
+            specArguments['AlcaSkims'] = datasetConfig.Alca.Producers
+
+            specArguments['UnmergedLFNBase'] = "%s/t0temp/data" % lfnBase
+            specArguments['MergedLFNBase'] = "%s/data" % lfnBase
+
+            wmSpec = promptrecoWorkload(workflowName, specArguments)
+
+            wmSpec.setOwnerDetails("Dirk.Hufnagel@cern.ch", "T0",
+                                   { 'vogroup': 'DEFAULT', 'vorole': 'DEFAULT',
+                                     'dn' : "Dirk.Hufnagel@cern.ch" } )
+            wmbsHelper = WMBSHelper(wmSpec, taskName, cachepath = specDirectory)
+
+            recoSpecs[workflowName] = (wmbsHelper, wmSpec, fileset)
+
     try:
         myThread.transaction.begin()
-        insertDatasetScenarioDAO.execute(bindsDatasetScenario, conn = myThread.transaction.conn, transaction = True)
+        if len(bindsDatasetScenario) > 0:
+            insertDatasetScenarioDAO.execute(bindsDatasetScenario, conn = myThread.transaction.conn, transaction = True)
         if len(bindsCMSSWVersion) > 0:
             insertCMSSWVersionDAO.execute(bindsCMSSWVersion, conn = myThread.transaction.conn, transaction = True)
         if len(bindsRecoConfig) > 0:
@@ -513,6 +580,12 @@ def configurePromptReco(tier0Config, specDirectory, lfnBase, run, stream):
             insertPhEDExConfigDAO.execute(bindsPhEDExConfig, conn = myThread.transaction.conn, transaction = True)
         if len(bindsPromptSkimConfig) > 0:
             insertPromptSkimConfigDAO.execute(bindsPromptSkimConfig, conn = myThread.transaction.conn, transaction = True)
+        if len(bindsReleasePromptReco) > 0:
+            releasePromptRecoDAO.execute(bindsReleasePromptReco, conn = myThread.transaction.conn, transaction = True)
+        for (wmbsHelper, wmSpec, fileset) in recoSpecs.values():
+            wmbsHelper.createSubscription(wmSpec.getTask(taskName), Fileset(id = fileset))
+        if len(recoSpecs) > 0:
+            markWorkflowsInjectedDAO.execute(recoSpecs.keys(), injected = True, conn = myThread.transaction.conn, transaction = True)
     except:
         myThread.transaction.rollback()
         raise

@@ -12,9 +12,6 @@ Tier0Configuration - Global configuration object
 | |       |
 | |       |--> Version - The CVS revision of the config
 | |       |--> AcquisitionEra - The acquisition era for the run
-| |       |--> RecoTimeout - PromptReco release timeout
-| |       |--> RecoLockTimeout - timout for locking PromptReco release before
-| |       |                      actual release
 | |       |--> PhEDExSubscriptions - Dictionary of PhEDEx subscriptions where the
 | |                                  primary dataset id is the key and the storage
 | |                                  node name is the value
@@ -38,11 +35,7 @@ Tier0Configuration - Global configuration object
 |             |     |
 |             |     |--> Scenario - Event scenario, determines configurations used
 |             |     |
-|             |     |--> ProcessingConfigURL - URL to the processing configuration
-|             |     |
 |             |     |--> DataTiers - List of data tiers
-|             |     |
-|             |     |--> AlcaMergeConfigURL - URL to the Alca merge configuration
 |             |     |
 |             |     |--> GlobalTag - Global tag used for processing
 |             |     |
@@ -82,8 +75,10 @@ Tier0Configuration - Global configuration object
       |
       |--> DATASETNAME
             |--> Name - Name of the dataset.
-            |--> Scenario - String that describes the processing scenario for this
-            |               dataset.
+            |--> Scenario - Processing scenario for this dataset.
+            |--> RecoDelay - PromptReco delay
+            |--> RecoDelayOffset - Time before PromptReco release for which
+            |                      settings are locked in and reco looks released
             |--> CustodialNode - The custodial PhEDEx storage node for this dataset
             |--> ArchivalNode - The archival PhEDEx node, always CERN.
             |--> CustodialPriority - The priority of the custodial subscription
@@ -100,19 +95,13 @@ Tier0Configuration - Global configuration object
             |     |--> GlobalTag - The global tag that will be used to prompt
             |     |                reconstruction.  Only used if DoReco is true.
             |     |--> CMSSWVersion - Framework version to be used for prompt
-            |     |                   reconstruction.  This only needs to be filled
-            |     |                   in if DoReco is True and will default to 
-            |     |                   Undefined if not set.
-            |     |--> ConfigURL - URL of the framework configuration file.  If not set
-            |                      the configuration will be pulled from the framework.
+            |                         reconstruction.  This only needs to be filled
+            |                         in if DoReco is True and will default to
+            |                         Undefined if not set.
             |
-            |--> Alca - Configuration section to hold settings related to alca 
-            |     |     production.
+            |--> Alca - Configuration section to hold settings related to alca production.
             |     |
-            |     |--> DoAlca - Either True or False.  Determines whether alca production
-            |     |             is preformed on this dataset.
-            |     |--> ConfigURL - URL of the framework configuration file.  If not set 
-            |                      the configuration will be pulled from the framework.
+            |     |--> Producers - List of alca producers active for this dataset.
             |
             |--> Tier1Skims - List of configuration section objects to hold Tier1 skims for
                   |           this dataset.
@@ -144,10 +133,6 @@ def createTier0Config():
     tier0Config.section_("Streams")
     tier0Config.section_("Datasets")
     tier0Config.section_("Global")
-
-    # setup some defaults
-    tier0Config.Global.RecoTimeout = 0
-    tier0Config.Global.RecoLockTimeout = 0
 
     return tier0Config
 
@@ -254,6 +239,19 @@ def addDataset(config, datasetName, **settings):
     #
     # override default settings with dataset specific settings (if exists)
     #
+    if hasattr(datasetConfig, "RecoDelay"):
+        datasetConfig.RecoDelay = settings.get('reco_delay', datasetConfig.RecoDelay)
+    else:
+        datasetConfig.RecoDelay = settings.get('reco_delay', 48 * 3600)
+
+    if hasattr(datasetConfig, "RecoDelayOffset"):
+        datasetConfig.RecoDelayOffset = settings.get('reco_delay_offset', datasetConfig.RecoDelayOffset)
+    else:
+        datasetConfig.RecoDelayOffset = settings.get('reco_delay_offset', 30 * 60)
+
+    if datasetConfig.RecoDelayOffset > datasetConfig.RecoDelay:
+        datasetConfig.RecoDelayOffset = datasetConfig.RecoDelay
+
     if hasattr(datasetConfig, "ProcessingVersion"):
         datasetConfig.ProcessingVersion = settings.get('default_proc_ver', datasetConfig.ProcessingVersion)
     else:
@@ -276,16 +274,13 @@ def addDataset(config, datasetName, **settings):
 
     datasetConfig.Reco.DoReco = settings.get("do_reco", False)
     datasetConfig.Reco.GlobalTag = settings.get("global_tag", datasetConfig.GlobalTag)
-    datasetConfig.Reco.ConfigURL = settings.get("reco_configuration", None)
     datasetConfig.Reco.ProcessingVersion = settings.get("reco_proc_ver", datasetConfig.ProcessingVersion)
     datasetConfig.Reco.EventSplit = settings.get("reco_split", 2000)
     datasetConfig.Reco.WriteRECO = settings.get("write_reco", True)
     datasetConfig.Reco.WriteDQM = settings.get("write_dqm", True)
     datasetConfig.Reco.WriteAOD = settings.get("write_aod", True)
 
-    datasetConfig.Alca.DoAlca = settings.get("do_alca", False)
     datasetConfig.Alca.Producers = settings.get("alca_producers", [])
-    datasetConfig.Alca.ConfigURL = settings.get("alca_configuration", None)
 
     datasetConfig.CustodialNode = settings.get("custodial_node", None)
     datasetConfig.CustodialPriority = settings.get("custodial_priority", "high")
@@ -301,24 +296,6 @@ def setAcquisitionEra(config, acquisitionEra):
     Set the acquisition era in the configuration.
     """
     config.Global.AcquisitionEra = acquisitionEra
-    return
-
-def setRecoTimeout(config, recoTimeout):
-    """
-    _setRecoTimeout__
-
-    Set the reco timeout in the configuration.
-    """
-    config.Global.RecoTimeout = recoTimeout
-    return
-
-def setRecoLockTimeout(config, recoLockTimeout):
-    """
-    _setRecoLockTimeout_
-
-    Set the reco lock timeout in the configuration.
-    """
-    config.Global.RecoLockTimeout = recoLockTimeout
     return
 
 def setConfigVersion(config, version):
@@ -402,9 +379,7 @@ def addExpressConfig(config, streamName, **options):
     streamConfig.section_("Express")
 
     streamConfig.Express.Scenario = scenario
-    streamConfig.Express.ProcessingConfigURL = proc_config
     streamConfig.Express.DataTiers = data_tiers
-    streamConfig.Express.AlcaMergeConfigURL = alcamerge_config
     streamConfig.Express.GlobalTag = global_tag
 
     streamConfig.Express.Producers = options.get("alca_producers", [])

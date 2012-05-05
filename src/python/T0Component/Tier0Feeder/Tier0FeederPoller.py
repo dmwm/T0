@@ -118,12 +118,6 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                         self.specDirectory,
                                                         self.lfnBase,
                                                         run, stream)
-
-                        RunConfigAPI.configurePromptReco(tier0Config,
-                                                         self.specDirectory,
-                                                         self.lfnBase,
-                                                         run, stream)
-
                     except:
                         logging.exception("Can't configure for run %d and stream %s" % (run, stream))
 
@@ -131,6 +125,13 @@ class Tier0FeederPoller(BaseWorkerThread):
         # end runs which are active and have ended according to the EoR StorageManager records
         #
         RunLumiCloseoutAPI.endRuns(self.dbInterfaceStorageManager)
+
+        #
+        # release runs for PromptReco
+        #
+        RunConfigAPI.releasePromptReco(tier0Config,
+                                       self.specDirectory,
+                                       self.lfnBase)
 
         #
         # close stream/lumis for run/streams that are active (fileset exists and open)

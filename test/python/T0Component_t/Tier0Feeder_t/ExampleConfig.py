@@ -7,8 +7,6 @@ Example configuration for RunConfig unittest
 from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
-from T0.RunConfig.Tier0Config import setRecoTimeout
-from T0.RunConfig.Tier0Config import setRecoLockTimeout
 from T0.RunConfig.Tier0Config import setConfigVersion
 from T0.RunConfig.Tier0Config import ignoreStream
 from T0.RunConfig.Tier0Config import addRepackConfig
@@ -24,13 +22,6 @@ tier0Config = createTier0Config()
 # and the version of the configuration.
 setAcquisitionEra(tier0Config, "ExampleConfig_UnitTest")
 setConfigVersion(tier0Config, "replace with real version")
-
-# Set the two timeouts for reco release
-# First timeout is used directly for reco release
-# Second timeout is used for the data service PromptReco start check
-# (to basically say we started PromptReco even though we haven't)
-setRecoTimeout(tier0Config, 60)
-setRecoLockTimeout(tier0Config, 30)
 
 # setup repack and express version mappings
 repackVersionOverride = {
@@ -63,6 +54,7 @@ addExpressConfig(tier0Config, "HLTMON",
 
 addDataset(tier0Config, "Default",
            scenario = "pp",
+           reco_delay = 60, reco_delay_offset = 30,
            reco_version = "CMSSW_4_2_8_patch1",
            default_proc_ver = 4,
            global_tag = "GlobalTag3",

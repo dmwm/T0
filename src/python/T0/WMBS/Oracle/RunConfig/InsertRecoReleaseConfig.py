@@ -1,20 +1,22 @@
 """
-_InsertDatasetFileset_
+_InsertRecoReleaseConfig_
 
-Oracle implementation of InsertDatasetFileset
+Oracle implementation of InsertRecoReleaseConfig
 
 """
 from WMCore.Database.DBFormatter import DBFormatter
 
-class InsertDatasetFileset(DBFormatter):
+class InsertRecoReleaseConfig(DBFormatter):
 
     def execute(self, binds, conn = None, transaction = False):
 
-        sql = """INSERT INTO run_primds_fileset_assoc
-                 (RUN_ID, PRIMDS_ID, FILESET)
+        sql = """INSERT INTO reco_release_config
+                 (RUN_ID, PRIMDS_ID, FILESET, DELAY, DELAY_OFFSET)
                  VALUES (:RUN,
                          (SELECT id FROM primary_dataset WHERE name = :PRIMDS),
-                         :FILESET)
+                         :FILESET,
+                         :RECODELAY,
+                         :RECODELAYOFFSET)
                  """
 
         self.dbi.processData(sql, binds, conn = conn,
