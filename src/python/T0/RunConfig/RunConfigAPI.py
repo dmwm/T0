@@ -313,6 +313,7 @@ def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
             taskName = "Express"
             workflowName = "Express_Run%d_Stream%s" % (run, stream)
             specArguments = getExpressArguments()
+            specArguments['ProcessingString'] = "Express"
             specArguments['ProcessingVersion'] = streamConfig.Express.ProcessingVersion
             specArguments['ProcScenario'] = streamConfig.Express.Scenario
             specArguments['GlobalTag'] = streamConfig.Express.GlobalTag

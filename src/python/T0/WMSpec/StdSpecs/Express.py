@@ -82,7 +82,7 @@ class ExpressWorkloadFactory(StdBase):
         # figure out alca primary dataset
         self.alcaPrimaryDataset = None
         for output in self.outputs:
-            output['filterName'] = "Express"
+            #output['filterName'] = "Express"
             output['moduleLabel'] = "write_%s_%s" % (output['primaryDataset'],
                                                      output['dataTier'])
             if output['dataTier'] == "ALCARECO":

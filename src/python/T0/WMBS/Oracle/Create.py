@@ -242,7 +242,7 @@ class Create(DBCreator):
             """CREATE TABLE repack_config (
                  run_id         int not null,
                  stream_id      int not null,
-                 proc_version   varchar(255) not null,
+                 proc_version   int not null,
                  primary key (run_id, stream_id)
                )"""
 
@@ -250,7 +250,7 @@ class Create(DBCreator):
             """CREATE TABLE express_config (
                  run_id         int           not null,
                  stream_id      int           not null,
-                 proc_version   varchar(255)  not null,
+                 proc_version   int           not null,
                  write_tiers    varchar(255)  not null,
                  write_skims    varchar(1000),
                  global_tag     varchar(255),
@@ -269,7 +269,7 @@ class Create(DBCreator):
                   write_reco     int           not null,
                   write_dqm      int           not null,
                   write_aod      int           not null,
-                  proc_version   varchar(255)  not null,
+                  proc_version   int           not null,
                   write_skims    varchar(1000),
                   global_tag     varchar(255),
                   config_url     varchar(255),
@@ -298,7 +298,7 @@ class Create(DBCreator):
                   node_id         int not null,
                   cmssw_id        int not null,
                   two_file_read   int not null,
-                  proc_version    varchar(255) not null,
+                  proc_version    int not null,
                   global_tag      varchar(255),
                   config_url      varchar(255),
                   primary key (run_id, primds_id, tier_id, skim_name)

@@ -1099,7 +1099,7 @@ class RunConfigTest(unittest.TestCase):
         repackConfig = self.getRepackConfigDAO.execute(176161, "A",
                                                        transaction = False)
 
-        self.assertEqual(repackConfig['proc_ver'], "v1",
+        self.assertEqual(repackConfig['proc_ver'], 1,
                          "ERROR: wrong processing version for stream A")
 
         self.assertEqual(repackConfig['cmssw'], "CMSSW_4_2_7",
@@ -1108,7 +1108,7 @@ class RunConfigTest(unittest.TestCase):
         expressConfig = self.getExpressConfigDAO.execute(176161, "Express",
                                                          transaction = False)
 
-        self.assertEqual(expressConfig['proc_ver'], "v2" ,
+        self.assertEqual(expressConfig['proc_ver'], 2,
                          "ERROR: wrong processing version for stream Express")
 
         self.assertEqual(expressConfig['cmssw'], "CMSSW_4_2_8_patch6" ,
@@ -1133,7 +1133,7 @@ class RunConfigTest(unittest.TestCase):
         expressConfig = self.getExpressConfigDAO.execute(176161, "HLTMON",
                                                          transaction = False)
 
-        self.assertEqual(expressConfig['proc_ver'], "v3" ,
+        self.assertEqual(expressConfig['proc_ver'], 3,
                          "ERROR: wrong processing version for stream HLTMON")
 
         self.assertEqual(expressConfig['cmssw'], "CMSSW_4_2_8_patch7" ,
@@ -1199,7 +1199,7 @@ class RunConfigTest(unittest.TestCase):
                 self.assertEquals(recoConfig['write_dqm'], 1,
                                   "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['proc_ver'], "v5",
+                self.assertEquals(recoConfig['proc_ver'], 5,
                                   "ERROR: problem in reco configuration")
 
                 writeSkims = []
@@ -1234,7 +1234,7 @@ class RunConfigTest(unittest.TestCase):
                 self.assertEquals(recoConfig['write_dqm'], 0,
                                   "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['proc_ver'], "v6",
+                self.assertEquals(recoConfig['proc_ver'], 6,
                                   "ERROR: problem in reco configuration")
 
                 writeSkims = []
@@ -1269,7 +1269,7 @@ class RunConfigTest(unittest.TestCase):
                 self.assertEquals(recoConfig['write_dqm'], 1,
                                   "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['proc_ver'], "v4",
+                self.assertEquals(recoConfig['proc_ver'], 4,
                                   "ERROR: problem in reco configuration")
 
                 writeSkims = []
@@ -1379,7 +1379,7 @@ class RunConfigTest(unittest.TestCase):
         self.assertEquals(promptSkimConfig['Skim1']['two_file_read'], 1,
                           "ERROR: problem in promptskim configuration")
 
-        self.assertEquals(promptSkimConfig['Skim1']['proc_ver'], "v7",
+        self.assertEquals(promptSkimConfig['Skim1']['proc_ver'], 7,
                           "ERROR: problem in promptskim configuration")
 
         self.assertEquals(promptSkimConfig['Skim1']['global_tag'], "GlobalTag6",
@@ -1402,7 +1402,7 @@ class RunConfigTest(unittest.TestCase):
         self.assertEquals(promptSkimConfig['Skim2']['two_file_read'], 0,
                           "ERROR: problem in promptskim configuration")
 
-        self.assertEquals(promptSkimConfig['Skim2']['proc_ver'], "v8",
+        self.assertEquals(promptSkimConfig['Skim2']['proc_ver'], 8,
                           "ERROR: problem in promptskim configuration")
 
         self.assertEquals(promptSkimConfig['Skim2']['global_tag'], "GlobalTag7",

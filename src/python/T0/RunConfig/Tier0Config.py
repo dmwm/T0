@@ -366,7 +366,7 @@ def addRepackConfig(config, streamName, **options):
     if hasattr(streamConfig.Repack, "ProcessingVersion"):
         streamConfig.Repack.ProcessingVersion = options.get("proc_ver", streamConfig.Repack.ProcessingVersion)
     else:
-        streamConfig.Repack.ProcessingVersion = options.get("proc_ver", "v1")
+        streamConfig.Repack.ProcessingVersion = options.get("proc_ver", 1)
 
     return
 
@@ -408,7 +408,7 @@ def addExpressConfig(config, streamName, **options):
     streamConfig.Express.GlobalTag = global_tag
 
     streamConfig.Express.Producers = options.get("alca_producers", [])
-    streamConfig.Express.ProcessingVersion = options.get("proc_ver", "v1")
+    streamConfig.Express.ProcessingVersion = options.get("proc_ver", 1)
     return
 
 def addRegistrationConfig(config, streamName, **options):
