@@ -20,7 +20,7 @@ class GetAvailableExpressFiles(DBFormatter):
                         wmbs_file_runlumi_map.lumi AS lumi,
                         wmbs_file_details.events AS events,
                         wmbs_file_details.lfn AS lfn,
-                        wmbs_location.se_name AS location
+                        wmbs_location_senames.se_name AS location
                  FROM wmbs_sub_files_available
                  INNER JOIN run_stream_fileset_assoc ON
                    run_stream_fileset_assoc.fileset =
@@ -39,6 +39,8 @@ class GetAvailableExpressFiles(DBFormatter):
                    wmbs_file_location.fileid = wmbs_sub_files_available.fileid
                  INNER JOIN wmbs_location ON
                    wmbs_location.id = wmbs_file_location.location
+                 INNER JOIN wmbs_location_senames ON
+                   wmbs_location_senames.location = wmbs_location.id
                  WHERE wmbs_sub_files_available.subscription = :subscription
                  """
 

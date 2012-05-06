@@ -29,7 +29,7 @@ class GetAvailableRepackMergeFiles(DBFormatter):
                         wmbs_file_details.filesize AS filesize,
                         wmbs_file_details.events AS events,
                         wmbs_file_details.lfn AS lfn,
-                        wmbs_location.se_name AS location,
+                        wmbs_location_senames.se_name AS location,
                         MIN(wmbs_file_runlumi_map.lumi) AS first_lumi,
                         MAX(wmbs_file_runlumi_map.lumi) AS last_lumi
                  FROM wmbs_sub_files_available
@@ -41,6 +41,8 @@ class GetAvailableRepackMergeFiles(DBFormatter):
                    wmbs_file_location.fileid = wmbs_sub_files_available.fileid
                  INNER JOIN wmbs_location ON
                    wmbs_location.id = wmbs_file_location.location
+                 INNER JOIN wmbs_location_senames ON
+                   wmbs_location_senames.location = wmbs_location.id
                  INNER JOIN wmbs_subscription repackmerge_subscription ON
                    repackmerge_subscription.id = wmbs_sub_files_available.subscription
                  INNER JOIN wmbs_workflow_output ON
@@ -57,7 +59,7 @@ class GetAvailableRepackMergeFiles(DBFormatter):
                           wmbs_file_details.filesize,
                           wmbs_file_details.events,
                           wmbs_file_details.lfn,
-                          wmbs_location.se_name
+                          wmbs_location_senames.se_name
                  """
 
         results = self.dbi.processData(sql, { 'subscription' : subscription },

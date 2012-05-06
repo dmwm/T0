@@ -49,8 +49,12 @@ class ExpressTest(unittest.TestCase):
                                 dbinterface = myThread.dbi)
 
         myThread.dbi.processData("""INSERT INTO wmbs_location
-                                    (id, site_name, se_name)
-                                    VALUES (wmbs_location_SEQ.nextval, 'SomeSite', 'SomeSE')
+                                    (id, site_name)
+                                    VALUES (1, 'SomeSite')
+                                    """, transaction = False)
+        myThread.dbi.processData("""INSERT INTO wmbs_location_senames
+                                    (location, se_name)
+                                    VALUES (1, 'SomeSE')
                                     """, transaction = False)
 
         insertRunDAO = daoFactory(classname = "RunConfig.InsertRun")
