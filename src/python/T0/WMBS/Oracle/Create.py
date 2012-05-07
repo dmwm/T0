@@ -113,8 +113,7 @@ class Create(DBCreator):
                  run_id             int            not null,
                  status             int            default 1 not null,
                  last_updated       int            not null,
-                 reco_started       int            default 0 not null,
-                 express_started    int            default 0 not null,
+                 express_released   int            default 0 not null,
                  hltkey             varchar(255)   not null,
                  start_time         int            not null,
                  end_time           int            default 0 not null,
@@ -370,7 +369,10 @@ class Create(DBCreator):
         # Indexes
         #
         self.indexes[len(self.indexes)] = \
-            """CREATE INDEX idx_run_1 ON run (status)"""
+            """CREATE INDEX idx_run_1 ON run (checkForZeroState(express_released))"""
+
+        self.indexes[len(self.indexes)] = \
+            """CREATE INDEX idx_run_2 ON run (status)"""
 
         self.indexes[len(self.indexes)] = \
             """CREATE INDEX idx_run_trig_primds_1 ON run_trig_primds_assoc (run_id, primds_id)"""

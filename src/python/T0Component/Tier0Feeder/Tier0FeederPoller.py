@@ -46,16 +46,25 @@ class Tier0FeederPoller(BaseWorkerThread):
         hltConfConnectUrl = config.HLTConfDatabase.connectUrl
         dbFactoryHltConf = DBFactory(logging, dburl = hltConfConnectUrl, options = {})
         dbInterfaceHltConf = dbFactoryHltConf.connect()
-
         daoFactoryHltConf = DAOFactory(package = "T0.WMBS",
                                        logger = logging,
                                        dbinterface = dbInterfaceHltConf)
-
         self.getHLTConfigDAO = daoFactoryHltConf(classname = "RunConfig.GetHLTConfig")
 
         storageManagerConnectUrl = config.StorageManagerDatabase.connectUrl
         dbFactoryStorageManager = DBFactory(logging, dburl = storageManagerConnectUrl, options = {})
         self.dbInterfaceStorageManager = dbFactoryStorageManager.connect()
+
+        self.getExpressReadyRunsDAO = None
+        if hasattr(config, "PopConLogDatabase"):
+            popConLogConnectUrl = getattr(config.PopConLogDatabase, "connectUrl", None)
+            if popConLogConnectUrl != None:
+                dbFactoryPopConLog = DBFactory(logging, dburl = popConLogConnectUrl, options = {})
+                dbInterfacePopConLog = dbFactoryPopConLog.connect()
+                daoFactoryPopConLog = DAOFactory(package = "T0.WMBS",
+                                                 logger = logging,
+                                                 dbinterface = dbInterfacePopConLog)
+                self.getExpressReadyRunsDAO = daoFactoryPopConLog(classname = "Tier0Feeder.GetExpressReadyRuns")
 
         return
 
@@ -69,6 +78,8 @@ class Tier0FeederPoller(BaseWorkerThread):
 
         findNewRunsDAO = self.daoFactory(classname = "Tier0Feeder.FindNewRuns")
         findNewRunStreamsDAO = self.daoFactory(classname = "Tier0Feeder.FindNewRunStreams")
+        findNewExpressRunsDAO = self.daoFactory(classname = "Tier0Feeder.FindNewExpressRuns")
+        releaseExpressDAO = self.daoFactory(classname = "Tier0Feeder.ReleaseExpress")
         feedStreamersDAO = self.daoFactory(classname = "Tier0Feeder.FeedStreamers")
 
         tier0Config = None
@@ -125,6 +136,28 @@ class Tier0FeederPoller(BaseWorkerThread):
         # end runs which are active and have ended according to the EoR StorageManager records
         #
         RunLumiCloseoutAPI.endRuns(self.dbInterfaceStorageManager)
+
+        #
+        # release runs for Express
+        #
+        runs = findNewExpressRunsDAO.execute(transaction = False)
+
+        if len(runs) > 0:
+
+            binds = []
+            for run in runs:
+                binds.append( { 'RUN' : run } )
+
+            if self.getExpressReadyRunsDAO != None:
+                runs = self.getExpressReadyRunsDAO.execute(binds = binds, transaction = False)
+
+            if len(runs) > 0:
+
+                binds = []
+                for run in runs:
+                    binds.append( { 'RUN' : run } )
+
+                releaseExpressDAO.execute(binds = binds, transaction = False)
 
         #
         # release runs for PromptReco

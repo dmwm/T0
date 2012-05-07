@@ -25,6 +25,9 @@ class GetAvailableExpressFiles(DBFormatter):
                  INNER JOIN run_stream_fileset_assoc ON
                    run_stream_fileset_assoc.fileset =
                      (SELECT fileset FROM wmbs_subscription WHERE id = wmbs_sub_files_available.subscription)
+                 INNER JOIN run ON
+                   run.run_id = run_stream_fileset_assoc.run_id AND
+                   run.express_released = 1
                  INNER JOIN wmbs_file_runlumi_map ON
                    wmbs_file_runlumi_map.fileid = wmbs_sub_files_available.fileid AND
                    wmbs_file_runlumi_map.run = run_stream_fileset_assoc.run_id

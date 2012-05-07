@@ -81,6 +81,10 @@ def modifyConfiguration(config, **args):
         config.section_("StorageManagerDatabase")
         config.StorageManagerDatabase.connectUrl = args['smdb_url']
 
+    if 'popconlogdb_url' in args:
+        config.section_("PopConLogDatabase")
+        config.PopConLogDatabase.connectUrl = args['popconlogdb_url']
+
     config.JobCreator.pollInterval = 30
     config.JobSubmitter.pollInterval = 30
     config.JobAccountant.pollInterval = 30
@@ -99,11 +103,11 @@ def main(argv=None):
     try:
         try:
             opts, args = getopt.getopt(argv[1:], "h", 
-            ["help", "input=", "output=", "confdb_url=", "smdb_url="])
+            ["help", "input=", "output=", "confdb_url=", "smdb_url=", "popconlogdb_url="])
 
         except getopt.error, msg:
             raise Usage(msg)
-    
+
         # option processing
         for option, value in opts:
             if option in ("-h", "--help"):
@@ -112,11 +116,9 @@ def main(argv=None):
                 outputFile = value
             if option == "--input":
                 inputFile = value
-            if option in ('--confdb_url', '--smdb_url'):
-
+            if option in ('--confdb_url', '--smdb_url', '--popconlogdb_url'):
                 parameters[option[2:]] = value
-    
-    
+
     except Usage, err:
         print >> sys.stderr, sys.argv[0].split("/")[-1] + ": " + str(err.msg)
         print >> sys.stderr, "\t for help use --help"

@@ -90,6 +90,7 @@ class ExpressTest(unittest.TestCase):
 
         # keep for later
         self.insertClosedLumiDAO = daoFactory(classname = "RunLumiCloseout.InsertClosedLumi")
+        self.releaseExpressDAO = daoFactory(classname = "Tier0Feeder.ReleaseExpress")
         self.currentTime = int(time.time())
 
         return
@@ -139,6 +140,8 @@ class ExpressTest(unittest.TestCase):
 
         Test that only closed lumis are used
 
+        Test check on express release
+
         """
         insertClosedLumiBinds = []
         for lumi in [1]:
@@ -174,6 +177,13 @@ class ExpressTest(unittest.TestCase):
                          "ERROR: JobFactory should have returned no JobGroup")
 
         self.finalCloseLumis()
+
+        jobGroups = jobFactory(maxInputEvents = 200)
+
+        self.assertEqual(len(jobGroups), 0,
+                         "ERROR: JobFactory should have returned no JobGroup")
+
+        self.releaseExpressDAO.execute(binds = { 'RUN' : 1 }, transaction = False)
 
         jobGroups = jobFactory(maxInputEvents = 200)
 
@@ -222,6 +232,8 @@ class ExpressTest(unittest.TestCase):
         self.insertClosedLumiDAO.execute(binds = insertClosedLumiBinds,
                                          transaction = False)
 
+        self.releaseExpressDAO.execute(binds = { 'RUN' : 1 }, transaction = False)
+
         jobGroups = jobFactory(maxInputEvents = 199)
 
         self.assertEqual(len(jobGroups[0].jobs), 2,
@@ -261,6 +273,8 @@ class ExpressTest(unittest.TestCase):
 
         self.insertClosedLumiDAO.execute(binds = insertClosedLumiBinds,
                                          transaction = False)
+
+        self.releaseExpressDAO.execute(binds = { 'RUN' : 1 }, transaction = False)
 
         jobGroups = jobFactory(maxInputEvents = 100)
 

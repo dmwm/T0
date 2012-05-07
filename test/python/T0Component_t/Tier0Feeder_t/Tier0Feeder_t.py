@@ -955,6 +955,8 @@ class Tier0FeederTest(unittest.TestCase):
         self.insertClosedLumiDAO = daoFactory(classname = "RunLumiCloseout.InsertClosedLumi")
         self.finalCloseLumiDAO = daoFactory(classname = "RunLumiCloseout.FinalCloseLumi")
         self.insertSplitLumisDAO = daoFactory(classname = "JobSplitting.InsertSplitLumis")
+        self.findNewExpressRunsDAO = daoFactory(classname = "Tier0Feeder.FindNewExpressRuns")
+        self.releaseExpressDAO = daoFactory(classname = "Tier0Feeder.ReleaseExpress")
 
         return
 
@@ -1686,6 +1688,73 @@ class Tier0FeederTest(unittest.TestCase):
 
         self.assertEqual(self.getNumActiveSplitLumis(), 0,
                          "ERROR: there should be no split lumi.")
+
+        return
+
+
+    def test04(self):
+        """
+        _test04_
+
+        Test releasing express processing without PopConLog DB
+
+        """
+        self.insertRun(176161)
+
+        runs = self.findNewExpressRunsDAO.execute(transaction = False)
+
+        self.assertEqual(set(runs), set([176161]),
+                         "ERROR: only run 176161 should not be express released.")
+
+        self.releaseExpressDAO.execute(binds = { 'RUN' : 176161 }, transaction = False)
+
+        runs = self.findNewExpressRunsDAO.execute(transaction = False)
+
+        self.assertEqual(set(runs), set([]),
+                         "ERROR: there should be no run not express released.")
+
+        return
+
+
+    def test05(self):
+        """
+        _test05_
+
+        Test the interaction with PopConLog DB to release express processing
+
+        """
+        getExpressReadyRunsDAO = None
+        if os.environ.has_key('WMAGENT_CONFIG'):
+
+            wmAgentConfig = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
+            if hasattr(wmAgentConfig, "PopConLogDatabase"):
+
+                connectUrl = getattr(wmAgentConfig.PopConLogDatabase, "connectUrl", None)
+
+                dbFactory = DBFactory(logging, dburl = connectUrl, options = {})
+                dbInterface = dbFactory.connect()
+
+                daoFactory = DAOFactory(package = "T0.WMBS",
+                                        logger = logging,
+                                        dbinterface = dbInterface)
+                getExpressReadyRunsDAO = daoFactory(classname = "Tier0Feeder.GetExpressReadyRuns")
+
+            else:
+                print "Your config is missing the PopConLogDatabase section"
+                print "Skipping PopConLog based express release test"
+                return
+
+        else:
+            print "You do not have WMAGENT_CONFIG in your environment"
+            print "Skipping PopConLog based express release test"
+            return
+
+        self.insertRun(176161)
+
+        runs = getExpressReadyRunsDAO.execute(binds = { 'RUN' : 176161 }, transaction = False)
+
+        self.assertEqual(set(runs), set([176161]),
+                         "ERROR: only run 176161 should be ready for express release.")
 
         return
 
