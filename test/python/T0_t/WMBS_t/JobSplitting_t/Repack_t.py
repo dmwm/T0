@@ -88,16 +88,16 @@ class RepackTest(unittest.TestCase):
                                            type = "Repack")
         self.subscription1.create()
 
+        # keep for later
+        self.insertClosedLumiDAO = daoFactory(classname = "RunLumiCloseout.InsertClosedLumi")
+        self.currentTime = int(time.time())
+
         # default split parameters
         self.splitArgs = {}
         self.splitArgs['maxSizeSingleLumi'] = 20*1024*1024*1024
         self.splitArgs['maxSizeMultiLumi'] = 10*1024*1024*1024
         self.splitArgs['maxEvents'] = 500000
         self.splitArgs['maxInputFiles'] = 1000
-
-        # keep for later
-        self.insertClosedLumiDAO = daoFactory(classname = "RunLumiCloseout.InsertClosedLumi")
-        self.currentTime = int(time.time())
 
         return
 

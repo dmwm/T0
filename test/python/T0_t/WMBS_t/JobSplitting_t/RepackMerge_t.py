@@ -113,6 +113,8 @@ class RepackTest(unittest.TestCase):
 
         # keep for later
         self.insertSplitLumisDAO = daoFactory(classname = "JobSplitting.InsertSplitLumis")
+        self.insertClosedLumiDAO = daoFactory(classname = "RunLumiCloseout.InsertClosedLumi")
+        self.currentTime = int(time.time())
 
         # default split parameters
         self.splitArgs = {}
@@ -669,6 +671,56 @@ class RepackTest(unittest.TestCase):
         job = jobGroups[0].jobs[0]
         self.assertEqual(len(job.getFiles()), 2,
                          "ERROR: Job does not process 2 files")
+
+        return
+
+    def test10(self):
+        """
+        _test10_
+
+        Test merging of multiple lumis with holes in the lumi sequence
+        Multi lumi input
+
+        """
+        mySplitArgs = self.splitArgs.copy()
+
+        for lumi in [1,2,4]:
+            for i in range(2):
+                newFile = File(makeUUID(), size = 1000, events = 100)
+                newFile.addRun(Run(1, *[lumi]))
+                newFile.setLocation("SomeSE", immediateSave = False)
+                newFile.create()
+                self.fileset2.addFile(newFile)
+        self.fileset2.commit()
+
+        jobFactory = self.splitterFactory(package = "WMCore.WMBS",
+                                          subscription = self.subscription2)
+
+        mySplitArgs['maxEvents'] = 500
+        jobGroups = jobFactory(**mySplitArgs)
+
+        self.assertEqual(len(jobGroups), 0,
+                         "ERROR: JobFactory should have returned no JobGroup")
+
+        self.insertClosedLumiDAO.execute(binds = { 'RUN' : 1,
+                                                   'LUMI' : 3,
+                                                   'STREAM' : "A",
+                                                   'FILECOUNT' : 0,
+                                                   'INSERT_TIME' : self.currentTime,
+                                                   'CLOSE_TIME' : self.currentTime },
+                                         transaction = False)
+
+        jobGroups = jobFactory(**mySplitArgs)
+
+        self.assertEqual(len(jobGroups), 1,
+                         "ERROR: JobFactory didn't return one JobGroup")
+
+        self.assertEqual(len(jobGroups[0].jobs), 1,
+                         "ERROR: JobFactory didn't create one job")
+
+        job = jobGroups[0].jobs[0]
+        self.assertEqual(len(job.getFiles()), 4,
+                         "ERROR: Job does not process 4 files")
 
         return
 

@@ -41,10 +41,11 @@ class Repack(JobFactory):
                                 logger = logging,
                                 dbinterface = myThread.dbi)
 
+        maxLumiWithJobDAO = daoFactory(classname = "Subscriptions.MaxLumiWithJob")
+        getClosedEmptyLumisDAO = daoFactory(classname = "JobSplitting.GetClosedEmptyLumis")
+
         # keep for later
         self.insertSplitLumisDAO = daoFactory(classname = "JobSplitting.InsertSplitLumis")
-        self.maxLumiWithJobDAO = daoFactory(classname = "Subscriptions.MaxLumiWithJob")
-        self.getClosedEmptyLumisDAO = daoFactory(classname = "JobSplitting.GetClosedEmptyLumis")
 
         # data discovery
         getFilesDAO = daoFactory(classname = "Subscriptions.GetAvailableRepackFiles")
@@ -63,7 +64,7 @@ class Repack(JobFactory):
         # highest lumi with a job
         maxLumiWithJob = 0
         if lumiList[0] > 1:
-            maxLumiWithJob = self.maxLumiWithJobDAO.execute(self.subscription["id"])
+            maxLumiWithJob = maxLumiWithJobDAO.execute(self.subscription["id"])
 
         # do we have lumi holes ?
         detectEmptyLumis = False
@@ -80,7 +81,7 @@ class Repack(JobFactory):
         # empty and closed lumis
         emptyLumis = []
         if detectEmptyLumis:
-            emptyLumis = self.getClosedEmptyLumisDAO.execute(self.subscription["id"])
+            emptyLumis = getClosedEmptyLumisDAO.execute(self.subscription["id"])
 
         # figure out lumi range to create jobs for
         streamersByLumi = {}

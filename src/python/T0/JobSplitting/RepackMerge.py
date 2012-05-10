@@ -48,8 +48,8 @@ class RepackMerge(JobFactory):
                                 logger = logging,
                                 dbinterface = myThread.dbi)
 
-        # keep for later
-        self.maxLumiWithJobDAO = daoFactory(classname = "Subscriptions.MaxLumiWithJob")
+        maxLumiWithJobDAO = daoFactory(classname = "Subscriptions.MaxLumiWithJob")
+        getClosedEmptyLumisFromChildSubDAO = daoFactory(classname = "JobSplitting.GetClosedEmptyLumisFromChildSub")
 
         # data discovery
         getFilesDAO = daoFactory(classname = "Subscriptions.GetAvailableRepackMergeFiles")
@@ -69,7 +69,7 @@ class RepackMerge(JobFactory):
         # highest lumi with a job
         maxLumiWithJob = 0
         if lumiList[0] > 1:
-            maxLumiWithJob = self.maxLumiWithJobDAO.execute(self.subscription["id"])
+            maxLumiWithJob = maxLumiWithJobDAO.execute(self.subscription["id"])
 
         # do we have lumi holes ?
         detectEmptyLumis = False
@@ -86,7 +86,7 @@ class RepackMerge(JobFactory):
         # empty and closed lumis
         emptyLumis = []
         if detectEmptyLumis:
-            emptyLumis = self.getClosedEmptyLumisDAO.execute(self.subscription["id"])
+            emptyLumis = getClosedEmptyLumisFromChildSubDAO.execute(self.subscription["id"])
 
         # figure out lumi range to create jobs for
         filesByLumi = {}
