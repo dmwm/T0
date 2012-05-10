@@ -332,6 +332,8 @@ def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
         specArguments['CMSSWVersion'] = streamConfig.VersionOverride.get(onlineVersion, onlineVersion)
 	specArguments['Outputs'] = outputModuleDetails
 
+        specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/local/Tier0/override_catalog.xml?protocol=override"
+
         if streamConfig.ProcessingStyle == "Bulk":
             wmSpec = repackWorkload(workflowName, specArguments)
         elif streamConfig.ProcessingStyle == "Express":
@@ -556,6 +558,8 @@ def releasePromptReco(tier0Config, specDirectory, lfnBase):
 
             specArguments['UnmergedLFNBase'] = "%s/t0temp/data" % lfnBase
             specArguments['MergedLFNBase'] = "%s/data" % lfnBase
+
+            specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/local/Tier0/override_catalog.xml?protocol=override"
 
             wmSpec = promptrecoWorkload(workflowName, specArguments)
 

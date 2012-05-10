@@ -143,6 +143,7 @@ class ExpressWorkloadFactory(StdBase):
 
         mergeTaskCmsswHelper.setErrorDestinationStep(stepName = mergeTaskLogArch.name())
         mergeTaskCmsswHelper.setGlobalTag(self.globalTag)
+        mergeTaskCmsswHelper.setOverrideCatalog(self.overrideCatalog)
 
         # finalize splitting parameters
         mySplitArgs = self.expressMergeSplitArgs.copy()
