@@ -328,6 +328,7 @@ def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
             specArguments['UnmergedLFNBase'] = "%s/t0temp/express" % lfnBase
             specArguments['MergedLFNBase'] = "%s/express" % lfnBase
 
+        specArguments['RunNumber'] = run
         specArguments['AcquisitionEra'] = tier0Config.Global.AcquisitionEra
         specArguments['CMSSWVersion'] = streamConfig.VersionOverride.get(onlineVersion, onlineVersion)
 	specArguments['Outputs'] = outputModuleDetails
@@ -545,6 +546,8 @@ def releasePromptReco(tier0Config, specDirectory, lfnBase):
 
             specArguments['AcquisitionEra'] = acqEra
             specArguments['CMSSWVersion'] = datasetConfig.Reco.CMSSWVersion
+
+            specArguments['RunNumber'] = run
 
             specArguments['ProcessingString'] = "PromptReco"
             specArguments['ProcessingVersion'] = datasetConfig.Reco.ProcessingVersion
