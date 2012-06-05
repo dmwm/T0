@@ -47,7 +47,10 @@ class GetHLTConfig(DBFormatter):
             dataset = result['dataset']
             path = result['path']
             process = result['process']
-    
+
+            if dataset == "VBF1Parked ":
+                dataset = "VBF1Parked"
+
             if not streamDict.has_key(stream):
                 streamDict[stream] = {}
             if not streamDict[stream].has_key(dataset):
