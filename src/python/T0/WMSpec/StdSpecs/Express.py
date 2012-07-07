@@ -106,7 +106,11 @@ class ExpressWorkloadFactory(StdBase):
                                                   forceUnmerged = True)
 
         for expressOutLabel, expressOutInfo in expressOutMods.items():
-            self.addExpressMergeTask(expressTask, expressOutLabel)
+            mergeTask = self.addExpressMergeTask(expressTask, expressOutLabel)
+            if expressOutInfo['dataTier'] in [ "DQM", "DQMROOT" ]:
+                self.addDQMHarvestTask(mergeTask, "Merged",
+                                       doLogCollect = False)
+
 
         return workload
 
