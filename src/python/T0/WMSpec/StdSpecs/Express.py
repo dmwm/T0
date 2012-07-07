@@ -80,19 +80,20 @@ class ExpressWorkloadFactory(StdBase):
 
         # complete output configuration
         # figure out alca primary dataset
-        self.alcaPrimaryDataset = None
+        alcaPrimaryDataset = None
         for output in self.outputs:
             #output['filterName'] = "Express"
             output['moduleLabel'] = "write_%s_%s" % (output['primaryDataset'],
                                                      output['dataTier'])
             if output['dataTier'] == "ALCARECO":
-                self.alcaPrimaryDataset = output['primaryDataset']
+                alcaPrimaryDataset = output['primaryDataset']
 
         # finalize splitting parameters
         mySplitArgs = self.expressSplitArgs.copy()
         mySplitArgs['algo_package'] = "T0.JobSplitting"
 
         expressTask = workload.newTask("Express")
+
         expressOutMods = self.setupProcessingTask(expressTask, taskType,
                                                   scenarioName = self.procScenario,
                                                   scenarioFunc = "expressProcessing",
@@ -106,10 +107,37 @@ class ExpressWorkloadFactory(StdBase):
                                                   forceUnmerged = True)
 
         for expressOutLabel, expressOutInfo in expressOutMods.items():
-            mergeTask = self.addExpressMergeTask(expressTask, expressOutLabel)
-            if expressOutInfo['dataTier'] in [ "DQM", "DQMROOT" ]:
-                self.addDQMHarvestTask(mergeTask, "Merged",
-                                       doLogCollect = False)
+
+            if expressOutInfo['dataTier'] == "ALCARECO":
+
+                # finalize splitting parameters
+                mySplitArgs = self.expressMergeSplitArgs.copy()
+                mySplitArgs['algo_package'] = "T0.JobSplitting"
+
+                alcaSkimTask = expressTask.addTask("%sAlcaSkim%s" % (expressTask.name(), expressOutLabel))
+
+                alcaSkimTask.setInputReference(expressTask.getStep("cmsRun1"),
+                                               outputModule = expressOutLabel)
+
+                self.setupProcessingTask(alcaSkimTask, taskType,
+                                         scenarioName = self.procScenario,
+                                         scenarioFunc = "alcaSkim",
+                                         scenarioArgs = { 'globalTag' : self.globalTag,
+                                                          'globalTagTransaction' : self.globalTagTransaction,
+                                                          'skims' : self.alcaSkims,
+                                                          'primaryDataset' : alcaPrimaryDataset },
+                                         splitAlgo = "ExpressMerge",
+                                         splitArgs = mySplitArgs,
+                                         stepType = cmsswStepType,
+                                         forceMerged = True)
+
+            else:
+
+                mergeTask = self.addExpressMergeTask(expressTask, expressOutLabel)
+
+                if expressOutInfo['dataTier'] in [ "DQM", "DQMROOT" ]:
+
+                    self.addDQMHarvestTask(mergeTask, "Merged", doLogCollect = False)
 
 
         return workload
@@ -121,7 +149,17 @@ class ExpressWorkloadFactory(StdBase):
         Create an expressmerge task for files produced by the parent task
 
         """
+        # finalize splitting parameters
+        mySplitArgs = self.expressMergeSplitArgs.copy()
+        mySplitArgs['algo_package'] = "T0.JobSplitting"
+
+        parentTaskCmssw = parentTask.getStep("cmsRun1")
+        parentOutputModule = parentTaskCmssw.getOutputModule(parentOutputModuleName)
+
         mergeTask = parentTask.addTask("%sMerge%s" % (parentTask.name(), parentOutputModuleName))
+
+        mergeTask.setInputReference(parentTaskCmssw, outputModule = parentOutputModuleName)
+
         self.addDashboardMonitoring(mergeTask)
         mergeTaskCmssw = mergeTask.makeStep("cmsRun1")
         mergeTaskCmssw.setStepType("CMSSW")
@@ -136,11 +174,6 @@ class ExpressWorkloadFactory(StdBase):
         mergeTask.applyTemplates()
         mergeTask.setTaskPriority(self.priority + 5)
 
-        parentTaskCmssw = parentTask.getStep("cmsRun1")
-        parentOutputModule = parentTaskCmssw.getOutputModule(parentOutputModuleName)
-
-        mergeTask.setInputReference(parentTaskCmssw, outputModule = parentOutputModuleName)
-
         mergeTaskCmsswHelper = mergeTaskCmssw.getTypeHelper()
         mergeTaskCmsswHelper.cmsswSetup(self.frameworkVersion, softwareEnvironment = "",
                                         scramArch = self.scramArch)
@@ -149,54 +182,26 @@ class ExpressWorkloadFactory(StdBase):
         mergeTaskCmsswHelper.setGlobalTag(self.globalTag)
         mergeTaskCmsswHelper.setOverrideCatalog(self.overrideCatalog)
 
-        # finalize splitting parameters
-        mySplitArgs = self.expressMergeSplitArgs.copy()
-        mySplitArgs['algo_package'] = "T0.JobSplitting"
+        mergeTask.setTaskType("Merge")
 
-        if getattr(parentOutputModule, "dataTier") == "ALCARECO":
+        # DQM is handled differently
+        #  merging does not increase size
+        #                => disable size limits
+        #  only harvest every 15 min
+        #                => higher limits for latency (disabled for now)
+        dqm_format = getattr(parentOutputModule, "dataTier") == "DQM"
+        if dqm_format:
+            mySplitArgs['maxInputSize'] *= 100
 
-            mergeTask.setTaskType("Processing")
+        mergeTask.setSplittingAlgorithm("ExpressMerge",
+                                        **mySplitArgs)
+        mergeTaskCmsswHelper.setDataProcessingConfig(self.procScenario, "merge", dqm_format = dqm_format)
 
-            scenarioFunc = "alcaSkim"
-            scenarioArgs = { 'globalTag' : self.globalTag,
-                             'globalTagTransaction' : self.globalTagTransaction,
-                             'skims' : self.alcaSkims,
-                             'primaryDataset' : self.alcaPrimaryDataset }
-            mergeTask.setSplittingAlgorithm("ExpressMerge",
-                                            **mySplitArgs)
-            mergeTaskCmsswHelper.setDataProcessingConfig(self.procScenario, scenarioFunc, **scenarioArgs)
-
-            configOutput = self.determineOutputModules(scenarioFunc, scenarioArgs)
-            for outputModuleName in configOutput.keys():
-                outputModule = self.addOutputModule(mergeTask,
-                                                    outputModuleName,
-                                                    configOutput[outputModuleName]['primaryDataset'],
-                                                    configOutput[outputModuleName]['dataTier'],
-                                                    configOutput[outputModuleName]['filterName'],
-                                                    forceMerged = True)
-
-        else:
-
-            mergeTask.setTaskType("Merge")
-
-            # DQM is handled differently
-            #  merging does not increase size
-            #                => disable size limits
-            #  only harvest every 15 min
-            #                => higher limits for latency (disabled for now)
-            dqm_format = getattr(parentOutputModule, "dataTier") == "DQM"
-            if dqm_format:
-                mySplitArgs['maxInputSize'] *= 100
-
-            mergeTask.setSplittingAlgorithm("ExpressMerge",
-                                            **mySplitArgs)
-            mergeTaskCmsswHelper.setDataProcessingConfig(self.procScenario, "merge", dqm_format = dqm_format)
-
-            self.addOutputModule(mergeTask, "Merged",
-                                 primaryDataset = getattr(parentOutputModule, "primaryDataset"),
-                                 dataTier = getattr(parentOutputModule, "dataTier"),
-                                 filterName = getattr(parentOutputModule, "filterName"),
-                                 forceMerged = True)
+        self.addOutputModule(mergeTask, "Merged",
+                             primaryDataset = getattr(parentOutputModule, "primaryDataset"),
+                             dataTier = getattr(parentOutputModule, "dataTier"),
+                             filterName = getattr(parentOutputModule, "filterName"),
+                             forceMerged = True)
 
         self.addCleanupTask(parentTask, parentOutputModuleName)
 
