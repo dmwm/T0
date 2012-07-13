@@ -114,7 +114,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
 
     return
 
-def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
+def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUploadProxy):
     """
     _configureRunStream_
 
@@ -327,6 +327,7 @@ def configureRunStream(tier0Config, specDirectory, lfnBase, run, stream):
             specArguments['AlcaSkims'] = streamConfig.Express.Producers
             specArguments['UnmergedLFNBase'] = "%s/t0temp/express" % lfnBase
             specArguments['MergedLFNBase'] = "%s/express" % lfnBase
+            specArguments['DQMUploadProxy'] = dqmUploadProxy
 
         specArguments['RunNumber'] = run
         specArguments['AcquisitionEra'] = tier0Config.Global.AcquisitionEra

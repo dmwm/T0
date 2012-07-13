@@ -41,10 +41,14 @@ class RunConfigTest(unittest.TestCase):
 
         self.hltkey = "/cdaq/physics/Run2011/3e33/v2.1/HLT/V2"
         self.hltConfig = None
+        self.dqmUploadProxy = None
 
         if os.environ.has_key('WMAGENT_CONFIG'):
 
             wmAgentConfig = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
+
+            self.dqmUploadProxy = getattr(wmAgentConfig.WMBSService, "proxy", None)
+
             if hasattr(wmAgentConfig, "HLTConfDatabase"):
 
                 connectUrl = getattr(wmAgentConfig.HLTConfDatabase, "connectUrl", None)
@@ -1076,9 +1080,9 @@ class RunConfigTest(unittest.TestCase):
                 self.assertEqual(sorted(mapping[stream][primds]), sorted(self.referenceMapping[stream][primds]),
                                  "ERROR: trigger paths do not match reference")
 
-        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176161, "A")
-        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176161, "Express")
-        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176161, "HLTMON")
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A", self.testDir, "/store", self.dqmUploadProxy)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "Express", self.testDir, "/store", self.dqmUploadProxy)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "HLTMON", self.testDir, "/store", self.dqmUploadProxy)
 
         datasets = self.getStreamDatasetsDAO.execute(176161, "A",
                                                      transaction = False)

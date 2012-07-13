@@ -42,6 +42,7 @@ class Tier0FeederPoller(BaseWorkerThread):
         self.tier0ConfigFile = config.Tier0Feeder.tier0ConfigFile
         self.specDirectory = config.Tier0Feeder.specDirectory
         self.lfnBase = getattr(config.Tier0Feeder, "lfnBase", "/store")
+        self.dqmUploadProxy = config.WMBSService.proxy
 
         hltConfConnectUrl = config.HLTConfDatabase.connectUrl
         dbFactoryHltConf = DBFactory(logging, dburl = hltConfConnectUrl, options = {})
@@ -126,9 +127,10 @@ class Tier0FeederPoller(BaseWorkerThread):
                 for stream in sorted(runStreams[run]):
                     try:
                         RunConfigAPI.configureRunStream(tier0Config,
+                                                        run, stream,
                                                         self.specDirectory,
                                                         self.lfnBase,
-                                                        run, stream)
+                                                        self.dqmUploadProxy)
                     except:
                         logging.exception("Can't configure for run %d and stream %s" % (run, stream))
 

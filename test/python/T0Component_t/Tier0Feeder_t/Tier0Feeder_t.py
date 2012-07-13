@@ -43,10 +43,16 @@ class Tier0FeederTest(unittest.TestCase):
 
         self.hltkey = "/cdaq/physics/Run2011/3e33/v2.1/HLT/V2"
         self.hltConfig = None
+        self.dqmUploadProxy = None
+        self.dbInterfaceStorageManager = None
+        self.getExpressReadyRunsDAO = None
 
         if os.environ.has_key('WMAGENT_CONFIG'):
 
             wmAgentConfig = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
+
+            self.dqmUploadProxy = getattr(wmAgentConfig.WMBSService, "proxy", None)
+
             if hasattr(wmAgentConfig, "HLTConfDatabase"):
 
                 connectUrl = getattr(wmAgentConfig.HLTConfDatabase, "connectUrl", None)
@@ -67,6 +73,25 @@ class Tier0FeederTest(unittest.TestCase):
             else:
                 print "Your config is missing the HLTConfDatabase section"
                 print "Using reference HLT config instead"
+
+            if hasattr(wmAgentConfig, "StorageManagerDatabase"):
+
+                connectUrl = getattr(wmAgentConfig.StorageManagerDatabase, "connectUrl", None)
+
+                dbFactory = DBFactory(logging, dburl = connectUrl, options = {})
+                self.dbInterfaceStorageManager = dbFactory.connect()
+
+            if hasattr(wmAgentConfig, "PopConLogDatabase"):
+
+                connectUrl = getattr(wmAgentConfig.PopConLogDatabase, "connectUrl", None)
+
+                dbFactory = DBFactory(logging, dburl = connectUrl, options = {})
+                dbInterface = dbFactory.connect()
+
+                daoFactory = DAOFactory(package = "T0.WMBS",
+                                        logger = logging,
+                                        dbinterface = dbInterface)
+                self.getExpressReadyRunsDAO = daoFactory(classname = "Tier0Feeder.GetExpressReadyRuns")
 
         else:
             print "You do not have WMAGENT_CONFIG in your environment"
@@ -1189,7 +1214,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(set(runStreams[176161]), set(["A"]),
                          "ERROR: there should be new run/stream for run 176161 and stream A")
 
-        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176161, "A")
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A", self.testDir, "/store", self.dqmUploadProxy)
 
         runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
         self.assertEqual(len(runStreams.keys()), 0,
@@ -1326,8 +1351,8 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(self.getNumFeedStreamers(), 4,
                          "ERROR: there should be 4 streamers feed")
 
-        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176162, "A")
-        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176163, "Express")
+        RunConfigAPI.configureRunStream(self.tier0Config, 176162, "A", self.testDir, "/store", self.dqmUploadProxy)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176163, "Express", self.testDir, "/store", self.dqmUploadProxy)
 
         runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
         self.assertEqual(set(runStreams.keys()), set([176162, 176163]),
@@ -1366,8 +1391,8 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(self.getNumFeedStreamers(), 6,
                          "ERROR: there should be 6 streamers feed")
 
-        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176162, "Express")
-        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176162, "HLTMON")
+        RunConfigAPI.configureRunStream(self.tier0Config, 176162, "Express", self.testDir, "/store", self.dqmUploadProxy)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176162, "HLTMON", self.testDir, "/store", self.dqmUploadProxy)
 
         runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
         self.assertEqual(set(runStreams.keys()), set([176163]),
@@ -1403,7 +1428,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(self.getNumFeedStreamers(), 8,
                          "ERROR: there should be 8 streamers feed")
 
-        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176163, "A")
+        RunConfigAPI.configureRunStream(self.tier0Config, 176163, "A", self.testDir, "/store", self.dqmUploadProxy)
 
         runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
         self.assertEqual(len(runStreams.keys()), 0,
@@ -1435,51 +1460,35 @@ class Tier0FeederTest(unittest.TestCase):
         for real run examples with full run and run/stream configuration
 
         """
-        dbInterfaceStorageManager = None
-        if os.environ.has_key('WMAGENT_CONFIG'):
-
-            wmAgentConfig = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
-            if hasattr(wmAgentConfig, "StorageManagerDatabase"):
-
-                connectUrl = getattr(wmAgentConfig.StorageManagerDatabase, "connectUrl", None)
-
-                dbFactory = DBFactory(logging, dburl = connectUrl, options = {})
-                dbInterfaceStorageManager = dbFactory.connect()
-
-            else:
-                print "Your config is missing the StorageManagerDatabase section"
-                print "Skipping run/lumi closing test"
-                return
-
-        else:
-            print "You do not have WMAGENT_CONFIG in your environment"
+        if self.dbInterfaceStorageManager = None:
+            print "Your config is missing the StorageManagerDatabase section"
             print "Skipping run/lumi closing test"
             return
 
-        RunLumiCloseoutAPI.endRuns(dbInterfaceStorageManager)
+        RunLumiCloseoutAPI.endRuns(self.dbInterfaceStorageManager)
         self.assertEqual(len(self.getEndedRuns()), 0,
                          "ERROR: there should be no ended runs")
 
-        RunLumiCloseoutAPI.closeLumiSections(dbInterfaceStorageManager)
+        RunLumiCloseoutAPI.closeLumiSections(self.dbInterfaceStorageManager)
         self.assertEqual(len(self.getClosedLumis()), 0,
                          "ERROR: there should be no closed lumis")
 
         self.insertRun(176161)
 
-        RunLumiCloseoutAPI.endRuns(dbInterfaceStorageManager)
+        RunLumiCloseoutAPI.endRuns(self.dbInterfaceStorageManager)
         endedRuns = self.getEndedRuns()
         self.assertEqual(endedRuns.keys(), [176161],
                          "ERROR: there should be 1 ended run: 176161")
         self.assertEqual(endedRuns[176161], 23,
                          "ERROR: there should be 23 lumis in run 176161")
 
-        RunLumiCloseoutAPI.closeLumiSections(dbInterfaceStorageManager)
+        RunLumiCloseoutAPI.closeLumiSections(self.dbInterfaceStorageManager)
         self.assertEqual(len(self.getClosedLumis()), 0,
                          "ERROR: there should be no closed lumis")
 
         self.insertRunStreamLumi(176161, "A", 1)
 
-        RunLumiCloseoutAPI.closeLumiSections(dbInterfaceStorageManager)
+        RunLumiCloseoutAPI.closeLumiSections(self.dbInterfaceStorageManager)
         self.assertEqual(len(self.getClosedLumis()), 0,
                          "ERROR: there should be no closed lumis")
 
@@ -1487,13 +1496,13 @@ class Tier0FeederTest(unittest.TestCase):
                                   { 'process' : "HLT",
                                     'mapping' : self.referenceMapping })
 
-        RunLumiCloseoutAPI.closeLumiSections(dbInterfaceStorageManager)
+        RunLumiCloseoutAPI.closeLumiSections(self.dbInterfaceStorageManager)
         self.assertEqual(len(self.getClosedLumis()), 0,
                          "ERROR: there should be no closed lumis")
 
-        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176161, "A")
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A", self.testDir, "/store", self.dqmUploadProxy)
 
-        RunLumiCloseoutAPI.closeLumiSections(dbInterfaceStorageManager)
+        RunLumiCloseoutAPI.closeLumiSections(self.dbInterfaceStorageManager)
 
         runStreamLumiDict = self.getClosedLumis()
         self.assertEqual(runStreamLumiDict.keys(), [176161],
@@ -1508,9 +1517,10 @@ class Tier0FeederTest(unittest.TestCase):
                              "ERROR: there should be 14 closed lumis for run 176161, stream A and lumi %d" % lumi)
 
         self.insertRunStreamLumi(176161, "HLTMON", 1)
-        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176161, "HLTMON")
 
-        RunLumiCloseoutAPI.closeLumiSections(dbInterfaceStorageManager)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "HLTMON", self.testDir, "/store", self.dqmUploadProxy)
+
+        RunLumiCloseoutAPI.closeLumiSections(self.dbInterfaceStorageManager)
 
         runStreamLumiDict = self.getClosedLumis()
         self.assertEqual(runStreamLumiDict.keys(), [176161],
@@ -1546,24 +1556,8 @@ class Tier0FeederTest(unittest.TestCase):
         Test closeout code for run/stream filesets
 
         """
-        dbInterfaceStorageManager = None
-        if os.environ.has_key('WMAGENT_CONFIG'):
-
-            wmAgentConfig = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
-            if hasattr(wmAgentConfig, "StorageManagerDatabase"):
-
-                connectUrl = getattr(wmAgentConfig.StorageManagerDatabase, "connectUrl", None)
-
-                dbFactory = DBFactory(logging, dburl = connectUrl, options = {})
-                dbInterfaceStorageManager = dbFactory.connect()
-
-            else:
-                print "Your config is missing the StorageManagerDatabase section"
-                print "Skipping run/lumi closing test"
-                return
-
-        else:
-            print "You do not have WMAGENT_CONFIG in your environment"
+        if self.dbInterfaceStorageManager = None:
+            print "Your config is missing the StorageManagerDatabase section"
             print "Skipping run/lumi closing test"
             return
 
@@ -1579,10 +1573,10 @@ class Tier0FeederTest(unittest.TestCase):
                                   { 'process' : "HLT",
                                     'mapping' : self.referenceMapping })
 
-        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176161, "A")
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A", self.testDir, "/store", self.dqmUploadProxy)
 
-        RunLumiCloseoutAPI.endRuns(dbInterfaceStorageManager)
-        RunLumiCloseoutAPI.closeLumiSections(dbInterfaceStorageManager)
+        RunLumiCloseoutAPI.endRuns(self.dbInterfaceStorageManager)
+        RunLumiCloseoutAPI.closeLumiSections(self.dbInterfaceStorageManager)
         
         RunLumiCloseoutAPI.closeRunStreamFilesets()
         self.assertEqual(len(self.getClosedRunStreamFilesets()), 0,
@@ -1598,8 +1592,8 @@ class Tier0FeederTest(unittest.TestCase):
             for count in range(14):
                 self.insertRunStreamLumi(176161, "A", lumi)
 
-        RunLumiCloseoutAPI.endRuns(dbInterfaceStorageManager)
-        RunLumiCloseoutAPI.closeLumiSections(dbInterfaceStorageManager)
+        RunLumiCloseoutAPI.endRuns(self.dbInterfaceStorageManager)
+        RunLumiCloseoutAPI.closeLumiSections(self.dbInterfaceStorageManager)
 
         RunLumiCloseoutAPI.closeRunStreamFilesets()
         self.assertEqual(len(self.getClosedRunStreamFilesets()), 0,
@@ -1632,7 +1626,7 @@ class Tier0FeederTest(unittest.TestCase):
                                   { 'process' : "HLT",
                                     'mapping' : self.referenceMapping })
 
-        RunConfigAPI.configureRunStream(self.tier0Config, self.testDir, "/store", 176161, "A")
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A", self.testDir, "/store", self.dqmUploadProxy)
 
         self.insertClosedLumiDAO.execute(binds = { 'RUN' : 176161,
                                                    'STREAM' : 'A',
@@ -1723,35 +1717,14 @@ class Tier0FeederTest(unittest.TestCase):
         Test the interaction with PopConLog DB to release express processing
 
         """
-        getExpressReadyRunsDAO = None
-        if os.environ.has_key('WMAGENT_CONFIG'):
-
-            wmAgentConfig = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
-            if hasattr(wmAgentConfig, "PopConLogDatabase"):
-
-                connectUrl = getattr(wmAgentConfig.PopConLogDatabase, "connectUrl", None)
-
-                dbFactory = DBFactory(logging, dburl = connectUrl, options = {})
-                dbInterface = dbFactory.connect()
-
-                daoFactory = DAOFactory(package = "T0.WMBS",
-                                        logger = logging,
-                                        dbinterface = dbInterface)
-                getExpressReadyRunsDAO = daoFactory(classname = "Tier0Feeder.GetExpressReadyRuns")
-
-            else:
-                print "Your config is missing the PopConLogDatabase section"
-                print "Skipping PopConLog based express release test"
-                return
-
-        else:
-            print "You do not have WMAGENT_CONFIG in your environment"
+        if self.getExpressReadyRunsDAO == None:
+            print "Your config is missing the PopConLogDatabase section"
             print "Skipping PopConLog based express release test"
             return
 
         self.insertRun(176161)
 
-        runs = getExpressReadyRunsDAO.execute(binds = { 'RUN' : 176161 }, transaction = False)
+        runs = self.getExpressReadyRunsDAO.execute(binds = { 'RUN' : 176161 }, transaction = False)
 
         self.assertEqual(set(runs), set([176161]),
                          "ERROR: only run 176161 should be ready for express release.")

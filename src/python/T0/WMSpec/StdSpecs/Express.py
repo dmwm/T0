@@ -137,8 +137,9 @@ class ExpressWorkloadFactory(StdBase):
 
                 if expressOutInfo['dataTier'] in [ "DQM", "DQMROOT" ]:
 
-                    self.addDQMHarvestTask(mergeTask, "Merged", doLogCollect = False)
-
+                    self.addDQMHarvestTask(mergeTask, "Merged",
+                                           uploadProxy = self.dqmUploadProxy,
+                                           doLogCollect = False)
 
         return workload
 
@@ -222,6 +223,7 @@ class ExpressWorkloadFactory(StdBase):
         self.procScenario = arguments['ProcScenario']
         self.alcaSkims = arguments['AlcaSkims']
         self.outputs = arguments['Outputs']
+        self.dqmUploadProxy = arguments['DQMUploadProxy']
 
         # job splitting parameters
         self.expressSplitArgs = {}
