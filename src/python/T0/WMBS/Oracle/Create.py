@@ -300,6 +300,13 @@ class Create(DBCreator):
                )"""
 
         self.create[len(self.create)] = \
+            """CREATE TABLE workflow_monitoring (
+                  id           varchar(255) not null,
+                  tracked      int default 0 not null,
+                  primary key (id)  
+               )"""
+
+        self.create[len(self.create)] = \
             """CREATE FUNCTION checkForZeroState (value IN int)
                RETURN int DETERMINISTIC IS
                BEGIN
