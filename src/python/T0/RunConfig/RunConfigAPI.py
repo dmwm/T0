@@ -114,7 +114,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
 
     return
 
-def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUploadProxy):
+def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUploadProxy = None):
     """
     _configureRunStream_
 
@@ -399,7 +399,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUplo
 
     return
 
-def releasePromptReco(tier0Config, specDirectory, lfnBase):
+def releasePromptReco(tier0Config, specDirectory, lfnBase, dqmUploadProxy = None):
     """
     _releasePromptReco_
 
@@ -564,6 +564,7 @@ def releasePromptReco(tier0Config, specDirectory, lfnBase):
             specArguments['MergedLFNBase'] = "%s/data" % lfnBase
 
             specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/local/Tier0/override_catalog.xml?protocol=override"
+            specArguments['DQMUploadProxy'] = dqmUploadProxy
 
             wmSpec = promptrecoWorkload(workflowName, specArguments)
 
