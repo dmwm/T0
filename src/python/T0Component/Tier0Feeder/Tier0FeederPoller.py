@@ -167,7 +167,7 @@ class Tier0FeederPoller(BaseWorkerThread):
         RunConfigAPI.releasePromptReco(tier0Config,
                                        self.specDirectory,
                                        self.lfnBase,
-				                       self.dqmUploadProxy)
+				       self.dqmUploadProxy)
 
         #
         # close stream/lumis for run/streams that are active (fileset exists and open)
