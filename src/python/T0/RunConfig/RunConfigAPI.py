@@ -114,7 +114,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
 
     return
 
-def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUploadProxy):
+def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUploadProxy = None):
     """
     _configureRunStream_
 
@@ -399,7 +399,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUplo
 
     return
 
-def releasePromptReco(tier0Config, specDirectory, lfnBase, dqmUploadProxy):
+def releasePromptReco(tier0Config, specDirectory, lfnBase, dqmUploadProxy = None):
     """
     _releasePromptReco_
 

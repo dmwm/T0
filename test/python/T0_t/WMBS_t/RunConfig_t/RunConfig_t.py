@@ -1080,9 +1080,9 @@ class RunConfigTest(unittest.TestCase):
                 self.assertEqual(sorted(mapping[stream][primds]), sorted(self.referenceMapping[stream][primds]),
                                  "ERROR: trigger paths do not match reference")
 
-        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A", self.testDir, "/store", self.dqmUploadProxy)
-        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "Express", self.testDir, "/store", self.dqmUploadProxy)
-        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "HLTMON", self.testDir, "/store", self.dqmUploadProxy)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A", self.testDir, "/store")
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "Express", self.testDir, "/store")
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "HLTMON", self.testDir, "/store")
 
         datasets = self.getStreamDatasetsDAO.execute(176161, "A",
                                                      transaction = False)
@@ -1188,7 +1188,7 @@ class RunConfigTest(unittest.TestCase):
         self.assertEquals(len(recoConfigs.keys()), 0,
                           "ERROR: there are reco configs present")
 
-        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store", self.dqmUploadProxy)
+        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store")
 
         recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
                                                    transaction = False)
@@ -1198,7 +1198,7 @@ class RunConfigTest(unittest.TestCase):
 
         self.removeRecoDelay("Cosmics")
 
-        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store", self.dqmUploadProxy)
+        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store")
 
         recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
                                                    transaction = False)
@@ -1211,7 +1211,7 @@ class RunConfigTest(unittest.TestCase):
                                           'END_TIME' : int(time.time()) + 10 },
                                 transaction = False)
 
-        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store", self.dqmUploadProxy)
+        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store")
 
         recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
                                                    transaction = False)
@@ -1224,7 +1224,7 @@ class RunConfigTest(unittest.TestCase):
                                           'END_TIME' : int(time.time()) - 10  },
                                 transaction = False)
 
-        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store", self.dqmUploadProxy)
+        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store")
 
         recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
                                                    transaction = False)
@@ -1234,7 +1234,7 @@ class RunConfigTest(unittest.TestCase):
 
         self.removeRecoDelay()
 
-        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store", self.dqmUploadProxy)
+        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store")
 
         recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
                                                    transaction = False)
