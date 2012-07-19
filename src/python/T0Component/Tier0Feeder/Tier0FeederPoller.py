@@ -198,7 +198,17 @@ class Tier0FeederPoller(BaseWorkerThread):
         #
         RunLumiCloseoutAPI.checkActiveSplitLumis()
 
+        self.feedCouchMonitoring()
+
         return
+
+    def feedCouchMonitoring(self):
+        getPendingWorkflowMonitoringDAO = self.daoFactory(classname = "Tier0Feeder.GetPendingWorkflowMonitoring")
+        workflows = getPendingWorkflowMonitoringDAO.execute()
+        if workflows:
+            for (workflow, run) in workflows:
+                logging.info("Going to publish workflow %s from run %s" % (workflow, run) )
+        
 
     def terminate(self, params):
         """
