@@ -16,23 +16,12 @@ class GetPendingWorkflowMonitoring(DBFormatter):
                  workflow_monitoring.fileset = wmbs_subscription.fileset
                  INNER JOIN run_stream_fileset_assoc ON
                  workflow_monitoring.fileset = run_stream_fileset_assoc.fileset
-                 WHERE workflow_monitoring.tracked = 0"""
+                 WHERE checkForZeroState(workflow_monitoring.tracked) = 0"""
 
-        binds = []
-        #for filesetId in filesetIds : 
-        #    binds.append({'FILESET_ID': filesetId})
-
-        result = self.dbi.processData(sql, binds, conn = conn,
+        result = self.dbi.processData(sql, [], conn = conn,
                              transaction = transaction)
-        workflows = []
-        for row in result:
-            (workflow, run) = row.data[0]
-            workflows.append({"workflow" : workflow,
-                                "run" : run})
-            
+
+        workflows = result[0].fetchall()            
+
         return workflows
-
-
-# top level Fileset ID, then TOP LEVEL SUBSCRIPTION ID
-# run number
 
