@@ -19,6 +19,7 @@ from WMCore.DAOFactory import DAOFactory
 from WMCore.Database.DBFactory import DBFactory
 from WMCore.WMException import WMException
 from WMCore.Configuration import loadConfigurationFile
+from WMCore.Services.WMStats.WMStatsWriter import WMStatsWriter
 
 from T0.RunConfig import RunConfigAPI
 from T0.RunLumiCloseout import RunLumiCloseoutAPI
@@ -43,6 +44,7 @@ class Tier0FeederPoller(BaseWorkerThread):
         self.specDirectory = config.Tier0Feeder.specDirectory
         self.lfnBase = getattr(config.Tier0Feeder, "lfnBase", "/store")
         self.dqmUploadProxy = config.WMBSService.proxy
+        self.localSummaryCouchDB = WMStatsWriter(self.config.wmagentsummaryCouchUrl)
 
         hltConfConnectUrl = config.HLTConfDatabase.connectUrl
         dbFactoryHltConf = DBFactory(logging, dburl = hltConfConnectUrl, options = {})
@@ -206,8 +208,17 @@ class Tier0FeederPoller(BaseWorkerThread):
         getPendingWorkflowMonitoringDAO = self.daoFactory(classname = "Tier0Feeder.GetPendingWorkflowMonitoring")
         workflows = getPendingWorkflowMonitoringDAO.execute()
         if workflows:
+            documents = []
             for (workflow, run) in workflows:
                 logging.info("Going to publish workflow %s from run %s" % (workflow, run) )
+                doc = {}
+                doc["_id"]      =   workflow
+                doc["workflow"] =   workflow
+                doc["type"]     =   "tier0_request"
+                doc["run"]      =   run
+                documents.append(doc)
+                #self.localSummaryCouchDB = WMStatsWriter(self.config.wmagentsummaryCouchUrl)
+            self.localSummaryCouchDB.uploadData(documents)
         
 
     def terminate(self, params):
