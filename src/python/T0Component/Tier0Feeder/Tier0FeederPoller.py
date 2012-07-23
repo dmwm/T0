@@ -211,15 +211,16 @@ class Tier0FeederPoller(BaseWorkerThread):
             documents = []
             for (workflow, run) in workflows:
                 logging.info("Going to publish workflow %s from run %s" % (workflow, run) )
-                doc = {}
-                doc["_id"]      =   workflow
-                doc["workflow"] =   workflow
+                doc = Document(str(workflow))
+                doc["workflow"] =   workflow # TODO: PUT THE NAME HERE, NOT THE INDEX!
                 doc["type"]     =   "tier0_request"
                 doc["run"]      =   run
                 documents.append(doc)
-                #self.localSummaryCouchDB = WMStatsWriter(self.config.wmagentsummaryCouchUrl)
-            self.localSummaryCouchDB.uploadData(documents)
-        
+            response = self.localSummaryCouchDB.uploadData(documents)        
+            if len(documents) == len(response):
+                logging.info(" Successfully uploaded all %d request documents" % len(documents))
+            # mark response requests as done in teh other DAO
+    
 
     def terminate(self, params):
         """
