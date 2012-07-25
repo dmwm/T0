@@ -301,9 +301,9 @@ class Create(DBCreator):
 
         self.create[len(self.create)] = \
             """CREATE TABLE workflow_monitoring (
-                  fileset      varchar(255) not null,
+                  workflow      varchar(255) not null,
                   tracked      int default 0 not null,
-                  primary key (fileset)  
+                  primary key (workflow)  
                )"""
 
         self.create[len(self.create)] = \

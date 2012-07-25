@@ -12,7 +12,7 @@ class InsertWorkflowMonitoring(DBFormatter):
     def execute(self, filesetIds, conn = None, transaction = False):
 
         sql = """INSERT INTO workflow_monitoring 
-                (fileset) 
+                (workflow) 
                 VALUES ((SELECT wmbs_subscription.workflow FROM wmbs_subscription WHERE wmbs_subscription.fileset = :FILESET_ID))"""
 
         binds = []

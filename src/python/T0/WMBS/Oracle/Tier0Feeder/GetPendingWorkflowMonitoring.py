@@ -10,13 +10,16 @@ class GetPendingWorkflowMonitoring(DBFormatter):
 
     def execute(self, conn = None, transaction = False):
 
+
         sql = """SELECT  wmbs_subscription.workflow, run_stream_fileset_assoc.run_id
                  FROM workflow_monitoring 
                  INNER JOIN wmbs_subscription ON
-                 workflow_monitoring.fileset = wmbs_subscription.fileset
+                 workflow_monitoring.workflow = wmbs_subscription.workflow
                  INNER JOIN run_stream_fileset_assoc ON
-                 workflow_monitoring.fileset = run_stream_fileset_assoc.fileset
+                 wmbs_subscription.fileset = run_stream_fileset_assoc.fileset
                  WHERE checkForZeroState(workflow_monitoring.tracked) = 0"""
+
+        # TODO: WE ALSO WANT TO GET THE WORKFLOW NAME!
 
         results = self.dbi.processData(sql, [], conn = conn,
                              transaction = transaction)
