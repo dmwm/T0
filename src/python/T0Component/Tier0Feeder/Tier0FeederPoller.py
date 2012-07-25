@@ -214,18 +214,18 @@ class Tier0FeederPoller(BaseWorkerThread):
             logging.debug("No workflows to publish to couch monitoring, doing nothing")
         if workflows:
             logging.debug(" Going to publish %d workflows" % len(workflows))
-            for (workflow, run) in workflows:
-                logging.info(" Publishing workflow %s from run %s to monitoring" % (workflow, run) )
+            for (workflowId, run, workflowName) in workflows:
+                logging.info(" Publishing workflow %s to monitoring" % workflowName)
                 doc = {}
-                doc["_id"] =  str(workflow)
-                doc["workflow"] =   workflow # FIXME:This has to be the workflow name!!
+                doc["_id"] =  str(workflowId)
+                doc["workflow"] =   workflowName # FIXME:This has to be the workflow name!!
                 doc["type"]     =   "tier0_request"
                 doc["run"]      =   run
                 response = self.localSummaryCouchDB.insertGenericRequest(doc)
                 if response == "OK" or "EXISTS":
-                    logging.info(" Successfully uploaded request %s of run %d" % (workflow, run))
+                    logging.info(" Successfully uploaded request %s" % workflowName)
                     # Here we have to trust the insert, if it doesn't happen will be easy to spot on the logs
-                    markTrackedWorkflowMonitoringDAO.execute(workflow)
+                    markTrackedWorkflowMonitoringDAO.execute(workflowId)
 
     def terminate(self, params):
         """
