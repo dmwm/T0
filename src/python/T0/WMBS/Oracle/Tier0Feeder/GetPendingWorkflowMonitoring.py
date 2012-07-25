@@ -18,10 +18,11 @@ class GetPendingWorkflowMonitoring(DBFormatter):
                  workflow_monitoring.fileset = run_stream_fileset_assoc.fileset
                  WHERE checkForZeroState(workflow_monitoring.tracked) = 0"""
 
-        result = self.dbi.processData(sql, [], conn = conn,
+        results = self.dbi.processData(sql, [], conn = conn,
                              transaction = transaction)
+        workflows = []
+        for result in results:
+            if result.rowcount > 0:
+                workflows.append(result.fetchall()[0])
 
-        workflows = result[0].fetchall()            
-
-        return workflows
-
+        return workflows 

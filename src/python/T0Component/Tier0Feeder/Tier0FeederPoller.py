@@ -199,28 +199,33 @@ class Tier0FeederPoller(BaseWorkerThread):
         # check and delete active split lumis
         #
         RunLumiCloseoutAPI.checkActiveSplitLumis()
-
+        
+        # gets all workflows not inserted to couchDB and does it.
         self.feedCouchMonitoring()
 
         return
 
     def feedCouchMonitoring(self):
+
         getPendingWorkflowMonitoringDAO = self.daoFactory(classname = "Tier0Feeder.GetPendingWorkflowMonitoring")
+        markTrackedWorkflowMonitoringDAO = self.daoFactory(classname = "Tier0Feeder.MarkTrackedWorkflowMonitoring")
         workflows = getPendingWorkflowMonitoringDAO.execute()
+        if len(workflows) == 0:
+            logging.debug("No workflows to publish to couch monitoring, doing nothing")
         if workflows:
-            documents = []
+            logging.debug(" Going to publish %d workflows" % len(workflows))
             for (workflow, run) in workflows:
-                logging.info("Going to publish workflow %s from run %s" % (workflow, run) )
-                doc = Document(str(workflow))
-                doc["workflow"] =   workflow # TODO: PUT THE NAME HERE, NOT THE INDEX!
+                logging.info(" Publishing workflow %s from run %s to monitoring" % (workflow, run) )
+                doc = {}
+                doc["_id"] =  str(workflow)
+                doc["workflow"] =   workflow # FIXME:This has to be the workflow name!!
                 doc["type"]     =   "tier0_request"
                 doc["run"]      =   run
-                documents.append(doc)
-            response = self.localSummaryCouchDB.uploadData(documents)        
-            if len(documents) == len(response):
-                logging.info(" Successfully uploaded all %d request documents" % len(documents))
-            # mark response requests as done in teh other DAO
-    
+                response = self.localSummaryCouchDB.insertGenericRequest(doc)
+                if response == "OK" or "EXISTS":
+                    logging.info(" Successfully uploaded request %s of run %d" % (workflow, run))
+                    # Here we have to trust the insert, if it doesn't happen will be easy to spot on the logs
+                    markTrackedWorkflowMonitoringDAO.execute(workflow)
 
     def terminate(self, params):
         """
