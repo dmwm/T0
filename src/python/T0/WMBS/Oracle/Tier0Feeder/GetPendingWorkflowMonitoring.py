@@ -25,9 +25,5 @@ class GetPendingWorkflowMonitoring(DBFormatter):
 
         results = self.dbi.processData(sql, [], conn = conn,
                              transaction = transaction)
-        workflows = []
-        for result in results:
-            if result.rowcount > 0:
-                workflows.append(result.fetchall()[0])
 
-        return workflows 
+        return results[0].fetchall()

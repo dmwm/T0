@@ -44,7 +44,7 @@ class Tier0FeederPoller(BaseWorkerThread):
         self.specDirectory = config.Tier0Feeder.specDirectory
         self.lfnBase = getattr(config.Tier0Feeder, "lfnBase", "/store")
         self.dqmUploadProxy = config.WMBSService.proxy
-        self.localSummaryCouchDB = WMStatsWriter(self.config.wmagentsummaryCouchUrl)
+        self.localSummaryCouchDB = WMStatsWriter(config.AnalyticsDataCollector.localWMStatsURL)
 
         hltConfConnectUrl = config.HLTConfDatabase.connectUrl
         dbFactoryHltConf = DBFactory(logging, dburl = hltConfConnectUrl, options = {})
