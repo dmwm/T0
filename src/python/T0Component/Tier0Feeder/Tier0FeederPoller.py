@@ -218,7 +218,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                 logging.info(" Publishing workflow %s to monitoring" % workflowName)
                 doc = {}
                 doc["_id"] =  str(workflowId)
-                doc["workflow"] =   workflowName # FIXME:This has to be the workflow name!!
+                doc["workflow"] =   workflowName
                 doc["type"]     =   "tier0_request"
                 doc["run"]      =   run
                 response = self.localSummaryCouchDB.insertGenericRequest(doc)

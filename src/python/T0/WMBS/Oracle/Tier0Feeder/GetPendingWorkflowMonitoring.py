@@ -21,8 +21,6 @@ class GetPendingWorkflowMonitoring(DBFormatter):
                  wmbs_subscription.fileset = run_stream_fileset_assoc.fileset
                  WHERE checkForZeroState(workflow_monitoring.tracked) = 0"""
 
-        # TODO: WE ALSO WANT TO GET THE WORKFLOW NAME!
-
         results = self.dbi.processData(sql, [], conn = conn,
                              transaction = transaction)
 
