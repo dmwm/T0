@@ -1188,7 +1188,7 @@ class RunConfigTest(unittest.TestCase):
         self.assertEquals(len(recoConfigs.keys()), 0,
                           "ERROR: there are reco configs present")
 
-        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store")
+        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store", self.dqmUploadProxy)
 
         recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
                                                    transaction = False)
@@ -1198,7 +1198,7 @@ class RunConfigTest(unittest.TestCase):
 
         self.removeRecoDelay("Cosmics")
 
-        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store")
+        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store", self.dqmUploadProxy)
 
         recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
                                                    transaction = False)
@@ -1211,7 +1211,7 @@ class RunConfigTest(unittest.TestCase):
                                           'END_TIME' : int(time.time()) + 10 },
                                 transaction = False)
 
-        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store")
+        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store", self.dqmUploadProxy)
 
         recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
                                                    transaction = False)
@@ -1224,7 +1224,7 @@ class RunConfigTest(unittest.TestCase):
                                           'END_TIME' : int(time.time()) - 10  },
                                 transaction = False)
 
-        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store")
+        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store", self.dqmUploadProxy)
 
         recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
                                                    transaction = False)
@@ -1234,7 +1234,7 @@ class RunConfigTest(unittest.TestCase):
 
         self.removeRecoDelay()
 
-        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store")
+        RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, "/store", self.dqmUploadProxy)
 
         recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
                                                    transaction = False)

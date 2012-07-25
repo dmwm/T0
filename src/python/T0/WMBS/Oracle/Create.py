@@ -300,6 +300,13 @@ class Create(DBCreator):
                )"""
 
         self.create[len(self.create)] = \
+            """CREATE TABLE workflow_monitoring (
+                  workflow      varchar(255) not null,
+                  tracked      int default 0 not null,
+                  primary key (workflow)  
+               )"""
+
+        self.create[len(self.create)] = \
             """CREATE FUNCTION checkForZeroState (value IN int)
                RETURN int DETERMINISTIC IS
                BEGIN
@@ -394,6 +401,9 @@ class Create(DBCreator):
 
         self.indexes[len(self.indexes)] = \
             """CREATE INDEX idx_reco_release_config_1 ON reco_release_config (checkForZeroState(released))"""
+
+        self.indexes[len(self.indexes)] = \
+            """CREATE INDEX idx_workflow_monitoring_0 ON workflow_monitoring (checkForZeroState(tracked))"""
 
         #
         # Constraints

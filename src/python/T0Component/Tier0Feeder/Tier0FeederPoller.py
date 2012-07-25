@@ -19,6 +19,7 @@ from WMCore.DAOFactory import DAOFactory
 from WMCore.Database.DBFactory import DBFactory
 from WMCore.WMException import WMException
 from WMCore.Configuration import loadConfigurationFile
+from WMCore.Services.WMStats.WMStatsWriter import WMStatsWriter
 
 from T0.RunConfig import RunConfigAPI
 from T0.RunLumiCloseout import RunLumiCloseoutAPI
@@ -43,6 +44,7 @@ class Tier0FeederPoller(BaseWorkerThread):
         self.specDirectory = config.Tier0Feeder.specDirectory
         self.lfnBase = getattr(config.Tier0Feeder, "lfnBase", "/store")
         self.dqmUploadProxy = config.WMBSService.proxy
+        self.localSummaryCouchDB = WMStatsWriter(config.AnalyticsDataCollector.localWMStatsURL)
 
         hltConfConnectUrl = config.HLTConfDatabase.connectUrl
         dbFactoryHltConf = DBFactory(logging, dburl = hltConfConnectUrl, options = {})
@@ -166,7 +168,8 @@ class Tier0FeederPoller(BaseWorkerThread):
         #
         RunConfigAPI.releasePromptReco(tier0Config,
                                        self.specDirectory,
-                                       self.lfnBase)
+                                       self.lfnBase,
+				       self.dqmUploadProxy)
 
         #
         # close stream/lumis for run/streams that are active (fileset exists and open)
@@ -196,8 +199,33 @@ class Tier0FeederPoller(BaseWorkerThread):
         # check and delete active split lumis
         #
         RunLumiCloseoutAPI.checkActiveSplitLumis()
+        
+        # gets all workflows not inserted to couchDB and does it.
+        self.feedCouchMonitoring()
 
         return
+
+    def feedCouchMonitoring(self):
+
+        getPendingWorkflowMonitoringDAO = self.daoFactory(classname = "Tier0Feeder.GetPendingWorkflowMonitoring")
+        markTrackedWorkflowMonitoringDAO = self.daoFactory(classname = "Tier0Feeder.MarkTrackedWorkflowMonitoring")
+        workflows = getPendingWorkflowMonitoringDAO.execute()
+        if len(workflows) == 0:
+            logging.debug("No workflows to publish to couch monitoring, doing nothing")
+        if workflows:
+            logging.debug(" Going to publish %d workflows" % len(workflows))
+            for (workflowId, run, workflowName) in workflows:
+                logging.info(" Publishing workflow %s to monitoring" % workflowName)
+                doc = {}
+                doc["_id"] =  str(workflowId)
+                doc["workflow"] =   workflowName
+                doc["type"]     =   "tier0_request"
+                doc["run"]      =   run
+                response = self.localSummaryCouchDB.insertGenericRequest(doc)
+                if response == "OK" or "EXISTS":
+                    logging.info(" Successfully uploaded request %s" % workflowName)
+                    # Here we have to trust the insert, if it doesn't happen will be easy to spot on the logs
+                    markTrackedWorkflowMonitoringDAO.execute(workflowId)
 
     def terminate(self, params):
         """

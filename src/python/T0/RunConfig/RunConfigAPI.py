@@ -114,7 +114,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
 
     return
 
-def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUploadProxy):
+def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUploadProxy = None):
     """
     _configureRunStream_
 
@@ -164,6 +164,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUplo
         insertErrorDatasetDAO = daoFactory(classname = "RunConfig.InsertErrorDataset")
         insertStreamFilesetDAO = daoFactory(classname = "RunConfig.InsertStreamFileset")
         insertRecoReleaseConfigDAO = daoFactory(classname = "RunConfig.InsertRecoReleaseConfig")
+        insertWorkflowMonitoringDAO = daoFactory(classname = "RunConfig.InsertWorkflowMonitoring")
+
 
         # mark workflows as injected
         wmbsDaoFactory = DAOFactory(package = "WMCore.WMBS",
@@ -376,6 +378,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUplo
             insertStreamFilesetDAO.execute(run, stream, filesetName, conn = myThread.transaction.conn, transaction = True)
             fileset.load()
             wmbsHelper.createSubscription(wmSpec.getTask(taskName), fileset)
+            insertWorkflowMonitoringDAO.execute([fileset.id],  conn = myThread.transaction.conn, transaction = True)
             if streamConfig.ProcessingStyle == "Bulk":
                 bindsRecoReleaseConfig = []
                 for fileset, primds in wmbsHelper.getMergeOutputMapping().items():
@@ -396,10 +399,9 @@ def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUplo
 
         # should we do anything for local runs ?
         pass
-
     return
 
-def releasePromptReco(tier0Config, specDirectory, lfnBase):
+def releasePromptReco(tier0Config, specDirectory, lfnBase, dqmUploadProxy = None):
     """
     _releasePromptReco_
 
@@ -427,6 +429,7 @@ def releasePromptReco(tier0Config, specDirectory, lfnBase):
     insertPhEDExConfigDAO = daoFactory(classname = "RunConfig.InsertPhEDExConfig")
     insertPromptSkimConfigDAO = daoFactory(classname = "RunConfig.InsertPromptSkimConfig")
     releasePromptRecoDAO = daoFactory(classname = "RunConfig.ReleasePromptReco")
+    insertWorkflowMonitoringDAO = daoFactory(classname = "RunConfig.InsertWorkflowMonitoring")
 
     bindsDatasetScenario = []
     bindsCMSSWVersion = []
@@ -564,6 +567,7 @@ def releasePromptReco(tier0Config, specDirectory, lfnBase):
             specArguments['MergedLFNBase'] = "%s/data" % lfnBase
 
             specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/local/Tier0/override_catalog.xml?protocol=override"
+            specArguments['DQMUploadProxy'] = dqmUploadProxy
 
             wmSpec = promptrecoWorkload(workflowName, specArguments)
 
@@ -592,6 +596,7 @@ def releasePromptReco(tier0Config, specDirectory, lfnBase):
             releasePromptRecoDAO.execute(bindsReleasePromptReco, conn = myThread.transaction.conn, transaction = True)
         for (wmbsHelper, wmSpec, fileset) in recoSpecs.values():
             wmbsHelper.createSubscription(wmSpec.getTask(taskName), Fileset(id = fileset))
+            insertWorkflowMonitoringDAO.execute([fileset],  conn = myThread.transaction.conn, transaction = True)
         if len(recoSpecs) > 0:
             markWorkflowsInjectedDAO.execute(recoSpecs.keys(), injected = True, conn = myThread.transaction.conn, transaction = True)
     except:
