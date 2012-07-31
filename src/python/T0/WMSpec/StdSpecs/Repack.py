@@ -150,6 +150,12 @@ class RepackWorkloadFactory(StdBase):
                              filterName = getattr(parentOutputModule, "filterName"),
                              forceMerged = True)
 
+        self.addOutputModule(mergeTask, "MergedError",
+                             primaryDataset = getattr(parentOutputModule, "primaryDataset") + "-Error",
+                             dataTier = getattr(parentOutputModule, "dataTier"),
+                             filterName = getattr(parentOutputModule, "filterName"),
+                             forceMerged = True)
+
         self.addCleanupTask(parentTask, parentOutputModuleName)
 
         return mergeTask
