@@ -271,8 +271,12 @@ class RepackMerge(JobFactory):
 
         self.newJob(name = "%s-%s" % (self.jobNamePrefix, makeUUID()))
 
+        if errorDataset:
+            self.currentJob.addBaggageParameter("useErrorDataset", True)
+
         for fileInfo in fileList:
             f = File(id = fileInfo['id'],
                      lfn = fileInfo['lfn'])
             f.setLocation(fileInfo['location'], immediateSave = False)
             self.currentJob.addFile(f)
+
