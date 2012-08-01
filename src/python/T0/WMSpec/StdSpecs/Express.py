@@ -40,7 +40,8 @@ def getTestArguments():
         "GlobalTag" : None,
         "GlobalTagTransaction" : None,
         "Outputs" : None,
-        "AlcaSkims" : None,
+        "AlcaSkims" : [ "TkAlCosmics0T", "MuAlGlobalCosmics", "HcalCalHOCosmics" ],
+        "DqmSequences" : [ "@common", "@jetmet" ],
 
         # optional for now
         "Multicore" : None,
@@ -100,6 +101,7 @@ class ExpressWorkloadFactory(StdBase):
                                                   scenarioArgs = { 'globalTag' : self.globalTag,
                                                                    'globalTagTransaction' : self.globalTagTransaction,
                                                                    'skims' : self.alcaSkims,
+                                                                   'dqmSeq' : self.dqmSequences,
                                                                    'outputs' : self.outputs },
                                                   splitAlgo = "Express",
                                                   splitArgs = mySplitArgs,
@@ -222,6 +224,7 @@ class ExpressWorkloadFactory(StdBase):
 	self.globalTagTransaction = arguments["GlobalTagTransaction"]
         self.procScenario = arguments['ProcScenario']
         self.alcaSkims = arguments['AlcaSkims']
+        self.dqmSequences = arguments['DqmSequences']
         self.outputs = arguments['Outputs']
         self.dqmUploadProxy = arguments['DQMUploadProxy']
 

@@ -252,7 +252,8 @@ class Create(DBCreator):
                  stream_id      int           not null,
                  proc_version   int           not null,
                  write_tiers    varchar(255)  not null,
-                 write_skims    varchar(1000),
+                 alca_skim      varchar(1000),
+                 dqm_seq        varchar(1000),
                  global_tag     varchar(255),
                  primary key (run_id, stream_id)
                )"""
@@ -268,7 +269,8 @@ class Create(DBCreator):
                   write_dqm      int           not null,
                   write_aod      int           not null,
                   proc_version   int           not null,
-                  write_skims    varchar(1000),
+                  alca_skim      varchar(1000),
+                  dqm_seq        varchar(1000),
                   global_tag     varchar(255),
                   primary key (run_id, primds_id)
                )"""

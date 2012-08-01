@@ -24,7 +24,8 @@ class GetRecoConfig(DBFormatter):
                         reco_config.write_aod,
                         reco_config.write_dqm,
                         reco_config.proc_version,
-                        reco_config.write_skims,
+                        reco_config.alca_skim,
+                        reco_config.dqm_seq,
                         reco_config.global_tag,
                         event_scenario.name
                  FROM reco_config
@@ -67,8 +68,9 @@ class GetRecoConfig(DBFormatter):
             resultDict[primds]['write_aod'] = result[5]
             resultDict[primds]['write_dqm'] = result[6]
             resultDict[primds]['proc_ver'] = result[7]
-            resultDict[primds]['write_skims'] = result[8]
-            resultDict[primds]['global_tag'] = result[9]
-            resultDict[primds]['scenario'] = result[10]
+            resultDict[primds]['alca_skim'] = result[8]
+            resultDict[primds]['dqm_seq'] = result[9]
+            resultDict[primds]['global_tag'] = result[10]
+            resultDict[primds]['scenario'] = result[11]
 
         return resultDict

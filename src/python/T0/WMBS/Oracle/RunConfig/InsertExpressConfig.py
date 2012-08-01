@@ -13,12 +13,13 @@ class InsertExpressConfig(DBFormatter):
 
         sql = """INSERT INTO express_config
                  (RUN_ID, STREAM_ID, PROC_VERSION,
-                  WRITE_TIERS, WRITE_SKIMS, GLOBAL_TAG)
+                  WRITE_TIERS, ALCA_SKIM, DQM_SEQ, GLOBAL_TAG)
                  VALUES (:RUN,
                          (SELECT id FROM stream WHERE name = :STREAM),
                          :PROC_VER,
                          :WRITE_TIERS,
-                         :WRITE_SKIMS,
+                         :ALCA_SKIM,
+                         :DQM_SEQ,
                          :GLOBAL_TAG)
                  """
 

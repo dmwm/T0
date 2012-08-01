@@ -227,19 +227,24 @@ def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUplo
                                               'eventContent' : "DQM",
                                               'primaryDataset' : specialDataset } )
 
-            writeSkims = None
+            alcaSkim = None
             if "ALCARECO" in streamConfig.Express.DataTiers:
-                if len(streamConfig.Express.Producers) > 0:
+                if len(streamConfig.Express.AlcaSkims) > 0:
                     outputModuleDetails.append( { 'dataTier' : "ALCARECO",
                                                   'eventContent' : "ALCARECO",
                                                   'primaryDataset' : specialDataset } )
-                    writeSkims = ",".join(streamConfig.Express.Producers)
+                    alcaSkim = ",".join(streamConfig.Express.AlcaSkims)
+
+            dqmSeq = None
+            if len(streamConfig.Express.DqmSequences) > 0:
+                dqmSeq = ",".join(streamConfig.Express.DqmSequences)
 
             bindsExpressConfig = { 'RUN' : run,
                                    'STREAM' : stream,
                                    'PROC_VER' : streamConfig.Express.ProcessingVersion,
                                    'WRITE_TIERS' : ",".join(streamConfig.Express.DataTiers),
-                                   'WRITE_SKIMS' : writeSkims,
+                                   'ALCA_SKIM' : alcaSkim,
+                                   'DQM_SEQ' : dqmSeq,
                                    'GLOBAL_TAG' : streamConfig.Express.GlobalTag }
 
 
@@ -326,7 +331,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUplo
             specArguments['ProcScenario'] = streamConfig.Express.Scenario
             specArguments['GlobalTag'] = streamConfig.Express.GlobalTag
             specArguments['GlobalTagTransaction'] = "Express_%d" % run
-            specArguments['AlcaSkims'] = streamConfig.Express.Producers
+            specArguments['AlcaSkims'] = streamConfig.Express.AlcaSkims
+            specArguments['DqmSequences'] = streamConfig.Express.DqmSequences
             specArguments['UnmergedLFNBase'] = "%s/t0temp/express" % lfnBase
             specArguments['MergedLFNBase'] = "%s/express" % lfnBase
             specArguments['DQMUploadProxy'] = dqmUploadProxy
@@ -464,9 +470,13 @@ def releasePromptReco(tier0Config, specDirectory, lfnBase, dqmUploadProxy = None
 
         bindsCMSSWVersion.append( { 'VERSION' : datasetConfig.Reco.CMSSWVersion } )
 
-        writeSkims = None
-        if len(datasetConfig.Alca.Producers) > 0:
-            writeSkims = ",".join(datasetConfig.Alca.Producers)
+        alcaSkim = None
+        if len(datasetConfig.Reco.AlcaSkims) > 0:
+            alcaSkim = ",".join(datasetConfig.Reco.AlcaSkims)
+
+        dqmSeq = None
+        if len(datasetConfig.Reco.DqmSequences) > 0:
+            dqmSeq = ",".join(datasetConfig.Reco.DqmSequences)
 
         bindsRecoConfig.append( { 'RUN' : run,
                                   'PRIMDS' : dataset,
@@ -477,7 +487,8 @@ def releasePromptReco(tier0Config, specDirectory, lfnBase, dqmUploadProxy = None
                                   'WRITE_DQM' : int(datasetConfig.Reco.WriteDQM),
                                   'WRITE_AOD' : int(datasetConfig.Reco.WriteAOD),
                                   'PROC_VER' : datasetConfig.Reco.ProcessingVersion,
-                                  'WRITE_SKIMS' : writeSkims,
+                                  'ALCA_SKIM' : alcaSkim,
+                                  'DQM_SEQ' : dqmSeq,
                                   'GLOBAL_TAG' : datasetConfig.Reco.GlobalTag } )
 
         requestOnly = "y"
@@ -536,7 +547,7 @@ def releasePromptReco(tier0Config, specDirectory, lfnBase, dqmUploadProxy = None
             writeTiers.append("AOD")
         if datasetConfig.Reco.WriteDQM:
             writeTiers.append("DQM")
-        if len(datasetConfig.Alca.Producers) > 0:
+        if len(datasetConfig.Reco.AlcaSkims) > 0:
             writeTiers.append("ALCARECO")
 
         if datasetConfig.Reco.DoReco and len(writeTiers) > 0:
@@ -561,7 +572,8 @@ def releasePromptReco(tier0Config, specDirectory, lfnBase, dqmUploadProxy = None
             specArguments['InputDataset'] = "/%s/%s-%s/RAW" % (dataset, acqEra, repackProcVer)
 
             specArguments['WriteTiers'] = writeTiers
-            specArguments['AlcaSkims'] = datasetConfig.Alca.Producers
+            specArguments['AlcaSkims'] = datasetConfig.Reco.AlcaSkims
+            specArguments['DqmSequences'] = datasetConfig.Reco.DqmSequences
 
             specArguments['UnmergedLFNBase'] = "%s/t0temp/data" % lfnBase
             specArguments['MergedLFNBase'] = "%s/data" % lfnBase
