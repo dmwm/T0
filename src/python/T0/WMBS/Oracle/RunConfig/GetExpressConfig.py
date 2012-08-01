@@ -14,7 +14,8 @@ class GetExpressConfig(DBFormatter):
         sql = """SELECT express_config.proc_version AS proc_ver,
                         cmssw_version.name AS cmssw,
                         express_config.write_tiers AS write_tiers,
-                        express_config.write_skims AS write_skims,
+                        express_config.alca_skim AS alca_skim,
+                        express_config.dqm_seq AS dqm_seq,
                         express_config.global_tag AS global_tag,
                         event_scenario.name AS scenario
                  FROM express_config
