@@ -11,7 +11,9 @@ Tier0Configuration - Global configuration object
 | |       |       stream or dataset and can be applied to an entire run.
 | |       |
 | |       |--> Version - The CVS revision of the config
+| |       |
 | |       |--> AcquisitionEra - The acquisition era for the run
+| |       |
 | |       |--> PhEDExSubscriptions - Dictionary of PhEDEx subscriptions where the
 | |                                  primary dataset id is the key and the storage
 | |                                  node name is the value
@@ -39,7 +41,9 @@ Tier0Configuration - Global configuration object
 |             |     |
 |             |     |--> GlobalTag - Global tag used for processing
 |             |     |
-|             |     |--> Producers - List of alca producers active for this stream.
+|             |     |--> AlcaSkims - List of alca skims active for this stream.
+|             |     |
+|             |     |--> DqmSequences - List of dqm sequences active for this stream.
 |             |     |
 |             |     |--> ProcessingVersion - processing version
 |             |
@@ -75,13 +79,20 @@ Tier0Configuration - Global configuration object
       |
       |--> DATASETNAME
             |--> Name - Name of the dataset.
+            |
             |--> Scenario - Processing scenario for this dataset.
+            |
             |--> RecoDelay - PromptReco delay
+            |
             |--> RecoDelayOffset - Time before PromptReco release for which
             |                      settings are locked in and reco looks released
+            |
             |--> CustodialNode - The custodial PhEDEx storage node for this dataset
+            |
             |--> ArchivalNode - The archival PhEDEx node, always CERN.
+            |
             |--> CustodialPriority - The priority of the custodial subscription
+            |
             |--> CustodialAutoApprove - Determine whether or not the custodial
             |                           subscription will be auto approved.
             |
@@ -92,27 +103,36 @@ Tier0Configuration - Global configuration object
             |     |
             |     |--> DoReco - Either True or False.  Determines whether prompt
             |     |             reconstruction is preformed on this dataset.
+            |     |
             |     |--> GlobalTag - The global tag that will be used to prompt
             |     |                reconstruction.  Only used if DoReco is true.
-            |     |--> CMSSWVersion - Framework version to be used for prompt
-            |                         reconstruction.  This only needs to be filled
-            |                         in if DoReco is True and will default to
-            |                         Undefined if not set.
-            |
-            |--> Alca - Configuration section to hold settings related to alca production.
             |     |
-            |     |--> Producers - List of alca producers active for this dataset.
+            |     |--> CMSSWVersion - Framework version to be used for prompt
+            |     |                   reconstruction.  This only needs to be filled
+            |     |                   in if DoReco is True and will default to
+            |     |                   Undefined if not set.
+            |     |
+            |     |--> AlcaSkims - List of alca skims active for this dataset.
+            |     |
+            |     |--> DqmSequences - List of dqm sequences active for this dataset.
             |
             |--> Tier1Skims - List of configuration section objects to hold Tier1 skims for
                   |           this dataset.
                   |
                   |--> DataTier - The tier of the input data.
+                  |
                   |--> PrimaryDataset - The primary dataset of the input data.
+                  |
                   |--> GlobalTag - The global tag to use with the skim.
+                  |
                   |--> CMSSWVersion - The framework version to use with the skim.
+                  |
                   |--> SkimName - The name of the skim.  Used for generating more descriptive job names.
+                  |
                   |--> ConfigURL - A URL to the framework config for the config.
+                  |
                   |--> ProcessingVersion - The processing version of the skim.
+                  |
                   |--> TwoFileRead - Bool that determines if this is a two file read skim.
 """
 
@@ -279,8 +299,8 @@ def addDataset(config, datasetName, **settings):
     datasetConfig.Reco.WriteRECO = settings.get("write_reco", True)
     datasetConfig.Reco.WriteDQM = settings.get("write_dqm", True)
     datasetConfig.Reco.WriteAOD = settings.get("write_aod", True)
-
-    datasetConfig.Alca.Producers = settings.get("alca_producers", [])
+    datasetConfig.Reco.AlcaSkims = settings.get("alca_producers", [])
+    datasetConfig.Reco.DqmSequences = settings.get("dqm_sequences", [])
 
     datasetConfig.CustodialNode = settings.get("custodial_node", None)
     datasetConfig.CustodialPriority = settings.get("custodial_priority", "high")
@@ -382,8 +402,10 @@ def addExpressConfig(config, streamName, **options):
     streamConfig.Express.DataTiers = data_tiers
     streamConfig.Express.GlobalTag = global_tag
 
-    streamConfig.Express.Producers = options.get("alca_producers", [])
+    streamConfig.Express.AlcaSkims = options.get("alca_producers", [])
+    streamConfig.Express.DqmSequences = options.get("dqm_sequences", [])
     streamConfig.Express.ProcessingVersion = options.get("proc_ver", 1)
+
     return
 
 def addRegistrationConfig(config, streamName, **options):
