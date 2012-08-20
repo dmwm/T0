@@ -553,7 +553,8 @@ class Create(DBCreator):
             """ALTER TABLE reco_release_config
                  ADD CONSTRAINT rec_rel_con_fil_id_fk
                  FOREIGN KEY (fileset)
-                 REFERENCES wmbs_fileset(id)"""
+                 REFERENCES wmbs_fileset(id)
+                 ON DELETE CASCADE"""
 
         self.constraints[len(self.constraints)] = \
             """ALTER TABLE stream_special_primds_assoc
