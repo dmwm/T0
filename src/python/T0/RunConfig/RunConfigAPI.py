@@ -394,7 +394,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUplo
                                                      'RECODELAY' : promptRecoDelay[primds],
                                                      'RECODELAYOFFSET' : promptRecoDelayOffset[primds] } )
                 insertRecoReleaseConfigDAO.execute(bindsRecoReleaseConfig, conn = myThread.transaction.conn, transaction = True)
-            markWorkflowsInjectedDAO.execute([workflowName], injected = True, conn = myThread.transaction.conn, transaction = True)
+            else:
+                markWorkflowsInjectedDAO.execute([workflowName], injected = True, conn = myThread.transaction.conn, transaction = True)
         except:
             myThread.transaction.rollback()
             raise
