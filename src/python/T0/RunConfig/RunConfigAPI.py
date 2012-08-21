@@ -114,7 +114,8 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
 
     return
 
-def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUploadProxy = None):
+def configureRunStream(tier0Config, run, stream, specDirectory,
+                       lfnBase, condUploadDir, dqmUploadProxy):
     """
     _configureRunStream_
 
@@ -335,6 +336,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUplo
             specArguments['DqmSequences'] = streamConfig.Express.DqmSequences
             specArguments['UnmergedLFNBase'] = "%s/t0temp/express" % lfnBase
             specArguments['MergedLFNBase'] = "%s/express" % lfnBase
+            specArguments['CondUploadDir'] = condUploadDir
             specArguments['DQMUploadProxy'] = dqmUploadProxy
 
         specArguments['RunNumber'] = run

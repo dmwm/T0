@@ -41,12 +41,14 @@ class RunConfigTest(unittest.TestCase):
 
         self.hltkey = "/cdaq/physics/Run2011/3e33/v2.1/HLT/V2"
         self.hltConfig = None
+        self.condUploadDir = None
         self.dqmUploadProxy = None
 
         if os.environ.has_key('WMAGENT_CONFIG'):
 
             wmAgentConfig = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
 
+            self.condUploadDir = getattr(wmAgentConfig.Tier0Feeder, "conditionUploadDir", None)
             self.dqmUploadProxy = getattr(wmAgentConfig.WMBSService, "proxy", None)
 
             if hasattr(wmAgentConfig, "HLTConfDatabase"):
@@ -1013,6 +1015,7 @@ class RunConfigTest(unittest.TestCase):
         self.getPhEDExConfigDAO = daoFactory(classname = "RunConfig.GetPhEDExConfig")
         self.getPromptSkimConfigDAO = daoFactory(classname = "RunConfig.GetPromptSkimConfig")
         self.endRunsDAO = daoFactory(classname = "RunLumiCloseout.EndRuns")
+        self.markRepackInjectedDAO = daoFactory(classname = "Tier0Feeder.MarkRepackInjected")
 
         return
 
@@ -1080,9 +1083,12 @@ class RunConfigTest(unittest.TestCase):
                 self.assertEqual(sorted(mapping[stream][primds]), sorted(self.referenceMapping[stream][primds]),
                                  "ERROR: trigger paths do not match reference")
 
-        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A", self.testDir, "/store", self.dqmUploadProxy)
-        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "Express", self.testDir, "/store", self.dqmUploadProxy)
-        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "HLTMON", self.testDir, "/store", self.dqmUploadProxy)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A", self.testDir,
+                                        "/store", self.condUploadDir, self.dqmUploadProxy)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "Express", self.testDir,
+                                        "/store", self.condUploadDir, self.dqmUploadProxy)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "HLTMON", self.testDir,
+                                        "/store", self.condUploadDir, self.dqmUploadProxy)
 
         datasets = self.getStreamDatasetsDAO.execute(176161, "A",
                                                      transaction = False)
@@ -1145,8 +1151,8 @@ class RunConfigTest(unittest.TestCase):
                          "ERROR: wrong data tiers for stream Express")
 
         writeSkims = []
-        if expressConfig['write_skims'] != None:
-            writeSkims = expressConfig['write_skims'].split(',')
+        if expressConfig['alca_skim'] != None:
+            writeSkims = expressConfig['alca_skim'].split(',')
         self.assertEqual(set(writeSkims), set([ "SiStripCalZeroBias", "PromptCalibProd" ]),
                          "ERROR: wrong alca skims for stream Express")
 
@@ -1170,8 +1176,8 @@ class RunConfigTest(unittest.TestCase):
                          "ERROR: wrong data tiers for stream HLTMON")
 
         writeSkims = []
-        if expressConfig['write_skims'] != None:
-            writeSkims = expressConfig['write_skims'].split(',')
+        if expressConfig['alca_skim'] != None:
+            writeSkims = expressConfig['alca_skim'].split(',')
         self.assertEqual(set(writeSkims), set([]),
                          "ERROR: wrong alca skims for stream HLTMON")
 
@@ -1275,8 +1281,8 @@ class RunConfigTest(unittest.TestCase):
                                   "ERROR: problem in reco configuration")
 
                 writeSkims = []
-                if recoConfig['write_skims'] != None:
-                    writeSkims = recoConfig['write_skims'].split(',')
+                if recoConfig['alca_skim'] != None:
+                    writeSkims = recoConfig['alca_skim'].split(',')
                 self.assertEquals(set(writeSkims), set([ "Skim1", "Skim2", "Skim3" ]),
                                   "ERROR: problem in reco configuration")
             
@@ -1310,8 +1316,8 @@ class RunConfigTest(unittest.TestCase):
                                   "ERROR: problem in reco configuration")
 
                 writeSkims = []
-                if recoConfig['write_skims'] != None:
-                    writeSkims = recoConfig['write_skims'].split(',')
+                if recoConfig['alca_skim'] != None:
+                    writeSkims = recoConfig['alca_skim'].split(',')
                 self.assertEquals(set(writeSkims), set([]),
                                   "ERROR: problem in reco configuration")
             
@@ -1345,8 +1351,8 @@ class RunConfigTest(unittest.TestCase):
                                   "ERROR: problem in reco configuration")
 
                 writeSkims = []
-                if recoConfig['write_skims'] != None:
-                    writeSkims = recoConfig['write_skims'].split(',')
+                if recoConfig['alca_skim'] != None:
+                    writeSkims = recoConfig['alca_skim'].split(',')
                 self.assertEquals(set(writeSkims), set([]),
                                   "ERROR: problem in reco configuration")
             
@@ -1528,6 +1534,15 @@ class RunConfigTest(unittest.TestCase):
                                               """, transaction = False)[0].fetchall()
         self.assertTrue(results[0][0] > 0,
                          "ERROR: no workflows created")
+        self.assertEqual(results[0][1], 0,
+                         "ERROR: all created workflows marked as injected")
+
+        self.markRepackInjectedDAO.execute(transaction = False)
+
+        results = myThread.dbi.processData("""SELECT COUNT(*), MIN(wmbs_workflow.injected)
+                                              FROM wmbs_workflow
+                                              """, transaction = False)[0].fetchall()
+
         self.assertEqual(results[0][1], 1,
                          "ERROR: not all created workflows marked as injected")
 
