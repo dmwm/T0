@@ -16,6 +16,7 @@ from WMCore.DAOFactory import DAOFactory
 from WMCore.Database.DBFactory import DBFactory
 from WMCore.Configuration import loadConfigurationFile
 from WMCore.Services.UUID import makeUUID
+from WMCore.Services.WMStats.WMStatsWriter import WMStatsWriter
 
 from T0.RunConfig import RunConfigAPI
 from T0.RunLumiCloseout import RunLumiCloseoutAPI
@@ -52,6 +53,7 @@ class Tier0FeederTest(unittest.TestCase):
             wmAgentConfig = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
 
             self.dqmUploadProxy = getattr(wmAgentConfig.WMBSService, "proxy", None)
+            self.localSummaryCouchDB = WMStatsWriter(wmAgentConfig.AnalyticsDataCollector.localWMStatsURL)
 
             if hasattr(wmAgentConfig, "HLTConfDatabase"):
 
@@ -982,6 +984,9 @@ class Tier0FeederTest(unittest.TestCase):
         self.insertSplitLumisDAO = daoFactory(classname = "JobSplitting.InsertSplitLumis")
         self.findNewExpressRunsDAO = daoFactory(classname = "Tier0Feeder.FindNewExpressRuns")
         self.releaseExpressDAO = daoFactory(classname = "Tier0Feeder.ReleaseExpress")
+        self.getPendingWorkflowMonitoringDAO = daoFactory(classname = "Tier0Feeder.GetPendingWorkflowMonitoring")
+        self.markTrackedWorkflowMonitoringDAO = daoFactory(classname = "Tier0Feeder.MarkTrackedWorkflowMonitoring")
+
 
         return
 
@@ -1159,7 +1164,28 @@ class Tier0FeederTest(unittest.TestCase):
             runStreamDict[result[0]] = result[1]
 
         return runStreamDict
-                                              
+
+    def feedCouchMonitoring(self):
+
+        workflows = self.getPendingWorkflowMonitoringDAO.execute()
+
+        if len(workflows) == 0:
+            logging.debug("No workflows to publish to couch monitoring, doing nothing")
+        if workflows:
+            logging.debug(" Going to publish %d workflows" % len(workflows))
+            for (workflowId, run, workflowName) in workflows:
+                logging.info(" Publishing workflow %s to monitoring" % workflowName)
+                doc = {}
+                doc["_id"] =  workflowName
+                doc["workflow"] =   workflowName # FIXME:This has to be the workflow name!!
+                #doc["status"]   =    {'status': 'new', 'timestamp': int(time.time())}
+                doc["type"]     =   "tier0_request"
+                doc["run"]      =   run
+                response = self.localSummaryCouchDB.insertGenericRequest(doc)
+                if response == "OK" or "EXISTS":
+                    logging.info(" Successfully uploaded request %s" % workflowName)
+                    # Here we have to trust the insert, if it doesn't happen will be easy to spot on the logs
+                    self.markTrackedWorkflowMonitoringDAO.execute(workflowId)
 
     def test00(self):
         """
@@ -1460,7 +1486,7 @@ class Tier0FeederTest(unittest.TestCase):
         for real run examples with full run and run/stream configuration
 
         """
-        if self.dbInterfaceStorageManager = None:
+        if self.dbInterfaceStorageManager == None:
             print "Your config is missing the StorageManagerDatabase section"
             print "Skipping run/lumi closing test"
             return
@@ -1556,7 +1582,8 @@ class Tier0FeederTest(unittest.TestCase):
         Test closeout code for run/stream filesets
 
         """
-        if self.dbInterfaceStorageManager = None:
+        
+        if self.dbInterfaceStorageManager == None:
             print "Your config is missing the StorageManagerDatabase section"
             print "Skipping run/lumi closing test"
             return
@@ -1604,6 +1631,15 @@ class Tier0FeederTest(unittest.TestCase):
         RunLumiCloseoutAPI.closeRunStreamFilesets()
         self.assertEqual(self.getClosedRunStreamFilesets(), { 176161 : 'A' },
                          "ERROR: there should be 1 closed run/stream filesets for run 176161 and stream A")
+
+
+        self.assertEqual(len(self.getPendingWorkflowMonitoringDAO.execute()), 1,
+                         "ERROR: there should be 1 workflow to be injected to couchDB")
+
+        self.feedCouchMonitoring()
+
+        self.assertEqual(len(self.getPendingWorkflowMonitoringDAO.execute()), 0,
+                         "ERROR: there should be no workflow to be injected to couchDB")
 
         return
 
