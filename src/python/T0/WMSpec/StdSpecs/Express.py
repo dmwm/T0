@@ -43,6 +43,8 @@ def getTestArguments():
         "AlcaSkims" : [ "TkAlCosmics0T", "MuAlGlobalCosmics", "HcalCalHOCosmics" ],
         "DqmSequences" : [ "@common", "@jetmet" ],
 
+        "CondUploadDir" : None,
+
         # optional for now
         "Multicore" : None,
         }
@@ -121,17 +123,29 @@ class ExpressWorkloadFactory(StdBase):
                 alcaSkimTask.setInputReference(expressTask.getStep("cmsRun1"),
                                                outputModule = expressOutLabel)
 
-                self.setupProcessingTask(alcaSkimTask, taskType,
-                                         scenarioName = self.procScenario,
-                                         scenarioFunc = "alcaSkim",
-                                         scenarioArgs = { 'globalTag' : self.globalTag,
-                                                          'globalTagTransaction' : self.globalTagTransaction,
-                                                          'skims' : self.alcaSkims,
-                                                          'primaryDataset' : alcaPrimaryDataset },
-                                         splitAlgo = "ExpressMerge",
-                                         splitArgs = mySplitArgs,
-                                         stepType = cmsswStepType,
-                                         forceMerged = True)
+                alcaSkimOutMods = self.setupProcessingTask(alcaSkimTask, taskType,
+                                                           scenarioName = self.procScenario,
+                                                           scenarioFunc = "alcaSkim",
+                                                           scenarioArgs = { 'globalTag' : self.globalTag,
+                                                                            'globalTagTransaction' : self.globalTagTransaction,
+                                                                            'skims' : self.alcaSkims,
+                                                                            'primaryDataset' : alcaPrimaryDataset },
+                                                           splitAlgo = "ExpressMerge",
+                                                           splitArgs = mySplitArgs,
+                                                           stepType = cmsswStepType,
+                                                           forceMerged = True)
+
+                for alcaSkimOutLabel, alcaSkimOutInfo in alcaSkimOutMods.items():
+
+                    if alcaSkimOutInfo['dataTier'] == "ALCAPROMPT":
+
+                        harvestTask = self.addAlcaHarvestTask(alcaSkimTask, alcaSkimOutLabel,
+                                                              condOutLabel = self.condOutLabel,
+                                                              condUploadDir = self.condUploadDir,
+                                                              uploadProxy = self.dqmUploadProxy,
+                                                              doLogCollect = False)
+
+                        self.addConditionTask(harvestTask, self.condOutLabel)
 
             else:
 
@@ -210,6 +224,109 @@ class ExpressWorkloadFactory(StdBase):
 
         return mergeTask
 
+    def addAlcaHarvestTask(self, parentTask, parentOutputModuleName,
+                           condOutLabel, condUploadDir, uploadProxy,
+                           parentStepName = "cmsRun1", doLogCollect = True):
+        """
+        _addAlcaHarvestTask_
+
+        Create an Alca harvest task to harvest the files produces by the parent task.
+        """
+        harvestTask = parentTask.addTask("%sAlcaHarvest%s" % (parentTask.name(), parentOutputModuleName))
+        self.addDashboardMonitoring(harvestTask)
+        harvestTaskCmssw = harvestTask.makeStep("cmsRun1")
+        harvestTaskCmssw.setStepType("CMSSW")
+
+        harvestTaskCondition = harvestTaskCmssw.addStep("condition1")
+        harvestTaskCondition.setStepType("AlcaHarvest")
+        harvestTaskUpload = harvestTaskCmssw.addStep("upload1")
+        harvestTaskUpload.setStepType("DQMUpload")
+        harvestTaskLogArch = harvestTaskCmssw.addStep("logArch1")
+        harvestTaskLogArch.setStepType("LogArchive")
+
+        harvestTask.setTaskLogBaseLFN(self.unmergedLFNBase)
+        if doLogCollect:
+            self.addLogCollectTask(harvestTask, taskName = "%s%sAlcaHarvestLogCollect" % (parentTask.name(), parentOutputModuleName))
+
+        harvestTask.setTaskType("Processing")
+        harvestTask.applyTemplates()
+        harvestTask.setTaskPriority(self.priority + 5)
+
+        harvestTaskCmsswHelper = harvestTaskCmssw.getTypeHelper()
+        harvestTaskCmsswHelper.cmsswSetup(self.frameworkVersion, softwareEnvironment = "",
+                                          scramArch = self.scramArch)
+
+        harvestTaskCmsswHelper.setErrorDestinationStep(stepName = harvestTaskLogArch.name())
+        harvestTaskCmsswHelper.setGlobalTag(self.globalTag)
+        harvestTaskCmsswHelper.setOverrideCatalog(self.overrideCatalog)
+
+        harvestTaskCmsswHelper.setUserLFNBase("/")
+
+        parentTaskCmssw = parentTask.getStep(parentStepName)
+        parentOutputModule = parentTaskCmssw.getOutputModule(parentOutputModuleName)
+
+        harvestTask.setInputReference(parentTaskCmssw, outputModule = parentOutputModuleName)
+
+        harvestTask.setSplittingAlgorithm("Harvest")
+
+        harvestTaskCmsswHelper.setDataProcessingConfig(self.procScenario, "alcaHarvesting",
+                                                       globalTag = self.globalTag,
+                                                       datasetName = "/%s/%s/%s" % (getattr(parentOutputModule, "primaryDataset"),
+                                                                                    getattr(parentOutputModule, "processedDataset"),
+                                                                                    getattr(parentOutputModule, "dataTier")),
+                                                       runNumber = self.runNumber)
+
+        harvestTaskConditionHelper = harvestTaskCondition.getTypeHelper()
+        harvestTaskConditionHelper.setRunNumber(self.runNumber)
+        harvestTaskConditionHelper.setConditionOutputLabel(condOutLabel)
+        harvestTaskConditionHelper.setConditionDir(condUploadDir)
+
+        self.addOutputModule(harvestTask, condOutLabel,
+                             primaryDataset = getattr(parentOutputModule, "primaryDataset"),
+                             dataTier = getattr(parentOutputModule, "dataTier"),
+                             filterName = getattr(parentOutputModule, "filterName"))
+
+        harvestTaskUploadHelper = harvestTaskUpload.getTypeHelper()
+        harvestTaskUploadHelper.setProxyFile(uploadProxy)
+
+        return harvestTask
+
+    def addConditionTask(self, parentTask, parentOutputModuleName):
+        """
+        _addConditionTask_
+
+        Does not actually produce any jobs
+        The job splitter is custom and just forwards information
+        into T0AST specific data structures, the actual upload
+        of the conditions to the DropBox is handled in a separate
+        Tier0 component.
+        
+        """
+        # finalize splitting parameters
+        mySplitArgs = {}
+        mySplitArgs['algo_package'] = "T0.JobSplitting"
+
+        parentTaskCmssw = parentTask.getStep("cmsRun1")
+        parentOutputModule = parentTaskCmssw.getOutputModule(parentOutputModuleName)
+
+        conditionTask = parentTask.addTask("%sCondition%s" % (parentTask.name(), parentOutputModuleName))
+
+        # this is complete bogus, but other code can't deal with a task with no steps
+        conditionTaskBogus = conditionTask.makeStep("bogus")
+        conditionTaskBogus.setStepType("DQMUpload")
+
+        conditionTask.setInputReference(parentTaskCmssw, outputModule = parentOutputModuleName)
+
+        conditionTask.applyTemplates()
+        conditionTask.setTaskPriority(self.priority + 5)
+
+        conditionTask.setTaskType("Processing")
+
+        conditionTask.setSplittingAlgorithm("Condition",
+                                            **mySplitArgs)
+
+        return
+
     def __call__(self, workloadName, arguments):
         """
         _call_
@@ -227,6 +344,7 @@ class ExpressWorkloadFactory(StdBase):
         self.dqmSequences = arguments['DqmSequences']
         self.outputs = arguments['Outputs']
         self.dqmUploadProxy = arguments['DQMUploadProxy']
+        self.condUploadDir = arguments['CondUploadDir']
 
         # job splitting parameters
         self.expressSplitArgs = {}
@@ -254,6 +372,9 @@ class ExpressWorkloadFactory(StdBase):
         self.runBlacklist = arguments.get("RunBlacklist", [])
         self.runWhitelist = arguments.get("RunWhitelist", [])
         self.emulation = arguments.get("Emulation", False)
+
+        # fixed parameters that are used in various places
+        self.condOutLabel = "Sqlite"
 
         return self.buildWorkload()
 
