@@ -23,11 +23,11 @@ from WMCore.Services.UUID import makeUUID
 from WMQuality.TestInit import TestInit
 
 
-class ExpressTest(unittest.TestCase):
+class ExpressMergeTest(unittest.TestCase):
     """
-    _ExpressTest_
+    _ExpressMergeTest_
 
-    Test for Express job splitter
+    Test for ExpressMerge job splitter
     """
 
     def setUp(self):
@@ -49,8 +49,8 @@ class ExpressTest(unittest.TestCase):
                                 dbinterface = myThread.dbi)
 
         myThread.dbi.processData("""INSERT INTO wmbs_location
-                                    (id, site_name)
-                                    VALUES (1, 'SomeSite')
+                                    (id, site_name, state)
+                                    VALUES (1, 'SomeSite', 1)
                                     """, transaction = False)
         myThread.dbi.processData("""INSERT INTO wmbs_location_senames
                                     (location, se_name)

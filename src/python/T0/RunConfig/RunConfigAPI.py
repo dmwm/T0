@@ -114,7 +114,8 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
 
     return
 
-def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUploadProxy = None):
+def configureRunStream(tier0Config, run, stream, specDirectory,
+                       lfnBase, condUploadDir, dqmUploadProxy):
     """
     _configureRunStream_
 
@@ -156,6 +157,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUplo
         # write stream configuration
         insertStreamStyleDAO = daoFactory(classname = "RunConfig.InsertStreamStyle")
         insertRepackConfigDAO = daoFactory(classname = "RunConfig.InsertRepackConfig")
+        insertPromptCalibrationDAO = daoFactory(classname = "RunConfig.InsertPromptCalibration")
         insertExpressConfigDAO = daoFactory(classname = "RunConfig.InsertExpressConfig")
         insertSpecialDatasetDAO = daoFactory(classname = "RunConfig.InsertSpecialDataset")
         insertDatasetScenarioDAO = daoFactory(classname = "RunConfig.InsertDatasetScenario")
@@ -166,25 +168,25 @@ def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUplo
         insertRecoReleaseConfigDAO = daoFactory(classname = "RunConfig.InsertRecoReleaseConfig")
         insertWorkflowMonitoringDAO = daoFactory(classname = "RunConfig.InsertWorkflowMonitoring")
 
-
-        # mark workflows as injected
-        wmbsDaoFactory = DAOFactory(package = "WMCore.WMBS",
-                                    logger = logging,
-                                    dbinterface = myThread.dbi)
-        markWorkflowsInjectedDAO   = wmbsDaoFactory(classname = "Workflow.MarkInjectedWorkflows")
-
         bindsDataset = []
         bindsStreamDataset = []
         bindsStreamStyle = {'RUN' : run,
                             'STREAM' : stream,
                             'STYLE': streamConfig.ProcessingStyle }
         bindsRepackConfig = {}
+        bindsPromptCalibration = {}
         bindsExpressConfig = {}
         bindsSpecialDataset = {}
         bindsDatasetScenario = []
         bindsCMSSWVersion = []
         bindsStreamOverride = {}
         bindsErrorDataset = []
+
+        # mark workflows as injected
+        wmbsDaoFactory = DAOFactory(package = "WMCore.WMBS",
+                                    logger = logging,
+                                    dbinterface = myThread.dbi)
+        markWorkflowsInjectedDAO   = wmbsDaoFactory(classname = "Workflow.MarkInjectedWorkflows")
 
         #
         # for spec creation, details for all outputs
@@ -234,6 +236,10 @@ def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUplo
                                                   'eventContent' : "ALCARECO",
                                                   'primaryDataset' : specialDataset } )
                     alcaSkim = ",".join(streamConfig.Express.AlcaSkims)
+
+                    if "PromptCalibProd" in streamConfig.Express.AlcaSkims:
+                        bindsPromptCalibration = { 'RUN' : run,
+                                                   'STREAM' : stream }
 
             dqmSeq = None
             if len(streamConfig.Express.DqmSequences) > 0:
@@ -335,6 +341,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUplo
             specArguments['DqmSequences'] = streamConfig.Express.DqmSequences
             specArguments['UnmergedLFNBase'] = "%s/t0temp/express" % lfnBase
             specArguments['MergedLFNBase'] = "%s/express" % lfnBase
+            specArguments['CondUploadDir'] = condUploadDir
             specArguments['DQMUploadProxy'] = dqmUploadProxy
 
         specArguments['RunNumber'] = run
@@ -368,6 +375,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, lfnBase, dqmUplo
                 insertStreamDatasetDAO.execute(bindsStreamDataset, conn = myThread.transaction.conn, transaction = True)
             if len(bindsRepackConfig) > 0:
                 insertRepackConfigDAO.execute(bindsRepackConfig, conn = myThread.transaction.conn, transaction = True)
+            if len(bindsPromptCalibration) > 0:
+                insertPromptCalibrationDAO.execute(bindsPromptCalibration, conn = myThread.transaction.conn, transaction = True)
             if len(bindsExpressConfig) > 0:
                 insertExpressConfigDAO.execute(bindsExpressConfig, conn = myThread.transaction.conn, transaction = True)
             if len(bindsSpecialDataset) > 0:

@@ -43,6 +43,7 @@ class Tier0FeederPoller(BaseWorkerThread):
         self.tier0ConfigFile = config.Tier0Feeder.tier0ConfigFile
         self.specDirectory = config.Tier0Feeder.specDirectory
         self.lfnBase = getattr(config.Tier0Feeder, "lfnBase", "/store")
+        self.condUploadDir = config.Tier0Feeder.conditionUploadDir
         self.dqmUploadProxy = config.WMBSService.proxy
         self.localSummaryCouchDB = WMStatsWriter(config.AnalyticsDataCollector.localWMStatsURL)
 
@@ -133,6 +134,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                         run, stream,
                                                         self.specDirectory,
                                                         self.lfnBase,
+                                                        self.condUploadDir,
                                                         self.dqmUploadProxy)
                     except:
                         logging.exception("Can't configure for run %d and stream %s" % (run, stream))
