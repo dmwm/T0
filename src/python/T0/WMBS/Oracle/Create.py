@@ -768,10 +768,7 @@ class Create(DBCreator):
                  FOREIGN KEY (cmssw_id)
                  REFERENCES cmssw_version(id)"""
 
-        subTypes = [ "Processing",
-                     "Merge",
-                     "Express",
-                     "Harvest" ]
+        subTypes = ["Express"]
         for name in subTypes:
             sql = """INSERT INTO wmbs_sub_types
                      (ID, NAME)
