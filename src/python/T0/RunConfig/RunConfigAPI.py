@@ -591,6 +591,8 @@ def releasePromptReco(tier0Config, specDirectory, lfnBase, dqmUploadProxy = None
             specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/local/Tier0/override_catalog.xml?protocol=override"
             specArguments['DQMUploadProxy'] = dqmUploadProxy
 
+            specArguments['DoLogCollect'] = False
+
             wmSpec = promptrecoWorkload(workflowName, specArguments)
 
             wmSpec.setOwnerDetails("Dirk.Hufnagel@cern.ch", "T0",
