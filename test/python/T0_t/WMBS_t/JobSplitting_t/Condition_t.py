@@ -1,0 +1,194 @@
+#!/usr/bin/env python
+"""
+_Conditions_t_
+
+Condition job splitting test
+
+"""
+
+import unittest
+import threading
+import logging
+import time
+
+from WMCore.WMBS.File import File
+from WMCore.WMBS.Fileset import Fileset
+from WMCore.WMBS.Subscription import Subscription
+from WMCore.WMBS.Workflow import Workflow
+from WMCore.DataStructs.Run import Run
+
+from WMCore.DAOFactory import DAOFactory
+from WMCore.JobSplitting.SplitterFactory import SplitterFactory
+from WMQuality.TestInit import TestInit
+
+
+class ConditionTest(unittest.TestCase):
+    """
+    _ExpressTest_
+
+    Test for Express job splitter
+    """
+
+    def setUp(self):
+        """
+        _setUp_
+
+        """
+        self.testInit = TestInit(__file__)
+        self.testInit.setLogging()
+        self.testInit.setDatabaseConnection()
+
+        self.testInit.setSchema(customModules = ["T0.WMBS"])
+
+        self.splitterFactory = SplitterFactory(package = "T0.JobSplitting")
+
+        myThread = threading.currentThread()
+        daoFactory = DAOFactory(package = "T0.WMBS",
+                                logger = logging,
+                                dbinterface = myThread.dbi)
+
+        wmbsDaoFactory = DAOFactory(package = "WMCore.WMBS",
+                                    logger = logging,
+                                    dbinterface = myThread.dbi)
+
+        myThread.dbi.processData("""INSERT INTO wmbs_location
+                                    (id, site_name, state)
+                                    VALUES (1, 'SomeSite', 1)
+                                    """, transaction = False)
+        myThread.dbi.processData("""INSERT INTO wmbs_location_senames
+                                    (location, se_name)
+                                    VALUES (1, 'SomeSE')
+                                    """, transaction = False)
+
+        insertRunDAO = daoFactory(classname = "RunConfig.InsertRun")
+        insertRunDAO.execute(binds = { 'RUN' : 1,
+                                       'TIME' : int(time.time()),
+                                       'HLTKEY' : "someHLTKey" },
+                             transaction = False)
+
+        insertLumiDAO = daoFactory(classname = "RunConfig.InsertLumiSection")
+        insertLumiDAO.execute(binds = { 'RUN' : 1,
+                                        'LUMI' : 1 },
+                              transaction = False)
+
+        insertStreamDAO = daoFactory(classname = "RunConfig.InsertStream")
+        insertStreamDAO.execute(binds = { 'STREAM' : "Express" },
+                                transaction = False)
+
+        insertStreamFilesetDAO = daoFactory(classname = "RunConfig.InsertStreamFileset")
+        insertStreamFilesetDAO.execute(1, "Express", "TestFileset1")
+
+        insertStreamerDAO = daoFactory(classname = "RunConfig.InsertStreamer")
+        insertStreamerDAO.execute(binds = { 'RUN' : 1,
+                                            'LUMI' : 1,
+                                            'STREAM' : "Express",
+                                            'TIME' : int(time.time()),
+                                            'LFN' : "/streamer",
+                                            'FILESIZE' : 0,
+                                            'EVENTS' : 0 },
+                                  transaction = False)
+
+        self.fileset1 = Fileset(name = "TestFileset1")
+        self.fileset1.create()
+
+        workflow1 = Workflow(spec = "spec.xml", owner = "hufnagel", name = "TestWorkflow1", task="Test")
+        workflow1.create()
+
+        self.subscription1  = Subscription(fileset = self.fileset1,
+                                           workflow = workflow1,
+                                           split_algo = "Condition",
+                                           type = "Condition")
+        self.subscription1.create()
+
+        # set parentage chain and sqlite fileset
+        alcaRecoFile = File("/alcareco", size = 0, events = 0)
+        alcaRecoFile.addRun(Run(1, *[1]))
+        alcaRecoFile.setLocation("SomeSE", immediateSave = False)
+        alcaRecoFile.create()
+        alcaPromptFile = File("/alcaprompt", size = 0, events = 0)
+        alcaPromptFile.addRun(Run(1, *[1]))
+        alcaPromptFile.setLocation("SomeSE", immediateSave = False)
+        alcaPromptFile.create()
+        sqliteFile = File("/sqlite", size = 0, events = 0)
+        sqliteFile.create()
+        self.fileset1.addFile(sqliteFile)
+        self.fileset1.commit()
+
+        results = myThread.dbi.processData("""SELECT lfn FROM wmbs_file_details
+                                              """,
+                                           transaction = False)[0].fetchall()
+
+        setParentageDAO = wmbsDaoFactory(classname = "Files.SetParentage")
+        setParentageDAO.execute(binds = [ { 'parent' : "/streamer",
+                                            'child' : "/alcareco" },
+                                          { 'parent' : "/alcareco",
+                                            'child' : "/alcaprompt" },
+                                          { 'parent' : "/alcaprompt",
+                                            'child' : "/sqlite" } ],
+                                transaction = False)
+
+        # default split parameters
+        self.splitArgs = {}
+
+        return
+
+    def tearDown(self):
+        """
+        _tearDown_
+
+        """
+        self.testInit.clearDatabase()
+
+        return
+
+    def countPromptCalibFiles(self):
+        """
+        _deleteSplitLumis_
+
+        """
+        myThread = threading.currentThread()
+
+        results = myThread.dbi.processData("""SELECT COUNT(*) FROM prompt_calib_file
+                                              """,
+                                           transaction = False)[0].fetchall()
+
+        return results[0][0]
+
+    def test00(self):
+        """
+        _test00_
+
+        Just make sure the job splitter does nothing
+        when the fileset is open and populates t0ast
+        data structures when it's closed. In the later
+        case all input files should be marked as
+        acquired without creating a job as well.
+
+        """
+        mySplitArgs = self.splitArgs.copy()
+
+        jobFactory = self.splitterFactory(package = "WMCore.WMBS",
+                                          subscription = self.subscription1)
+
+        jobGroups = jobFactory(**mySplitArgs)
+
+        self.assertEqual(len(jobGroups), 0,
+                         "ERROR: JobFactory should have returned no JobGroup")
+
+        self.assertEqual(self.countPromptCalibFiles(), 0,
+                         "ERROR: there should be no prompt_calib_file")
+
+        self.fileset1.markOpen(False)
+
+        jobGroups = jobFactory(**mySplitArgs)
+
+        self.assertEqual(len(jobGroups), 0,
+                         "ERROR: JobFactory should have returned no JobGroup")
+
+        self.assertEqual(self.countPromptCalibFiles(), 1,
+                         "ERROR: there should be one prompt_calib_file")
+
+        return
+
+if __name__ == '__main__':
+    unittest.main()

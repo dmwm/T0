@@ -49,8 +49,8 @@ class RepackTest(unittest.TestCase):
                                 dbinterface = myThread.dbi)
 
         myThread.dbi.processData("""INSERT INTO wmbs_location
-                                    (id, site_name)
-                                    VALUES (1, 'SomeSite')
+                                    (id, site_name, state)
+                                    VALUES (1, 'SomeSite', 1)
                                     """, transaction = False)
         myThread.dbi.processData("""INSERT INTO wmbs_location_senames
                                     (location, se_name)
