@@ -199,7 +199,7 @@ class ExpressWorkloadFactory(StdBase):
         mergeTaskCmsswHelper.setGlobalTag(self.globalTag)
         mergeTaskCmsswHelper.setOverrideCatalog(self.overrideCatalog)
 
-        mergeTask.setTaskType("Merge")
+        mergeTask.setTaskType("Express")
 
         # DQM is handled differently
         #  merging does not increase size
@@ -248,7 +248,7 @@ class ExpressWorkloadFactory(StdBase):
         if doLogCollect:
             self.addLogCollectTask(harvestTask, taskName = "%s%sAlcaHarvestLogCollect" % (parentTask.name(), parentOutputModuleName))
 
-        harvestTask.setTaskType("Processing")
+        harvestTask.setTaskType("Harvesting")
         harvestTask.applyTemplates()
         harvestTask.setTaskPriority(self.priority + 5)
 
@@ -320,7 +320,7 @@ class ExpressWorkloadFactory(StdBase):
         conditionTask.applyTemplates()
         conditionTask.setTaskPriority(self.priority + 5)
 
-        conditionTask.setTaskType("Processing")
+        conditionTask.setTaskType("Express")
 
         conditionTask.setSplittingAlgorithm("Condition",
                                             **mySplitArgs)
