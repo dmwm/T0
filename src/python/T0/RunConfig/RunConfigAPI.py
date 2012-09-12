@@ -24,7 +24,7 @@ from T0.WMSpec.StdSpecs.Express import expressWorkload
 from WMCore.WMSpec.StdSpecs.PromptReco import getTestArguments as getPromptRecoArguments
 from WMCore.WMSpec.StdSpecs.PromptReco import promptrecoWorkload
 
-def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
+def configureRun(tier0Config, run, lfnBase, hltConfig, referenceHltConfig = None):
     """
     _configureRun_
 
@@ -80,7 +80,8 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
 
         try:
             myThread.transaction.begin()
-            updateRunDAO.execute(run, hltConfig['process'],
+            updateRunDAO.execute(run, lfnBase,
+                                 hltConfig['process'],
                                  tier0Config.Global.AcquisitionEra,
                                  transaction = True)
             insertStreamDAO.execute(bindsStream,
@@ -115,7 +116,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
     return
 
 def configureRunStream(tier0Config, run, stream, specDirectory,
-                       lfnBase, condUploadDir, dqmUploadProxy):
+                       condUploadDir, dqmUploadProxy):
     """
     _configureRunStream_
 
@@ -136,13 +137,14 @@ def configureRunStream(tier0Config, run, stream, specDirectory,
                             logger = logging,
                             dbinterface = myThread.dbi)
 
-    getHLTKeyForRunDAO = daoFactory(classname = "RunConfig.GetHLTKeyForRun")
-    hltkey = getHLTKeyForRunDAO.execute(run, transaction = False)
+    # retrieve some basic run information
+    getRunInfoDAO = daoFactory(classname = "RunConfig.GetRunInfo")
+    runInfo = getRunInfoDAO.execute(run, transaction = False)[0]
 
     #
     # treat centralDAQ or miniDAQ runs (have an HLT key) different from local runs
     #
-    if hltkey != None:
+    if runInfo['hltkey'] != None:
 
         # streams not explicitely configured are repacked
         if stream not in tier0Config.Streams.dictionary_().keys():
@@ -267,8 +269,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory,
         getStreamDatasetsDAO = daoFactory(classname = "RunConfig.GetStreamDatasets")
         datasets = getStreamDatasetsDAO.execute(run, stream, transaction = False)
 
-        getRunInfoDAO = daoFactory(classname = "RunConfig.GetRunInfo")
-        runInfo = getRunInfoDAO.execute(run, transaction = False)[0]
+
 
         getStreamDatasetTriggersDAO = daoFactory(classname = "RunConfig.GetStreamDatasetTriggers")
         datasetTriggers = getStreamDatasetTriggersDAO.execute(run, stream, transaction = False)[stream]
@@ -326,8 +327,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory,
             workflowName = "Repack_Run%d_Stream%s" % (run, stream)
             specArguments = getRepackArguments()
             specArguments['ProcessingVersion'] = streamConfig.Repack.ProcessingVersion
-            specArguments['UnmergedLFNBase'] = "%s/t0temp/data" % lfnBase
-            specArguments['MergedLFNBase'] = "%s/data" % lfnBase
+            specArguments['UnmergedLFNBase'] = "%s/t0temp/data" % runInfo['lfn_base']
+            specArguments['MergedLFNBase'] = "%s/data" % runInfo['lfn_base']
         elif streamConfig.ProcessingStyle == "Express":
             taskName = "Express"
             workflowName = "Express_Run%d_Stream%s" % (run, stream)
@@ -339,8 +340,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory,
             specArguments['GlobalTagTransaction'] = "Express_%d" % run
             specArguments['AlcaSkims'] = streamConfig.Express.AlcaSkims
             specArguments['DqmSequences'] = streamConfig.Express.DqmSequences
-            specArguments['UnmergedLFNBase'] = "%s/t0temp/express" % lfnBase
-            specArguments['MergedLFNBase'] = "%s/express" % lfnBase
+            specArguments['UnmergedLFNBase'] = "%s/t0temp/express" % runInfo['lfn_base']
+            specArguments['MergedLFNBase'] = "%s/express" % runInfo['lfn_base']
             specArguments['CondUploadDir'] = condUploadDir
             specArguments['DQMUploadProxy'] = dqmUploadProxy
 
@@ -417,7 +418,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory,
         pass
     return
 
-def releasePromptReco(tier0Config, specDirectory, lfnBase, dqmUploadProxy = None):
+def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
     """
     _releasePromptReco_
 
@@ -466,141 +467,147 @@ def releasePromptReco(tier0Config, specDirectory, lfnBase, dqmUploadProxy = None
     findRecoReleaseDAO = daoFactory(classname = "RunConfig.FindRecoRelease")
     recoRelease = findRecoReleaseDAO.execute(transaction = False)
 
-    for (run, dataset, fileset, acqEra, repackProcVer) in recoRelease:
+    for run in sorted(recoRelease.keys()):
 
-        bindsReleasePromptReco.append( { 'RUN' : run,
-                                         'PRIMDS' : dataset,
-                                         'NOW' : int(time.time()) } )
+        # retrieve some basic run information
+        getRunInfoDAO = daoFactory(classname = "RunConfig.GetRunInfo")
+        runInfo = getRunInfoDAO.execute(run, transaction = False)[0]
 
-        datasetConfig = retrieveDatasetConfig(tier0Config, dataset)
+        for (dataset, fileset, repackProcVer) in recoRelease[run]:
 
-        bindsDatasetScenario.append( { 'RUN' : run,
-                                       'PRIMDS' : dataset,
-                                       'SCENARIO' : datasetConfig.Scenario } )
+            bindsReleasePromptReco.append( { 'RUN' : run,
+                                             'PRIMDS' : dataset,
+                                             'NOW' : int(time.time()) } )
 
-        bindsCMSSWVersion.append( { 'VERSION' : datasetConfig.Reco.CMSSWVersion } )
+            datasetConfig = retrieveDatasetConfig(tier0Config, dataset)
 
-        alcaSkim = None
-        if len(datasetConfig.Reco.AlcaSkims) > 0:
-            alcaSkim = ",".join(datasetConfig.Reco.AlcaSkims)
+            bindsDatasetScenario.append( { 'RUN' : run,
+                                           'PRIMDS' : dataset,
+                                           'SCENARIO' : datasetConfig.Scenario } )
 
-        dqmSeq = None
-        if len(datasetConfig.Reco.DqmSequences) > 0:
-            dqmSeq = ",".join(datasetConfig.Reco.DqmSequences)
+            bindsCMSSWVersion.append( { 'VERSION' : datasetConfig.Reco.CMSSWVersion } )
 
-        bindsRecoConfig.append( { 'RUN' : run,
-                                  'PRIMDS' : dataset,
-                                  'DO_RECO' : int(datasetConfig.Reco.DoReco),
-                                  'CMSSW' : datasetConfig.Reco.CMSSWVersion,
-                                  'RECO_SPLIT' : datasetConfig.Reco.EventSplit,
-                                  'WRITE_RECO' : int(datasetConfig.Reco.WriteRECO),
-                                  'WRITE_DQM' : int(datasetConfig.Reco.WriteDQM),
-                                  'WRITE_AOD' : int(datasetConfig.Reco.WriteAOD),
-                                  'PROC_VER' : datasetConfig.Reco.ProcessingVersion,
-                                  'ALCA_SKIM' : alcaSkim,
-                                  'DQM_SEQ' : dqmSeq,
-                                  'GLOBAL_TAG' : datasetConfig.Reco.GlobalTag } )
+            alcaSkim = None
+            if len(datasetConfig.Reco.AlcaSkims) > 0:
+                alcaSkim = ",".join(datasetConfig.Reco.AlcaSkims)
 
-        requestOnly = "y"
-        if datasetConfig.CustodialAutoApprove:
-            requestOnly = "n"
+            dqmSeq = None
+            if len(datasetConfig.Reco.DqmSequences) > 0:
+                dqmSeq = ",".join(datasetConfig.Reco.DqmSequences)
 
-        if datasetConfig.CustodialNode != None:
+            bindsRecoConfig.append( { 'RUN' : run,
+                                      'PRIMDS' : dataset,
+                                      'DO_RECO' : int(datasetConfig.Reco.DoReco),
+                                      'CMSSW' : datasetConfig.Reco.CMSSWVersion,
+                                      'RECO_SPLIT' : datasetConfig.Reco.EventSplit,
+                                      'WRITE_RECO' : int(datasetConfig.Reco.WriteRECO),
+                                      'WRITE_DQM' : int(datasetConfig.Reco.WriteDQM),
+                                      'WRITE_AOD' : int(datasetConfig.Reco.WriteAOD),
+                                      'PROC_VER' : datasetConfig.Reco.ProcessingVersion,
+                                      'ALCA_SKIM' : alcaSkim,
+                                      'DQM_SEQ' : dqmSeq,
+                                      'GLOBAL_TAG' : datasetConfig.Reco.GlobalTag } )
 
-            bindsStorageNode.append( { 'NODE' : datasetConfig.CustodialNode } )
+            requestOnly = "y"
+            if datasetConfig.CustodialAutoApprove:
+                requestOnly = "n"
 
-            bindsPhEDExConfig.append( { 'RUN' : run,
-                                        'PRIMDS' : dataset,
-                                        'NODE' : datasetConfig.CustodialNode,
-                                        'CUSTODIAL' : 1,
-                                        'REQ_ONLY' : requestOnly,
-                                        'PRIO' : datasetConfig.CustodialPriority } )
+            if datasetConfig.CustodialNode != None:
 
-        if datasetConfig.ArchivalNode != None:
+                bindsStorageNode.append( { 'NODE' : datasetConfig.CustodialNode } )
 
-            bindsStorageNode.append( { 'NODE' : datasetConfig.ArchivalNode } )
-
-            bindsPhEDExConfig.append( { 'RUN' : run,
-                                        'PRIMDS' : dataset,
-                                        'NODE' : datasetConfig.ArchivalNode,
-                                        'CUSTODIAL' : 0,
-                                        'REQ_ONLY' : "n",
-                                        'PRIO' : "high" } )
-
-        for tier1Skim in datasetConfig.Tier1Skims:
-
-            bindsCMSSWVersion.append( { 'VERSION' : tier1Skim.CMSSWVersion } )
-
-            if tier1Skim.Node == None:
-                tier1Skim.Node = datasetConfig.CustodialNode
-            else:
-                bindsStorageNode.append( { 'NODE' : tier1Skim.Node } )
-
-            if tier1Skim.Node == None:
-                raise RuntimeError, "Configured a skim without providing a skim node or a custodial site\n"
-
-            bindsPromptSkimConfig.append( { 'RUN' : run,
+                bindsPhEDExConfig.append( { 'RUN' : run,
                                             'PRIMDS' : dataset,
-                                            'TIER' : tier1Skim.DataTier,
-                                            'NODE' : tier1Skim.Node,
-                                            'CMSSW' : tier1Skim.CMSSWVersion,
-                                            'TWO_FILE_READ' : int(tier1Skim.TwoFileRead),
-                                            'PROC_VER' : tier1Skim.ProcessingVersion,
-                                            'SKIM_NAME' : tier1Skim.SkimName,
-                                            'GLOBAL_TAG' : tier1Skim.GlobalTag,
-                                            "CONFIG_URL" : tier1Skim.ConfigURL } )
+                                            'NODE' : datasetConfig.CustodialNode,
+                                            'CUSTODIAL' : 1,
+                                            'REQ_ONLY' : requestOnly,
+                                            'PRIO' : datasetConfig.CustodialPriority } )
 
-        writeTiers = []
-        if datasetConfig.Reco.WriteRECO:
-            writeTiers.append("RECO")
-        if datasetConfig.Reco.WriteAOD:
-            writeTiers.append("AOD")
-        if datasetConfig.Reco.WriteDQM:
-            writeTiers.append("DQM")
-        if len(datasetConfig.Reco.AlcaSkims) > 0:
-            writeTiers.append("ALCARECO")
+            if datasetConfig.ArchivalNode != None:
 
-        if datasetConfig.Reco.DoReco and len(writeTiers) > 0:
+                bindsStorageNode.append( { 'NODE' : datasetConfig.ArchivalNode } )
 
-            #
-            # create WMSpec
-            #
-            taskName = "Reco"
-            workflowName = "PromptReco_Run%d_%s" % (run, dataset)
-            specArguments = getPromptRecoArguments()
+                bindsPhEDExConfig.append( { 'RUN' : run,
+                                            'PRIMDS' : dataset,
+                                            'NODE' : datasetConfig.ArchivalNode,
+                                            'CUSTODIAL' : 0,
+                                            'REQ_ONLY' : "n",
+                                            'PRIO' : "high" } )
 
-            specArguments['AcquisitionEra'] = acqEra
-            specArguments['CMSSWVersion'] = datasetConfig.Reco.CMSSWVersion
+            for tier1Skim in datasetConfig.Tier1Skims:
 
-            specArguments['RunNumber'] = run
+                bindsCMSSWVersion.append( { 'VERSION' : tier1Skim.CMSSWVersion } )
 
-            specArguments['ProcessingString'] = "PromptReco"
-            specArguments['ProcessingVersion'] = datasetConfig.Reco.ProcessingVersion
-            specArguments['ProcScenario'] = datasetConfig.Scenario
-            specArguments['GlobalTag'] = datasetConfig.Reco.GlobalTag
+                if tier1Skim.Node == None:
+                    tier1Skim.Node = datasetConfig.CustodialNode
+                else:
+                    bindsStorageNode.append( { 'NODE' : tier1Skim.Node } )
 
-            specArguments['InputDataset'] = "/%s/%s-%s/RAW" % (dataset, acqEra, repackProcVer)
+                if tier1Skim.Node == None:
+                    raise RuntimeError, "Configured a skim without providing a skim node or a custodial site\n"
 
-            specArguments['WriteTiers'] = writeTiers
-            specArguments['AlcaSkims'] = datasetConfig.Reco.AlcaSkims
-            specArguments['DqmSequences'] = datasetConfig.Reco.DqmSequences
+                bindsPromptSkimConfig.append( { 'RUN' : run,
+                                                'PRIMDS' : dataset,
+                                                'TIER' : tier1Skim.DataTier,
+                                                'NODE' : tier1Skim.Node,
+                                                'CMSSW' : tier1Skim.CMSSWVersion,
+                                                'TWO_FILE_READ' : int(tier1Skim.TwoFileRead),
+                                                'PROC_VER' : tier1Skim.ProcessingVersion,
+                                                'SKIM_NAME' : tier1Skim.SkimName,
+                                                'GLOBAL_TAG' : tier1Skim.GlobalTag,
+                                                "CONFIG_URL" : tier1Skim.ConfigURL } )
 
-            specArguments['UnmergedLFNBase'] = "%s/t0temp/data" % lfnBase
-            specArguments['MergedLFNBase'] = "%s/data" % lfnBase
+            writeTiers = []
+            if datasetConfig.Reco.WriteRECO:
+                writeTiers.append("RECO")
+            if datasetConfig.Reco.WriteAOD:
+                writeTiers.append("AOD")
+            if datasetConfig.Reco.WriteDQM:
+                writeTiers.append("DQM")
+            if len(datasetConfig.Reco.AlcaSkims) > 0:
+                writeTiers.append("ALCARECO")
 
-            specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/local/Tier0/override_catalog.xml?protocol=override"
-            specArguments['DQMUploadProxy'] = dqmUploadProxy
+            if datasetConfig.Reco.DoReco and len(writeTiers) > 0:
 
-            specArguments['DoLogCollect'] = False
+                #
+                # create WMSpec
+                #
+                taskName = "Reco"
+                workflowName = "PromptReco_Run%d_%s" % (run, dataset)
+                specArguments = getPromptRecoArguments()
 
-            wmSpec = promptrecoWorkload(workflowName, specArguments)
+                specArguments['AcquisitionEra'] = runInfo['acq_era']
+                specArguments['CMSSWVersion'] = datasetConfig.Reco.CMSSWVersion
 
-            wmSpec.setOwnerDetails("Dirk.Hufnagel@cern.ch", "T0",
-                                   { 'vogroup': 'DEFAULT', 'vorole': 'DEFAULT',
-                                     'dn' : "Dirk.Hufnagel@cern.ch" } )
-            wmbsHelper = WMBSHelper(wmSpec, taskName, cachepath = specDirectory)
+                specArguments['RunNumber'] = run
 
-            recoSpecs[workflowName] = (wmbsHelper, wmSpec, fileset)
+                specArguments['ProcessingString'] = "PromptReco"
+                specArguments['ProcessingVersion'] = datasetConfig.Reco.ProcessingVersion
+                specArguments['ProcScenario'] = datasetConfig.Scenario
+                specArguments['GlobalTag'] = datasetConfig.Reco.GlobalTag
+
+                specArguments['InputDataset'] = "/%s/%s-%s/RAW" % (dataset, runInfo['acq_era'], repackProcVer)
+
+                specArguments['WriteTiers'] = writeTiers
+                specArguments['AlcaSkims'] = datasetConfig.Reco.AlcaSkims
+                specArguments['DqmSequences'] = datasetConfig.Reco.DqmSequences
+
+                specArguments['UnmergedLFNBase'] = "%s/t0temp/data" % runInfo['lfn_base']
+                specArguments['MergedLFNBase'] = "%s/data" % runInfo['lfn_base']
+
+                specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/local/Tier0/override_catalog.xml?protocol=override"
+                specArguments['DQMUploadProxy'] = dqmUploadProxy
+
+                specArguments['DoLogCollect'] = False
+
+                wmSpec = promptrecoWorkload(workflowName, specArguments)
+
+                wmSpec.setOwnerDetails("Dirk.Hufnagel@cern.ch", "T0",
+                                       { 'vogroup': 'DEFAULT', 'vorole': 'DEFAULT',
+                                         'dn' : "Dirk.Hufnagel@cern.ch" } )
+                wmbsHelper = WMBSHelper(wmSpec, taskName, cachepath = specDirectory)
+
+                recoSpecs[workflowName] = (wmbsHelper, wmSpec, fileset)
 
     try:
         myThread.transaction.begin()

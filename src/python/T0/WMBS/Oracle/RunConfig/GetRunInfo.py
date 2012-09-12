@@ -13,6 +13,7 @@ class GetRunInfo(DBFormatter):
 
         sql = """SELECT status,
                         hltkey,
+                        lfn_base,
                         process,
                         acq_era
                  FROM run
