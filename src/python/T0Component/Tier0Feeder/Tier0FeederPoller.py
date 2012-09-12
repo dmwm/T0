@@ -118,7 +118,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                         continue
 
                 try:
-                    RunConfigAPI.configureRun(tier0Config, run, hltConfig)
+                    RunConfigAPI.configureRun(tier0Config, run, self.lfnBase, hltConfig)
                 except:
                     logging.exception("Can't configure for run %d" % (run))
 
@@ -133,7 +133,6 @@ class Tier0FeederPoller(BaseWorkerThread):
                         RunConfigAPI.configureRunStream(tier0Config,
                                                         run, stream,
                                                         self.specDirectory,
-                                                        self.lfnBase,
                                                         self.condUploadDir,
                                                         self.dqmUploadProxy)
                     except:
@@ -171,7 +170,6 @@ class Tier0FeederPoller(BaseWorkerThread):
         #
         RunConfigAPI.releasePromptReco(tier0Config,
                                        self.specDirectory,
-                                       self.lfnBase,
 				       self.dqmUploadProxy)
 
         #

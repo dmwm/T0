@@ -119,6 +119,7 @@ class Create(DBCreator):
                  end_time           int            default 0 not null,
                  close_time         int            default 0 not null,
                  lumicount          int            default 0 not null,
+                 lfn_base           varchar(255),
                  process            varchar(255),
                  acq_era            varchar(255),
                  primary key(run_id)

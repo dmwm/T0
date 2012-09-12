@@ -19,7 +19,6 @@ class FindRecoRelease(DBFormatter):
         sql = """SELECT reco_release_config.run_id,
                         primary_dataset.name,
                         reco_release_config.fileset,
-                        run.acq_era,
                         repack_config.proc_version
                  FROM reco_release_config
                  INNER JOIN run ON
@@ -42,12 +41,16 @@ class FindRecoRelease(DBFormatter):
         results = self.dbi.processData(sql, binds, conn = conn,
                                        transaction = transaction)[0].fetchall()
 
-        recoRelease = []
+        recoRelease = {}
         for result in results:
-            recoRelease.append((result[0],
-                                result[1],
-                                result[2],
-                                result[3],
-                                result[4]))
+
+            run = result[0]
+
+            if not recoRelease.has_key(run):
+                recoRelease[run] = []
+
+            recoRelease[run].append((result[1],
+                                     result[2],
+                                     result[3]))
 
         return recoRelease
