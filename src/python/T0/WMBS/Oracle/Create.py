@@ -31,180 +31,180 @@ class Create(DBCreator):
         #
         self.create[len(self.create)] = \
             """CREATE TABLE t0_config (
-                 run_id     int          not null,
-                 config     varchar(255) not null,
+                 run_id   int           not null,
+                 config   varchar2(255) not null,
                  primary key(run_id)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE run_status (
-                 id      int           not null,
-                 name    varchar(25)   not null,
+                 id     int          not null,
+                 name   varchar2(25) not null,
                  primary key(id),
                  constraint run_sta_name_uq unique(name)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE processing_style (
-                 id    int         not null,
-                 name  varchar(25) not null,
+                 id     int          not null,
+                 name   varchar2(25) not null,
                  primary key(id),
                  constraint pro_sty_name_uq unique(name)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE event_scenario (
-                 id      int           not null,
-                 name    varchar(25)   not null,
+                 id     int          not null,
+                 name   varchar2(25) not null,
                  primary key(id),
                  constraint eve_sce_name_uq unique(name)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE data_tier (
-                 id      int           not null,
-                 name    varchar(25)   not null,
+                 id     int          not null,
+                 name   varchar2(25) not null,
                  primary key(id),
                  constraint dat_tie_name_uq unique(name)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE cmssw_version (
-                 id   int          not null,
-                 name varchar(255) not null,
+                 id     int           not null,
+                 name   varchar2(255) not null,
                  primary key(id),
                  constraint cms_ver_name_uq unique(name)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE stream (
-                 id    int            not null,
-                 name  varchar(255)   not null,
+                 id     int           not null,
+                 name   varchar2(255) not null,
                  primary key(id),
                  constraint str_name_uq unique(name)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE trigger_label (
-                 id      int           not null,
-                 name    varchar(255)  not null,
+                 id     int           not null,
+                 name   varchar2(255) not null,
                  primary key(id),
                  constraint tri_lab_name_uq unique(name)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE primary_dataset (
-                 id      int           not null,
-                 name    varchar(255)  not null,
+                 id     int           not null,
+                 name   varchar2(255) not null,
                  primary key(id),
                  constraint pri_dat_name_uq unique(name)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE storage_node (
-                 id      int           not null,
-                 name    varchar(255)  not null,
+                 id     int           not null,
+                 name   varchar2(255) not null,
                  primary key(id),
                  constraint sto_nod_name_uq unique(name)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE run (
-                 run_id             int            not null,
-                 status             int            default 1 not null,
-                 last_updated       int            not null,
-                 express_released   int            default 0 not null,
-                 hltkey             varchar(255)   not null,
-                 start_time         int            not null,
-                 end_time           int            default 0 not null,
-                 close_time         int            default 0 not null,
-                 lumicount          int            default 0 not null,
-                 lfn_base           varchar(255),
-                 process            varchar(255),
-                 acq_era            varchar(255),
+                 run_id             int           not null,
+                 status             int           default 1 not null,
+                 last_updated       int           not null,
+                 express_released   int           default 0 not null,
+                 hltkey             varchar2(255) not null,
+                 start_time         int           not null,
+                 end_time           int           default 0 not null,
+                 close_time         int           default 0 not null,
+                 lumicount          int           default 0 not null,
+                 lfn_base           varchar2(255),
+                 process            varchar2(255),
+                 acq_era            varchar2(255),
                  primary key(run_id)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE run_trig_primds_assoc (
-                 run_id     int   not null,
-                 primds_id  int   not null,
-                 trig_id    int   not null,
+                 run_id      int not null,
+                 primds_id   int not null,
+                 trig_id     int not null,
                  primary key(run_id, primds_id, trig_id)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE run_primds_stream_assoc (
-                 run_id     int   not null,
-                 primds_id  int   not null,
-                 stream_id  int   not null,
+                 run_id      int not null,
+                 primds_id   int not null,
+                 stream_id   int not null,
                  primary key(run_id, primds_id)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE run_primds_scenario_assoc (
-                 run_id       int   not null,
-                 primds_id    int   not null,
-                 scenario_id  int   not null,
+                 run_id        int not null,
+                 primds_id     int not null,
+                 scenario_id   int not null,
                  primary key(run_id, primds_id)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE run_stream_style_assoc (
-                 run_id    int not null,
-                 stream_id int not null,
-                 style_id  int not null,
+                 run_id      int not null,
+                 stream_id   int not null,
+                 style_id    int not null,
                  primary key(run_id, stream_id)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE run_stream_cmssw_assoc (
-                 run_id           int not null,
-                 stream_id        int not null,
-                 online_version   int not null,
-                 override_version int not null,
+                 run_id             int not null,
+                 stream_id          int not null,
+                 online_version     int not null,
+                 override_version   int not null,
                  primary key(run_id, stream_id)
                 )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE run_stream_fileset_assoc (
-                 run_id       int   not null,
-                 stream_id    int   not null,
-                 fileset      int   not null,
+                 run_id      int not null,
+                 stream_id   int not null,
+                 fileset     int not null,
                  primary key(run_id, stream_id),
                  constraint run_str_fil_ass_fil_uq unique(fileset)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE reco_release_config (
-                 run_id       int   not null,
-                 primds_id    int   not null,
-                 fileset      int   not null,
-                 delay        int   not null,
-                 delay_offset int   not null,
-                 released     int   default 0 not null,
+                 run_id         int not null,
+                 primds_id      int not null,
+                 fileset        int not null,
+                 delay          int not null,
+                 delay_offset   int not null,
+                 released       int default 0 not null,
                  primary key(run_id, primds_id),
                  constraint rec_rel_con_fil_uq unique(fileset)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE stream_special_primds_assoc (
-                 stream_id    int   not null,
-                 primds_id    int   not null,
+                 stream_id   int not null,
+                 primds_id   int not null,
                  primary key(stream_id)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE primds_error_primds_assoc (
-                 parent_id   int   not null,
-                 error_id    int   not null,
+                 parent_id   int not null,
+                 error_id    int not null,
                  primary key(parent_id)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE lumi_section (
-                 run_id      int   not null,
-                 lumi_id     int   not null,
+                 run_id    int not null,
+                 lumi_id   int not null,
                  primary key(run_id, lumi_id)
                )"""
 
@@ -221,21 +221,21 @@ class Create(DBCreator):
 
         self.create[len(self.create)] = \
             """CREATE TABLE lumi_section_split_active (
-                 run_id       int   not null,
-                 subscription int   not null,
-                 lumi_id      int   not null,
+                 run_id         int not null,
+                 subscription   int not null,
+                 lumi_id        int not null,
                  primary key(run_id, subscription, lumi_id)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE streamer (
-                 id              int   not null,
-                 run_id          int   not null,
-                 stream_id       int   not null,
-                 lumi_id         int   not null,
-                 insert_time     int   not null,
-                 used            int   default 0 not null,
-                 deleted         int   default 0 not null,
+                 id            int not null,
+                 run_id        int not null,
+                 stream_id     int not null,
+                 lumi_id       int not null,
+                 insert_time   int not null,
+                 used          int default 0 not null,
+                 deleted       int default 0 not null,
                  primary key(id)
                )"""
 
@@ -249,57 +249,57 @@ class Create(DBCreator):
 
         self.create[len(self.create)] = \
             """CREATE TABLE prompt_calib (
-                 run_id         int   not null,
-                 stream_id      int   not null,
-                 finished       int   default 0 not null,
+                 run_id      int not null,
+                 stream_id   int not null,
+                 finished    int default 0 not null,
                  primary key (run_id, stream_id)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE prompt_calib_file (
-                 run_id         int   not null,
-                 stream_id      int   not null,
-                 fileid         int   not null,
+                 run_id      int not null,
+                 stream_id   int not null,
+                 fileid      int not null,
                  primary key (run_id, stream_id, fileid)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE express_config (
-                 run_id         int           not null,
-                 stream_id      int           not null,
-                 proc_version   int           not null,
-                 write_tiers    varchar(255)  not null,
-                 alca_skim      varchar(1000),
-                 dqm_seq        varchar(1000),
-                 global_tag     varchar(255),
+                 run_id         int            not null,
+                 stream_id      int            not null,
+                 proc_version   int            not null,
+                 write_tiers    varchar2(255)  not null,
+                 alca_skim      varchar2(1000),
+                 dqm_seq        varchar2(1000),
+                 global_tag     varchar2(255),
                  primary key (run_id, stream_id)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE reco_config (
-                  run_id         int           not null,
-                  primds_id      int           not null,
-                  do_reco        int           not null,
-                  cmssw_id       int           not null,
-                  reco_split     int           not null,
-                  write_reco     int           not null,
-                  write_dqm      int           not null,
-                  write_aod      int           not null,
-                  proc_version   int           not null,
-                  alca_skim      varchar(1000),
-                  dqm_seq        varchar(1000),
-                  global_tag     varchar(255),
+                  run_id         int            not null,
+                  primds_id      int            not null,
+                  do_reco        int            not null,
+                  cmssw_id       int            not null,
+                  reco_split     int            not null,
+                  write_reco     int            not null,
+                  write_dqm      int            not null,
+                  write_aod      int            not null,
+                  proc_version   int            not null,
+                  alca_skim      varchar2(1000),
+                  dqm_seq        varchar2(1000),
+                  global_tag     varchar2(255),
                   primary key (run_id, primds_id)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE phedex_config (
-                  run_id         int not null,
-                  primds_id      int not null,
-                  node_id        int not null,
-                  custodial      int not null,
-                  request_only   varchar(1)  not null,
-                  priority       varchar(10) not null,
+                  run_id         int          not null,
+                  primds_id      int          not null,
+                  node_id        int          not null,
+                  custodial      int          not null,
+                  request_only   char(1)      not null,
+                  priority       varchar2(10) not null,
                   primary key (run_id, primds_id, node_id)
                )"""
 
@@ -308,20 +308,20 @@ class Create(DBCreator):
                   run_id          int not null,
                   primds_id       int not null,
                   tier_id         int not null,
-                  skim_name       varchar(255) not null,
+                  skim_name       varchar2(255) not null,
                   node_id         int not null,
                   cmssw_id        int not null,
                   two_file_read   int not null,
                   proc_version    int not null,
-                  global_tag      varchar(255),
-                  config_url      varchar(255),
+                  global_tag      varchar2(255),
+                  config_url      varchar2(255),
                   primary key (run_id, primds_id, tier_id, skim_name)
                )"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE workflow_monitoring (
-                  workflow      varchar(255) not null,
-                  tracked      int default 0 not null,
+                  workflow   varchar2(255) not null,
+                  tracked    int default 0 not null,
                   primary key (workflow)  
                )"""
 
