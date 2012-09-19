@@ -225,7 +225,7 @@ class Tier0FeederPoller(BaseWorkerThread):
             for (workflowId, run, workflowName) in workflows:
                 logging.info(" Publishing workflow %s to monitoring" % workflowName)
                 doc = {}
-                doc["_id"] =  str(workflowId)
+                doc["_id"] =  workflowName
                 doc["workflow"] =   workflowName
                 doc["type"]     =   "tier0_request"
                 doc["run"]      =   run
