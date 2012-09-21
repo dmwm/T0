@@ -215,9 +215,12 @@ class Tier0FeederPoller(BaseWorkerThread):
 
     def feedCouchMonitoring(self):
 
-        getPendingWorkflowMonitoringDAO = self.daoFactory(classname = "Tier0Feeder.GetPendingWorkflowMonitoring")
+        getStreamerWorkflowsForMonitoringDAO = self.daoFactory(classname = "Tier0Feeder.GetStreamerWorkflowsForMonitoring")
+        getPromptRecoWorkflowsForMonitoringDAO = self.daoFactory(classname = "Tier0Feeder.GetPromptRecoWorkflowsForMonitoring")
         markTrackedWorkflowMonitoringDAO = self.daoFactory(classname = "Tier0Feeder.MarkTrackedWorkflowMonitoring")
-        workflows = getPendingWorkflowMonitoringDAO.execute()
+        workflows = getStreamerWorkflowsForMonitoringDAO.execute()
+        workflows += getPromptRecoWorkflowsForMonitoringDAO.execute()
+
         if len(workflows) == 0:
             logging.debug("No workflows to publish to couch monitoring, doing nothing")
         if workflows:
