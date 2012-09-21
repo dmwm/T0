@@ -986,7 +986,8 @@ class Tier0FeederTest(unittest.TestCase):
         self.insertSplitLumisDAO = daoFactory(classname = "JobSplitting.InsertSplitLumis")
         self.findNewExpressRunsDAO = daoFactory(classname = "Tier0Feeder.FindNewExpressRuns")
         self.releaseExpressDAO = daoFactory(classname = "Tier0Feeder.ReleaseExpress")
-        self.getPendingWorkflowMonitoringDAO = daoFactory(classname = "Tier0Feeder.GetPendingWorkflowMonitoring")
+        self.getStreamerWorkflowsForMonitoringDAO = daoFactory(classname = "Tier0Feeder.GetStreamerWorkflowsForMonitoring")
+        self.getPromptRecoWorkflowsForMonitoringDAO = daoFactory(classname = "Tier0Feeder.GetPromptRecoWorkflowsForMonitoring")
         self.markTrackedWorkflowMonitoringDAO = daoFactory(classname = "Tier0Feeder.MarkTrackedWorkflowMonitoring")
 
 
@@ -1169,7 +1170,7 @@ class Tier0FeederTest(unittest.TestCase):
 
     def feedCouchMonitoring(self):
 
-        workflows = self.getPendingWorkflowMonitoringDAO.execute()
+        workflows = self.getStreamerWorkflowsForMonitoringDAO.execute()
 
         if len(workflows) == 0:
             logging.debug("No workflows to publish to couch monitoring, doing nothing")
@@ -1179,7 +1180,7 @@ class Tier0FeederTest(unittest.TestCase):
                 logging.info(" Publishing workflow %s to monitoring" % workflowName)
                 doc = {}
                 doc["_id"] =  workflowName
-                doc["workflow"] =   workflowName # FIXME:This has to be the workflow name!!
+                doc["workflow"] =   workflowName
                 #doc["status"]   =    {'status': 'new', 'timestamp': int(time.time())}
                 doc["type"]     =   "tier0_request"
                 doc["run"]      =   run
@@ -1648,12 +1649,12 @@ class Tier0FeederTest(unittest.TestCase):
                          "ERROR: there should be 1 closed run/stream filesets for run 176161 and stream A")
 
 
-        self.assertEqual(len(self.getPendingWorkflowMonitoringDAO.execute()), 1,
+        self.assertEqual(len(self.getStreamerWorkflowsForMonitoringDAO.execute()), 1,
                          "ERROR: there should be 1 workflow to be injected to couchDB")
 
         self.feedCouchMonitoring()
 
-        self.assertEqual(len(self.getPendingWorkflowMonitoringDAO.execute()), 0,
+        self.assertEqual(len(self.getStreamerWorkflowsForMonitoringDAO.execute()), 0,
                          "ERROR: there should be no workflow to be injected to couchDB")
 
         return
