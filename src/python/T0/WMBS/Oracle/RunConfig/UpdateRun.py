@@ -9,20 +9,16 @@ from WMCore.Database.DBFormatter import DBFormatter
 
 class UpdateRun(DBFormatter):
 
-    def execute(self, run, lfnBase, process, acqEra,
-                conn = None, transaction = False):
+    def execute(self, binds, conn = None, transaction = False):
 
         sql = """UPDATE run
-                 SET lfn_base = :p_1,
-                     process = :p_2,
-                     acq_era = :p_3
-                 WHERE run_id = :p_4
+                 SET process = :PROCESS,
+                     acq_era = :ACQERA,
+                     lfn_base = :LFNBASE,
+                     ah_timeout = :AHTIMEOUT,
+                     ah_dir = :AHDIR
+                 WHERE run_id = :RUN
                  """
-
-        binds = { 'p_1' : lfnBase,
-                  'p_2' : process,
-                  'p_3' : acqEra,
-                  'p_4' : run }
 
         self.dbi.processData(sql, binds, conn = conn,
                              transaction = transaction)

@@ -7,6 +7,7 @@ Example configuration for RunConfig unittest
 from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
+from T0.RunConfig.Tier0Config import setAlcaHarvestConfig
 from T0.RunConfig.Tier0Config import setConfigVersion
 from T0.RunConfig.Tier0Config import ignoreStream
 from T0.RunConfig.Tier0Config import addRepackConfig
@@ -18,10 +19,19 @@ from T0.RunConfig.Tier0Config import addTier1Skim
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
 
-# Set global parameters like the acquisition era
-# and the version of the configuration.
-setAcquisitionEra(tier0Config, "ExampleConfig_UnitTest")
+# set the config version (not really used at the moment)
 setConfigVersion(tier0Config, "replace with real version")
+
+# Set global parameters:
+#  acquisition era
+#  LFN prefix
+#  data type
+setAcquisitionEra(tier0Config, "ExampleConfig_UnitTest")
+#setLFNPrefix(tier0Config, "/store")
+#setDataType(tier0Config, "data")
+setAlcaHarvestConfig(tier0Config,
+                     alcaHarvestTimeout = 12*3600,
+                     alcaHarvestDir = "/blah/blah")
 
 # setup repack and express version mappings
 repackVersionOverride = {

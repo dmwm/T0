@@ -41,14 +41,12 @@ class RunConfigTest(unittest.TestCase):
 
         self.hltkey = "/cdaq/physics/Run2011/3e33/v2.1/HLT/V2"
         self.hltConfig = None
-        self.condUploadDir = None
         self.dqmUploadProxy = None
 
         if os.environ.has_key('WMAGENT_CONFIG'):
 
             wmAgentConfig = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
 
-            self.condUploadDir = getattr(wmAgentConfig.Tier0Feeder, "conditionUploadDir", None)
             self.dqmUploadProxy = getattr(wmAgentConfig.WMBSService, "proxy", None)
 
             if hasattr(wmAgentConfig, "HLTConfDatabase"):
@@ -150,6 +148,8 @@ class RunConfigTest(unittest.TestCase):
                                     'lfn_base' : "/store",
                                     'process': 'HLT',
                                     'hltkey': self.hltkey,
+                                    'ah_timeout' : 12*3600,
+                                    'ah_dir' : "/blah/blah",
                                     'acq_era': 'ExampleConfig_UnitTest' } ]
 
         self.referenceMapping = {}
@@ -1085,12 +1085,9 @@ class RunConfigTest(unittest.TestCase):
                 self.assertEqual(sorted(mapping[stream][primds]), sorted(self.referenceMapping[stream][primds]),
                                  "ERROR: trigger paths do not match reference")
 
-        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A", self.testDir,
-                                        self.condUploadDir, self.dqmUploadProxy)
-        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "Express", self.testDir,
-                                        self.condUploadDir, self.dqmUploadProxy)
-        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "HLTMON", self.testDir,
-                                        self.condUploadDir, self.dqmUploadProxy)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A", self.testDir, self.dqmUploadProxy)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "Express", self.testDir, self.dqmUploadProxy)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "HLTMON", self.testDir, self.dqmUploadProxy)
 
         datasets = self.getStreamDatasetsDAO.execute(176161, "A",
                                                      transaction = False)
