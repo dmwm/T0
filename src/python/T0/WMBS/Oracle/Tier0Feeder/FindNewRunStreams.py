@@ -19,13 +19,13 @@ class FindNewRunStreams(DBFormatter):
                  INNER JOIN run ON
                    run.run_id = streamer.run_id AND
                    run.acq_era IS NOT NULL
-                 LEFT OUTER JOIN run_stream_fileset_assoc ON
-                   run_stream_fileset_assoc.run_id = streamer.run_id AND
-                   run_stream_fileset_assoc.stream_id = streamer.stream_id
+                 LEFT OUTER JOIN run_stream_style_assoc ON
+                   run_stream_style_assoc.run_id = streamer.run_id AND
+                   run_stream_style_assoc.stream_id = streamer.stream_id
                  INNER JOIN stream ON
                    stream.id = streamer.stream_id
                  WHERE checkForZeroState(streamer.used) = 0
-                 AND run_stream_fileset_assoc.run_id IS NULL
+                 AND run_stream_style_assoc.run_id IS NULL
                  GROUP BY streamer.run_id, stream.name
                  """
 
