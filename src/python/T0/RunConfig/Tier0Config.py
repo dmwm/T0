@@ -10,13 +10,18 @@ Tier0Configuration - Global configuration object
 | | |--> Global - Configuration parameters that do not belong to a particular
 | |       |       stream or dataset and can be applied to an entire run.
 | |       |
-| |       |--> Version - The CVS revision of the config
+| |       |--> Version - The configuration version (not used at the moment)
 | |       |
 | |       |--> AcquisitionEra - The acquisition era for the run
 | |       |
-| |       |--> PhEDExSubscriptions - Dictionary of PhEDEx subscriptions where the
-| |                                  primary dataset id is the key and the storage
-| |                                  node name is the value
+| |       |--> AlcaHarvestTimeout - AlcaHarvesting for a run/stream is normally trigered by
+| |       |                         fileset closing (ie. all data received and processed).
+| |       |                         This timeout will configure an additional time trigger
+| |       |                         based on the run end_time (or when the last streamer
+| |       |                         file was received).
+| |       |
+| |       |--> AlcaHarvestDir - Directory to which the AlcaHarvest job copies the
+| |                             sqlite file and associated metadata.
 | |
 | |--> Streams - Configuration parameters that belong to a particular stream
 |       |
@@ -155,6 +160,8 @@ def createTier0Config():
     tier0Config.section_("Global")
 
     return tier0Config
+
+
 
 def retrieveStreamConfig(config, streamName):
     """
@@ -316,6 +323,16 @@ def setAcquisitionEra(config, acquisitionEra):
     Set the acquisition era in the configuration.
     """
     config.Global.AcquisitionEra = acquisitionEra
+    return
+
+def setAlcaHarvestConfig(config, alcaHarvestTimeout, alcaHarvestDir):
+    """
+    _setAlcaHarvestConfig_
+
+    Configure needed settings for AlcaHarvest
+    """
+    config.Global.AlcaHarvestTimeout = alcaHarvestTimeout
+    config.Global.AlcaHarvestDir = alcaHarvestDir
     return
 
 def setConfigVersion(config, version):

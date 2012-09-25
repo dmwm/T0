@@ -88,6 +88,11 @@ class ConditionTest(unittest.TestCase):
                                             'EVENTS' : 0 },
                                   transaction = False)
 
+        insertPromptCalibrationDAO = daoFactory(classname = "RunConfig.InsertPromptCalibration")
+        insertPromptCalibrationDAO.execute( { 'RUN' : 1,
+                                              'STREAM' : "Express" },
+                                            transaction = False)
+
         self.fileset1 = Fileset(name = "TestFileset1")
         self.fileset1.create()
 
@@ -129,6 +134,8 @@ class ConditionTest(unittest.TestCase):
 
         # default split parameters
         self.splitArgs = {}
+        self.splitArgs['runNumber'] = 1
+        self.splitArgs['streamName'] = "Express"
 
         return
 
@@ -141,6 +148,20 @@ class ConditionTest(unittest.TestCase):
 
         return
 
+    def isPromptCalibFinished(self):
+        """
+        _isPromptCalibFinished_
+
+        """
+        myThread = threading.currentThread()
+
+        result = myThread.dbi.processData("""SELECT finished
+                                             FROM prompt_calib
+                                             """,
+                                          transaction = False)[0].fetchall()[0][0]
+
+        return result
+
     def countPromptCalibFiles(self):
         """
         _deleteSplitLumis_
@@ -148,15 +169,18 @@ class ConditionTest(unittest.TestCase):
         """
         myThread = threading.currentThread()
 
-        results = myThread.dbi.processData("""SELECT COUNT(*) FROM prompt_calib_file
-                                              """,
-                                           transaction = False)[0].fetchall()
+        result = myThread.dbi.processData("""SELECT COUNT(*)
+                                             FROM prompt_calib_file
+                                             """,
+                                          transaction = False)[0].fetchall()[0][0]
 
-        return results[0][0]
+        return result
 
     def test00(self):
         """
         _test00_
+
+        Make sure the job splitter behaves correctly.
 
         Just make sure the job splitter does nothing
         when the fileset is open and populates t0ast
@@ -170,13 +194,19 @@ class ConditionTest(unittest.TestCase):
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription1)
 
-        jobGroups = jobFactory(**mySplitArgs)
-
-        self.assertEqual(len(jobGroups), 0,
-                         "ERROR: JobFactory should have returned no JobGroup")
+        self.assertEqual(self.isPromptCalibFinished(), 0,
+                         "ERROR: prompt_calib should not be finished")
 
         self.assertEqual(self.countPromptCalibFiles(), 0,
                          "ERROR: there should be no prompt_calib_file")
+
+        jobGroups = jobFactory(**mySplitArgs)
+
+        self.assertEqual(self.isPromptCalibFinished(), 0,
+                         "ERROR: prompt_calib should not be finished")
+
+        self.assertEqual(self.countPromptCalibFiles(), 1,
+                         "ERROR: there should be one prompt_calib_file")
 
         self.fileset1.markOpen(False)
 
@@ -184,6 +214,9 @@ class ConditionTest(unittest.TestCase):
 
         self.assertEqual(len(jobGroups), 0,
                          "ERROR: JobFactory should have returned no JobGroup")
+
+        self.assertEqual(self.isPromptCalibFinished(), 1,
+                         "ERROR: prompt_calib should be finished")
 
         self.assertEqual(self.countPromptCalibFiles(), 1,
                          "ERROR: there should be one prompt_calib_file")

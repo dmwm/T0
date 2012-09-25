@@ -43,7 +43,8 @@ def getTestArguments():
         "AlcaSkims" : [ "TkAlCosmics0T", "MuAlGlobalCosmics", "HcalCalHOCosmics" ],
         "DqmSequences" : [ "@common", "@jetmet" ],
 
-        "CondUploadDir" : None,
+        "AlcaHarvestTimeout" : None,
+        "AlcaHarvestDir" : None,
 
         # optional for now
         "Multicore" : None,
@@ -137,15 +138,15 @@ class ExpressWorkloadFactory(StdBase):
 
                 for alcaSkimOutLabel, alcaSkimOutInfo in alcaSkimOutMods.items():
 
-                    if alcaSkimOutInfo['dataTier'] == "ALCAPROMPT":
+                    if alcaSkimOutInfo['dataTier'] == "ALCAPROMPT" and self.alcaHarvestDir != None:
 
                         harvestTask = self.addAlcaHarvestTask(alcaSkimTask, alcaSkimOutLabel,
-                                                              condOutLabel = self.condOutLabel,
-                                                              condUploadDir = self.condUploadDir,
+                                                              condOutLabel = self.alcaHarvestOutLabel,
+                                                              condUploadDir = self.alcaHarvestDir,
                                                               uploadProxy = self.dqmUploadProxy,
                                                               doLogCollect = False)
 
-                        self.addConditionTask(harvestTask, self.condOutLabel)
+                        self.addConditionTask(harvestTask, self.alcaHarvestOutLabel)
 
             else:
 
@@ -232,6 +233,12 @@ class ExpressWorkloadFactory(StdBase):
 
         Create an Alca harvest task to harvest the files produces by the parent task.
         """
+        # finalize splitting parameters
+        mySplitArgs = {}
+        mySplitArgs['algo_package'] = "T0.JobSplitting"
+        mySplitArgs['runNumber'] = self.runNumber
+        mySplitArgs['timeout'] = self.alcaHarvestTimeout
+
         harvestTask = parentTask.addTask("%sAlcaHarvest%s" % (parentTask.name(), parentOutputModuleName))
         self.addDashboardMonitoring(harvestTask)
         harvestTaskCmssw = harvestTask.makeStep("cmsRun1")
@@ -267,7 +274,8 @@ class ExpressWorkloadFactory(StdBase):
 
         harvestTask.setInputReference(parentTaskCmssw, outputModule = parentOutputModuleName)
 
-        harvestTask.setSplittingAlgorithm("Harvest")
+        harvestTask.setSplittingAlgorithm("AlcaHarvest",
+                                          **mySplitArgs)
 
         harvestTaskCmsswHelper.setDataProcessingConfig(self.procScenario, "alcaHarvesting",
                                                        globalTag = self.globalTag,
@@ -305,6 +313,8 @@ class ExpressWorkloadFactory(StdBase):
         # finalize splitting parameters
         mySplitArgs = {}
         mySplitArgs['algo_package'] = "T0.JobSplitting"
+        mySplitArgs['runNumber'] = self.runNumber
+        mySplitArgs['streamName'] = self.streamName
 
         parentTaskCmssw = parentTask.getStep("cmsRun1")
         parentOutputModule = parentTaskCmssw.getOutputModule(parentOutputModuleName)
@@ -344,7 +354,9 @@ class ExpressWorkloadFactory(StdBase):
         self.dqmSequences = arguments['DqmSequences']
         self.outputs = arguments['Outputs']
         self.dqmUploadProxy = arguments['DQMUploadProxy']
-        self.condUploadDir = arguments['CondUploadDir']
+        self.alcaHarvestTimeout = arguments['AlcaHarvestTimeout']
+        self.alcaHarvestDir = arguments['AlcaHarvestDir']
+        self.streamName = arguments['StreamName']
 
         # job splitting parameters
         self.expressSplitArgs = {}
@@ -374,7 +386,7 @@ class ExpressWorkloadFactory(StdBase):
         self.emulation = arguments.get("Emulation", False)
 
         # fixed parameters that are used in various places
-        self.condOutLabel = "Sqlite"
+        self.alcaHarvestOutLabel = "Sqlite"
 
         return self.buildWorkload()
 

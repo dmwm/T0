@@ -13,9 +13,11 @@ class GetRunInfo(DBFormatter):
 
         sql = """SELECT status,
                         hltkey,
-                        lfn_base,
                         process,
-                        acq_era
+                        acq_era,
+                        lfn_base,
+                        ah_timeout,
+                        ah_dir
                  FROM run
                  WHERE run_id = :RUN
                  """

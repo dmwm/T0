@@ -119,9 +119,11 @@ class Create(DBCreator):
                  end_time           int           default 0 not null,
                  close_time         int           default 0 not null,
                  lumicount          int           default 0 not null,
-                 lfn_base           varchar2(255),
                  process            varchar2(255),
                  acq_era            varchar2(255),
+                 lfn_base           varchar2(255),
+                 ah_timeout         int,
+                 ah_dir             varchar2(255),
                  primary key(run_id)
                )"""
 
@@ -419,7 +421,7 @@ class Create(DBCreator):
             """CREATE INDEX idx_streamer_3 ON streamer (checkForZeroOneState(deleted))"""
 
         self.indexes[len(self.indexes)] = \
-            """CREATE INDEX idx_prompt_calib_1 ON prompt_calib (checkForZeroState(finished))"""
+            """CREATE INDEX idx_prompt_calib_1 ON prompt_calib (checkForZeroOneState(finished))"""
 
         self.indexes[len(self.indexes)] = \
             """CREATE INDEX idx_reco_release_config_1 ON reco_release_config (checkForZeroState(released))"""

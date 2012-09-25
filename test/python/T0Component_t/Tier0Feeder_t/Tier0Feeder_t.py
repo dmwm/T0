@@ -44,7 +44,6 @@ class Tier0FeederTest(unittest.TestCase):
 
         self.hltkey = "/cdaq/physics/Run2011/3e33/v2.1/HLT/V2"
         self.hltConfig = None
-        self.condUploadDir = None
         self.dqmUploadProxy = None
         self.dbInterfaceStorageManager = None
         self.getExpressReadyRunsDAO = None
@@ -53,7 +52,6 @@ class Tier0FeederTest(unittest.TestCase):
 
             wmAgentConfig = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
 
-            self.condUploadDir = getattr(wmAgentConfig.Tier0Feeder, "conditionUploadDir", None)
             self.dqmUploadProxy = getattr(wmAgentConfig.WMBSService, "proxy", None)
             self.localSummaryCouchDB = WMStatsWriter(wmAgentConfig.AnalyticsDataCollector.localWMStatsURL)
 
@@ -1244,8 +1242,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(set(runStreams[176161]), set(["A"]),
                          "ERROR: there should be new run/stream for run 176161 and stream A")
 
-        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A", self.testDir,
-                                        self.condUploadDir, self.dqmUploadProxy)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A", self.testDir, self.dqmUploadProxy)
 
         runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
         self.assertEqual(len(runStreams.keys()), 0,
@@ -1384,10 +1381,8 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(self.getNumFeedStreamers(), 4,
                          "ERROR: there should be 4 streamers feed")
 
-        RunConfigAPI.configureRunStream(self.tier0Config, 176162, "A", self.testDir,
-                                        self.condUploadDir, self.dqmUploadProxy)
-        RunConfigAPI.configureRunStream(self.tier0Config, 176163, "Express", self.testDir,
-                                        self.condUploadDir, self.dqmUploadProxy)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176162, "A", self.testDir, self.dqmUploadProxy)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176163, "Express", self.testDir, self.dqmUploadProxy)
 
         runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
         self.assertEqual(set(runStreams.keys()), set([176162, 176163]),
@@ -1426,10 +1421,8 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(self.getNumFeedStreamers(), 6,
                          "ERROR: there should be 6 streamers feed")
 
-        RunConfigAPI.configureRunStream(self.tier0Config, 176162, "Express", self.testDir,
-                                        self.condUploadDir, self.dqmUploadProxy)
-        RunConfigAPI.configureRunStream(self.tier0Config, 176162, "HLTMON", self.testDir,
-                                        self.condUploadDir, self.dqmUploadProxy)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176162, "Express", self.testDir, self.dqmUploadProxy)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176162, "HLTMON", self.testDir, self.dqmUploadProxy)
 
         runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
         self.assertEqual(set(runStreams.keys()), set([176163]),
@@ -1465,8 +1458,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(self.getNumFeedStreamers(), 8,
                          "ERROR: there should be 8 streamers feed")
 
-        RunConfigAPI.configureRunStream(self.tier0Config, 176163, "A", self.testDir,
-                                        self.condUploadDir, self.dqmUploadProxy)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176163, "A", self.testDir, self.dqmUploadProxy)
 
         runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
         self.assertEqual(len(runStreams.keys()), 0,
@@ -1539,8 +1531,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(len(self.getClosedLumis()), 0,
                          "ERROR: there should be no closed lumis")
 
-        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A", self.testDir,
-                                        self.condUploadDir, self.dqmUploadProxy)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A", self.testDir, self.dqmUploadProxy)
 
         RunLumiCloseoutAPI.closeLumiSections(self.dbInterfaceStorageManager)
 
@@ -1558,8 +1549,7 @@ class Tier0FeederTest(unittest.TestCase):
 
         self.insertRunStreamLumi(176161, "HLTMON", 1)
 
-        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "HLTMON", self.testDir,
-                                        self.condUploadDir, self.dqmUploadProxy)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "HLTMON", self.testDir, self.dqmUploadProxy)
 
         RunLumiCloseoutAPI.closeLumiSections(self.dbInterfaceStorageManager)
 
@@ -1615,8 +1605,7 @@ class Tier0FeederTest(unittest.TestCase):
                                   { 'process' : "HLT",
                                     'mapping' : self.referenceMapping })
 
-        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A", self.testDir,
-                                        self.condUploadDir, self.dqmUploadProxy)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A", self.testDir, self.dqmUploadProxy)
 
         RunLumiCloseoutAPI.endRuns(self.dbInterfaceStorageManager)
         RunLumiCloseoutAPI.closeLumiSections(self.dbInterfaceStorageManager)
@@ -1679,8 +1668,7 @@ class Tier0FeederTest(unittest.TestCase):
                                   { 'process' : "HLT",
                                     'mapping' : self.referenceMapping })
 
-        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A", self.testDir,
-                                        self.condUploadDir, self.dqmUploadProxy)
+        RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A", self.testDir, self.dqmUploadProxy)
 
         self.insertClosedLumiDAO.execute(binds = { 'RUN' : 176161,
                                                    'STREAM' : 'A',
