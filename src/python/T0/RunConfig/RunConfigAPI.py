@@ -356,22 +356,23 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['DQMUploadProxy'] = dqmUploadProxy
             specArguments['StreamName'] = stream
 
-        specArguments['RunNumber'] = run
-        specArguments['AcquisitionEra'] = tier0Config.Global.AcquisitionEra
-        specArguments['CMSSWVersion'] = streamConfig.VersionOverride.get(onlineVersion, onlineVersion)
-	specArguments['Outputs'] = outputModuleDetails
-
-        specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/local/Tier0/override_catalog.xml?protocol=override"
+        if streamConfig.ProcessingStyle in [ 'Bulk', 'Express' ]:
+            specArguments['RunNumber'] = run
+            specArguments['AcquisitionEra'] = tier0Config.Global.AcquisitionEra
+            specArguments['CMSSWVersion'] = streamConfig.VersionOverride.get(onlineVersion, onlineVersion)
+            specArguments['Outputs'] = outputModuleDetails
+            specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/local/Tier0/override_catalog.xml?protocol=override"
 
         if streamConfig.ProcessingStyle == "Bulk":
             wmSpec = repackWorkload(workflowName, specArguments)
         elif streamConfig.ProcessingStyle == "Express":
             wmSpec = expressWorkload(workflowName, specArguments)
 
-        wmSpec.setOwnerDetails("Dirk.Hufnagel@cern.ch", "T0",
-                               { 'vogroup': 'DEFAULT', 'vorole': 'DEFAULT',
-                                 'dn' : "Dirk.Hufnagel@cern.ch" } )
-        wmbsHelper = WMBSHelper(wmSpec, taskName, cachepath = specDirectory)
+        if streamConfig.ProcessingStyle in [ 'Bulk', 'Express' ]:
+            wmSpec.setOwnerDetails("Dirk.Hufnagel@cern.ch", "T0",
+                                   { 'vogroup': 'DEFAULT', 'vorole': 'DEFAULT',
+                                     'dn' : "Dirk.Hufnagel@cern.ch" } )
+            wmbsHelper = WMBSHelper(wmSpec, taskName, cachepath = specDirectory)
 
         filesetName = "Run%d_Stream%s" % (run, stream)
         fileset = Fileset(filesetName)
@@ -402,10 +403,11 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             if len(bindsErrorDataset) > 0:
                 insertErrorDatasetDAO.execute(bindsErrorDataset, conn = myThread.transaction.conn, transaction = True)
             insertStreamStyleDAO.execute(bindsStreamStyle, conn = myThread.transaction.conn, transaction = True)
-            insertStreamFilesetDAO.execute(run, stream, filesetName, conn = myThread.transaction.conn, transaction = True)
-            fileset.load()
-            wmbsHelper.createSubscription(wmSpec.getTask(taskName), fileset)
-            insertWorkflowMonitoringDAO.execute([fileset.id],  conn = myThread.transaction.conn, transaction = True)
+            if streamConfig.ProcessingStyle in [ 'Bulk', 'Express' ]:
+                insertStreamFilesetDAO.execute(run, stream, filesetName, conn = myThread.transaction.conn, transaction = True)
+                fileset.load()
+                wmbsHelper.createSubscription(wmSpec.getTask(taskName), fileset)
+                insertWorkflowMonitoringDAO.execute([fileset.id],  conn = myThread.transaction.conn, transaction = True)
             if streamConfig.ProcessingStyle == "Bulk":
                 bindsRecoReleaseConfig = []
                 for fileset, primds in wmbsHelper.getMergeOutputMapping().items():
@@ -415,7 +417,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                                      'RECODELAY' : promptRecoDelay[primds],
                                                      'RECODELAYOFFSET' : promptRecoDelayOffset[primds] } )
                 insertRecoReleaseConfigDAO.execute(bindsRecoReleaseConfig, conn = myThread.transaction.conn, transaction = True)
-            else:
+            elif streamConfig.ProcessingStyle == "Express":
                 markWorkflowsInjectedDAO.execute([workflowName], injected = True, conn = myThread.transaction.conn, transaction = True)
         except:
             myThread.transaction.rollback()
