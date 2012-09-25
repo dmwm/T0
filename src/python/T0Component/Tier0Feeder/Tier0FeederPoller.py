@@ -23,6 +23,7 @@ from WMCore.Services.WMStats.WMStatsWriter import WMStatsWriter
 
 from T0.RunConfig import RunConfigAPI
 from T0.RunLumiCloseout import RunLumiCloseoutAPI
+from T0.ConditionUpload import ConditionUploadAPI
 
 
 class Tier0FeederPoller(BaseWorkerThread):
@@ -43,9 +44,14 @@ class Tier0FeederPoller(BaseWorkerThread):
         self.tier0ConfigFile = config.Tier0Feeder.tier0ConfigFile
         self.specDirectory = config.Tier0Feeder.specDirectory
         self.lfnBase = getattr(config.Tier0Feeder, "lfnBase", "/store")
-        self.condUploadDir = config.Tier0Feeder.conditionUploadDir
+
         self.dqmUploadProxy = config.WMBSService.proxy
+
         self.localSummaryCouchDB = WMStatsWriter(config.AnalyticsDataCollector.localWMStatsURL)
+
+        self.condUploadTimeout = 18 * 3600
+        self.dropboxHost = "webcondvm.cern.ch"
+        self.validationMode = True
 
         hltConfConnectUrl = config.HLTConfDatabase.connectUrl
         dbFactoryHltConf = DBFactory(logging, dburl = hltConfConnectUrl, options = {})
@@ -133,7 +139,6 @@ class Tier0FeederPoller(BaseWorkerThread):
                         RunConfigAPI.configureRunStream(tier0Config,
                                                         run, stream,
                                                         self.specDirectory,
-                                                        self.condUploadDir,
                                                         self.dqmUploadProxy)
                     except:
                         logging.exception("Can't configure for run %d and stream %s" % (run, stream))
@@ -207,9 +212,18 @@ class Tier0FeederPoller(BaseWorkerThread):
         # check and delete active split lumis
         #
         RunLumiCloseoutAPI.checkActiveSplitLumis()
-        
-        # gets all workflows not inserted to couchDB and does it.
+
+        #
+        # insert workflows into CouchDB for monitoring
+        #
         self.feedCouchMonitoring()
+
+        #
+        # upload PCL conditions to DropBox
+        #
+        ConditionUploadAPI.uploadConditions(self.condUploadTimeout,
+                                            self.dropboxHost,
+                                            self.validationMode)
 
         return
 

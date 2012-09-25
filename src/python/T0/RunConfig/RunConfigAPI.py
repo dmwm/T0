@@ -60,6 +60,13 @@ def configureRun(tier0Config, run, lfnBase, hltConfig, referenceHltConfig = None
         insertTriggerDAO = daoFactory(classname = "RunConfig.InsertTrigger")
         insertDatasetTriggerDAO = daoFactory(classname = "RunConfig.InsertDatasetTrigger")
 
+        bindsUpdateRun = { 'RUN' : run,
+                           'PROCESS' : hltConfig['process'],
+                           'ACQERA' : tier0Config.Global.AcquisitionEra,
+                           'LFNBASE' : lfnBase,
+                           'AHTIMEOUT' : tier0Config.Global.AlcaHarvestTimeout,
+                           'AHDIR' : tier0Config.Global.AlcaHarvestDir }
+
         bindsStream = []
         bindsDataset = []
         bindsStreamDataset = []
@@ -80,9 +87,7 @@ def configureRun(tier0Config, run, lfnBase, hltConfig, referenceHltConfig = None
 
         try:
             myThread.transaction.begin()
-            updateRunDAO.execute(run, lfnBase,
-                                 hltConfig['process'],
-                                 tier0Config.Global.AcquisitionEra,
+            updateRunDAO.execute(bindsUpdateRun,
                                  transaction = True)
             insertStreamDAO.execute(bindsStream,
                                     transaction = True)
@@ -104,8 +109,13 @@ def configureRun(tier0Config, run, lfnBase, hltConfig, referenceHltConfig = None
 
         try:
             myThread.transaction.begin()
-            updateRunDAO.execute(run, "FakeProcessName",
-                                 "FakeAcquisitionEra",
+            bindsUpdateRun = { 'RUN' : run,
+                               'PROCESS' : "FakeProcessName",
+                               'ACQERA' : "FakeAcquisitionEra",
+                               'LFNBASE' : lfnBase,
+                               'AHTIMEOUT' : None,
+                               'AHDIR' : None }
+            updateRunDAO.execute(bindsUpdateRun,
                                  transaction = True)
         except:
             myThread.transaction.rollback()
@@ -115,8 +125,7 @@ def configureRun(tier0Config, run, lfnBase, hltConfig, referenceHltConfig = None
 
     return
 
-def configureRunStream(tier0Config, run, stream, specDirectory,
-                       condUploadDir, dqmUploadProxy):
+def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
     """
     _configureRunStream_
 
@@ -342,8 +351,10 @@ def configureRunStream(tier0Config, run, stream, specDirectory,
             specArguments['DqmSequences'] = streamConfig.Express.DqmSequences
             specArguments['UnmergedLFNBase'] = "%s/t0temp/express" % runInfo['lfn_base']
             specArguments['MergedLFNBase'] = "%s/express" % runInfo['lfn_base']
-            specArguments['CondUploadDir'] = condUploadDir
+            specArguments['AlcaHarvestTimeout'] = runInfo['ah_timeout']
+            specArguments['AlcaHarvestDir'] = runInfo['ah_dir']
             specArguments['DQMUploadProxy'] = dqmUploadProxy
+            specArguments['StreamName'] = stream
 
         specArguments['RunNumber'] = run
         specArguments['AcquisitionEra'] = tier0Config.Global.AcquisitionEra

@@ -34,16 +34,23 @@ class Condition(JobFactory):
         Some other component will pick up from the info we wrote.
 
         """
+        runNumber = kwargs['runNumber']
+        streamName = kwargs['streamName']
+
         myThread = threading.currentThread()
         daoFactory = DAOFactory(package = "T0.WMBS",
                                 logger = logging,
                                 dbinterface = myThread.dbi)
 
-        # only deal with closed fileset
+        # check if fileset is open
+        # if fileset is open, AlcaHarvest was triggered by timeout
+        # in that case do not set to finished, there is another payload coming
         fileset = self.subscription.getFileset()
         fileset.load()
-        if fileset.open:
-            return
+
+        if not fileset.open:
+            markPromptCalibrationFinishedDAO = daoFactory(classname = "ConditionUpload.MarkPromptCalibrationFinished")
+            markPromptCalibrationFinishedDAO.execute(runNumber, streamName, 1)
 
         # data discovery
         getFilesDAO = daoFactory(classname = "Subscriptions.GetAvailableConditionFiles")
@@ -57,11 +64,11 @@ class Condition(JobFactory):
         for availableFile in availableFiles:
             bindVarList.append( { 'SUBSCRIPTION' : self.subscription["id"],
                                   'FILEID' : availableFile['id'],
-                                  'RUN_ID' : availableFile['run_id'],
-                                  'STREAM_ID' : availableFile['stream_id'] } )
+                                  'RUN_ID' : runNumber,
+                                  'STREAM' : streamName } )
 
-        # save the information in T0AST and mark files complete
-        insertPromptCalibrationFileDAO = daoFactory(classname = "JobSplitting.InsertPromptCalibrationFile")
-        insertPromptCalibrationFileDAO.execute(bindVarList)
+        if len(bindVarList) > 0:
+            insertPromptCalibrationFileDAO = daoFactory(classname = "JobSplitting.InsertPromptCalibrationFile")
+            insertPromptCalibrationFileDAO.execute(bindVarList)
 
         return
