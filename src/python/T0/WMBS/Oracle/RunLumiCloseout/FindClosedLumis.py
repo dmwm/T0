@@ -19,6 +19,9 @@ Return a list of dictionaries with run/stream/lumi.
 
 from WMCore.Database.DBFormatter import DBFormatter
 
+import logging
+from sqlalchemy.exc import DatabaseError
+
 class FindClosedLumis(DBFormatter):
 
     def execute(self, binds, conn = None, transaction = False):
@@ -52,8 +55,13 @@ class FindClosedLumis(DBFormatter):
                                    WHERE c.runnumber = a.runnumber ) )
                  """
 
-        results = self.dbi.processData(sql, binds, conn = conn,
-                                       transaction = transaction)[0].fetchall()
+        try:
+            results = self.dbi.processData(sql, binds, conn = conn,
+                                           transaction = transaction)[0].fetchall()
+        except DatabaseError, ex:
+            logging.error("ERROR: DatabaseError exception when checking for closed run/stream/lumi")
+            logging.error("   %s" % ex)
+            results = []
 
         closedLumis = []
         for result in results:
