@@ -372,6 +372,10 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             wmSpec.setOwnerDetails("Dirk.Hufnagel@cern.ch", "T0",
                                    { 'vogroup': 'DEFAULT', 'vorole': 'DEFAULT',
                                      'dn' : "Dirk.Hufnagel@cern.ch" } )
+
+            wmSpec.setupPerformanceMonitoring(maxRSS = 10485760, maxVSize = 10485760,
+                                              softTimeout = 604800, gracePeriod = 3600)
+
             wmbsHelper = WMBSHelper(wmSpec, taskName, cachepath = specDirectory)
 
         filesetName = "Run%d_Stream%s" % (run, stream)
@@ -618,6 +622,9 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                 wmSpec.setOwnerDetails("Dirk.Hufnagel@cern.ch", "T0",
                                        { 'vogroup': 'DEFAULT', 'vorole': 'DEFAULT',
                                          'dn' : "Dirk.Hufnagel@cern.ch" } )
+
+                wmSpec.setupPerformanceMonitoring(maxRSS = 10485760, maxVSize = 10485760,
+                                                  softTimeout = 604800, gracePeriod = 3600)
                 wmbsHelper = WMBSHelper(wmSpec, taskName, cachepath = specDirectory)
 
                 recoSpecs[workflowName] = (wmbsHelper, wmSpec, fileset)
