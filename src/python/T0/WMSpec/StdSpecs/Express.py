@@ -136,6 +136,8 @@ class ExpressWorkloadFactory(StdBase):
                                                            stepType = cmsswStepType,
                                                            forceMerged = True)
 
+                self.addCleanupTask(expressTask, expressOutLabel)
+
                 for alcaSkimOutLabel, alcaSkimOutInfo in alcaSkimOutMods.items():
 
                     if alcaSkimOutInfo['dataTier'] == "ALCAPROMPT" and self.alcaHarvestDir != None:
