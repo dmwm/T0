@@ -92,7 +92,7 @@ def uploadConditions(timeout, dropboxHost, validationMode):
 
             # if finished set to completely finished
             if conditions[run][stream]['finished'] == 1:
-                markPromptCalibrationFinishedDAO,execute(run, stream, 2, transaction = False)
+                markPromptCalibrationFinishedDAO.execute(run, stream, 2, transaction = False)
             else:
                 advanceToNextRun = False
 
