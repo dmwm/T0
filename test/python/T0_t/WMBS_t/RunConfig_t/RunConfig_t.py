@@ -1009,7 +1009,7 @@ class RunConfigTest(unittest.TestCase):
         self.getRunInfoDAO = daoFactory(classname = "RunConfig.GetRunInfo")
         self.getStreamDatasetTriggersDAO = daoFactory(classname = "RunConfig.GetStreamDatasetTriggers")
         self.getStreamDatasetsDAO = daoFactory(classname = "RunConfig.GetStreamDatasets")
-        self.getStreamStylesDAO = daoFactory(classname = "RunConfig.GetStreamStyles")
+        self.getStreamStyleDAO = daoFactory(classname = "RunConfig.GetStreamStyle")
         self.getRepackConfigDAO = daoFactory(classname = "RunConfig.GetRepackConfig")
         self.getExpressConfigDAO = daoFactory(classname = "RunConfig.GetExpressConfig")
         self.getRecoConfigDAO = daoFactory(classname = "RunConfig.GetRecoConfig")
@@ -1028,6 +1028,31 @@ class RunConfigTest(unittest.TestCase):
         self.testInit.clearDatabase()
 
         return
+
+    def getStreams(self, run):
+        """
+        _getStreams_
+
+        return all streams in a run
+        """
+        myThread = threading.currentThread()
+
+        sql = """SELECT DISTINCT stream.name
+                 FROM run_primds_stream_assoc
+                 INNER JOIN stream ON
+                   stream.id = run_primds_stream_assoc.stream_id
+                 WHERE run_primds_stream_assoc.run_id = :RUN
+                 """
+
+        binds = { 'RUN' : run }
+
+        results = myThread.dbi.processData(sql, binds, transaction = False)[0].fetchall()
+
+        streams = []
+        for result in results:
+            streams.append(result[0])
+
+        return streams
 
     def removeRecoDelay(self, dataset = None):
         """
@@ -1073,16 +1098,20 @@ class RunConfigTest(unittest.TestCase):
         self.assertEqual(runInfo, self.referenceRunInfo,
                          "ERROR: run info does not match reference")
 
-        mapping = self.getStreamDatasetTriggersDAO.execute(176161,
-                                                           transaction = False)
+        streams = self.getStreams(176161)
 
-        self.assertEqual(sorted(mapping.keys()), sorted(self.referenceMapping.keys()),
+        self.assertEqual(sorted(streams), sorted(self.referenceMapping.keys()),
                          "ERROR: streams do not match reference") 
-        for stream in mapping.keys():
-            self.assertEqual(sorted(mapping[stream].keys()), sorted(self.referenceMapping[stream].keys()),
+
+        for stream in streams:
+
+            mapping = self.getStreamDatasetTriggersDAO.execute(176161, stream,
+                                                               transaction = False)
+
+            self.assertEqual(sorted(mapping.keys()), sorted(self.referenceMapping[stream].keys()),
                              "ERROR: primary datasets do not match reference")
-            for primds in mapping[stream].keys():
-                self.assertEqual(sorted(mapping[stream][primds]), sorted(self.referenceMapping[stream][primds]),
+            for primds in mapping.keys():
+                self.assertEqual(sorted(mapping[primds]), sorted(self.referenceMapping[stream][primds]),
                                  "ERROR: trigger paths do not match reference")
 
         RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A", self.testDir, self.dqmUploadProxy)
@@ -1105,7 +1134,7 @@ class RunConfigTest(unittest.TestCase):
         for primds in datasets:
             if not primds.endswith("-Error"):
                 self.assertFalse(('%s-Error' % primds) in datasets,
-                                "ERROR: error datasets for express setup incorrectly")
+                                 "ERROR: error datasets for express setup incorrectly")
 
         datasets = self.getStreamDatasetsDAO.execute(176161, "HLTMON",
                                                      transaction = False)
@@ -1117,14 +1146,19 @@ class RunConfigTest(unittest.TestCase):
                 self.assertFalse(('%s-Error' % primds) in datasets,
                                 "ERROR: error datasets for express setup incorrectly")
 
-        streamStyles = self.getStreamStylesDAO.execute(176161,
+        streamStyle = self.getStreamStyleDAO.execute(176161, "A",
                                                        transaction = False)
-
-        self.assertEquals(streamStyles['A'], "Bulk",
+        self.assertEquals(streamStyle, "Bulk",
                           "ERROR: stream A is not Bulk style")
-        self.assertEquals(streamStyles['Express'], "Express",
+
+        streamStyle = self.getStreamStyleDAO.execute(176161, "Express",
+                                                      transaction = False)
+        self.assertEquals(streamStyle, "Express",
                           "ERROR: stream Express is not Express style")
-        self.assertEquals(streamStyles['HLTMON'], "Express",
+
+        streamStyle = self.getStreamStyleDAO.execute(176161, "HLTMON",
+                                                      transaction = False)
+        self.assertEquals(streamStyle, "Express",
                           "ERROR: stream HLTMON is not Express style")
 
         repackConfig = self.getRepackConfigDAO.execute(176161, "A",
@@ -1365,7 +1399,7 @@ class RunConfigTest(unittest.TestCase):
         phedexConfigs = self.getPhEDExConfigDAO.execute(176161, "A",
                                                         transaction = False)
 
-        self.assertEquals(datasets, set(phedexConfigs.keys()),
+        self.assertEquals(set(phedexConfigs.keys()), set(datasets),
                           "ERROR: problems retrieving PhEDEx configs for stream A")
 
         for primds, phedexConfig in phedexConfigs.items():

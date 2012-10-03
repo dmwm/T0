@@ -3,6 +3,11 @@ _MarkPromptCalibrationFinished_
 
 Oracle implementation of MarkPromptCalibrationFinished
 
+Mark the PCL finished for the given run and stream.
+There are two levels of finished here, 1 which means
+the harvesting is done and 2 which means the upload
+to the dropbox is complete too.
+
 """
 
 from WMCore.Database.DBFormatter import DBFormatter

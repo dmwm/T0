@@ -4,10 +4,9 @@ _FindRecoRelease_
 Oracle implementation of FindRecoRelease
 
 Return a list of tuples containing every
-run,primds,fileset ready for reco release
+run,primds,fileset ready for reco release.
 
 """
-
 import time
 
 from WMCore.Database.DBFormatter import DBFormatter

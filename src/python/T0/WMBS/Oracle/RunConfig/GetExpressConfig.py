@@ -3,6 +3,8 @@ _GetExpressConfig_
 
 Oracle implementation of GetExpressConfig
 
+Returns express configuration for given run and stream.
+
 """
 
 from WMCore.Database.DBFormatter import DBFormatter

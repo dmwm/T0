@@ -3,7 +3,10 @@ _CheckActiveSplitLumis_
 
 Oracle implementation of CheckActiveSplitLumis
 
+Check active split lumis for completetion and delete if complete.
 
+An active split lumi is complete if there are no available, acquired
+or failed files for the run/stream/subscription combination.
 
 """
 import time
