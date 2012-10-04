@@ -4,7 +4,8 @@ _GetRunEndTime_
 Oracle implementation of GetRunEndTime
 
 Returns run end time or insert time of last
-streamer if run hasn't ended yet
+streamer if run hasn't ended yet.
+
 """
 
 from WMCore.Database.DBFormatter import DBFormatter

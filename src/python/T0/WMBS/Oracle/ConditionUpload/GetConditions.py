@@ -3,7 +3,9 @@ _GetConditions_
 
 Oracle implementation of GetConditions
 
-Return all expected and exisiting condition payloads
+Return all expected and exisiting condition payloads for
+runs and streams that don't have completed  the PCL yet.
+
 """
 
 from WMCore.Database.DBFormatter import DBFormatter

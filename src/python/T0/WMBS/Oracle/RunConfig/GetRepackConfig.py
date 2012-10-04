@@ -3,6 +3,8 @@ _GetRepackConfig_
 
 Oracle implementation of GetRepackConfig
 
+Return Repack configuration for given run and stream.
+
 """
 
 from WMCore.Database.DBFormatter import DBFormatter

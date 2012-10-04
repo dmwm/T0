@@ -3,6 +3,8 @@ _GetStreamOnlineVersion_
 
 Oracle implementation of GetStreamOnlineVersion
 
+Return online CMSSW version for a given run and stream.
+
 """
 
 from WMCore.Database.DBFormatter import DBFormatter

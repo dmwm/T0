@@ -3,7 +3,12 @@ _CloseRunStreamFilesets_
 
 Oracle implementation of CloseRunStreamFilesets
 
+IF a run has ended and the run/stream fileset is still open, check
+for complete lumi_closed records, that all lumis are finally closed
+(all data for them in T0AST) and that all data has been feed to
+the filesets for processing.
 
+If all these conditions are satisifed, close the run/stream fileset.
 
 """
 import time

@@ -3,18 +3,15 @@ _GetPhEDExConfig_
 
 Oracle implementation of GetPhEDExConfig
 
+Returns PhEDEx configuration for given run and stream.
+
 """
 
 from WMCore.Database.DBFormatter import DBFormatter
 
 class GetPhEDExConfig(DBFormatter):
 
-    def execute(self, run, stream = None, conn = None, transaction = False):
-
-        sqlStream = """"""
-        if stream != None:
-            sqlStream = """AND run_primds_stream_assoc.stream_id =
-                             (SELECT id FROM stream WHERE name = :STREAM)"""
+    def execute(self, run, stream, conn = None, transaction = False):
 
         sql = """SELECT primary_dataset.name,
                         storage_node.name,
@@ -34,11 +31,12 @@ class GetPhEDExConfig(DBFormatter):
                  INNER JOIN storage_node ON
                    storage_node.id = phedex_config.node_id
                  WHERE phedex_config.run_id = :RUN
-                 %s """ % sqlStream
+                 AND run_primds_stream_assoc.stream_id =
+                   (SELECT id FROM stream WHERE name = :STREAM)
+                 """
 
-        binds = { 'RUN' : run }
-        if stream != None:
-            binds['STREAM'] = stream
+        binds = { 'RUN' : run,
+                  'STREAM' : stream }
         
         results = self.dbi.processData(sql, binds, conn = conn,
                                        transaction = transaction)[0].fetchall()

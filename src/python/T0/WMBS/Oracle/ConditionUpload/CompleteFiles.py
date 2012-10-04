@@ -3,6 +3,9 @@ _CompleteFiles_
 
 Oracle implementation of CompleteFiles
 
+There is a DQ in WMCore for this, but it also deletes from
+the available and failed tables, which isn't needed here.
+
 """
 
 from WMCore.Database.DBFormatter import DBFormatter

@@ -1,7 +1,7 @@
 """
 _GetAvailableConditionFiles_
 
-Oracle implementation of GetAvailableRepackFiles
+Oracle implementation of GetAvailableConditionFiles
 
 Similar to Subscriptions.GetAvailableFiles, 
 except it only returns file ids, nothing else

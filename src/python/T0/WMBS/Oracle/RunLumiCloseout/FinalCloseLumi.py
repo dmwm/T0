@@ -3,6 +3,9 @@ _FinalCloseLumi_
 
 Oracle implementation of FinalCloseLumi
 
+Check all not yet closed run/stream/lumis for complete file
+counts and close them if all files are present.
+
 """
 
 from WMCore.Database.DBFormatter import DBFormatter

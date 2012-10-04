@@ -3,18 +3,15 @@ _GetPromptSkimConfig_
 
 Oracle implementation of GetPromptSkimConfig
 
+Returns PromptSkim configuration for given run and stream.
+
 """
 
 from WMCore.Database.DBFormatter import DBFormatter
 
 class GetPromptSkimConfig(DBFormatter):
 
-    def execute(self, run, stream = None, conn = None, transaction = False):
-
-        sqlStream = """"""
-        if stream != None:
-            sqlStream = """AND run_primds_stream_assoc.stream_id =
-                             (SELECT id FROM stream WHERE name = :STREAM)"""
+    def execute(self, run, stream, conn = None, transaction = False):
 
         sql = """SELECT primary_dataset.name,
                         data_tier.name,
@@ -42,11 +39,12 @@ class GetPromptSkimConfig(DBFormatter):
                  INNER JOIN cmssw_version ON
                    cmssw_version.id = promptskim_config.cmssw_id
                  WHERE promptskim_config.run_id = :RUN
-                 %s """ % sqlStream
+                 AND run_primds_stream_assoc.stream_id =
+                   (SELECT id FROM stream WHERE name = :STREAM)
+                 """
 
-        binds = { 'RUN' : run }
-        if stream != None:
-            binds['STREAM'] = stream
+        binds = { 'RUN' : run,
+                  'STREAM' : stream }
         
         results = self.dbi.processData(sql, binds, conn = conn,
                                        transaction = transaction)[0].fetchall()
