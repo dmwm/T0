@@ -34,23 +34,13 @@ class Condition(JobFactory):
         Some other component will pick up from the info we wrote.
 
         """
-        runNumber = kwargs['runNumber']
-        streamName = kwargs['streamName']
+        run = kwargs['runNumber']
+        stream = kwargs['streamName']
 
         myThread = threading.currentThread()
         daoFactory = DAOFactory(package = "T0.WMBS",
                                 logger = logging,
                                 dbinterface = myThread.dbi)
-
-        # check if fileset is open
-        # if fileset is open, AlcaHarvest was triggered by timeout
-        # in that case do not set to finished, there is another payload coming
-        fileset = self.subscription.getFileset()
-        fileset.load()
-
-        if not fileset.open:
-            markPromptCalibrationFinishedDAO = daoFactory(classname = "ConditionUpload.MarkPromptCalibrationFinished")
-            markPromptCalibrationFinishedDAO.execute(runNumber, streamName, 1)
 
         # data discovery
         getFilesDAO = daoFactory(classname = "Subscriptions.GetAvailableConditionFiles")
@@ -64,8 +54,8 @@ class Condition(JobFactory):
         for availableFile in availableFiles:
             bindVarList.append( { 'SUBSCRIPTION' : self.subscription["id"],
                                   'FILEID' : availableFile['id'],
-                                  'RUN_ID' : runNumber,
-                                  'STREAM' : streamName } )
+                                  'RUN_ID' : run,
+                                  'STREAM' : stream } )
 
         if len(bindVarList) > 0:
             insertPromptCalibrationFileDAO = daoFactory(classname = "JobSplitting.InsertPromptCalibrationFile")

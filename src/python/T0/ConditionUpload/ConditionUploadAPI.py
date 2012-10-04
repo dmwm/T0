@@ -50,6 +50,7 @@ def uploadConditions(timeout, dropboxHost, validationMode):
 
     findConditionsDAO = daoFactory(classname = "ConditionUpload.GetConditions")
     completeFilesDAO = daoFactory(classname = "ConditionUpload.CompleteFiles")
+    
     markPromptCalibrationFinishedDAO = daoFactory(classname = "ConditionUpload.MarkPromptCalibrationFinished")
 
     # look at all runs not completely finished with condition uploads
@@ -90,11 +91,17 @@ def uploadConditions(timeout, dropboxHost, validationMode):
                 else:
                     myThread.transaction.commit()
 
-            # if finished set to completely finished
-            if conditions[run][stream]['finished'] == 1:
-                markPromptCalibrationFinishedDAO.execute(run, stream, 2, transaction = False)
-            else:
-                advanceToNextRun = False
+                # FIXME, only finish and advance to next run if fileset for
+                # subscription closed and no more acquired files
+                #
+                # PROBLEM, how to check that without file/subscription
+                #
+                # might need to cache the subscription in prompt_calib
+                # update call from job splitter maybe
+                if True:
+                    markPromptCalibrationFinishedDAO.execute(run, stream, 2, transaction = False)
+                else:
+                    advanceToNextRun = False
 
         # check for timeout, but only if there is a next run
         if not advanceToNextRun and index < len(conditions.keys()):
