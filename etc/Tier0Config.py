@@ -11,3 +11,15 @@ config.JobSubmitter.LsfPluginQueue = "cmsrepack"
 config.JobSubmitter.LsfPluginResourceReq = "select[type==SLC5_64] rusage[pool=10000,mem=1800]"
 config.JobSubmitter.LsfPluginJobGroup = "/groups/tier0/wmagent_testing"
 config.JobSubmitter.LsfPluginBatchOutput = "None"
+
+config.JobCreator.pollInterval = 30
+config.JobSubmitter.pollInterval = 30
+config.JobAccountant.pollInterval = 30
+
+config.RetryManager.section_("PauseAlgo")
+config.RetryManager.PauseAlgo.section_("default")
+config.RetryManager.PauseAlgo.default.coolOffTime = retryAlgoParams
+config.RetryManager.PauseAlgo.default.pauseCount = 3
+config.RetryManager.plugins = {"default" : "PauseAlgo"}
+
+config.ErrorHandler.maxRetries = 30
