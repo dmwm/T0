@@ -11,7 +11,7 @@ from WMCore.Database.DBFormatter import DBFormatter
 class GetConditions(DBFormatter):
 
     sql = """SELECT prompt_calib.run_id,
-                    prompt_calib.stream_id,
+                    stream.name,
                     prompt_calib.finished,
                     prompt_calib_file.fileid,
                     wmbs_sub_files_acquired.subscription,
@@ -19,6 +19,8 @@ class GetConditions(DBFormatter):
              FROM prompt_calib
                INNER JOIN run ON
                  run.run_id = prompt_calib.run_id
+               INNER JOIN stream ON
+                 stream.id = prompt_calib.stream_id
                LEFT OUTER JOIN prompt_calib_file ON
                  prompt_calib_file.run_id = prompt_calib.run_id AND
                  prompt_calib_file.stream_id = prompt_calib.stream_id
