@@ -85,10 +85,6 @@ def modifyConfiguration(config, **args):
         config.section_("PopConLogDatabase")
         config.PopConLogDatabase.connectUrl = args['popconlogdb_url']
 
-    config.JobCreator.pollInterval = 30
-    config.JobSubmitter.pollInterval = 30
-    config.JobAccountant.pollInterval = 30
-
     return config
 
 
