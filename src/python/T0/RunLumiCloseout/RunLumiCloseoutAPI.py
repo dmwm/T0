@@ -106,10 +106,24 @@ def closeLumiSections(dbInterfaceStorageManager):
 
     if len(closedLumis) > 0:
 
-        bindVarList = []
+        #
+        # insert all lumis we find, but have to take care of duplicates
+        # (due to having the same lumi for different streams)
+        #
+        runLumis = {}
         for closedLumi in closedLumis:
-            bindVarList.append( { 'RUN' : closedLumi['RUN'],
-                                  'LUMI' : closedLumi['LUMI'] } )
+            run = closedLumi['RUN']
+            lumi = closedLumi['LUMI']
+            if not runLumis.has_key(run):
+                runLumis[run] = set()
+            runLumis[run].add(lumi)
+
+        bindVarList = []
+        for run, lumis in runLumis.items():
+            for lumi in lumis:
+                bindVarList.append( { 'RUN' : run,
+                                      'LUMI' : lumi } )
+
         insertLumiDAO.execute(binds = bindVarList,
                               transaction = False)
 
