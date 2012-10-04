@@ -6,6 +6,7 @@ Oracle implementation of MarkRepackInjected
 Check that all datasets for a workflow (ie. stream)
 have had their PromptReco released and then mark
 the repack workflow as injected
+
 """
 
 from WMCore.Database.DBFormatter import DBFormatter

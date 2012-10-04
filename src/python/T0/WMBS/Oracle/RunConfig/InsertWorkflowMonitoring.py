@@ -2,23 +2,30 @@
 _InsertWorkflowMonitoring_
 
 Oracle implementation of InsertWorkflowMonitoring
-Important bit is that the only unique identifier per worklfow, is the top level fileset, which is the input to the first task.
-Supports as input one or more fileset.id's as a [list]
+
+Important bit is that the only unique identifier per workflow
+is the top level fileset, which is the input to the first task.
+Supports as input one or more fileset.ids as a list.
+
 """
+
 from WMCore.Database.DBFormatter import DBFormatter
 
 class InsertWorkflowMonitoring(DBFormatter):
 
-    def execute(self, filesetIds, conn = None, transaction = False):
+    def execute(self, filesets, conn = None, transaction = False):
 
-        sql = """INSERT INTO workflow_monitoring 
-                (workflow) 
-                VALUES ((SELECT wmbs_subscription.workflow FROM wmbs_subscription WHERE wmbs_subscription.fileset = :FILESET_ID))"""
+        sql = """INSERT INTO workflow_monitoring (WORKFLOW) 
+                 VALUES ((SELECT workflow
+                          FROM wmbs_subscription
+                          WHERE fileset = :FILESET))
+                 """
 
         binds = []
-        for filesetId in filesetIds : 
-            binds.append({'FILESET_ID': filesetId})
+        for fileset in filesets: 
+            binds.append( { 'FILESET' : fileset } )
 
         self.dbi.processData(sql, binds, conn = conn,
                              transaction = transaction)
+
         return

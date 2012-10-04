@@ -3,6 +3,11 @@ _InsertPromptCalibrationFile_
 
 Oracle implementation of InsertPromptCalibrationFile
 
+Inserts files into the prompt_calib_file table and
+marks them as acquired for the subscription. The files
+will then be picked up by another piece of code,
+uploaded to the DropBox and be marked as completed.
+
 """
 
 from WMCore.Database.DBFormatter import DBFormatter

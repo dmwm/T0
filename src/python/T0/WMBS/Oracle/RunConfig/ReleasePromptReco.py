@@ -3,9 +3,9 @@ _ReleasePromptReco_
 
 Oracle implementation of ReleasePromptReco
 
-"""
+Release PromptReco for given run and primary dataset.
 
-import time
+"""
 
 from WMCore.Database.DBFormatter import DBFormatter
 

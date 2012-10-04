@@ -275,15 +275,10 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         #
         # then configure datasets
         #
-        getStreamDatasetsDAO = daoFactory(classname = "RunConfig.GetStreamDatasets")
-        datasets = getStreamDatasetsDAO.execute(run, stream, transaction = False)
-
-
-
         getStreamDatasetTriggersDAO = daoFactory(classname = "RunConfig.GetStreamDatasetTriggers")
-        datasetTriggers = getStreamDatasetTriggersDAO.execute(run, stream, transaction = False)[stream]
+        datasetTriggers = getStreamDatasetTriggersDAO.execute(run, stream, transaction = False)
 
-        for dataset in datasets:
+        for dataset, paths in datasetTriggers.items():
 
             datasetConfig = retrieveDatasetConfig(tier0Config, dataset)
 
@@ -291,7 +286,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             promptRecoDelayOffset[datasetConfig.Name] = datasetConfig.RecoDelayOffset
 
             selectEvents = []
-            for path in datasetTriggers[datasetConfig.Name]:
+            for path in sorted(paths):
                 selectEvents.append("%s:%s" % (path, runInfo['process']))
 
             if streamConfig.ProcessingStyle == "Bulk":
@@ -301,12 +296,12 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                               'selectEvents' : selectEvents,
                                               'primaryDataset' : datasetConfig.Name } )
 
-##                 errorDataset = "%s-%s" % (datasetConfig.Name, "Error")
+##                 errorDataset = "%s-%s" % (dataset, "Error")
 ##                 bindsDataset.append( { 'PRIMDS' : errorDataset } )
 ##                 bindsStreamDataset.append( { 'RUN' : run,
 ##                                              'PRIMDS' : errorDataset,
 ##                                              'STREAM' : stream } )
-##                 bindsErrorDataset.append( { 'PARENT' : datasetConfig.Name,
+##                 bindsErrorDataset.append( { 'PARENT' : dataset,
 ##                                             'ERROR' : errorDataset } )
 
             elif streamConfig.ProcessingStyle == "Express":
@@ -318,7 +313,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                                       'selectEvents' : selectEvents,
                                                       'primaryDataset' : datasetConfig.Name } )
 
-                #insertPhEDExConfig(dbConn, runNumber, datasetConfig.Name,
+                #insertPhEDExConfig(dbConn, runNumber, dataset,
                 #                   None, "T2_CH_CAF", None, False)
 
                 #insertPhEDExConfig(dbConn, runNumber, errorDataset,

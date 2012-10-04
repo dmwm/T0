@@ -3,7 +3,7 @@ _FindActiveRuns_
 
 Oracle implementation of FindActiveRuns
 
-Return a lisrt of all active runs (end_time is 0).
+Return a list of all active runs (end_time is 0).
 
 """
 

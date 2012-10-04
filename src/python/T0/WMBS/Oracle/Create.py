@@ -322,9 +322,9 @@ class Create(DBCreator):
 
         self.create[len(self.create)] = \
             """CREATE TABLE workflow_monitoring (
-                  workflow   varchar2(255) not null,
+                  workflow   int not null,
                   tracked    int default 0 not null,
-                  primary key (workflow)  
+                  primary key (workflow)
                )"""
 
         self.create[len(self.create)] = \
@@ -770,6 +770,12 @@ class Create(DBCreator):
                  ADD CONSTRAINT pro_con_cms_id_fk
                  FOREIGN KEY (cmssw_id)
                  REFERENCES cmssw_version(id)"""
+
+        self.constraints[len(self.constraints)] = \
+            """ALTER TABLE workflow_monitoring
+                 ADD CONSTRAINT wor_mon_wor_fk
+                 FOREIGN KEY (workflow)
+                 REFERENCES wmbs_workflow(id)"""
 
         subTypes = ["Express"]
         for name in subTypes:

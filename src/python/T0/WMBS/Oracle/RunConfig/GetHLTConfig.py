@@ -3,6 +3,9 @@ _GetHLTConfig_
 
 Oracle implementation of GetHLTConfig
 
+Returns HLT configuration (process name and stream
+to dataset to trigger mapping) for a given HLT key.
+
 """
 
 from WMCore.Database.DBFormatter import DBFormatter

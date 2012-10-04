@@ -3,6 +3,10 @@ _GetStreamDatasets_
 
 Oracle implementation of GetStreamDatasets
 
+Return list of primary datasets for given run and stream.
+As we do not join to the stream to trigger assoc table,
+this also returns error datasets.
+
 """
 
 from WMCore.Database.DBFormatter import DBFormatter

@@ -3,6 +3,8 @@ _GetRunInfo_
 
 Oracle implementation of GetRunInfo
 
+Return global information for given run (from run table).
+
 """
 
 from WMCore.Database.DBFormatter import DBFormatter
