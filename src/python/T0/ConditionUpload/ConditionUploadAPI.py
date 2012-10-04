@@ -188,7 +188,7 @@ def uploadToDropbox(condFiles, dropboxHost, validationMode):
                         status = True
 
                 if status == False:
-                    logging.error("ERROR: DropBox validation upload failed for %s" % file2upload)
+                    logging.error("DropBox validation upload failed for %s" % file2upload)
                     uploadStatus = False
 
         else:
@@ -202,13 +202,13 @@ def uploadToDropbox(condFiles, dropboxHost, validationMode):
                         status = True
 
                 if status == False:
-                    logging.error("ERROR: DropBox upload failed for %s" % file2upload)
+                    logging.error("DropBox upload failed for %s" % file2upload)
                     uploadStatus = False
 
         if uploadStatus:
             completeFiles.append(sqliteFile)
             completeFiles.append(metaFile)
-            logging.error("  ==> Upload succeeded for payload %s" % filenamePrefix)
+            logging.info("  ==> Upload succeeded for payload %s" % filenamePrefix)
         else:
             logging.error("  ==> Upload failed for payload %s" % filenamePrefix)
 
