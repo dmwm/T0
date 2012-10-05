@@ -25,8 +25,13 @@ class GetExpressReadyRuns(DBFormatter):
                  HAVING COUNT(*) > 0
                  """
 
-        results = self.dbi.processData(sql, binds, conn = conn,
-                                       transaction = transaction)[0].fetchall()
+        try:
+            results = self.dbi.processData(sql, binds, conn = conn,
+                                           transaction = transaction)[0].fetchall()
+        except DatabaseError, ex:
+            logging.error("ERROR: DatabaseError exception when checking for express ready runs")
+            logging.error("   %s" % ex)
+            results = []
 
         runs = []
         for result in results:
