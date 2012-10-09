@@ -1,1 +1,10 @@
-no change report before 1.9.18
+1.9.18 to 1.9.19:
+  - script to create new release
+  - more adjustments for the prompt calibration loop
+  - more workarounds for the Oracle ADG query bug
+  - fix bug in the prompt calibration loop
+  - fix bug in lumi insertion
+  - a few adjustements in the Tier0 config template, fixes #3982
+  - a bunch of small fixes and changes to DAOs
+  - fix a few ConditionsUpload logging issues
+  - add missing GetRunEndTime DAO
