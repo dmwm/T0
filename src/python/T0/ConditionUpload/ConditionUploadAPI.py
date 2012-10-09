@@ -22,17 +22,12 @@ def uploadConditions(timeout, dropboxHost, validationMode):
 
     Called by Tier0Feeder in every polling cycle
 
-    Return PCL status incl. files for upload for all
-    run/stream combos that are not completely finished.
-
-    Completely finished in this context means that the
-    filesets for all streams in the run were closed
-    (ie. all data was processed) and all condition
-    files were uploaded
+    Determine PCL status incl. files for upload for all
+    run/stream combos that are not finished yet.
 
     Loop through the runs, uploading files for all
-    streams. If the stream is finished (ie. fileset
-    is closed), mark it as completely finished.
+    streams. If the run/stream  upload subscription
+    is finished, mark that run/stream PCL as finished.
 
     Terminate the loop on the first run that has
     not completely finished streams, but only
@@ -50,7 +45,8 @@ def uploadConditions(timeout, dropboxHost, validationMode):
 
     findConditionsDAO = daoFactory(classname = "ConditionUpload.GetConditions")
     completeFilesDAO = daoFactory(classname = "ConditionUpload.CompleteFiles")
-    
+
+    isPromptCalibrationFinishedDAO = daoFactory(classname = "ConditionUpload.IsPromptCalibrationFinished")
     markPromptCalibrationFinishedDAO = daoFactory(classname = "ConditionUpload.MarkPromptCalibrationFinished")
 
     # look at all runs not completely finished with condition uploads
@@ -63,21 +59,20 @@ def uploadConditions(timeout, dropboxHost, validationMode):
 
         advanceToNextRun = True
 
-        for stream in conditions[run].keys():
+        for streamid in conditions[run].keys():
 
             # always upload files (if there are any to upload)
             condFiles = []
             uploadedFiles = []
-            for condFile in conditions[run][stream]['files']:
-                if condFile['subscription'] != None:
-                    condFiles.append(condFile)
+            for condFile in conditions[run][streamid]['files']:
+                condFiles.append(condFile)
             if len(condFiles) > 0:
                 uploadedFiles = uploadToDropbox(condFiles, dropboxHost, validationMode)
 
             bindVarList = []
             for uploadedFile in uploadedFiles:
                 bindVarList.append( { 'FILEID' : uploadedFile['fileid'],
-                                      'SUBSCRIPTION' : uploadedFile['subscription'] } )
+                                      'SUBSCRIPTION' : conditions[run][streamid]['subscription'] } )
 
             # need a transaction here so we don't have files in
             # state acquired and complete at the same time
@@ -91,17 +86,16 @@ def uploadConditions(timeout, dropboxHost, validationMode):
                 else:
                     myThread.transaction.commit()
 
-                # FIXME, only finish and advance to next run if fileset for
-                # subscription closed and no more acquired files
-                #
-                # PROBLEM, how to check that without file/subscription
-                #
-                # might need to cache the subscription in prompt_calib
-                # update call from job splitter maybe
-                if True:
-                    markPromptCalibrationFinishedDAO.execute(run, stream, 2, transaction = False)
+            # only finish and advance to next run if all run/stream finished
+            # that means fileset for subscription closed and no available/acquired files
+            if  conditions[run][streamid]['subscription'] != None:
+                finished = isPromptCalibrationFinishedDAO.execute(conditions[run][streamid]['subscription'])
+                if finished:
+                    markPromptCalibrationFinishedDAO.execute(run, streamid, transaction = False)
                 else:
                     advanceToNextRun = False
+            else:
+                advanceToNextRun = False
 
         # check for timeout, but only if there is a next run
         if not advanceToNextRun and index < len(conditions.keys()):

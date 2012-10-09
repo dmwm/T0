@@ -251,9 +251,10 @@ class Create(DBCreator):
 
         self.create[len(self.create)] = \
             """CREATE TABLE prompt_calib (
-                 run_id      int not null,
-                 stream_id   int not null,
-                 finished    int default 0 not null,
+                 run_id        int not null,
+                 stream_id     int not null,
+                 finished      int default 0 not null,
+                 subscription  int,
                  primary key (run_id, stream_id)
                )"""
 
@@ -421,7 +422,7 @@ class Create(DBCreator):
             """CREATE INDEX idx_streamer_3 ON streamer (checkForZeroOneState(deleted))"""
 
         self.indexes[len(self.indexes)] = \
-            """CREATE INDEX idx_prompt_calib_1 ON prompt_calib (checkForZeroOneState(finished))"""
+            """CREATE INDEX idx_prompt_calib_1 ON prompt_calib (checkForZeroState(finished))"""
 
         self.indexes[len(self.indexes)] = \
             """CREATE INDEX idx_reco_release_config_1 ON reco_release_config (checkForZeroState(released))"""
@@ -675,6 +676,13 @@ class Create(DBCreator):
                  REFERENCES stream(id)"""
 
         self.constraints[len(self.constraints)] = \
+            """ALTER TABLE prompt_calib
+                 ADD CONSTRAINT pro_cal_sub_fk
+                 FOREIGN KEY (subscription)
+                 REFERENCES wmbs_subscription(id)
+                 ON DELETE CASCADE"""
+
+        self.constraints[len(self.constraints)] = \
             """ALTER TABLE prompt_calib_file
                  ADD CONSTRAINT pro_cal_fil_run_id_fk
                  FOREIGN KEY (run_id)
@@ -775,7 +783,8 @@ class Create(DBCreator):
             """ALTER TABLE workflow_monitoring
                  ADD CONSTRAINT wor_mon_wor_fk
                  FOREIGN KEY (workflow)
-                 REFERENCES wmbs_workflow(id)"""
+                 REFERENCES wmbs_workflow(id)
+                 ON DELETE CASCADE"""
 
         subTypes = ["Express"]
         for name in subTypes:
