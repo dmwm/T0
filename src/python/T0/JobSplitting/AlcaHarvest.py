@@ -81,7 +81,6 @@ class AlcaHarvest(JobFactory):
         getAllFilesDAO = self.daoFactory(classname = "Subscriptions.GetAllFiles")
         return getAllFilesDAO.execute(self.subscription["id"])
 
-
     def createJob(self, fileList):
         """
         _createJob_
