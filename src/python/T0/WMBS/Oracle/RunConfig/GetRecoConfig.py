@@ -25,16 +25,12 @@ class GetRecoConfig(DBFormatter):
                         reco_config.dqm_seq,
                         reco_config.global_tag,
                         event_scenario.name
-                 FROM reco_config
-                 INNER JOIN run_primds_stream_assoc ON
-                   run_primds_stream_assoc.run_id = reco_config.run_id AND
-                   run_primds_stream_assoc.primds_id = reco_config.primds_id
-                 INNER JOIN run_stream_style_assoc ON
-                   run_stream_style_assoc.run_id = reco_config.run_id AND
-                   run_stream_style_assoc.stream_id = run_primds_stream_assoc.stream_id AND
-                   run_stream_style_assoc.style_id = (SELECT id FROM processing_style WHERE name = 'Bulk')
+                 FROM run_primds_stream_assoc
+                 INNER JOIN reco_config ON
+                   reco_config.run_id = run_primds_stream_assoc.run_id AND
+                   reco_config.primds_id = run_primds_stream_assoc.primds_id
                  INNER JOIN run_primds_scenario_assoc ON
-                   run_primds_scenario_assoc.run_id = reco_config.run_id AND
+                   run_primds_scenario_assoc.run_id = run_primds_stream_assoc.run_id AND
                    run_primds_scenario_assoc.primds_id = reco_config.primds_id
                  INNER JOIN primary_dataset ON
                    primary_dataset.id = run_primds_stream_assoc.primds_id
@@ -42,7 +38,7 @@ class GetRecoConfig(DBFormatter):
                    cmssw_version.id = reco_config.cmssw_id
                  INNER JOIN event_scenario ON
                    event_scenario.id = run_primds_scenario_assoc.scenario_id
-                 WHERE reco_config.run_id = :RUN
+                 WHERE run_primds_stream_assoc.run_id = :RUN
                  AND run_primds_stream_assoc.stream_id =
                    (SELECT id FROM stream WHERE name = :STREAM)
                  """

@@ -31,11 +31,6 @@ class GetAvailableExpressFiles(DBFormatter):
                  INNER JOIN wmbs_file_runlumi_map ON
                    wmbs_file_runlumi_map.fileid = wmbs_sub_files_available.fileid AND
                    wmbs_file_runlumi_map.run = run_stream_fileset_assoc.run_id
-                 INNER JOIN lumi_section_closed ON
-                   lumi_section_closed.run_id = run_stream_fileset_assoc.run_id AND
-                   lumi_section_closed.stream_id = run_stream_fileset_assoc.stream_id AND
-                   lumi_section_closed.lumi_id = wmbs_file_runlumi_map.lumi AND
-                   lumi_section_closed.close_time > 0
                  INNER JOIN wmbs_file_details ON
                    wmbs_file_details.id = wmbs_sub_files_available.fileid
                  INNER JOIN wmbs_file_location ON

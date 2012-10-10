@@ -16,13 +16,13 @@ class GetStreamerWorkflowsForMonitoring(DBFormatter):
         sql = """SELECT workflow_monitoring.workflow,
                         run_stream_fileset_assoc.run_id,
                         wmbs_workflow.name
-                 FROM workflow_monitoring 
+                 FROM workflow_monitoring
                    INNER JOIN wmbs_subscription ON
                      wmbs_subscription.workflow = workflow_monitoring.workflow
-                   INNER JOIN wmbs_workflow ON
-                     wmbs_workflow.id = workflow_monitoring.workflow
                    INNER JOIN run_stream_fileset_assoc ON
                      run_stream_fileset_assoc.fileset = wmbs_subscription.fileset
+                   INNER JOIN wmbs_workflow ON
+                     wmbs_workflow.id = workflow_monitoring.workflow
                  WHERE checkForZeroState(workflow_monitoring.tracked) = 0
                  """
 

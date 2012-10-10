@@ -22,14 +22,10 @@ class GetPromptSkimConfig(DBFormatter):
                         promptskim_config.proc_version,
                         promptskim_config.global_tag,
                         promptskim_config.config_url
-                 FROM promptskim_config
-                 INNER JOIN run_primds_stream_assoc ON
-                   run_primds_stream_assoc.run_id = promptskim_config.run_id AND
-                   run_primds_stream_assoc.primds_id = promptskim_config.primds_id
-                 INNER JOIN run_stream_style_assoc ON
-                   run_stream_style_assoc.run_id = promptskim_config.run_id AND
-                   run_stream_style_assoc.stream_id = run_primds_stream_assoc.stream_id AND
-                   run_stream_style_assoc.style_id = (SELECT id FROM processing_style WHERE name = 'Bulk')
+                 FROM run_primds_stream_assoc
+                 INNER JOIN promptskim_config ON
+                   promptskim_config.run_id = run_primds_stream_assoc.run_id AND
+                   promptskim_config.primds_id = run_primds_stream_assoc.primds_id
                  INNER JOIN primary_dataset ON
                    primary_dataset.id = promptskim_config.primds_id
                  INNER JOIN data_tier ON
@@ -38,7 +34,7 @@ class GetPromptSkimConfig(DBFormatter):
                    storage_node.id = promptskim_config.node_id
                  INNER JOIN cmssw_version ON
                    cmssw_version.id = promptskim_config.cmssw_id
-                 WHERE promptskim_config.run_id = :RUN
+                 WHERE run_primds_stream_assoc.run_id = :RUN
                  AND run_primds_stream_assoc.stream_id =
                    (SELECT id FROM stream WHERE name = :STREAM)
                  """
