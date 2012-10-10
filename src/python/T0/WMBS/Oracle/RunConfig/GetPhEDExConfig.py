@@ -18,19 +18,15 @@ class GetPhEDExConfig(DBFormatter):
                         phedex_config.custodial,
                         phedex_config.request_only,
                         phedex_config.priority
-                 FROM phedex_config
-                 INNER JOIN run_primds_stream_assoc ON
-                   run_primds_stream_assoc.run_id = phedex_config.run_id AND
-                   run_primds_stream_assoc.primds_id = phedex_config.primds_id
-                 INNER JOIN run_stream_style_assoc ON
-                   run_stream_style_assoc.run_id = phedex_config.run_id AND
-                   run_stream_style_assoc.stream_id = run_primds_stream_assoc.stream_id AND
-                   run_stream_style_assoc.style_id = (SELECT id FROM processing_style WHERE name = 'Bulk')
+                 FROM run_primds_stream_assoc
+                 INNER JOIN phedex_config ON
+                   phedex_config.run_id = run_primds_stream_assoc.run_id AND
+                   phedex_config.primds_id = run_primds_stream_assoc.primds_id
                  INNER JOIN primary_dataset ON
                    primary_dataset.id = phedex_config.primds_id
                  INNER JOIN storage_node ON
                    storage_node.id = phedex_config.node_id
-                 WHERE phedex_config.run_id = :RUN
+                 WHERE run_primds_stream_assoc.run_id.run_id = :RUN
                  AND run_primds_stream_assoc.stream_id =
                    (SELECT id FROM stream WHERE name = :STREAM)
                  """

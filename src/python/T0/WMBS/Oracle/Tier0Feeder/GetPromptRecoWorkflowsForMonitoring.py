@@ -16,13 +16,13 @@ class GetPromptRecoWorkflowsForMonitoring(DBFormatter):
         sql = """SELECT workflow_monitoring.workflow,
                         reco_release_config.run_id,
                         wmbs_workflow.name
-                 FROM workflow_monitoring 
+                 FROM workflow_monitoring
                    INNER JOIN wmbs_subscription ON
                      wmbs_subscription.workflow = workflow_monitoring.workflow
-                   INNER JOIN wmbs_workflow ON
-                     wmbs_workflow.id = workflow_monitoring.workflow
                    INNER JOIN reco_release_config ON
                      reco_release_config.fileset = wmbs_subscription.fileset
+                   INNER JOIN wmbs_workflow ON
+                     wmbs_workflow.id = workflow_monitoring.workflow
                  WHERE checkForZeroState(workflow_monitoring.tracked) = 0
                  """
 

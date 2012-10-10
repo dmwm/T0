@@ -34,7 +34,7 @@ class Create(DBCreator):
                  run_id   int           not null,
                  config   varchar2(255) not null,
                  primary key(run_id)
-               )"""
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE run_status (
@@ -42,7 +42,7 @@ class Create(DBCreator):
                  name   varchar2(25) not null,
                  primary key(id),
                  constraint run_sta_name_uq unique(name)
-               )"""
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE processing_style (
@@ -50,7 +50,7 @@ class Create(DBCreator):
                  name   varchar2(25) not null,
                  primary key(id),
                  constraint pro_sty_name_uq unique(name)
-               )"""
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE event_scenario (
@@ -58,7 +58,7 @@ class Create(DBCreator):
                  name   varchar2(25) not null,
                  primary key(id),
                  constraint eve_sce_name_uq unique(name)
-               )"""
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE data_tier (
@@ -66,7 +66,7 @@ class Create(DBCreator):
                  name   varchar2(25) not null,
                  primary key(id),
                  constraint dat_tie_name_uq unique(name)
-               )"""
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE cmssw_version (
@@ -74,7 +74,7 @@ class Create(DBCreator):
                  name   varchar2(255) not null,
                  primary key(id),
                  constraint cms_ver_name_uq unique(name)
-               )"""
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE stream (
@@ -82,7 +82,7 @@ class Create(DBCreator):
                  name   varchar2(255) not null,
                  primary key(id),
                  constraint str_name_uq unique(name)
-               )"""
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE trigger_label (
@@ -90,7 +90,7 @@ class Create(DBCreator):
                  name   varchar2(255) not null,
                  primary key(id),
                  constraint tri_lab_name_uq unique(name)
-               )"""
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE primary_dataset (
@@ -98,7 +98,7 @@ class Create(DBCreator):
                  name   varchar2(255) not null,
                  primary key(id),
                  constraint pri_dat_name_uq unique(name)
-               )"""
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE storage_node (
@@ -106,7 +106,7 @@ class Create(DBCreator):
                  name   varchar2(255) not null,
                  primary key(id),
                  constraint sto_nod_name_uq unique(name)
-               )"""
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE run (
@@ -133,7 +133,7 @@ class Create(DBCreator):
                  primds_id   int not null,
                  trig_id     int not null,
                  primary key(run_id, primds_id, trig_id)
-               )"""
+               ) ORGANIZATION INDEX COMPRESS 2"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE run_primds_stream_assoc (
@@ -149,7 +149,7 @@ class Create(DBCreator):
                  primds_id     int not null,
                  scenario_id   int not null,
                  primary key(run_id, primds_id)
-               )"""
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE run_stream_style_assoc (
@@ -157,7 +157,7 @@ class Create(DBCreator):
                  stream_id   int not null,
                  style_id    int not null,
                  primary key(run_id, stream_id)
-               )"""
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE run_stream_cmssw_assoc (
@@ -166,7 +166,7 @@ class Create(DBCreator):
                  online_version     int not null,
                  override_version   int not null,
                  primary key(run_id, stream_id)
-                )"""
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE run_stream_fileset_assoc (
@@ -175,6 +175,8 @@ class Create(DBCreator):
                  fileset     int not null,
                  primary key(run_id, stream_id),
                  constraint run_str_fil_ass_fil_uq unique(fileset)
+                   using index
+                     (create unique index idx_run_stream_fileset_assoc_1 on run_stream_fileset_assoc (fileset))
                )"""
 
         self.create[len(self.create)] = \
@@ -187,6 +189,8 @@ class Create(DBCreator):
                  released       int default 0 not null,
                  primary key(run_id, primds_id),
                  constraint rec_rel_con_fil_uq unique(fileset)
+                   using index
+                     (create unique index idx_reco_release_config_1 on reco_release_config (fileset))
                )"""
 
         self.create[len(self.create)] = \
@@ -194,21 +198,21 @@ class Create(DBCreator):
                  stream_id   int not null,
                  primds_id   int not null,
                  primary key(stream_id)
-               )"""
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE primds_error_primds_assoc (
                  parent_id   int not null,
                  error_id    int not null,
                  primary key(parent_id)
-               )"""
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE lumi_section (
                  run_id    int not null,
                  lumi_id   int not null,
                  primary key(run_id, lumi_id)
-               )"""
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE lumi_section_closed (
@@ -219,15 +223,15 @@ class Create(DBCreator):
                  insert_time int   not null,
                  close_time  int   default 0 not null,
                  primary key(run_id, stream_id, lumi_id)
-               )"""
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE lumi_section_split_active (
-                 run_id         int not null,
                  subscription   int not null,
+                 run_id         int not null,
                  lumi_id        int not null,
-                 primary key(run_id, subscription, lumi_id)
-               )"""
+                 primary key(subscription, run_id, lumi_id)
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE streamer (
@@ -247,24 +251,7 @@ class Create(DBCreator):
                  stream_id      int not null,
                  proc_version   int not null,
                  primary key (run_id, stream_id)
-               )"""
-
-        self.create[len(self.create)] = \
-            """CREATE TABLE prompt_calib (
-                 run_id        int not null,
-                 stream_id     int not null,
-                 finished      int default 0 not null,
-                 subscription  int,
-                 primary key (run_id, stream_id)
-               )"""
-
-        self.create[len(self.create)] = \
-            """CREATE TABLE prompt_calib_file (
-                 run_id      int not null,
-                 stream_id   int not null,
-                 fileid      int not null,
-                 primary key (run_id, stream_id, fileid)
-               )"""
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE express_config (
@@ -276,57 +263,74 @@ class Create(DBCreator):
                  dqm_seq        varchar2(1000),
                  global_tag     varchar2(255),
                  primary key (run_id, stream_id)
-               )"""
+               ) ORGANIZATION INDEX"""
+
+        self.create[len(self.create)] = \
+            """CREATE TABLE prompt_calib (
+                 run_id        int not null,
+                 stream_id     int not null,
+                 finished      int default 0 not null,
+                 subscription  int,
+                 primary key (run_id, stream_id)
+               ) ORGANIZATION INDEX"""
+
+        self.create[len(self.create)] = \
+            """CREATE TABLE prompt_calib_file (
+                 fileid      int not null,
+                 run_id      int not null,
+                 stream_id   int not null,
+                 primary key (fileid, run_id, stream_id)
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE reco_config (
-                  run_id         int            not null,
-                  primds_id      int            not null,
-                  do_reco        int            not null,
-                  cmssw_id       int            not null,
-                  reco_split     int            not null,
-                  write_reco     int            not null,
-                  write_dqm      int            not null,
-                  write_aod      int            not null,
-                  proc_version   int            not null,
-                  alca_skim      varchar2(1000),
-                  dqm_seq        varchar2(1000),
-                  global_tag     varchar2(255),
-                  primary key (run_id, primds_id)
-               )"""
+                 run_id         int            not null,
+                 primds_id      int            not null,
+                 do_reco        int            not null,
+                 cmssw_id       int            not null,
+                 reco_split     int            not null,
+                 write_reco     int            not null,
+                 write_dqm      int            not null,
+                 write_aod      int            not null,
+                 proc_version   int            not null,
+                 alca_skim      varchar2(1000),
+                 dqm_seq        varchar2(1000),
+                 global_tag     varchar2(255),
+                 primary key (run_id, primds_id)
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE phedex_config (
-                  run_id         int          not null,
-                  primds_id      int          not null,
-                  node_id        int          not null,
-                  custodial      int          not null,
-                  request_only   char(1)      not null,
-                  priority       varchar2(10) not null,
-                  primary key (run_id, primds_id, node_id)
-               )"""
+                 run_id         int          not null,
+                 primds_id      int          not null,
+                 node_id        int          not null,
+                 custodial      int          not null,
+                 request_only   char(1)      not null,
+                 priority       varchar2(10) not null,
+                 primary key (run_id, primds_id, node_id)
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE promptskim_config (
-                  run_id          int not null,
-                  primds_id       int not null,
-                  tier_id         int not null,
-                  skim_name       varchar2(255) not null,
-                  node_id         int not null,
-                  cmssw_id        int not null,
-                  two_file_read   int not null,
-                  proc_version    int not null,
-                  global_tag      varchar2(255),
-                  config_url      varchar2(255),
-                  primary key (run_id, primds_id, tier_id, skim_name)
-               )"""
+                 run_id          int not null,
+                 primds_id       int not null,
+                 tier_id         int not null,
+                 skim_name       varchar2(255) not null,
+                 node_id         int not null,
+                 cmssw_id        int not null,
+                 two_file_read   int not null,
+                 proc_version    int not null,
+                 global_tag      varchar2(255),
+                 config_url      varchar2(255),
+                 primary key (run_id, primds_id, tier_id, skim_name)
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE workflow_monitoring (
-                  workflow   int not null,
-                  tracked    int default 0 not null,
-                  primary key (workflow)
-               )"""
+                 workflow   int not null,
+                 tracked    int default 0 not null,
+                 primary key (workflow)
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE FUNCTION checkForZeroState (value IN int)
@@ -397,6 +401,12 @@ class Create(DBCreator):
         #
         # Indexes
         #
+        #
+        # Usual rules is to put an index on all FK. I don't follow it
+        # strictly here because some tables are only used rarely and
+        # with well defined filter conditions. In these cases I might
+        # just add an index on the condition I need.
+        #
         self.indexes[len(self.indexes)] = \
             """CREATE INDEX idx_run_1 ON run (checkForZeroState(express_released))"""
 
@@ -404,10 +414,10 @@ class Create(DBCreator):
             """CREATE INDEX idx_run_2 ON run (status)"""
 
         self.indexes[len(self.indexes)] = \
-            """CREATE INDEX idx_run_trig_primds_1 ON run_trig_primds_assoc (run_id, primds_id)"""
+            """CREATE INDEX idx_run_primds_stream_1 ON run_primds_stream_assoc (run_id, stream_id)"""
 
         self.indexes[len(self.indexes)] = \
-            """CREATE INDEX idx_run_primds_stream_1 ON run_primds_stream_assoc (run_id, stream_id)"""
+            """CREATE INDEX idx_reco_release_config_1 ON reco_release_config (checkForZeroState(released))"""
 
         self.indexes[len(self.indexes)] = \
             """CREATE INDEX idx_lumi_section_closed_1 ON lumi_section_closed (checkForZeroState(close_time))"""
@@ -423,9 +433,6 @@ class Create(DBCreator):
 
         self.indexes[len(self.indexes)] = \
             """CREATE INDEX idx_prompt_calib_1 ON prompt_calib (checkForZeroState(finished))"""
-
-        self.indexes[len(self.indexes)] = \
-            """CREATE INDEX idx_reco_release_config_1 ON reco_release_config (checkForZeroState(released))"""
 
         self.indexes[len(self.indexes)] = \
             """CREATE INDEX idx_workflow_monitoring_0 ON workflow_monitoring (checkForZeroState(tracked))"""
@@ -664,6 +671,18 @@ class Create(DBCreator):
                  REFERENCES stream(id)"""
 
         self.constraints[len(self.constraints)] = \
+            """ALTER TABLE express_config
+                 ADD CONSTRAINT exp_con_run_id_fk
+                 FOREIGN KEY (run_id)
+                 REFERENCES run(run_id)"""
+
+        self.constraints[len(self.constraints)] = \
+            """ALTER TABLE express_config
+                 ADD CONSTRAINT exp_con_str_id_fk
+                 FOREIGN KEY (stream_id)
+                 REFERENCES stream(id)"""
+
+        self.constraints[len(self.constraints)] = \
             """ALTER TABLE prompt_calib
                  ADD CONSTRAINT pro_cal_run_id_fk
                  FOREIGN KEY (run_id)
@@ -684,6 +703,13 @@ class Create(DBCreator):
 
         self.constraints[len(self.constraints)] = \
             """ALTER TABLE prompt_calib_file
+                 ADD CONSTRAINT pro_cal_fil_fil_id_fk
+                 FOREIGN KEY (fileid)
+                 REFERENCES wmbs_file_details(id)
+                 ON DELETE CASCADE"""
+
+        self.constraints[len(self.constraints)] = \
+            """ALTER TABLE prompt_calib_file
                  ADD CONSTRAINT pro_cal_fil_run_id_fk
                  FOREIGN KEY (run_id)
                  REFERENCES run(run_id)"""
@@ -691,25 +717,6 @@ class Create(DBCreator):
         self.constraints[len(self.constraints)] = \
             """ALTER TABLE prompt_calib_file
                  ADD CONSTRAINT pro_cal_fil_str_id_fk
-                 FOREIGN KEY (stream_id)
-                 REFERENCES stream(id)"""
-
-        self.constraints[len(self.constraints)] = \
-            """ALTER TABLE prompt_calib_file
-                 ADD CONSTRAINT pro_cal_fil_fil_id_fk
-                 FOREIGN KEY (fileid)
-                 REFERENCES wmbs_file_details(id)
-                 ON DELETE CASCADE"""
-
-        self.constraints[len(self.constraints)] = \
-            """ALTER TABLE express_config
-                 ADD CONSTRAINT exp_con_run_id_fk
-                 FOREIGN KEY (run_id)
-                 REFERENCES run(run_id)"""
-
-        self.constraints[len(self.constraints)] = \
-            """ALTER TABLE express_config
-                 ADD CONSTRAINT exp_con_str_id_fk
                  FOREIGN KEY (stream_id)
                  REFERENCES stream(id)"""
 
