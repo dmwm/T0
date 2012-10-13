@@ -417,7 +417,7 @@ class Create(DBCreator):
             """CREATE INDEX idx_run_primds_stream_1 ON run_primds_stream_assoc (run_id, stream_id)"""
 
         self.indexes[len(self.indexes)] = \
-            """CREATE INDEX idx_reco_release_config_1 ON reco_release_config (checkForZeroState(released))"""
+            """CREATE INDEX idx_reco_release_config_2 ON reco_release_config (checkForZeroState(released))"""
 
         self.indexes[len(self.indexes)] = \
             """CREATE INDEX idx_lumi_section_closed_1 ON lumi_section_closed (checkForZeroState(close_time))"""
