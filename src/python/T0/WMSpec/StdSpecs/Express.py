@@ -111,6 +111,8 @@ class ExpressWorkloadFactory(StdBase):
                                                   stepType = cmsswStepType,
                                                   forceUnmerged = True)
 
+        expressTask.setTaskType("Express")
+
         for expressOutLabel, expressOutInfo in expressOutMods.items():
 
             if expressOutInfo['dataTier'] == "ALCARECO":
@@ -135,6 +137,8 @@ class ExpressWorkloadFactory(StdBase):
                                                            splitArgs = mySplitArgs,
                                                            stepType = cmsswStepType,
                                                            forceMerged = True)
+
+                alcaSkimTask.setTaskType("Express")
 
                 self.addCleanupTask(expressTask, expressOutLabel)
 
@@ -332,7 +336,7 @@ class ExpressWorkloadFactory(StdBase):
         conditionTask.applyTemplates()
         conditionTask.setTaskPriority(self.priority + 5)
 
-        conditionTask.setTaskType("Express")
+        conditionTask.setTaskType("Harvesting")
 
         conditionTask.setSplittingAlgorithm("Condition",
                                             **mySplitArgs)

@@ -94,6 +94,8 @@ class RepackWorkloadFactory(StdBase):
                                                  splitArgs = mySplitArgs,
                                                  stepType = cmsswStepType)
 
+        repackTask.setTaskType("Repack")
+
         for repackOutLabel, repackOutInfo in repackOutMods.items():
             self.addRepackMergeTask(repackTask, repackOutLabel)
 
@@ -138,7 +140,7 @@ class RepackWorkloadFactory(StdBase):
         mySplitArgs = self.repackMergeSplitArgs.copy()
         mySplitArgs['algo_package'] = "T0.JobSplitting"
 
-        mergeTask.setTaskType("Merge")
+        mergeTask.setTaskType("Repack")
 
         mergeTask.setSplittingAlgorithm("RepackMerge",
                                         **mySplitArgs)
