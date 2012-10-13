@@ -793,7 +793,7 @@ class Create(DBCreator):
                  REFERENCES wmbs_workflow(id)
                  ON DELETE CASCADE"""
 
-        subTypes = ["Express"]
+        subTypes = ["Express", "Repack"]
         for name in subTypes:
             sql = """INSERT INTO wmbs_sub_types
                      (ID, NAME)
