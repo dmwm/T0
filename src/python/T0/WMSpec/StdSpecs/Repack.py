@@ -140,7 +140,7 @@ class RepackWorkloadFactory(StdBase):
         mySplitArgs = self.repackMergeSplitArgs.copy()
         mySplitArgs['algo_package'] = "T0.JobSplitting"
 
-        mergeTask.setTaskType("Repack")
+        mergeTask.setTaskType("Merge")
 
         mergeTask.setSplittingAlgorithm("RepackMerge",
                                         **mySplitArgs)
