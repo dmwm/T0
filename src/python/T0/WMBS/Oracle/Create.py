@@ -121,11 +121,15 @@ class Create(DBCreator):
                  lumicount          int           default 0 not null,
                  process            varchar2(255),
                  acq_era            varchar2(255),
-                 lfn_base           varchar2(255),
+                 lfn_prefix         varchar2(255),
+                 bulk_data_type     varchar2(255),
                  ah_timeout         int,
                  ah_dir             varchar2(255),
+                 cond_timeout       int,
+                 db_host            varchar2(255),
+                 valid_mode         int,
                  primary key(run_id)
-               )"""
+               ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE run_trig_primds_assoc (

@@ -145,11 +145,15 @@ class RunConfigTest(unittest.TestCase):
         self.tier0Config = loadConfigurationFile("ExampleConfig.py")
 
         self.referenceRunInfo = [ { 'status': 1,
-                                    'lfn_base' : "/store",
+                                    'lfn_prefix' : "/store",
+                                    'bulk_data_type' : "data",
                                     'process': 'HLT',
                                     'hltkey': self.hltkey,
                                     'ah_timeout' : 12*3600,
                                     'ah_dir' : "/blah/blah",
+                                    'cond_timeout' : 18*3600,
+                                    'db_host' : "webcondvm.cern.ch",
+                                    'valid_mode' : True,
                                     'acq_era': 'ExampleConfig_UnitTest' } ]
 
         self.referenceMapping = {}
@@ -1087,7 +1091,7 @@ class RunConfigTest(unittest.TestCase):
         """
         myThread = threading.currentThread()
 
-        RunConfigAPI.configureRun(self.tier0Config, 176161, "/store",
+        RunConfigAPI.configureRun(self.tier0Config, 176161,
                                   self.hltConfig,
                                   { 'process' : "HLT",
                                     'mapping' : self.referenceMapping })

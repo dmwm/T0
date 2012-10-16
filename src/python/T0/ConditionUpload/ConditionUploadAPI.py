@@ -16,7 +16,7 @@ import subprocess
 from WMCore.DAOFactory import DAOFactory
 
 
-def uploadConditions(timeout, dropboxHost, validationMode):
+def uploadConditions():
     """
     _uploadConditions_
 
@@ -59,12 +59,18 @@ def uploadConditions(timeout, dropboxHost, validationMode):
 
         advanceToNextRun = True
 
-        for streamid in conditions[run].keys():
+        timeout = conditions[run]['condUploadTimeout']
+        dropboxHost = conditions[run]['dropboxHost']
+        validationMode = conditions[run]['validationMode']
+
+        for streamid in conditions[run]['streams'].keys():
+
+            subscription = conditions[run]['streams'][streamid]['subscription']
 
             # always upload files (if there are any to upload)
             condFiles = []
             uploadedFiles = []
-            for condFile in conditions[run][streamid]['files']:
+            for condFile in conditions[run]['streams'][streamid]['files']:
                 condFiles.append(condFile)
             if len(condFiles) > 0:
                 uploadedFiles = uploadToDropbox(condFiles, dropboxHost, validationMode)
@@ -72,7 +78,7 @@ def uploadConditions(timeout, dropboxHost, validationMode):
             bindVarList = []
             for uploadedFile in uploadedFiles:
                 bindVarList.append( { 'FILEID' : uploadedFile['fileid'],
-                                      'SUBSCRIPTION' : conditions[run][streamid]['subscription'] } )
+                                      'SUBSCRIPTION' : subscription } )
 
             # need a transaction here so we don't have files in
             # state acquired and complete at the same time
@@ -88,8 +94,8 @@ def uploadConditions(timeout, dropboxHost, validationMode):
 
             # only finish and advance to next run if all run/stream finished
             # that means fileset for subscription closed and no available/acquired files
-            if  conditions[run][streamid]['subscription'] != None:
-                finished = isPromptCalibrationFinishedDAO.execute(conditions[run][streamid]['subscription'])
+            if subscription != None:
+                finished = isPromptCalibrationFinishedDAO.execute(subscription)
                 if finished:
                     markPromptCalibrationFinishedDAO.execute(run, streamid, transaction = False)
                 else:

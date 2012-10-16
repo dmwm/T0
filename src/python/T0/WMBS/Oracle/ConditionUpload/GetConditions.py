@@ -13,11 +13,16 @@ from WMCore.Database.DBFormatter import DBFormatter
 class GetConditions(DBFormatter):
 
     sql = """SELECT prompt_calib.run_id,
+                    run.cond_timeout,
+                    run.db_host,
+                    run.valid_mode,
                     prompt_calib.stream_id,
                     prompt_calib.subscription,
                     prompt_calib_file.fileid,
                     wmbs_file_details.lfn
              FROM prompt_calib
+               INNER JOIN run ON
+                 run.run_id = prompt_calib.run_id
                LEFT OUTER JOIN wmbs_sub_files_acquired ON
                  wmbs_sub_files_acquired.subscription = prompt_calib.subscription
                LEFT OUTER JOIN prompt_calib_file ON
@@ -36,17 +41,21 @@ class GetConditions(DBFormatter):
         for result in results:
 
             run = result[0]
-            streamid = result[1]
+            streamid = result[4]
 
             if not conditions.has_key(run):
                 conditions[run] = {}
-            if not conditions[run].has_key(streamid):
-                conditions[run][streamid] = {}
-                conditions[run][streamid]['subscription'] = result[2]
-                conditions[run][streamid]['files'] = []
+                conditions[run]['condUploadTimeout'] = result[1]
+                conditions[run]['dropboxHost'] = result[2]
+                conditions[run]['validationMode'] = bool(result[3])
+                conditions[run]['streams'] = {}
+            if not conditions[run]['streams'].has_key(streamid):
+                conditions[run]['streams'][streamid] = {}
+                conditions[run]['streams'][streamid]['subscription'] = result[5]
+                conditions[run]['streams'][streamid]['files'] = []
 
-            if result[3] != None:
-                conditions[run][streamid]['files'].append( { 'fileid' : result[3],
-                                                             'pfn' : result[4] } )
+            if result[6] != None:
+                conditions[run]['streams'][streamid]['files'].append( { 'fileid' : result[6],
+                                                                        'pfn' : result[7] } )
 
         return conditions
