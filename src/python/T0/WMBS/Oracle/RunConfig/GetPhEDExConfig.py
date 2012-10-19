@@ -26,7 +26,7 @@ class GetPhEDExConfig(DBFormatter):
                    primary_dataset.id = phedex_config.primds_id
                  INNER JOIN storage_node ON
                    storage_node.id = phedex_config.node_id
-                 WHERE run_primds_stream_assoc.run_id.run_id = :RUN
+                 WHERE run_primds_stream_assoc.run_id = :RUN
                  AND run_primds_stream_assoc.stream_id =
                    (SELECT id FROM stream WHERE name = :STREAM)
                  """

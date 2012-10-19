@@ -24,7 +24,7 @@ from T0.WMSpec.StdSpecs.Express import expressWorkload
 from WMCore.WMSpec.StdSpecs.PromptReco import getTestArguments as getPromptRecoArguments
 from WMCore.WMSpec.StdSpecs.PromptReco import promptrecoWorkload
 
-def configureRun(tier0Config, run, lfnBase, hltConfig, referenceHltConfig = None):
+def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
     """
     _configureRun_
 
@@ -63,9 +63,13 @@ def configureRun(tier0Config, run, lfnBase, hltConfig, referenceHltConfig = None
         bindsUpdateRun = { 'RUN' : run,
                            'PROCESS' : hltConfig['process'],
                            'ACQERA' : tier0Config.Global.AcquisitionEra,
-                           'LFNBASE' : lfnBase,
+                           'LFNPREFIX' : tier0Config.Global.LFNPrefix,
+                           'BULKDATATYPE' : tier0Config.Global.BulkDataType,
                            'AHTIMEOUT' : tier0Config.Global.AlcaHarvestTimeout,
-                           'AHDIR' : tier0Config.Global.AlcaHarvestDir }
+                           'AHDIR' : tier0Config.Global.AlcaHarvestDir,
+                           'CONDTIMEOUT' : tier0Config.Global.ConditionUploadTimeout,
+                           'DBHOST' : tier0Config.Global.DropboxHost,
+                           'VALIDMODE' : tier0Config.Global.ValidationMode }
 
         bindsStream = []
         bindsDataset = []
@@ -112,9 +116,13 @@ def configureRun(tier0Config, run, lfnBase, hltConfig, referenceHltConfig = None
             bindsUpdateRun = { 'RUN' : run,
                                'PROCESS' : "FakeProcessName",
                                'ACQERA' : "FakeAcquisitionEra",
-                               'LFNBASE' : lfnBase,
+                               'LFNPREFIX' : "/fakelfnprefix",
+                               'BULKDATATYPE' : "FakeBulkDataType",
                                'AHTIMEOUT' : None,
-                               'AHDIR' : None }
+                               'AHDIR' : None,
+                               'CONDTIMEOUT' : None,
+                               'DBHOST' : None,
+                               'VALIDMODE' : None }
             updateRunDAO.execute(bindsUpdateRun,
                                  transaction = True)
         except:
@@ -331,8 +339,10 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             workflowName = "Repack_Run%d_Stream%s" % (run, stream)
             specArguments = getRepackArguments()
             specArguments['ProcessingVersion'] = streamConfig.Repack.ProcessingVersion
-            specArguments['UnmergedLFNBase'] = "%s/t0temp/data" % runInfo['lfn_base']
-            specArguments['MergedLFNBase'] = "%s/data" % runInfo['lfn_base']
+            specArguments['UnmergedLFNBase'] = "%s/t0temp/%s" % (runInfo['lfn_prefix'],
+                                                                 runInfo['bulk_data_type'])
+            specArguments['MergedLFNBase'] = "%s/%s" % (runInfo['lfn_prefix'],
+                                                        runInfo['bulk_data_type'])
         elif streamConfig.ProcessingStyle == "Express":
             taskName = "Express"
             workflowName = "Express_Run%d_Stream%s" % (run, stream)
@@ -344,8 +354,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['GlobalTagTransaction'] = "Express_%d" % run
             specArguments['AlcaSkims'] = streamConfig.Express.AlcaSkims
             specArguments['DqmSequences'] = streamConfig.Express.DqmSequences
-            specArguments['UnmergedLFNBase'] = "%s/t0temp/express" % runInfo['lfn_base']
-            specArguments['MergedLFNBase'] = "%s/express" % runInfo['lfn_base']
+            specArguments['UnmergedLFNBase'] = "%s/t0temp/express" % runInfo['lfn_prefix']
+            specArguments['MergedLFNBase'] = "%s/express" % runInfo['lfn_prefix']
             specArguments['AlcaHarvestTimeout'] = runInfo['ah_timeout']
             specArguments['AlcaHarvestDir'] = runInfo['ah_dir']
             specArguments['DQMUploadProxy'] = dqmUploadProxy
@@ -604,8 +614,10 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                 specArguments['AlcaSkims'] = datasetConfig.Reco.AlcaSkims
                 specArguments['DqmSequences'] = datasetConfig.Reco.DqmSequences
 
-                specArguments['UnmergedLFNBase'] = "%s/t0temp/data" % runInfo['lfn_base']
-                specArguments['MergedLFNBase'] = "%s/data" % runInfo['lfn_base']
+                specArguments['UnmergedLFNBase'] = "%s/t0temp/%s" % (runInfo['lfn_prefix'],
+                                                                     runInfo['bulk_data_type'])
+                specArguments['MergedLFNBase'] = "%s/%s" % (runInfo['lfn_prefix'],
+                                                            runInfo['bulk_data_type'])
 
                 specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/local/Tier0/override_catalog.xml?protocol=override"
                 specArguments['DQMUploadProxy'] = dqmUploadProxy

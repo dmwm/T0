@@ -1223,7 +1223,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(len(runStreams.keys()), 0,
                          "ERROR: there should be no new run/stream")
 
-        RunConfigAPI.configureRun(self.tier0Config, 176161, "/store",
+        RunConfigAPI.configureRun(self.tier0Config, 176161,
                                   self.hltConfig,
                                   { 'process' : "HLT",
                                     'mapping' : self.referenceMapping })
@@ -1341,7 +1341,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(self.getNumFeedStreamers(), 4,
                          "ERROR: there should be 4 streamers feed")
 
-        RunConfigAPI.configureRun(self.tier0Config, 176162, "/store",
+        RunConfigAPI.configureRun(self.tier0Config, 176162,
                                   self.hltConfig,
                                   { 'process' : "HLT",
                                     'mapping' : self.referenceMapping })
@@ -1360,7 +1360,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(self.getNumFeedStreamers(), 4,
                          "ERROR: there should be 4 streamers feed")
 
-        RunConfigAPI.configureRun(self.tier0Config, 176163, "/store",
+        RunConfigAPI.configureRun(self.tier0Config, 176163,
                                   self.hltConfig,
                                   { 'process' : "HLT",
                                     'mapping' : self.referenceMapping })
@@ -1522,7 +1522,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(len(self.getClosedLumis()), 0,
                          "ERROR: there should be no closed lumis")
 
-        RunConfigAPI.configureRun(self.tier0Config, 176161, "/store",
+        RunConfigAPI.configureRun(self.tier0Config, 176161,
                                   self.hltConfig,
                                   { 'process' : "HLT",
                                     'mapping' : self.referenceMapping })
@@ -1600,7 +1600,7 @@ class Tier0FeederTest(unittest.TestCase):
         for count in range(14):
             self.insertRunStreamLumi(176161, "A", 1)
 
-        RunConfigAPI.configureRun(self.tier0Config, 176161, "/store",
+        RunConfigAPI.configureRun(self.tier0Config, 176161,
                                   self.hltConfig,
                                   { 'process' : "HLT",
                                     'mapping' : self.referenceMapping })
@@ -1663,7 +1663,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.insertRunStreamLumi(176161, "A", 1)
         self.insertRunStreamLumi(176161, "A", 1)
 
-        RunConfigAPI.configureRun(self.tier0Config, 176161, "/store",
+        RunConfigAPI.configureRun(self.tier0Config, 176161,
                                   self.hltConfig,
                                   { 'process' : "HLT",
                                     'mapping' : self.referenceMapping })

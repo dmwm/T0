@@ -14,9 +14,13 @@ class UpdateRun(DBFormatter):
         sql = """UPDATE run
                  SET process = :PROCESS,
                      acq_era = :ACQERA,
-                     lfn_base = :LFNBASE,
+                     lfn_prefix = :LFNPREFIX,
+                     bulk_data_type = :BULKDATATYPE,
                      ah_timeout = :AHTIMEOUT,
-                     ah_dir = :AHDIR
+                     ah_dir = :AHDIR,
+                     cond_timeout = :CONDTIMEOUT,
+                     db_host = :DBHOST,
+                     valid_mode = :VALIDMODE
                  WHERE run_id = :RUN
                  """
 

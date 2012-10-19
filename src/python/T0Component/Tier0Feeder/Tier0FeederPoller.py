@@ -43,15 +43,10 @@ class Tier0FeederPoller(BaseWorkerThread):
 
         self.tier0ConfigFile = config.Tier0Feeder.tier0ConfigFile
         self.specDirectory = config.Tier0Feeder.specDirectory
-        self.lfnBase = getattr(config.Tier0Feeder, "lfnBase", "/store")
 
         self.dqmUploadProxy = config.WMBSService.proxy
 
         self.localSummaryCouchDB = WMStatsWriter(config.AnalyticsDataCollector.localWMStatsURL)
-
-        self.condUploadTimeout = 18 * 3600
-        self.dropboxHost = "webcondvm.cern.ch"
-        self.validationMode = True
 
         hltConfConnectUrl = config.HLTConfDatabase.connectUrl
         dbFactoryHltConf = DBFactory(logging, dburl = hltConfConnectUrl, options = {})
@@ -124,7 +119,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                         continue
 
                 try:
-                    RunConfigAPI.configureRun(tier0Config, run, self.lfnBase, hltConfig)
+                    RunConfigAPI.configureRun(tier0Config, run, hltConfig)
                 except:
                     logging.exception("Can't configure for run %d" % (run))
 
@@ -221,9 +216,7 @@ class Tier0FeederPoller(BaseWorkerThread):
         #
         # upload PCL conditions to DropBox
         #
-        ConditionUploadAPI.uploadConditions(self.condUploadTimeout,
-                                            self.dropboxHost,
-                                            self.validationMode)
+        ConditionUploadAPI.uploadConditions()
 
         return
 

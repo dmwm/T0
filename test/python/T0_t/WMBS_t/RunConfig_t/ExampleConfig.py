@@ -7,7 +7,9 @@ Example configuration for RunConfig unittest
 from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
-from T0.RunConfig.Tier0Config import setAlcaHarvestConfig
+from T0.RunConfig.Tier0Config import setLFNPrefix
+from T0.RunConfig.Tier0Config import setBulkDataType
+from T0.RunConfig.Tier0Config import setPromptCalibrationConfig
 from T0.RunConfig.Tier0Config import setConfigVersion
 from T0.RunConfig.Tier0Config import ignoreStream
 from T0.RunConfig.Tier0Config import addRepackConfig
@@ -27,11 +29,14 @@ setConfigVersion(tier0Config, "replace with real version")
 #  LFN prefix
 #  data type
 setAcquisitionEra(tier0Config, "ExampleConfig_UnitTest")
-#setLFNPrefix(tier0Config, "/store")
-#setDataType(tier0Config, "data")
-setAlcaHarvestConfig(tier0Config,
-                     alcaHarvestTimeout = 12*3600,
-                     alcaHarvestDir = "/blah/blah")
+setLFNPrefix(tier0Config, "/store")
+setBulkDataType(tier0Config, "data")
+setPromptCalibrationConfig(tier0Config,
+                           alcaHarvestTimeout = 12*3600,
+                           alcaHarvestDir = "/some/afs/dir",
+                           conditionUploadTimeout = 18*3600,
+                           dropboxHost = "webcondvm.cern.ch",
+                           validationMode = True)
 
 # setup repack and express version mappings
 repackVersionOverride = {

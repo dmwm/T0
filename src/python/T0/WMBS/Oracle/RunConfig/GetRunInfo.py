@@ -17,7 +17,8 @@ class GetRunInfo(DBFormatter):
                         hltkey,
                         process,
                         acq_era,
-                        lfn_base,
+                        lfn_prefix,
+                        bulk_data_type,
                         ah_timeout,
                         ah_dir
                  FROM run
