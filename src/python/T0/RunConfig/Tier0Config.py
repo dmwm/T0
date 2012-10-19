@@ -14,6 +14,10 @@ Tier0Configuration - Global configuration object
 | |       |
 | |       |--> AcquisitionEra - The acquisition era for the run
 | |       |
+| |       |--> LFNPrefix - The LFN prefix for the run
+| |       |
+| |       |--> BulkDataType - The bulk data type for the run
+| |       |
 | |       |--> AlcaHarvestTimeout - AlcaHarvesting for a run/stream is normally trigered by
 | |       |                         fileset closing (ie. all data received and processed).
 | |       |                         This timeout will configure an additional time trigger
@@ -21,7 +25,19 @@ Tier0Configuration - Global configuration object
 | |       |                         file was received).
 | |       |
 | |       |--> AlcaHarvestDir - Directory to which the AlcaHarvest job copies the
-| |                             sqlite file and associated metadata.
+| |       |                     sqlite file and associated metadata.
+| |       |
+| |       |--> ConditionUploadTimeout - ConditionUpload normally only advances to the next run
+| |       |                             if the current run is completely finished (ie. all data
+| |       |                             received, processed, alca harvested and conditions
+| |       |                             uploaded). This timeout will configure an additional
+| |       |                             time trigger based on the run end_time ( or when the
+| |       |                             last streamer file was received).
+| |       |
+| |       |--> DropBoxHost - Machine where we upload the PCL conditions to
+| |       |
+| |       |--> ValidationMode - Whether or not we upload conditions for immediate use
+| |                             in PromptReco or just for validation checks.
 | |
 | |--> Streams - Configuration parameters that belong to a particular stream
 |       |
@@ -325,14 +341,37 @@ def setAcquisitionEra(config, acquisitionEra):
     config.Global.AcquisitionEra = acquisitionEra
     return
 
-def setAlcaHarvestConfig(config, alcaHarvestTimeout, alcaHarvestDir):
+def setLFNPrefix(config, prefix):
     """
-    _setAlcaHarvestConfig_
+    _setLFNPrefix_
 
-    Configure needed settings for AlcaHarvest
+    Set the LFN prefix in the configuration.
+    """
+    config.Global.LFNPrefix = prefix
+    return
+
+def setBulkDataType(config, type):
+    """
+    _setBulkDataType_
+
+    Set the bulk data type in the configuration.
+    """
+    config.Global.BulkDataType = type
+    return
+
+def setPromptCalibrationConfig(config, alcaHarvestTimeout, alcaHarvestDir,
+                               conditionUploadTimeout, dropboxHost,
+                               validationMode):
+    """
+    _setPromptCalibrationConfig_
+
+    Configure needed settings for PromptCalibration
     """
     config.Global.AlcaHarvestTimeout = alcaHarvestTimeout
     config.Global.AlcaHarvestDir = alcaHarvestDir
+    config.Global.ConditionUploadTimeout = conditionUploadTimeout
+    config.Global.DropboxHost = dropboxHost
+    config.Global.ValidationMode = validationMode
     return
 
 def setConfigVersion(config, version):
