@@ -20,7 +20,10 @@ class GetRunInfo(DBFormatter):
                         lfn_prefix,
                         bulk_data_type,
                         ah_timeout,
-                        ah_dir
+                        ah_dir,
+                        cond_timeout,
+                        db_host,
+                        valid_mode
                  FROM run
                  WHERE run_id = :RUN
                  """

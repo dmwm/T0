@@ -150,10 +150,10 @@ class RunConfigTest(unittest.TestCase):
                                     'process': 'HLT',
                                     'hltkey': self.hltkey,
                                     'ah_timeout' : 12*3600,
-                                    'ah_dir' : "/blah/blah",
+                                    'ah_dir' : "/some/afs/dir",
                                     'cond_timeout' : 18*3600,
                                     'db_host' : "webcondvm.cern.ch",
-                                    'valid_mode' : True,
+                                    'valid_mode' : int(True),
                                     'acq_era': 'ExampleConfig_UnitTest' } ]
 
         self.referenceMapping = {}
