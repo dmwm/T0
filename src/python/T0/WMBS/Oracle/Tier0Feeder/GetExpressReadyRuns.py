@@ -12,6 +12,9 @@ can have Express released)
 
 from WMCore.Database.DBFormatter import DBFormatter
 
+import logging
+from sqlalchemy.exc import DatabaseError
+
 class GetExpressReadyRuns(DBFormatter):
 
     def execute(self, binds, conn = None, transaction = False):
