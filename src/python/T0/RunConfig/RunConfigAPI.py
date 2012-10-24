@@ -268,10 +268,13 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                    'STREAM' : stream,
                                    'PROC_VER' : streamConfig.Express.ProcessingVersion,
                                    'WRITE_TIERS' : ",".join(streamConfig.Express.DataTiers),
+                                   'GLOBAL_TAG' : streamConfig.Express.GlobalTag,
+                                   'MAX_EVENTS' : streamConfig.Express.MaxInputEvents,
+                                   'MAX_SIZE' : streamConfig.Express.MaxInputSize,
+                                   'MAX_FILES' : streamConfig.Express.MaxInputFiles,
+                                   'MAX_LATENCY' : streamConfig.Express.MaxLatency,
                                    'ALCA_SKIM' : alcaSkim,
-                                   'DQM_SEQ' : dqmSeq,
-                                   'GLOBAL_TAG' : streamConfig.Express.GlobalTag }
-
+                                   'DQM_SEQ' : dqmSeq }
 
         overrideVersion = streamConfig.VersionOverride.get(onlineVersion, None)
         if overrideVersion != None:
@@ -352,6 +355,10 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['ProcScenario'] = streamConfig.Express.Scenario
             specArguments['GlobalTag'] = streamConfig.Express.GlobalTag
             specArguments['GlobalTagTransaction'] = "Express_%d" % run
+            specArguments['MaxInputEvents'] = streamConfig.Express.MaxInputEvents
+            specArguments['MaxInputSize'] = streamConfig.Express.MaxInputSize
+            specArguments['MaxInputFiles'] = streamConfig.Express.MaxInputFiles
+            specArguments['MaxLatency'] = streamConfig.Express.MaxLatency
             specArguments['AlcaSkims'] = streamConfig.Express.AlcaSkims
             specArguments['DqmSequences'] = streamConfig.Express.DqmSequences
             specArguments['UnmergedLFNBase'] = "%s/t0temp/express" % runInfo['lfn_prefix']
