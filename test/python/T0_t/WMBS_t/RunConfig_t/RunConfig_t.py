@@ -1187,14 +1187,32 @@ class RunConfigTest(unittest.TestCase):
         self.assertEqual(set(writeTiers), set([ "FEVT", "ALCARECO", "DQM" ]),
                          "ERROR: wrong data tiers for stream Express")
 
-        writeSkims = []
+        self.assertEqual(expressConfig['global_tag'], "GlobalTag1",
+                         "ERROR: wrong global tag for stream Express")
+
+        self.assertEqual(expressConfig['max_events'], 123,
+                         "ERROR: wrong max input events for stream Express")
+
+        self.assertEqual(expressConfig['max_size'], 123456789,
+                         "ERROR: wrong max input size for stream Express")
+
+        self.assertEqual(expressConfig['max_files'], 1234,
+                         "ERROR: wrong max input files for stream Express")
+
+        self.assertEqual(expressConfig['max_latency'], 12 * 23,
+                         "ERROR: wrong max latency for stream Express")
+
+        alcaSkims = []
         if expressConfig['alca_skim'] != None:
-            writeSkims = expressConfig['alca_skim'].split(',')
-        self.assertEqual(set(writeSkims), set([ "SiStripCalZeroBias", "PromptCalibProd" ]),
+            alcaSkims = expressConfig['alca_skim'].split(',')
+        self.assertEqual(set(alcaSkims), set([ "SiStripCalZeroBias", "PromptCalibProd" ]),
                          "ERROR: wrong alca skims for stream Express")
 
-        self.assertEqual(expressConfig['global_tag'], "GlobalTag1" ,
-                         "ERROR: wrong global tag for stream Express")
+        dqmSeq = []
+        if expressConfig['dqm_seq'] != None:
+            dqmSeq = expressConfig['dqm_seq'].split(',')
+            self.assertEqual(set(dqmSeq), set([ "@common" ]),
+                             "ERROR: wrong dqm sequences for stream Express")
 
         self.assertEqual(expressConfig['scenario'], "pp" ,
                          "ERROR: wrong scenario for stream Express")

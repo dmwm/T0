@@ -67,6 +67,15 @@ Tier0Configuration - Global configuration object
 |             |     |--> DqmSequences - List of dqm sequences active for this stream.
 |             |     |
 |             |     |--> ProcessingVersion - processing version
+|             |     |
+|             |     |--> MaxInputEvents - max events for express processing job
+|             |     |
+|             |     |--> MaxInputSize - max input size for express merge job
+|             |     |
+|             |     |--> MaxInputFiles - max input files for express merge job
+|             |     |
+|             |     |--> MaxLatency - max latency to trigger express merge job
+|             |
 |             |
 |             |--> Register - Configuration section for register streams
 |             |     |
@@ -461,6 +470,11 @@ def addExpressConfig(config, streamName, **options):
     streamConfig.Express.AlcaSkims = options.get("alca_producers", [])
     streamConfig.Express.DqmSequences = options.get("dqm_sequences", [])
     streamConfig.Express.ProcessingVersion = options.get("proc_ver", 1)
+
+    streamConfig.Express.MaxInputEvents = options.get("maxInputEvents", 200)
+    streamConfig.Express.MaxInputSize = options.get("maxInputSize", 2 * 1024 * 1024 * 1024)
+    streamConfig.Express.MaxInputFiles = options.get("maxInputFiles", 500)
+    streamConfig.Express.MaxLatency = options.get("maxLatency", 15 * 23)
 
     return
 
