@@ -364,13 +364,13 @@ class ExpressWorkloadFactory(StdBase):
         self.alcaHarvestDir = arguments['AlcaHarvestDir']
         self.streamName = arguments['StreamName']
 
-        # job splitting parameters
+        # job splitting parameters (also required parameters)
         self.expressSplitArgs = {}
-        self.expressSplitArgs['maxInputEvents'] = 200
+        self.expressSplitArgs['maxInputEvents'] = arguments['MaxInputEvents']
         self.expressMergeSplitArgs = {}
-        self.expressMergeSplitArgs['maxInputSize'] = 2 * 1024 * 1024 * 1024
-        self.expressMergeSplitArgs['maxInputFiles'] = 500
-        self.expressMergeSplitArgs['maxLatency'] = 15 * 23
+        self.expressMergeSplitArgs['maxInputSize'] = arguments['MaxInputSize']
+        self.expressMergeSplitArgs['maxInputFiles'] = arguments['MaxInputFiles']
+        self.expressMergeSplitArgs['maxLatency'] = arguments['MaxLatency']
 
         if arguments.has_key("Multicore"):
             numCores = arguments.get("Multicore")

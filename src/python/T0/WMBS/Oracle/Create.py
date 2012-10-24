@@ -259,13 +259,17 @@ class Create(DBCreator):
 
         self.create[len(self.create)] = \
             """CREATE TABLE express_config (
-                 run_id         int            not null,
-                 stream_id      int            not null,
-                 proc_version   int            not null,
-                 write_tiers    varchar2(255)  not null,
+                 run_id         int             not null,
+                 stream_id      int             not null,
+                 proc_version   int             not null,
+                 write_tiers    varchar2(255)   not null,
+                 global_tag     varchar2(255)   not null,
+                 max_events     int             not null,
+                 max_size       int             not null,
+                 max_files      int             not null,
+                 max_latency    int             not null,
                  alca_skim      varchar2(1000),
                  dqm_seq        varchar2(1000),
-                 global_tag     varchar2(255),
                  primary key (run_id, stream_id)
                ) ORGANIZATION INDEX"""
 

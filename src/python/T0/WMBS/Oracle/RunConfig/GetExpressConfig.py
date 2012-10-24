@@ -16,9 +16,13 @@ class GetExpressConfig(DBFormatter):
         sql = """SELECT express_config.proc_version AS proc_ver,
                         cmssw_version.name AS cmssw,
                         express_config.write_tiers AS write_tiers,
+                        express_config.global_tag AS global_tag,
+                        express_config.max_events AS max_events,
+                        express_config.max_size AS max_size,
+                        express_config.max_files AS max_files,
+                        express_config.max_latency AS max_latency,
                         express_config.alca_skim AS alca_skim,
                         express_config.dqm_seq AS dqm_seq,
-                        express_config.global_tag AS global_tag,
                         event_scenario.name AS scenario
                  FROM express_config
                  INNER JOIN run_stream_cmssw_assoc ON
