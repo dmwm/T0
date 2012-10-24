@@ -415,7 +415,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             if streamConfig.ProcessingStyle in [ 'Bulk', 'Express' ]:
                 insertStreamFilesetDAO.execute(run, stream, filesetName, conn = myThread.transaction.conn, transaction = True)
                 fileset.load()
-                wmbsHelper.createSubscription(wmSpec.getTask(taskName), fileset)
+                wmbsHelper.createSubscription(wmSpec.getTask(taskName), fileset, alternativeFilesetClose = True)
                 insertWorkflowMonitoringDAO.execute([fileset.id],  conn = myThread.transaction.conn, transaction = True)
             if streamConfig.ProcessingStyle == "Bulk":
                 bindsRecoReleaseConfig = []
@@ -653,7 +653,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
         if len(bindsReleasePromptReco) > 0:
             releasePromptRecoDAO.execute(bindsReleasePromptReco, conn = myThread.transaction.conn, transaction = True)
         for (wmbsHelper, wmSpec, fileset) in recoSpecs.values():
-            wmbsHelper.createSubscription(wmSpec.getTask(taskName), Fileset(id = fileset))
+            wmbsHelper.createSubscription(wmSpec.getTask(taskName), Fileset(id = fileset), alternativeFilesetClose = True)
             insertWorkflowMonitoringDAO.execute([fileset],  conn = myThread.transaction.conn, transaction = True)
         if len(recoSpecs) > 0:
             markWorkflowsInjectedDAO.execute(recoSpecs.keys(), injected = True, conn = myThread.transaction.conn, transaction = True)
