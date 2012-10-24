@@ -31,7 +31,7 @@ class Repack(JobFactory):
         self.jobNamePrefix = kwargs.get('jobNamePrefix', "Repack")
         self.maxSizeSingleLumi = kwargs['maxSizeSingleLumi']
         self.maxSizeMultiLumi = kwargs['maxSizeMultiLumi']
-        self.maxEvents = kwargs['maxEvents']
+        self.maxInputEvents = kwargs['maxInputEvents']
         self.maxInputFiles = kwargs['maxInputFiles']
 
         self.createdGroup = False
@@ -141,7 +141,7 @@ class Repack(JobFactory):
             # => handle lumi individually and split
             #
             if lumiSizeTotal > self.maxSizeSingleLumi or \
-                   lumiEventsTotal > self.maxEvents:
+                   lumiEventsTotal > self.maxInputEvents:
 
                 splitLumis.append( { 'SUB' : self.subscription["id"],
                                      'LUMI' : lumi } )
@@ -171,7 +171,7 @@ class Repack(JobFactory):
                             newSizeTotal = sizeTotal + streamer['filesize']                        
 
                             if newSizeTotal <= self.maxSizeSingleLumi and \
-                                   newEventsTotal <= self.maxEvents:
+                                   newEventsTotal <= self.maxInputEvents:
                                 eventsTotal = newEventsTotal
                                 sizeTotal = newSizeTotal
                                 streamerList.append(streamer)
@@ -203,7 +203,7 @@ class Repack(JobFactory):
 
                 # still safe with new lumi, just add it
                 elif newSizeTotal <= self.maxSizeMultiLumi and \
-                       newEventsTotal <= self.maxEvents and \
+                       newEventsTotal <= self.maxInputEvents and \
                        newInputfiles <= self.maxInputFiles:
 
                     jobSizeTotal = newSizeTotal

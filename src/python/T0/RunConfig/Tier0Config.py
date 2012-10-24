@@ -52,7 +52,31 @@ Tier0Configuration - Global configuration object
 |             |
 |             |--> Repack - Configuration section for bulk streams
 |             |     |
-|             |     |--> Nothing here for now, placeholder
+|             |     |--> ProcessingVersion - processing version
+|             |     |
+|             |     |--> MaxSizeSingleLumi - max size of single lumi before we break
+|             |     |                        it up into multiple repack jobs
+|             |     |
+|             |     |--> MaxSizeMultiLumi - max size for a multi lumi repack job
+|             |     |
+|             |     |--> MinInputSize - min input size for repack merge job
+|             |     |
+|             |     |--> MaxInputSize - max input size for repack merge job
+|             |     |
+|             |     |--> MaxEdmSize - max size for repack merge output, break
+|             |     |                 up lumi into multiple files and send to
+|             |     |                 error dataset if larger
+|             |     |
+|             |     |--> MaxOverSize - max size for overmerge (where merging in
+|             |     |                  order forces us to use a lumi to get over
+|             |     |                  the min size but that also gets us over
+|             |     |                  the max size allowed. In these case we
+|             |     |                  have a preference for creating too large
+|             |     |                  files compared to too small files.
+|             |     |
+|             |     |--> MaxInputEvents - max input events for repack and repack merge job
+|             |     |
+|             |     |--> MaxInputFiles - max input files for repack and repack merge job
 |             |
 |             |--> Express - Configuration section for express streams
 |             |     |
@@ -68,7 +92,7 @@ Tier0Configuration - Global configuration object
 |             |     |
 |             |     |--> ProcessingVersion - processing version
 |             |     |
-|             |     |--> MaxInputEvents - max events for express processing job
+|             |     |--> MaxInputEvents - max input events for express processing job
 |             |     |
 |             |     |--> MaxInputSize - max input size for express merge job
 |             |     |
@@ -429,6 +453,49 @@ def addRepackConfig(config, streamName, **options):
         streamConfig.Repack.ProcessingVersion = options.get("proc_ver", streamConfig.Repack.ProcessingVersion)
     else:
         streamConfig.Repack.ProcessingVersion = options.get("proc_ver", 1)
+
+    if hasattr(streamConfig.Repack, "MaxSizeSingleLumi"):
+        streamConfig.Repack.MaxSizeSingleLumi = options.get("maxSizeSingleLumi", streamConfig.Repack.MaxSizeSingleLumi)
+    else:
+        streamConfig.Repack.MaxSizeSingleLumi = options.get("maxSizeSingleLumi", 10*1024*1024*1024)
+
+    if hasattr(streamConfig.Repack, "MaxSizeMultiLumi"):
+        streamConfig.Repack.MaxSizeMultiLumi = options.get("maxSizeMultiLumi", streamConfig.Repack.MaxSizeMultiLumi)
+    else:
+        streamConfig.Repack.MaxSizeMultiLumi = options.get("maxSizeMultiLumi", 8*1024*1024*1024)
+
+    if hasattr(streamConfig.Repack, "MinInputSize"):
+        streamConfig.Repack.MinInputSize = options.get("minInputSize", streamConfig.Repack.MinInputSize)
+    else:
+        streamConfig.Repack.MinInputSize = options.get("minInputSize", 2.1 * 1024 * 1024 * 1024)
+
+    if hasattr(streamConfig.Repack, "MaxInputSize"):
+        streamConfig.Repack.MaxInputSize = options.get("maxInputSize", streamConfig.Repack.MaxInputSize)
+    else:
+        streamConfig.Repack.MaxInputSize = options.get("maxInputSize", 4 * 1024 * 1024 * 1024)
+
+    if hasattr(streamConfig.Repack, "MaxEdmSize"):
+        streamConfig.Repack.MaxEdmSize = options.get("maxEdmSize", streamConfig.Repack.MaxEdmSize)
+    else:
+        streamConfig.Repack.MaxEdmSize = options.get("maxEdmSize", 10 * 1024 * 1024 * 1024)
+
+    if hasattr(streamConfig.Repack, "MaxOverSize"):
+        streamConfig.Repack.MaxOverSize = options.get("maxOverSize", streamConfig.Repack.MaxOverSize)
+    else:
+        streamConfig.Repack.MaxOverSize = options.get("maxOverSize", 8 * 1024 * 1024 * 1024)
+
+    if hasattr(streamConfig.Repack, "MaxInputEvents"):
+        streamConfig.Repack.MaxInputEvents = options.get("maxInputEvents", streamConfig.Repack.MaxInputEvents)
+    else:
+        streamConfig.Repack.MaxInputEvents = options.get("maxInputEvents", 10 * 1000 * 1000)
+
+    if hasattr(streamConfig.Repack, "MaxInputFiles"):
+        streamConfig.Repack.MaxInputFiles = options.get("maxInputFiles", streamConfig.Repack.MaxInputFiles)
+    else:
+        streamConfig.Repack.MaxInputFiles = options.get("maxInputFiles", 1000)
+
+    if streamConfig.Repack.MaxOverSize > streamConfig.Repack.MaxEdmSize:
+        streamConfig.Repack.MaxOverSize = streamConfig.Repack.MaxEdmSize
 
     return
 

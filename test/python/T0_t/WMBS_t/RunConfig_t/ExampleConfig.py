@@ -50,6 +50,14 @@ hltmonVersionOverride = {
 
 addRepackConfig(tier0Config, "Default",
                 proc_ver = 1,
+                maxSizeSingleLumi = 1234,
+                maxSizeMultiLumi = 1122,
+                minInputSize = 210,
+                maxInputSize = 400,
+                maxEdmSize = 1233,
+                maxOverSize = 1133,
+                maxInputEvents = 500,
+                maxInputFiles = 1111,
                 versionOverride = repackVersionOverride)
 
 addExpressConfig(tier0Config, "Express",

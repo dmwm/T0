@@ -180,20 +180,17 @@ class RepackWorkloadFactory(StdBase):
 
         # job splitting parameters
         self.repackSplitArgs = {}
-        self.repackSplitArgs['maxSizeSingleLumi'] = 20*1024*1024*1024
-        self.repackSplitArgs['maxSizeMultiLumi'] = 10*1024*1024*1024
-        self.repackSplitArgs['maxEvents'] = 500000
-        self.repackSplitArgs['maxInputFiles'] = 1000
+        self.repackSplitArgs['maxSizeSingleLumi'] = arguments['MaxSizeSingleLumi']
+        self.repackSplitArgs['maxSizeMultiLumi'] = arguments['MaxSizeMultiLumi']
+        self.repackSplitArgs['maxInputEvents'] = arguments['MaxInputEvents']
+        self.repackSplitArgs['maxInputFiles'] = arguments['MaxInputFiles']
         self.repackMergeSplitArgs = {}
-        self.repackMergeSplitArgs['minSize'] = 2.1 * 1024 * 1024 * 1024
-        self.repackMergeSplitArgs['maxSize'] = 4.0 * 1024 * 1024 * 1024
-        self.repackMergeSplitArgs['maxEvents'] = 100000000
-        self.repackMergeSplitArgs['maxInputFiles'] = 1000
-        self.repackMergeSplitArgs['maxEdmSize'] = 20 * 1024 * 1024 * 1024
-        self.repackMergeSplitArgs['maxOverSize'] = 10 * 1024 * 1024 * 1024
-
-        if self.repackMergeSplitArgs['maxOverSize'] > self.repackMergeSplitArgs['maxEdmSize']:
-            self.repackMergeSplitArgs['maxOverSize'] = self.repackMergeSplitArgs['maxEdmSize']
+        self.repackMergeSplitArgs['minInputSize'] = arguments['MinInputSize']
+        self.repackMergeSplitArgs['maxInputSize'] = arguments['MaxInputSize']
+        self.repackMergeSplitArgs['maxEdmSize'] = arguments['MaxEdmSize']
+        self.repackMergeSplitArgs['maxOverSize'] = arguments['MaxOverSize']
+        self.repackMergeSplitArgs['maxInputEvents'] = arguments['MaxInputEvents']
+        self.repackMergeSplitArgs['maxInputFiles'] = arguments['MaxInputFiles']
 
         if arguments.has_key("Multicore"):
             numCores = arguments.get("Multicore")
