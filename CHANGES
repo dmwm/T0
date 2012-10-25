@@ -1,3 +1,10 @@
+1.9.21 to 1.9.22:
+  - make Repack job splitting parameters configurable
+  - make Express job splitting parameters configurable
+  - select alternative fileset closing policy
+  - add missing import in the GetExpressReadyRuns DAO
+  - add or move various config options to OfflineConfiguration
+
 1.9.19 to 1.9.21:
   - adjust task types for express and repack
   - some restructuring of the schema
