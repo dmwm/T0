@@ -228,7 +228,15 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             bindsRepackConfig = { 'RUN' : run,
                                   'STREAM' : stream,
-                                  'PROC_VER': streamConfig.Repack.ProcessingVersion }
+                                  'PROC_VER': streamConfig.Repack.ProcessingVersion,
+                                  'MAX_SIZE_SINGLE_LUMI' : streamConfig.Repack.MaxSizeSingleLumi,
+                                  'MAX_SIZE_MULTI_LUMI' : streamConfig.Repack.MaxSizeMultiLumi,
+                                  'MIN_SIZE' : streamConfig.Repack.MinInputSize,
+                                  'MAX_SIZE' : streamConfig.Repack.MaxInputSize,
+                                  'MAX_EDM_SIZE' : streamConfig.Repack.MaxEdmSize,
+                                  'MAX_OVER_SIZE' : streamConfig.Repack.MaxOverSize,
+                                  'MAX_EVENTS' : streamConfig.Repack.MaxInputEvents,
+                                  'MAX_FILES' : streamConfig.Repack.MaxInputFiles }
 
         elif streamConfig.ProcessingStyle == "Express":
 
@@ -342,6 +350,14 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             workflowName = "Repack_Run%d_Stream%s" % (run, stream)
             specArguments = getRepackArguments()
             specArguments['ProcessingVersion'] = streamConfig.Repack.ProcessingVersion
+            specArguments['MaxSizeSingleLumi'] = streamConfig.Repack.MaxSizeSingleLumi
+            specArguments['MaxSizeMultiLumi'] = streamConfig.Repack.MaxSizeMultiLumi
+            specArguments['MinInputSize'] = streamConfig.Repack.MinInputSize
+            specArguments['MaxInputSize'] = streamConfig.Repack.MaxInputSize
+            specArguments['MaxEdmSize'] = streamConfig.Repack.MaxEdmSize
+            specArguments['MaxOverSize'] = streamConfig.Repack.MaxOverSize
+            specArguments['MaxInputEvents'] = streamConfig.Repack.MaxInputEvents
+            specArguments['MaxInputFiles'] = streamConfig.Repack.MaxInputFiles
             specArguments['UnmergedLFNBase'] = "%s/t0temp/%s" % (runInfo['lfn_prefix'],
                                                                  runInfo['bulk_data_type'])
             specArguments['MergedLFNBase'] = "%s/%s" % (runInfo['lfn_prefix'],
