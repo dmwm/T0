@@ -1171,6 +1171,30 @@ class RunConfigTest(unittest.TestCase):
         self.assertEqual(repackConfig['proc_ver'], 1,
                          "ERROR: wrong processing version for stream A")
 
+        self.assertEqual(repackConfig['max_size_single_lumi'], 1234,
+                         "ERROR: wrong max single lumi size for stream A")
+
+        self.assertEqual(repackConfig['max_size_multi_lumi'], 1122,
+                         "ERROR: wrong max multi lumi size for stream A")
+
+        self.assertEqual(repackConfig['min_size'], 210,
+                         "ERROR: wrong min input size for stream A")
+
+        self.assertEqual(repackConfig['max_size'], 400,
+                         "ERROR: wrong max input size for stream A")
+
+        self.assertEqual(repackConfig['max_edm_size'], 1233,
+                         "ERROR: wrong max edm size for stream A")
+
+        self.assertEqual(repackConfig['max_over_size'], 1133,
+                         "ERROR: wrong max over size for stream A")
+
+        self.assertEqual(repackConfig['max_events'], 500,
+                         "ERROR: wrong max input events for stream A")
+
+        self.assertEqual(repackConfig['max_files'], 1111,
+                         "ERROR: wrong max input files for stream A")
+
         self.assertEqual(repackConfig['cmssw'], "CMSSW_4_2_7",
                          "ERROR: wrong CMSSW version for stream A")
 

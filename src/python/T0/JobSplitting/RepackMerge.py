@@ -30,9 +30,9 @@ class RepackMerge(JobFactory):
         """
         # extract some global scheduling parameters
         self.jobNamePrefix = kwargs.get('jobNamePrefix', "RepackMerge")
-        self.minSize = kwargs['minSize']
-        self.maxSize = kwargs['maxSize']
-        self.maxEvents = kwargs['maxEvents']
+        self.minInputSize = kwargs['minInputSize']
+        self.maxInputSize = kwargs['maxInputSize']
+        self.maxInputEvents = kwargs['maxInputEvents']
         self.maxInputFiles = kwargs['maxInputFiles']
         self.maxEdmSize = kwargs['maxEdmSize']
         self.maxOverSize = kwargs['maxOverSize']
@@ -174,7 +174,7 @@ class RepackMerge(JobFactory):
                             newSizeTotal = sizeTotal + fileInfo['filesize']
 
                             if newSizeTotal <= self.maxEdmSize and \
-                                   newEventsTotal <= self.maxEvents:
+                                   newEventsTotal <= self.maxInputEvents:
                                 eventsTotal = newEventsTotal
                                 sizeTotal = newSizeTotal
                                 fileList.append(fileInfo)
@@ -184,8 +184,8 @@ class RepackMerge(JobFactory):
                     for fileInfo in fileList:
                         lumiFileList.remove(fileInfo)
 
-            elif lumiSizeTotal >= self.maxSize or \
-                     lumiEventsTotal >= self.maxEvents or \
+            elif lumiSizeTotal >= self.maxInputSize or \
+                     lumiEventsTotal >= self.maxInputEvents or \
                      lumiInputFiles >= self.maxInputFiles:
 
                 # merge what we have to preserve order
@@ -206,8 +206,8 @@ class RepackMerge(JobFactory):
                 newInputFiles = jobInputFiles + lumiInputFiles
 
                 # still safe with new file, just add it
-                if newSizeTotal <= self.maxSize and \
-                       newEventsTotal <= self.maxEvents and \
+                if newSizeTotal <= self.maxInputSize and \
+                       newEventsTotal <= self.maxInputEvents and \
                        newInputFiles <= self.maxInputFiles:
 
                     jobSizeTotal = newSizeTotal
@@ -217,7 +217,7 @@ class RepackMerge(JobFactory):
 
                 # over limits with new file, over minimum without it
                 # issue merge job (regular)
-                elif jobSizeTotal > self.minSize:
+                elif jobSizeTotal > self.minInputSize:
 
                     self.createJob(jobFileList)
                     jobSizeTotal = lumiSizeTotal
@@ -230,7 +230,7 @@ class RepackMerge(JobFactory):
                 # still below override limits (and below event limit)
                 # add file, issue merge job (too large)
                 elif newSizeTotal <= self.maxOverSize and \
-                         newEventsTotal <= self.maxEvents:
+                         newEventsTotal <= self.maxInputEvents:
 
                     jobFileList.extend(lumiFileList)
                     self.createJob(jobFileList)

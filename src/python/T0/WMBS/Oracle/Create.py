@@ -251,9 +251,17 @@ class Create(DBCreator):
 
         self.create[len(self.create)] = \
             """CREATE TABLE repack_config (
-                 run_id         int not null,
-                 stream_id      int not null,
-                 proc_version   int not null,
+                 run_id               int not null,
+                 stream_id            int not null,
+                 proc_version         int not null,
+                 max_size_single_lumi int not null,
+                 max_size_multi_lumi  int not null,
+                 min_size             int not null,
+                 max_size             int not null,
+                 max_edm_size         int not null,
+                 max_over_size        int not null,
+                 max_events           int not null,
+                 max_files            int not null,
                  primary key (run_id, stream_id)
                ) ORGANIZATION INDEX"""
 
