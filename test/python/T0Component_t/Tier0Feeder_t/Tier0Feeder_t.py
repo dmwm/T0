@@ -986,9 +986,11 @@ class Tier0FeederTest(unittest.TestCase):
         self.insertSplitLumisDAO = daoFactory(classname = "JobSplitting.InsertSplitLumis")
         self.findNewExpressRunsDAO = daoFactory(classname = "Tier0Feeder.FindNewExpressRuns")
         self.releaseExpressDAO = daoFactory(classname = "Tier0Feeder.ReleaseExpress")
-        self.getPendingWorkflowMonitoringDAO = daoFactory(classname = "Tier0Feeder.GetPendingWorkflowMonitoring")
+        self.getStreamerWorkflowsForMonitoringDAO = daoFactory(classname = "Tier0Feeder.GetStreamerWorkflowsForMonitoring")
+        self.getPromptRecoWorkflowsForMonitoringDAO = daoFactory(classname = "Tier0Feeder.GetPromptRecoWorkflowsForMonitoring")
         self.markTrackedWorkflowMonitoringDAO = daoFactory(classname = "Tier0Feeder.MarkTrackedWorkflowMonitoring")
-
+        self.getNotClosedOutWorkflowsDAO = daoFactory(classname = "Tier0Feeder.GetNotClosedOutWorkflows")
+        self.markCloseoutWorkflowMonitoringDAO = daoFactory(classname = "Tier0Feeder.MarkCloseoutWorkflowMonitoring")
 
         return
 
@@ -1169,7 +1171,8 @@ class Tier0FeederTest(unittest.TestCase):
 
     def feedCouchMonitoring(self):
 
-        workflows = self.getPendingWorkflowMonitoringDAO.execute()
+        workflows = self.getStreamerWorkflowsForMonitoringDAO.execute()
+        workflows += self.getPromptRecoWorkflowsForMonitoringDAO.execute()
 
         if len(workflows) == 0:
             logging.debug("No workflows to publish to couch monitoring, doing nothing")
@@ -1179,7 +1182,7 @@ class Tier0FeederTest(unittest.TestCase):
                 logging.info(" Publishing workflow %s to monitoring" % workflowName)
                 doc = {}
                 doc["_id"] =  workflowName
-                doc["workflow"] =   workflowName # FIXME:This has to be the workflow name!!
+                doc["workflow"] =   workflowName
                 #doc["status"]   =    {'status': 'new', 'timestamp': int(time.time())}
                 doc["type"]     =   "tier0_request"
                 doc["run"]      =   run
@@ -1188,6 +1191,32 @@ class Tier0FeederTest(unittest.TestCase):
                     logging.info(" Successfully uploaded request %s" % workflowName)
                     # Here we have to trust the insert, if it doesn't happen will be easy to spot on the logs
                     self.markTrackedWorkflowMonitoringDAO.execute(workflowId)
+
+    def closeOutRealTimeWorkflows(self):
+        # This is supposed to keep track (in couch) if Repack and Express have all the files in place (fileset closed).
+        # found PromptReco workflows should be closed automatically.
+        workflows = self.getNotClosedOutWorkflowsDAO.execute()
+        if len(workflows) == 0:
+            logging.debug("No workflows to publish to couch monitoring, doing nothing")
+        if workflows:
+            for workflow in workflows:
+                (workflowId, filesetId, filesetOpen, workflowName) = workflow
+                # find returns -1 if the string is not found
+                if workflowName.find('PromptReco') >= 0:
+                    logging.debug("Closing out instantaneously PromptReco Workflow %s" % workflowName)
+                    self.updateClosedState(workflowName, workflowId)
+                else :
+                    # Check if fileset (which you already know) is closed or not
+                    # FIXME: No better way to do it? what comes from the DAO is a string, casting bool or int doesn't help much.
+                    # Works like that :
+                    if filesetOpen == '0':
+                        self.updateClosedState(workflowName, workflowId)
+
+    def updateClosedState(self, workflowName, workflowId):
+        response = self.localSummaryCouchDB.updateRequestStatus(workflowName, 'Closed')
+        if response == "OK" or "EXISTS":
+            logging.debug("Successfully closed workflow %s" % workflowName)
+            self.markCloseoutWorkflowMonitoringDAO.execute(workflowId)
 
     def test00(self):
         """
@@ -1648,13 +1677,22 @@ class Tier0FeederTest(unittest.TestCase):
                          "ERROR: there should be 1 closed run/stream filesets for run 176161 and stream A")
 
 
-        self.assertEqual(len(self.getPendingWorkflowMonitoringDAO.execute()), 1,
+        self.assertEqual(len(self.getStreamerWorkflowsForMonitoringDAO.execute()), 1,
                          "ERROR: there should be 1 workflow to be injected to couchDB")
 
         self.feedCouchMonitoring()
 
-        self.assertEqual(len(self.getPendingWorkflowMonitoringDAO.execute()), 0,
+        self.assertEqual(len(self.getStreamerWorkflowsForMonitoringDAO.execute()), 0,
                          "ERROR: there should be no workflow to be injected to couchDB")
+
+        self.assertEqual(len(self.getNotClosedOutWorkflowsDAO.execute()), 1,
+                         "ERROR: there should be one workflow which is not closed")
+
+        self.closeOutRealTimeWorkflows()
+
+        self.assertEqual(len(self.getNotClosedOutWorkflowsDAO.execute()), 0,
+                         "ERROR: there should be no workflow which is not closed")
+
 
         return
 

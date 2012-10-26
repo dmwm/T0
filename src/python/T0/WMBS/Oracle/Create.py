@@ -322,6 +322,7 @@ class Create(DBCreator):
             """CREATE TABLE workflow_monitoring (
                   workflow   varchar2(255) not null,
                   tracked    int default 0 not null,
+                  closeout   int default 0 not null,
                   primary key (workflow)  
                )"""
 
@@ -425,8 +426,10 @@ class Create(DBCreator):
             """CREATE INDEX idx_reco_release_config_1 ON reco_release_config (checkForZeroState(released))"""
 
         self.indexes[len(self.indexes)] = \
-            """CREATE INDEX idx_workflow_monitoring_0 ON workflow_monitoring (checkForZeroState(tracked))"""
+            """CREATE INDEX idx_wf_monitoring_tracked_0 ON workflow_monitoring (checkForZeroState(tracked))"""
 
+        self.indexes[len(self.indexes)] = \
+            """CREATE INDEX idx_wf_monitoring_closeout_0 ON workflow_monitoring (checkForZeroState(closeout))"""
         #
         # Constraints
         #
