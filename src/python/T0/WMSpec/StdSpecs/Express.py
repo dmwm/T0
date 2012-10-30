@@ -199,6 +199,8 @@ class ExpressWorkloadFactory(StdBase):
         mergeTask.setTaskPriority(self.priority + 5)
 
         mergeTaskCmsswHelper = mergeTaskCmssw.getTypeHelper()
+        mergeTaskStageHelper = mergeTaskStageOut.getTypeHelper()
+
         mergeTaskCmsswHelper.cmsswSetup(self.frameworkVersion, softwareEnvironment = "",
                                         scramArch = self.scramArch)
 
@@ -206,7 +208,9 @@ class ExpressWorkloadFactory(StdBase):
         mergeTaskCmsswHelper.setGlobalTag(self.globalTag)
         mergeTaskCmsswHelper.setOverrideCatalog(self.overrideCatalog)
 
-        mergeTask.setTaskType("Express")
+        #mergeTaskStageHelper.setMinMergeSize(0, 0)
+
+        mergeTask.setTaskType("Merge")
 
         # DQM is handled differently
         #  merging does not increase size
