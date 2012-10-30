@@ -129,6 +129,8 @@ class RepackWorkloadFactory(StdBase):
         mergeTask.setInputReference(parentTaskCmssw, outputModule = parentOutputModuleName)
 
         mergeTaskCmsswHelper = mergeTaskCmssw.getTypeHelper()
+        mergeTaskStageHelper = mergeTaskStageOut.getTypeHelper()
+
         mergeTaskCmsswHelper.cmsswSetup(self.frameworkVersion, softwareEnvironment = "",
                                         scramArch = self.scramArch)
 
@@ -136,11 +138,13 @@ class RepackWorkloadFactory(StdBase):
         mergeTaskCmsswHelper.setGlobalTag(self.globalTag)
         mergeTaskCmsswHelper.setOverrideCatalog(self.overrideCatalog)
 
+        #mergeTaskStageHelper.setMinMergeSize(0, 0)
+
+        mergeTask.setTaskType("Merge")
+
         # finalize splitting parameters
         mySplitArgs = self.repackMergeSplitArgs.copy()
         mySplitArgs['algo_package'] = "T0.JobSplitting"
-
-        mergeTask.setTaskType("Merge")
 
         mergeTask.setSplittingAlgorithm("RepackMerge",
                                         **mySplitArgs)
