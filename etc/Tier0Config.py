@@ -19,6 +19,14 @@ config.RetryManager.section_("PauseAlgo")
 config.RetryManager.PauseAlgo.section_("default")
 config.RetryManager.PauseAlgo.default.coolOffTime = retryAlgoParams
 config.RetryManager.PauseAlgo.default.pauseCount = 3
-config.RetryManager.plugins = {"default" : "PauseAlgo"}
+config.RetryManager.plugins = {"default" : "PauseAlgo",
+                               "Cleanup" : "SquaredAlgo",
+                               "LogCollect" : "SquaredAlgo"}
 
-config.ErrorHandler.maxRetries = 30
+config.ErrorHandler.maxRetries = {"default" : 30,
+                                  "Cleanup" : 2,
+                                  "LogCollect" : 2}
+
+config.TaskArchiver.useReqMgrForCompletionCheck = False
+
+config.JobArchiver.handleInjected = False
