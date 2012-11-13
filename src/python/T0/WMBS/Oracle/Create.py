@@ -345,6 +345,7 @@ class Create(DBCreator):
             """CREATE TABLE workflow_monitoring (
                  workflow   int not null,
                  tracked    int default 0 not null,
+                 closeout   int default 0 not null,  
                  primary key (workflow)
                ) ORGANIZATION INDEX"""
 
@@ -453,6 +454,8 @@ class Create(DBCreator):
         self.indexes[len(self.indexes)] = \
             """CREATE INDEX idx_workflow_monitoring_0 ON workflow_monitoring (checkForZeroState(tracked))"""
 
+        self.indexes[len(self.indexes)] = \
+            """CREATE INDEX idx_workflow_monitoring_1 ON workflow_monitoring (checkForZeroState(closeout))"""
         #
         # Constraints
         #
