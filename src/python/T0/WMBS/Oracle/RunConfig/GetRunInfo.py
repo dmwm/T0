@@ -19,6 +19,7 @@ class GetRunInfo(DBFormatter):
                         acq_era,
                         lfn_prefix,
                         bulk_data_type,
+                        bulk_data_loc,
                         ah_timeout,
                         ah_dir,
                         cond_timeout,

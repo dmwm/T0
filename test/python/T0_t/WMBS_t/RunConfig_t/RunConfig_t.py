@@ -147,6 +147,7 @@ class RunConfigTest(unittest.TestCase):
         self.referenceRunInfo = [ { 'status': 1,
                                     'lfn_prefix' : "/store",
                                     'bulk_data_type' : "data",
+                                    'bulk_data_loc' : "T2_CH_CERN",
                                     'process': 'HLT',
                                     'hltkey': self.hltkey,
                                     'ah_timeout' : 12*3600,
@@ -1440,13 +1441,22 @@ class RunConfigTest(unittest.TestCase):
             
                 self.assertEquals(recoConfig['scenario'], "pp",
                                   "ERROR: problem in reco configuration")
-                
-        
-        phedexConfigs = self.getPhEDExConfigDAO.execute(176161, "A",
-                                                        transaction = False)
 
-        self.assertEquals(set(phedexConfigs.keys()), set(datasets),
-                          "ERROR: problems retrieving PhEDEx configs for stream A")
+
+        datasetsStreamA = self.getStreamDatasetsDAO.execute(176161, "A",
+                                                            transaction = False)
+
+        datasetsStreamExpress = self.getStreamDatasetsDAO.execute(176161, "Express",
+                                                                  transaction = False)
+
+        datasetsStreamHLTMON = self.getStreamDatasetsDAO.execute(176161, "HLTMON",
+                                                                 transaction = False)
+
+        datasets = datasetsStreamA.union(datasetsStreamExpress).union(datasetsStreamHLTMON)
+
+        phedexConfigs = self.getPhEDExConfigDAO.execute(176161, transaction = False)
+        self.assertEquals(set(phedexConfigs.keys()), datasets,
+                          "ERROR: problems retrieving PhEDEx configs")
 
         for primds, phedexConfig in phedexConfigs.items():
 
@@ -1464,7 +1474,7 @@ class RunConfigTest(unittest.TestCase):
                 self.assertEquals(phedexConfig['Node2']['priority'], "high",
                                   "ERROR: problem in phedex configuration")
 
-                self.assertEquals(phedexConfig['Node3']['custodial'], 0,
+                self.assertEquals(phedexConfig['Node3']['custodial'], 1,
                                   "ERROR: problem in phedex configuration")
 
                 self.assertEquals(phedexConfig['Node3']['request_only'], "n",
@@ -1487,21 +1497,21 @@ class RunConfigTest(unittest.TestCase):
                 self.assertEquals(phedexConfig['Node4']['priority'], "normal",
                                   "ERROR: problem in phedex configuration")
 
-                self.assertEquals(phedexConfig['Node5']['custodial'], 0,
+                self.assertEquals(phedexConfig['Node5']['custodial'], 1,
                                   "ERROR: problem in phedex configuration")
 
                 self.assertEquals(phedexConfig['Node5']['request_only'], "n",
                                   "ERROR: problem in phedex configuration")
 
-                self.assertEquals(phedexConfig['Node5']['priority'], "high",
+                self.assertEquals(phedexConfig['Node5']['priority'], "normal",
                                   "ERROR: problem in phedex configuration")
 
-            else:
+            elif primds in datasetsStreamA:
 
                 self.assertEquals(set(phedexConfig.keys()), set([ "Node1" ]),
                                   "ERROR: problem in phedex configuration")
 
-                self.assertEquals(phedexConfig['Node1']['custodial'], 0,
+                self.assertEquals(phedexConfig['Node1']['custodial'], 1,
                                   "ERROR: problem in phedex configuration")
 
                 self.assertEquals(phedexConfig['Node1']['request_only'], "n",
@@ -1509,6 +1519,21 @@ class RunConfigTest(unittest.TestCase):
 
                 self.assertEquals(phedexConfig['Node1']['priority'], "high",
                                   "ERROR: problem in phedex configuration")
+
+            else:
+
+                self.assertEquals(set(phedexConfig.keys()), set([ "T2_CH_CERN" ]),
+                                  "ERROR: problem in phedex configuration")
+
+                self.assertEquals(phedexConfig['T2_CH_CERN']['custodial'], 1,
+                                  "ERROR: problem in phedex configuration")
+
+                self.assertEquals(phedexConfig['T2_CH_CERN']['request_only'], "n",
+                                  "ERROR: problem in phedex configuration")
+
+                self.assertEquals(phedexConfig['T2_CH_CERN']['priority'], "high",
+                                  "ERROR: problem in phedex configuration")
+
 
         promptSkimConfigs = self.getPromptSkimConfigDAO.execute(176161, "A",
                                                                 transaction = False)
