@@ -214,6 +214,11 @@ class Tier0FeederPoller(BaseWorkerThread):
         self.feedCouchMonitoring()
 
         #
+        # Update Couch when Repack and Express have closed input filesets (analog to old T0 closeout)
+        #
+        self.closeOutRealTimeWorkflows()
+
+        #
         # upload PCL conditions to DropBox
         #
         ConditionUploadAPI.uploadConditions()
@@ -244,6 +249,32 @@ class Tier0FeederPoller(BaseWorkerThread):
                     logging.info(" Successfully uploaded request %s" % workflowName)
                     # Here we have to trust the insert, if it doesn't happen will be easy to spot on the logs
                     markTrackedWorkflowMonitoringDAO.execute(workflowId)
+
+    def closeOutRealTimeWorkflows(self):
+        # This is supposed to keep track (in couch) if Repack and Express have all the files in place (fileset closed).
+        # found PromptReco workflows should be closed automatically.
+        workflows = self.getNotClosedOutWorkflowsDAO.execute()
+        if len(workflows) == 0:
+            logging.debug("No workflows to publish to couch monitoring, doing nothing")
+        if workflows:
+            for workflow in workflows:
+                (workflowId, filesetId, filesetOpen, workflowName) = workflow
+                # find returns -1 if the string is not found
+                if workflowName.find('PromptReco') >= 0:
+                    logging.debug("Closing out instantaneously PromptReco Workflow %s" % workflowName)
+                    self.updateClosedState(workflowName, workflowId)
+                else :
+                    # Check if fileset (which you already know) is closed or not
+                    # FIXME: No better way to do it? what comes from the DAO is a string, casting bool or int doesn't help much.
+                    # Works like that :
+                    if filesetOpen == '0':
+                        self.updateClosedState(workflowName, workflowId)
+
+    def updateClosedState(self, workflowName, workflowId):
+        response = self.localSummaryCouchDB.updateRequestStatus(workflowName, 'Closed')
+        if response == "OK" or "EXISTS":
+            logging.debug("Successfully closed workflow %s" % workflowName)
+            self.markCloseoutWorkflowMonitoringDAO.execute(workflowId)
 
     def terminate(self, params):
         """
