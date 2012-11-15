@@ -65,6 +65,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
                            'ACQERA' : tier0Config.Global.AcquisitionEra,
                            'LFNPREFIX' : tier0Config.Global.LFNPrefix,
                            'BULKDATATYPE' : tier0Config.Global.BulkDataType,
+                           'BULKDATALOC' : tier0Config.Global.BulkDataLocation,
                            'AHTIMEOUT' : tier0Config.Global.AlcaHarvestTimeout,
                            'AHDIR' : tier0Config.Global.AlcaHarvestDir,
                            'CONDTIMEOUT' : tier0Config.Global.ConditionUploadTimeout,
@@ -91,18 +92,12 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
 
         try:
             myThread.transaction.begin()
-            updateRunDAO.execute(bindsUpdateRun,
-                                 transaction = True)
-            insertStreamDAO.execute(bindsStream,
-                                    transaction = True)
-            insertDatasetDAO.execute(bindsDataset,
-                                     transaction = True)
-            insertStreamDatasetDAO.execute(bindsStreamDataset,
-                                           transaction = True)
-            insertTriggerDAO.execute(bindsTrigger,
-                                     transaction = True)
-            insertDatasetTriggerDAO.execute(bindsDatasetTrigger,
-                                            transaction = True)
+            updateRunDAO.execute(bindsUpdateRun, conn = myThread.transaction.conn, transaction = True)
+            insertStreamDAO.execute(bindsStream, conn = myThread.transaction.conn, transaction = True)
+            insertDatasetDAO.execute(bindsDataset, conn = myThread.transaction.conn, transaction = True)
+            insertStreamDatasetDAO.execute(bindsStreamDataset, conn = myThread.transaction.conn, transaction = True)
+            insertTriggerDAO.execute(bindsTrigger, conn = myThread.transaction.conn, transaction = True)
+            insertDatasetTriggerDAO.execute(bindsDatasetTrigger, conn = myThread.transaction.conn, transaction = True)
         except:
             myThread.transaction.rollback()
             raise
@@ -111,20 +106,20 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
 
     else:
 
+        bindsUpdateRun = { 'RUN' : run,
+                           'PROCESS' : "FakeProcessName",
+                           'ACQERA' : "FakeAcquisitionEra",
+                           'LFNPREFIX' : "/fakelfnprefix",
+                           'BULKDATATYPE' : "FakeBulkDataType",
+                           'AHTIMEOUT' : None,
+                           'AHDIR' : None,
+                           'CONDTIMEOUT' : None,
+                           'DBHOST' : None,
+                           'VALIDMODE' : None }
+
         try:
             myThread.transaction.begin()
-            bindsUpdateRun = { 'RUN' : run,
-                               'PROCESS' : "FakeProcessName",
-                               'ACQERA' : "FakeAcquisitionEra",
-                               'LFNPREFIX' : "/fakelfnprefix",
-                               'BULKDATATYPE' : "FakeBulkDataType",
-                               'AHTIMEOUT' : None,
-                               'AHDIR' : None,
-                               'CONDTIMEOUT' : None,
-                               'DBHOST' : None,
-                               'VALIDMODE' : None }
-            updateRunDAO.execute(bindsUpdateRun,
-                                 transaction = True)
+            updateRunDAO.execute(bindsUpdateRun, conn = myThread.transaction.conn, transaction = True)
         except:
             myThread.transaction.rollback()
             raise
@@ -186,6 +181,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         insertStreamFilesetDAO = daoFactory(classname = "RunConfig.InsertStreamFileset")
         insertRecoReleaseConfigDAO = daoFactory(classname = "RunConfig.InsertRecoReleaseConfig")
         insertWorkflowMonitoringDAO = daoFactory(classname = "RunConfig.InsertWorkflowMonitoring")
+        insertStorageNodeDAO = daoFactory(classname = "RunConfig.InsertStorageNode")
+        insertPhEDExConfigDAO = daoFactory(classname = "RunConfig.InsertPhEDExConfig")
 
         bindsDataset = []
         bindsStreamDataset = []
@@ -200,12 +197,14 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         bindsCMSSWVersion = []
         bindsStreamOverride = {}
         bindsErrorDataset = []
+        bindsStorageNode = []
+        bindsPhEDExConfig = []
 
         # mark workflows as injected
         wmbsDaoFactory = DAOFactory(package = "WMCore.WMBS",
                                     logger = logging,
                                     dbinterface = myThread.dbi)
-        markWorkflowsInjectedDAO   = wmbsDaoFactory(classname = "Workflow.MarkInjectedWorkflows")
+        markWorkflowsInjectedDAO = wmbsDaoFactory(classname = "Workflow.MarkInjectedWorkflows")
 
         #
         # for spec creation, details for all outputs
@@ -217,6 +216,16 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         #
         promptRecoDelay = {}
         promptRecoDelayOffset = {}
+
+        #
+        # for PhEDEx subscription settings
+        #
+        subscriptions = { 'Express' : [],
+                          'Bulk' : [] }
+
+        # some hardcoded PhEDEx defaults
+        expressPhEDExInjectNode = "T2_CH_CERN"
+        expressPhEDExSubscribeNode = "T2_CH_CERN"
 
         #
         # first take care of all stream settings
@@ -255,6 +264,21 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 outputModuleDetails.append( { 'dataTier' : "DQM",
                                               'eventContent' : "DQM",
                                               'primaryDataset' : specialDataset } )
+
+            bindsStorageNode.append( { 'NODE' : expressPhEDExSubscribeNode } )
+
+            bindsPhEDExConfig.append( { 'RUN' : run,
+                                        'PRIMDS' : specialDataset,
+                                        'NODE' : expressPhEDExSubscribeNode,
+                                        'CUSTODIAL' : 1,
+                                        'REQ_ONLY' : "n",
+                                        'PRIO' : "high" } )
+
+            subscriptions['Express'].append( { 'custodialSites' : [expressPhEDExSubscribeNode],
+                                               'nonCustodialSites' : [],
+                                               'autoApproveSites' : [expressPhEDExSubscribeNode],
+                                               'priority' : "high",
+                                               'primaryDataset' : specialDataset } )
 
             alcaSkim = None
             if "ALCARECO" in streamConfig.Express.DataTiers:
@@ -301,19 +325,62 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             datasetConfig = retrieveDatasetConfig(tier0Config, dataset)
 
-            promptRecoDelay[datasetConfig.Name] = datasetConfig.RecoDelay
-            promptRecoDelayOffset[datasetConfig.Name] = datasetConfig.RecoDelayOffset
-
             selectEvents = []
             for path in sorted(paths):
                 selectEvents.append("%s:%s" % (path, runInfo['process']))
 
             if streamConfig.ProcessingStyle == "Bulk":
 
+                promptRecoDelay[datasetConfig.Name] = datasetConfig.RecoDelay
+                promptRecoDelayOffset[datasetConfig.Name] = datasetConfig.RecoDelayOffset
+
                 outputModuleDetails.append( { 'dataTier' : "RAW",
                                               'eventContent' : "ALL",
                                               'selectEvents' : selectEvents,
-                                              'primaryDataset' : datasetConfig.Name } )
+                                              'primaryDataset' : dataset } )
+
+                custodialSites = []
+                nonCustodialSites = []
+                autoApproveSites = []
+
+                if datasetConfig.CustodialNode != None:
+
+                    custodialSites.append(datasetConfig.CustodialNode)
+
+                    requestOnly = "y"
+                    if datasetConfig.CustodialAutoApprove:
+                        requestOnly = "n"
+                        autoApproveSites.append(datasetConfig.CustodialNode)
+
+                    bindsStorageNode.append( { 'NODE' : datasetConfig.CustodialNode } )
+
+                    bindsPhEDExConfig.append( { 'RUN' : run,
+                                                'PRIMDS' : dataset,
+                                                'NODE' : datasetConfig.CustodialNode,
+                                                'CUSTODIAL' : 1,
+                                                'REQ_ONLY' : requestOnly,
+                                                'PRIO' : datasetConfig.CustodialPriority } )
+
+                if datasetConfig.ArchivalNode != None:
+
+                    custodialSites.append(datasetConfig.ArchivalNode)
+                    autoApproveSites.append(datasetConfig.ArchivalNode)
+
+                    bindsStorageNode.append( { 'NODE' : datasetConfig.ArchivalNode } )
+
+                    bindsPhEDExConfig.append( { 'RUN' : run,
+                                                'PRIMDS' : dataset,
+                                                'NODE' : datasetConfig.ArchivalNode,
+                                                'CUSTODIAL' : 1,
+                                                'REQ_ONLY' : "n",
+                                                'PRIO' : datasetConfig.CustodialPriority } )
+
+                if len(custodialSites) + len(nonCustodialSites) > 0:
+                    subscriptions['Bulk'].append( { 'custodialSites' : custodialSites,
+                                                    'nonCustodialSites' : nonCustodialSites,
+                                                    'autoApproveSites' : autoApproveSites,
+                                                    'priority' : datasetConfig.CustodialPriority,
+                                                    'primaryDataset' : dataset } )
 
 ##                 errorDataset = "%s-%s" % (dataset, "Error")
 ##                 bindsDataset.append( { 'PRIMDS' : errorDataset } )
@@ -327,19 +394,24 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
                 for dataTier in streamConfig.Express.DataTiers:
                     if dataTier not in [ "ALCARECO", "DQM" ]:
+
                         outputModuleDetails.append( { 'dataTier' : dataTier,
                                                       'eventContent' : dataTier,
                                                       'selectEvents' : selectEvents,
-                                                      'primaryDataset' : datasetConfig.Name } )
+                                                      'primaryDataset' : dataset } )
 
-                #insertPhEDExConfig(dbConn, runNumber, dataset,
-                #                   None, "T2_CH_CAF", None, False)
+                bindsPhEDExConfig.append( { 'RUN' : run,
+                                            'PRIMDS' : dataset,
+                                            'NODE' : expressPhEDExSubscribeNode,
+                                            'CUSTODIAL' : 1,
+                                            'REQ_ONLY' : "n",
+                                            'PRIO' : "high" } )
 
-                #insertPhEDExConfig(dbConn, runNumber, errorDataset,
-                #                   None, "T2_CH_CAF", None, False)
-
-
-
+                subscriptions['Express'].append( { 'custodialSites' : [expressPhEDExSubscribeNode],
+                                                   'nonCustodialSites' : [],
+                                                   'autoApproveSites' : [expressPhEDExSubscribeNode],
+                                                   'priority' : "high",
+                                                   'primaryDataset' : dataset } )
 
         #
         # finally create WMSpec
@@ -389,12 +461,18 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['AcquisitionEra'] = tier0Config.Global.AcquisitionEra
             specArguments['CMSSWVersion'] = streamConfig.VersionOverride.get(onlineVersion, onlineVersion)
             specArguments['Outputs'] = outputModuleDetails
-            specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/local/Tier0/override_catalog.xml?protocol=override"
+            specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/T0_CH_CERN/Tier0/override_catalog.xml?protocol=override"
 
         if streamConfig.ProcessingStyle == "Bulk":
             wmSpec = repackWorkload(workflowName, specArguments)
+            wmSpec.setPhEDExInjectionOverride(runInfo['bulk_data_loc'])
+            for subscription in subscriptions['Bulk']:
+                wmSpec.setSubscriptionInformation(**subscription)
         elif streamConfig.ProcessingStyle == "Express":
             wmSpec = expressWorkload(workflowName, specArguments)
+            wmSpec.setPhEDExInjectionOverride(expressPhEDExInjectNode)
+            for subscription in subscriptions['Express']:
+                wmSpec.setSubscriptionInformation(**subscription)
 
         if streamConfig.ProcessingStyle in [ 'Bulk', 'Express' ]:
             wmSpec.setOwnerDetails("Dirk.Hufnagel@cern.ch", "T0",
@@ -434,6 +512,10 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 updateStreamOverrideDAO.execute(bindsStreamOverride, conn = myThread.transaction.conn, transaction = True)
             if len(bindsErrorDataset) > 0:
                 insertErrorDatasetDAO.execute(bindsErrorDataset, conn = myThread.transaction.conn, transaction = True)
+            if len(bindsStorageNode) > 0:
+                insertStorageNodeDAO.execute(bindsStorageNode, conn = myThread.transaction.conn, transaction = True)
+            if len(bindsPhEDExConfig) > 0:
+                insertPhEDExConfigDAO.execute(bindsPhEDExConfig, conn = myThread.transaction.conn, transaction = True)
             insertStreamStyleDAO.execute(bindsStreamStyle, conn = myThread.transaction.conn, transaction = True)
             if streamConfig.ProcessingStyle in [ 'Bulk', 'Express' ]:
                 insertStreamFilesetDAO.execute(run, stream, filesetName, conn = myThread.transaction.conn, transaction = True)
@@ -497,7 +579,6 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
     bindsCMSSWVersion = []
     bindsRecoConfig = []
     bindsStorageNode = []
-    bindsPhEDExConfig = []
     bindsPromptSkimConfig = []
     bindsReleasePromptReco = []
 
@@ -507,7 +588,15 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                                 dbinterface = myThread.dbi)
     markWorkflowsInjectedDAO   = wmbsDaoFactory(classname = "Workflow.MarkInjectedWorkflows")
 
+    #
+    # for creating PromptReco specs
+    #
     recoSpecs = {}
+
+    #
+    # for PhEDEx subscription settings
+    #
+    subscriptions = []
 
     findRecoReleaseDAO = daoFactory(classname = "RunConfig.FindRecoRelease")
     recoRelease = findRecoReleaseDAO.execute(transaction = False)
@@ -517,6 +606,10 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
         # retrieve some basic run information
         getRunInfoDAO = daoFactory(classname = "RunConfig.GetRunInfo")
         runInfo = getRunInfoDAO.execute(run, transaction = False)[0]
+
+        # retrieve phedex configs for run
+        getPhEDExConfigDAO = daoFactory(classname = "RunConfig.GetPhEDExConfig")
+        phedexConfigs = getPhEDExConfigDAO.execute(run, transaction = False)
 
         for (dataset, fileset, repackProcVer) in recoRelease[run]:
 
@@ -553,31 +646,28 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                                       'DQM_SEQ' : dqmSeq,
                                       'GLOBAL_TAG' : datasetConfig.Reco.GlobalTag } )
 
-            requestOnly = "y"
-            if datasetConfig.CustodialAutoApprove:
-                requestOnly = "n"
+            phedexConfig = phedexConfigs[dataset]
 
-            if datasetConfig.CustodialNode != None:
+            custodialSites = []
+            nonCustodialSites = []
+            autoApproveSites = []
 
-                bindsStorageNode.append( { 'NODE' : datasetConfig.CustodialNode } )
+            for node, config in phedexConfig.items():
 
-                bindsPhEDExConfig.append( { 'RUN' : run,
-                                            'PRIMDS' : dataset,
-                                            'NODE' : datasetConfig.CustodialNode,
-                                            'CUSTODIAL' : 1,
-                                            'REQ_ONLY' : requestOnly,
-                                            'PRIO' : datasetConfig.CustodialPriority } )
+                if config['custodial'] == 1:
+                    custodialSites.append(node)
+                else:
+                    nonCustodialSites.append(node)
 
-            if datasetConfig.ArchivalNode != None:
+                if config['request_only'] == "n":
+                    autoApproveSites.append(node)
 
-                bindsStorageNode.append( { 'NODE' : datasetConfig.ArchivalNode } )
-
-                bindsPhEDExConfig.append( { 'RUN' : run,
-                                            'PRIMDS' : dataset,
-                                            'NODE' : datasetConfig.ArchivalNode,
-                                            'CUSTODIAL' : 0,
-                                            'REQ_ONLY' : "n",
-                                            'PRIO' : "high" } )
+            if len(custodialSites) + len(nonCustodialSites) > 0:
+                subscriptions.append( { 'custodialSites' : custodialSites,
+                                        'nonCustodialSites' : nonCustodialSites,
+                                        'autoApproveSites' : autoApproveSites,
+                                        'priority' : config['priority'],
+                                        'primaryDataset' : dataset } )
 
             for tier1Skim in datasetConfig.Tier1Skims:
 
@@ -642,12 +732,16 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                 specArguments['MergedLFNBase'] = "%s/%s" % (runInfo['lfn_prefix'],
                                                             runInfo['bulk_data_type'])
 
-                specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/local/Tier0/override_catalog.xml?protocol=override"
+                specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/T0_CH_CERN/Tier0/override_catalog.xml?protocol=override"
                 specArguments['DQMUploadProxy'] = dqmUploadProxy
 
                 specArguments['DoLogCollect'] = False
 
                 wmSpec = promptrecoWorkload(workflowName, specArguments)
+
+                wmSpec.setPhEDExInjectionOverride(runInfo['bulk_data_loc'])
+                for subscription in subscriptions:
+                    wmSpec.setSubscriptionInformation(**subscription)
 
                 wmSpec.setOwnerDetails("Dirk.Hufnagel@cern.ch", "T0",
                                        { 'vogroup': 'DEFAULT', 'vorole': 'DEFAULT',
@@ -655,6 +749,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
 
                 wmSpec.setupPerformanceMonitoring(maxRSS = 10485760, maxVSize = 10485760,
                                                   softTimeout = 604800, gracePeriod = 3600)
+
                 wmbsHelper = WMBSHelper(wmSpec, taskName, cachepath = specDirectory)
 
                 recoSpecs[workflowName] = (wmbsHelper, wmSpec, fileset)
@@ -669,8 +764,6 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
             insertRecoConfigDAO.execute(bindsRecoConfig, conn = myThread.transaction.conn, transaction = True)
         if len(bindsStorageNode) > 0:
             insertStorageNodeDAO.execute(bindsStorageNode, conn = myThread.transaction.conn, transaction = True)
-        if len(bindsPhEDExConfig) > 0:
-            insertPhEDExConfigDAO.execute(bindsPhEDExConfig, conn = myThread.transaction.conn, transaction = True)
         if len(bindsPromptSkimConfig) > 0:
             insertPromptSkimConfigDAO.execute(bindsPromptSkimConfig, conn = myThread.transaction.conn, transaction = True)
         if len(bindsReleasePromptReco) > 0:

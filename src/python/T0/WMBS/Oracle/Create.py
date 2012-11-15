@@ -123,6 +123,7 @@ class Create(DBCreator):
                  acq_era            varchar2(255),
                  lfn_prefix         varchar2(255),
                  bulk_data_type     varchar2(255),
+                 bulk_data_loc      varchar2(255),
                  ah_timeout         int,
                  ah_dir             varchar2(255),
                  cond_timeout       int,

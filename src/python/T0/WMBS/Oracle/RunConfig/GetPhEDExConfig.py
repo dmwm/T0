@@ -11,7 +11,7 @@ from WMCore.Database.DBFormatter import DBFormatter
 
 class GetPhEDExConfig(DBFormatter):
 
-    def execute(self, run, stream, conn = None, transaction = False):
+    def execute(self, run, conn = None, transaction = False):
 
         sql = """SELECT primary_dataset.name,
                         storage_node.name,
@@ -27,12 +27,9 @@ class GetPhEDExConfig(DBFormatter):
                  INNER JOIN storage_node ON
                    storage_node.id = phedex_config.node_id
                  WHERE run_primds_stream_assoc.run_id = :RUN
-                 AND run_primds_stream_assoc.stream_id =
-                   (SELECT id FROM stream WHERE name = :STREAM)
                  """
 
-        binds = { 'RUN' : run,
-                  'STREAM' : stream }
+        binds = { 'RUN' : run }
         
         results = self.dbi.processData(sql, binds, conn = conn,
                                        transaction = transaction)[0].fetchall()
