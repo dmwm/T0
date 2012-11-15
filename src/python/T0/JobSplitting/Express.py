@@ -78,7 +78,7 @@ class Express(JobFactory):
 
             lumiStreamerList = streamersByLumi[lumi]
 
-            createdJob = False
+            createdMultipleJobs = False
             while len(lumiStreamerList) > 0:
 
                 eventsTotal = 0
@@ -98,15 +98,17 @@ class Express(JobFactory):
                             eventsTotal = newEventsTotal
                             streamerList.append(streamer)
 
-                if createdJob:
-                    splitLumis.append( { 'SUB' : self.subscription["id"],
-                                         'LUMI' : lumi } )
-
                 self.createJob(streamerList)
-                createdJob = True
 
                 for streamer in streamerList:
                     lumiStreamerList.remove(streamer)
+
+                if len(lumiStreamerList) > 0:
+                    createdMultipleJobs = True
+
+            if createdMultipleJobs:
+                splitLumis.append( { 'SUB' : self.subscription["id"],
+                                     'LUMI' : lumi } )
 
         if len(splitLumis) > 0:
             self.insertSplitLumisDAO.execute(binds = splitLumis)
