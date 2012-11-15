@@ -1,3 +1,10 @@
+1.9.22 to 1.9.24:
+  - configure PhEDEx subscriptions
+  - closeout Repack and Express workflows in couch
+  - fix serious problem with repack merge scheduling
+  - add some extra defaults for the Tier0 config
+  - fix merged status of express merge output
+
 1.9.21 to 1.9.22:
   - make Repack job splitting parameters configurable
   - make Express job splitting parameters configurable
