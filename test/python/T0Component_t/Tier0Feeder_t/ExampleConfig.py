@@ -9,6 +9,7 @@ from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
 from T0.RunConfig.Tier0Config import setLFNPrefix
 from T0.RunConfig.Tier0Config import setBulkDataType
+from T0.RunConfig.Tier0Config import setBulkDataLocation
 from T0.RunConfig.Tier0Config import setPromptCalibrationConfig
 from T0.RunConfig.Tier0Config import setConfigVersion
 from T0.RunConfig.Tier0Config import ignoreStream
@@ -31,6 +32,7 @@ setConfigVersion(tier0Config, "replace with real version")
 setAcquisitionEra(tier0Config, "ExampleConfig_UnitTest")
 setLFNPrefix(tier0Config, "/store")
 setBulkDataType(tier0Config, "data")
+setBulkDataLocation(tier0Config, "T2_CH_CERN")
 setPromptCalibrationConfig(tier0Config,
                            alcaHarvestTimeout = 12*3600,
                            alcaHarvestDir = "/some/afs/dir",

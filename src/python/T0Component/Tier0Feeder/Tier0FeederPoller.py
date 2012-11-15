@@ -226,7 +226,12 @@ class Tier0FeederPoller(BaseWorkerThread):
         return
 
     def feedCouchMonitoring(self):
+        """
+        _feedCouchMonitoring_
 
+        check for workflows that haven't been uploaded to Couch for monitoring yet
+
+        """
         getStreamerWorkflowsForMonitoringDAO = self.daoFactory(classname = "Tier0Feeder.GetStreamerWorkflowsForMonitoring")
         getPromptRecoWorkflowsForMonitoringDAO = self.daoFactory(classname = "Tier0Feeder.GetPromptRecoWorkflowsForMonitoring")
         markTrackedWorkflowMonitoringDAO = self.daoFactory(classname = "Tier0Feeder.MarkTrackedWorkflowMonitoring")
@@ -235,6 +240,7 @@ class Tier0FeederPoller(BaseWorkerThread):
 
         if len(workflows) == 0:
             logging.debug("No workflows to publish to couch monitoring, doing nothing")
+
         if workflows:
             logging.debug(" Going to publish %d workflows" % len(workflows))
             for (workflowId, run, workflowName) in workflows:
@@ -250,12 +256,22 @@ class Tier0FeederPoller(BaseWorkerThread):
                     # Here we have to trust the insert, if it doesn't happen will be easy to spot on the logs
                     markTrackedWorkflowMonitoringDAO.execute(workflowId)
 
+        return
+
     def closeOutRealTimeWorkflows(self):
-        # This is supposed to keep track (in couch) if Repack and Express have all the files in place (fileset closed).
-        # found PromptReco workflows should be closed automatically.
-        workflows = self.getNotClosedOutWorkflowsDAO.execute()
+        """
+        _closeOutRealTimeWorkflows_
+
+        Updates couch with the closeout status of Repack and Express
+        PromptReco should be closed out automatically
+
+        """
+        getNotClosedOutWorkflowsDAO = self.daoFactory(classname = "Tier0Feeder.GetNotClosedOutWorkflows")
+        workflows = getNotClosedOutWorkflowsDAO.execute()
+
         if len(workflows) == 0:
             logging.debug("No workflows to publish to couch monitoring, doing nothing")
+
         if workflows:
             for workflow in workflows:
                 (workflowId, filesetId, filesetOpen, workflowName) = workflow
@@ -270,11 +286,24 @@ class Tier0FeederPoller(BaseWorkerThread):
                     if filesetOpen == '0':
                         self.updateClosedState(workflowName, workflowId)
 
+        return
+
     def updateClosedState(self, workflowName, workflowId):
+        """
+        _updateClosedState_
+
+        Mark a workflow as Closed
+
+        """
+        markCloseoutWorkflowMonitoringDAO = self.daoFactory(classname = "Tier0Feeder.MarkCloseoutWorkflowMonitoring")
+
         response = self.localSummaryCouchDB.updateRequestStatus(workflowName, 'Closed')
+
         if response == "OK" or "EXISTS":
             logging.debug("Successfully closed workflow %s" % workflowName)
-            self.markCloseoutWorkflowMonitoringDAO.execute(workflowId)
+            markCloseoutWorkflowMonitoringDAO.execute(workflowId)
+
+        return
 
     def terminate(self, params):
         """

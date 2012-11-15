@@ -18,6 +18,8 @@ Tier0Configuration - Global configuration object
 | |       |
 | |       |--> BulkDataType - The bulk data type for the run
 | |       |
+| |       |--> BulkDataLocation - The bulk data location for the run (to be used as phedex source site)
+| |       |
 | |       |--> AlcaHarvestTimeout - AlcaHarvesting for a run/stream is normally trigered by
 | |       |                         fileset closing (ie. all data received and processed).
 | |       |                         This timeout will configure an additional time trigger
@@ -390,6 +392,16 @@ def setBulkDataType(config, type):
     Set the bulk data type in the configuration.
     """
     config.Global.BulkDataType = type
+    return
+
+def setBulkDataLocation(config, location):
+    """
+    _setBulkDataLocation_
+
+    Set the bulk data location (to be used as source for phedex injections) in the configuration.
+    
+    """
+    config.Global.BulkDataLocation = location
     return
 
 def setPromptCalibrationConfig(config, alcaHarvestTimeout, alcaHarvestDir,

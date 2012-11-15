@@ -16,6 +16,7 @@ class UpdateRun(DBFormatter):
                      acq_era = :ACQERA,
                      lfn_prefix = :LFNPREFIX,
                      bulk_data_type = :BULKDATATYPE,
+                     bulk_data_loc = :BULKDATALOC,
                      ah_timeout = :AHTIMEOUT,
                      ah_dir = :AHDIR,
                      cond_timeout = :CONDTIMEOUT,
