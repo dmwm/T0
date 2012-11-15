@@ -96,7 +96,7 @@ class RepackTest(unittest.TestCase):
         self.splitArgs = {}
         self.splitArgs['maxSizeSingleLumi'] = 20*1024*1024*1024
         self.splitArgs['maxSizeMultiLumi'] = 10*1024*1024*1024
-        self.splitArgs['maxEvents'] = 500000
+        self.splitArgs['maxInputEvents'] = 500000
         self.splitArgs['maxInputFiles'] = 1000
 
         return
@@ -107,19 +107,6 @@ class RepackTest(unittest.TestCase):
 
         """
         self.testInit.clearDatabase()
-
-        return
-
-    def finalCloseLumis(self):
-        """
-        _finalCloseLumis_
-
-        """
-        myThread = threading.currentThread()
-
-        myThread.dbi.processData("""UPDATE lumi_section_closed
-                                    SET close_time = 1
-                                    """, transaction = False)
 
         return
 
@@ -145,12 +132,9 @@ class RepackTest(unittest.TestCase):
         Test multi lumi size threshold
         Multi lumi input
 
-        Test that only closed lumis are used
-
         """
         mySplitArgs = self.splitArgs.copy()
 
-        insertClosedLumiBinds = []
         for lumi in [1,2,3,4]:
             filecount = 2
             for i in range(filecount):
@@ -159,45 +143,11 @@ class RepackTest(unittest.TestCase):
                 newFile.setLocation("SomeSE", immediateSave = False)
                 newFile.create()
                 self.fileset1.addFile(newFile)
-                insertClosedLumiBinds.append( { 'RUN' : 1,
-                                                'LUMI' : lumi,
-                                                'STREAM' : "A",
-                                                'FILECOUNT' : filecount,
-                                                'INSERT_TIME' : self.currentTime,
-                                                'CLOSE_TIME' : 0 } )
+
         self.fileset1.commit()
 
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription1)
-
-        mySplitArgs['maxSizeMultiLumi'] = self.splitArgs['maxSizeMultiLumi']
-        jobGroups = jobFactory(**mySplitArgs)
-
-        self.assertEqual(len(jobGroups), 0,
-                         "ERROR: JobFactory should have returned no JobGroup")
-
-        mySplitArgs['maxSizeMultiLumi'] = 5000
-        jobGroups = jobFactory(**mySplitArgs)
-
-        self.assertEqual(len(jobGroups), 0,
-                         "ERROR: JobFactory should have returned no JobGroup")
-
-        self.insertClosedLumiDAO.execute(binds = insertClosedLumiBinds,
-                                         transaction = False)
-
-        mySplitArgs['maxSizeMultiLumi'] = self.splitArgs['maxSizeMultiLumi']
-        jobGroups = jobFactory(**mySplitArgs)
-
-        self.assertEqual(len(jobGroups), 0,
-                         "ERROR: JobFactory should have returned no JobGroup")
-
-        mySplitArgs['maxSizeMultiLumi'] = 5000
-        jobGroups = jobFactory(**mySplitArgs)
-
-        self.assertEqual(len(jobGroups), 0,
-                         "ERROR: JobFactory should have returned no JobGroup")
-
-        self.finalCloseLumis()
 
         mySplitArgs['maxSizeMultiLumi'] = self.splitArgs['maxSizeMultiLumi']
         jobGroups = jobFactory(**mySplitArgs)
@@ -281,7 +231,7 @@ class RepackTest(unittest.TestCase):
         self.assertEqual(len(jobGroups), 0,
                          "ERROR: JobFactory should have returned no JobGroup")
 
-        mySplitArgs['maxEvents'] = 500
+        mySplitArgs['maxInputEvents'] = 500
         jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
@@ -411,7 +361,7 @@ class RepackTest(unittest.TestCase):
         self.assertEqual(len(jobGroups), 0,
                          "ERROR: JobFactory should have returned no JobGroup")
 
-        mySplitArgs['maxEvents'] = 650
+        mySplitArgs['maxInputEvents'] = 650
         jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
@@ -604,7 +554,7 @@ class RepackTest(unittest.TestCase):
         self.insertClosedLumiDAO.execute(binds = insertClosedLumiBinds,
                                          transaction = False)
 
-        mySplitArgs['maxEvents'] = 900
+        mySplitArgs['maxInputEvents'] = 900
         jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
