@@ -735,8 +735,6 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                 specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/T0_CH_CERN/Tier0/override_catalog.xml?protocol=override"
                 specArguments['DQMUploadProxy'] = dqmUploadProxy
 
-                specArguments['DoLogCollect'] = False
-
                 wmSpec = promptrecoWorkload(workflowName, specArguments)
 
                 wmSpec.setPhEDExInjectionOverride(runInfo['bulk_data_loc'])
