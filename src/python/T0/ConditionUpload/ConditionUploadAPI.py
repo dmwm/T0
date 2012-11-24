@@ -168,6 +168,8 @@ def uploadToDropbox(condFiles, dropboxHost, validationMode):
         os.chmod(filenameDB, stat.S_IREAD | stat.S_IWRITE | stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH)
         os.chmod(filenameTXT, stat.S_IREAD | stat.S_IWRITE | stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH)
 
+        shutil.copy2(filenameTXT, metaFile['pfn'] + ".uploaded")
+
         uploadStatus = True
         if validationMode:
 
