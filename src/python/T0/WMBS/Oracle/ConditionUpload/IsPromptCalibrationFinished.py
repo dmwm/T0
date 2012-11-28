@@ -17,8 +17,7 @@ class IsPromptCalibrationFinished(DBFormatter):
         sql = """SELECT 1
                  FROM wmbs_subscription
                    INNER JOIN wmbs_fileset ON
-                     wmbs_fileset.id = wmbs_subscription.fileset AND
-                     wmbs_fileset.open = 0
+                     wmbs_fileset.id = wmbs_subscription.fileset
                    LEFT OUTER JOIN wmbs_sub_files_available ON
                      wmbs_sub_files_available.subscription = wmbs_subscription.id
                    LEFT OUTER JOIN wmbs_sub_files_acquired ON
@@ -26,6 +25,7 @@ class IsPromptCalibrationFinished(DBFormatter):
                  WHERE wmbs_subscription.id = :SUBSCRIPTION
                  HAVING COUNT(wmbs_sub_files_available.subscription) = 0
                  AND COUNT(wmbs_sub_files_acquired.subscription) = 0
+                 AND SUM(wmbs_fileset.open) = 0
                  """
 
         binds = { 'SUBSCRIPTION' : subscription }
