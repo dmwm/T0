@@ -44,9 +44,14 @@ class RepackMergeTest(unittest.TestCase):
         self.splitterFactory = SplitterFactory(package = "T0.JobSplitting")
 
         myThread = threading.currentThread()
+
         daoFactory = DAOFactory(package = "T0.WMBS",
                                 logger = logging,
                                 dbinterface = myThread.dbi)
+
+        wmbsDaoFactory = DAOFactory(package = "WMCore.WMBS",
+                                    logger = logging,
+                                    dbinterface = myThread.dbi)
 
         myThread.dbi.processData("""INSERT INTO wmbs_location
                                     (id, site_name, state)
@@ -76,17 +81,40 @@ class RepackMergeTest(unittest.TestCase):
         insertLumiDAO.execute(binds = { 'RUN' : 1,
                                         'LUMI' : 4 },
                               transaction = False)
+        insertLumiDAO.execute(binds = { 'RUN' : 1,
+                                        'LUMI' : 5 },
+                              transaction = False)
 
         insertStreamDAO = daoFactory(classname = "RunConfig.InsertStream")
         insertStreamDAO.execute(binds = { 'STREAM' : "A" },
                                 transaction = False)
 
+        insertCMSSVersionDAO = daoFactory(classname = "RunConfig.InsertCMSSWVersion")
+        insertCMSSVersionDAO.execute(binds = { 'VERSION' : "CMSSW_4_2_7" },
+                                     transaction = False)
+
+        insertStreamCMSSWVersionDAO = daoFactory(classname = "RunConfig.InsertStreamCMSSWVersion")
+        insertStreamCMSSWVersionDAO.execute(binds = { 'RUN' : 1,
+                                                      'STREAM' : 'A',
+                                                      'VERSION' : "CMSSW_4_2_7" },
+                                            transaction = False)
+
+        insertStreamerDAO = daoFactory(classname = "RunConfig.InsertStreamer")
+        insertStreamerDAO.execute(binds = { 'RUN' : 1,
+                                            'LUMI' : 4,
+                                            'STREAM' : "A",
+                                            'LFN' : "/testLFN/A",
+                                            'FILESIZE' : 100,
+                                            'EVENTS' : 100,
+                                            'TIME' : int(time.time()) },
+                                  transaction = False)
+
         insertStreamFilesetDAO = daoFactory(classname = "RunConfig.InsertStreamFileset")
         insertStreamFilesetDAO.execute(1, "A", "TestFileset1")
 
-        fileset1 = Fileset(name = "TestFileset1")
+        self.fileset1 = Fileset(name = "TestFileset1")
         self.fileset2 = Fileset(name = "TestFileset2")
-        fileset1.load()
+        self.fileset1.load()
         self.fileset2.create()
 
         workflow1 = Workflow(spec = "spec.xml", owner = "hufnagel", name = "TestWorkflow1", task="Test")
@@ -94,7 +122,7 @@ class RepackMergeTest(unittest.TestCase):
         workflow1.create()
         workflow2.create()
 
-        self.subscription1  = Subscription(fileset = fileset1,
+        self.subscription1  = Subscription(fileset = self.fileset1,
                                            workflow = workflow1,
                                            split_algo = "Repack",
                                            type = "Repack")
@@ -114,13 +142,16 @@ class RepackMergeTest(unittest.TestCase):
         # keep for later
         self.insertSplitLumisDAO = daoFactory(classname = "JobSplitting.InsertSplitLumis")
         self.insertClosedLumiDAO = daoFactory(classname = "RunLumiCloseout.InsertClosedLumi")
+        self.feedStreamersDAO = daoFactory(classname = "Tier0Feeder.FeedStreamers")                                                      
+        self.acquireFilesDAO = wmbsDaoFactory(classname = "Subscriptions.AcquireFiles")
+        self.completeFilesDAO = wmbsDaoFactory(classname = "Subscriptions.CompleteFiles")
         self.currentTime = int(time.time())
 
         # default split parameters
         self.splitArgs = {}
-        self.splitArgs['minSize'] = 2.1 * 1024 * 1024 * 1024
-        self.splitArgs['maxSize'] = 4.0 * 1024 * 1024 * 1024
-        self.splitArgs['maxEvents'] = 100000000
+        self.splitArgs['minInputSize'] = 2.1 * 1024 * 1024 * 1024
+        self.splitArgs['maxInputSize'] = 4.0 * 1024 * 1024 * 1024
+        self.splitArgs['maxInputEvents'] = 100000000
         self.splitArgs['maxInputFiles'] = 1000
         self.splitArgs['maxEdmSize'] = 20 * 1024 * 1024 * 1024
         self.splitArgs['maxOverSize'] = 10 * 1024 * 1024 * 1024
@@ -235,7 +266,7 @@ class RepackMergeTest(unittest.TestCase):
         self.assertEqual(len(jobGroups), 0,
                          "ERROR: JobFactory should have returned no JobGroup")
 
-        mySplitArgs['maxSize'] = 3000
+        mySplitArgs['maxInputSize'] = 3000
         jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
@@ -283,7 +314,7 @@ class RepackMergeTest(unittest.TestCase):
         self.assertEqual(len(jobGroups), 0,
                          "ERROR: JobFactory should have returned no JobGroup")
 
-        mySplitArgs['maxEvents'] = 300
+        mySplitArgs['maxInputEvents'] = 300
         jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
@@ -373,13 +404,13 @@ class RepackMergeTest(unittest.TestCase):
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription2)
 
-        mySplitArgs['minSize'] = 3000
+        mySplitArgs['minInputSize'] = 3000
         jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
                          "ERROR: JobFactory should have returned no JobGroup")
 
-        mySplitArgs['maxSize'] = 5000
+        mySplitArgs['maxInputSize'] = 5000
         jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
@@ -431,13 +462,13 @@ class RepackMergeTest(unittest.TestCase):
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription2)
 
-        mySplitArgs['minSize'] = 3000
+        mySplitArgs['minInputSize'] = 3000
         jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
                          "ERROR: JobFactory should have returned no JobGroup")
 
-        mySplitArgs['maxEvents'] = 500
+        mySplitArgs['maxInputEvents'] = 500
         jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
@@ -489,7 +520,7 @@ class RepackMergeTest(unittest.TestCase):
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription2)
 
-        mySplitArgs['minSize'] = 3000
+        mySplitArgs['minInputSize'] = 3000
         jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
@@ -548,8 +579,8 @@ class RepackMergeTest(unittest.TestCase):
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription2)
 
-        mySplitArgs['minSize'] = 3000
-        mySplitArgs['maxSize'] = 9000
+        mySplitArgs['minInputSize'] = 3000
+        mySplitArgs['maxInputSize'] = 9000
         jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
@@ -588,8 +619,8 @@ class RepackMergeTest(unittest.TestCase):
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription2)
 
-        mySplitArgs['minSize'] = 3000
-        mySplitArgs['maxSize'] = 9000
+        mySplitArgs['minInputSize'] = 3000
+        mySplitArgs['maxInputSize'] = 9000
         mySplitArgs['maxOverSize'] = 9500
         jobGroups = jobFactory(**mySplitArgs)
 
@@ -643,9 +674,9 @@ class RepackMergeTest(unittest.TestCase):
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription2)
 
-        mySplitArgs['minSize'] = 3000
-        mySplitArgs['maxSize'] = 9000
-        mySplitArgs['maxEvents'] = 300
+        mySplitArgs['minInputSize'] = 3000
+        mySplitArgs['maxInputSize'] = 9000
+        mySplitArgs['maxInputEvents'] = 300
         jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
@@ -679,12 +710,15 @@ class RepackMergeTest(unittest.TestCase):
         _test10_
 
         Test merging of multiple lumis with holes in the lumi sequence
+
+        Hole is due to no streamer files for the lumi
+
         Multi lumi input
 
         """
         mySplitArgs = self.splitArgs.copy()
 
-        for lumi in [1,2,4]:
+        for lumi in [1,2,5]:
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
@@ -696,7 +730,7 @@ class RepackMergeTest(unittest.TestCase):
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription2)
 
-        mySplitArgs['maxEvents'] = 500
+        mySplitArgs['maxInputEvents'] = 500
         jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
@@ -709,6 +743,40 @@ class RepackMergeTest(unittest.TestCase):
                                                    'INSERT_TIME' : self.currentTime,
                                                    'CLOSE_TIME' : self.currentTime },
                                          transaction = False)
+
+        jobGroups = jobFactory(**mySplitArgs)
+
+        self.assertEqual(len(jobGroups), 0,
+                         "ERROR: JobFactory should have returned no JobGroup")
+
+        self.insertClosedLumiDAO.execute(binds = { 'RUN' : 1,
+                                                   'LUMI' : 4,
+                                                   'STREAM' : "A",
+                                                   'FILECOUNT' : 1,
+                                                   'INSERT_TIME' : self.currentTime,
+                                                   'CLOSE_TIME' : self.currentTime },
+                                         transaction = False)
+
+        self.feedStreamersDAO.execute(transaction = False)
+        self.fileset1.loadData()
+
+        jobGroups = jobFactory(**mySplitArgs)
+
+        self.assertEqual(len(jobGroups), 0,
+                         "ERROR: JobFactory should have returned no JobGroup")
+
+        for fileid in self.fileset1.getFiles(type = 'id'):
+            self.acquireFilesDAO.execute(self.subscription1['id'], fileid,
+                                         transaction = False)
+
+        jobGroups = jobFactory(**mySplitArgs)
+
+        self.assertEqual(len(jobGroups), 0,
+                         "ERROR: JobFactory should have returned no JobGroup")
+
+        for fileid in self.fileset1.getFiles(type = 'id'):
+            self.completeFilesDAO.execute(self.subscription1['id'], fileid,
+                                          transaction = False)
 
         jobGroups = jobFactory(**mySplitArgs)
 
