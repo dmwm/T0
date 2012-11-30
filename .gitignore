@@ -11,3 +11,4 @@ install/
 dist/
 *.egg-info
 merge.cmd
+.settings
