@@ -26,33 +26,24 @@ class FindClosedLumis(DBFormatter):
 
     def execute(self, binds, conn = None, transaction = False):
 
-        sql = """SELECT a.runnumber, a.stream, a.lumisection, SUM(a.filecount)
-                 FROM CMS_STOMGR.streams a
-                 INNER JOIN CMS_STOMGR.runs b ON
-                   b.runnumber = a.runnumber AND
-                   b.instance = a.instance
-                 WHERE a.runnumber = :RUN
-                 AND a.stream = :STREAM
-                 AND a.lumisection > :LUMI
-                 GROUP BY a.runnumber, a.stream, a.lumisection
-                 HAVING ( COUNT(*) = ( SELECT COUNT(*)
-                                       FROM CMS_STOMGR.runs c
-                                       WHERE c.runnumber = a.runnumber ) AND
-                          COUNT(*) = ( SELECT MAX(c.n_instances)
-                                       FROM CMS_STOMGR.runs c
-                                       WHERE c.runnumber = a.runnumber ) )
-                 OR ( COUNT(*) = SUM(CASE
-                                       WHEN b.status = 1 THEN 1000
-                                       WHEN b.n_lumisections < a.lumisection THEN 0
-                                       ELSE 1
-                                     END) AND
-                      COUNT(*) = ( SELECT SUM(CASE
-                                                WHEN c.status = 1 THEN 1000
-                                                WHEN c.n_lumisections < a.lumisection THEN 0
-                                                ELSE 1
-                                              END)
-                                   FROM CMS_STOMGR.runs c
-                                   WHERE c.runnumber = a.runnumber ) )
+        sql = """SELECT b.runnumber, a.stream, a.lumisection, SUM(a.filecount)
+                 FROM CMS_STOMGR.runs b
+                 LEFT OUTER JOIN CMS_STOMGR.streams a ON
+                   a.runnumber = b.runnumber AND
+                   a.instance = b.instance AND
+                   a.stream = :STREAM AND
+                   a.lumisection > :LUMI
+                 WHERE b.runnumber = :RUN
+                 GROUP BY b.runnumber, a.stream, a.lumisection
+                 HAVING COUNT(b.runnumber) = MAX(b.n_instances)
+                 AND (
+                   COUNT(a.runnumber) = COUNT(b.runnumber) OR
+                   COUNT(a.runnumber) = SUM(CASE
+                                              WHEN b.status = 1 THEN 1000
+                                              WHEN b.n_lumisections < a.lumisection THEN 0
+                                              ELSE 1
+                                            END)
+                 )
                  """
 
         try:
