@@ -274,8 +274,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                         'REQ_ONLY' : "n",
                                         'PRIO' : "high" } )
 
-            subscriptions['Express'].append( { 'custodialSites' : [expressPhEDExSubscribeNode],
-                                               'nonCustodialSites' : [],
+            subscriptions['Express'].append( { 'custodialSites' : [],
+                                               'nonCustodialSites' : [expressPhEDExSubscribeNode],
                                                'autoApproveSites' : [expressPhEDExSubscribeNode],
                                                'priority' : "high",
                                                'primaryDataset' : specialDataset } )
@@ -407,8 +407,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                             'REQ_ONLY' : "n",
                                             'PRIO' : "high" } )
 
-                subscriptions['Express'].append( { 'custodialSites' : [expressPhEDExSubscribeNode],
-                                                   'nonCustodialSites' : [],
+                subscriptions['Express'].append( { 'custodialSites' : [],
+                                                   'nonCustodialSites' : [expressPhEDExSubscribeNode],
                                                    'autoApproveSites' : [expressPhEDExSubscribeNode],
                                                    'priority' : "high",
                                                    'primaryDataset' : dataset } )
