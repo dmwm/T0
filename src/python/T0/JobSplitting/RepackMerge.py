@@ -50,6 +50,7 @@ class RepackMerge(JobFactory):
 
         maxLumiWithJobDAO = daoFactory(classname = "Subscriptions.MaxLumiWithJob")
         getClosedEmptyLumisFromChildSubDAO = daoFactory(classname = "JobSplitting.GetClosedEmptyLumisFromChildSub")
+        getCompletedLumisFromChildSubDAO = daoFactory(classname = "JobSplitting.GetCompletedLumisFromChildSub")
 
         # data discovery
         getFilesDAO = daoFactory(classname = "Subscriptions.GetAvailableRepackMergeFiles")
@@ -71,29 +72,44 @@ class RepackMerge(JobFactory):
         if lumiList[0] > 1:
             maxLumiWithJob = maxLumiWithJobDAO.execute(self.subscription["id"])
 
-        # do we have lumi holes ?
-        detectEmptyLumis = False
-        if lumiList[0] > maxLumiWithJob + 1:
-            detectEmptyLumis = True
-        elif lumiList[0] == maxLumiWithJob + 1:
-            for lumi in range(lumiList[0], lumiList[-1] + 1):
-                if lumi not in lumiList:
-                    detectEmptyLumis = True
-        else:
+        # consistency check
+        if lumiList[0] <= maxLumiWithJob:
             logging.error("ERROR: finding data that can't be there, bailing out...")
             return
+
+        # do we have lumi holes ?
+        detectEmptyLumis = False
+        detectCompleteLumis = False
+        lumi = maxLumiWithJob + 1
+        while lumi in lumiList:
+            lumi += 1
+        if lumi < lumiList[-1]:
+            detectEmptyLumis = True
 
         # empty and closed lumis
         emptyLumis = []
         if detectEmptyLumis:
-            emptyLumis = getClosedEmptyLumisFromChildSubDAO.execute(self.subscription["id"])
+
+            emptyLumis = getClosedEmptyLumisFromChildSubDAO.execute(self.subscription["id"], maxLumiWithJob)
+
+            # do we still have lumi holes ?
+            lumi = maxLumiWithJob + 1
+            while lumi in lumiList or lumi in emptyLumis:
+                lumi += 1
+            if lumi < lumiList[-1]:
+                detectCompleteLumis = True
+
+        # lumis for which repacking is complete
+        completeLumis = []
+        if detectCompleteLumis:
+            completeLumis = getCompletedLumisFromChildSubDAO.execute(self.subscription["id"], maxLumiWithJob)
 
         # figure out lumi range to create jobs for
         filesByLumi = {}
         firstLumi = maxLumiWithJob + 1
         lastLumi = lumiList[-1]
         for lumi in range(firstLumi, lastLumi + 1):
-            if (lumi in lumiList) or (lumi in emptyLumis):
+            if (lumi in lumiList) or (lumi in emptyLumis) or (lumi in completeLumis):
                 filesByLumi[lumi] = []
             else:
                 break
