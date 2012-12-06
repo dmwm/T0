@@ -66,22 +66,23 @@ class Repack(JobFactory):
         if lumiList[0] > 1:
             maxLumiWithJob = maxLumiWithJobDAO.execute(self.subscription["id"])
 
-        # do we have lumi holes ?
-        detectEmptyLumis = False
-        if lumiList[0] > maxLumiWithJob + 1:
-            detectEmptyLumis = True
-        elif lumiList[0] == maxLumiWithJob + 1:
-            for lumi in range(lumiList[0], lumiList[-1] + 1):
-                if lumi not in lumiList:
-                    detectEmptyLumis = True
-        else:
+        # consistency check
+        if lumiList[0] <= maxLumiWithJob:
             logging.error("ERROR: finding data that can't be there, bailing out...")
             return
+
+        # do we have lumi holes ?
+        detectEmptyLumis = False
+        lumi = maxLumiWithJob + 1
+        while lumi in lumiList:
+            lumi += 1
+        if lumi < lumiList[-1]:
+            detectEmptyLumis = True
 
         # empty and closed lumis
         emptyLumis = []
         if detectEmptyLumis:
-            emptyLumis = getClosedEmptyLumisDAO.execute(self.subscription["id"])
+            emptyLumis = getClosedEmptyLumisDAO.execute(self.subscription["id"], maxLumiWithJob)
 
         # figure out lumi range to create jobs for
         streamersByLumi = {}
