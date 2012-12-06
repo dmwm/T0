@@ -8,12 +8,15 @@ import time
 
 # Load/set configuration :
 config = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
-slsXml = "/afs/cern.ch/user/c/cmsprod/www/sls/cmst0-backlog-wma.xml"
+alarmConfigPath = os.path.join(os.environ.get("SLS_CONFIG") or
+                               os.environ["T0_ROOT"], 'etc/operations/SLSAlarmsConfig.py')
+alarmConfig = loadConfigurationFile(alarmConfigPath)
+xmlFile = getattr(alarmConfig.cmst0_backlog_wma, "xmlFile", None) or "cmst0_backlog_wma.xml"
+slsXml = os.path.join(alarmConfig.Settings.xmlDir, xmlFile)
 
 # Getting what we need from configuration
-couchURL = config.WMBSService.views.active.wmbs.couchConfig.couchURL
-couchURL = "http://vocms15.cern.ch:5984"
-jobsDatabase = config.WMBSService.views.active.wmbs.couchConfig.jobDumpDBName+"/jobs"
+couchURL = config.JobStateMachine.couchurl
+jobsDatabase = config.JobStateMachine.couchDBName + "/jobs"
 
 jobsDB = Database(jobsDatabase, couchURL)
 
@@ -36,20 +39,47 @@ for row in rows['rows']:
     jobCounts[workflowType] += createdJobs        
 
 # Here comes the TH logic, very simple in the beginning
-if jobCounts["PromptReco"] > 15000 or jobCounts["Express"]  > 2000 or jobCounts["Repack"] > 500:
-	availability = 0
-else: 
-	availability = 100 
+availability = 100
+for workflowType in jobCounts:
+    limit = getattr(alarmConfig.cmst0_backlog_wma, workflowType.lower())
+    if jobCounts[workflowType] > limit:
+        availability = 0
 
+interventionInfo = {}
+if hasattr(alarmConfig.cmst0_backlog_wma, "Intervention"):
+    startTime = alarmConfig.cmst0_backlog_wma.Intervention.startTime
+    duration = alarmConfig.cmst0_backlog_wma.Intervention.duration
+    message = alarmConfig.cmst0_backlog_wma.Intervention.message
 
-timestamp = time.strftime("%Y-%m-%dT%H:%M:%S+02:00") 
+    # Check that the intervention is present or in the future
+    structStartTime = time.strptime(startTime, "%Y-%m-%dT%H:%M:%S")
+    startTimeSeconds = time.mktime(structStartTime)
+    if (startTimeSeconds + duration * 3600) >= time.time():
+        interventionInfo = {'startTime' : startTime,
+                            'duration' : duration,
+                            'message' : message}
+intervention = ""
+if interventionInfo:
+    inteventionTemplate = """        <interventions>
+        <intervention start="{startTime}" length="PT{duration}H">
+            {message}
+        </intervention>
+    </interventions>"""
+
+    intervention = inteventionTemplate.format(**interventionInfo)
+
+timezone = str(int(-time.timezone / 3600)).zfill(2)
+timestamp = time.strftime("%Y-%m-%dT%H:%M:%S+")
+timestamp += "%s:00" % timezone
 xmlValues = {         
 		"availability"  : availability,
 		"timestamp"     : timestamp,
 		"promptreco_count": jobCounts["PromptReco"],
 		"express_count"	: jobCounts["Express"],
-		"repack_count"	: jobCounts["Repack"]
+		"repack_count"	: jobCounts["Repack"],
+        "intervention"  : intervention
 } 
+            
 
 template = Template("""<?xml version="1.0" encoding="utf-8"?>
        <serviceupdate xmlns="http://sls.cern.ch/SLS/XML/update">
@@ -61,6 +91,7 @@ template = Template("""<?xml version="1.0" encoding="utf-8"?>
                        <numericvalue name="repack_count" desc="Backlogged Repack">$repack_count</numericvalue>
                        <numericvalue name="express_count" desc="Backlogged Express">$express_count</numericvalue>
                </data>
+               $intervention
        </serviceupdate> """)
 
 xmlUpdated = template.safe_substitute(xmlValues)
