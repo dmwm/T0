@@ -1,0 +1,192 @@
+#!/usr/bin/env python
+"""
+_cmst0-late-workflows_
+
+Check for workflows that are taking longer than expected,
+configuration is provided in an external configuration file.
+
+Availability metrics are defined as:
+
+0 - At least one Express or Repack workflow is late
+50 - At least one PromptReco workflow is late
+100 - No workflow is late
+"""
+
+import traceback
+import time
+import re
+import os
+import sys
+
+from WMCore.Services.WMStats.WMStatsReader import WMStatsReader
+from WMCore.Configuration import loadConfigurationFile
+
+promptRecoRegexp = re.compile(r'^PromptReco_.*$')
+repackRegexp     = re.compile(r'^Repack_.*$')
+expressRegexp    = re.compile(r'^Express_.*$')
+
+regexpMapping = {'Express' : expressRegexp,
+                 'Repack'  : repackRegexp,
+                 'PromptReco' : promptRecoRegexp}
+
+def loadLimitsFromConfig(config):
+    """
+    _loadLimitsFromConfig_
+
+    Loads the time limits for the different workflows and states
+    from the configuration file. Formats it as a dictionary.
+    """
+    limits = {}
+    for workflowType in config.cmst0_late_workflows.WorkflowTimeouts.listSections_():
+        limits[workflowType] = {}
+        workflowTypeInfo = getattr(config.cmst0_late_workflows.WorkflowTimeouts, workflowType)
+        for state in getattr(workflowTypeInfo, "states"):
+            limits[workflowType][state] = getattr(workflowTypeInfo, state)
+    return limits
+
+def processWorkflows(wmStats, workflowLimits):
+    """
+    _processWorkflows_
+
+    The core logic of the tool, it gets a WMStatsReader object
+    and checks all the available workflows in it. It uses the
+    workflowLimits to check which workflows have remained in a state
+    longer than expected, finally it returns a dictionary with the problematic
+    workflows, their states and the time spent in them.
+    """
+
+    workflowStates = wmStats.workflowStatus(stale = False)
+    workflowStates = dict(map(lambda (key, value): (key.replace(' ', ''), value), workflowStates.items()))
+    problematicWorkflows = []
+    currentTime = int(time.time())
+    for workflowType in workflowLimits:
+        for state in workflowLimits[workflowType]:
+            if state in workflowStates:
+                workflows = filter(regexpMapping[workflowType].match, workflowStates[state])
+                for workflow in workflows:
+                    stateTime = workflowStates[state][workflow]
+                    if currentTime - stateTime > 3600 * float(workflowLimits[workflowType][state]):
+                        problematicWorkflows.append({'workflow' : workflow,
+                                                     'elapsedTime' : currentTime - stateTime,
+                                                     'state' : state})
+
+    return problematicWorkflows
+
+def calculateAvailability(data, runBlacklist):
+    """
+    _calculateAvailability_
+
+    Calculates the availability according
+    to the metrics defined in the module
+    documentation. Receives a list
+    of dictionaries with workflow information.
+    Take into account run blacklists.
+    """
+    availability = 100
+    runRegexp = re.compile(r'^.*_Run([0-9]{6})_.*$')
+    for entry in data:
+        if runRegexp.match(entry['workflow']).groups()[0] in runBlacklist:
+            continue
+        if promptRecoRegexp.match(entry['workflow']):
+            availability = 50
+        elif repackRegexp.match(entry['workflow']):
+            availability = 0
+        elif expressRegexp.match(entry['workflow']):
+            availability = 0
+        if not availability:
+            # Already 0, break out
+            break
+
+    return availability
+
+def buildSLSXML(outputFilePath, data, runBlacklist, interventionInfo):
+    """
+    _buildSLSXML_
+
+    Builds an XML file for SLS updates based
+    on the information in data.
+    """
+    textLines = ""
+    for entry in sorted(data, key = lambda x : x['elapsedTime'], reverse = True):
+        textLines += "\t\t%s has been in %s for %4.1f hours\n" % (entry['workflow'],
+                                                                  entry['state'],
+                                                                  entry['elapsedTime'] / 3600.0)
+    textLines = textLines.rstrip('\n')
+
+    availability = calculateAvailability(data, runBlacklist)
+    timezone = str(int(-time.timezone / 3600)).zfill(2)
+    timestamp = time.strftime("%Y-%m-%dT%H:%M:%S+")
+    timestamp += "%s:00" % timezone
+
+    intervention = ""
+    if interventionInfo:
+        inteventionTemplate = """        <interventions>
+            <intervention start="{startTime}" length="PT{duration}H">
+                {message}
+            </intervention>
+        </interventions>"""
+
+        intervention = inteventionTemplate.format(**interventionInfo)
+
+    template = """<?xml version="1.0" encoding="utf-8"?>
+    <serviceupdate xmlns="http://sls.cern.ch/SLS/XML/update">
+        <id>CMST0-late-workflows</id>
+        <availability>{availability}</availability>
+        <timestamp>{timestamp}</timestamp>
+        <data>
+{data}
+        </data>
+{intervention}
+    </serviceupdate>\n"""
+
+    xml = template.format(data = textLines, availability = availability,
+                          timestamp = timestamp, intervention = intervention)
+
+    try:
+        outputFile = open(outputFilePath, 'w')
+        outputFile.write(xml)
+    except:
+        print "Couldn't write the XML file"
+        traceback.print_exc()
+    finally:
+        outputFile.close()
+
+    return
+
+def main():
+
+    agentConfig = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
+    localWMStatsURL = agentConfig.AnalyticsDataCollector.localWMStatsURL
+    wmstatsReader = WMStatsReader(couchURL = localWMStatsURL)
+
+    alarmConfigPath = os.path.join(os.environ.get("SLS_CONFIG") or
+                                   os.environ["T0_ROOT"], 'etc/operations/SLSAlarmsConfig.py')
+    alarmConfig = loadConfigurationFile(alarmConfigPath)
+
+    workflowLimits = loadLimitsFromConfig(alarmConfig)
+    data = processWorkflows(wmstatsReader, workflowLimits)
+
+    interventionInfo = {}
+    if hasattr(alarmConfig.cmst0_late_workflows, "Intervention"):
+        startTime = alarmConfig.cmst0_late_workflows.Intervention.startTime
+        duration = alarmConfig.cmst0_late_workflows.Intervention.duration
+        message = alarmConfig.cmst0_late_workflows.Intervention.message
+
+        # Check that the intervention is present or in the future
+        structStartTime = time.strptime(startTime, "%Y-%m-%dT%H:%M:%S")
+        startTimeSeconds = time.mktime(structStartTime)
+        if (startTimeSeconds + duration * 3600) >= time.time():
+            interventionInfo = {'startTime' : startTime,
+                                'duration' : duration,
+                                'message' : message}
+            
+    runBlacklist = getattr(alarmConfig.cmst0_late_workflows, "runBlacklist", [])
+
+    xmlFile = getattr(alarmConfig.cmst0_late_workflows, "xmlFile", None) or "cmst0_late_workflows.xml"
+    xmlPath = os.path.join(alarmConfig.Settings.xmlDir, xmlFile)
+    buildSLSXML(xmlPath, data, runBlacklist, interventionInfo)
+
+    return
+
+if __name__ == '__main__':
+    sys.exit(main())
