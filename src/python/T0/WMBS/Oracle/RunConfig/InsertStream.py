@@ -11,27 +11,25 @@ class InsertStream(DBFormatter):
 
     def execute(self, binds, conn = None, transaction = False):
 
-        sql = """INSERT INTO stream
-                 (ID, NAME)
-                 SELECT stream_SEQ.nextval, :STREAM
-                 FROM DUAL
-                 WHERE NOT EXISTS (
-                   SELECT * FROM stream WHERE NAME = :STREAM
-                 )"""
-
-##         sql = """BEGIN
-##                    INSERT INTO stream
-##                    (ID, NAME)
-##                    SELECT stream_SEQ.nextval, :STREAM
-##                    FROM DUAL
-##                    WHERE NOT EXISTS (
-##                      SELECT * FROM stream WHERE NAME = :STREAM
-##                    )
-##                  EXCEPTION
-##                    WHEN DUP_VAL_ON_INDEX THEN NULL;
-##                    WHEN OTHERS THEN RAISE;
-##                  END; 
-##                  """
+        sql = """DECLARE
+                   cnt NUMBER(1);
+                 BEGIN
+                   SELECT COUNT(*)
+                   INTO cnt
+                   FROM stream
+                   WHERE name = :STREAM
+                   ;
+                   IF (cnt = 0)
+                   THEN
+                     INSERT INTO stream
+                     (ID, NAME)
+                     VALUES(stream_SEQ.nextval, :STREAM)
+                     ;
+                   END IF;
+                 EXCEPTION
+                   WHEN DUP_VAL_ON_INDEX THEN NULL;
+                 END;
+                 """
 
         self.dbi.processData(sql, binds, conn = conn,
                              transaction = transaction)
