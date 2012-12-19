@@ -1,3 +1,14 @@
+1.9.24 to 1.9.25:
+  - fix a race condition in some insert queries, pull request #4022
+  - Add new script to alarm on late workflows, pull request #4020
+  - Implement check for active runs, pull request #4016
+  - add consistency check to runlumicloseout, pull request #4019
+  - fix some problems with handling of empty lumis in repackmerge, pull request #4018
+  - fix problem with PCL completion check, pull request #4015
+  - copy back to AFS actually uploaded metadata file from alcaupload, pull request #4011
+  - Fix Express subscriptions, pull request #4010
+  - fix problem with split lumi insert in express, pull request #4009
+
 1.9.22 to 1.9.24:
   - configure PhEDEx subscriptions
   - closeout Repack and Express workflows in couch
