@@ -49,8 +49,17 @@ class RepackMerge(JobFactory):
                                 dbinterface = myThread.dbi)
 
         maxLumiWithJobDAO = daoFactory(classname = "Subscriptions.MaxLumiWithJob")
-        getClosedEmptyLumisFromChildSubDAO = daoFactory(classname = "JobSplitting.GetClosedEmptyLumisFromChildSub")
-        getCompletedLumisFromChildSubDAO = daoFactory(classname = "JobSplitting.GetCompletedLumisFromChildSub")
+        getGoodLumiHolesDAO = daoFactory(classname = "JobSplitting.GetGoodLumiHoles")
+
+        # highest lumi with a job
+        maxLumiWithJob = maxLumiWithJobDAO.execute(self.subscription["id"])
+
+        logging.debug("DEBUG Sub %d, maxLumiWithJob = %d" % (self.subscription["id"], maxLumiWithJob))
+
+        # find good lumi holes (needs to be done before data discovery)
+        goodLumiHoles = getGoodLumiHolesDAO.execute(self.subscription["id"], maxLumiWithJob)
+
+        logging.debug("DEBUG Sub %d, goodLumiHoles = %s" % (self.subscription["id"], sorted(goodLumiHoles)))
 
         # data discovery
         getFilesDAO = daoFactory(classname = "Subscriptions.GetAvailableRepackMergeFiles")
@@ -67,49 +76,29 @@ class RepackMerge(JobFactory):
                 lumiList.add(lumi)
         lumiList = sorted(list(lumiList))
 
-        # highest lumi with a job
-        maxLumiWithJob = 0
-        if lumiList[0] > 1:
-            maxLumiWithJob = maxLumiWithJobDAO.execute(self.subscription["id"])
+        logging.debug("DEBUG Sub %d, lumiList = %s" % (self.subscription["id"], lumiList))
 
-        # consistency check
-        if lumiList[0] <= maxLumiWithJob:
-            logging.error("ERROR: finding data that can't be there, bailing out...")
-            return
+        # check if fileset is closed
+        fileset = self.subscription.getFileset()
+        fileset.load()
 
-        # do we have lumi holes ?
-        detectEmptyLumis = False
-        detectCompleteLumis = False
-        lumi = maxLumiWithJob + 1
-        while lumi in lumiList:
-            lumi += 1
-        if lumi < lumiList[-1]:
-            detectEmptyLumis = True
-
-        # empty and closed lumis
-        emptyLumis = []
-        if detectEmptyLumis:
-
-            emptyLumis = getClosedEmptyLumisFromChildSubDAO.execute(self.subscription["id"], maxLumiWithJob)
-
-            # do we still have lumi holes ?
-            lumi = maxLumiWithJob + 1
-            while lumi in lumiList or lumi in emptyLumis:
-                lumi += 1
-            if lumi < lumiList[-1]:
-                detectCompleteLumis = True
-
-        # lumis for which repacking is complete
-        completeLumis = []
-        if detectCompleteLumis:
-            completeLumis = getCompletedLumisFromChildSubDAO.execute(self.subscription["id"], maxLumiWithJob)
-
-        # figure out lumi range to create jobs for
-        filesByLumi = {}
+        # extended lumi range for job creation
         firstLumi = maxLumiWithJob + 1
         lastLumi = lumiList[-1]
+
+        # consistency check (ignore at end of run)
+        if lumiList[0] <= maxLumiWithJob:
+            if fileset.open:
+                logging.error("ERROR: finding data that can't be there, bailing out...")
+                return
+            else:
+                logging.info("WARNING: finding data that can't be there, fileset is closed, merge anyways...")
+                firstLumi = lumiList[0]
+
+        # narrow down lumi range for job creation
+        filesByLumi = {}
         for lumi in range(firstLumi, lastLumi + 1):
-            if (lumi in lumiList) or (lumi in emptyLumis) or (lumi in completeLumis):
+            if (lumi in lumiList) or (lumi in goodLumiHoles):
                 filesByLumi[lumi] = []
             else:
                 break
@@ -120,9 +109,7 @@ class RepackMerge(JobFactory):
             if filesByLumi.has_key(lumi):
                 filesByLumi[lumi].append(fileInfo)
 
-        # check if fileset is closed
-        fileset = self.subscription.getFileset()
-        fileset.load()
+        logging.debug("DEBUG Sub %d, create jobs for lumis = %s" % (self.subscription["id"], sorted(filesByLumi.keys())))
 
         self.defineJobs(filesByLumi, fileset.open)
 
