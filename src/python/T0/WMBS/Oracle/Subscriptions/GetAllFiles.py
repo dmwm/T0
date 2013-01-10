@@ -33,4 +33,13 @@ class GetAllFiles(DBFormatter):
         results = self.dbi.processData(self.sql, { 'subscription' : subscription },
                                        conn = conn, transaction = transaction)
 
-        return self.formatDict(results)
+        ungroupedResults = self.formatDict(results)
+        result = {}
+        for entry in ungroupedResults:
+            if entry['lfn'] not in result:
+                entry['location'] = set([entry['location']])
+                result[entry['lfn']] = entry
+            else:
+                result[entry['lfn']]['location'].add(entry['location'])
+
+        return result.values()
