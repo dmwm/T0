@@ -1,3 +1,10 @@
+1.9.25 to 1.9.27:
+  - correct the event scenarios in schema, pull request #4027
+  - Activate LogCollect for Tier-0 specs, pull request #4026
+  - Fix splitting algo with multiple SEs, pull request #4025
+  - inserts blocks with status VALID in DBS, pull request #4024
+  - fix problems with repackmerge, pull request #4023
+
 1.9.24 to 1.9.25:
   - fix a race condition in some insert queries, pull request #4022
   - Add new script to alarm on late workflows, pull request #4020
