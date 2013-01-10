@@ -862,7 +862,8 @@ class Create(DBCreator):
                            5 : "AlCaTestEnable",
                            6 : "AlCaP0",
                            7 : "AlCaPhiSymEcal",
-                           8 : "AlcaLumiPixels" }
+                           8 : "AlCaLumiPixels",
+                           9 : "DataScouting" }
         for id, name in eventScenarios.items():
             sql = """INSERT INTO event_scenario
                      (ID, NAME)
