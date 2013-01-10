@@ -462,6 +462,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['CMSSWVersion'] = streamConfig.VersionOverride.get(onlineVersion, onlineVersion)
             specArguments['Outputs'] = outputModuleDetails
             specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/T0_CH_CERN/Tier0/override_catalog.xml?protocol=override"
+            specArguments['ValidStatus'] = "VALID"
 
         if streamConfig.ProcessingStyle == "Bulk":
             wmSpec = repackWorkload(workflowName, specArguments)
@@ -733,6 +734,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                                                             runInfo['bulk_data_type'])
 
                 specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/T0_CH_CERN/Tier0/override_catalog.xml?protocol=override"
+                specArguments['ValidStatus'] = "VALID"
+
                 specArguments['DQMUploadProxy'] = dqmUploadProxy
 
                 specArguments['DoLogCollect'] = False
