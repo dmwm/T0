@@ -738,8 +738,6 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
 
                 specArguments['DQMUploadProxy'] = dqmUploadProxy
 
-                specArguments['DoLogCollect'] = False
-
                 wmSpec = promptrecoWorkload(workflowName, specArguments)
 
                 wmSpec.setPhEDExInjectionOverride(runInfo['bulk_data_loc'])
