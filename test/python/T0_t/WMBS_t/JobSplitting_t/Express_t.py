@@ -57,6 +57,12 @@ class ExpressTest(unittest.TestCase):
                                     VALUES (1, 'SomeSE')
                                     """, transaction = False)
 
+        myThread.dbi.processData("""INSERT INTO wmbs_location_senames
+                                    (location, se_name)
+                                    VALUES (1, 'SomeSE2')
+                                    """, transaction = False)
+
+
         insertRunDAO = daoFactory(classname = "RunConfig.InsertRun")
         insertRunDAO.execute(binds = { 'RUN' : 1,
                                        'TIME' : int(time.time()),
