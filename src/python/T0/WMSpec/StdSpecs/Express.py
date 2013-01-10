@@ -113,6 +113,8 @@ class ExpressWorkloadFactory(StdBase):
 
         expressTask.setTaskType("Express")
 
+        self.addLogCollectTask(expressTask)
+
         for expressOutLabel, expressOutInfo in expressOutMods.items():
 
             if expressOutInfo['dataTier'] == "ALCARECO":
@@ -140,6 +142,7 @@ class ExpressWorkloadFactory(StdBase):
 
                 alcaSkimTask.setTaskType("Express")
 
+                self.addLogCollectTask(alcaSkimTask, taskName = "%s%sAlcaSkimLogCollect" % (expressTask.name(), expressOutLabel))
                 self.addCleanupTask(expressTask, expressOutLabel)
 
                 for alcaSkimOutLabel, alcaSkimOutInfo in alcaSkimOutMods.items():
@@ -150,7 +153,7 @@ class ExpressWorkloadFactory(StdBase):
                                                               condOutLabel = self.alcaHarvestOutLabel,
                                                               condUploadDir = self.alcaHarvestDir,
                                                               uploadProxy = self.dqmUploadProxy,
-                                                              doLogCollect = False)
+                                                              doLogCollect = True)
 
                         self.addConditionTask(harvestTask, self.alcaHarvestOutLabel)
 
@@ -162,7 +165,7 @@ class ExpressWorkloadFactory(StdBase):
 
                     self.addDQMHarvestTask(mergeTask, "Merged",
                                            uploadProxy = self.dqmUploadProxy,
-                                           doLogCollect = False)
+                                           doLogCollect = True)
 
         return workload
 
@@ -194,6 +197,8 @@ class ExpressWorkloadFactory(StdBase):
         mergeTaskLogArch.setStepType("LogArchive")
 
         mergeTask.setTaskLogBaseLFN(self.unmergedLFNBase)
+
+        self.addLogCollectTask(mergeTask, taskName = "%s%sMergeLogCollect" % (parentTask.name(), parentOutputModuleName))
 
         mergeTask.applyTemplates()
         mergeTask.setTaskPriority(self.priority + 5)

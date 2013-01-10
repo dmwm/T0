@@ -96,6 +96,8 @@ class RepackWorkloadFactory(StdBase):
 
         repackTask.setTaskType("Repack")
 
+        self.addLogCollectTask(repackTask)
+
         for repackOutLabel, repackOutInfo in repackOutMods.items():
             self.addRepackMergeTask(repackTask, repackOutLabel)
 
@@ -119,6 +121,8 @@ class RepackWorkloadFactory(StdBase):
         mergeTaskLogArch.setStepType("LogArchive")
 
         mergeTask.setTaskLogBaseLFN(self.unmergedLFNBase)
+
+        self.addLogCollectTask(mergeTask, taskName = "%s%sMergeLogCollect" % (parentTask.name(), parentOutputModuleName))
 
         mergeTask.applyTemplates()
         mergeTask.setTaskPriority(self.priority + 5)
