@@ -17,6 +17,7 @@ class UpdateRun(DBFormatter):
                      lfn_prefix = :LFNPREFIX,
                      bulk_data_type = :BULKDATATYPE,
                      bulk_data_loc = :BULKDATALOC,
+                     dqmuploadurl = :DQMUPLOADURL,
                      ah_timeout = :AHTIMEOUT,
                      ah_dir = :AHDIR,
                      cond_timeout = :CONDTIMEOUT,
