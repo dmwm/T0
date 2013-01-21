@@ -20,6 +20,7 @@ class GetRunInfo(DBFormatter):
                         lfn_prefix,
                         bulk_data_type,
                         bulk_data_loc,
+                        dqmuploadurl,
                         ah_timeout,
                         ah_dir,
                         cond_timeout,
