@@ -13,10 +13,12 @@ import logging
 import threading
 import subprocess
 
+from T0.ConditionUpload import upload
+
 from WMCore.DAOFactory import DAOFactory
 
 
-def uploadConditions():
+def uploadConditions(username, password):
     """
     _uploadConditions_
 
@@ -73,7 +75,7 @@ def uploadConditions():
             for condFile in conditions[run]['streams'][streamid]['files']:
                 condFiles.append(condFile)
             if len(condFiles) > 0:
-                uploadedFiles = uploadToDropbox(condFiles, dropboxHost, validationMode)
+                uploadedFiles = uploadToDropbox(condFiles, dropboxHost, validationMode, username, password)
 
             bindVarList = []
             for uploadedFile in uploadedFiles:
@@ -114,7 +116,7 @@ def uploadConditions():
 
     return
 
-def uploadToDropbox(condFiles, dropboxHost, validationMode):
+def uploadToDropbox(condFiles, dropboxHost, validationMode, username, password):
     """
     _uploadToDropbox_
 
@@ -139,81 +141,66 @@ def uploadToDropbox(condFiles, dropboxHost, validationMode):
                 filesDict[filenamePrefix] = {}
             filesDict[filenamePrefix][filenameExt] = condFile
 
-    files2delete = []
     for filenamePrefix in filesDict.keys():
 
         sqliteFile = filesDict[filenamePrefix]['db']
         metaFile = filesDict[filenamePrefix]['txt']
 
-        filenameDB = filenamePrefix + ".db"
-        filenameTXT = filenamePrefix + ".txt"
-        filenameTAR = filenamePrefix + ".tar.bz2"
+        completeFiles.extend( uploadPayload(filenamePrefix, sqliteFile, metaFile,
+                                            dropboxHost, validationMode,
+                                            username, password) )
 
-        shutil.copy2(sqliteFile['pfn'], filenameDB)
-        files2delete.append(filenameDB)
+    return completeFiles
 
-        # select the right destination db depending
-        # on whether we are in validation mode
-        fin = open(metaFile['pfn'])
-        lines = fin.readlines()
-        fin.close()
-        fout = open(filenameTXT, 'w')
-        if validationMode:
-            fout.writelines( [ line.replace('destDBValidation', 'destDB', 1) for line in lines if 'destDB ' not in line] )
-        else:
-            fout.writelines( [ line for line in lines if 'destDBValidation ' not in line] )
-        fout.close()
-        files2delete.append(filenameTXT)
+def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationMode, username, password):
+    """
+    _uploadPayload_
 
-        os.chmod(filenameDB, stat.S_IREAD | stat.S_IWRITE | stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH)
-        os.chmod(filenameTXT, stat.S_IREAD | stat.S_IWRITE | stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH)
+    Upload a single payload consisting of a sqlite
+    file and a metadata file to the dropbox.
+    
+    """
+    completeFiles = []
+    files2delete = []
 
-        shutil.copy2(filenameTXT, metaFile['pfn'] + ".uploaded")
+    filenameDB = filenamePrefix + ".db"
+    filenameTXT = filenamePrefix + ".txt"
+    filenameTAR = filenamePrefix + ".tar.bz2"
 
-        uploadStatus = True
-        if validationMode:
+    shutil.copy2(sqliteFile['pfn'], filenameDB)
+    files2delete.append(filenameDB)
 
-            fout = tarfile.open(filenameTAR, "w:bz2")
-            fout.add(filenameDB)
-            fout.add(filenameTXT)
-            fout.close()
-            files2delete.append(filenameTAR)
+    # select the right destination db depending
+    # on whether we are in validation mode
+    fin = open(metaFile['pfn'])
+    lines = fin.readlines()
+    fin.close()
+    fout = open(filenameTXT, 'w')
+    if validationMode:
+        fout.writelines( [ line.replace('prepMetaData ', '', 1) for line in lines if 'prodMetaData ' not in line] )
+    else:
+        fout.writelines( [ line.replace('prodMetaData ', '', 1) for line in lines if 'prepMetaData ' not in line] )
+    fout.close()
+    files2delete.append(filenameTXT)
 
-            os.chmod(filenameTAR, stat.S_IREAD | stat.S_IWRITE | stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH)
+    os.chmod(filenameDB, stat.S_IREAD | stat.S_IWRITE | stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH)
+    os.chmod(filenameTXT, stat.S_IREAD | stat.S_IWRITE | stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH)
 
-            for file2upload in [ filenameTAR ]:
+    shutil.copy2(filenameTXT, metaFile['pfn'] + ".uploaded")
 
-                status = False
-                if 0 == subprocess.call(["scp", "-p", file2upload, "%s:/tmp/" % dropboxHost]):
-                    if 0 == subprocess.call(["ssh", dropboxHost, "mv /tmp/%s /DropBox_test/" % file2upload]):
-                        logging.info("DropBox validation upload suceeded for %s" % file2upload)
-                        status = True
+    uploadStatus = True
+    try:
+        upload.uploadTier0Files([filenameDB], username, password)
+    except:
+        logging.exception("Something went wrong with the Dropbox upload...")
+        uploadStatus = False
 
-                if status == False:
-                    logging.error("DropBox validation upload failed for %s" % file2upload)
-                    uploadStatus = False
-
-        else:
-
-            for file2upload in [ filenameDB, filenameTXT ]:
-
-                status = False
-                if 0 == subprocess.call(["scp", "-p", file2upload, "%s:/tmp/" % dropboxHost]):
-                    if 0 == subprocess.call(["ssh", dropboxHost, "mv /tmp/%s /DropBox/" % file2upload]):
-                        logging.info("DropBox upload suceeded for %s" % file2upload)
-                        status = True
-
-                if status == False:
-                    logging.error("DropBox upload failed for %s" % file2upload)
-                    uploadStatus = False
-
-        if uploadStatus:
-            completeFiles.append(sqliteFile)
-            completeFiles.append(metaFile)
-            logging.info("  ==> Upload succeeded for payload %s" % filenamePrefix)
-        else:
-            logging.error("  ==> Upload failed for payload %s" % filenamePrefix)
-
+    if uploadStatus:
+        completeFiles.append(sqliteFile)
+        completeFiles.append(metaFile)
+        logging.info("  ==> Upload succeeded for payload %s" % filenamePrefix)
+    else:
+        logging.error("  ==> Upload failed for payload %s" % filenamePrefix)
 
     for file2delete in files2delete:
         os.remove(file2delete)

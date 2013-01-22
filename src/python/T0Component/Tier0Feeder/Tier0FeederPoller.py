@@ -43,6 +43,8 @@ class Tier0FeederPoller(BaseWorkerThread):
 
         self.tier0ConfigFile = config.Tier0Feeder.tier0ConfigFile
         self.specDirectory = config.Tier0Feeder.specDirectory
+        self.dropboxuser = config.Tier0Feeder.dropboxuser
+        self.dropboxpass = config.Tier0Feeder.dropboxpass
 
         self.dqmUploadProxy = config.WMBSService.proxy
 
@@ -221,7 +223,7 @@ class Tier0FeederPoller(BaseWorkerThread):
         #
         # upload PCL conditions to DropBox
         #
-        ConditionUploadAPI.uploadConditions()
+        ConditionUploadAPI.uploadConditions(self.dropboxuser, self.dropboxpass)
 
         return
 
