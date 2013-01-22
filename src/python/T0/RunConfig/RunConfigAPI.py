@@ -66,6 +66,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
                            'LFNPREFIX' : tier0Config.Global.LFNPrefix,
                            'BULKDATATYPE' : tier0Config.Global.BulkDataType,
                            'BULKDATALOC' : tier0Config.Global.BulkDataLocation,
+                           'DQMUPLOADURL' : tier0Config.Global.DQMUploadUrl,
                            'AHTIMEOUT' : tier0Config.Global.AlcaHarvestTimeout,
                            'AHDIR' : tier0Config.Global.AlcaHarvestDir,
                            'CONDTIMEOUT' : tier0Config.Global.ConditionUploadTimeout,
@@ -458,6 +459,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['AlcaHarvestTimeout'] = runInfo['ah_timeout']
             specArguments['AlcaHarvestDir'] = runInfo['ah_dir']
             specArguments['DQMUploadProxy'] = dqmUploadProxy
+            specArguments['DQMUploadUrl'] = runInfo['dqmuploadurl']
             specArguments['StreamName'] = stream
 
         if streamConfig.ProcessingStyle in [ 'Bulk', 'Express' ]:
@@ -743,6 +745,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                 specArguments['ValidStatus'] = "VALID"
 
                 specArguments['DQMUploadProxy'] = dqmUploadProxy
+                specArguments['DQMUploadUrl'] = runInfo['dqmuploadurl']
 
                 wmSpec = promptrecoWorkload(workflowName, specArguments)
 

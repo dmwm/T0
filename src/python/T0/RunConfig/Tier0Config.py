@@ -20,6 +20,8 @@ Tier0Configuration - Global configuration object
 | |       |
 | |       |--> BulkDataLocation - The bulk data location for the run (to be used as phedex source site)
 | |       |
+| |       |--> DQMUploadURL - The URL used for DQM uploads
+| |       |
 | |       |--> AlcaHarvestTimeout - AlcaHarvesting for a run/stream is normally trigered by
 | |       |                         fileset closing (ie. all data received and processed).
 | |       |                         This timeout will configure an additional time trigger
@@ -402,6 +404,16 @@ def setBulkDataLocation(config, location):
     
     """
     config.Global.BulkDataLocation = location
+    return
+
+def setDQMUploadUrl(config, dqmuploadurl):
+    """
+    _setDQMUploadUrl_
+
+    Set the DQM upload Url in the configuration.
+    
+    """
+    config.Global.DQMUploadUrl = dqmuploadurl
     return
 
 def setPromptCalibrationConfig(config, alcaHarvestTimeout, alcaHarvestDir,
