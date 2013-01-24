@@ -11,8 +11,10 @@ Setup subscriptions for new runs/streams
 Assigns new data to the correct subscriptions
 
 """
+import os
 import logging
 import threading
+import subprocess
 
 from WMCore.WorkerThreads.BaseWorkerThread import BaseWorkerThread
 from WMCore.DAOFactory import DAOFactory
@@ -45,6 +47,11 @@ class Tier0FeederPoller(BaseWorkerThread):
         self.specDirectory = config.Tier0Feeder.specDirectory
         self.dropboxuser = config.Tier0Feeder.dropboxuser
         self.dropboxpass = config.Tier0Feeder.dropboxpass
+
+        self.transferSystemBaseDir = getattr(config.Tier0Feeder, "transferSystemBaseDir", None)
+        if self.transferSystemBaseDir != None:
+            if not os.path.exists(self.transferSystemBaseDir):
+                self.transferSystemBaseDir = None
 
         self.dqmUploadProxy = config.WMBSService.proxy
 
@@ -221,6 +228,12 @@ class Tier0FeederPoller(BaseWorkerThread):
         self.closeOutRealTimeWorkflows()
 
         #
+        # send repacked notifications to StorageManager
+        #
+        if self.transferSystemBaseDir != None:
+            self.notifyStorageManager()
+
+        #
         # upload PCL conditions to DropBox
         #
         ConditionUploadAPI.uploadConditions(self.dropboxuser, self.dropboxpass)
@@ -304,6 +317,50 @@ class Tier0FeederPoller(BaseWorkerThread):
         if response == "OK" or "EXISTS":
             logging.debug("Successfully closed workflow %s" % workflowName)
             markCloseoutWorkflowMonitoringDAO.execute(workflowId)
+
+        return
+
+    def notifyStorageManager(self):
+        """
+        _notifyStorageManager_
+
+        Find all finished streamers for closed all run/stream
+        Send the notification message to StorageManager
+        Update the streamer status to finished (deleted = 1)
+
+        """
+        getFinishedStreamersDAO = self.daoFactory(classname = "SMNotification.GetFinishedStreamers")
+        markStreamersFinishedDAO = self.daoFactory(classname = "SMNotification.MarkStreamersFinished")
+
+        allFinishedStreamers = getFinishedStreamersDAO.execute(transaction = False)
+
+        num = len(allFinishedStreamers)/50
+        for finishedStreamers in [allFinishedStreamers[i::num] for i in range(num)]:
+
+            streamers = []
+            filenameParams = ""
+
+            for (id, lfn) in finishedStreamers:
+                streamers.append(id)
+                filenameParams += "-FILENAME %s " % os.path.basename(lfn)
+
+            logging.debug("Notifying transfer system about processed streamers")
+            p = subprocess.Popen("/bin/bash",stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+            output, error = p.communicate("""
+            export T0_BASE_DIR=%s
+            export T0ROOT=${T0_BASE_DIR}/T0
+            export CONFIG=${T0_BASE_DIR}/Config/TransferSystem_CERN.cfg
+ 
+            export PERL5LIB=${T0ROOT}/perl_lib
+ 
+            ${T0ROOT}/operations/sendRepackedStatus.pl --config $CONFIG %s
+            """ % (self.transferSystemBaseDir, filenameParams))
+
+            if len(error) > 0:
+                logging.error("ERROR: Could not notify transfer system about processed streamers")
+                logging.error("ERROR: %s" % error)
+
+            markStreamersFinishedDAO.execute(streamers, transaction = False)
 
         return
 
