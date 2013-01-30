@@ -165,6 +165,7 @@ class ExpressWorkloadFactory(StdBase):
 
                     self.addDQMHarvestTask(mergeTask, "Merged",
                                            uploadProxy = self.dqmUploadProxy,
+                                           periodic_harvest_interval = 20 * 60,
                                            doLogCollect = True)
 
         return workload
