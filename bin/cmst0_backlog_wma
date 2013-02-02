@@ -9,7 +9,7 @@ import time
 # Load/set configuration :
 config = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
 alarmConfigPath = os.path.join(os.environ.get("SLS_CONFIG") or
-                               os.environ["T0_ROOT"], 'etc/operations/SLSAlarmsConfig.py')
+                               os.environ["T0_ROOT"], 'etc/SLSAlarmsConfig.py')
 alarmConfig = loadConfigurationFile(alarmConfigPath)
 xmlFile = getattr(alarmConfig.cmst0_backlog_wma, "xmlFile", None) or "cmst0_backlog_wma.xml"
 slsXml = os.path.join(alarmConfig.Settings.xmlDir, xmlFile)
@@ -36,12 +36,12 @@ for row in rows['rows']:
     workflowType = workflow.split("_")[0]
     createdJobs = row['value']
 
-    jobCounts[workflowType] += createdJobs        
+    jobCounts[workflowType] += createdJobs
 
 # Here comes the TH logic, very simple in the beginning
 availability = 100
 for workflowType in jobCounts:
-    limit = getattr(alarmConfig.cmst0_backlog_wma, workflowType.lower())
+    limit = getattr(alarmConfig.cmst0_backlog_wma, workflowType)
     if jobCounts[workflowType] > limit:
         availability = 0
 
@@ -71,19 +71,19 @@ if interventionInfo:
 timezone = str(int(-time.timezone / 3600)).zfill(2)
 timestamp = time.strftime("%Y-%m-%dT%H:%M:%S+")
 timestamp += "%s:00" % timezone
-xmlValues = {         
+xmlValues = {
 		"availability"  : availability,
 		"timestamp"     : timestamp,
 		"promptreco_count": jobCounts["PromptReco"],
 		"express_count"	: jobCounts["Express"],
 		"repack_count"	: jobCounts["Repack"],
         "intervention"  : intervention
-} 
-            
+}
+
 
 template = Template("""<?xml version="1.0" encoding="utf-8"?>
        <serviceupdate xmlns="http://sls.cern.ch/SLS/XML/update">
-               <id>CMST0-backlog-wma</id>
+               <id>cmst0-wma-backlog</id>
                <availability>$availability</availability>
                <timestamp>$timestamp</timestamp>
                <data>
@@ -95,6 +95,6 @@ template = Template("""<?xml version="1.0" encoding="utf-8"?>
        </serviceupdate> """)
 
 xmlUpdated = template.safe_substitute(xmlValues)
-xml = open(slsXml,'w')
+xml = open(slsXml, 'w')
 xml.write(xmlUpdated)
 xml.close()
