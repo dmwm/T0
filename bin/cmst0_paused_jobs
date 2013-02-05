@@ -1,0 +1,200 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+__cmst0_paused_jobs__
+
+This scripts checks the agent database for paused jobs and alerts on them.
+
+Availability metrics are defined as:
+
+0 - A paused job exists
+100 - No paused jobs
+
+Created on Mon Jul 16 17:17:15 2012
+
+@author: dballest
+"""
+
+import os
+import sys
+import threading
+import traceback
+import time
+
+from string import Template
+
+from WMCore.WMInit            import connectToDB
+from WMCore.DAOFactory        import DAOFactory
+from WMCore.WMBS.Job          import Job
+from WMCore.JobStateMachine.Transitions import Transitions
+from WMCore.Configuration import loadConfigurationFile
+
+class PausedJobsChecker:
+    """
+    _pausedJobsChecker_
+
+    Class in charge of querying the WMCore local DB and extracting
+    information about problematic jobs
+    """
+
+    def __init__(self):
+        """
+        __init__
+        Inits the checker pointing it to the right DB and creating the
+        necessary DAOs
+        """
+        myThread = threading.currentThread()
+        connectToDB()
+        self.dbi = myThread.dbi
+        self.daoFactory = DAOFactory(package = "WMCore.WMBS",
+                                     logger = myThread.logger,
+                                     dbinterface = self.dbi)
+        self.getJobs = self.daoFactory(classname = "Jobs.GetAllJobs")
+        self.getWorkflow = self.daoFactory(classname = "Jobs.GetWorkflowTask")
+
+    def getJobsByWorkflow(self):
+        """
+        _getJobsByWorkflow_
+
+        Query the DB for *paused jobs and aggregate them by workflow,
+        it returns a dictionary keyed by task which contains
+        list of fully loaded WMBS Job objects
+        """
+        transitions = Transitions()
+        pausedStates = filter(lambda x : x.find('paused') != -1,
+                              transitions.keys())
+
+        pausedJobs = []
+        for pausedType in pausedStates:
+            pausedJobs += self.getJobs.execute(state = pausedType)
+
+        if not pausedJobs:
+            return {}
+
+        jobs = self.getWorkflow.execute(pausedJobs)
+
+        workflows = {}
+        for entry in jobs:
+            WMBSJob = Job(id = entry['id'])
+            WMBSJob.load()
+
+            workflow = entry['name']
+            if workflow not in workflows:
+                workflows[workflow] = []
+            workflows[workflow].append(WMBSJob)
+        return workflows
+
+def processPausedJobInformation(config, workflows):
+    """
+    _processPausedJobInformation_
+
+    Take a dictionary keyed by task which contains lists of paused jobs
+    and determine the availability of the service. Use the auxiliary
+    methods to generate the XML file for SLS.
+    """
+    availability = 100
+    blacklist = getattr(config, "RunBlacklist", [])
+    for workflow in workflows:
+        for value in blacklist:
+            if value in workflow:
+                break
+        else:
+            availability = 0
+    numPaused = sum(map(len, workflows.values()))
+    buildSLSXML(config, availability, numPaused)
+
+
+def buildSLSXML(config, availability, pausedJobs):
+    """
+    _buildSLSXML_
+
+    Builds an XML file for SLS updates based
+    on the information in data.
+    """
+    timezone = str(int(-time.timezone / 3600)).zfill(2)
+    timestamp = time.strftime("%Y-%m-%dT%H:%M:%S+")
+    timestamp += "%s:00" % timezone
+
+    # Retrieve the intervention info if any
+    interventionInfo = {}
+    if hasattr(config, "Intervention"):
+        startTime = config.Intervention.startTime
+        duration = config.Intervention.duration
+        message = config.Intervention.message
+
+        # Check that the intervention is present or in the future
+        structStartTime = time.strptime(startTime, "%Y-%m-%dT%H:%M:%S")
+        startTimeSeconds = time.mktime(structStartTime)
+        if (startTimeSeconds + duration * 3600) >= time.time():
+            interventionInfo = {'startTime' : startTime,
+                                'duration' : duration,
+                                'message' : message}
+
+    intervention = ""
+    if interventionInfo:
+        inteventionTemplate = """        <interventions>
+            <intervention start="{startTime}" length="PT{duration}H">
+                {message}
+            </intervention>
+        </interventions>"""
+
+        intervention = inteventionTemplate.format(**interventionInfo)
+
+    template = """<?xml version="1.0" encoding="utf-8"?>
+    <serviceupdate xmlns="http://sls.cern.ch/SLS/XML/update">
+        <id>CMST0-paused-jobs</id>
+        <availability>{availability}</availability>
+        <timestamp>{timestamp}</timestamp>
+        <data>
+            {data}
+        </data>
+{intervention}
+    </serviceupdate>\n"""
+
+    data = '<numericvalue name="paused_jobs" desc="Paused jobs">%d</numericvalue>' % pausedJobs
+
+    xml = template.format(data = data, availability = availability,
+                          timestamp = timestamp, intervention = intervention)
+
+    # Get the output file path
+    xmlFile = getattr(config, "xmlFile", "cmst0-paused-jobs.xml")
+    try:
+        outputFile = open(os.path.join(config.Settings.xmlDir, xmlFile), 'w')
+        outputFile.write(xml)
+    except:
+        print "Couldn't write the XML file"
+        traceback.print_exc()
+    finally:
+        outputFile.close()
+
+    return
+
+def main():
+    """
+    _main_
+
+    Script's main function:
+        Starts the job checker
+        Checks for paused jobs
+        Process the paused job information
+    """
+    # Load only the relevant alarm configuration but add anything from Settings
+    configPath = os.path.join(os.environ.get("SLS_CONFIG") or
+                              os.environ["T0_ROOT"], "etc/SLSAlarmsConfig.py")
+    fullConfig = loadConfigurationFile(configPath)
+    config = getattr(fullConfig, "cmst0_paused_jobs")
+    settings = getattr(fullConfig, "Settings")
+    config.section_("Settings")
+    config.Settings = settings
+    try:
+        checker = PausedJobsChecker()
+        jobsByWorkflow = checker.getJobsByWorkflow()
+    except Exception, ex:
+        print "Exception in checker procedure:"
+        print str(ex)
+        print traceback.format_exc()
+
+    processPausedJobInformation(config, jobsByWorkflow)
+
+if __name__ == "__main__":
+    sys.exit(main())
