@@ -202,7 +202,6 @@ class ExpressWorkloadFactory(StdBase):
         self.addLogCollectTask(mergeTask, taskName = "%s%sMergeLogCollect" % (parentTask.name(), parentOutputModuleName))
 
         mergeTask.applyTemplates()
-        mergeTask.setTaskPriority(self.priority + 5)
 
         mergeTaskCmsswHelper = mergeTaskCmssw.getTypeHelper()
         mergeTaskStageHelper = mergeTaskStageOut.getTypeHelper()
@@ -273,7 +272,6 @@ class ExpressWorkloadFactory(StdBase):
 
         harvestTask.setTaskType("Harvesting")
         harvestTask.applyTemplates()
-        harvestTask.setTaskPriority(self.priority + 5)
 
         harvestTaskCmsswHelper = harvestTaskCmssw.getTypeHelper()
         harvestTaskCmsswHelper.cmsswSetup(self.frameworkVersion, softwareEnvironment = "",
@@ -344,7 +342,6 @@ class ExpressWorkloadFactory(StdBase):
         conditionTask.setInputReference(parentTaskCmssw, outputModule = parentOutputModuleName)
 
         conditionTask.applyTemplates()
-        conditionTask.setTaskPriority(self.priority + 5)
 
         conditionTask.setTaskType("Harvesting")
 
