@@ -125,7 +125,6 @@ class RepackWorkloadFactory(StdBase):
         self.addLogCollectTask(mergeTask, taskName = "%s%sMergeLogCollect" % (parentTask.name(), parentOutputModuleName))
 
         mergeTask.applyTemplates()
-        mergeTask.setTaskPriority(self.priority + 5)
 
         parentTaskCmssw = parentTask.getStep("cmsRun1")
         parentOutputModule = parentTaskCmssw.getOutputModule(parentOutputModuleName)
