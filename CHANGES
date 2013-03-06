@@ -1,3 +1,15 @@
+1.9.27 to 1.9.28:
+  - remove setTaskPriority calls from Repack and Express Specs, pull request #4040
+  - Add the missing operational tools for the WMAT0, pull request #4037
+  - enable periodic dqm harvesting for express, pull request #4035
+  - send repack/express completion messages to SM, pull request #4034
+  - make DQM upload URL configurable, pull request #4033
+  - add more runs to the workaround for the bad HLT menu, pull request #4032
+  - workaround for bad HLT menu, pull request #4031
+  - Pass reco splitting to spec, pull request #4030
+  - fix problem in lumi closing query, pull request #4028
+  - change PCL condition upload to work with new Dropbox, pull request #4029
+
 1.9.25 to 1.9.27:
   - correct the event scenarios in schema, pull request #4027
   - Activate LogCollect for Tier-0 specs, pull request #4026
