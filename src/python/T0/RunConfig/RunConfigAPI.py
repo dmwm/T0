@@ -178,7 +178,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         insertDatasetScenarioDAO = daoFactory(classname = "RunConfig.InsertDatasetScenario")
         insertCMSSWVersionDAO = daoFactory(classname = "RunConfig.InsertCMSSWVersion")
         updateStreamOverrideDAO = daoFactory(classname = "RunConfig.UpdateStreamOverride")
-        insertErrorDatasetDAO = daoFactory(classname = "RunConfig.InsertErrorDataset")
         insertStreamFilesetDAO = daoFactory(classname = "RunConfig.InsertStreamFileset")
         insertRecoReleaseConfigDAO = daoFactory(classname = "RunConfig.InsertRecoReleaseConfig")
         insertWorkflowMonitoringDAO = daoFactory(classname = "RunConfig.InsertWorkflowMonitoring")
@@ -197,7 +196,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         bindsDatasetScenario = []
         bindsCMSSWVersion = []
         bindsStreamOverride = {}
-        bindsErrorDataset = []
         bindsStorageNode = []
         bindsPhEDExConfig = []
 
@@ -387,14 +385,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                                     'priority' : datasetConfig.CustodialPriority,
                                                     'primaryDataset' : dataset } )
 
-##                 errorDataset = "%s-%s" % (dataset, "Error")
-##                 bindsDataset.append( { 'PRIMDS' : errorDataset } )
-##                 bindsStreamDataset.append( { 'RUN' : run,
-##                                              'PRIMDS' : errorDataset,
-##                                              'STREAM' : stream } )
-##                 bindsErrorDataset.append( { 'PARENT' : dataset,
-##                                             'ERROR' : errorDataset } )
-
             elif streamConfig.ProcessingStyle == "Express":
 
                 for dataTier in streamConfig.Express.DataTiers:
@@ -517,8 +507,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 insertCMSSWVersionDAO.execute(bindsCMSSWVersion, conn = myThread.transaction.conn, transaction = True)
             if len(bindsStreamOverride) > 0:
                 updateStreamOverrideDAO.execute(bindsStreamOverride, conn = myThread.transaction.conn, transaction = True)
-            if len(bindsErrorDataset) > 0:
-                insertErrorDatasetDAO.execute(bindsErrorDataset, conn = myThread.transaction.conn, transaction = True)
             if len(bindsStorageNode) > 0:
                 insertStorageNodeDAO.execute(bindsStorageNode, conn = myThread.transaction.conn, transaction = True)
             if len(bindsPhEDExConfig) > 0:
