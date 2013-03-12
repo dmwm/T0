@@ -207,13 +207,6 @@ class Create(DBCreator):
                ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
-            """CREATE TABLE primds_error_primds_assoc (
-                 parent_id   int not null,
-                 error_id    int not null,
-                 primary key(parent_id)
-               ) ORGANIZATION INDEX"""
-
-        self.create[len(self.create)] = \
             """CREATE TABLE lumi_section (
                  run_id    int not null,
                  lumi_id   int not null,
@@ -617,18 +610,6 @@ class Create(DBCreator):
             """ALTER TABLE stream_special_primds_assoc
                  ADD CONSTRAINT str_spe_pri_pri_id_fk
                  FOREIGN KEY (primds_id)
-                 REFERENCES primary_dataset(id)"""
-
-        self.constraints[len(self.constraints)] = \
-            """ALTER TABLE primds_error_primds_assoc
-                 ADD CONSTRAINT pri_err_pri_par_id_fk
-                 FOREIGN KEY (parent_id)
-                 REFERENCES primary_dataset(id)"""
-
-        self.constraints[len(self.constraints)] = \
-            """ALTER TABLE primds_error_primds_assoc
-                 ADD CONSTRAINT pri_err_pri_err_id_fk
-                 FOREIGN KEY (error_id)
                  REFERENCES primary_dataset(id)"""
 
         self.constraints[len(self.constraints)] = \
