@@ -188,19 +188,24 @@ def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationM
 
     shutil.copy2(filenameTXT, metaFile['pfn'] + ".uploaded")
 
-    uploadStatus = True
-    try:
-        upload.uploadTier0Files([filenameDB], username, password)
-    except:
-        logging.exception("Something went wrong with the Dropbox upload...")
-        uploadStatus = False
-
-    if uploadStatus:
+    if username == None or password == None:
         completeFiles.append(sqliteFile)
         completeFiles.append(metaFile)
-        logging.info("  ==> Upload succeeded for payload %s" % filenamePrefix)
+        logging.info("No username/password provided for DropBox upload...")
+        logging.info("  ==> Upload skipped for payload %s" % filenamePrefix)
     else:
-        logging.error("  ==> Upload failed for payload %s" % filenamePrefix)
+        uploadStatus = True
+        try:
+            upload.uploadTier0Files([filenameDB], username, password)
+        except:
+            logging.exception("Something went wrong with the Dropbox upload...")
+
+        if uploadStatus:
+            completeFiles.append(sqliteFile)
+            completeFiles.append(metaFile)
+            logging.info("  ==> Upload succeeded for payload %s" % filenamePrefix)
+        else:
+            logging.error("  ==> Upload failed for payload %s" % filenamePrefix)
 
     for file2delete in files2delete:
         os.remove(file2delete)
