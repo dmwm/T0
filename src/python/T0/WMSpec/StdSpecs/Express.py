@@ -168,6 +168,11 @@ class ExpressWorkloadFactory(StdBase):
                                            periodic_harvest_interval = 20 * 60,
                                            doLogCollect = True)
 
+        workload.setBlockCloseSettings(self.blockCloseDelay,
+                                       workload.getBlockCloseMaxFiles(),
+                                       workload.getBlockCloseMaxEvents(),
+                                       workload.getBlockCloseMaxSize())
+
         return workload
 
     def addExpressMergeTask(self, parentTask, parentOutputModuleName):
@@ -370,6 +375,7 @@ class ExpressWorkloadFactory(StdBase):
         self.alcaHarvestTimeout = arguments['AlcaHarvestTimeout']
         self.alcaHarvestDir = arguments['AlcaHarvestDir']
         self.streamName = arguments['StreamName']
+        self.blockCloseDelay = arguments['BlockCloseDelay']
 
         # job splitting parameters (also required parameters)
         self.expressSplitArgs = {}

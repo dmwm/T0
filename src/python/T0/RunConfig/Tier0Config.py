@@ -103,6 +103,8 @@ Tier0Configuration - Global configuration object
 |             |     |--> MaxInputFiles - max input files for express merge job
 |             |     |
 |             |     |--> MaxLatency - max latency to trigger express merge job
+|             |     |
+|             |     |--> BlockCloseDelay - delay to close block in WMAgent
 |             |
 |             |
 |             |--> Register - Configuration section for register streams
@@ -566,6 +568,8 @@ def addExpressConfig(config, streamName, **options):
     streamConfig.Express.MaxInputSize = options.get("maxInputSize", 2 * 1024 * 1024 * 1024)
     streamConfig.Express.MaxInputFiles = options.get("maxInputFiles", 500)
     streamConfig.Express.MaxLatency = options.get("maxLatency", 15 * 23)
+
+    streamConfig.Express.BlockCloseDelay = options.get("blockCloseDelay", 3600)
 
     return
 

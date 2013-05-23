@@ -304,6 +304,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                    'MAX_SIZE' : streamConfig.Express.MaxInputSize,
                                    'MAX_FILES' : streamConfig.Express.MaxInputFiles,
                                    'MAX_LATENCY' : streamConfig.Express.MaxLatency,
+                                   'BLOCK_DELAY' : streamConfig.Express.BlockCloseDelay,
                                    'ALCA_SKIM' : alcaSkim,
                                    'DQM_SEQ' : dqmSeq }
 
@@ -442,6 +443,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['MaxInputSize'] = streamConfig.Express.MaxInputSize
             specArguments['MaxInputFiles'] = streamConfig.Express.MaxInputFiles
             specArguments['MaxLatency'] = streamConfig.Express.MaxLatency
+            specArguments['BlockCloseDelay'] = streamConfig.Express.BlockCloseDelay
             specArguments['AlcaSkims'] = streamConfig.Express.AlcaSkims
             specArguments['DqmSequences'] = streamConfig.Express.DqmSequences
             specArguments['UnmergedLFNBase'] = "%s/t0temp/express" % runInfo['lfn_prefix']

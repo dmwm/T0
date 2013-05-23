@@ -271,6 +271,7 @@ class Create(DBCreator):
                  max_size       int             not null,
                  max_files      int             not null,
                  max_latency    int             not null,
+                 block_delay    int             not null,
                  alca_skim      varchar2(1000),
                  dqm_seq        varchar2(1000),
                  primary key (run_id, stream_id)
