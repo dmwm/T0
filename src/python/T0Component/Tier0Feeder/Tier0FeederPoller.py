@@ -45,8 +45,8 @@ class Tier0FeederPoller(BaseWorkerThread):
 
         self.tier0ConfigFile = config.Tier0Feeder.tier0ConfigFile
         self.specDirectory = config.Tier0Feeder.specDirectory
-        self.dropboxuser = config.Tier0Feeder.dropboxuser
-        self.dropboxpass = config.Tier0Feeder.dropboxpass
+        self.dropboxuser = getattr(config.Tier0Feeder, "dropboxuser", None)
+        self.dropboxpass = getattr(config.Tier0Feeder, "dropboxpass", None)
 
         self.transferSystemBaseDir = getattr(config.Tier0Feeder, "transferSystemBaseDir", None)
         if self.transferSystemBaseDir != None:
