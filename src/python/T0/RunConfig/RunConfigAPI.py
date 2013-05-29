@@ -381,6 +381,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
                 if len(custodialSites) + len(nonCustodialSites) > 0:
                     subscriptions['Bulk'].append( { 'custodialSites' : custodialSites,
+                                                    'custodialSubType' : "Replica",
                                                     'nonCustodialSites' : nonCustodialSites,
                                                     'autoApproveSites' : autoApproveSites,
                                                     'priority' : datasetConfig.CustodialPriority,
