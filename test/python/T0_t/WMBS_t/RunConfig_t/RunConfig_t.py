@@ -35,7 +35,7 @@ class RunConfigTest(unittest.TestCase):
         self.testInit.setLogging()
         self.testInit.setDatabaseConnection()
 
-        self.testInit.setSchema(customModules = ["T0.WMBS"])
+        self.testInit.setSchema(customModules = ["T0.WMBS","WMComponent.DBS3Buffer"])
 
         self.testDir  = self.testInit.generateWorkDir()
 
@@ -148,14 +148,15 @@ class RunConfigTest(unittest.TestCase):
                                     'lfn_prefix' : "/store",
                                     'bulk_data_type' : "data",
                                     'bulk_data_loc' : "T2_CH_CERN",
-                                    'process': 'HLT',
+                                    'process': "HLT",
                                     'hltkey': self.hltkey,
+                                    'dqmuploadurl': "https://cmsweb.cern.ch/dqm/dev",
                                     'ah_timeout' : 12*3600,
                                     'ah_dir' : "/some/afs/dir",
                                     'cond_timeout' : 18*3600,
                                     'db_host' : "webcondvm.cern.ch",
                                     'valid_mode' : int(True),
-                                    'acq_era': 'ExampleConfig_UnitTest' } ]
+                                    'acq_era': "ExampleConfig_UnitTest" } ]
 
         self.referenceMapping = {}
         self.referenceMapping['A'] = {}

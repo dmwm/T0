@@ -21,8 +21,8 @@ from T0.WMSpec.StdSpecs.Repack import getTestArguments as getRepackArguments
 from T0.WMSpec.StdSpecs.Repack import repackWorkload
 from T0.WMSpec.StdSpecs.Express import getTestArguments as getExpressArguments
 from T0.WMSpec.StdSpecs.Express import expressWorkload
-from WMCore.WMSpec.StdSpecs.PromptReco import getTestArguments as getPromptRecoArguments
-from WMCore.WMSpec.StdSpecs.PromptReco import promptrecoWorkload
+
+from WMCore.WMSpec.StdSpecs.PromptReco import PromptRecoWorkloadFactory
 
 def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
     """
@@ -707,7 +707,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                 #
                 taskName = "Reco"
                 workflowName = "PromptReco_Run%d_%s" % (run, dataset)
-                specArguments = getPromptRecoArguments()
+                specArguments = PromptRecoWorkloadFactory.getTestArguments()
 
                 specArguments['AcquisitionEra'] = runInfo['acq_era']
                 specArguments['CMSSWVersion'] = datasetConfig.Reco.CMSSWVersion
@@ -738,7 +738,11 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                 specArguments['DQMUploadProxy'] = dqmUploadProxy
                 specArguments['DQMUploadUrl'] = runInfo['dqmuploadurl']
 
-                wmSpec = promptrecoWorkload(workflowName, specArguments)
+                # not used, but needed by the validation
+                specArguments['CouchURL'] = "http://fakehost:1234"
+
+                factory = PromptRecoWorkloadFactory()
+                wmSpec = factory.factoryWorkloadConstruction(workflowName, specArguments)
 
                 wmSpec.setPhEDExInjectionOverride(runInfo['bulk_data_loc'])
                 for subscription in subscriptions:
