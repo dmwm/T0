@@ -10,6 +10,7 @@ from T0.RunConfig.Tier0Config import setAcquisitionEra
 from T0.RunConfig.Tier0Config import setLFNPrefix
 from T0.RunConfig.Tier0Config import setBulkDataType
 from T0.RunConfig.Tier0Config import setBulkDataLocation
+from T0.RunConfig.Tier0Config import setDQMUploadUrl
 from T0.RunConfig.Tier0Config import setPromptCalibrationConfig
 from T0.RunConfig.Tier0Config import setConfigVersion
 from T0.RunConfig.Tier0Config import ignoreStream
@@ -33,6 +34,7 @@ setAcquisitionEra(tier0Config, "ExampleConfig_UnitTest")
 setLFNPrefix(tier0Config, "/store")
 setBulkDataType(tier0Config, "data")
 setBulkDataLocation(tier0Config, "T2_CH_CERN")
+setDQMUploadUrl(tier0Config, "https://cmsweb.cern.ch/dqm/dev")
 setPromptCalibrationConfig(tier0Config,
                            alcaHarvestTimeout = 12*3600,
                            alcaHarvestDir = "/some/afs/dir",
@@ -52,13 +54,27 @@ hltmonVersionOverride = {
 
 addRepackConfig(tier0Config, "Default",
                 proc_ver = 1,
+                maxSizeSingleLumi = 1234,
+                maxSizeMultiLumi = 1122,
+                minInputSize = 210,
+                maxInputSize = 400,
+                maxEdmSize = 1233,
+                maxOverSize = 1133,
+                maxInputEvents = 500,
+                maxInputFiles = 1111,
                 versionOverride = repackVersionOverride)
 
 addExpressConfig(tier0Config, "Express",
                  scenario = "pp",
                  data_tiers = [ "FEVT", "ALCARECO", "DQM" ],
+                 maxInputEvents = 123,
+                 maxInputSize = 123456789,
+                 maxInputFiles = 1234,
+                 maxLatency = 12 * 23,
                  alca_producers = [ "SiStripCalZeroBias", "PromptCalibProd" ],
+                 dqm_sequences = [ "@common" ],
                  global_tag = "GlobalTag1",
+                 reco_version = "CMSSW_4_2_8_patch7",
                  proc_ver = 2,
                  versionOverride = expressVersionOverride)
 

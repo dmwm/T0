@@ -38,7 +38,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.testInit.setLogging()
         self.testInit.setDatabaseConnection()
 
-        self.testInit.setSchema(customModules = ["T0.WMBS"])
+        self.testInit.setSchema(customModules = ["T0.WMBS","WMComponent.DBS3Buffer"])
 
         self.testDir  = self.testInit.generateWorkDir()
 
