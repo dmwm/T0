@@ -27,6 +27,8 @@ def getTestArguments():
     arguments = {
         "Requestor": "Dirk.Hufnagel@cern.ch",
 
+        "RequestPriority" : 1,
+
         "ScramArch": "slc5_amd64_gcc462",
 
         # needed, but ultimately not used for anything
@@ -54,6 +56,10 @@ class RepackWorkloadFactory(StdBase):
         StdBase.__init__(self)
         self.multicore = False
         self.multicoreNCores = 1
+
+        self.inputPrimaryDataset = None
+        self.inputProcessedDataset = None
+
         return
 
     def buildWorkload(self):
