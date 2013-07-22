@@ -17,11 +17,8 @@ from T0.RunConfig.Tier0Config import retrieveDatasetConfig
 from T0.RunConfig.Tier0Config import addRepackConfig
 from T0.RunConfig.Tier0Config import deleteStreamConfig
 
-from T0.WMSpec.StdSpecs.Repack import getTestArguments as getRepackArguments
-from T0.WMSpec.StdSpecs.Repack import repackWorkload
-from T0.WMSpec.StdSpecs.Express import getTestArguments as getExpressArguments
-from T0.WMSpec.StdSpecs.Express import expressWorkload
-
+from T0.WMSpec.StdSpecs.Repack import RepackWorkloadFactory
+from T0.WMSpec.StdSpecs.Express import ExpressWorkloadFactory
 from WMCore.WMSpec.StdSpecs.PromptReco import PromptRecoWorkloadFactory
 
 def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
@@ -415,9 +412,14 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         #
         outputs = {}
         if streamConfig.ProcessingStyle == "Bulk":
+
             taskName = "Repack"
             workflowName = "Repack_Run%d_Stream%s" % (run, stream)
-            specArguments = getRepackArguments()
+
+            specArguments = RepackWorkloadFactory.getTestArguments()
+
+            specArguments['RequestPriority'] = 0
+
             specArguments['ProcessingVersion'] = streamConfig.Repack.ProcessingVersion
             specArguments['MaxSizeSingleLumi'] = streamConfig.Repack.MaxSizeSingleLumi
             specArguments['MaxSizeMultiLumi'] = streamConfig.Repack.MaxSizeMultiLumi
@@ -432,12 +434,17 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['MergedLFNBase'] = "%s/%s" % (runInfo['lfn_prefix'],
                                                         runInfo['bulk_data_type'])
         elif streamConfig.ProcessingStyle == "Express":
+
             taskName = "Express"
             workflowName = "Express_Run%d_Stream%s" % (run, stream)
-            specArguments = getExpressArguments()
+
+            specArguments = ExpressWorkloadFactory.getTestArguments()
+
+            specArguments['RequestPriority'] = 0
+
             specArguments['ProcessingString'] = "Express"
             specArguments['ProcessingVersion'] = streamConfig.Express.ProcessingVersion
-            specArguments['ProcScenario'] = streamConfig.Express.Scenario
+            specArguments['Scenario'] = streamConfig.Express.Scenario
             specArguments['GlobalTag'] = streamConfig.Express.GlobalTag
             specArguments['GlobalTagTransaction'] = "Express_%d" % run
             specArguments['MaxInputEvents'] = streamConfig.Express.MaxInputEvents
@@ -464,12 +471,14 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['ValidStatus'] = "VALID"
 
         if streamConfig.ProcessingStyle == "Bulk":
-            wmSpec = repackWorkload(workflowName, specArguments)
+            factory = RepackWorkloadFactory()
+            wmSpec = factory.factoryWorkloadConstruction(workflowName, specArguments)
             wmSpec.setPhEDExInjectionOverride(runInfo['bulk_data_loc'])
             for subscription in subscriptions['Bulk']:
                 wmSpec.setSubscriptionInformation(**subscription)
         elif streamConfig.ProcessingStyle == "Express":
-            wmSpec = expressWorkload(workflowName, specArguments)
+            factory = ExpressWorkloadFactory()
+            wmSpec = factory.factoryWorkloadConstruction(workflowName, specArguments)
             wmSpec.setPhEDExInjectionOverride(expressPhEDExInjectNode)
             for subscription in subscriptions['Express']:
                 wmSpec.setSubscriptionInformation(**subscription)
@@ -709,6 +718,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                 workflowName = "PromptReco_Run%d_%s" % (run, dataset)
                 specArguments = PromptRecoWorkloadFactory.getTestArguments()
 
+                specArguments['RequestPriority'] = 0
+
                 specArguments['AcquisitionEra'] = runInfo['acq_era']
                 specArguments['CMSSWVersion'] = datasetConfig.Reco.CMSSWVersion
 
@@ -718,7 +729,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
 
                 specArguments['ProcessingString'] = "PromptReco"
                 specArguments['ProcessingVersion'] = datasetConfig.Reco.ProcessingVersion
-                specArguments['ProcScenario'] = datasetConfig.Scenario
+                specArguments['Scenario'] = datasetConfig.Scenario
                 specArguments['GlobalTag'] = datasetConfig.Reco.GlobalTag
 
                 specArguments['InputDataset'] = "/%s/%s-%s/RAW" % (dataset, runInfo['acq_era'], repackProcVer)
