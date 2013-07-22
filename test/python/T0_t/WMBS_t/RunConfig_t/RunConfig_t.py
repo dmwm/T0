@@ -148,9 +148,9 @@ class RunConfigTest(unittest.TestCase):
                                     'lfn_prefix' : "/store",
                                     'bulk_data_type' : "data",
                                     'bulk_data_loc' : "T2_CH_CERN",
-                                    'process': "HLT",
+                                    'dqmuploadurl' : "https://cmsweb.cern.ch/dqm/dev",
+                                    'process': 'HLT',
                                     'hltkey': self.hltkey,
-                                    'dqmuploadurl': "https://cmsweb.cern.ch/dqm/dev",
                                     'ah_timeout' : 12*3600,
                                     'ah_dir' : "/some/afs/dir",
                                     'cond_timeout' : 18*3600,
@@ -1206,8 +1206,11 @@ class RunConfigTest(unittest.TestCase):
         self.assertEqual(expressConfig['proc_ver'], 2,
                          "ERROR: wrong processing version for stream Express")
 
-        self.assertEqual(expressConfig['cmssw'], "CMSSW_4_2_8_patch6" ,
-                         "ERROR: wrong CMSSW version for stream Express")
+        self.assertEqual(expressConfig['stream_cmssw'], "CMSSW_4_2_8_patch6",
+                         "ERROR: wrong stream CMSSW version for stream Express")
+
+        self.assertEqual(expressConfig['reco_cmssw'], "CMSSW_4_2_8_patch7",
+                         "ERROR: wrong reco CMSSW version for stream Express")
 
         writeTiers = expressConfig['write_tiers'].split(',')
         self.assertEqual(set(writeTiers), set([ "FEVT", "ALCARECO", "DQM" ]),
@@ -1249,8 +1252,11 @@ class RunConfigTest(unittest.TestCase):
         self.assertEqual(expressConfig['proc_ver'], 3,
                          "ERROR: wrong processing version for stream HLTMON")
 
-        self.assertEqual(expressConfig['cmssw'], "CMSSW_4_2_8_patch7" ,
-                         "ERROR: wrong CMSSW version for stream HLTMON")
+        self.assertEqual(expressConfig['stream_cmssw'], "CMSSW_4_2_8_patch7",
+                         "ERROR: wrong stream CMSSW version for stream HLTMON")
+
+        self.assertEqual(expressConfig['reco_cmssw'], None,
+                         "ERROR: wrong reco CMSSW version for stream HLTMON")
 
         writeTiers = expressConfig['write_tiers'].split(',')
         self.assertEqual(set(writeTiers), set([ "FEVTHLTALL" ]),

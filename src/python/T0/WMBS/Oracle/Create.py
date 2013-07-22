@@ -272,6 +272,7 @@ class Create(DBCreator):
                  max_files      int             not null,
                  max_latency    int             not null,
                  block_delay    int             not null,
+                 cmssw_id       int,
                  alca_skim      varchar2(1000),
                  dqm_seq        varchar2(1000),
                  primary key (run_id, stream_id)
@@ -685,6 +686,12 @@ class Create(DBCreator):
                  ADD CONSTRAINT exp_con_str_id_fk
                  FOREIGN KEY (stream_id)
                  REFERENCES stream(id)"""
+
+        self.constraints[len(self.constraints)] = \
+            """ALTER TABLE express_config
+                 ADD CONSTRAINT exp_con_cms_id_fk
+                 FOREIGN KEY (cmssw_id)
+                 REFERENCES cmssw_version(id)"""
 
         self.constraints[len(self.constraints)] = \
             """ALTER TABLE prompt_calib

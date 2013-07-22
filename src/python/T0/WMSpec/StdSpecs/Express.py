@@ -12,9 +12,15 @@ express processing -> FEVT/RAW/RECO/whatever -> express merge
 """
 
 import os
+import logging
+
+import WMCore.WMSpec.Steps.StepFactory as StepFactory
+
+from WMCore.WMSpec.WMWorkloadTools import makeList
+from WMCore.Lexicon import cmsswversion
 
 from WMCore.WMSpec.StdSpecs.StdBase import StdBase
-from WMCore.WMSpec.WMWorkloadTools import makeList
+
 
 class ExpressWorkloadFactory(StdBase):
     """
@@ -50,14 +56,9 @@ class ExpressWorkloadFactory(StdBase):
             taskType = "MultiProcessing"
 
         # complete output configuration
-        # figure out alca primary dataset
-        alcaPrimaryDataset = None
         for output in self.outputs:
-            #output['filterName'] = "Express"
             output['moduleLabel'] = "write_%s_%s" % (output['primaryDataset'],
                                                      output['dataTier'])
-            if output['dataTier'] == "ALCARECO":
-                alcaPrimaryDataset = output['primaryDataset']
 
         # finalize splitting parameters
         mySplitArgs = self.expressSplitArgs.copy()
@@ -65,22 +66,99 @@ class ExpressWorkloadFactory(StdBase):
 
         expressTask = workload.newTask("Express")
 
-        expressOutMods = self.setupProcessingTask(expressTask, taskType,
-                                                  scenarioName = self.procScenario,
-                                                  scenarioFunc = "expressProcessing",
-                                                  scenarioArgs = { 'globalTag' : self.globalTag,
-                                                                   'globalTagTransaction' : self.globalTagTransaction,
-                                                                   'skims' : self.alcaSkims,
-                                                                   'dqmSeq' : self.dqmSequences,
-                                                                   'outputs' : self.outputs },
-                                                  splitAlgo = "Express",
-                                                  splitArgs = mySplitArgs,
-                                                  stepType = cmsswStepType,
-                                                  forceUnmerged = True)
+        #
+        # need to split this up into two separate code paths
+        # one is direct reco from the streamer files
+        # the other is conversion and then reco
+        #
+        if self.frameworkVersionReco == self.frameworkVersion or self.frameworkVersionReco == None:
+
+            expressRecoStepName = "cmsRun1"
+
+            expressOutMods = self.setupProcessingTask(expressTask, taskType,
+                                                      scenarioName = self.procScenario,
+                                                      scenarioFunc = "expressProcessing",
+                                                      scenarioArgs = { 'globalTag' : self.globalTag,
+                                                                       'globalTagTransaction' : self.globalTagTransaction,
+                                                                       'skims' : self.alcaSkims,
+                                                                       'dqmSeq' : self.dqmSequences,
+                                                                       'outputs' : self.outputs,
+                                                                       'inputSource' : "DAT" },
+                                                      splitAlgo = "Express",
+                                                      splitArgs = mySplitArgs,
+                                                      stepType = cmsswStepType,
+                                                      forceUnmerged = True)
+        else:
+
+            expressRecoStepName = "cmsRun2"
+
+            conversionOutMods = self.setupProcessingTask(expressTask, taskType,
+                                                         scenarioName = self.procScenario,
+                                                         scenarioFunc = "repack",
+                                                         scenarioArgs = { 'outputs' : [ { 'dataTier' : "RAW",
+                                                                                          'eventContent' : "ALL",
+                                                                                          'primaryDataset' : self.specialDataset,
+                                                                                          'moduleLabel' : "write_RAW" } ] },
+                                                         splitAlgo = "Express",
+                                                         splitArgs = mySplitArgs,
+                                                         stepType = cmsswStepType,
+                                                         forceUnmerged = True)
+
+            # there is only one
+            conversionOutLabel = conversionOutMods.keys()[0]
+
+            # everything comin after should use the express reco CMSSW version
+            self.frameworkVersion = self.frameworkVersionReco
+            
+            # add a second step doing the reconstruction
+            parentCmsswStep = expressTask.getStep("cmsRun1")
+            parentCmsswStepHelper = parentCmsswStep.getTypeHelper()
+            parentCmsswStepHelper.keepOutput(False)
+            stepTwoCmssw = parentCmsswStep.addTopStep("cmsRun2")
+            stepTwoCmssw.setStepType(cmsswStepType)
+
+            template = StepFactory.getStepTemplate(cmsswStepType)
+            template(stepTwoCmssw.data)
+
+            stepTwoCmsswHelper = stepTwoCmssw.getTypeHelper()
+            stepTwoCmsswHelper.setGlobalTag(self.globalTag)
+            stepTwoCmsswHelper.setupChainedProcessing("cmsRun1", conversionOutLabel)
+            stepTwoCmsswHelper.cmsswSetup(self.frameworkVersion, softwareEnvironment = "",
+                                          scramArch = self.scramArch)
+
+            scenarioFunc = "expressProcessing"
+            scenarioArgs = { 'globalTag' : self.globalTag,
+                             'globalTagTransaction' : self.globalTagTransaction,
+                             'skims' : self.alcaSkims,
+                             'dqmSeq' : self.dqmSequences,
+                             'outputs' : self.outputs,
+                             'inputSource' : "EDM" }
+
+            configOutput = self.determineOutputModules(scenarioFunc, scenarioArgs)
+
+            expressOutMods = {}
+            for outputModuleName in configOutput.keys():
+                outputModule = self.addOutputModule(expressTask,
+                                                    outputModuleName,
+                                                    configOutput[outputModuleName]['primaryDataset'],
+                                                    configOutput[outputModuleName]['dataTier'],
+                                                    configOutput[outputModuleName].get('filterName', None),
+                                                    stepName = "cmsRun2", forceUnmerged = True)
+                expressOutMods[outputModuleName] = outputModule
+
+            if 'outputs' in scenarioArgs:
+                for output in scenarioArgs['outputs']:
+                    if 'primaryDataset' in output:
+                        del output['primaryDataset']
+            if 'primaryDataset' in scenarioArgs:
+                del scenarioArgs['primaryDataset']
+
+            stepTwoCmsswHelper.setDataProcessingConfig(self.procScenario, scenarioFunc, **scenarioArgs)
+
 
         expressTask.setTaskType("Express")
 
-        self.addLogCollectTask(expressTask)
+        self.addLogCollectTask(expressTask, taskName = "ExpressLogCollect")
 
         for expressOutLabel, expressOutInfo in expressOutMods.items():
 
@@ -92,7 +170,7 @@ class ExpressWorkloadFactory(StdBase):
 
                 alcaSkimTask = expressTask.addTask("%sAlcaSkim%s" % (expressTask.name(), expressOutLabel))
 
-                alcaSkimTask.setInputReference(expressTask.getStep("cmsRun1"),
+                alcaSkimTask.setInputReference(expressTask.getStep(expressRecoStepName),
                                                outputModule = expressOutLabel)
 
                 alcaSkimOutMods = self.setupProcessingTask(alcaSkimTask, taskType,
@@ -101,7 +179,7 @@ class ExpressWorkloadFactory(StdBase):
                                                            scenarioArgs = { 'globalTag' : self.globalTag,
                                                                             'globalTagTransaction' : self.globalTagTransaction,
                                                                             'skims' : self.alcaSkims,
-                                                                            'primaryDataset' : alcaPrimaryDataset },
+                                                                            'primaryDataset' : self.specialDataset },
                                                            splitAlgo = "ExpressMerge",
                                                            splitArgs = mySplitArgs,
                                                            stepType = cmsswStepType,
@@ -109,7 +187,7 @@ class ExpressWorkloadFactory(StdBase):
 
                 alcaSkimTask.setTaskType("Express")
 
-                self.addLogCollectTask(alcaSkimTask, taskName = "%s%sAlcaSkimLogCollect" % (expressTask.name(), expressOutLabel))
+                self.addLogCollectTask(alcaSkimTask, taskName = "AlcaSkimLogCollect")
                 self.addCleanupTask(expressTask, expressOutLabel)
 
                 for alcaSkimOutLabel, alcaSkimOutInfo in alcaSkimOutMods.items():
@@ -126,7 +204,7 @@ class ExpressWorkloadFactory(StdBase):
 
             else:
 
-                mergeTask = self.addExpressMergeTask(expressTask, expressOutLabel)
+                mergeTask = self.addExpressMergeTask(expressTask, expressRecoStepName, expressOutLabel)
 
                 if expressOutInfo['dataTier'] in [ "DQM", "DQMROOT" ]:
 
@@ -145,7 +223,7 @@ class ExpressWorkloadFactory(StdBase):
         
         return workload
 
-    def addExpressMergeTask(self, parentTask, parentOutputModuleName):
+    def addExpressMergeTask(self, parentTask, parentStepName, parentOutputModuleName):
         """
         _addExpressMergeTask_
 
@@ -156,7 +234,7 @@ class ExpressWorkloadFactory(StdBase):
         mySplitArgs = self.expressMergeSplitArgs.copy()
         mySplitArgs['algo_package'] = "T0.JobSplitting"
 
-        parentTaskCmssw = parentTask.getStep("cmsRun1")
+        parentTaskCmssw = parentTask.getStep(parentStepName)
         parentOutputModule = parentTaskCmssw.getOutputModule(parentOutputModuleName)
 
         mergeTask = parentTask.addTask("%sMerge%s" % (parentTask.name(), parentOutputModuleName))
@@ -181,7 +259,7 @@ class ExpressWorkloadFactory(StdBase):
         mergeTaskCmsswHelper = mergeTaskCmssw.getTypeHelper()
         mergeTaskStageHelper = mergeTaskStageOut.getTypeHelper()
 
-        mergeTaskCmsswHelper.cmsswSetup(self.frameworkVersion, softwareEnvironment = "",
+        mergeTaskCmsswHelper.cmsswSetup(self.frameworkVersionReco, softwareEnvironment = "",
                                         scramArch = self.scramArch)
 
         mergeTaskCmsswHelper.setErrorDestinationStep(stepName = mergeTaskLogArch.name())
@@ -358,6 +436,9 @@ class ExpressWorkloadFactory(StdBase):
         specArgs = {"Scenario" : {"default" : None, "type" : str,
                                   "optional" : False, "validate" : None,
                                   "attr" : "procScenario", "null" : False},
+                    "CMSSWVersionReco" : {"default" : None, "type" : str,
+                                          "optional" : False, "validate" : cmsswversion,
+                                          "attr" : "frameworkVersionReco", "null" : True},
                     "GlobalTag" : {"default" : None, "type" : str,
                                    "optional" : False, "validate" : None,
                                    "attr" : "globalTag", "null" : False},
@@ -370,6 +451,9 @@ class ExpressWorkloadFactory(StdBase):
                     "StreamName" : {"default" : None, "type" : str,
                                     "optional" : False, "validate" : None,
                                     "attr" : "streamName", "null" : False},
+                    "SpecialDataset" : {"default" : None, "type" : str,
+                                        "optional" : False, "validate" : None,
+                                        "attr" : "specialDataset", "null" : False},
                     "AlcaHarvestTimeout" : {"default" : None, "type" : int,
                                             "optional" : False, "validate" : None,
                                             "attr" : "alcaHarvestTimeout", "null" : False},

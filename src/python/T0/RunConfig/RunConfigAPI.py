@@ -167,13 +167,13 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         insertStreamDatasetDAO = daoFactory(classname = "RunConfig.InsertStreamDataset")
 
         # write stream configuration
+        insertCMSSWVersionDAO = daoFactory(classname = "RunConfig.InsertCMSSWVersion")
         insertStreamStyleDAO = daoFactory(classname = "RunConfig.InsertStreamStyle")
         insertRepackConfigDAO = daoFactory(classname = "RunConfig.InsertRepackConfig")
         insertPromptCalibrationDAO = daoFactory(classname = "RunConfig.InsertPromptCalibration")
         insertExpressConfigDAO = daoFactory(classname = "RunConfig.InsertExpressConfig")
         insertSpecialDatasetDAO = daoFactory(classname = "RunConfig.InsertSpecialDataset")
         insertDatasetScenarioDAO = daoFactory(classname = "RunConfig.InsertDatasetScenario")
-        insertCMSSWVersionDAO = daoFactory(classname = "RunConfig.InsertCMSSWVersion")
         updateStreamOverrideDAO = daoFactory(classname = "RunConfig.UpdateStreamOverride")
         insertStreamFilesetDAO = daoFactory(classname = "RunConfig.InsertStreamFileset")
         insertRecoReleaseConfigDAO = daoFactory(classname = "RunConfig.InsertRecoReleaseConfig")
@@ -181,6 +181,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         insertStorageNodeDAO = daoFactory(classname = "RunConfig.InsertStorageNode")
         insertPhEDExConfigDAO = daoFactory(classname = "RunConfig.InsertPhEDExConfig")
 
+        bindsCMSSWVersion = []
         bindsDataset = []
         bindsStreamDataset = []
         bindsStreamStyle = {'RUN' : run,
@@ -191,7 +192,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         bindsExpressConfig = {}
         bindsSpecialDataset = {}
         bindsDatasetScenario = []
-        bindsCMSSWVersion = []
         bindsStreamOverride = {}
         bindsStorageNode = []
         bindsPhEDExConfig = []
@@ -206,6 +206,11 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         # for spec creation, details for all outputs
         #
         outputModuleDetails = []
+
+        #
+        # special dataset for some express output
+        #
+        specialDataset = None
 
         #
         # for PromptReco delay settings
@@ -292,6 +297,9 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             if len(streamConfig.Express.DqmSequences) > 0:
                 dqmSeq = ",".join(streamConfig.Express.DqmSequences)
 
+            if streamConfig.Express.CMSSWVersion != None:
+                bindsCMSSWVersion.append( { 'VERSION' : streamConfig.Express.CMSSWVersion } )
+
             bindsExpressConfig = { 'RUN' : run,
                                    'STREAM' : stream,
                                    'PROC_VER' : streamConfig.Express.ProcessingVersion,
@@ -302,6 +310,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                    'MAX_FILES' : streamConfig.Express.MaxInputFiles,
                                    'MAX_LATENCY' : streamConfig.Express.MaxLatency,
                                    'BLOCK_DELAY' : streamConfig.Express.BlockCloseDelay,
+                                   'CMSSW' : streamConfig.Express.CMSSWVersion,
                                    'ALCA_SKIM' : alcaSkim,
                                    'DQM_SEQ' : dqmSeq }
 
@@ -447,6 +456,9 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['ProcessingString'] = "Express"
             specArguments['ProcessingVersion'] = streamConfig.Express.ProcessingVersion
             specArguments['Scenario'] = streamConfig.Express.Scenario
+
+            specArguments['CMSSWVersionReco'] = streamConfig.Express.CMSSWVersion
+
             specArguments['GlobalTag'] = streamConfig.Express.GlobalTag
             specArguments['GlobalTagTransaction'] = "Express_%d" % run
             specArguments['MaxInputEvents'] = streamConfig.Express.MaxInputEvents
@@ -463,6 +475,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['DQMUploadProxy'] = dqmUploadProxy
             specArguments['DQMUploadUrl'] = runInfo['dqmuploadurl']
             specArguments['StreamName'] = stream
+            specArguments['SpecialDataset'] = specialDataset
 
         if streamConfig.ProcessingStyle in [ 'Bulk', 'Express' ]:
             specArguments['RunNumber'] = run
@@ -503,6 +516,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         #
         try:
             myThread.transaction.begin()
+            if len(bindsCMSSWVersion) > 0:
+                insertCMSSWVersionDAO.execute(bindsCMSSWVersion, conn = myThread.transaction.conn, transaction = True)
             if len(bindsDataset) > 0:
                 insertDatasetDAO.execute(bindsDataset, conn = myThread.transaction.conn, transaction = True)
             if len(bindsStreamDataset) > 0:
@@ -517,8 +532,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 insertSpecialDatasetDAO.execute(bindsSpecialDataset, conn = myThread.transaction.conn, transaction = True)
             if len(bindsDatasetScenario) > 0:
                 insertDatasetScenarioDAO.execute(bindsDatasetScenario, conn = myThread.transaction.conn, transaction = True)
-            if len(bindsCMSSWVersion) > 0:
-                insertCMSSWVersionDAO.execute(bindsCMSSWVersion, conn = myThread.transaction.conn, transaction = True)
             if len(bindsStreamOverride) > 0:
                 updateStreamOverrideDAO.execute(bindsStreamOverride, conn = myThread.transaction.conn, transaction = True)
             if len(bindsStorageNode) > 0:

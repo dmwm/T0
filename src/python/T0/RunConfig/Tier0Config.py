@@ -90,6 +90,10 @@ Tier0Configuration - Global configuration object
 |             |     |
 |             |     |--> GlobalTag - Global tag used for processing
 |             |     |
+|             |     |--> CMSSWVersion - Framework version used for processing. This only
+|             |     |                   needs to be filled if we want to run the reco
+|             |     |                   step separate from the repacking step.
+|             |     |
 |             |     |--> AlcaSkims - List of alca skims active for this stream.
 |             |     |
 |             |     |--> DqmSequences - List of dqm sequences active for this stream.
@@ -569,6 +573,8 @@ def addExpressConfig(config, streamName, **options):
     streamConfig.Express.Scenario = scenario
     streamConfig.Express.DataTiers = data_tiers
     streamConfig.Express.GlobalTag = global_tag
+
+    streamConfig.Express.CMSSWVersion = options.get("reco_version", None)
 
     streamConfig.Express.AlcaSkims = options.get("alca_producers", [])
     streamConfig.Express.DqmSequences = options.get("dqm_sequences", [])
