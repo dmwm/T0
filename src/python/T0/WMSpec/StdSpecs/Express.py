@@ -14,45 +14,7 @@ express processing -> FEVT/RAW/RECO/whatever -> express merge
 import os
 
 from WMCore.WMSpec.StdSpecs.StdBase import StdBase
-
-def getTestArguments():
-    """
-    _getTestArguments_
-
-    This should be where the default REQUIRED arguments go
-    This serves as documentation for what is currently required 
-    by the standard Express workload in importable format.
-
-    NOTE: These are test values.  If used in real workflows they
-    will cause everything to crash/die/break, and we will be forced
-    to hunt you down and kill you.
-    """
-    arguments = {
-        "Requestor" : "Dirk.Hufnagel@cern.ch",
-
-        "RequestPriority" : 1,
-
-        "ScramArch" : "slc5_amd64_gcc462",
-        
-        # these must be overridden
-        "AcquisitionEra" : None,
-        "CMSSWVersion" : None,
-        "ProcessingVersion" : None,
-        "ProcScenario" : None,
-        "GlobalTag" : None,
-        "GlobalTagTransaction" : None,
-        "Outputs" : None,
-        "AlcaSkims" : [ "TkAlCosmics0T", "MuAlGlobalCosmics", "HcalCalHOCosmics" ],
-        "DqmSequences" : [ "@common", "@jetmet" ],
-
-        "AlcaHarvestTimeout" : None,
-        "AlcaHarvestDir" : None,
-
-        # optional for now
-        "Multicore" : None,
-        }
-
-    return arguments
+from WMCore.WMSpec.WMWorkloadTools import makeList
 
 class ExpressWorkloadFactory(StdBase):
     """
@@ -62,8 +24,6 @@ class ExpressWorkloadFactory(StdBase):
     """
     def __init__(self):
         StdBase.__init__(self)
-        self.multicore = False
-        self.multicoreNCores = 1
 
         self.inputPrimaryDataset = None
         self.inputProcessedDataset = None
@@ -82,6 +42,7 @@ class ExpressWorkloadFactory(StdBase):
         """
         workload = self.createWorkload()
         workload.setDashboardActivity("tier0")
+        self.reportWorkflowToDashboard(workload.getDashboardActivity())
 
         cmsswStepType = "CMSSW"
         taskType = "Processing"
@@ -370,18 +331,7 @@ class ExpressWorkloadFactory(StdBase):
         StdBase.__call__(self, workloadName, arguments)
 
         # Required parameters that must be specified by the Requestor.
-        self.frameworkVersion = arguments["CMSSWVersion"]
-        self.globalTag = arguments["GlobalTag"]
-	self.globalTagTransaction = arguments["GlobalTagTransaction"]
-        self.procScenario = arguments['ProcScenario']
-        self.alcaSkims = arguments['AlcaSkims']
-        self.dqmSequences = arguments['DqmSequences']
         self.outputs = arguments['Outputs']
-        self.dqmUploadProxy = arguments['DQMUploadProxy']
-        self.alcaHarvestTimeout = arguments['AlcaHarvestTimeout']
-        self.alcaHarvestDir = arguments['AlcaHarvestDir']
-        self.streamName = arguments['StreamName']
-        self.blockCloseDelay = arguments['BlockCloseDelay']
 
         # job splitting parameters (also required parameters)
         self.expressSplitArgs = {}
@@ -391,36 +341,47 @@ class ExpressWorkloadFactory(StdBase):
         self.expressMergeSplitArgs['maxInputFiles'] = arguments['MaxInputFiles']
         self.expressMergeSplitArgs['maxLatency'] = arguments['MaxLatency']
 
-        if arguments.has_key("Multicore"):
-            numCores = arguments.get("Multicore")
-            if numCores == None or numCores == "":
-                self.multicore = False
-            elif numCores == "auto":
-                self.multicore = True
-                self.multicoreNCores = "auto"
-            else:
-                self.multicore = True
-                self.multicoreNCores = numCores
-
-        # Optional arguments that default to something reasonable.
-        self.dbsUrl = arguments.get("DbsUrl", "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet")
-        self.blockBlacklist = arguments.get("BlockBlacklist", [])
-        self.blockWhitelist = arguments.get("BlockWhitelist", [])
-        self.runBlacklist = arguments.get("RunBlacklist", [])
-        self.runWhitelist = arguments.get("RunWhitelist", [])
-        self.emulation = arguments.get("Emulation", False)
-
         # fixed parameters that are used in various places
         self.alcaHarvestOutLabel = "Sqlite"
 
         return self.buildWorkload()
 
-def expressWorkload(workloadName, arguments):
-    """
-    _expressWorkload_
-
-    Instantiate the ExpressWorkflowFactory and have
-    it generate a workload for the given parameters.
-    """
-    myExpressFactory = ExpressWorkloadFactory()
-    return myExpressFactory(workloadName, arguments)
+    @staticmethod
+    def getWorkloadArguments():
+        baseArgs = StdBase.getWorkloadArguments()
+##         specArgs = {"Outputs" : {"default" : {}, "type" : dict,
+##                                  "optional" : False, "validate" : None,
+##                                  "attr" : "outputs", "null" : False},
+        specArgs = {"Scenario" : {"default" : None, "type" : str,
+                                  "optional" : False, "validate" : None,
+                                  "attr" : "procScenario", "null" : False},
+                    "GlobalTag" : {"default" : None, "type" : str,
+                                   "optional" : False, "validate" : None,
+                                   "attr" : "globalTag", "null" : False},
+                    "GlobalTagTransaction" : {"default" : None, "type" : str,
+                                              "optional" : False, "validate" : None,
+                                              "attr" : "globalTagTransaction", "null" : False},
+                    "DQMUploadProxy" : {"default" : None, "type" : str,
+                                        "optional" : False, "validate" : None,
+                                        "attr" : "dqmUploadProxy", "null" : False},
+                    "StreamName" : {"default" : None, "type" : str,
+                                    "optional" : False, "validate" : None,
+                                    "attr" : "streamName", "null" : False},
+                    "AlcaHarvestTimeout" : {"default" : None, "type" : int,
+                                            "optional" : False, "validate" : None,
+                                            "attr" : "alcaHarvestTimeout", "null" : False},
+                    "AlcaHarvestDir" : {"default" : None, "type" : str,
+                                        "optional" : False, "validate" : None,
+                                        "attr" : "alcaHarvestDir", "null" : True},
+                    "BlockCloseDelay" : {"default" : None, "type" : int,
+                                         "optional" : False, "validate" : lambda x : x > 0,
+                                         "attr" : "blockCloseDelay", "null" : False},
+                    "AlcaSkims" : {"default" : None, "type" : makeList,
+                                   "optional" : False, "validate" : None,
+                                   "attr" : "alcaSkims", "null" : False},
+                    "DqmSequences" : {"default" : None, "type" : makeList,
+                                      "optional" : False, "validate" : None,
+                                      "attr" : "dqmSequences", "null" : False},
+                    }
+        baseArgs.update(specArgs)
+        return baseArgs
