@@ -467,7 +467,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['AcquisitionEra'] = tier0Config.Global.AcquisitionEra
             specArguments['CMSSWVersion'] = streamConfig.VersionOverride.get(onlineVersion, onlineVersion)
             specArguments['Outputs'] = outputModuleDetails
-            specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/T0_CH_CERN/Tier0/override_catalog.xml?protocol=override"
+            specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/T2_CH_CERN/Tier0/override_catalog.xml?protocol=override"
             specArguments['ValidStatus'] = "VALID"
 
         if streamConfig.ProcessingStyle == "Bulk":
