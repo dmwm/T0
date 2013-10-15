@@ -630,7 +630,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                                            'PRIMDS' : dataset,
                                            'SCENARIO' : datasetConfig.Scenario } )
 
-            bindsCMSSWVersion.append( { 'VERSION' : datasetConfig.Reco.CMSSWVersion } )
+            if datasetConfig.Reco.CMSSWVersion != None:
+                bindsCMSSWVersion.append( { 'VERSION' : datasetConfig.Reco.CMSSWVersion } )
 
             alcaSkim = None
             if len(datasetConfig.Reco.AlcaSkims) > 0:
@@ -644,6 +645,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                                       'PRIMDS' : dataset,
                                       'DO_RECO' : int(datasetConfig.Reco.DoReco),
                                       'CMSSW' : datasetConfig.Reco.CMSSWVersion,
+                                      'SCRAM_ARCH' : datasetConfig.Reco.ScramArch,
                                       'RECO_SPLIT' : datasetConfig.Reco.EventSplit,
                                       'WRITE_RECO' : int(datasetConfig.Reco.WriteRECO),
                                       'WRITE_DQM' : int(datasetConfig.Reco.WriteDQM),
@@ -653,7 +655,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                                       'DQM_SEQ' : dqmSeq,
                                       'GLOBAL_TAG' : datasetConfig.Reco.GlobalTag } )
 
-            phedexConfig = phedexConfigs[dataset]
+            phedexConfig = phedexConfigs.get("dataset", {})
 
             custodialSites = []
             nonCustodialSites = []
@@ -722,6 +724,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
 
                 specArguments['AcquisitionEra'] = runInfo['acq_era']
                 specArguments['CMSSWVersion'] = datasetConfig.Reco.CMSSWVersion
+                specArguments['ScramArch'] = datasetConfig.Reco.ScramArch
 
                 specArguments['RunNumber'] = run
 
