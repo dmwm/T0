@@ -133,23 +133,23 @@ Tier0Configuration - Global configuration object
 |
 |--> Datasets
       | |
-      | |--> Default - Configuration section to hold the default dataset config.
-      |                This will have the same structure as the dataset config
-      |                listed below.
+      | |--> Default - Configuration section to hold the default dataset config
+      |                This will have the same structure as the dataset config below
       |
       |--> DATASETNAME
-            |--> Name - Name of the dataset.
             |
-            |--> Scenario - Processing scenario for this dataset.
+            |--> Name - Name of the dataset
+            |
+            |--> Scenario - Processing scenario for this dataset
             |
             |--> RecoDelay - PromptReco delay
             |
-            |--> RecoDelayOffset - Time before PromptReco release for which
+            |--> RecoDelayOffset - Time before PromptReco is released for which
             |                      settings are locked in and reco looks released
             |
             |--> CustodialNode - The custodial PhEDEx storage node for this dataset
             |
-            |--> ArchivalNode - The archival PhEDEx node, always CERN.
+            |--> ArchivalNode - The archival PhEDEx node (should always be CERN T0)
             |
             |--> CustodialPriority - The priority of the custodial subscription
             |
@@ -158,23 +158,19 @@ Tier0Configuration - Global configuration object
             |
             |--> DefaultProcessingVersion - Used for all output from PromptReco
             |
-            |--> Reco - Configuration section to hold settings related to prompt
-            |     |     reconstruction.
+            |--> Reco - Configuration section to hold settings related to PromptReco
             |     |
-            |     |--> DoReco - Either True or False.  Determines whether prompt
-            |     |             reconstruction is preformed on this dataset.
+            |     |--> DoReco - Whether we are running PromptReco at all
             |     |
-            |     |--> GlobalTag - The global tag that will be used to prompt
-            |     |                reconstruction.  Only used if DoReco is true.
+            |     |--> CMSSWVersion - CMSSW used for PromptReco (mandatory if DoReco is True)
             |     |
-            |     |--> CMSSWVersion - Framework version to be used for prompt
-            |     |                   reconstruction.  This only needs to be filled
-            |     |                   in if DoReco is True and will default to
-            |     |                   Undefined if not set.
+            |     |--> ScramArch - ScramArch used for PromptReco (mandatory if DoReco is True)
             |     |
-            |     |--> AlcaSkims - List of alca skims active for this dataset.
+            |     |--> GlobalTag - Global tag used for PromptReco (mandatory if DoReco is True)
             |     |
-            |     |--> DqmSequences - List of dqm sequences active for this dataset.
+            |     |--> AlcaSkims - List of alca skims active for this dataset
+            |     |
+            |     |--> DqmSequences - List of dqm sequences active for this dataset
             |
             |--> Tier1Skims - List of configuration section objects to hold Tier1 skims for
                   |           this dataset.
@@ -339,23 +335,37 @@ def addDataset(config, datasetName, **settings):
     else:
         datasetConfig.ProcessingVersion = settings.get('default_proc_ver', None)
 
-    if hasattr(datasetConfig, "GlobalTag"):
-        datasetConfig.GlobalTag = settings.get('global_tag', datasetConfig.GlobalTag)
-    else:
-        datasetConfig.GlobalTag = settings.get('global_tag', None)
-
     if hasattr(datasetConfig, "ArchivalNode"):
         datasetConfig.ArchivalNode = settings.get('archival_node', datasetConfig.ArchivalNode)
     else:
         datasetConfig.ArchivalNode = settings.get('archival_node', None)
 
+    datasetConfig.Reco.DoReco = settings.get("do_reco", False)
+
     if hasattr(datasetConfig.Reco, "CMSSWVersion"):
         datasetConfig.Reco.CMSSWVersion = settings.get('reco_version', datasetConfig.Reco.CMSSWVersion)
+    elif datasetConfig.Reco.DoReco:
+        msg = "Tier0Config.addDataset : no reco_version defined for dataset %s" % datasetName
+        raise RuntimeError, msg
     else:
-        datasetConfig.Reco.CMSSWVersion = settings.get('reco_version', "Undefined")
+        datasetConfig.Reco.CMSSWVersion = settings.get('reco_version', None)
 
-    datasetConfig.Reco.DoReco = settings.get("do_reco", False)
-    datasetConfig.Reco.GlobalTag = settings.get("global_tag", datasetConfig.GlobalTag)
+    if hasattr(datasetConfig.Reco, "ScramArch"):
+        datasetConfig.Reco.ScramArch = settings.get('scram_arch', datasetConfig.Reco.ScramArch)
+    elif datasetConfig.Reco.DoReco:
+        msg = "Tier0Config.addDataset : no scram_arch defined for dataset %s" % datasetName
+        raise RuntimeError, msg
+    else:
+        datasetConfig.Reco.ScramArch = settings.get('scram_arch', None)
+
+    if hasattr(datasetConfig.Reco, "GlobalTag"):
+        datasetConfig.Reco.GlobalTag = settings.get('global_tag', datasetConfig.Reco.GlobalTag)
+    elif datasetConfig.Reco.DoReco:
+        msg = "Tier0Config.addDataset : no global_tag defined for dataset %s" % datasetName
+        raise RuntimeError, msg
+    else:
+        datasetConfig.Reco.GlobalTag = settings.get('global_tag', None)
+
     datasetConfig.Reco.ProcessingVersion = settings.get("reco_proc_ver", datasetConfig.ProcessingVersion)
     datasetConfig.Reco.EventSplit = settings.get("reco_split", 2000)
     datasetConfig.Reco.WriteRECO = settings.get("write_reco", True)

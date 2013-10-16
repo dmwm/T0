@@ -23,6 +23,7 @@ class GetRecoConfig(DBFormatter):
                         reco_config.proc_version,
                         reco_config.alca_skim,
                         reco_config.dqm_seq,
+                        reco_config.scram_arch,
                         reco_config.global_tag,
                         event_scenario.name
                  FROM run_primds_stream_assoc
@@ -64,7 +65,8 @@ class GetRecoConfig(DBFormatter):
             resultDict[primds]['proc_ver'] = result[7]
             resultDict[primds]['alca_skim'] = result[8]
             resultDict[primds]['dqm_seq'] = result[9]
-            resultDict[primds]['global_tag'] = result[10]
-            resultDict[primds]['scenario'] = result[11]
+            resultDict[primds]['scram_arch'] = result[10]
+            resultDict[primds]['global_tag'] = result[11]
+            resultDict[primds]['scenario'] = result[12]
 
         return resultDict

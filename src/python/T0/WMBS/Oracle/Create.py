@@ -299,15 +299,16 @@ class Create(DBCreator):
                  run_id         int            not null,
                  primds_id      int            not null,
                  do_reco        int            not null,
-                 cmssw_id       int            not null,
                  reco_split     int            not null,
                  write_reco     int            not null,
                  write_dqm      int            not null,
                  write_aod      int            not null,
                  proc_version   int            not null,
+                 cmssw_id       int,
+                 scram_arch     varchar2(255),
+                 global_tag     varchar2(255),
                  alca_skim      varchar2(1000),
                  dqm_seq        varchar2(1000),
-                 global_tag     varchar2(255),
                  primary key (run_id, primds_id)
                ) ORGANIZATION INDEX"""
 
