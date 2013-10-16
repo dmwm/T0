@@ -89,6 +89,7 @@ addDataset(tier0Config, "Default",
            scenario = "pp",
            reco_delay = 60, reco_delay_offset = 30,
            reco_version = "CMSSW_4_2_8_patch1",
+           scram_arch = "slc5_amd64_gcc462",
            default_proc_ver = 4,
            global_tag = "GlobalTag3",
            archival_node = "Node1")

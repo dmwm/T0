@@ -1345,6 +1345,9 @@ class RunConfigTest(unittest.TestCase):
 
                 self.assertEquals(recoConfig['cmssw'], "CMSSW_4_2_8_patch2",
                                   "ERROR: problem in reco configuration")
+
+                self.assertEquals(recoConfig['scram_arch'], "slc5_amd64_gcc462",
+                                  "ERROR: problem in reco configuration")
             
                 self.assertEquals(recoConfig['reco_split'], 100,
                                   "ERROR: problem in reco configuration")
@@ -1380,7 +1383,10 @@ class RunConfigTest(unittest.TestCase):
             
                 self.assertEquals(recoConfig['cmssw'], "CMSSW_4_2_8_patch3",
                                   "ERROR: problem in reco configuration")
-            
+
+                self.assertEquals(recoConfig['scram_arch'], "slc5_amd64_gcc462",
+                                  "ERROR: problem in reco configuration")
+
                 self.assertEquals(recoConfig['reco_split'], 200,
                                   "ERROR: problem in reco configuration")
             
@@ -1415,7 +1421,10 @@ class RunConfigTest(unittest.TestCase):
             
                 self.assertEquals(recoConfig['cmssw'], "CMSSW_4_2_8_patch1",
                                   "ERROR: problem in reco configuration")
-            
+
+                self.assertEquals(recoConfig['scram_arch'], "slc5_amd64_gcc462",
+                                  "ERROR: problem in reco configuration")
+
                 self.assertEquals(recoConfig['reco_split'], 2000,
                                   "ERROR: problem in reco configuration")
             
