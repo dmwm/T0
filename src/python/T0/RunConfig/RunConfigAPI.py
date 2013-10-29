@@ -655,7 +655,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                                       'DQM_SEQ' : dqmSeq,
                                       'GLOBAL_TAG' : datasetConfig.Reco.GlobalTag } )
 
-            phedexConfig = phedexConfigs.get("dataset", {})
+            phedexConfig = phedexConfigs.get(dataset, {})
 
             custodialSites = []
             nonCustodialSites = []
