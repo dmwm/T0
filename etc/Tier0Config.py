@@ -30,3 +30,7 @@ config.ErrorHandler.maxRetries = {"default" : 30,
 config.TaskArchiver.useReqMgrForCompletionCheck = False
 
 config.JobArchiver.handleInjected = False
+
+config.DBS3Upload.primaryDatasetType = "data"
+
+config.DBSInterface.primaryDatasetType = "data"
