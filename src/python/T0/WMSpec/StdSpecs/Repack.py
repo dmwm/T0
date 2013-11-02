@@ -72,6 +72,10 @@ class RepackWorkloadFactory(StdBase):
 
         for repackOutLabel, repackOutInfo in repackOutMods.items():
             self.addRepackMergeTask(repackTask, repackOutLabel)
+        
+        # setting the parameters which need to be set for all the tasks
+        # sets acquisitionEra, processingVersion, processingString
+        workload.setTaskPropertiesFromWorkload()
 
         return workload
 

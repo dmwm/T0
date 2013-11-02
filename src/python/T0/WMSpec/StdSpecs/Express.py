@@ -139,7 +139,10 @@ class ExpressWorkloadFactory(StdBase):
                                        workload.getBlockCloseMaxFiles(),
                                        workload.getBlockCloseMaxEvents(),
                                        workload.getBlockCloseMaxSize())
-
+        # setting the parameters which need to be set for all the tasks
+        # sets acquisitionEra, processingVersion, processingString
+        workload.setTaskPropertiesFromWorkload()
+        
         return workload
 
     def addExpressMergeTask(self, parentTask, parentOutputModuleName):
