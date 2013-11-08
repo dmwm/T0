@@ -749,6 +749,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                 specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/T0_CH_CERN/Tier0/override_catalog.xml?protocol=override"
                 specArguments['ValidStatus'] = "VALID"
 
+                specArguments['EnableHarvesting'] = "True"
                 specArguments['DQMUploadProxy'] = dqmUploadProxy
                 specArguments['DQMUploadUrl'] = runInfo['dqmuploadurl']
 
