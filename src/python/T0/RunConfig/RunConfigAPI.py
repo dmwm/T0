@@ -323,6 +323,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             if dataset == "Unassigned path":
                 if stream == "Express" and run in [ 210114, 210116, 210120, 210121, 210178 ]:
                     continue
+                if stream == "A" and run in [ 216120, 216125, 216130 ]:
+                    continue
 
             datasetConfig = retrieveDatasetConfig(tier0Config, dataset)
 
