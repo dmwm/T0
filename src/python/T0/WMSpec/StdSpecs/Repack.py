@@ -77,6 +77,11 @@ class RepackWorkloadFactory(StdBase):
         # sets acquisitionEra, processingVersion, processingString
         workload.setTaskPropertiesFromWorkload()
 
+        # set the LFN bases (normally done by request manager)
+        # also pass run number to add run based directories
+        workload.setLFNBase(self.mergedLFNBase, self.unmergedLFNBase,
+                            runNumber = self.runNumber)
+
         return workload
 
     def addRepackMergeTask(self, parentTask, parentOutputModuleName):
