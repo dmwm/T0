@@ -15,7 +15,6 @@ class GetRecoConfig(DBFormatter):
 
         sql = """SELECT primary_dataset.name,
                         reco_config.do_reco,
-                        cmssw_version.name,
                         reco_config.reco_split,
                         reco_config.write_reco,
                         reco_config.write_aod,
@@ -23,6 +22,7 @@ class GetRecoConfig(DBFormatter):
                         reco_config.proc_version,
                         reco_config.alca_skim,
                         reco_config.dqm_seq,
+                        cmssw_version.name,
                         reco_config.scram_arch,
                         reco_config.global_tag,
                         event_scenario.name
@@ -57,14 +57,14 @@ class GetRecoConfig(DBFormatter):
 
             resultDict[primds] = {}
             resultDict[primds]['do_reco'] = result[1]
-            resultDict[primds]['cmssw'] = result[2]
-            resultDict[primds]['reco_split'] = result[3]
-            resultDict[primds]['write_reco'] = result[4]
-            resultDict[primds]['write_aod'] = result[5]
-            resultDict[primds]['write_dqm'] = result[6]
-            resultDict[primds]['proc_ver'] = result[7]
-            resultDict[primds]['alca_skim'] = result[8]
-            resultDict[primds]['dqm_seq'] = result[9]
+            resultDict[primds]['reco_split'] = result[2]
+            resultDict[primds]['write_reco'] = result[3]
+            resultDict[primds]['write_aod'] = result[4]
+            resultDict[primds]['write_dqm'] = result[5]
+            resultDict[primds]['proc_ver'] = result[6]
+            resultDict[primds]['alca_skim'] = result[7]
+            resultDict[primds]['dqm_seq'] = result[8]
+            resultDict[primds]['cmssw'] = result[9]
             resultDict[primds]['scram_arch'] = result[10]
             resultDict[primds]['global_tag'] = result[11]
             resultDict[primds]['scenario'] = result[12]

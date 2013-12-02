@@ -71,7 +71,7 @@ class ExpressWorkloadFactory(StdBase):
         # one is direct reco from the streamer files
         # the other is conversion and then reco
         #
-        if self.frameworkVersionReco == self.frameworkVersion or self.frameworkVersionReco == None:
+        if self.recoFrameworkVersion == None or self.recoFrameworkVersion == self.frameworkVersion:
 
             expressRecoStepName = "cmsRun1"
 
@@ -107,8 +107,9 @@ class ExpressWorkloadFactory(StdBase):
             # there is only one
             conversionOutLabel = conversionOutMods.keys()[0]
 
-            # everything comin after should use the express reco CMSSW version
-            self.frameworkVersion = self.frameworkVersionReco
+            # everything coming after should use the reco CMSSW version and Scram Arch
+            self.frameworkVersion = self.recoFrameworkVersion
+            self.scramArch = self.recoScramArch
             
             # add a second step doing the reconstruction
             parentCmsswStep = expressTask.getStep("cmsRun1")
@@ -265,7 +266,7 @@ class ExpressWorkloadFactory(StdBase):
         mergeTaskCmsswHelper = mergeTaskCmssw.getTypeHelper()
         mergeTaskStageHelper = mergeTaskStageOut.getTypeHelper()
 
-        mergeTaskCmsswHelper.cmsswSetup(self.frameworkVersionReco, softwareEnvironment = "",
+        mergeTaskCmsswHelper.cmsswSetup(self.frameworkVersion, softwareEnvironment = "",
                                         scramArch = self.scramArch)
 
         mergeTaskCmsswHelper.setErrorDestinationStep(stepName = mergeTaskLogArch.name())
@@ -442,9 +443,12 @@ class ExpressWorkloadFactory(StdBase):
         specArgs = {"Scenario" : {"default" : None, "type" : str,
                                   "optional" : False, "validate" : None,
                                   "attr" : "procScenario", "null" : False},
-                    "CMSSWVersionReco" : {"default" : None, "type" : str,
+                    "RecoCMSSWVersion" : {"default" : None, "type" : str,
                                           "optional" : False, "validate" : cmsswversion,
-                                          "attr" : "frameworkVersionReco", "null" : True},
+                                          "attr" : "recoFrameworkVersion", "null" : True},
+                    "RecoScramArch" : {"default" : None, "type" : str,
+                                       "optional" : False, "validate" : None,
+                                       "attr" : "recoScramArch", "null" : True},
                     "GlobalTag" : {"default" : None, "type" : str,
                                    "optional" : False, "validate" : None,
                                    "attr" : "globalTag", "null" : False},

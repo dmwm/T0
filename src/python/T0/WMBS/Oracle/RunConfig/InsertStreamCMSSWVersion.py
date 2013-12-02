@@ -12,10 +12,10 @@ class InsertStreamCMSSWVersion(DBFormatter):
     def execute(self, binds, conn = None, transaction = False):
 
         sql = """INSERT INTO run_stream_cmssw_assoc
-                 (RUN_ID, STREAM_ID, ONLINE_VERSION, OVERRIDE_VERSION)
+                 (RUN_ID, STREAM_ID, ONLINE_VERSION)
                  SELECT :RUN,
                         (SELECT id FROM stream WHERE name = :STREAM),
-                        id, id
+                        id
                  FROM cmssw_version
                  WHERE name = :VERSION
                  AND NOT EXISTS (
