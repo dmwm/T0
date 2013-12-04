@@ -7,6 +7,8 @@ Example configuration for RunConfig unittest
 from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
+from T0.RunConfig.Tier0Config import setScramArch
+from T0.RunConfig.Tier0Config import setDefaultScramArch
 from T0.RunConfig.Tier0Config import setLFNPrefix
 from T0.RunConfig.Tier0Config import setBulkDataType
 from T0.RunConfig.Tier0Config import setBulkDataLocation
@@ -18,7 +20,6 @@ from T0.RunConfig.Tier0Config import addRepackConfig
 from T0.RunConfig.Tier0Config import addExpressConfig
 from T0.RunConfig.Tier0Config import addRegistrationConfig
 from T0.RunConfig.Tier0Config import addConversionConfig
-from T0.RunConfig.Tier0Config import addTier1Skim
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -42,14 +43,18 @@ setPromptCalibrationConfig(tier0Config,
                            dropboxHost = "webcondvm.cern.ch",
                            validationMode = True)
 
+# configure ScramArch
+setDefaultScramArch(tier0Config, "slc5_amd64_gcc462")
+setScramArch(tier0Config, "CMSSW_6_2_4", "slc5_amd64_gcc472")
+
 # setup repack and express version mappings
 repackVersionOverride = {
     }
 expressVersionOverride = {
-    "CMSSW_4_2_7" : "CMSSW_4_2_8_patch6",
+    "CMSSW_5_2_7" : "CMSSW_5_3_14",
     }
 hltmonVersionOverride = {
-    "CMSSW_4_2_7" : "CMSSW_4_2_8_patch7",
+    "CMSSW_5_2_7" : "CMSSW_5_3_8",
     }
 
 addRepackConfig(tier0Config, "Default",
@@ -74,7 +79,7 @@ addExpressConfig(tier0Config, "Express",
                  alca_producers = [ "SiStripCalZeroBias", "PromptCalibProd" ],
                  dqm_sequences = [ "@common" ],
                  global_tag = "GlobalTag1",
-                 reco_version = "CMSSW_4_2_8_patch7",
+                 reco_version = "CMSSW_6_2_4",
                  proc_ver = 2,
                  versionOverride = expressVersionOverride)
 
@@ -88,8 +93,7 @@ addExpressConfig(tier0Config, "HLTMON",
 addDataset(tier0Config, "Default",
            scenario = "pp",
            reco_delay = 60, reco_delay_offset = 30,
-           reco_version = "CMSSW_4_2_8_patch1",
-           scram_arch = "slc5_amd64_gcc462",
+           reco_version = "CMSSW_5_3_8",
            default_proc_ver = 4,
            global_tag = "GlobalTag3",
            archival_node = "Node1")
@@ -100,7 +104,7 @@ addDataset(tier0Config, "Cosmics",
            global_tag = "GlobalTag4",
            reco_split = 100,
            alca_producers = [ "Skim1", "Skim2", "Skim3" ],
-           reco_version = "CMSSW_4_2_8_patch2",
+           reco_version = "CMSSW_5_3_14",
            reco_proc_ver = 5,
            do_alca = True,
            custodial_node = "Node2",
@@ -115,7 +119,7 @@ addDataset(tier0Config, "MinimumBias",
            global_tag = "GlobalTag5",
            reco_split = 200,
            alca_producers = [],
-           reco_version = "CMSSW_4_2_8_patch3",
+           reco_version = "CMSSW_6_2_4",
            reco_proc_ver = 6,
            do_alca = False,
            custodial_node = "Node4",
@@ -125,25 +129,6 @@ addDataset(tier0Config, "MinimumBias",
            write_reco = False,
            write_aod = False,
            write_dqm = False)
-
-addTier1Skim(tier0Config,"Skim1",
-             dataTier = "RECO",
-             primaryDataset = "Cosmics",
-             cmsswVersion = "CMSSW_4_2_8_patch4",
-             processingVersion = 7,
-             configURL = "exampleurl1",
-             globalTag = "GlobalTag6",
-             twoFileRead = True)
-
-addTier1Skim(tier0Config,"Skim2",
-             dataTier = "AOD",
-             primaryDataset = "MinimumBias",
-             cmsswVersion = "CMSSW_4_2_8_patch5",
-             processingVersion = 8,
-             configURL = "exampleurl2",
-             globalTag = "GlobalTag7",
-             twoFileRead = False,
-             skimNode = "Node6")
 
 if __name__ == '__main__':
     print tier0Config

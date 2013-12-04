@@ -170,7 +170,6 @@ class Create(DBCreator):
                  run_id             int not null,
                  stream_id          int not null,
                  online_version     int not null,
-                 override_version   int not null,
                  primary key(run_id, stream_id)
                ) ORGANIZATION INDEX"""
 
@@ -246,35 +245,40 @@ class Create(DBCreator):
 
         self.create[len(self.create)] = \
             """CREATE TABLE repack_config (
-                 run_id               int not null,
-                 stream_id            int not null,
-                 proc_version         int not null,
-                 max_size_single_lumi int not null,
-                 max_size_multi_lumi  int not null,
-                 min_size             int not null,
-                 max_size             int not null,
-                 max_edm_size         int not null,
-                 max_over_size        int not null,
-                 max_events           int not null,
-                 max_files            int not null,
+                 run_id               int          not null,
+                 stream_id            int          not null,
+                 proc_version         int          not null,
+                 max_size_single_lumi int          not null,
+                 max_size_multi_lumi  int          not null,
+                 min_size             int          not null,
+                 max_size             int          not null,
+                 max_edm_size         int          not null,
+                 max_over_size        int          not null,
+                 max_events           int          not null,
+                 max_files            int          not null,
+                 cmssw_id             int          not null,
+                 scram_arch           varchar2(50) not null,
                  primary key (run_id, stream_id)
                ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE express_config (
-                 run_id         int             not null,
-                 stream_id      int             not null,
-                 proc_version   int             not null,
-                 write_tiers    varchar2(255)   not null,
-                 global_tag     varchar2(255)   not null,
-                 max_events     int             not null,
-                 max_size       int             not null,
-                 max_files      int             not null,
-                 max_latency    int             not null,
-                 block_delay    int             not null,
-                 cmssw_id       int,
-                 alca_skim      varchar2(1000),
-                 dqm_seq        varchar2(1000),
+                 run_id          int           not null,
+                 stream_id       int           not null,
+                 proc_version    int           not null,
+                 write_tiers     varchar2(255) not null,
+                 global_tag      varchar2(50)  not null,
+                 max_events      int           not null,
+                 max_size        int           not null,
+                 max_files       int           not null,
+                 max_latency     int           not null,
+                 block_delay     int           not null,
+                 cmssw_id        int           not null,
+                 scram_arch      varchar2(50)  not null,
+                 reco_cmssw_id   int,
+                 reco_scram_arch varchar2(50),
+                 alca_skim       varchar2(1000),
+                 dqm_seq         varchar2(1000),
                  primary key (run_id, stream_id)
                ) ORGANIZATION INDEX"""
 
@@ -306,8 +310,8 @@ class Create(DBCreator):
                  write_aod      int            not null,
                  proc_version   int            not null,
                  cmssw_id       int,
-                 scram_arch     varchar2(255),
-                 global_tag     varchar2(255),
+                 scram_arch     varchar2(50),
+                 global_tag     varchar2(50),
                  alca_skim      varchar2(1000),
                  dqm_seq        varchar2(1000),
                  primary key (run_id, primds_id)
@@ -322,21 +326,6 @@ class Create(DBCreator):
                  request_only   char(1)      not null,
                  priority       varchar2(10) not null,
                  primary key (run_id, primds_id, node_id)
-               ) ORGANIZATION INDEX"""
-
-        self.create[len(self.create)] = \
-            """CREATE TABLE promptskim_config (
-                 run_id          int not null,
-                 primds_id       int not null,
-                 tier_id         int not null,
-                 skim_name       varchar2(255) not null,
-                 node_id         int not null,
-                 cmssw_id        int not null,
-                 two_file_read   int not null,
-                 proc_version    int not null,
-                 global_tag      varchar2(255),
-                 config_url      varchar2(255),
-                 primary key (run_id, primds_id, tier_id, skim_name)
                ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
@@ -560,12 +549,6 @@ class Create(DBCreator):
                  REFERENCES cmssw_version(id)"""
 
         self.constraints[len(self.constraints)] = \
-            """ALTER TABLE run_stream_cmssw_assoc
-                 ADD CONSTRAINT run_str_cms_ove_ver_fk
-                 FOREIGN KEY (override_version)
-                 REFERENCES cmssw_version(id)"""
-
-        self.constraints[len(self.constraints)] = \
             """ALTER TABLE run_stream_fileset_assoc
                  ADD CONSTRAINT run_str_fil_run_id_fk
                  FOREIGN KEY (run_id)
@@ -766,36 +749,6 @@ class Create(DBCreator):
                  ADD CONSTRAINT phe_con_nod_id_fk
                  FOREIGN KEY (node_id)
                  REFERENCES storage_node(id)"""
-
-        self.constraints[len(self.constraints)] = \
-            """ALTER TABLE promptskim_config
-                 ADD CONSTRAINT pro_con_run_id_fk
-                 FOREIGN KEY (run_id)
-                 REFERENCES run(run_id)"""
-
-        self.constraints[len(self.constraints)] = \
-            """ALTER TABLE promptskim_config
-                 ADD CONSTRAINT pro_con_primds_id_fk
-                 FOREIGN KEY (primds_id)
-                 REFERENCES primary_dataset(id)"""
-
-        self.constraints[len(self.constraints)] = \
-            """ALTER TABLE promptskim_config
-                 ADD CONSTRAINT pro_con_tie_id_fk
-                 FOREIGN KEY (tier_id)
-                 REFERENCES data_tier(id)"""
-
-        self.constraints[len(self.constraints)] = \
-            """ALTER TABLE promptskim_config
-                 ADD CONSTRAINT pro_con_nod_id_fk
-                 FOREIGN KEY (node_id)
-                 REFERENCES storage_node(id)"""
-
-        self.constraints[len(self.constraints)] = \
-            """ALTER TABLE promptskim_config
-                 ADD CONSTRAINT pro_con_cms_id_fk
-                 FOREIGN KEY (cmssw_id)
-                 REFERENCES cmssw_version(id)"""
 
         self.constraints[len(self.constraints)] = \
             """ALTER TABLE workflow_monitoring

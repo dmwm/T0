@@ -80,7 +80,7 @@ class RunConfigTest(unittest.TestCase):
                                 dbinterface = myThread.dbi)
 
         insertCMSSVersionDAO = daoFactory(classname = "RunConfig.InsertCMSSWVersion")
-        insertCMSSVersionDAO.execute(binds = { 'VERSION' : "CMSSW_4_2_7" },
+        insertCMSSVersionDAO.execute(binds = { 'VERSION' : "CMSSW_5_2_7" },
                                      transaction = False)
 
         insertRunDAO = daoFactory(classname = "RunConfig.InsertRun")
@@ -105,15 +105,15 @@ class RunConfigTest(unittest.TestCase):
         insertStreamCMSSWVersionDAO = daoFactory(classname = "RunConfig.InsertStreamCMSSWVersion")
         insertStreamCMSSWVersionDAO.execute(binds = { 'RUN' : 176161,
                                                       'STREAM' : "A",
-                                                      'VERSION' : "CMSSW_4_2_7" },
+                                                      'VERSION' : "CMSSW_5_2_7" },
                                             transaction = False)
         insertStreamCMSSWVersionDAO.execute(binds = { 'RUN' : 176161,
                                                       'STREAM' : "Express",
-                                                      'VERSION' : "CMSSW_4_2_7" },
+                                                      'VERSION' : "CMSSW_5_2_7" },
                                             transaction = False)
         insertStreamCMSSWVersionDAO.execute(binds = { 'RUN' : 176161,
                                                       'STREAM' : "HLTMON",
-                                                      'VERSION' : "CMSSW_4_2_7" },
+                                                      'VERSION' : "CMSSW_5_2_7" },
                                             transaction = False)
 
         insertStreamerDAO = daoFactory(classname = "RunConfig.InsertStreamer")
@@ -1020,7 +1020,6 @@ class RunConfigTest(unittest.TestCase):
         self.getExpressConfigDAO = daoFactory(classname = "RunConfig.GetExpressConfig")
         self.getRecoConfigDAO = daoFactory(classname = "RunConfig.GetRecoConfig")
         self.getPhEDExConfigDAO = daoFactory(classname = "RunConfig.GetPhEDExConfig")
-        self.getPromptSkimConfigDAO = daoFactory(classname = "RunConfig.GetPromptSkimConfig")
         self.endRunsDAO = daoFactory(classname = "RunLumiCloseout.EndRuns")
         self.markRepackInjectedDAO = daoFactory(classname = "Tier0Feeder.MarkRepackInjected")
 
@@ -1197,8 +1196,11 @@ class RunConfigTest(unittest.TestCase):
         self.assertEqual(repackConfig['max_files'], 1111,
                          "ERROR: wrong max input files for stream A")
 
-        self.assertEqual(repackConfig['cmssw'], "CMSSW_4_2_7",
+        self.assertEqual(repackConfig['cmssw'], "CMSSW_5_2_7",
                          "ERROR: wrong CMSSW version for stream A")
+
+        self.assertEqual(repackConfig['scram_arch'], "slc5_amd64_gcc462",
+                         "ERROR: wrong ScramArch for stream A")
 
         expressConfig = self.getExpressConfigDAO.execute(176161, "Express",
                                                          transaction = False)
@@ -1206,11 +1208,17 @@ class RunConfigTest(unittest.TestCase):
         self.assertEqual(expressConfig['proc_ver'], 2,
                          "ERROR: wrong processing version for stream Express")
 
-        self.assertEqual(expressConfig['stream_cmssw'], "CMSSW_4_2_8_patch6",
-                         "ERROR: wrong stream CMSSW version for stream Express")
+        self.assertEqual(expressConfig['cmssw'], "CMSSW_5_3_14",
+                         "ERROR: wrong CMSSW version for stream Express")
 
-        self.assertEqual(expressConfig['reco_cmssw'], "CMSSW_4_2_8_patch7",
+        self.assertEqual(expressConfig['scram_arch'], "slc5_amd64_gcc462",
+                         "ERROR: wrong ScramArch for stream Express")
+
+        self.assertEqual(expressConfig['reco_cmssw'], "CMSSW_6_2_4",
                          "ERROR: wrong reco CMSSW version for stream Express")
+
+        self.assertEqual(expressConfig['reco_scram_arch'], "slc5_amd64_gcc472",
+                         "ERROR: wrong reco ScramArch for stream Express")
 
         writeTiers = expressConfig['write_tiers'].split(',')
         self.assertEqual(set(writeTiers), set([ "FEVT", "ALCARECO", "DQM" ]),
@@ -1252,11 +1260,17 @@ class RunConfigTest(unittest.TestCase):
         self.assertEqual(expressConfig['proc_ver'], 3,
                          "ERROR: wrong processing version for stream HLTMON")
 
-        self.assertEqual(expressConfig['stream_cmssw'], "CMSSW_4_2_8_patch7",
-                         "ERROR: wrong stream CMSSW version for stream HLTMON")
+        self.assertEqual(expressConfig['cmssw'], "CMSSW_5_3_8",
+                         "ERROR: wrong CMSSW version for stream HLTMON")
+
+        self.assertEqual(expressConfig['scram_arch'], "slc5_amd64_gcc462",
+                         "ERROR: wrong ScramArch for stream Express")
 
         self.assertEqual(expressConfig['reco_cmssw'], None,
                          "ERROR: wrong reco CMSSW version for stream HLTMON")
+
+        self.assertEqual(expressConfig['reco_scram_arch'], None,
+                         "ERROR: wrong reco ScramArch for stream Express")
 
         writeTiers = expressConfig['write_tiers'].split(',')
         self.assertEqual(set(writeTiers), set([ "FEVTHLTALL" ]),
@@ -1349,7 +1363,7 @@ class RunConfigTest(unittest.TestCase):
                     self.assertEquals(recoConfig['do_reco'], 0,
                                       "ERROR: problem in reco configuration")
 
-                self.assertEquals(recoConfig['cmssw'], "CMSSW_4_2_8_patch2",
+                self.assertEquals(recoConfig['cmssw'], "CMSSW_5_3_14",
                                   "ERROR: problem in reco configuration")
 
                 self.assertEquals(recoConfig['scram_arch'], "slc5_amd64_gcc462",
@@ -1387,10 +1401,10 @@ class RunConfigTest(unittest.TestCase):
                 self.assertEquals(recoConfig['do_reco'], 0,
                                   "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['cmssw'], "CMSSW_4_2_8_patch3",
+                self.assertEquals(recoConfig['cmssw'], "CMSSW_6_2_4",
                                   "ERROR: problem in reco configuration")
 
-                self.assertEquals(recoConfig['scram_arch'], "slc5_amd64_gcc462",
+                self.assertEquals(recoConfig['scram_arch'], "slc5_amd64_gcc472",
                                   "ERROR: problem in reco configuration")
 
                 self.assertEquals(recoConfig['reco_split'], 200,
@@ -1425,7 +1439,7 @@ class RunConfigTest(unittest.TestCase):
                 self.assertEquals(recoConfig['do_reco'], 0,
                                   "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['cmssw'], "CMSSW_4_2_8_patch1",
+                self.assertEquals(recoConfig['cmssw'], "CMSSW_5_3_8",
                                   "ERROR: problem in reco configuration")
 
                 self.assertEquals(recoConfig['scram_arch'], "slc5_amd64_gcc462",
@@ -1549,65 +1563,6 @@ class RunConfigTest(unittest.TestCase):
 
                 self.assertEquals(phedexConfig['T2_CH_CERN']['priority'], "high",
                                   "ERROR: problem in phedex configuration")
-
-
-        promptSkimConfigs = self.getPromptSkimConfigDAO.execute(176161, "A",
-                                                                transaction = False)
-
-        self.assertEquals(set(promptSkimConfigs.keys()), set([ "Cosmics", "MinimumBias" ]),
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(set(promptSkimConfigs['Cosmics'].keys()), set([ "RECO" ]),
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(set(promptSkimConfigs['MinimumBias'].keys()), set([ "AOD" ]),
-                          "ERROR: problem in promptskim configuration")
-
-        promptSkimConfig = promptSkimConfigs['Cosmics']['RECO']
-
-        self.assertEquals(set(promptSkimConfig.keys()), set([ "Skim1" ]),
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim1']['node'], "Node2",
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim1']['cmssw'], "CMSSW_4_2_8_patch4",
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim1']['two_file_read'], 1,
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim1']['proc_ver'], 7,
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim1']['global_tag'], "GlobalTag6",
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim1']['config_url'], "exampleurl1",
-                          "ERROR: problem in promptskim configuration")
-
-        promptSkimConfig = promptSkimConfigs['MinimumBias']['AOD']
-
-        self.assertEquals(set(promptSkimConfig.keys()), set([ "Skim2" ]),
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim2']['node'], "Node6",
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim2']['cmssw'], "CMSSW_4_2_8_patch5",
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim2']['two_file_read'], 0,
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim2']['proc_ver'], 8,
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim2']['global_tag'], "GlobalTag7",
-                          "ERROR: problem in promptskim configuration")
-
-        self.assertEquals(promptSkimConfig['Skim2']['config_url'], "exampleurl2",
-                          "ERROR: problem in promptskim configuration")
 
         #
         # check created run/stream filesets/subscriptions

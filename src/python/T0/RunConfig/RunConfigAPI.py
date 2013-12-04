@@ -174,7 +174,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         insertExpressConfigDAO = daoFactory(classname = "RunConfig.InsertExpressConfig")
         insertSpecialDatasetDAO = daoFactory(classname = "RunConfig.InsertSpecialDataset")
         insertDatasetScenarioDAO = daoFactory(classname = "RunConfig.InsertDatasetScenario")
-        updateStreamOverrideDAO = daoFactory(classname = "RunConfig.UpdateStreamOverride")
         insertStreamFilesetDAO = daoFactory(classname = "RunConfig.InsertStreamFileset")
         insertRecoReleaseConfigDAO = daoFactory(classname = "RunConfig.InsertRecoReleaseConfig")
         insertWorkflowMonitoringDAO = daoFactory(classname = "RunConfig.InsertWorkflowMonitoring")
@@ -192,7 +191,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         bindsExpressConfig = {}
         bindsSpecialDataset = {}
         bindsDatasetScenario = []
-        bindsStreamOverride = {}
         bindsStorageNode = []
         bindsPhEDExConfig = []
 
@@ -236,6 +234,13 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
         if streamConfig.ProcessingStyle == "Bulk":
 
+            streamConfig.Repack.CMSSWVersion = streamConfig.VersionOverride.get(onlineVersion, onlineVersion)
+
+            bindsCMSSWVersion.append( { 'VERSION' : streamConfig.Repack.CMSSWVersion } )
+
+            streamConfig.Repack.ScramArch = tier0Config.Global.ScramArches.get(streamConfig.Repack.CMSSWVersion,
+                                                                               tier0Config.Global.DefaultScramArch)
+
             bindsRepackConfig = { 'RUN' : run,
                                   'STREAM' : stream,
                                   'PROC_VER': streamConfig.Repack.ProcessingVersion,
@@ -246,7 +251,9 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                   'MAX_EDM_SIZE' : streamConfig.Repack.MaxEdmSize,
                                   'MAX_OVER_SIZE' : streamConfig.Repack.MaxOverSize,
                                   'MAX_EVENTS' : streamConfig.Repack.MaxInputEvents,
-                                  'MAX_FILES' : streamConfig.Repack.MaxInputFiles }
+                                  'MAX_FILES' : streamConfig.Repack.MaxInputFiles,
+                                  'CMSSW' : streamConfig.Repack.CMSSWVersion,
+                                  'SCRAM_ARCH' : streamConfig.Repack.ScramArch }
 
         elif streamConfig.ProcessingStyle == "Express":
 
@@ -297,8 +304,20 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             if len(streamConfig.Express.DqmSequences) > 0:
                 dqmSeq = ",".join(streamConfig.Express.DqmSequences)
 
-            if streamConfig.Express.CMSSWVersion != None:
-                bindsCMSSWVersion.append( { 'VERSION' : streamConfig.Express.CMSSWVersion } )
+            streamConfig.Express.CMSSWVersion = streamConfig.VersionOverride.get(onlineVersion, onlineVersion)
+
+            bindsCMSSWVersion.append( { 'VERSION' : streamConfig.Express.CMSSWVersion } )
+
+            streamConfig.Express.ScramArch = tier0Config.Global.ScramArches.get(streamConfig.Express.CMSSWVersion,
+                                                                                tier0Config.Global.DefaultScramArch)
+            
+            streamConfig.Express.RecoScramArch = None
+            if streamConfig.Express.RecoCMSSWVersion != None:
+
+                bindsCMSSWVersion.append( { 'VERSION' : streamConfig.Express.RecoCMSSWVersion } )
+
+                streamConfig.Express.RecoScramArch = tier0Config.Global.ScramArches.get(streamConfig.Express.RecoCMSSWVersion,
+                                                                                        tier0Config.Global.DefaultScramArch)
 
             bindsExpressConfig = { 'RUN' : run,
                                    'STREAM' : stream,
@@ -311,15 +330,11 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                    'MAX_LATENCY' : streamConfig.Express.MaxLatency,
                                    'BLOCK_DELAY' : streamConfig.Express.BlockCloseDelay,
                                    'CMSSW' : streamConfig.Express.CMSSWVersion,
+                                   'SCRAM_ARCH' : streamConfig.Express.ScramArch,
+                                   'RECO_CMSSW' : streamConfig.Express.RecoCMSSWVersion,
+                                   'RECO_SCRAM_ARCH' : streamConfig.Express.RecoScramArch,
                                    'ALCA_SKIM' : alcaSkim,
                                    'DQM_SEQ' : dqmSeq }
-
-        overrideVersion = streamConfig.VersionOverride.get(onlineVersion, None)
-        if overrideVersion != None:
-            bindsCMSSWVersion.append( { 'VERSION' : overrideVersion } )
-            bindsStreamOverride =  { "RUN" : run,
-                                     "STREAM" : stream,
-                                     "OVERRIDE" : overrideVersion }
 
         #
         # then configure datasets
@@ -431,6 +446,9 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             specArguments['RequestPriority'] = 0
 
+            specArguments['CMSSWVersion'] = streamConfig.Repack.CMSSWVersion
+            specArguments['ScramArch'] = streamConfig.Repack.ScramArch
+
             specArguments['ProcessingVersion'] = streamConfig.Repack.ProcessingVersion
             specArguments['MaxSizeSingleLumi'] = streamConfig.Repack.MaxSizeSingleLumi
             specArguments['MaxSizeMultiLumi'] = streamConfig.Repack.MaxSizeMultiLumi
@@ -457,7 +475,10 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['ProcessingVersion'] = streamConfig.Express.ProcessingVersion
             specArguments['Scenario'] = streamConfig.Express.Scenario
 
-            specArguments['CMSSWVersionReco'] = streamConfig.Express.CMSSWVersion
+            specArguments['CMSSWVersion'] = streamConfig.Express.CMSSWVersion
+            specArguments['ScramArch'] = streamConfig.Express.ScramArch
+            specArguments['RecoCMSSWVersion'] = streamConfig.Express.RecoCMSSWVersion
+            specArguments['RecoScramArch'] = streamConfig.Express.RecoScramArch
 
             specArguments['GlobalTag'] = streamConfig.Express.GlobalTag
             specArguments['GlobalTagTransaction'] = "Express_%d" % run
@@ -480,7 +501,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         if streamConfig.ProcessingStyle in [ 'Bulk', 'Express' ]:
             specArguments['RunNumber'] = run
             specArguments['AcquisitionEra'] = tier0Config.Global.AcquisitionEra
-            specArguments['CMSSWVersion'] = streamConfig.VersionOverride.get(onlineVersion, onlineVersion)
             specArguments['Outputs'] = outputModuleDetails
             specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/T2_CH_CERN/Tier0/override_catalog.xml?protocol=override"
             specArguments['ValidStatus'] = "VALID"
@@ -532,8 +552,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 insertSpecialDatasetDAO.execute(bindsSpecialDataset, conn = myThread.transaction.conn, transaction = True)
             if len(bindsDatasetScenario) > 0:
                 insertDatasetScenarioDAO.execute(bindsDatasetScenario, conn = myThread.transaction.conn, transaction = True)
-            if len(bindsStreamOverride) > 0:
-                updateStreamOverrideDAO.execute(bindsStreamOverride, conn = myThread.transaction.conn, transaction = True)
             if len(bindsStorageNode) > 0:
                 insertStorageNodeDAO.execute(bindsStorageNode, conn = myThread.transaction.conn, transaction = True)
             if len(bindsPhEDExConfig) > 0:
@@ -593,7 +611,6 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
     insertRecoConfigDAO = daoFactory(classname = "RunConfig.InsertRecoConfig")
     insertStorageNodeDAO = daoFactory(classname = "RunConfig.InsertStorageNode")
     insertPhEDExConfigDAO = daoFactory(classname = "RunConfig.InsertPhEDExConfig")
-    insertPromptSkimConfigDAO = daoFactory(classname = "RunConfig.InsertPromptSkimConfig")
     releasePromptRecoDAO = daoFactory(classname = "RunConfig.ReleasePromptReco")
     insertWorkflowMonitoringDAO = daoFactory(classname = "RunConfig.InsertWorkflowMonitoring")
 
@@ -601,7 +618,6 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
     bindsCMSSWVersion = []
     bindsRecoConfig = []
     bindsStorageNode = []
-    bindsPromptSkimConfig = []
     bindsReleasePromptReco = []
 
     # mark workflows as injected
@@ -656,6 +672,9 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
             if len(datasetConfig.Reco.DqmSequences) > 0:
                 dqmSeq = ",".join(datasetConfig.Reco.DqmSequences)
 
+            datasetConfig.Reco.ScramArch = tier0Config.Global.ScramArches.get(datasetConfig.Reco.CMSSWVersion,
+                                                                              tier0Config.Global.DefaultScramArch)
+
             bindsRecoConfig.append( { 'RUN' : run,
                                       'PRIMDS' : dataset,
                                       'DO_RECO' : int(datasetConfig.Reco.DoReco),
@@ -692,29 +711,6 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                                         'autoApproveSites' : autoApproveSites,
                                         'priority' : config['priority'],
                                         'primaryDataset' : dataset } )
-
-            for tier1Skim in datasetConfig.Tier1Skims:
-
-                bindsCMSSWVersion.append( { 'VERSION' : tier1Skim.CMSSWVersion } )
-
-                if tier1Skim.Node == None:
-                    tier1Skim.Node = datasetConfig.CustodialNode
-                else:
-                    bindsStorageNode.append( { 'NODE' : tier1Skim.Node } )
-
-                if tier1Skim.Node == None:
-                    raise RuntimeError, "Configured a skim without providing a skim node or a custodial site\n"
-
-                bindsPromptSkimConfig.append( { 'RUN' : run,
-                                                'PRIMDS' : dataset,
-                                                'TIER' : tier1Skim.DataTier,
-                                                'NODE' : tier1Skim.Node,
-                                                'CMSSW' : tier1Skim.CMSSWVersion,
-                                                'TWO_FILE_READ' : int(tier1Skim.TwoFileRead),
-                                                'PROC_VER' : tier1Skim.ProcessingVersion,
-                                                'SKIM_NAME' : tier1Skim.SkimName,
-                                                'GLOBAL_TAG' : tier1Skim.GlobalTag,
-                                                "CONFIG_URL" : tier1Skim.ConfigURL } )
 
             writeTiers = []
             if datasetConfig.Reco.WriteRECO:
@@ -799,8 +795,6 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
             insertRecoConfigDAO.execute(bindsRecoConfig, conn = myThread.transaction.conn, transaction = True)
         if len(bindsStorageNode) > 0:
             insertStorageNodeDAO.execute(bindsStorageNode, conn = myThread.transaction.conn, transaction = True)
-        if len(bindsPromptSkimConfig) > 0:
-            insertPromptSkimConfigDAO.execute(bindsPromptSkimConfig, conn = myThread.transaction.conn, transaction = True)
         if len(bindsReleasePromptReco) > 0:
             releasePromptRecoDAO.execute(bindsReleasePromptReco, conn = myThread.transaction.conn, transaction = True)
         for (wmbsHelper, wmSpec, fileset) in recoSpecs.values():

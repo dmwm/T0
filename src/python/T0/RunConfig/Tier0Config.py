@@ -41,7 +41,12 @@ Tier0Configuration - Global configuration object
 | |       |--> DropBoxHost - Machine where we upload the PCL conditions to
 | |       |
 | |       |--> ValidationMode - Whether or not we upload conditions for immediate use
-| |                             in PromptReco or just for validation checks.
+| |       |                     in PromptReco or just for validation checks.
+| |       |
+| |       |--> ScramArches - Dictionary containig CMSSW release and corresponding ScramArch
+| |       |
+| |       |--> DefaultScramArch - Default ScramArch if nothing else is specified for release
+| |
 | |
 | |--> Streams - Configuration parameters that belong to a particular stream
 |       |
@@ -90,9 +95,9 @@ Tier0Configuration - Global configuration object
 |             |     |
 |             |     |--> GlobalTag - Global tag used for processing
 |             |     |
-|             |     |--> CMSSWVersion - Framework version used for processing. This only
-|             |     |                   needs to be filled if we want to run the reco
-|             |     |                   step separate from the repacking step.
+|             |     |--> RecoCMSSWVersion - Framework version used for processing. This only
+|             |     |                       needs to be filled if we want to run the reco
+|             |     |                       step separate from the repacking step.
 |             |     |
 |             |     |--> AlcaSkims - List of alca skims active for this stream.
 |             |     |
@@ -163,37 +168,16 @@ Tier0Configuration - Global configuration object
             |--> DefaultProcessingVersion - Used for all output from PromptReco
             |
             |--> Reco - Configuration section to hold settings related to PromptReco
-            |     |
-            |     |--> DoReco - Whether we are running PromptReco at all
-            |     |
-            |     |--> CMSSWVersion - CMSSW used for PromptReco (mandatory if DoReco is True)
-            |     |
-            |     |--> ScramArch - ScramArch used for PromptReco (mandatory if DoReco is True)
-            |     |
-            |     |--> GlobalTag - Global tag used for PromptReco (mandatory if DoReco is True)
-            |     |
-            |     |--> AlcaSkims - List of alca skims active for this dataset
-            |     |
-            |     |--> DqmSequences - List of dqm sequences active for this dataset
-            |
-            |--> Tier1Skims - List of configuration section objects to hold Tier1 skims for
-                  |           this dataset.
                   |
-                  |--> DataTier - The tier of the input data.
+                  |--> DoReco - Whether we are running PromptReco at all
                   |
-                  |--> PrimaryDataset - The primary dataset of the input data.
+                  |--> CMSSWVersion - CMSSW used for PromptReco (mandatory if DoReco is True)
                   |
-                  |--> GlobalTag - The global tag to use with the skim.
+                  |--> GlobalTag - Global tag used for PromptReco (mandatory if DoReco is True)
                   |
-                  |--> CMSSWVersion - The framework version to use with the skim.
+                  |--> AlcaSkims - List of alca skims active for this dataset
                   |
-                  |--> SkimName - The name of the skim.  Used for generating more descriptive job names.
-                  |
-                  |--> ConfigURL - A URL to the framework config for the config.
-                  |
-                  |--> ProcessingVersion - The processing version of the skim.
-                  |
-                  |--> TwoFileRead - Bool that determines if this is a two file read skim.
+                  |--> DqmSequences - List of dqm sequences active for this dataset
 """
 
 import logging
@@ -214,9 +198,9 @@ def createTier0Config():
     tier0Config.section_("Datasets")
     tier0Config.section_("Global")
 
+    tier0Config.Global.ScramArches = {}
+
     return tier0Config
-
-
 
 def retrieveStreamConfig(config, streamName):
     """
@@ -354,14 +338,6 @@ def addDataset(config, datasetName, **settings):
     else:
         datasetConfig.Reco.CMSSWVersion = settings.get('reco_version', None)
 
-    if hasattr(datasetConfig.Reco, "ScramArch"):
-        datasetConfig.Reco.ScramArch = settings.get('scram_arch', datasetConfig.Reco.ScramArch)
-    elif datasetConfig.Reco.DoReco:
-        msg = "Tier0Config.addDataset : no scram_arch defined for dataset %s" % datasetName
-        raise RuntimeError, msg
-    else:
-        datasetConfig.Reco.ScramArch = settings.get('scram_arch', None)
-
     if hasattr(datasetConfig.Reco, "GlobalTag"):
         datasetConfig.Reco.GlobalTag = settings.get('global_tag', datasetConfig.Reco.GlobalTag)
     elif datasetConfig.Reco.DoReco:
@@ -392,6 +368,24 @@ def setAcquisitionEra(config, acquisitionEra):
     Set the acquisition era in the configuration.
     """
     config.Global.AcquisitionEra = acquisitionEra
+    return
+
+def setScramArch(config, cmssw, arch):
+    """
+    _setDefaultScramArch_
+
+    Set the default scram arch in this configuration.
+    """
+    config.Global.ScramArches[cmssw] = arch
+    return
+
+def setDefaultScramArch(config, arch):
+    """
+    _setDefaultScramArch_
+
+    Set the default scram arch in this configuration.
+    """
+    config.Global.DefaultScramArch = arch
     return
 
 def setLFNPrefix(config, prefix):
@@ -574,7 +568,7 @@ def addExpressConfig(config, streamName, **options):
     streamConfig.Express.DataTiers = data_tiers
     streamConfig.Express.GlobalTag = global_tag
 
-    streamConfig.Express.CMSSWVersion = options.get("reco_version", None)
+    streamConfig.Express.RecoCMSSWVersion = options.get("reco_version", None)
 
     streamConfig.Express.AlcaSkims = options.get("alca_producers", [])
     streamConfig.Express.DqmSequences = options.get("dqm_sequences", [])

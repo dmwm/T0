@@ -22,13 +22,11 @@ class GetRepackConfig(DBFormatter):
                         repack_config.max_over_size AS max_over_size,
                         repack_config.max_events AS max_events,
                         repack_config.max_files AS max_files,
-                        cmssw_version.name AS cmssw
+                        cmssw_version.name AS cmssw,
+                        repack_config.scram_arch AS scram_arch
                  FROM repack_config
-                 INNER JOIN run_stream_cmssw_assoc ON
-                   run_stream_cmssw_assoc.run_id = repack_config.run_id AND
-                   run_stream_cmssw_assoc.stream_id = repack_config.stream_id
                  INNER JOIN cmssw_version ON
-                   cmssw_version.id = run_stream_cmssw_assoc.override_version
+                   cmssw_version.id = repack_config.cmssw_id
                  WHERE repack_config.run_id = :RUN
                  AND repack_config.stream_id = (SELECT id FROM stream WHERE name = :STREAM)
                  """
