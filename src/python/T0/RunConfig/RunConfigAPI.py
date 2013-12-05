@@ -661,33 +661,33 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                                            'PRIMDS' : dataset,
                                            'SCENARIO' : datasetConfig.Scenario } )
 
-            if datasetConfig.Reco.CMSSWVersion != None:
-                bindsCMSSWVersion.append( { 'VERSION' : datasetConfig.Reco.CMSSWVersion } )
+            if datasetConfig.CMSSWVersion != None:
+                bindsCMSSWVersion.append( { 'VERSION' : datasetConfig.CMSSWVersion } )
 
             alcaSkim = None
-            if len(datasetConfig.Reco.AlcaSkims) > 0:
-                alcaSkim = ",".join(datasetConfig.Reco.AlcaSkims)
+            if len(datasetConfig.AlcaSkims) > 0:
+                alcaSkim = ",".join(datasetConfig.AlcaSkims)
 
             dqmSeq = None
-            if len(datasetConfig.Reco.DqmSequences) > 0:
-                dqmSeq = ",".join(datasetConfig.Reco.DqmSequences)
+            if len(datasetConfig.DqmSequences) > 0:
+                dqmSeq = ",".join(datasetConfig.DqmSequences)
 
-            datasetConfig.Reco.ScramArch = tier0Config.Global.ScramArches.get(datasetConfig.Reco.CMSSWVersion,
-                                                                              tier0Config.Global.DefaultScramArch)
+            datasetConfig.ScramArch = tier0Config.Global.ScramArches.get(datasetConfig.CMSSWVersion,
+                                                                         tier0Config.Global.DefaultScramArch)
 
             bindsRecoConfig.append( { 'RUN' : run,
                                       'PRIMDS' : dataset,
-                                      'DO_RECO' : int(datasetConfig.Reco.DoReco),
-                                      'CMSSW' : datasetConfig.Reco.CMSSWVersion,
-                                      'SCRAM_ARCH' : datasetConfig.Reco.ScramArch,
-                                      'RECO_SPLIT' : datasetConfig.Reco.EventSplit,
-                                      'WRITE_RECO' : int(datasetConfig.Reco.WriteRECO),
-                                      'WRITE_DQM' : int(datasetConfig.Reco.WriteDQM),
-                                      'WRITE_AOD' : int(datasetConfig.Reco.WriteAOD),
-                                      'PROC_VER' : datasetConfig.Reco.ProcessingVersion,
+                                      'DO_RECO' : int(datasetConfig.DoReco),
+                                      'CMSSW' : datasetConfig.CMSSWVersion,
+                                      'SCRAM_ARCH' : datasetConfig.ScramArch,
+                                      'RECO_SPLIT' : datasetConfig.RecoSplit,
+                                      'WRITE_RECO' : int(datasetConfig.WriteRECO),
+                                      'WRITE_DQM' : int(datasetConfig.WriteDQM),
+                                      'WRITE_AOD' : int(datasetConfig.WriteAOD),
+                                      'PROC_VER' : datasetConfig.ProcessingVersion,
                                       'ALCA_SKIM' : alcaSkim,
                                       'DQM_SEQ' : dqmSeq,
-                                      'GLOBAL_TAG' : datasetConfig.Reco.GlobalTag } )
+                                      'GLOBAL_TAG' : datasetConfig.GlobalTag } )
 
             phedexConfig = phedexConfigs.get(dataset, {})
 
@@ -713,16 +713,16 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                                         'primaryDataset' : dataset } )
 
             writeTiers = []
-            if datasetConfig.Reco.WriteRECO:
+            if datasetConfig.WriteRECO:
                 writeTiers.append("RECO")
-            if datasetConfig.Reco.WriteAOD:
+            if datasetConfig.WriteAOD:
                 writeTiers.append("AOD")
-            if datasetConfig.Reco.WriteDQM:
+            if datasetConfig.WriteDQM:
                 writeTiers.append("DQM")
-            if len(datasetConfig.Reco.AlcaSkims) > 0:
+            if len(datasetConfig.AlcaSkims) > 0:
                 writeTiers.append("ALCARECO")
 
-            if datasetConfig.Reco.DoReco and len(writeTiers) > 0:
+            if datasetConfig.DoReco and len(writeTiers) > 0:
 
                 #
                 # create WMSpec
@@ -734,23 +734,23 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                 specArguments['RequestPriority'] = 0
 
                 specArguments['AcquisitionEra'] = runInfo['acq_era']
-                specArguments['CMSSWVersion'] = datasetConfig.Reco.CMSSWVersion
-                specArguments['ScramArch'] = datasetConfig.Reco.ScramArch
+                specArguments['CMSSWVersion'] = datasetConfig.CMSSWVersion
+                specArguments['ScramArch'] = datasetConfig.ScramArch
 
                 specArguments['RunNumber'] = run
 
-                specArguments['StdJobSplitArgs'] = {'events_per_job' : datasetConfig.Reco.EventSplit}
+                specArguments['StdJobSplitArgs'] = {'events_per_job' : datasetConfig.RecoSplit}
 
                 specArguments['ProcessingString'] = "PromptReco"
-                specArguments['ProcessingVersion'] = datasetConfig.Reco.ProcessingVersion
+                specArguments['ProcessingVersion'] = datasetConfig.ProcessingVersion
                 specArguments['Scenario'] = datasetConfig.Scenario
-                specArguments['GlobalTag'] = datasetConfig.Reco.GlobalTag
+                specArguments['GlobalTag'] = datasetConfig.GlobalTag
 
                 specArguments['InputDataset'] = "/%s/%s-%s/RAW" % (dataset, runInfo['acq_era'], repackProcVer)
 
                 specArguments['WriteTiers'] = writeTiers
-                specArguments['AlcaSkims'] = datasetConfig.Reco.AlcaSkims
-                specArguments['DqmSequences'] = datasetConfig.Reco.DqmSequences
+                specArguments['AlcaSkims'] = datasetConfig.AlcaSkims
+                specArguments['DqmSequences'] = datasetConfig.DqmSequences
 
                 specArguments['UnmergedLFNBase'] = "%s/t0temp/%s" % (runInfo['lfn_prefix'],
                                                                      runInfo['bulk_data_type'])
