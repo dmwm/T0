@@ -309,9 +309,9 @@ class Create(DBCreator):
                  write_dqm      int            not null,
                  write_aod      int            not null,
                  proc_version   int            not null,
-                 cmssw_id       int,
-                 scram_arch     varchar2(50),
-                 global_tag     varchar2(50),
+                 cmssw_id       int            not null,
+                 scram_arch     varchar2(50)   not null,
+                 global_tag     varchar2(50)   not null,
                  alca_skim      varchar2(1000),
                  dqm_seq        varchar2(1000),
                  primary key (run_id, primds_id)

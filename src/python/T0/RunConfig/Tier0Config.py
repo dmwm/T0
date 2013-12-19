@@ -165,19 +165,17 @@ Tier0Configuration - Global configuration object
             |--> CustodialAutoApprove - Determine whether or not the custodial
             |                           subscription will be auto approved.
             |
-            |--> DefaultProcessingVersion - Used for all output from PromptReco
+            |--> ProcessingVersion - Used for all output from PromptReco
             |
-            |--> Reco - Configuration section to hold settings related to PromptReco
-                  |
-                  |--> DoReco - Whether we are running PromptReco at all
-                  |
-                  |--> CMSSWVersion - CMSSW used for PromptReco (mandatory if DoReco is True)
-                  |
-                  |--> GlobalTag - Global tag used for PromptReco (mandatory if DoReco is True)
-                  |
-                  |--> AlcaSkims - List of alca skims active for this dataset
-                  |
-                  |--> DqmSequences - List of dqm sequences active for this dataset
+            |--> DoReco - Whether we are running PromptReco at all
+            |
+            |--> CMSSWVersion - CMSSW used for PromptReco (mandatory if DoReco is True)
+            |
+            |--> GlobalTag - Global tag used for PromptReco (mandatory if DoReco is True)
+            |
+            |--> AlcaSkims - List of alca skims active for this dataset
+            |
+            |--> DqmSequences - List of dqm sequences active for this dataset
 """
 
 import logging
@@ -263,102 +261,127 @@ def addDataset(config, datasetName, **settings):
     """
     _addDataset_
 
-    Add a dataset to the configuration using settings from the Default dataset
-    to fill in any parameter not explicitly defined here. Default is doing nothing.
+    Add a dataset to the configuration using settings from either
+    explictely define parameters or using the ones from the
+    Default dataset (not all parameters can be overridden).
 
-    The following keys may be passed in to alter the default settings:
-      scenario - The scenario for this dataset.
-      global_tag - The global tag to use for reco.
-      do_reco, do_alca - Disable/enable reco and alca.
-        Default is disabled for both.
-      reco_version - Framework versions for reco and alca.
-        No defaults are specified.
-      default_proc_ver - Processing version that will be applied to all
-        processing steps.  This will be applied first and then the specific
-        processing versions will be applied.
-      reco_configuration, alca_configuration - Configurations
-        to use for reco and alca.  No defaults are specified.
-      alca_producers - The list of alca producers to be run during reco and
-        which we need to then split out during alca skimming
-      reco_split - The amount of events to process per prompt reco job  
-      custodial_node - The PhEDEx custodial node for this dataset.
-      archival_node - The PhEDEx archival node for this dataset, always CERN.
-      custodial_priority - The priority of the custodial PhEDEx subscription,
-        defaults to high.
-      custodial_auto_approve - Whether or not the custodial subscription is auto
-        approved.  Defaults to false.
+    The following keys may be passed
+      scenario - the processing scenario
+      do_reco - whether we run PromptReco at all
+      reco_delay - time to wait for PromptReco release
+      reco_delay_offset - time shift before PromptReco release
+                          when that release is locked in
+      proc_version - processing version for all outputs
+      cmssw_version - framework version
+      global_tag - the global tag to use
+      reco_split - number of events to process per reco job
+      write_reco - whether the reco jobs writes RECO output
+      write_aod - whether the reco job writes AOD output
+      write_dqm - whether the reco job writes DQM output
+      archival_node - PhEDEx archival node for this dataset
+                      (defaults to None)
+      alca_producers - alca producers for reco, be be split
+                       out into separate sampls in alca skimming
+                       (defaults to empty list)
+      dqm_sequences - dqm sequences used for reco
+                      (defaults to empty list) 
+      custodial_node - PhEDEx custodial node for this dataset
+      custodial_priority - priority for the custodial subscription
+                           (defaults to high)
+      custodial_auto_approve - auto-approve the custodial subscription
+                               (defaults to False)
     """
     datasetConfig = retrieveDatasetConfig(config, datasetName)
 
-    # scenario needs to be specified
-    if hasattr(datasetConfig, "Scenario"):
-        datasetConfig.Scenario = settings.get('scenario', datasetConfig.Scenario)
-        if datasetConfig.Scenario == None:
-            msg = "Tier0Config.addDataset : no scenario defined for dataset %s or in Default" % datasetName
-            raise RuntimeError, msg
-    else:
-        datasetConfig.Scenario = settings.get('scenario', None)
+    #
+    # first the mandatory paramters
+    #
+    # they can either be set for Default or directly for the dataset
+    #
+    if 'scenario' in settings:
+        datasetConfig.Scenario = settings['scenario']
+    elif not hasattr(datasetConfig, "Scenario"):
+        msg = "Tier0Config.addDataset : no scenario defined for dataset %s or Default" % datasetName
+        raise RuntimeError, msg
 
-    datasetConfig.section_("Reco")
-    datasetConfig.section_("Alca")
+    if 'do_reco' in settings:
+        datasetConfig.DoReco = settings['do_reco']
+    elif not hasattr(datasetConfig, "DoReco"):
+        msg = "Tier0Config.addDataset : no do_reco defined for dataset %s or Default" % datasetName
+        raise RuntimeError, msg
+
+    if 'reco_delay' in settings:
+        datasetConfig.RecoDelay = settings['reco_delay']
+    elif not hasattr(datasetConfig, "RecoDelay"):
+        msg = "Tier0Config.addDataset : no reco_delay defined for dataset %s or Default" % datasetName
+        raise RuntimeError, msg
+
+    if 'reco_delay_offset' in settings:
+        datasetConfig.RecoDelayOffset = settings['reco_delay_offset']
+    elif not hasattr(datasetConfig, "RecoDelayOffset"):
+        msg = "Tier0Config.addDataset : no reco_delay_offset defined for dataset %s or Default" % datasetName
+        raise RuntimeError, msg
+
+    if 'proc_version' in settings:
+        datasetConfig.ProcessingVersion = settings['proc_version']
+    elif not hasattr(datasetConfig, "ProcessingVersion"):
+        msg = "Tier0Config.addDataset : no proc_version defined for dataset %s or Default" % datasetName
+        raise RuntimeError, msg
+
+    if 'cmssw_version' in settings:
+        datasetConfig.CMSSWVersion = settings['cmssw_version']
+    elif not hasattr(datasetConfig, "CMSSWVersion"):
+        msg = "Tier0Config.addDataset : no cmssw_version defined for dataset %s or Default" % datasetName
+        raise RuntimeError, msg
+
+    if 'global_tag' in settings:
+        datasetConfig.GlobalTag = settings['global_tag']
+    elif not hasattr(datasetConfig, "GlobalTag"):
+        msg = "Tier0Config.addDataset : no global_tag defined for dataset %s or Default" % datasetName
+        raise RuntimeError, msg
+
+    if 'reco_split' in settings:
+        datasetConfig.RecoSplit = settings['reco_split']
+    elif not hasattr(datasetConfig, "RecoSplit"):
+        msg = "Tier0Config.addDataset : no reco_split defined for dataset %s or Default" % datasetName
+        raise RuntimeError, msg
+
+    if 'write_reco' in settings:
+        datasetConfig.WriteRECO = settings['write_reco']
+    elif not hasattr(datasetConfig, "WriteRECO"):
+        msg = "Tier0Config.addDataset : no write_reco defined for dataset %s or Default" % datasetName
+        raise RuntimeError, msg
+
+    if 'write_aod' in settings:
+        datasetConfig.WriteAOD = settings['write_aod']
+    elif not hasattr(datasetConfig, "WriteAOD"):
+        msg = "Tier0Config.addDataset : no write_aod defined for dataset %s or Default" % datasetName
+        raise RuntimeError, msg
+
+    if 'write_dqm' in settings:
+        datasetConfig.WriteDQM = settings['write_dqm']
+    elif not hasattr(datasetConfig, "WriteDQM"):
+        msg = "Tier0Config.addDataset : no write_dqm defined for dataset %s or Default" % datasetName
+        raise RuntimeError, msg
 
     #
-    # override default settings with dataset specific settings (if exists)
+    # some optional parameters, Default rules are still used
     #
-    if hasattr(datasetConfig, "RecoDelay"):
-        datasetConfig.RecoDelay = settings.get('reco_delay', datasetConfig.RecoDelay)
-    else:
-        datasetConfig.RecoDelay = settings.get('reco_delay', 48 * 3600)
-
-    if hasattr(datasetConfig, "RecoDelayOffset"):
-        datasetConfig.RecoDelayOffset = settings.get('reco_delay_offset', datasetConfig.RecoDelayOffset)
-    else:
-        datasetConfig.RecoDelayOffset = settings.get('reco_delay_offset', 30 * 60)
-
-    if datasetConfig.RecoDelayOffset > datasetConfig.RecoDelay:
-        datasetConfig.RecoDelayOffset = datasetConfig.RecoDelay
-
-    if hasattr(datasetConfig, "ProcessingVersion"):
-        datasetConfig.ProcessingVersion = settings.get('default_proc_ver', datasetConfig.ProcessingVersion)
-    else:
-        datasetConfig.ProcessingVersion = settings.get('default_proc_ver', None)
-
     if hasattr(datasetConfig, "ArchivalNode"):
         datasetConfig.ArchivalNode = settings.get('archival_node', datasetConfig.ArchivalNode)
     else:
         datasetConfig.ArchivalNode = settings.get('archival_node', None)
 
-    datasetConfig.Reco.DoReco = settings.get("do_reco", False)
-
-    if hasattr(datasetConfig.Reco, "CMSSWVersion"):
-        datasetConfig.Reco.CMSSWVersion = settings.get('reco_version', datasetConfig.Reco.CMSSWVersion)
-    elif datasetConfig.Reco.DoReco:
-        msg = "Tier0Config.addDataset : no reco_version defined for dataset %s" % datasetName
-        raise RuntimeError, msg
-    else:
-        datasetConfig.Reco.CMSSWVersion = settings.get('reco_version', None)
-
-    if hasattr(datasetConfig.Reco, "GlobalTag"):
-        datasetConfig.Reco.GlobalTag = settings.get('global_tag', datasetConfig.Reco.GlobalTag)
-    elif datasetConfig.Reco.DoReco:
-        msg = "Tier0Config.addDataset : no global_tag defined for dataset %s" % datasetName
-        raise RuntimeError, msg
-    else:
-        datasetConfig.Reco.GlobalTag = settings.get('global_tag', None)
-
-    datasetConfig.Reco.ProcessingVersion = settings.get("reco_proc_ver", datasetConfig.ProcessingVersion)
-    datasetConfig.Reco.EventSplit = settings.get("reco_split", 2000)
-    datasetConfig.Reco.WriteRECO = settings.get("write_reco", True)
-    datasetConfig.Reco.WriteDQM = settings.get("write_dqm", True)
-    datasetConfig.Reco.WriteAOD = settings.get("write_aod", True)
-    datasetConfig.Reco.AlcaSkims = settings.get("alca_producers", [])
-    datasetConfig.Reco.DqmSequences = settings.get("dqm_sequences", [])
+    #
+    # finally some parameters for which Default isn't used
+    #
+    datasetConfig.AlcaSkims = settings.get("alca_producers", [])
+    datasetConfig.DqmSequences = settings.get("dqm_sequences", [])
 
     datasetConfig.CustodialNode = settings.get("custodial_node", None)
     datasetConfig.CustodialPriority = settings.get("custodial_priority", "high")
     datasetConfig.CustodialAutoApprove = settings.get("custodial_auto_approve", False)
 
-    datasetConfig.Tier1Skims = []
     return
 
 def setAcquisitionEra(config, acquisitionEra):
