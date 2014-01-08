@@ -84,44 +84,17 @@ alcarawSplitting = 100000
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_5_0_0" : "CMSSW_5_1_2_patch1",
-    "CMSSW_5_0_1" : "CMSSW_5_1_2_patch1",
-    "CMSSW_5_1_1" : "CMSSW_5_1_2_patch1",
-    "CMSSW_5_1_2" : "CMSSW_5_1_2_patch1",
-    "CMSSW_5_2_2" : "CMSSW_5_3_14",
-    "CMSSW_5_2_3" : "CMSSW_5_3_14",
-    "CMSSW_5_2_4" : "CMSSW_5_3_14",
-    "CMSSW_5_2_5" : "CMSSW_5_3_14",
-    "CMSSW_5_2_6" : "CMSSW_5_3_14",
     "CMSSW_5_2_7" : "CMSSW_5_3_14",
     "CMSSW_5_2_8" : "CMSSW_5_3_14",
     "CMSSW_5_2_9" : "CMSSW_5_3_14",
     }
 expressVersionOverride = {
-    "CMSSW_5_0_0" : "CMSSW_5_1_2_patch1",
-    "CMSSW_5_0_1" : "CMSSW_5_1_2_patch1",
-    "CMSSW_5_1_1" : "CMSSW_5_1_2_patch1",
-    "CMSSW_5_1_2" : "CMSSW_5_1_2_patch1",
-    "CMSSW_5_2_2" : "CMSSW_5_3_14",
-    "CMSSW_5_2_3" : "CMSSW_5_3_14",
-    "CMSSW_5_2_4" : "CMSSW_5_3_14",
-    "CMSSW_5_2_5" : "CMSSW_5_3_14",
-    "CMSSW_5_2_6" : "CMSSW_5_3_14",
     "CMSSW_5_2_7" : "CMSSW_5_3_14",
     "CMSSW_5_2_8" : "CMSSW_5_3_14",
     "CMSSW_5_2_9" : "CMSSW_5_3_14",
     }
 
 hltmonVersionOverride = {
-    "CMSSW_5_0_0" : "CMSSW_5_1_2_patch1",
-    "CMSSW_5_0_1" : "CMSSW_5_1_2_patch1",
-    "CMSSW_5_1_1" : "CMSSW_5_1_2_patch1",
-    "CMSSW_5_1_2" : "CMSSW_5_1_2_patch1",
-    "CMSSW_5_2_2" : "CMSSW_5_2_7_hltpatch1",
-    "CMSSW_5_2_3" : "CMSSW_5_2_7_hltpatch1",
-    "CMSSW_5_2_4" : "CMSSW_5_2_7_hltpatch1",
-    "CMSSW_5_2_5" : "CMSSW_5_2_7_hltpatch1",
-    "CMSSW_5_2_6" : "CMSSW_5_2_7_hltpatch1",
     "CMSSW_5_2_7" : "CMSSW_5_2_7_hltpatch1",
     "CMSSW_5_2_8" : "CMSSW_5_2_7_hltpatch1",
     "CMSSW_5_2_9" : "CMSSW_5_2_7_hltpatch1",
