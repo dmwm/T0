@@ -256,6 +256,7 @@ class Create(DBCreator):
                  max_over_size        int          not null,
                  max_events           int          not null,
                  max_files            int          not null,
+                 block_delay          int          not null,
                  cmssw_id             int          not null,
                  scram_arch           varchar2(50) not null,
                  primary key (run_id, stream_id)
@@ -309,6 +310,7 @@ class Create(DBCreator):
                  write_dqm      int            not null,
                  write_aod      int            not null,
                  proc_version   int            not null,
+                 block_delay    int            not null,
                  cmssw_id       int            not null,
                  scram_arch     varchar2(50)   not null,
                  global_tag     varchar2(50)   not null,

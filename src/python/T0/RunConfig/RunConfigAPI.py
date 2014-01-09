@@ -252,6 +252,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                   'MAX_OVER_SIZE' : streamConfig.Repack.MaxOverSize,
                                   'MAX_EVENTS' : streamConfig.Repack.MaxInputEvents,
                                   'MAX_FILES' : streamConfig.Repack.MaxInputFiles,
+                                  'BLOCK_DELAY' : streamConfig.Repack.BlockCloseDelay,
                                   'CMSSW' : streamConfig.Repack.CMSSWVersion,
                                   'SCRAM_ARCH' : streamConfig.Repack.ScramArch }
 
@@ -462,6 +463,9 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                                                  runInfo['bulk_data_type'])
             specArguments['MergedLFNBase'] = "%s/%s" % (runInfo['lfn_prefix'],
                                                         runInfo['bulk_data_type'])
+
+            specArguments['BlockCloseDelay'] = streamConfig.Repack.BlockCloseDelay
+
         elif streamConfig.ProcessingStyle == "Express":
 
             taskName = "Express"
@@ -486,7 +490,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['MaxInputSize'] = streamConfig.Express.MaxInputSize
             specArguments['MaxInputFiles'] = streamConfig.Express.MaxInputFiles
             specArguments['MaxLatency'] = streamConfig.Express.MaxLatency
-            specArguments['BlockCloseDelay'] = streamConfig.Express.BlockCloseDelay
             specArguments['AlcaSkims'] = streamConfig.Express.AlcaSkims
             specArguments['DqmSequences'] = streamConfig.Express.DqmSequences
             specArguments['UnmergedLFNBase'] = "%s/t0temp/express" % runInfo['lfn_prefix']
@@ -497,6 +500,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['DQMUploadUrl'] = runInfo['dqmuploadurl']
             specArguments['StreamName'] = stream
             specArguments['SpecialDataset'] = specialDataset
+
+            specArguments['BlockCloseDelay'] = streamConfig.Express.BlockCloseDelay
 
         if streamConfig.ProcessingStyle in [ 'Bulk', 'Express' ]:
             specArguments['RunNumber'] = run
@@ -678,8 +683,6 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
             bindsRecoConfig.append( { 'RUN' : run,
                                       'PRIMDS' : dataset,
                                       'DO_RECO' : int(datasetConfig.DoReco),
-                                      'CMSSW' : datasetConfig.CMSSWVersion,
-                                      'SCRAM_ARCH' : datasetConfig.ScramArch,
                                       'RECO_SPLIT' : datasetConfig.RecoSplit,
                                       'WRITE_RECO' : int(datasetConfig.WriteRECO),
                                       'WRITE_DQM' : int(datasetConfig.WriteDQM),
@@ -687,6 +690,9 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                                       'PROC_VER' : datasetConfig.ProcessingVersion,
                                       'ALCA_SKIM' : alcaSkim,
                                       'DQM_SEQ' : dqmSeq,
+                                      'BLOCK_DELAY' : datasetConfig.BlockCloseDelay,
+                                      'CMSSW' : datasetConfig.CMSSWVersion,
+                                      'SCRAM_ARCH' : datasetConfig.ScramArch,
                                       'GLOBAL_TAG' : datasetConfig.GlobalTag } )
 
             phedexConfig = phedexConfigs.get(dataset, {})
@@ -763,6 +769,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                 specArguments['EnableHarvesting'] = "True"
                 specArguments['DQMUploadProxy'] = dqmUploadProxy
                 specArguments['DQMUploadUrl'] = runInfo['dqmuploadurl']
+
+                specArguments['BlockCloseDelay'] = datasetConfig.BlockCloseDelay
 
                 # not used, but needed by the validation
                 specArguments['CouchURL'] = "http://fakehost:1234"

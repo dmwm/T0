@@ -470,15 +470,15 @@ class ExpressWorkloadFactory(StdBase):
                     "AlcaHarvestDir" : {"default" : None, "type" : str,
                                         "optional" : False, "validate" : None,
                                         "attr" : "alcaHarvestDir", "null" : True},
-                    "BlockCloseDelay" : {"default" : None, "type" : int,
-                                         "optional" : False, "validate" : lambda x : x > 0,
-                                         "attr" : "blockCloseDelay", "null" : False},
                     "AlcaSkims" : {"default" : None, "type" : makeList,
                                    "optional" : False, "validate" : None,
                                    "attr" : "alcaSkims", "null" : False},
                     "DqmSequences" : {"default" : None, "type" : makeList,
                                       "optional" : False, "validate" : None,
                                       "attr" : "dqmSequences", "null" : False},
+                    "BlockCloseDelay" : {"default" : None, "type" : int,
+                                         "optional" : False, "validate" : lambda x : x > 0,
+                                         "attr" : "blockCloseDelay", "null" : False},
                     }
         baseArgs.update(specArgs)
         return baseArgs

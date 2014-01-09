@@ -20,6 +20,7 @@ class GetExpressConfig(DBFormatter):
                         express_config.max_size AS max_size,
                         express_config.max_files AS max_files,
                         express_config.max_latency AS max_latency,
+                        express_config.block_delay AS block_delay,
                         stream_version.name AS cmssw,
                         express_config.scram_arch AS scram_arch,
                         reco_version.name AS reco_cmssw,

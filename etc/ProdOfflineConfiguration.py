@@ -138,6 +138,7 @@ addRepackConfig(tier0Config, "Default",
                 maxOverSize = 8 * 1024 * 1024 * 1024,
                 maxInputEvents = 10 * 1000 * 1000,
                 maxInputFiles = 1000,
+                blockCloseDelay = 24 * 3600,
                 versionOverride = repackVersionOverride)
 
 addDataset(tier0Config, "Default",
@@ -150,6 +151,7 @@ addDataset(tier0Config, "Default",
            cmssw_version = defaultCMSSWVersion,
            global_tag = promptrecoGlobalTag,
            archival_node = "T0_CH_CERN",
+           blockCloseDelay = 24 * 3600,
            scenario = "pp")
 
 
