@@ -72,7 +72,12 @@ class RepackWorkloadFactory(StdBase):
 
         for repackOutLabel, repackOutInfo in repackOutMods.items():
             self.addRepackMergeTask(repackTask, repackOutLabel)
-        
+
+        workload.setBlockCloseSettings(self.blockCloseDelay,
+                                       workload.getBlockCloseMaxFiles(),
+                                       workload.getBlockCloseMaxEvents(),
+                                       workload.getBlockCloseMaxSize())
+
         # setting the parameters which need to be set for all the tasks
         # sets acquisitionEra, processingVersion, processingString
         workload.setTaskPropertiesFromWorkload()
@@ -189,6 +194,9 @@ class RepackWorkloadFactory(StdBase):
                     "GlobalTag" : {"default" : "fake", "type" : str,
                                    "optional" : True, "validate" : None,
                                    "attr" : "globalTag", "null" : False},
+                    "BlockCloseDelay" : {"default" : None, "type" : int,
+                                         "optional" : False, "validate" : lambda x : x > 0,
+                                         "attr" : "blockCloseDelay", "null" : False},
                     }
         baseArgs.update(specArgs)
         return baseArgs

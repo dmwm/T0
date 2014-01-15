@@ -111,6 +111,7 @@ addRepackConfig(tier0Config, "Default",
                 maxOverSize = 8 * 1024 * 1024 * 1024,
                 maxInputEvents = 10 * 1000 * 1000,
                 maxInputFiles = 1000,
+                blockCloseDelay = 1200,
                 versionOverride = repackVersionOverride)
 
 addDataset(tier0Config, "Default",
@@ -123,6 +124,7 @@ addDataset(tier0Config, "Default",
            cmssw_version = defaultCMSSWVersion,
            global_tag = promptrecoGlobalTag,
            archival_node = "T0_CH_CERN",
+           blockCloseDelay = 1200,
            scenario = "pp")
 
 
@@ -432,7 +434,7 @@ addExpressConfig(tier0Config, "HIExpress",
                  maxInputSize = 2 * 1024 * 1024 * 1024,
                  maxInputFiles = 500,
                  maxLatency = 5 * 23,
-                 blockCloseDelay = 3600,
+                 blockCloseDelay = 1200,
                  versionOverride = expressVersionOverride)
 
 addExpressConfig(tier0Config, "Express",
@@ -447,7 +449,7 @@ addExpressConfig(tier0Config, "Express",
                  maxInputSize = 2 * 1024 * 1024 * 1024,
                  maxInputFiles = 500,
                  maxLatency = 15 * 23,
-                 blockCloseDelay = 3600,
+                 blockCloseDelay = 1200,
                  versionOverride = expressVersionOverride)
 
 addExpressConfig(tier0Config, "ExpressCosmics",
@@ -460,7 +462,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  maxInputSize = 2 * 1024 * 1024 * 1024,
                  maxInputFiles = 500,
                  maxLatency = 15 * 23,
-                 blockCloseDelay = 3600,
+                 blockCloseDelay = 1200,
                  versionOverride = expressVersionOverride)
 
 addExpressConfig(tier0Config, "HLTMON",
@@ -472,7 +474,7 @@ addExpressConfig(tier0Config, "HLTMON",
                  maxInputSize = 2 * 1024 * 1024 * 1024,
                  maxInputFiles = 500,
                  maxLatency = 15 * 23,
-                 blockCloseDelay = 3600,
+                 blockCloseDelay = 1200,
                  versionOverride = hltmonVersionOverride)
 
 

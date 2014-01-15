@@ -22,6 +22,7 @@ class GetRecoConfig(DBFormatter):
                         reco_config.proc_version,
                         reco_config.alca_skim,
                         reco_config.dqm_seq,
+                        reco_config.block_delay,
                         cmssw_version.name,
                         reco_config.scram_arch,
                         reco_config.global_tag,
@@ -64,9 +65,10 @@ class GetRecoConfig(DBFormatter):
             resultDict[primds]['proc_ver'] = result[6]
             resultDict[primds]['alca_skim'] = result[7]
             resultDict[primds]['dqm_seq'] = result[8]
-            resultDict[primds]['cmssw'] = result[9]
-            resultDict[primds]['scram_arch'] = result[10]
-            resultDict[primds]['global_tag'] = result[11]
-            resultDict[primds]['scenario'] = result[12]
+            resultDict[primds]['block_delay'] = result[9]
+            resultDict[primds]['cmssw'] = result[10]
+            resultDict[primds]['scram_arch'] = result[11]
+            resultDict[primds]['global_tag'] = result[12]
+            resultDict[primds]['scenario'] = result[13]
 
         return resultDict

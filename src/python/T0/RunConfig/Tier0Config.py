@@ -86,6 +86,8 @@ Tier0Configuration - Global configuration object
 |             |     |--> MaxInputEvents - max input events for repack and repack merge job
 |             |     |
 |             |     |--> MaxInputFiles - max input files for repack and repack merge job
+|             |     |
+|             |     |--> BlockCloseDelay - delay to close block in WMAgent
 |             |
 |             |--> Express - Configuration section for express streams
 |             |     |
@@ -176,6 +178,8 @@ Tier0Configuration - Global configuration object
             |--> AlcaSkims - List of alca skims active for this dataset
             |
             |--> DqmSequences - List of dqm sequences active for this dataset
+            |
+            |--> BlockCloseDelay - Delay to close block in WMAgent
 """
 
 import logging
@@ -290,6 +294,7 @@ def addDataset(config, datasetName, **settings):
                            (defaults to high)
       custodial_auto_approve - auto-approve the custodial subscription
                                (defaults to False)
+      blockCloseDelay - block closing timeout in hours
     """
     datasetConfig = retrieveDatasetConfig(config, datasetName)
 
@@ -371,6 +376,11 @@ def addDataset(config, datasetName, **settings):
         datasetConfig.ArchivalNode = settings.get('archival_node', datasetConfig.ArchivalNode)
     else:
         datasetConfig.ArchivalNode = settings.get('archival_node', None)
+
+    if hasattr(datasetConfig, "BlockCloseDelay"):
+        datasetConfig.BlockCloseDelay = settings.get("blockCloseDelay", datasetConfig.BlockCloseDelay)
+    else:
+        datasetConfig.BlockCloseDelay = settings.get("blockCloseDelay", 24 * 3600)
 
     #
     # finally some parameters for which Default isn't used
@@ -553,6 +563,11 @@ def addRepackConfig(config, streamName, **options):
 
     if streamConfig.Repack.MaxOverSize > streamConfig.Repack.MaxEdmSize:
         streamConfig.Repack.MaxOverSize = streamConfig.Repack.MaxEdmSize
+
+    if hasattr(streamConfig.Repack, "BlockCloseDelay"):
+        streamConfig.Repack.BlockCloseDelay = options.get("blockCloseDelay", streamConfig.Repack.BlockCloseDelay)
+    else:
+        streamConfig.Repack.BlockCloseDelay = options.get("blockCloseDelay", 24 * 3600)
 
     return
 
