@@ -81,6 +81,8 @@ addExpressConfig(tier0Config, "Express",
                  global_tag = "GlobalTag1",
                  reco_version = "CMSSW_6_2_4",
                  proc_ver = 2,
+                 periodicHarvestInterval = 20 * 60,
+                 blockCloseDelay = 3600,
                  versionOverride = expressVersionOverride)
 
 addExpressConfig(tier0Config, "HLTMON",
@@ -88,47 +90,46 @@ addExpressConfig(tier0Config, "HLTMON",
                  data_tiers = [ "FEVTHLTALL" ],
                  global_tag = "GlobalTag2",
                  proc_ver = 3,
+                 blockCloseDelay = 7200,
                  versionOverride = hltmonVersionOverride)
 
 addDataset(tier0Config, "Default",
-           scenario = "pp",
-           reco_delay = 60, reco_delay_offset = 30,
-           reco_version = "CMSSW_5_3_8",
-           default_proc_ver = 4,
+           do_reco = False,
+           write_reco = False, write_aod = True, write_dqm = True,
+           reco_delay = 60,
+           reco_delay_offset = 30,
+           reco_split = 2000,
+           proc_version = 4,
+           cmssw_version = "CMSSW_5_3_8",
            global_tag = "GlobalTag3",
-           archival_node = "Node1")
+           archival_node = "Node1",
+           blockCloseDelay = 24 * 3600,
+           scenario = "pp")
 
 addDataset(tier0Config, "Cosmics",
-           scenario = "cosmics",
            do_reco = True,
-           global_tag = "GlobalTag4",
+           write_reco = True, write_aod = True, write_dqm = True,
            reco_split = 100,
+           proc_version = 5,
+           cmssw_version = "CMSSW_5_3_14",
+           global_tag = "GlobalTag4",
            alca_producers = [ "Skim1", "Skim2", "Skim3" ],
-           reco_version = "CMSSW_5_3_14",
-           reco_proc_ver = 5,
-           do_alca = True,
            custodial_node = "Node2",
            archival_node = "Node3",
-           write_reco = True,
-           write_aod = True,
-           write_dqm = True)
+           scenario = "cosmics")
 
 addDataset(tier0Config, "MinimumBias",
-           scenario = "pp",
-           do_reco = False,
-           global_tag = "GlobalTag5",
+           write_reco = False, write_aod = False, write_dqm = False,
            reco_split = 200,
+           proc_version = 6,
+           cmssw_version = "CMSSW_6_2_4",
+           global_tag = "GlobalTag5",
            alca_producers = [],
-           reco_version = "CMSSW_6_2_4",
-           reco_proc_ver = 6,
-           do_alca = False,
            custodial_node = "Node4",
-           archival_node = "Node5",
            custodial_priority = "normal",
            custodial_auto_approve = True,
-           write_reco = False,
-           write_aod = False,
-           write_dqm = False)
+           archival_node = "Node5",
+           scenario = "pp")
 
 if __name__ == '__main__':
     print tier0Config

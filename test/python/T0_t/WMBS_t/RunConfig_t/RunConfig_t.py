@@ -1254,6 +1254,12 @@ class RunConfigTest(unittest.TestCase):
         self.assertEqual(expressConfig['scenario'], "pp" ,
                          "ERROR: wrong scenario for stream Express")
 
+        self.assertEqual(expressConfig['dqm_interval'], 20 * 60,
+                         "ERROR: wrong dqm_interval for stream Express")
+
+        self.assertEqual(expressConfig['block_delay'], 3600,
+                         "ERROR: wrong block_delay for stream Express")
+
         expressConfig = self.getExpressConfigDAO.execute(176161, "HLTMON",
                                                          transaction = False)
 
@@ -1288,6 +1294,11 @@ class RunConfigTest(unittest.TestCase):
         self.assertEqual(expressConfig['scenario'], "cosmics" ,
                          "ERROR: wrong scenario for stream HLTMON")
 
+        self.assertEqual(expressConfig['dqm_interval'], 0,
+                         "ERROR: wrong dqm_interval for stream HLTMON")
+
+        self.assertEqual(expressConfig['block_delay'], 7200,
+                         "ERROR: wrong block_delay for stream HLTMON")
         
         recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
                                                    transaction = False)
@@ -1448,7 +1459,7 @@ class RunConfigTest(unittest.TestCase):
                 self.assertEquals(recoConfig['reco_split'], 2000,
                                   "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['write_reco'], 1,
+                self.assertEquals(recoConfig['write_reco'], 0,
                                   "ERROR: problem in reco configuration")
             
                 self.assertEquals(recoConfig['write_aod'], 1,
