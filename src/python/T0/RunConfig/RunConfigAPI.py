@@ -329,6 +329,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                    'MAX_SIZE' : streamConfig.Express.MaxInputSize,
                                    'MAX_FILES' : streamConfig.Express.MaxInputFiles,
                                    'MAX_LATENCY' : streamConfig.Express.MaxLatency,
+                                   'DQM_INTERVAL' : streamConfig.Express.PeriodicHarvestInterval,
                                    'BLOCK_DELAY' : streamConfig.Express.BlockCloseDelay,
                                    'CMSSW' : streamConfig.Express.CMSSWVersion,
                                    'SCRAM_ARCH' : streamConfig.Express.ScramArch,
@@ -500,6 +501,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['DQMUploadUrl'] = runInfo['dqmuploadurl']
             specArguments['StreamName'] = stream
             specArguments['SpecialDataset'] = specialDataset
+
+            specArguments['PeriodicHarvestInterval'] = streamConfig.Express.PeriodicHarvestInterval
 
             specArguments['BlockCloseDelay'] = streamConfig.Express.BlockCloseDelay
 

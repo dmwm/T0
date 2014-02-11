@@ -434,6 +434,7 @@ addExpressConfig(tier0Config, "HIExpress",
                  maxInputSize = 2 * 1024 * 1024 * 1024,
                  maxInputFiles = 500,
                  maxLatency = 5 * 23,
+                 periodicHarvestInterval = 20 * 60,
                  blockCloseDelay = 3600,
                  versionOverride = expressVersionOverride)
 
@@ -449,6 +450,7 @@ addExpressConfig(tier0Config, "Express",
                  maxInputSize = 2 * 1024 * 1024 * 1024,
                  maxInputFiles = 500,
                  maxLatency = 15 * 23,
+                 periodicHarvestInterval = 20 * 60,
                  blockCloseDelay = 3600,
                  versionOverride = expressVersionOverride)
 
@@ -462,6 +464,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  maxInputSize = 2 * 1024 * 1024 * 1024,
                  maxInputFiles = 500,
                  maxLatency = 15 * 23,
+                 periodicHarvestInterval = 20 * 60,
                  blockCloseDelay = 3600,
                  versionOverride = expressVersionOverride)
 
