@@ -73,6 +73,9 @@ def modifyConfiguration(config, **args):
 
     config.BossAir.pluginNames = ["LsfPlugin"]
 
+    if hasattr(config, "JobUpdater"):
+        delattr(config, "JobUpdater")
+
     if 'confdb_url' in args:
         config.section_("HLTConfDatabase")
         config.HLTConfDatabase.connectUrl = args['confdb_url']
