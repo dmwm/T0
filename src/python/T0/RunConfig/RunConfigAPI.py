@@ -510,7 +510,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['RunNumber'] = run
             specArguments['AcquisitionEra'] = tier0Config.Global.AcquisitionEra
             specArguments['Outputs'] = outputModuleDetails
-            specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/T2_CH_CERN/Tier0/override_catalog.xml?protocol=override"
+            specArguments['OverrideCatalog'] = "trivialcatalog_file:/cvmfs/cms.cern.ch/SITECONF/T2_CH_CERN/Tier0/override_catalog.xml?protocol=override"
             specArguments['ValidStatus'] = "VALID"
 
         if streamConfig.ProcessingStyle == "Bulk":
@@ -766,7 +766,6 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                 specArguments['MergedLFNBase'] = "%s/%s" % (runInfo['lfn_prefix'],
                                                             runInfo['bulk_data_type'])
 
-                specArguments['OverrideCatalog'] = "trivialcatalog_file:/afs/cern.ch/cms/SITECONF/T2_CH_CERN/Tier0/override_catalog.xml?protocol=override"
                 specArguments['ValidStatus'] = "VALID"
 
                 specArguments['EnableHarvesting'] = "True"
