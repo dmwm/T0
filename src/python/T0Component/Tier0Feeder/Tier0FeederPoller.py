@@ -53,7 +53,7 @@ class Tier0FeederPoller(BaseWorkerThread):
             if not os.path.exists(self.transferSystemBaseDir):
                 self.transferSystemBaseDir = None
 
-        self.dqmUploadProxy = config.WMBSService.proxy
+        self.dqmUploadProxy = getattr(config.Tier0Feeder, "dqmUploadProxy", None)
 
         self.localSummaryCouchDB = WMStatsWriter(config.AnalyticsDataCollector.localWMStatsURL)
 
