@@ -97,6 +97,3 @@ class AlcaHarvest(JobFactory):
                      lfn = fileInfo['lfn'])
             f.setLocation(fileInfo['location'], immediateSave = False)
             self.currentJob.addFile(f)
-
-        if 'X509_USER_PROXY' in os.environ:
-            self.currentJob['proxyPath'] = os.environ['X509_USER_PROXY']
