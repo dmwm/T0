@@ -56,6 +56,6 @@ class GetConditions(DBFormatter):
 
             if result[6] != None:
                 conditions[run]['streams'][streamid]['files'].append( { 'fileid' : result[6],
-                                                                        'pfn' : result[7] } )
+                                                                        'lfn' : result[7] } )
 
         return conditions

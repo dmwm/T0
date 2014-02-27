@@ -133,10 +133,10 @@ def uploadToDropbox(condFiles, dropboxHost, validationMode, username, password):
     completeFiles = []
     filesDict = {}
     for condFile in condFiles:
-        if condFile['pfn'] == "/no/output":
+        if condFile['lfn'] == "/no/output":
             completeFiles.append(condFile)
         else:
-            (filenamePrefix, filenameExt) = os.path.basename(condFile['pfn']).split('.')
+            (filenamePrefix, filenameExt) = os.path.basename(condFile['lfn']).split('.')
             if not filesDict.has_key(filenamePrefix):
                 filesDict[filenamePrefix] = {}
             filesDict[filenamePrefix][filenameExt] = condFile
@@ -162,50 +162,86 @@ def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationM
     """
     completeFiles = []
     files2delete = []
+    inputCopied = True
 
     filenameDB = filenamePrefix + ".db"
     filenameTXT = filenamePrefix + ".txt"
     filenameTAR = filenamePrefix + ".tar.bz2"
 
-    shutil.copy2(sqliteFile['pfn'], filenameDB)
-    files2delete.append(filenameDB)
+    eosPrefix = "root://eoscms//eos/cms"
+    sqliteFile['pfn'] = eosPrefix + sqliteFile['lfn']
+    metaFile['pfn'] = eosPrefix + metaFile['lfn']
+
+    command = "xrdcp -s -f %s %s" % (sqliteFile['pfn'], filenameDB)
+    p = subprocess.Popen(command, shell = True,
+                         stdout=subprocess.PIPE,
+                         stderr=subprocess.STDOUT)
+    output = p.communicate()[0]
+    if p.returncode > 0:
+        logging.error("Failure during copy from EOS: %s" % output)
+        logging.error("  ==> Upload failed for payload %s" % filenamePrefix)
+        inputCopied = False
+    else:
+        files2delete.append(filenameDB)
+
+    command = "xrdcp -s -f %s %s" % (metaFile['pfn'], filenameTXT)
+    p = subprocess.Popen(command, shell = True,
+                         stdout=subprocess.PIPE,
+                         stderr=subprocess.STDOUT)
+    output = p.communicate()[0]
+    if p.returncode > 0:
+        logging.error("Failure during copy from EOS: %s" % output)
+        logging.error("  ==> Upload failed for payload %s" % filenamePrefix)
+        inputCopied = False
+    else:
+        files2delete.append(filenameTXT)
 
     # select the right destination db depending
     # on whether we are in validation mode
-    fin = open(metaFile['pfn'])
-    lines = fin.readlines()
-    fin.close()
-    fout = open(filenameTXT, 'w')
-    if validationMode:
-        fout.writelines( [ line.replace('prepMetaData ', '', 1) for line in lines if 'prodMetaData ' not in line] )
-    else:
-        fout.writelines( [ line.replace('prodMetaData ', '', 1) for line in lines if 'prepMetaData ' not in line] )
-    fout.close()
-    files2delete.append(filenameTXT)
+    if inputCopied:
+        fin = open(filenameTXT)
+        lines = fin.readlines()
+        fin.close()
+        fout = open(filenameTXT, 'w')
+        if validationMode:
+            fout.writelines( [ line.replace('prepMetaData ', '', 1) for line in lines if 'prodMetaData ' not in line] )
+        else:
+            fout.writelines( [ line.replace('prodMetaData ', '', 1) for line in lines if 'prepMetaData ' not in line] )
+        fout.close()
 
-    os.chmod(filenameDB, stat.S_IREAD | stat.S_IWRITE | stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH)
-    os.chmod(filenameTXT, stat.S_IREAD | stat.S_IWRITE | stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH)
+        os.chmod(filenameDB, stat.S_IREAD | stat.S_IWRITE | stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH)
+        os.chmod(filenameTXT, stat.S_IREAD | stat.S_IWRITE | stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH)
 
-    shutil.copy2(filenameTXT, metaFile['pfn'] + ".uploaded")
+        #
+        # currently fails because cmst1 does not have permission to write on EOS
+        #
+        #command = "xrdcp -s -f %s %s" % (filenameTXT, metaFile['pfn'] + ".uploaded")
+        #p = subprocess.Popen(command, shell = True,
+        #                     stdout=subprocess.PIPE,
+        #                     stderr=subprocess.STDOUT)
+        #output = p.communicate()[0]
+        #if p.returncode > 0:
+        #    logging.error("Failure during copy to EOS: %s" % output)
+        #    logging.error("  ==> Upload failed for payload %s" % filenamePrefix)
 
-    if username == None or password == None:
-        completeFiles.append(sqliteFile)
-        completeFiles.append(metaFile)
-        logging.info("No username/password provided for DropBox upload...")
-        logging.info("  ==> Upload skipped for payload %s" % filenamePrefix)
-    else:
-        uploadStatus = True
-        try:
-            upload.uploadTier0Files([filenameDB], username, password)
-        except:
-            logging.exception("Something went wrong with the Dropbox upload...")
-
-        if uploadStatus:
+        if username == None or password == None:
             completeFiles.append(sqliteFile)
             completeFiles.append(metaFile)
-            logging.info("  ==> Upload succeeded for payload %s" % filenamePrefix)
+            logging.info("No username/password provided for DropBox upload...")
+            logging.info("  ==> Upload skipped for payload %s" % filenamePrefix)
         else:
-            logging.error("  ==> Upload failed for payload %s" % filenamePrefix)
+            uploadStatus = True
+            try:
+                upload.uploadTier0Files([filenameDB], username, password)
+            except:
+                logging.exception("Something went wrong with the Dropbox upload...")
+                
+            if uploadStatus:
+                completeFiles.append(sqliteFile)
+                completeFiles.append(metaFile)
+                logging.info("  ==> Upload succeeded for payload %s" % filenamePrefix)
+            else:
+                logging.error("  ==> Upload failed for payload %s" % filenamePrefix)
 
     for file2delete in files2delete:
         os.remove(file2delete)
