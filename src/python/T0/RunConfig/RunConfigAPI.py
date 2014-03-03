@@ -460,8 +460,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['MaxOverSize'] = streamConfig.Repack.MaxOverSize
             specArguments['MaxInputEvents'] = streamConfig.Repack.MaxInputEvents
             specArguments['MaxInputFiles'] = streamConfig.Repack.MaxInputFiles
-            specArguments['UnmergedLFNBase'] = "%s/t0temp/%s" % (runInfo['lfn_prefix'],
-                                                                 runInfo['bulk_data_type'])
+            specArguments['UnmergedLFNBase'] = "%s/unmerged/%s" % (runInfo['lfn_prefix'],
+                                                                   runInfo['bulk_data_type'])
             specArguments['MergedLFNBase'] = "%s/%s" % (runInfo['lfn_prefix'],
                                                         runInfo['bulk_data_type'])
 
@@ -493,7 +493,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['MaxLatency'] = streamConfig.Express.MaxLatency
             specArguments['AlcaSkims'] = streamConfig.Express.AlcaSkims
             specArguments['DqmSequences'] = streamConfig.Express.DqmSequences
-            specArguments['UnmergedLFNBase'] = "%s/t0temp/express" % runInfo['lfn_prefix']
+            specArguments['UnmergedLFNBase'] = "%s/unmerged/express" % runInfo['lfn_prefix']
             specArguments['MergedLFNBase'] = "%s/express" % runInfo['lfn_prefix']
             specArguments['AlcaHarvestTimeout'] = runInfo['ah_timeout']
             specArguments['AlcaHarvestDir'] = runInfo['ah_dir']
@@ -761,8 +761,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
                 specArguments['AlcaSkims'] = datasetConfig.AlcaSkims
                 specArguments['DqmSequences'] = datasetConfig.DqmSequences
 
-                specArguments['UnmergedLFNBase'] = "%s/t0temp/%s" % (runInfo['lfn_prefix'],
-                                                                     runInfo['bulk_data_type'])
+                specArguments['UnmergedLFNBase'] = "%s/unmerged/%s" % (runInfo['lfn_prefix'],
+                                                                       runInfo['bulk_data_type'])
                 specArguments['MergedLFNBase'] = "%s/%s" % (runInfo['lfn_prefix'],
                                                             runInfo['bulk_data_type'])
 
