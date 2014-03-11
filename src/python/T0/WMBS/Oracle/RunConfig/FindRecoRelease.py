@@ -15,6 +15,21 @@ class FindRecoRelease(DBFormatter):
 
     def execute(self, conn = None, transaction = False):
 
+        binds = { 'NOW' : int(time.time()) }
+
+        sql = """UPDATE ( SELECT reco_release_config.released AS released
+                          FROM reco_release_config
+                          INNER JOIN run ON
+                            run.run_id = reco_release_config.run_id
+                          WHERE checkForZeroOneState(reco_release_config.released) = 0
+                          AND run.end_time + reco_release_config.delay - reco_release_config.delay_offset < :NOW
+                          AND run.end_time > 0 ) t
+                 SET t.released = 1
+                 """
+
+        self.dbi.processData(sql, binds, conn = conn,
+                             transaction = transaction)
+
         sql = """SELECT reco_release_config.run_id,
                         primary_dataset.name,
                         reco_release_config.fileset,
@@ -30,12 +45,10 @@ class FindRecoRelease(DBFormatter):
                  INNER JOIN repack_config ON
                    repack_config.run_id = reco_release_config.run_id AND
                    repack_config.stream_id = run_primds_stream_assoc.stream_id
-                 WHERE checkForZeroState(reco_release_config.released) = 0
+                 WHERE checkForZeroOneState(reco_release_config.released) = 1
                  AND run.end_time + reco_release_config.delay < :NOW
                  AND run.end_time > 0
                  """
-
-        binds = { 'NOW' : int(time.time()) }
 
         results = self.dbi.processData(sql, binds, conn = conn,
                                        transaction = transaction)[0].fetchall()
