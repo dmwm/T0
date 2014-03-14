@@ -17,8 +17,8 @@ class InsertPromptCalibrationFile(DBFormatter):
     def execute(self, binds, conn = None, transaction = False):
 
         sql = """INSERT ALL
-                   INTO prompt_calib_file (RUN_ID, STREAM_ID, FILEID)
-                     VALUES (:RUN_ID, id, :FILEID)
+                   INTO prompt_calib_file (RUN_ID, STREAM_ID, FILEID, SUBSCRIPTION)
+                     VALUES (:RUN_ID, id, :FILEID, :SUBSCRIPTION)
                    INTO wmbs_sub_files_acquired (SUBSCRIPTION, FILEID)
                      VALUES (:SUBSCRIPTION, :FILEID)
                  SELECT id FROM stream

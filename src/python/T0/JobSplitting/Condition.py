@@ -50,10 +50,6 @@ class Condition(JobFactory):
         if len(availableFiles) == 0:
             return
 
-        # associate subscription with run/stream
-        updatePromptCalibrationDAO = daoFactory(classname = "JobSplitting.UpdatePromptCalibration")
-        updatePromptCalibrationDAO.execute(run, stream, self.subscription["id"])
-
         bindVarList = []
         for availableFile in availableFiles:
             bindVarList.append( { 'SUBSCRIPTION' : self.subscription["id"],

@@ -12,9 +12,10 @@ class InsertPromptCalibration(DBFormatter):
     def execute(self, binds, conn = None, transaction = False):
 
         sql = """INSERT INTO prompt_calib
-                 (RUN_ID, STREAM_ID)
+                 (RUN_ID, STREAM_ID, NUM_PRODUCER)
                  VALUES (:RUN,
-                         (SELECT id FROM stream WHERE name = :STREAM))
+                         (SELECT id FROM stream WHERE name = :STREAM),
+                         :NUM_PRODUCER)
                  """
 
         self.dbi.processData(sql, binds, conn = conn,
