@@ -290,17 +290,18 @@ class Create(DBCreator):
             """CREATE TABLE prompt_calib (
                  run_id        int not null,
                  stream_id     int not null,
+                 num_producer  int not null,
                  finished      int default 0 not null,
-                 subscription  int,
                  primary key (run_id, stream_id)
                ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
             """CREATE TABLE prompt_calib_file (
-                 fileid      int not null,
-                 run_id      int not null,
-                 stream_id   int not null,
-                 primary key (fileid, run_id, stream_id)
+                 run_id        int not null,
+                 stream_id     int not null,
+                 fileid        int not null,
+                 subscription  int not null,
+                 primary key (run_id, stream_id, fileid)
                ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
@@ -704,20 +705,6 @@ class Create(DBCreator):
                  REFERENCES stream(id)"""
 
         self.constraints[len(self.constraints)] = \
-            """ALTER TABLE prompt_calib
-                 ADD CONSTRAINT pro_cal_sub_fk
-                 FOREIGN KEY (subscription)
-                 REFERENCES wmbs_subscription(id)
-                 ON DELETE CASCADE"""
-
-        self.constraints[len(self.constraints)] = \
-            """ALTER TABLE prompt_calib_file
-                 ADD CONSTRAINT pro_cal_fil_fil_id_fk
-                 FOREIGN KEY (fileid)
-                 REFERENCES wmbs_file_details(id)
-                 ON DELETE CASCADE"""
-
-        self.constraints[len(self.constraints)] = \
             """ALTER TABLE prompt_calib_file
                  ADD CONSTRAINT pro_cal_fil_run_id_fk
                  FOREIGN KEY (run_id)
@@ -728,6 +715,20 @@ class Create(DBCreator):
                  ADD CONSTRAINT pro_cal_fil_str_id_fk
                  FOREIGN KEY (stream_id)
                  REFERENCES stream(id)"""
+
+        self.constraints[len(self.constraints)] = \
+            """ALTER TABLE prompt_calib_file
+                 ADD CONSTRAINT pro_cal_fil_fil_id_fk
+                 FOREIGN KEY (fileid)
+                 REFERENCES wmbs_file_details(id)
+                 ON DELETE CASCADE"""
+
+        self.constraints[len(self.constraints)] = \
+            """ALTER TABLE prompt_calib_file
+                 ADD CONSTRAINT pro_cal_fil_sub_fk
+                 FOREIGN KEY (subscription)
+                 REFERENCES wmbs_subscription(id)
+                 ON DELETE CASCADE"""
 
         self.constraints[len(self.constraints)] = \
             """ALTER TABLE reco_config

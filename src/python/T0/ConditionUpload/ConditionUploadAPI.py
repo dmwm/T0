@@ -65,44 +65,46 @@ def uploadConditions(username, password):
         dropboxHost = conditions[run]['dropboxHost']
         validationMode = conditions[run]['validationMode']
 
-        for streamid in conditions[run]['streams'].keys():
+        for streamid, uploadableFiles in conditions[run]['streams'].items():
 
-            subscription = conditions[run]['streams'][streamid]['subscription']
+            if len(uploadableFiles) > 0:
 
-            # always upload files (if there are any to upload)
-            condFiles = []
-            uploadedFiles = []
-            for condFile in conditions[run]['streams'][streamid]['files']:
-                condFiles.append(condFile)
-            if len(condFiles) > 0:
-                uploadedFiles = uploadToDropbox(condFiles, dropboxHost, validationMode, username, password)
+                uploadedFiles = uploadToDropbox(uploadableFiles, dropboxHost, validationMode, username, password)
 
-            bindVarList = []
-            for uploadedFile in uploadedFiles:
-                bindVarList.append( { 'FILEID' : uploadedFile['fileid'],
-                                      'SUBSCRIPTION' : subscription } )
+                if len(uploadedFiles) > 0:
 
-            # need a transaction here so we don't have files in
-            # state acquired and complete at the same time
-            if len(bindVarList) > 0:
-                try:
-                    myThread.transaction.begin()
-                    completeFilesDAO.execute(bindVarList, transaction = True)
-                except:
-                    myThread.transaction.rollback()
-                    raise
-                else:
-                    myThread.transaction.commit()
+                    bindVarList = []
+                    for uploadedFile in uploadedFiles:
+                        bindVarList.append( { 'FILEID' : uploadedFile['fileid'],
+                                              'SUBSCRIPTION' : uploadedFile['subscription'] } )
 
-            # only finish and advance to next run if all run/stream finished
-            # that means fileset for subscription closed and no available/acquired files
-            if subscription != None:
-                finished = isPromptCalibrationFinishedDAO.execute(subscription)
-                if finished:
+                    # need a transaction here so we don't have files in
+                    # state acquired and complete at the same time
+                    try:
+                        myThread.transaction.begin()
+                        completeFilesDAO.execute(bindVarList, transaction = True)
+                    except:
+                        myThread.transaction.rollback()
+                        raise
+                    else:
+                        myThread.transaction.commit()
+
+                    # check if all files for run/stream uploaded (that means only complete
+                    # files for same number of subscriptions as number of producers)
                     markPromptCalibrationFinishedDAO.execute(run, streamid, transaction = False)
+
                 else:
+                    # upload failed
                     advanceToNextRun = False
+
             else:
+                # no files available for upload yet
+                advanceToNextRun = False
+
+        # check if all streams for run finished
+        if advanceToNextRun:
+            finished = isPromptCalibrationFinishedDAO.execute(run, transaction = False)
+            if not finished:
                 advanceToNextRun = False
 
         # check for timeout, but only if there is a next run

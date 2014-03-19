@@ -297,9 +297,15 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                                   'primaryDataset' : specialDataset } )
                     alcaSkim = ",".join(streamConfig.Express.AlcaSkims)
 
-                    if "PromptCalibProd" in streamConfig.Express.AlcaSkims:
+                    numPromptCalibProd = 0
+                    for producer in streamConfig.Express.AlcaSkims:
+                        if producer.startswith("PromptCalibProd"):
+                            numPromptCalibProd += 1
+
+                    if numPromptCalibProd > 0:
                         bindsPromptCalibration = { 'RUN' : run,
-                                                   'STREAM' : stream }
+                                                   'STREAM' : stream,
+                                                   'NUM_PRODUCER' : numPromptCalibProd }
 
             dqmSeq = None
             if len(streamConfig.Express.DqmSequences) > 0:
