@@ -593,7 +593,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         pass
     return
 
-def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy = None):
+def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
     """
     _releasePromptReco_
 

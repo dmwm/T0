@@ -188,10 +188,11 @@ class Create(DBCreator):
             """CREATE TABLE reco_release_config (
                  run_id         int not null,
                  primds_id      int not null,
+                 in_datasvc     int default 0 not null,
+                 released       int default 0 not null,
                  fileset        int not null,
                  delay          int not null,
                  delay_offset   int not null,
-                 released       int default 0 not null,
                  primary key(run_id, primds_id),
                  constraint rec_rel_con_fil_uq unique(fileset)
                    using index
@@ -266,6 +267,7 @@ class Create(DBCreator):
             """CREATE TABLE express_config (
                  run_id          int           not null,
                  stream_id       int           not null,
+                 in_datasvc      int           default 0 not null,
                  proc_version    int           not null,
                  write_tiers     varchar2(255) not null,
                  global_tag      varchar2(50)  not null,
@@ -305,6 +307,7 @@ class Create(DBCreator):
             """CREATE TABLE reco_config (
                  run_id         int            not null,
                  primds_id      int            not null,
+                 in_datasvc     int            default 0 not null,
                  do_reco        int            not null,
                  reco_split     int            not null,
                  write_reco     int            not null,
@@ -424,7 +427,10 @@ class Create(DBCreator):
             """CREATE INDEX idx_run_primds_stream_1 ON run_primds_stream_assoc (run_id, stream_id)"""
 
         self.indexes[len(self.indexes)] = \
-            """CREATE INDEX idx_reco_release_config_2 ON reco_release_config (checkForZeroState(released))"""
+            """CREATE INDEX idx_reco_release_config_2 ON reco_release_config (checkForZeroOneState(in_datasvc))"""
+
+        self.indexes[len(self.indexes)] = \
+            """CREATE INDEX idx_reco_release_config_3 ON reco_release_config (checkForZeroOneState(released))"""
 
         self.indexes[len(self.indexes)] = \
             """CREATE INDEX idx_lumi_section_closed_1 ON lumi_section_closed (checkForZeroState(close_time))"""
@@ -440,6 +446,12 @@ class Create(DBCreator):
 
         self.indexes[len(self.indexes)] = \
             """CREATE INDEX idx_prompt_calib_1 ON prompt_calib (checkForZeroState(finished))"""
+
+        self.indexes[len(self.indexes)] = \
+            """CREATE INDEX idx_express_config_1 ON express_config (checkForZeroState(in_datasvc))"""
+
+        self.indexes[len(self.indexes)] = \
+            """CREATE INDEX idx_reco_config_1 ON reco_config (checkForZeroState(in_datasvc))"""
 
         self.indexes[len(self.indexes)] = \
             """CREATE INDEX idx_workflow_monitoring_0 ON workflow_monitoring (checkForZeroState(tracked))"""

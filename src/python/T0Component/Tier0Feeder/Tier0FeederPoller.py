@@ -80,6 +80,17 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                  dbinterface = dbInterfacePopConLog)
                 self.getExpressReadyRunsDAO = daoFactoryPopConLog(classname = "Tier0Feeder.GetExpressReadyRuns")
 
+        self.haveT0DataSvc = False
+        if hasattr(config, "T0DataSvcDatabase"):
+            t0datasvcConnectUrl = getattr(config.T0DataSvcDatabase, "connectUrl", None)
+            if t0datasvcConnectUrl != None:
+                self.haveT0DataSvc = True
+                dbFactoryT0DataSvc = DBFactory(logging, dburl = t0datasvcConnectUrl, options = {})
+                dbInterfaceT0DataSvc = dbFactoryT0DataSvc.connect()
+                self.daoFactoryT0DataSvc = DAOFactory(package = "T0.WMBS",
+                                                      logger = logging,
+                                                      dbinterface = dbInterfaceT0DataSvc)
+
         return
 
     def algorithm(self, parameters = None):
@@ -179,7 +190,15 @@ class Tier0FeederPoller(BaseWorkerThread):
         #
         RunConfigAPI.releasePromptReco(tier0Config,
                                        self.specDirectory,
-				       self.dqmUploadProxy)
+                                       self.dqmUploadProxy)
+
+        #
+        # insert express and reco configs into Tier0 Data Service
+        #
+        if self.haveT0DataSvc:
+            self.updateExpressConfigsT0DataSvc()
+            self.updateRecoConfigsT0DataSvc()
+            self.updateRecoReleaseConfigsT0DataSvc()
 
         #
         # check if all datasets for a stream had their PromptReco released
@@ -361,6 +380,109 @@ class Tier0FeederPoller(BaseWorkerThread):
                 logging.error("ERROR: %s" % error)
 
             markStreamersFinishedDAO.execute(streamers, transaction = False)
+
+        return
+
+    def updateExpressConfigsT0DataSvc(self):
+        """
+        _updateExpressConfigsT0DataSvc_
+
+        Check which express_config rows are missing
+        in the Tier0 Data Service and insert them,
+        also record that fact in t0ast
+
+        """
+        getExpressConfigsDAO = self.daoFactory(classname = "T0DataSvc.GetExpressConfigs")
+        expressConfigs = getExpressConfigsDAO.execute(transaction = False)
+
+        if len(expressConfigs) > 0:
+
+            bindsInsert = []
+            bindsUpdate = []
+            for config in expressConfigs:
+                bindsInsert.append( { 'RUN' : config['run'],
+                                      'STREAM' : config['stream'],
+                                      'CMSSW' : config['cmssw'],
+                                      'SCRAM_ARCH' : config['scram_arch'],
+                                      'RECO_CMSSW' : config['reco_cmssw'],
+                                      'RECO_SCRAM_ARCH' : config['reco_scram_arch'],
+                                      'GLOBAL_TAG' : config['global_tag'],
+                                      'SCENARIO' : config['scenario'] } )
+                bindsUpdate.append( { 'RUN' : config['run'],
+                                      'STREAM' : config['stream'] } )
+
+            insertExpressConfigsDAO = self.daoFactoryT0DataSvc(classname = "T0DataSvc.InsertExpressConfigs")
+            insertExpressConfigsDAO.execute(binds = bindsInsert, transaction = False)
+
+            updateExpressConfigsDAO = self.daoFactory(classname = "T0DataSvc.UpdateExpressConfigs")
+            updateExpressConfigsDAO.execute(binds = bindsUpdate, transaction = False)
+
+        return
+
+    def updateRecoConfigsT0DataSvc(self):
+        """
+        _updateRecoConfigsT0DataSvc_
+
+        Check which reco_config rows are missing
+        in the Tier0 Data Service and insert them,
+        also record that fact in t0ast
+
+        """
+        getRecoConfigsDAO = self.daoFactory(classname = "T0DataSvc.GetRecoConfigs")
+        recoConfigs = getRecoConfigsDAO.execute(transaction = False)
+
+        if len(recoConfigs) > 0:
+
+            bindsInsert = []
+            bindsUpdate = []
+            for config in recoConfigs:
+                bindsInsert.append( { 'RUN' : config['run'],
+                                      'PRIMDS' : config['primds'],
+                                      'CMSSW' : config['cmssw'],
+                                      'SCRAM_ARCH' : config['scram_arch'],
+                                      'GLOBAL_TAG' : config['global_tag'],
+                                      'SCENARIO' : config['scenario'] } )
+                bindsUpdate.append( { 'RUN' : config['run'],
+                                      'PRIMDS' : config['primds'] } )
+
+            insertRecoConfigsDAO = self.daoFactoryT0DataSvc(classname = "T0DataSvc.InsertRecoConfigs")
+            insertRecoConfigsDAO.execute(binds = bindsInsert, transaction = False)
+
+            updateRecoConfigsDAO = self.daoFactory(classname = "T0DataSvc.UpdateRecoConfigs")
+            updateRecoConfigsDAO.execute(binds = bindsUpdate, transaction = False)
+
+        return
+
+    def updateRecoReleaseConfigsT0DataSvc(self):
+        """
+        _updateRecoReleaseConfigsT0DataSvc_
+
+        Insert information about PromptReco release into the Tier0 Data Service.
+        Already aggregate by run, if one primary dataset is released that means
+        the whole run is considered released.
+
+        """
+        getRecoReleaseConfigsDAO = self.daoFactory(classname = "T0DataSvc.GetRecoReleaseConfigs")
+        recoReleaseConfigs = getRecoReleaseConfigsDAO.execute(transaction = False)
+
+        if len(recoReleaseConfigs) > 0:
+
+            bindsInsert = []
+            bindsUpdate = []
+            for config in recoReleaseConfigs:
+
+                locked = int(config['released'] > 0)
+
+                bindsInsert.append( { 'RUN' : config['run'],
+                                      'LOCKED' : locked } )
+                bindsUpdate.append( { 'RUN' : config['run'],
+                                      'IN_DATASVC' : locked + 1 } )
+
+            insertRecoReleaseConfigsDAO = self.daoFactoryT0DataSvc(classname = "T0DataSvc.InsertRecoReleaseConfigs")
+            insertRecoReleaseConfigsDAO.execute(binds = bindsInsert, transaction = False)
+
+            updateRecoReleaseConfigsDAO = self.daoFactory(classname = "T0DataSvc.UpdateRecoReleaseConfigs")
+            updateRecoReleaseConfigsDAO.execute(binds = bindsUpdate, transaction = False)
 
         return
 
