@@ -754,7 +754,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
 
                 specArguments['RunNumber'] = run
 
-                specArguments['StdJobSplitArgs'] = {'events_per_job' : datasetConfig.RecoSplit}
+                specArguments['SplittingAlgo'] = "EventBased"
+                specArguments['EventsPerJob'] = datasetConfig.RecoSplit
 
                 specArguments['ProcessingString'] = "PromptReco"
                 specArguments['ProcessingVersion'] = datasetConfig.ProcessingVersion
