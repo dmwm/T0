@@ -450,7 +450,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             taskName = "Repack"
             workflowName = "Repack_Run%d_Stream%s" % (run, stream)
 
-            specArguments = RepackWorkloadFactory.getTestArguments()
+            specArguments = {}
 
             specArguments['RequestPriority'] = 0
 
@@ -478,7 +478,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             taskName = "Express"
             workflowName = "Express_Run%d_Stream%s" % (run, stream)
 
-            specArguments = ExpressWorkloadFactory.getTestArguments()
+            specArguments = {}
 
             specArguments['RequestPriority'] = 0
 
@@ -744,7 +744,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 #
                 taskName = "Reco"
                 workflowName = "PromptReco_Run%d_%s" % (run, dataset)
-                specArguments = PromptRecoWorkloadFactory.getTestArguments()
+
+                specArguments = {}
 
                 specArguments['RequestPriority'] = 0
 
