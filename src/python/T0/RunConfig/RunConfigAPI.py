@@ -452,6 +452,14 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             specArguments = {}
 
+            specArguments['Group'] = "unknown"
+            specArguments['Requestor'] = "unknown"
+            specArguments['RequestorDN'] = "unknown"
+
+            specArguments['TimePerEvent'] = 1
+            specArguments['SizePerEvent'] = 200
+            specArguments['Memory'] = 1000
+
             specArguments['RequestPriority'] = 0
 
             specArguments['CMSSWVersion'] = streamConfig.Repack.CMSSWVersion
@@ -479,6 +487,14 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             workflowName = "Express_Run%d_Stream%s" % (run, stream)
 
             specArguments = {}
+
+            specArguments['Group'] = "unknown"
+            specArguments['Requestor'] = "unknown"
+            specArguments['RequestorDN'] = "unknown"
+
+            specArguments['TimePerEvent'] = 12
+            specArguments['SizePerEvent'] = 512
+            specArguments['Memory'] = 1800
 
             specArguments['RequestPriority'] = 0
 
@@ -746,6 +762,14 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 workflowName = "PromptReco_Run%d_%s" % (run, dataset)
 
                 specArguments = {}
+
+                specArguments['Group'] = "unknown"
+                specArguments['Requestor'] = "unknown"
+                specArguments['RequestorDN'] = "unknown"
+
+                specArguments['TimePerEvent'] = 12
+                specArguments['SizePerEvent'] = 512
+                specArguments['Memory'] = 1800
 
                 specArguments['RequestPriority'] = 0
 
