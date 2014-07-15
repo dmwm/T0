@@ -326,13 +326,12 @@ class Create(DBCreator):
 
         self.create[len(self.create)] = \
             """CREATE TABLE phedex_config (
-                 run_id         int          not null,
-                 primds_id      int          not null,
-                 node_id        int          not null,
-                 custodial      int          not null,
-                 request_only   char(1)      not null,
-                 priority       varchar2(10) not null,
-                 primary key (run_id, primds_id, node_id)
+                 run_id           int not null,
+                 primds_id        int not null,
+                 archival_node_id int,
+                 tape_node_id     int,
+                 disk_node_id     int,
+                 primary key (run_id, primds_id)
                ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
@@ -762,8 +761,20 @@ class Create(DBCreator):
 
         self.constraints[len(self.constraints)] = \
             """ALTER TABLE phedex_config
-                 ADD CONSTRAINT phe_con_nod_id_fk
-                 FOREIGN KEY (node_id)
+                 ADD CONSTRAINT phe_con_arc_nod_id_fk
+                 FOREIGN KEY (archival_node_id)
+                 REFERENCES storage_node(id)"""
+
+        self.constraints[len(self.constraints)] = \
+            """ALTER TABLE phedex_config
+                 ADD CONSTRAINT phe_con_tap_nod_id_fk
+                 FOREIGN KEY (tape_node_id)
+                 REFERENCES storage_node(id)"""
+
+        self.constraints[len(self.constraints)] = \
+            """ALTER TABLE phedex_config
+                 ADD CONSTRAINT phe_con_dis_nod_id_fk
+                 FOREIGN KEY (disk_node_id)
                  REFERENCES storage_node(id)"""
 
         self.constraints[len(self.constraints)] = \

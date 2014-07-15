@@ -160,14 +160,11 @@ Tier0Configuration - Global configuration object
             |--> RecoDelayOffset - Time before PromptReco is released for which
             |                      settings are locked in and reco looks released
             |
-            |--> CustodialNode - The custodial PhEDEx storage node for this dataset
-            |
             |--> ArchivalNode - The archival PhEDEx node (should always be CERN T0)
             |
-            |--> CustodialPriority - The priority of the custodial subscription
+            |--> TapeNode - The tape PhEDEx node (should be T1 _MSS)
             |
-            |--> CustodialAutoApprove - Determine whether or not the custodial
-            |                           subscription will be auto approved.
+            |--> DiskNode - The disk PhEDEx node (should be T1 _Disk)
             |
             |--> ProcessingVersion - Used for all output from PromptReco
             |
@@ -371,14 +368,14 @@ def addDataset(config, datasetName, **settings):
         msg = "Tier0Config.addDataset : no write_dqm defined for dataset %s or Default" % datasetName
         raise RuntimeError, msg
 
-    #
-    # some optional parameters, Default rules are still used
-    #
     if hasattr(datasetConfig, "ArchivalNode"):
         datasetConfig.ArchivalNode = settings.get('archival_node', datasetConfig.ArchivalNode)
     else:
         datasetConfig.ArchivalNode = settings.get('archival_node', None)
 
+    #
+    # optional parameter, Default rule is still used
+    #
     if hasattr(datasetConfig, "BlockCloseDelay"):
         datasetConfig.BlockCloseDelay = settings.get("blockCloseDelay", datasetConfig.BlockCloseDelay)
     else:
@@ -390,9 +387,8 @@ def addDataset(config, datasetName, **settings):
     datasetConfig.AlcaSkims = settings.get("alca_producers", [])
     datasetConfig.DqmSequences = settings.get("dqm_sequences", [])
 
-    datasetConfig.CustodialNode = settings.get("custodial_node", None)
-    datasetConfig.CustodialPriority = settings.get("custodial_priority", "high")
-    datasetConfig.CustodialAutoApprove = settings.get("custodial_auto_approve", False)
+    datasetConfig.TapeNode = settings.get("tape_node", None)
+    datasetConfig.DiskNode = settings.get("disk_node", None)
 
     return
 
@@ -570,6 +566,9 @@ def addRepackConfig(config, streamName, **options):
         streamConfig.Repack.BlockCloseDelay = options.get("blockCloseDelay", streamConfig.Repack.BlockCloseDelay)
     else:
         streamConfig.Repack.BlockCloseDelay = options.get("blockCloseDelay", 24 * 3600)
+
+    streamConfig.Repack.TapeNodes = options.get("tapeNodes", [])
+    streamConfig.Repack.DiskNodes = options.get("diskNodes", [])
 
     return
 

@@ -114,8 +114,9 @@ addDataset(tier0Config, "Cosmics",
            cmssw_version = "CMSSW_5_3_14",
            global_tag = "GlobalTag4",
            alca_producers = [ "Skim1", "Skim2", "Skim3" ],
-           custodial_node = "Node2",
-           archival_node = "Node3",
+           archival_node = "Node2",
+           tape_node = "Node3",
+           disk_node = "Node4",
            scenario = "cosmics")
 
 addDataset(tier0Config, "MinimumBias",
@@ -125,9 +126,6 @@ addDataset(tier0Config, "MinimumBias",
            cmssw_version = "CMSSW_6_2_4",
            global_tag = "GlobalTag5",
            alca_producers = [],
-           custodial_node = "Node4",
-           custodial_priority = "normal",
-           custodial_auto_approve = True,
            archival_node = "Node5",
            scenario = "pp")
 
