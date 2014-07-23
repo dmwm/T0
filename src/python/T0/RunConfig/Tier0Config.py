@@ -179,6 +179,8 @@ Tier0Configuration - Global configuration object
             |--> DqmSequences - List of dqm sequences active for this dataset
             |
             |--> BlockCloseDelay - Delay to close block in WMAgent
+            |
+            |--> SiteWhitelist - Site whitelist for PromptReco
 """
 
 import logging
@@ -380,6 +382,11 @@ def addDataset(config, datasetName, **settings):
         datasetConfig.BlockCloseDelay = settings.get("blockCloseDelay", datasetConfig.BlockCloseDelay)
     else:
         datasetConfig.BlockCloseDelay = settings.get("blockCloseDelay", 24 * 3600)
+
+    if hasattr(datasetConfig, "SiteWhitelist"):
+        datasetConfig.SiteWhitelist = settings.get("siteWhitelist", datasetConfig.SiteWhitelist)
+    else:
+        datasetConfig.SiteWhitelist = settings.get("siteWhitelist", [ "T2_CH_CERN_T0" ])
 
     #
     # finally some parameters for which Default isn't used
