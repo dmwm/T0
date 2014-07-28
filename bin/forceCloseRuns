@@ -1,0 +1,205 @@
+#!/usr/bin/env python
+"""
+__DiagnoseActiveRuns__
+
+Check a given run and look
+for problems in the input streamer data,
+e.g. incomplete data for lumis, EoLS/EoR missing records
+"""
+
+import logging
+import os
+import sys
+import traceback
+import time
+
+from optparse import OptionParser
+
+from WMCore.Configuration import loadConfigurationFile
+from WMCore.DAOFactory import DAOFactory
+from WMCore.Database.DBFactory import DBFactory
+from WMCore.Database.Transaction import Transaction
+
+
+def forceCloseRun(run, writeChange):
+    """
+    _forceCloseRun_
+
+    First collect information on
+      - highest lumi in run
+      - number of files for each run/stream and
+        lumis in the 1 to highest lumi range
+
+    If writeChange is True, end run and fill consistency
+    check information so that the run will close out
+    """
+    # Setup everything, first the configuration
+    if "WMAGENT_CONFIG" not in os.environ:
+        logging.error("WMAGENT_CONFIG is not in the environment. Exiting.")
+        return 1
+
+    wmat0Config = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
+    t0astConnectUrl = wmat0Config.CoreDatabase.connectUrl
+
+    # Get all the DAO factories and DB interfaces
+    dbFactory = DBFactory(logging, dburl = t0astConnectUrl, options = {})
+    dbInterface = dbFactory.connect()
+    daoFactory = DAOFactory(package = "T0.WMBS",
+                            logger = logging,
+                            dbinterface = dbInterface)
+
+    # Start the checks
+    highLumi = dbInterface.processData("""
+                                       SELECT MAX(lumi_section.lumi_id)
+                                       FROM lumi_section
+                                       WHERE run_id = :RUN
+                                       """,
+                                       binds = { 'RUN' : run },
+                                       transaction = False)[0].fetchall()[0][0]
+
+    if highLumi == None:
+        logging.error("There is no data for this run !")
+        return 1
+
+    highLumi = int(highLumi) 
+
+    logging.info("Highest lumi for run %d is %d" % (run, highLumi))
+
+    results = dbInterface.processData("""
+                                      SELECT stream.name
+                                      FROM streamer
+                                      INNER JOIN stream ON
+                                        stream.id = streamer.stream_id
+                                      WHERE streamer.run_id = :RUN
+                                      GROUP BY stream.name
+                                      """,
+                                      binds = { 'RUN' : run },
+                                      transaction = False)[0].fetchall()
+
+    streams = []
+    for result in results:
+        streams.append(result[0])
+
+    streamLumiCountDict = {}
+    for stream in streams:
+
+        streamLumiCountDict[stream] = {}
+        for lumi in range(1, highLumi+1):
+            streamLumiCountDict[stream][lumi] = 0
+
+        results = dbInterface.processData("""
+                                          SELECT streamer.lumi_id, COUNT(*)
+                                          FROM streamer
+                                          WHERE streamer.run_id = :RUN
+                                          AND streamer.stream_id = (SELECT id FROM stream WHERE name = :STREAM)
+                                          GROUP BY streamer.lumi_id
+                                          """,
+                                          binds = { 'RUN' : run, 'STREAM' : stream },
+                                          transaction = False)[0].fetchall()
+
+        for result in results:
+            lumi = int(result[0])
+            count = int(result[1])
+            streamLumiCountDict[stream][lumi] = count
+
+        for lumi, count in sorted(streamLumiCountDict[stream].items()):
+            if writeChange:
+                logging.debug("Have %d files for run %d, stream %s and lumi %d" % (count, run, stream, lumi))
+            else:
+                logging.info("Have %d files for run %d, stream %s and lumi %d" % (count, run, stream, lumi))
+
+    if writeChange:
+
+        insertLumiDAO = daoFactory(classname = "RunConfig.InsertLumiSection")
+        insertClosedLumiDAO = daoFactory(classname = "RunLumiCloseout.InsertClosedLumi")
+        endRunsDAO = daoFactory(classname = "RunLumiCloseout.EndRuns")
+
+        lumis = []
+        for lumi in range(1, highLumi+1):
+            lumis.append(  { 'RUN' : run,
+                             'LUMI' : lumi } )
+
+        closedLumis = []
+        for stream in streamLumiCountDict.keys():
+            for lumi, count in streamLumiCountDict[stream].items():
+                closedLumis.append( { 'RUN' : run,
+                                      'STREAM' : stream,
+                                      'LUMI' : lumi,
+                                      'FILECOUNT' : count,
+                                      'INSERT_TIME' : int(time.time()),
+                                      'CLOSE_TIME' : int(time.time()) } )
+
+        endedRun = { 'RUN' : run,
+                     'LUMICOUNT' : highLumi,
+                     'END_TIME' : int(time.time()) }
+
+        trans = None
+        try:
+            # Wrap it in a transaction since it is a delicate operation
+            trans = Transaction(dbinterface = dbInterface)
+            trans.begin()
+
+            # insert lumi records
+            insertLumiDAO.execute(binds = lumis, conn = trans.conn, transaction = True)
+
+            # insert closed lumi records
+            insertClosedLumiDAO.execute(binds = closedLumis, conn = trans.conn, transaction = True)
+
+            # end run
+            endRunsDAO.execute(binds = endedRun, conn = trans.conn, transaction = True)
+
+            # Everything went well, commit it
+            trans.commit()
+            print "Done with the changes, run %s should close soon." % run
+            return 0
+        except Exception, ex:
+            if trans:
+                # In case of error, rollback and close connection
+                trans.rollbackForError()
+            logging.error("Failed to make changes:\n %s" % str(ex))
+            logging.error(traceback.format_exc())
+            return 1
+
+    return
+
+def main():
+    """
+    _main_
+
+    Parse the options and check the requested run
+    """
+    usage = "Usage: %prog [options]"
+    parser = OptionParser(usage = usage)
+    parser.add_option("--run", action = "append", metavar="RUN",
+                      dest="runs", help="run to force close (multiple possible)")
+    parser.add_option("--writeChange", action = "store_true", default = False,
+                      dest = "writeChange", help = "Actually commits to database")
+    parser.add_option("-v", "--verbose", action = "store_true", default = False,
+                      dest = "verbose", help = "Prints DEBUG logging statements")
+    parser.add_option("-s", "--silent", action = "store_true", default = False,
+                      dest = "silent", help = "Suppress any logging statements below ERROR level")
+    (options, args) = parser.parse_args()
+
+    if options.verbose and options.silent:
+        print "Conflicting options: silent and verbose. Exiting."
+        return 1
+    loggingLevel = logging.INFO
+    if options.silent:
+        loggingLevel = logging.ERROR
+    if options.verbose:
+        loggingLevel = logging.DEBUG
+    logging.basicConfig(level = loggingLevel)
+    logging.debug("Set verbose console output.")
+
+    if not options.runs:
+        logging.error("Need to provide run input option. Exiting.")
+        return 1
+
+    for run in options.runs:
+        logging.info("About to force close run %s" % run)
+        forceCloseRun(int(run), options.writeChange)
+
+    return
+
+if __name__ == '__main__':
+    sys.exit(main())
