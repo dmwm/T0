@@ -98,7 +98,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
             insertDatasetTriggerDAO.execute(bindsDatasetTrigger, conn = myThread.transaction.conn, transaction = True)
         except:
             myThread.transaction.rollback()
-            raise
+            raise RuntimeError("Problem in configureRun() database transaction !")
         else:
             myThread.transaction.commit()
 
@@ -120,7 +120,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
             updateRunDAO.execute(bindsUpdateRun, conn = myThread.transaction.conn, transaction = True)
         except:
             myThread.transaction.rollback()
-            raise
+            raise RuntimeError("Problem in configureRun() database transaction !")
         else:
             myThread.transaction.commit()
 
@@ -155,6 +155,12 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
     # treat centralDAQ or miniDAQ runs (have an HLT key) different from local runs
     #
     if runInfo['hltkey'] != None:
+
+        # consistency check to make sure stream exists and has datasets defined
+        getStreamDatasetsDAO = daoFactory(classname = "RunConfig.GetStreamDatasets")
+        datasets = getStreamDatasetsDAO.execute(run, stream, transaction = False)
+        if len(datasets) == 0:
+            raise RuntimeError("Stream is not defined in HLT menu or has no datasets !")
 
         # streams not explicitely configured are repacked
         if stream not in tier0Config.Streams.dictionary_().keys():
@@ -605,7 +611,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 markWorkflowsInjectedDAO.execute([workflowName], injected = True, conn = myThread.transaction.conn, transaction = True)
         except:
             myThread.transaction.rollback()
-            raise
+            raise RuntimeError("Problem in configureRunStream() database transaction !"))
         else:
             myThread.transaction.commit()
 
@@ -846,7 +852,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
             markWorkflowsInjectedDAO.execute(recoSpecs.keys(), injected = True, conn = myThread.transaction.conn, transaction = True)
     except:
         myThread.transaction.rollback()
-        raise
+        raise RuntimeError("Problem in releasePromptReco() database transaction !")
     else:
         myThread.transaction.commit()
 
