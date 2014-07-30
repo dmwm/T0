@@ -1503,76 +1503,46 @@ class RunConfigTest(unittest.TestCase):
 
             if primds == "Cosmics":
 
-                self.assertEquals(set(phedexConfig.keys()), set([ "Node2", "Node3" ]),
+                self.assertEquals(phedexConfig['archival_node'], "Node2",
                                   "ERROR: problem in phedex configuration")
 
-                self.assertEquals(phedexConfig['Node2']['custodial'], 1,
+                self.assertEquals(phedexConfig['tape_node'], "Node3",
                                   "ERROR: problem in phedex configuration")
 
-                self.assertEquals(phedexConfig['Node2']['request_only'], "y",
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node2']['priority'], "high",
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node3']['custodial'], 1,
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node3']['request_only'], "n",
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node3']['priority'], "high",
+                self.assertEquals(phedexConfig['disk_node'], "Node4",
                                   "ERROR: problem in phedex configuration")
 
             elif primds == "MinimumBias":
 
-                self.assertEquals(set(phedexConfig.keys()), set([ "Node4", "Node5" ]),
+                self.assertEquals(phedexConfig['archival_node'], "Node5",
                                   "ERROR: problem in phedex configuration")
 
-                self.assertEquals(phedexConfig['Node4']['custodial'], 1,
+                self.assertEquals(phedexConfig['tape_node'], None,
                                   "ERROR: problem in phedex configuration")
 
-                self.assertEquals(phedexConfig['Node4']['request_only'], "n",
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node4']['priority'], "normal",
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node5']['custodial'], 1,
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node5']['request_only'], "n",
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node5']['priority'], "normal",
+                self.assertEquals(phedexConfig['disk_node'], None,
                                   "ERROR: problem in phedex configuration")
 
             elif primds in datasetsStreamA:
 
-                self.assertEquals(set(phedexConfig.keys()), set([ "Node1" ]),
+                self.assertEquals(phedexConfig['archival_node'], "Node1",
                                   "ERROR: problem in phedex configuration")
 
-                self.assertEquals(phedexConfig['Node1']['custodial'], 1,
+                self.assertEquals(phedexConfig['tape_node'], None,
                                   "ERROR: problem in phedex configuration")
 
-                self.assertEquals(phedexConfig['Node1']['request_only'], "n",
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['Node1']['priority'], "high",
+                self.assertEquals(phedexConfig['disk_node'], None,
                                   "ERROR: problem in phedex configuration")
 
             else:
 
-                self.assertEquals(set(phedexConfig.keys()), set([ "T2_CH_CERN" ]),
+                self.assertEquals(phedexConfig['archival_node'], None,
                                   "ERROR: problem in phedex configuration")
 
-                self.assertEquals(phedexConfig['T2_CH_CERN']['custodial'], 1,
+                self.assertEquals(phedexConfig['tape_node'], None,
                                   "ERROR: problem in phedex configuration")
 
-                self.assertEquals(phedexConfig['T2_CH_CERN']['request_only'], "n",
-                                  "ERROR: problem in phedex configuration")
-
-                self.assertEquals(phedexConfig['T2_CH_CERN']['priority'], "high",
+                self.assertEquals(phedexConfig['disk_node'], "T2_CH_CERN",
                                   "ERROR: problem in phedex configuration")
 
         #
