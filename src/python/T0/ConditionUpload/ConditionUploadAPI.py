@@ -18,7 +18,7 @@ from T0.ConditionUpload import upload
 from WMCore.DAOFactory import DAOFactory
 
 
-def uploadConditions(username, password):
+def uploadConditions(username, password, serviceCert, serviceKey):
     """
     _uploadConditions_
 
@@ -69,7 +69,8 @@ def uploadConditions(username, password):
 
             if len(uploadableFiles) > 0:
 
-                uploadedFiles = uploadToDropbox(uploadableFiles, dropboxHost, validationMode, username, password)
+                uploadedFiles = uploadToDropbox(uploadableFiles, dropboxHost, validationMode,
+                                                username, password, serviceCert, serviceKey)
 
                 if len(uploadedFiles) > 0:
 
@@ -118,7 +119,8 @@ def uploadConditions(username, password):
 
     return
 
-def uploadToDropbox(condFiles, dropboxHost, validationMode, username, password):
+def uploadToDropbox(condFiles, dropboxHost, validationMode,
+                    username, password, serviceCert, serviceKey):
     """
     _uploadToDropbox_
 
@@ -150,11 +152,12 @@ def uploadToDropbox(condFiles, dropboxHost, validationMode, username, password):
 
         completeFiles.extend( uploadPayload(filenamePrefix, sqliteFile, metaFile,
                                             dropboxHost, validationMode,
-                                            username, password) )
+                                            username, password,
+                                            serviceCert, serviceKey) )
 
     return completeFiles
 
-def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationMode, username, password):
+def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationMode, username, password, serviceCert, serviceKey):
     """
     _uploadPayload_
 
@@ -214,36 +217,45 @@ def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationM
         os.chmod(filenameDB, stat.S_IREAD | stat.S_IWRITE | stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH)
         os.chmod(filenameTXT, stat.S_IREAD | stat.S_IWRITE | stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH)
 
-        #
-        # currently fails because cmst1 does not have permission to write on EOS
-        #
-        #command = "xrdcp -s -f %s %s" % (filenameTXT, metaFile['pfn'] + ".uploaded")
-        #p = subprocess.Popen(command, shell = True,
-        #                     stdout=subprocess.PIPE,
-        #                     stderr=subprocess.STDOUT)
-        #output = p.communicate()[0]
-        #if p.returncode > 0:
-        #    logging.error("Failure during copy to EOS: %s" % output)
-        #    logging.error("  ==> Upload failed for payload %s" % filenamePrefix)
-
         if username == None or password == None:
             completeFiles.append(sqliteFile)
             completeFiles.append(metaFile)
             logging.info("No username/password provided for DropBox upload...")
             logging.info("  ==> Upload skipped for payload %s" % filenamePrefix)
+        elif serviceCert == None or serviceKey == None:
+            completeFiles.append(sqliteFile)
+            completeFiles.append(metaFile)
+            logging.info("No service cert/key provided to access EOS for upload record...")
+            logging.info("  ==> Upload skipped for payload %s" % filenamePrefix)
         else:
-            uploadStatus = True
-            try:
-                upload.uploadTier0Files([filenameDB], username, password)
-            except:
-                logging.exception("Something went wrong with the Dropbox upload...")
-                
-            if uploadStatus:
-                completeFiles.append(sqliteFile)
-                completeFiles.append(metaFile)
-                logging.info("  ==> Upload succeeded for payload %s" % filenamePrefix)
-            else:
+            # needed by the PCL monitoring to know whether we uploaded to prod or validation
+            command = "export X509_USER_CERT=%s\n" % serviceCert
+            command += "export X509_USER_KEY=%s\n" % serviceKey
+            command += "xrdcp -s -f %s %s" % (filenameTXT, metaFile['pfn'] + ".uploaded")
+            p = subprocess.Popen(command, shell = True,
+                                 stdin=subprocess.PIPE,
+                                 stdout=subprocess.PIPE,
+                                 stderr=subprocess.STDOUT)
+            output = p.communicate()[0]
+            if p.returncode > 0:
+                logging.error("Failure during copy of .uploaded file to EOS: %s" % output)
                 logging.error("  ==> Upload failed for payload %s" % filenamePrefix)
+            else:
+                uploadStatus = True
+                try:
+                    # normally I would want to evanluate the return code here
+                    # as long as the dropbox resturns errors for non-fixable
+                    # problems, I cannot do that though (would retry forever)
+                    upload.uploadTier0Files([filenameDB], username, password)
+                except:
+                    logging.exception("Something went wrong with the Dropbox upload...")
+                
+                if uploadStatus:
+                    completeFiles.append(sqliteFile)
+                    completeFiles.append(metaFile)
+                    logging.info("  ==> Upload succeeded for payload %s" % filenamePrefix)
+                else:
+                    logging.error("  ==> Upload failed for payload %s" % filenamePrefix)
 
     for file2delete in files2delete:
         os.remove(file2delete)
