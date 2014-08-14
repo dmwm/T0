@@ -144,9 +144,6 @@ class Repack(JobFactory):
             if lumiSizeTotal > self.maxSizeSingleLumi or \
                    lumiEventsTotal > self.maxInputEvents:
 
-                splitLumis.append( { 'SUB' : self.subscription["id"],
-                                     'LUMI' : lumi } )
-
                 # repack what we have to preserve order
                 if len(jobStreamerList) > 0:
                     self.createJob(jobStreamerList)
@@ -154,6 +151,7 @@ class Repack(JobFactory):
                     jobEventsTotal = 0
                     jobStreamerList = []
 
+                createdMultipleJobs = False
                 while len(lumiStreamerList) > 0:
 
                     eventsTotal = 0
@@ -181,6 +179,13 @@ class Repack(JobFactory):
 
                     for streamer in streamerList:
                         lumiStreamerList.remove(streamer)
+
+                    if len(lumiStreamerList) > 0:
+                        createdMultipleJobs = True
+
+                if createdMultipleJobs:
+                    splitLumis.append( { 'SUB' : self.subscription["id"],
+                                         'LUMI' : lumi } )
 
             # lumi is smaller than split limits
             # check if it can be combined with previous lumi(s)
