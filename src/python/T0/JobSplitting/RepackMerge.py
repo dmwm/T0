@@ -30,10 +30,13 @@ class RepackMerge(JobFactory):
         """
         # extract some global scheduling parameters
         self.jobNamePrefix = kwargs.get('jobNamePrefix', "RepackMerge")
+
         self.minInputSize = kwargs['minInputSize']
         self.maxInputSize = kwargs['maxInputSize']
+
         self.maxInputEvents = kwargs['maxInputEvents']
         self.maxInputFiles = kwargs['maxInputFiles']
+
         self.maxEdmSize = kwargs['maxEdmSize']
         self.maxOverSize = kwargs['maxOverSize']
 
@@ -149,7 +152,8 @@ class RepackMerge(JobFactory):
             #
             # => split up lumi and merge individual parts
             #
-            if lumiSizeTotal > self.maxEdmSize:
+            if lumiSizeTotal > self.maxEdmSize or \
+                    lumiEventsTotal > self.maxInputEvents:
 
                 # merge what we have to preserve order
                 if len(jobFileList) > 0:
@@ -171,13 +175,16 @@ class RepackMerge(JobFactory):
                             eventsTotal = fileInfo['events']
                             sizeTotal = fileInfo['filesize']
                             fileList.append(fileInfo)
+
                         # otherwise calculate new totals and check if to use file
                         else:
+
                             newEventsTotal = eventsTotal + fileInfo['events']
                             newSizeTotal = sizeTotal + fileInfo['filesize']
 
                             if newSizeTotal <= self.maxEdmSize and \
                                    newEventsTotal <= self.maxInputEvents:
+
                                 eventsTotal = newEventsTotal
                                 sizeTotal = newSizeTotal
                                 fileList.append(fileInfo)
@@ -187,9 +194,8 @@ class RepackMerge(JobFactory):
                     for fileInfo in fileList:
                         lumiFileList.remove(fileInfo)
 
-            elif lumiSizeTotal >= self.maxInputSize or \
-                     lumiEventsTotal >= self.maxInputEvents or \
-                     lumiInputFiles >= self.maxInputFiles:
+            elif lumiSizeTotal > self.maxInputSize or \
+                     lumiInputFiles > self.maxInputFiles:
 
                 # merge what we have to preserve order
                 if len(jobFileList) > 0:

@@ -29,8 +29,10 @@ class Repack(JobFactory):
         """
         # extract some global scheduling parameters
         self.jobNamePrefix = kwargs.get('jobNamePrefix', "Repack")
+
         self.maxSizeSingleLumi = kwargs['maxSizeSingleLumi']
         self.maxSizeMultiLumi = kwargs['maxSizeMultiLumi']
+
         self.maxInputEvents = kwargs['maxInputEvents']
         self.maxInputFiles = kwargs['maxInputFiles']
 
@@ -164,6 +166,7 @@ class Repack(JobFactory):
                             eventsTotal = streamer['events']
                             sizeTotal = streamer['filesize']
                             streamerList.append(streamer)
+
                         # otherwise calculate new totals and check if to use streamer
                         else:
                             newEventsTotal = eventsTotal + streamer['events']
@@ -171,6 +174,7 @@ class Repack(JobFactory):
 
                             if newSizeTotal <= self.maxSizeSingleLumi and \
                                    newEventsTotal <= self.maxInputEvents:
+
                                 eventsTotal = newEventsTotal
                                 sizeTotal = newSizeTotal
                                 streamerList.append(streamer)
