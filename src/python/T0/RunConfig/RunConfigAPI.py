@@ -399,7 +399,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                     nonCustodialSites.append(datasetConfig.DiskNode)
                     autoApproveSites.append(datasetConfig.DiskNode)
 
-                if len(custodialSites) > 0:
+                if len(custodialSites) > 0 or len(nonCustodialSites) > 0:
                     subscriptions.append( { 'custodialSites' : custodialSites,
                                             'custodialSubType' : "Replica",
                                             'nonCustodialSites' : nonCustodialSites,
@@ -407,6 +407,29 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                             'priority' : "high",
                                             'primaryDataset' : dataset,
                                             'dataTier' : "RAW" } )
+
+                #
+                # set subscriptions for error dataset
+                #
+                custodialSites = []
+                nonCustodialSites = []
+                autoApproveSites = []
+                if datasetConfig.ArchivalNode != None:
+                    custodialSites.append(datasetConfig.ArchivalNode)
+                    autoApproveSites.append(datasetConfig.ArchivalNode)
+                if datasetConfig.ArchivalNode != expressPhEDExInjectNode:
+                    nonCustodialSites.append(expressPhEDExInjectNode)
+                    autoApproveSites.append(expressPhEDExInjectNode)
+
+                if len(custodialSites) > 0 or len(nonCustodialSites) > 0:
+                    subscriptions.append( { 'custodialSites' : custodialSites,
+                                            'custodialSubType' : "Replica",
+                                            'nonCustodialSites' : nonCustodialSites,
+                                            'autoApproveSites' : autoApproveSites,
+                                            'priority' : "high",
+                                            'primaryDataset' : "%s-Error" % dataset,
+                                            'dataTier' : "RAW" } )
+
 
             elif streamConfig.ProcessingStyle == "Express":
 
