@@ -239,8 +239,8 @@ def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationM
             output = p.communicate()[0]
             if p.returncode > 0:
                 logging.error("Failure during copy of .uploaded file to EOS: %s" % output)
-                logging.error("  ==> Upload failed for payload %s" % filenamePrefix)
-            else:
+                #logging.error("  ==> Upload failed for payload %s" % filenamePrefix)
+            if True:
                 uploadStatus = True
                 try:
                     # normally I would want to evanluate the return code here
