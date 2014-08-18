@@ -257,7 +257,7 @@ class RepackMerge(JobFactory):
                     jobSizeTotal = lumiSizeTotal
                     jobEventsTotal = lumiEventsTotal
                     jobInputFiles = lumiInputFiles
-                    jobFileList = [lumiFileList]
+                    jobFileList = lumiFileList
 
         # finish out leftovers if we are in closeout
         if len(jobFileList) > 0 and not filesetOpen:
