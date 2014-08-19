@@ -18,7 +18,7 @@ from T0.ConditionUpload import upload
 from WMCore.DAOFactory import DAOFactory
 
 
-def uploadConditions(username, password, serviceCert, serviceKey):
+def uploadConditions(username, password, serviceProxy):
     """
     _uploadConditions_
 
@@ -70,7 +70,7 @@ def uploadConditions(username, password, serviceCert, serviceKey):
             if len(uploadableFiles) > 0:
 
                 uploadedFiles = uploadToDropbox(uploadableFiles, dropboxHost, validationMode,
-                                                username, password, serviceCert, serviceKey)
+                                                username, password, serviceProxy)
 
                 if len(uploadedFiles) > 0:
 
@@ -120,7 +120,7 @@ def uploadConditions(username, password, serviceCert, serviceKey):
     return
 
 def uploadToDropbox(condFiles, dropboxHost, validationMode,
-                    username, password, serviceCert, serviceKey):
+                    username, password, serviceProxy):
     """
     _uploadToDropbox_
 
@@ -153,11 +153,11 @@ def uploadToDropbox(condFiles, dropboxHost, validationMode,
         completeFiles.extend( uploadPayload(filenamePrefix, sqliteFile, metaFile,
                                             dropboxHost, validationMode,
                                             username, password,
-                                            serviceCert, serviceKey) )
+                                            serviceProxy) )
 
     return completeFiles
 
-def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationMode, username, password, serviceCert, serviceKey):
+def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationMode, username, password, serviceProxy):
     """
     _uploadPayload_
 
@@ -222,15 +222,14 @@ def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationM
             completeFiles.append(metaFile)
             logging.info("No username/password provided for DropBox upload...")
             logging.info("  ==> Upload skipped for payload %s" % filenamePrefix)
-        elif serviceCert == None or serviceKey == None:
+        elif serviceProxy == None:
             completeFiles.append(sqliteFile)
             completeFiles.append(metaFile)
-            logging.info("No service cert/key provided to access EOS for upload record...")
+            logging.info("No service proxy provided to access EOS for uploaded record...")
             logging.info("  ==> Upload skipped for payload %s" % filenamePrefix)
         else:
             # needed by the PCL monitoring to know whether we uploaded to prod or validation
-            command = "export X509_USER_CERT=%s\n" % serviceCert
-            command += "export X509_USER_KEY=%s\n" % serviceKey
+            command = "export X509_USER_PROXY=%s\n" % serviceProxy
             command += "xrdcp -s -f %s %s" % (filenameTXT, metaFile['pfn'] + ".uploaded")
             p = subprocess.Popen(command, shell = True,
                                  stdin=subprocess.PIPE,
@@ -239,13 +238,13 @@ def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationM
             output = p.communicate()[0]
             if p.returncode > 0:
                 logging.error("Failure during copy of .uploaded file to EOS: %s" % output)
-                #logging.error("  ==> Upload failed for payload %s" % filenamePrefix)
-            if True:
+                logging.error("  ==> Upload failed for payload %s" % filenamePrefix)
+            else:
                 uploadStatus = True
                 try:
-                    # normally I would want to evanluate the return code here
-                    # as long as the dropbox resturns errors for non-fixable
-                    # problems, I cannot do that though (would retry forever)
+                    # normally I would want to evanluate the return code here,
+                    # but as long as the dropbox resturns errors for non-fixable
+                    # problems, I cannot do that (would retry forever)
                     upload.uploadTier0Files([filenameDB], username, password)
                 except:
                     logging.exception("Something went wrong with the Dropbox upload...")

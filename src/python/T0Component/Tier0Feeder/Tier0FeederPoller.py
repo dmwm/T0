@@ -54,8 +54,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                 self.transferSystemBaseDir = None
 
         self.dqmUploadProxy = getattr(config.Tier0Feeder, "dqmUploadProxy", None)
-        self.serviceCert = getattr(config.Tier0Feeder, "serviceCert", None)
-        self.serviceKey = getattr(config.Tier0Feeder, "serviceKey", None)
+        self.serviceProxy = getattr(config.Tier0Feeder, "serviceProxy", None)
 
         self.localSummaryCouchDB = WMStatsWriter(config.AnalyticsDataCollector.localWMStatsURL)
 
@@ -257,8 +256,7 @@ class Tier0FeederPoller(BaseWorkerThread):
         #
         # upload PCL conditions to DropBox
         #
-        ConditionUploadAPI.uploadConditions(self.dropboxuser, self.dropboxpass,
-                                            self.serviceCert, self.serviceKey)
+        ConditionUploadAPI.uploadConditions(self.dropboxuser, self.dropboxpass, self.serviceProxy)
 
         return
 
