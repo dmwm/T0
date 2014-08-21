@@ -460,7 +460,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['MaxOverSize'] = streamConfig.Repack.MaxOverSize
             specArguments['MaxInputEvents'] = streamConfig.Repack.MaxInputEvents
             specArguments['MaxInputFiles'] = streamConfig.Repack.MaxInputFiles
-            specArguments['UnmergedLFNBase'] = "%s/unmerged/%s" % (runInfo['lfn_prefix'],
+            specArguments['UnmergedLFNBase'] = "/%s/unmerged/%s" % (runInfo['lfn_prefix'].split('/')[1],
                                                                    runInfo['bulk_data_type'])
             specArguments['MergedLFNBase'] = "%s/%s" % (runInfo['lfn_prefix'],
                                                         runInfo['bulk_data_type'])
@@ -501,7 +501,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['MaxLatency'] = streamConfig.Express.MaxLatency
             specArguments['AlcaSkims'] = streamConfig.Express.AlcaSkims
             specArguments['DqmSequences'] = streamConfig.Express.DqmSequences
-            specArguments['UnmergedLFNBase'] = "%s/unmerged/express" % runInfo['lfn_prefix']
+            specArguments['UnmergedLFNBase'] = "/%s/unmerged/express" % runInfo['lfn_prefix'].split('/')[1]
             specArguments['MergedLFNBase'] = "%s/express" % runInfo['lfn_prefix']
             specArguments['AlcaHarvestTimeout'] = runInfo['ah_timeout']
             specArguments['AlcaHarvestDir'] = runInfo['ah_dir']
@@ -591,7 +591,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 markWorkflowsInjectedDAO.execute([workflowName], injected = True, conn = myThread.transaction.conn, transaction = True)
         except:
             myThread.transaction.rollback()
-            raise RuntimeError("Problem in configureRunStream() database transaction !"))
+            raise RuntimeError("Problem in configureRunStream() database transaction !")
         else:
             myThread.transaction.commit()
 
@@ -806,7 +806,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 specArguments['AlcaSkims'] = datasetConfig.AlcaSkims
                 specArguments['DqmSequences'] = datasetConfig.DqmSequences
 
-                specArguments['UnmergedLFNBase'] = "%s/unmerged/%s" % (runInfo['lfn_prefix'],
+                specArguments['UnmergedLFNBase'] = "/%s/unmerged/%s" % (runInfo['lfn_prefix'].split('/')[1],
                                                                        runInfo['bulk_data_type'])
                 specArguments['MergedLFNBase'] = "%s/%s" % (runInfo['lfn_prefix'],
                                                             runInfo['bulk_data_type'])
