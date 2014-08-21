@@ -18,6 +18,8 @@ from WMCore.Configuration import loadConfigurationFile
 
 from T0.RunConfig import RunConfigAPI
 
+from T0.RunConfig.Tier0Config import setBackfill
+
 
 class RunConfigTest(unittest.TestCase):
     """
@@ -145,7 +147,7 @@ class RunConfigTest(unittest.TestCase):
         self.tier0Config = loadConfigurationFile("ExampleConfig.py")
 
         self.referenceRunInfo = [ { 'status': 1,
-                                    'lfn_prefix' : "/store",
+                                    'backfill' : None,
                                     'bulk_data_type' : "data",
                                     'bulk_data_loc' : "T2_CH_CERN",
                                     'dqmuploadurl' : "https://cmsweb.cern.ch/dqm/dev",
@@ -1601,6 +1603,31 @@ class RunConfigTest(unittest.TestCase):
 
         self.assertEqual(results[0][1], 1,
                          "ERROR: not all created workflows marked as injected")
+
+        return
+
+    def test01(self):
+        """
+        _test01_
+
+        Test setting backfill mode
+
+        """
+        myThread = threading.currentThread()
+
+        setBackfill(self.tier0Config, 2)
+        self.referenceRunInfo[0]['backfill'] = "2"
+
+        RunConfigAPI.configureRun(self.tier0Config, 176161,
+                                  self.hltConfig,
+                                  { 'process' : "HLT",
+                                    'mapping' : self.referenceMapping })
+
+        runInfo = self.getRunInfoDAO.execute(176161,
+                                             transaction = False)
+
+        self.assertEqual(runInfo, self.referenceRunInfo,
+                         "ERROR: run info does not match reference")
 
         return
 

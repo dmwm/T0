@@ -17,7 +17,7 @@ class GetRunInfo(DBFormatter):
                         hltkey,
                         process,
                         acq_era,
-                        lfn_prefix,
+                        backfill,
                         bulk_data_type,
                         bulk_data_loc,
                         dqmuploadurl,

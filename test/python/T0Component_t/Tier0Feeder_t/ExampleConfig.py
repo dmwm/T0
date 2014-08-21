@@ -9,7 +9,7 @@ from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
 from T0.RunConfig.Tier0Config import setScramArch
 from T0.RunConfig.Tier0Config import setDefaultScramArch
-from T0.RunConfig.Tier0Config import setLFNPrefix
+from T0.RunConfig.Tier0Config import setBackfill
 from T0.RunConfig.Tier0Config import setBulkDataType
 from T0.RunConfig.Tier0Config import setBulkDataLocation
 from T0.RunConfig.Tier0Config import setDQMUploadUrl
@@ -29,10 +29,10 @@ setConfigVersion(tier0Config, "replace with real version")
 
 # Set global parameters:
 #  acquisition era
-#  LFN prefix
+#  backfill mode 
 #  data type
 setAcquisitionEra(tier0Config, "ExampleConfig_UnitTest")
-setLFNPrefix(tier0Config, "/store")
+setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
 setBulkDataLocation(tier0Config, "T2_CH_CERN")
 setDQMUploadUrl(tier0Config, "https://cmsweb.cern.ch/dqm/dev")

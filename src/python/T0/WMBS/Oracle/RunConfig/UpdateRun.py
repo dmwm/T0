@@ -14,7 +14,7 @@ class UpdateRun(DBFormatter):
         sql = """UPDATE run
                  SET process = :PROCESS,
                      acq_era = :ACQERA,
-                     lfn_prefix = :LFNPREFIX,
+                     backfill = :BACKFILL,
                      bulk_data_type = :BULKDATATYPE,
                      bulk_data_loc = :BULKDATALOC,
                      dqmuploadurl = :DQMUPLOADURL,

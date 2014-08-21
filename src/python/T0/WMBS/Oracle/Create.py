@@ -121,7 +121,7 @@ class Create(DBCreator):
                  lumicount          int           default 0 not null,
                  process            varchar2(255),
                  acq_era            varchar2(255),
-                 lfn_prefix         varchar2(255),
+                 backfill           varchar2(255),
                  bulk_data_type     varchar2(255),
                  bulk_data_loc      varchar2(255),
                  dqmuploadurl       varchar2(255),
