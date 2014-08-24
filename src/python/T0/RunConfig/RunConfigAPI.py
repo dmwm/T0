@@ -60,7 +60,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         bindsUpdateRun = { 'RUN' : run,
                            'PROCESS' : hltConfig['process'],
                            'ACQERA' : tier0Config.Global.AcquisitionEra,
-                           'LFNPREFIX' : tier0Config.Global.LFNPrefix,
+                           'BACKFILL' : tier0Config.Global.Backfill,
                            'BULKDATATYPE' : tier0Config.Global.BulkDataType,
                            'BULKDATALOC' : tier0Config.Global.BulkDataLocation,
                            'DQMUPLOADURL' : tier0Config.Global.DQMUploadUrl,
@@ -107,7 +107,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         bindsUpdateRun = { 'RUN' : run,
                            'PROCESS' : "FakeProcessName",
                            'ACQERA' : "FakeAcquisitionEra",
-                           'LFNPREFIX' : "/fakelfnprefix",
+                           'BACKFILL' : None,
                            'BULKDATATYPE' : "FakeBulkDataType",
                            'AHTIMEOUT' : None,
                            'AHDIR' : None,
@@ -460,10 +460,13 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['MaxOverSize'] = streamConfig.Repack.MaxOverSize
             specArguments['MaxInputEvents'] = streamConfig.Repack.MaxInputEvents
             specArguments['MaxInputFiles'] = streamConfig.Repack.MaxInputFiles
-            specArguments['UnmergedLFNBase'] = "%s/unmerged/%s" % (runInfo['lfn_prefix'],
-                                                                   runInfo['bulk_data_type'])
-            specArguments['MergedLFNBase'] = "%s/%s" % (runInfo['lfn_prefix'],
-                                                        runInfo['bulk_data_type'])
+
+            specArguments['UnmergedLFNBase'] = "/store/unmerged/%s" % runInfo['bulk_data_type']
+            if runInfo['backfill']:
+                specArguments['MergedLFNBase'] = "/store/backfill/%s/%s" % (runInfo['backfill'],
+                                                                            runInfo['bulk_data_type'])
+            else:
+                specArguments['MergedLFNBase'] = "/store/%s" % runInfo['bulk_data_type']
 
             specArguments['BlockCloseDelay'] = streamConfig.Repack.BlockCloseDelay
 
@@ -501,14 +504,19 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['MaxLatency'] = streamConfig.Express.MaxLatency
             specArguments['AlcaSkims'] = streamConfig.Express.AlcaSkims
             specArguments['DqmSequences'] = streamConfig.Express.DqmSequences
-            specArguments['UnmergedLFNBase'] = "%s/unmerged/express" % runInfo['lfn_prefix']
-            specArguments['MergedLFNBase'] = "%s/express" % runInfo['lfn_prefix']
             specArguments['AlcaHarvestTimeout'] = runInfo['ah_timeout']
             specArguments['AlcaHarvestDir'] = runInfo['ah_dir']
             specArguments['DQMUploadProxy'] = dqmUploadProxy
             specArguments['DQMUploadUrl'] = runInfo['dqmuploadurl']
             specArguments['StreamName'] = stream
             specArguments['SpecialDataset'] = specialDataset
+
+            specArguments['UnmergedLFNBase'] = "/store/unmerged/express"
+            specArguments['MergedLFNBase'] = "/store/express"
+            if runInfo['backfill']:
+                specArguments['MergedLFNBase'] = "/store/backfill/%s/express" % runInfo['backfill']
+            else:
+                specArguments['MergedLFNBase'] = "/store/express"
 
             specArguments['PeriodicHarvestInterval'] = streamConfig.Express.PeriodicHarvestInterval
 
@@ -806,10 +814,12 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 specArguments['AlcaSkims'] = datasetConfig.AlcaSkims
                 specArguments['DqmSequences'] = datasetConfig.DqmSequences
 
-                specArguments['UnmergedLFNBase'] = "%s/unmerged/%s" % (runInfo['lfn_prefix'],
-                                                                       runInfo['bulk_data_type'])
-                specArguments['MergedLFNBase'] = "%s/%s" % (runInfo['lfn_prefix'],
-                                                            runInfo['bulk_data_type'])
+                specArguments['UnmergedLFNBase'] = "/store/unmerged/%s" % runInfo['bulk_data_type']
+                if runInfo['backfill']:
+                    specArguments['MergedLFNBase'] = "/store/backfill/%s/%s" % (runInfo['backfill'],
+                                                                                runInfo['bulk_data_type'])
+                else:
+                    specArguments['MergedLFNBase'] = "/store/%s" % runInfo['bulk_data_type']
 
                 specArguments['ValidStatus'] = "VALID"
 

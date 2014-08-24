@@ -14,7 +14,7 @@ Tier0Configuration - Global configuration object
 | |       |
 | |       |--> AcquisitionEra - The acquisition era for the run
 | |       |
-| |       |--> LFNPrefix - The LFN prefix for the run
+| |       |--> Backfill - The backfill mode, can be None, 1 or 2
 | |       |
 | |       |--> BulkDataType - The bulk data type for the run
 | |       |
@@ -200,6 +200,7 @@ def createTier0Config():
     tier0Config.section_("Global")
 
     tier0Config.Global.ScramArches = {}
+    tier0Config.Global.Backfill = None
 
     return tier0Config
 
@@ -419,13 +420,17 @@ def setDefaultScramArch(config, arch):
     config.Global.DefaultScramArch = arch
     return
 
-def setLFNPrefix(config, prefix):
+def setBackfill(config, mode):
     """
-    _setLFNPrefix_
+    _setBackfill_
 
-    Set the LFN prefix in the configuration.
+    Set the backfill mode in the configuration.
     """
-    config.Global.LFNPrefix = prefix
+    if mode not in [ None, 1, 2 ]:
+        msg = "Tier0Config.setBackfill : %s is not a valid backfill mode" % mode
+        raise RuntimeError, msg
+
+    config.Global.Backfill = mode
     return
 
 def setBulkDataType(config, type):
