@@ -385,6 +385,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                             'DISK_NODE' : datasetConfig.DiskNode } )
 
                 custodialSites = []
+                nonCustodialSites = []
                 autoApproveSites = []
                 if datasetConfig.ArchivalNode != None:
                     bindsStorageNode.append( { 'NODE' : datasetConfig.ArchivalNode } )
@@ -395,11 +396,13 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                     custodialSites.append(datasetConfig.TapeNode)
                 if datasetConfig.DiskNode != None:
                     bindsStorageNode.append( { 'NODE' : datasetConfig.DiskNode } )
+                    nonCustodialSites.append(datasetConfig.DiskNode)
+                    autoApproveSites.append(datasetConfig.DiskNode)
 
                 if len(custodialSites) > 0:
                     subscriptions.append( { 'custodialSites' : custodialSites,
                                             'custodialSubType' : "Replica",
-                                            'nonCustodialSites' : [],
+                                            'nonCustodialSites' : nonCustodialSites,
                                             'autoApproveSites' : autoApproveSites,
                                             'priority' : "high",
                                             'primaryDataset' : dataset,
