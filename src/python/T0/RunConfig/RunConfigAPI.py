@@ -549,11 +549,15 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['BlockCloseDelay'] = streamConfig.Express.BlockCloseDelay
 
         if streamConfig.ProcessingStyle in [ 'Bulk', 'Express' ]:
+
             specArguments['RunNumber'] = run
             specArguments['AcquisitionEra'] = tier0Config.Global.AcquisitionEra
             specArguments['Outputs'] = outputModuleDetails
             specArguments['OverrideCatalog'] = "trivialcatalog_file:/cvmfs/cms.cern.ch/SITECONF/T2_CH_CERN/Tier0/override_catalog.xml?protocol=override"
             specArguments['ValidStatus'] = "VALID"
+
+            specArguments['SiteWhitelist'] = [ "T2_CH_CERN_T0" ]
+            specArguments['SiteBlacklist'] = []
 
         if streamConfig.ProcessingStyle == "Bulk":
             factory = RepackWorkloadFactory()
@@ -625,7 +629,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 markWorkflowsInjectedDAO.execute([workflowName], injected = True, conn = myThread.transaction.conn, transaction = True)
         except:
             myThread.transaction.rollback()
-            raise RuntimeError("Problem in configureRunStream() database transaction !"))
+            raise RuntimeError("Problem in configureRunStream() database transaction !")
         else:
             myThread.transaction.commit()
 
@@ -854,6 +858,10 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 specArguments['DQMUploadUrl'] = runInfo['dqmuploadurl']
 
                 specArguments['BlockCloseDelay'] = datasetConfig.BlockCloseDelay
+
+                specArguments['SiteWhitelist'] = datasetConfig.SiteWhitelist
+                specArguments['SiteBlacklist'] = []
+                specArguments['TrustSitelists'] = "True"
 
                 # not used, but needed by the validation
                 specArguments['CouchURL'] = "http://fakehost:1234"
