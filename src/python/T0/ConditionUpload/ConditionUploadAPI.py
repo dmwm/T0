@@ -83,7 +83,7 @@ def uploadConditions(username, password, serviceProxy):
                     # state acquired and complete at the same time
                     try:
                         myThread.transaction.begin()
-                        completeFilesDAO.execute(bindVarList, transaction = True)
+                        completeFilesDAO.execute(bindVarList, conn = myThread.transaction.conn, transaction = True)
                     except:
                         myThread.transaction.rollback()
                         raise
