@@ -177,7 +177,8 @@ def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationM
     sqliteFile['pfn'] = eosPrefix + sqliteFile['lfn']
     metaFile['pfn'] = eosPrefix + metaFile['lfn']
 
-    command = "xrdcp -s -f %s %s" % (sqliteFile['pfn'], filenameDB)
+    command = "export X509_USER_PROXY=%s\n" % serviceProxy
+    command += "xrdcp -s -f %s %s" % (sqliteFile['pfn'], filenameDB)
     p = subprocess.Popen(command, shell = True,
                          stdout=subprocess.PIPE,
                          stderr=subprocess.STDOUT)
@@ -189,7 +190,8 @@ def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationM
     else:
         files2delete.append(filenameDB)
 
-    command = "xrdcp -s -f %s %s" % (metaFile['pfn'], filenameTXT)
+    command = "export X509_USER_PROXY=%s\n" % serviceProxy
+    command += "xrdcp -s -f %s %s" % (metaFile['pfn'], filenameTXT)
     p = subprocess.Popen(command, shell = True,
                          stdout=subprocess.PIPE,
                          stderr=subprocess.STDOUT)
