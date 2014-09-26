@@ -156,17 +156,20 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
     #
     if runInfo['hltkey'] != None:
 
-        # consistency check to make sure stream exists and has datasets defined
-        getStreamDatasetsDAO = daoFactory(classname = "RunConfig.GetStreamDatasets")
-        datasets = getStreamDatasetsDAO.execute(run, stream, transaction = False)
-        if len(datasets) == 0:
-            raise RuntimeError("Stream is not defined in HLT menu or has no datasets !")
-
         # streams not explicitely configured are repacked
         if stream not in tier0Config.Streams.dictionary_().keys():
             addRepackConfig(tier0Config, stream)
 
         streamConfig = tier0Config.Streams.dictionary_()[stream]
+
+        # consistency check to make sure stream exists and has datasets defined
+        # only run if we don't ignore the stream
+        if streamConfig.ProcessingStyle != "Ignore":
+            getStreamDatasetsDAO = daoFactory(classname = "RunConfig.GetStreamDatasets")
+            datasets = getStreamDatasetsDAO.execute(run, stream, transaction = False)
+            if len(datasets) == 0:
+                raise RuntimeError("Stream is not defined in HLT menu or has no datasets !")
+
 
         # write stream/dataset mapping (for special express and error datasets)
         insertDatasetDAO = daoFactory(classname = "RunConfig.InsertPrimaryDataset")
