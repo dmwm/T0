@@ -13,7 +13,8 @@ class InsertRecoConfig(DBFormatter):
 
         sql = """INSERT INTO reco_config
                  (RUN_ID, PRIMDS_ID, DO_RECO, RECO_SPLIT, WRITE_RECO, WRITE_DQM, WRITE_AOD,
-                  PROC_VERSION, ALCA_SKIM, DQM_SEQ, BLOCK_DELAY, CMSSW_ID, SCRAM_ARCH, GLOBAL_TAG)
+                  PROC_VERSION, ALCA_SKIM, DQM_SEQ, BLOCK_DELAY, CMSSW_ID, MULTICORE,
+                  SCRAM_ARCH, GLOBAL_TAG)
                  VALUES (:RUN,
                          (SELECT id FROM primary_dataset WHERE name = :PRIMDS),
                          :DO_RECO,
@@ -26,6 +27,7 @@ class InsertRecoConfig(DBFormatter):
                          :DQM_SEQ,
                          :BLOCK_DELAY,
                          (SELECT id FROM cmssw_version WHERE name = :CMSSW),
+                         :MULTICORE,
                          :SCRAM_ARCH,
                          :GLOBAL_TAG)
                  """

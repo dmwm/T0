@@ -101,6 +101,8 @@ Tier0Configuration - Global configuration object
 |             |     |                       needs to be filled if we want to run the reco
 |             |     |                       step separate from the repacking step.
 |             |     |
+|             |     |--> Multicore - number of cores to be used for the reco step (optional)
+|             |     |
 |             |     |--> AlcaSkims - List of alca skims active for this stream.
 |             |     |
 |             |     |--> DqmSequences - List of dqm sequences active for this stream.
@@ -121,7 +123,6 @@ Tier0Configuration - Global configuration object
 |             |     |--> DqmInterval - periodic DQM harvesting interval
 |             |     |
 |             |     |--> BlockCloseDelay - delay to close block in WMAgent
-|             |
 |             |
 |             |--> Register - Configuration section for register streams
 |             |     |
@@ -174,6 +175,8 @@ Tier0Configuration - Global configuration object
             |--> DoReco - Whether we are running PromptReco at all
             |
             |--> CMSSWVersion - CMSSW used for PromptReco (mandatory if DoReco is True)
+            |
+            |--> Multicore - number of cores to be used for the reco step (optional)
             |
             |--> GlobalTag - Global tag used for PromptReco (mandatory if DoReco is True)
             |
@@ -378,6 +381,11 @@ def addDataset(config, datasetName, **settings):
         datasetConfig.ArchivalNode = settings.get('archival_node', datasetConfig.ArchivalNode)
     else:
         datasetConfig.ArchivalNode = settings.get('archival_node', None)
+
+    if hasattr(datasetConfig, "Multicore"):
+        datasetConfig.Multicore = settings.get('multicore', datasetConfig.Multicore)
+    else:
+        datasetConfig.Multicore = settings.get('multicore', None)
 
     #
     # optional parameter, Default rule is still used
@@ -623,6 +631,8 @@ def addExpressConfig(config, streamName, **options):
     streamConfig.Express.GlobalTag = global_tag
 
     streamConfig.Express.RecoCMSSWVersion = options.get("reco_version", None)
+
+    streamConfig.Express.Multicore = options.get('multicore', None)
 
     streamConfig.Express.AlcaSkims = options.get("alca_producers", [])
     streamConfig.Express.DqmSequences = options.get("dqm_sequences", [])

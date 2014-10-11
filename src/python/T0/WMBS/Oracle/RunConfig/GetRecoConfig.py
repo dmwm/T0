@@ -25,6 +25,7 @@ class GetRecoConfig(DBFormatter):
                         reco_config.block_delay,
                         cmssw_version.name,
                         reco_config.scram_arch,
+                        reco_config.multicore,
                         reco_config.global_tag,
                         event_scenario.name
                  FROM run_primds_stream_assoc
@@ -68,7 +69,8 @@ class GetRecoConfig(DBFormatter):
             resultDict[primds]['block_delay'] = result[9]
             resultDict[primds]['cmssw'] = result[10]
             resultDict[primds]['scram_arch'] = result[11]
-            resultDict[primds]['global_tag'] = result[12]
-            resultDict[primds]['scenario'] = result[13]
+            resultDict[primds]['multicore'] = result[12]
+            resultDict[primds]['global_tag'] = result[13]
+            resultDict[primds]['scenario'] = result[14]
 
         return resultDict

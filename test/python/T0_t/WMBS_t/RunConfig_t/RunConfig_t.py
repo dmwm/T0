@@ -1155,18 +1155,18 @@ class RunConfigTest(unittest.TestCase):
 
         streamStyle = self.getStreamStyleDAO.execute(176161, "A",
                                                        transaction = False)
-        self.assertEquals(streamStyle, "Bulk",
-                          "ERROR: stream A is not Bulk style")
+        self.assertEqual(streamStyle, "Bulk",
+                         "ERROR: stream A is not Bulk style")
 
         streamStyle = self.getStreamStyleDAO.execute(176161, "Express",
                                                       transaction = False)
-        self.assertEquals(streamStyle, "Express",
-                          "ERROR: stream Express is not Express style")
+        self.assertEqual(streamStyle, "Express",
+                         "ERROR: stream Express is not Express style")
 
         streamStyle = self.getStreamStyleDAO.execute(176161, "HLTMON",
                                                       transaction = False)
-        self.assertEquals(streamStyle, "Express",
-                          "ERROR: stream HLTMON is not Express style")
+        self.assertEqual(streamStyle, "Express",
+                         "ERROR: stream HLTMON is not Express style")
 
         repackConfig = self.getRepackConfigDAO.execute(176161, "A",
                                                        transaction = False)
@@ -1212,6 +1212,9 @@ class RunConfigTest(unittest.TestCase):
 
         self.assertEqual(expressConfig['cmssw'], "CMSSW_5_3_14",
                          "ERROR: wrong CMSSW version for stream Express")
+
+        self.assertEqual(expressConfig['multicore'], 4,
+                         "ERROR: wrong Multicore settings for stream Express")
 
         self.assertEqual(expressConfig['scram_arch'], "slc5_amd64_gcc462",
                          "ERROR: wrong ScramArch for stream Express")
@@ -1274,6 +1277,9 @@ class RunConfigTest(unittest.TestCase):
         self.assertEqual(expressConfig['cmssw'], "CMSSW_5_3_8",
                          "ERROR: wrong CMSSW version for stream HLTMON")
 
+        self.assertEqual(expressConfig['multicore'], None,
+                         "ERROR: wrong Multicore settings for stream Express")
+
         self.assertEqual(expressConfig['scram_arch'], "slc5_amd64_gcc462",
                          "ERROR: wrong ScramArch for stream Express")
 
@@ -1308,16 +1314,16 @@ class RunConfigTest(unittest.TestCase):
         recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
                                                    transaction = False)
 
-        self.assertEquals(len(recoConfigs.keys()), 0,
-                          "ERROR: there are reco configs present")
+        self.assertEqual(len(recoConfigs.keys()), 0,
+                         "ERROR: there are reco configs present")
 
         RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, self.dqmUploadProxy)
 
         recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
                                                    transaction = False)
 
-        self.assertEquals(len(recoConfigs.keys()), 0,
-                          "ERROR: there are reco configs present")
+        self.assertEqual(len(recoConfigs.keys()), 0,
+                         "ERROR: there are reco configs present")
 
         self.removeRecoDelay("Cosmics")
 
@@ -1326,8 +1332,8 @@ class RunConfigTest(unittest.TestCase):
         recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
                                                    transaction = False)
 
-        self.assertEquals(len(recoConfigs.keys()), 0,
-                          "ERROR: there are reco configs present")
+        self.assertEqual(len(recoConfigs.keys()), 0,
+                         "ERROR: there are reco configs present")
 
         self.endRunsDAO.execute(binds = { 'RUN' : 176161,
                                           'LUMICOUNT' : 1,
@@ -1339,8 +1345,8 @@ class RunConfigTest(unittest.TestCase):
         recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
                                                    transaction = False)
 
-        self.assertEquals(len(recoConfigs.keys()), 0,
-                          "ERROR: there are reco configs present")
+        self.assertEqual(len(recoConfigs.keys()), 0,
+                         "ERROR: there are reco configs present")
 
         self.endRunsDAO.execute(binds = { 'RUN' : 176161,
                                           'LUMICOUNT' : 1,
@@ -1352,8 +1358,8 @@ class RunConfigTest(unittest.TestCase):
         recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
                                                    transaction = False)
 
-        self.assertEquals(set(recoConfigs.keys()), set(["Cosmics"]),
-                          "ERROR: problems retrieving reco configs for stream A")
+        self.assertEqual(set(recoConfigs.keys()), set(["Cosmics"]),
+                         "ERROR: problems retrieving reco configs for stream A")
 
         self.removeRecoDelay()
 
@@ -1365,128 +1371,133 @@ class RunConfigTest(unittest.TestCase):
         datasets = self.getStreamDatasetsDAO.execute(176161, "A",
                                                      transaction = False)
 
-        self.assertEquals(set(recoConfigs.keys()), set(datasets),
-                          "ERROR: problems retrieving reco configs for stream A")
+        self.assertEqual(set(recoConfigs.keys()), set(datasets),
+                         "ERROR: problems retrieving reco configs for stream A")
 
         for primds, recoConfig in recoConfigs.items():
 
             if primds == "Cosmics":
 
-                if primds == "Cosmics":
-                    self.assertEquals(recoConfig['do_reco'], 1,
-                                      "ERROR: problem in reco configuration")
-                else:
-                    self.assertEquals(recoConfig['do_reco'], 0,
-                                      "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['do_reco'], 1,
+                                 "ERROR: problem in reco configuration")
 
-                self.assertEquals(recoConfig['cmssw'], "CMSSW_5_3_14",
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['cmssw'], "CMSSW_5_3_14",
+                                 "ERROR: problem in reco configuration")
 
-                self.assertEquals(recoConfig['scram_arch'], "slc5_amd64_gcc462",
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['multicore'], 4,
+                                 "ERROR: problem in reco configuration")
+
+                self.assertEqual(recoConfig['scram_arch'], "slc5_amd64_gcc462",
+                                 "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['reco_split'], 100,
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['reco_split'], 100,
+                                 "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['write_reco'], 1,
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['write_reco'], 1,
+                                 "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['write_aod'], 1,
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['write_aod'], 1,
+                                 "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['write_dqm'], 1,
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['write_dqm'], 1,
+                                 "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['proc_ver'], 5,
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['proc_ver'], 5,
+                                 "ERROR: problem in reco configuration")
 
                 writeSkims = []
                 if recoConfig['alca_skim'] != None:
                     writeSkims = recoConfig['alca_skim'].split(',')
-                self.assertEquals(set(writeSkims), set([ "Skim1", "Skim2", "Skim3" ]),
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(set(writeSkims), set([ "Skim1", "Skim2", "Skim3" ]),
+                                 "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['global_tag'], "GlobalTag4",
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['global_tag'], "GlobalTag4",
+                                 "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['scenario'], "cosmics",
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['scenario'], "cosmics",
+                                 "ERROR: problem in reco configuration")
 
             elif primds == "MinimumBias":
 
-                self.assertEquals(recoConfig['do_reco'], 0,
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['do_reco'], 0,
+                                 "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['cmssw'], "CMSSW_6_2_4",
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['cmssw'], "CMSSW_6_2_4",
+                                 "ERROR: problem in reco configuration")
 
-                self.assertEquals(recoConfig['scram_arch'], "slc5_amd64_gcc472",
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['multicore'], 8,
+                                 "ERROR: problem in reco configuration")
 
-                self.assertEquals(recoConfig['reco_split'], 200,
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['scram_arch'], "slc5_amd64_gcc472",
+                                 "ERROR: problem in reco configuration")
+
+                self.assertEqual(recoConfig['reco_split'], 200,
+                                 "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['write_reco'], 0,
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['write_reco'], 0,
+                                 "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['write_aod'], 0,
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['write_aod'], 0,
+                                 "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['write_dqm'], 0,
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['write_dqm'], 0,
+                                 "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['proc_ver'], 6,
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['proc_ver'], 6,
+                                 "ERROR: problem in reco configuration")
 
                 writeSkims = []
                 if recoConfig['alca_skim'] != None:
                     writeSkims = recoConfig['alca_skim'].split(',')
-                self.assertEquals(set(writeSkims), set([]),
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(set(writeSkims), set([]),
+                                 "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['global_tag'], "GlobalTag5",
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['global_tag'], "GlobalTag5",
+                                 "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['scenario'], "pp",
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['scenario'], "pp",
+                                 "ERROR: problem in reco configuration")
 
             else:
 
-                self.assertEquals(recoConfig['do_reco'], 0,
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['do_reco'], 0,
+                                 "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['cmssw'], "CMSSW_5_3_8",
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['cmssw'], "CMSSW_5_3_8",
+                                 "ERROR: problem in reco configuration")
 
-                self.assertEquals(recoConfig['scram_arch'], "slc5_amd64_gcc462",
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['multicore'], 8,
+                                 "ERROR: problem in reco configuration")
 
-                self.assertEquals(recoConfig['reco_split'], 2000,
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['scram_arch'], "slc5_amd64_gcc462",
+                                 "ERROR: problem in reco configuration")
+
+                self.assertEqual(recoConfig['reco_split'], 2000,
+                                 "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['write_reco'], 0,
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['write_reco'], 0,
+                                 "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['write_aod'], 1,
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['write_aod'], 1,
+                                 "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['write_dqm'], 1,
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['write_dqm'], 1,
+                                 "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['proc_ver'], 4,
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['proc_ver'], 4,
+                                 "ERROR: problem in reco configuration")
 
                 writeSkims = []
                 if recoConfig['alca_skim'] != None:
                     writeSkims = recoConfig['alca_skim'].split(',')
-                self.assertEquals(set(writeSkims), set([]),
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(set(writeSkims), set([]),
+                                 "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['global_tag'], "GlobalTag3",
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['global_tag'], "GlobalTag3",
+                                 "ERROR: problem in reco configuration")
             
-                self.assertEquals(recoConfig['scenario'], "pp",
-                                  "ERROR: problem in reco configuration")
+                self.assertEqual(recoConfig['scenario'], "pp",
+                                 "ERROR: problem in reco configuration")
 
 
         datasetsStreamA = self.getStreamDatasetsDAO.execute(176161, "A",
@@ -1501,54 +1512,54 @@ class RunConfigTest(unittest.TestCase):
         datasets = datasetsStreamA.union(datasetsStreamExpress).union(datasetsStreamHLTMON)
 
         phedexConfigs = self.getPhEDExConfigDAO.execute(176161, transaction = False)
-        self.assertEquals(set(phedexConfigs.keys()), datasets,
-                          "ERROR: problems retrieving PhEDEx configs")
+        self.assertEqual(set(phedexConfigs.keys()), datasets,
+                         "ERROR: problems retrieving PhEDEx configs")
 
         for primds, phedexConfig in phedexConfigs.items():
 
             if primds == "Cosmics":
 
-                self.assertEquals(phedexConfig['archival_node'], "Node2",
-                                  "ERROR: problem in phedex configuration")
+                self.assertEqual(phedexConfig['archival_node'], "Node2",
+                                 "ERROR: problem in phedex configuration")
 
-                self.assertEquals(phedexConfig['tape_node'], "Node3",
-                                  "ERROR: problem in phedex configuration")
+                self.assertEqual(phedexConfig['tape_node'], "Node3",
+                                 "ERROR: problem in phedex configuration")
 
-                self.assertEquals(phedexConfig['disk_node'], "Node4",
-                                  "ERROR: problem in phedex configuration")
+                self.assertEqual(phedexConfig['disk_node'], "Node4",
+                                 "ERROR: problem in phedex configuration")
 
             elif primds == "MinimumBias":
 
-                self.assertEquals(phedexConfig['archival_node'], "Node5",
-                                  "ERROR: problem in phedex configuration")
+                self.assertEqual(phedexConfig['archival_node'], "Node5",
+                                 "ERROR: problem in phedex configuration")
 
-                self.assertEquals(phedexConfig['tape_node'], None,
-                                  "ERROR: problem in phedex configuration")
+                self.assertEqual(phedexConfig['tape_node'], None,
+                                 "ERROR: problem in phedex configuration")
 
-                self.assertEquals(phedexConfig['disk_node'], None,
-                                  "ERROR: problem in phedex configuration")
+                self.assertEqual(phedexConfig['disk_node'], None,
+                                 "ERROR: problem in phedex configuration")
 
             elif primds in datasetsStreamA:
 
-                self.assertEquals(phedexConfig['archival_node'], "Node1",
-                                  "ERROR: problem in phedex configuration")
+                self.assertEqual(phedexConfig['archival_node'], "Node1",
+                                 "ERROR: problem in phedex configuration")
 
-                self.assertEquals(phedexConfig['tape_node'], None,
-                                  "ERROR: problem in phedex configuration")
+                self.assertEqual(phedexConfig['tape_node'], None,
+                                 "ERROR: problem in phedex configuration")
 
-                self.assertEquals(phedexConfig['disk_node'], None,
-                                  "ERROR: problem in phedex configuration")
+                self.assertEqual(phedexConfig['disk_node'], None,
+                                 "ERROR: problem in phedex configuration")
 
             else:
 
-                self.assertEquals(phedexConfig['archival_node'], None,
-                                  "ERROR: problem in phedex configuration")
+                self.assertEqual(phedexConfig['archival_node'], None,
+                                 "ERROR: problem in phedex configuration")
 
-                self.assertEquals(phedexConfig['tape_node'], None,
-                                  "ERROR: problem in phedex configuration")
+                self.assertEqual(phedexConfig['tape_node'], None,
+                                 "ERROR: problem in phedex configuration")
 
-                self.assertEquals(phedexConfig['disk_node'], "T2_CH_CERN",
-                                  "ERROR: problem in phedex configuration")
+                self.assertEqual(phedexConfig['disk_node'], "T2_CH_CERN",
+                                 "ERROR: problem in phedex configuration")
 
         #
         # check created run/stream filesets/subscriptions
