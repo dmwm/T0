@@ -75,6 +75,11 @@ def modifyConfiguration(config, **args):
 
     if hasattr(config, "JobUpdater"):
         delattr(config, "JobUpdater")
+    
+    # t0 wmstats specific configuration
+    config.AnalyticsDataCollector.localT0RequestDBURL = "%s/%s" % (config.JobStateMachine.couchurl, 
+                                                                   config.Tier0Feeder.requestDBName)
+    config.AnalyticsDataCollector.RequestCouchApp = "T0Request"
 
     if 'confdb_url' in args:
         config.section_("HLTConfDatabase")

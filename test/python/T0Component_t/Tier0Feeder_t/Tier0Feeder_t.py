@@ -16,7 +16,7 @@ from WMCore.DAOFactory import DAOFactory
 from WMCore.Database.DBFactory import DBFactory
 from WMCore.Configuration import loadConfigurationFile
 from WMCore.Services.UUID import makeUUID
-from WMCore.Services.WMStats.WMStatsWriter import WMStatsWriter
+from WMCore.Services.RequestDB.RequestDBWriter import RequestDBWriter
 
 from T0.RunConfig import RunConfigAPI
 from T0.RunLumiCloseout import RunLumiCloseoutAPI
@@ -53,7 +53,8 @@ class Tier0FeederTest(unittest.TestCase):
             wmAgentConfig = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
 
             self.dqmUploadProxy = getattr(wmAgentConfig.WMBSService, "proxy", None)
-            self.localSummaryCouchDB = WMStatsWriter(wmAgentConfig.AnalyticsDataCollector.localWMStatsURL)
+            self.localSummaryCouchDB = RequestDBWriter(wmAgentConfig.AnalyticsDataCollector.localWMStatsURL,
+                                                       couchapp = "T0Request")
 
             if hasattr(wmAgentConfig, "HLTConfDatabase"):
 
@@ -1184,10 +1185,8 @@ class Tier0FeederTest(unittest.TestCase):
             for (workflowId, run, workflowName) in workflows:
                 logging.info(" Publishing workflow %s to monitoring" % workflowName)
                 doc = {}
-                doc["_id"] =  workflowName
-                doc["workflow"] =   workflowName
-                doc["type"]     =   "tier0_request"
-                doc["run"]      =   run
+                doc["RequestName"] =   workflowName
+                doc["Run"]      =   run
                 response = self.localSummaryCouchDB.insertGenericRequest(doc)
                 if response == "OK" or "EXISTS":
                     logging.info(" Successfully uploaded request %s" % workflowName)

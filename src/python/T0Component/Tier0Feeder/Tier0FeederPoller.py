@@ -21,7 +21,7 @@ from WMCore.DAOFactory import DAOFactory
 from WMCore.Database.DBFactory import DBFactory
 from WMCore.WMException import WMException
 from WMCore.Configuration import loadConfigurationFile
-from WMCore.Services.WMStats.WMStatsWriter import WMStatsWriter
+from WMCore.Services.RequestDB.RequestDBWriter import RequestDBWriter
 
 from T0.RunConfig import RunConfigAPI
 from T0.RunLumiCloseout import RunLumiCloseoutAPI
@@ -56,7 +56,8 @@ class Tier0FeederPoller(BaseWorkerThread):
         self.dqmUploadProxy = getattr(config.Tier0Feeder, "dqmUploadProxy", None)
         self.serviceProxy = getattr(config.Tier0Feeder, "serviceProxy", None)
 
-        self.localSummaryCouchDB = WMStatsWriter(config.AnalyticsDataCollector.localWMStatsURL)
+        self.localRequestCouchDB = RequestDBWriter(config.AnalyticsDataCollector.localT0RequestDBURL, 
+                                                   couchapp = config.AnalyticsDataCollector.RequestCouchApp)
 
         hltConfConnectUrl = config.HLTConfDatabase.connectUrl
         dbFactoryHltConf = DBFactory(logging, dburl = hltConfConnectUrl, options = {})
@@ -280,12 +281,12 @@ class Tier0FeederPoller(BaseWorkerThread):
             logging.debug(" Going to publish %d workflows" % len(workflows))
             for (workflowId, run, workflowName) in workflows:
                 logging.info(" Publishing workflow %s to monitoring" % workflowName)
+                #TODO: add more information about workflow if there need to be kept longer than 
+                # workflow life cycle.
                 doc = {}
-                doc["_id"] =  workflowName
-                doc["workflow"] =   workflowName
-                doc["type"]     =   "tier0_request"
-                doc["run"]      =   run
-                response = self.localSummaryCouchDB.insertGenericRequest(doc)
+                doc["RequestName"] =   workflowName
+                doc["Run"]      =   run
+                response = self.localRequestCouchDB.insertGenericRequest(doc)
                 if response == "OK" or "EXISTS":
                     logging.info(" Successfully uploaded request %s" % workflowName)
                     # Here we have to trust the insert, if it doesn't happen will be easy to spot on the logs
@@ -332,7 +333,7 @@ class Tier0FeederPoller(BaseWorkerThread):
         """
         markCloseoutWorkflowMonitoringDAO = self.daoFactory(classname = "Tier0Feeder.MarkCloseoutWorkflowMonitoring")
 
-        response = self.localSummaryCouchDB.updateRequestStatus(workflowName, 'Closed')
+        response = self.localRequestCouchDB.updateRequestStatus(workflowName, 'Closed')
 
         if response == "OK" or "EXISTS":
             logging.debug("Successfully closed workflow %s" % workflowName)
