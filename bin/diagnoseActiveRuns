@@ -106,9 +106,11 @@ def diagnoseRun(runNumber, doChange):
         return 1
 
     logging.debug("Run has already ended, checking WMStats to see if it is closed.")
-
-    activeWorkflows = localDBreader.workflowsByStatus(["new"], stale = False)
-    closedWorkflows = localDBreader.workflowsByStatus([], stale = False)
+    
+    all_status =  ["new","Closed","Merge","Harvesting","Processing Done","AlcaSkim","completed"]
+    
+    activeWorkflows = localDBreader.workflowsByStatus(["new"])
+    closedWorkflows = localDBreader.workflowsByStatus(all_status)
     regex = re.compile(r"^[\w]+_Run%s_[\w]+$" % runNumber)
     matchingWorkflows = filter(regex.match, activeWorkflows)
     matchingAllWorkflows = filter(regex.match, closedWorkflows)
