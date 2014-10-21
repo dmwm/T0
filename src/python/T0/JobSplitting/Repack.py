@@ -255,3 +255,5 @@ class Repack(JobFactory):
                      lfn = streamer['lfn'])
             f.setLocation(streamer['location'], immediateSave = False)
             self.currentJob.addFile(f)
+
+        return

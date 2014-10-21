@@ -175,3 +175,5 @@ class ExpressMerge(JobFactory):
                      lfn = fileInfo['lfn'])
             f.setLocation(fileInfo['location'], immediateSave = False)
             self.currentJob.addFile(f)
+
+        return

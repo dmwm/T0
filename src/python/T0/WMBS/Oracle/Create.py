@@ -271,6 +271,7 @@ class Create(DBCreator):
                  proc_version    int           not null,
                  write_tiers     varchar2(255) not null,
                  global_tag      varchar2(50)  not null,
+                 max_rate        int           not null,
                  max_events      int           not null,
                  max_size        int           not null,
                  max_files       int           not null,

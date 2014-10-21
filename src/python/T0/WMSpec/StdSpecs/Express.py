@@ -423,6 +423,7 @@ class ExpressWorkloadFactory(StdBase):
 
         # job splitting parameters (also required parameters)
         self.expressSplitArgs = {}
+        self.expressSplitArgs['maxInputRate'] = arguments['MaxInputRate']
         self.expressSplitArgs['maxInputEvents'] = arguments['MaxInputEvents']
         self.expressMergeSplitArgs = {}
         self.expressMergeSplitArgs['maxInputSize'] = arguments['MaxInputSize']

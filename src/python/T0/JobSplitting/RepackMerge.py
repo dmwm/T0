@@ -289,3 +289,4 @@ class RepackMerge(JobFactory):
             f.setLocation(fileInfo['location'], immediateSave = False)
             self.currentJob.addFile(f)
 
+        return

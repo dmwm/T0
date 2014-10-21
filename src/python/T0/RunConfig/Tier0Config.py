@@ -107,6 +107,9 @@ Tier0Configuration - Global configuration object
 |             |     |
 |             |     |--> ProcessingVersion - processing version
 |             |     |
+|             |     |--> MaxInputRate - max input rate that is accepted for processing
+|             |     |                       (in events per lumi section) 
+|             |     |
 |             |     |--> MaxInputEvents - max input events for express processing job
 |             |     |
 |             |     |--> MaxInputSize - max input size for express merge job
@@ -625,6 +628,7 @@ def addExpressConfig(config, streamName, **options):
     streamConfig.Express.DqmSequences = options.get("dqm_sequences", [])
     streamConfig.Express.ProcessingVersion = options.get("proc_ver", 1)
 
+    streamConfig.Express.MaxInputRate = options.get("maxInputRate", 23 * 1000)
     streamConfig.Express.MaxInputEvents = options.get("maxInputEvents", 200)
     streamConfig.Express.MaxInputSize = options.get("maxInputSize", 2 * 1024 * 1024 * 1024)
     streamConfig.Express.MaxInputFiles = options.get("maxInputFiles", 500)
