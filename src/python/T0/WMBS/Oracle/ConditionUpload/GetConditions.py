@@ -12,31 +12,56 @@ from WMCore.Database.DBFormatter import DBFormatter
 
 class GetConditions(DBFormatter):
 
-    sql = """SELECT prompt_calib.run_id,
-                    run.cond_timeout,
-                    run.db_host,
-                    run.valid_mode,
-                    prompt_calib.stream_id,
-                    prompt_calib_file.fileid,
-                    prompt_calib_file.subscription,
-                    wmbs_file_details.lfn
-             FROM prompt_calib
-             INNER JOIN run ON
-               run.run_id = prompt_calib.run_id
-             LEFT OUTER JOIN prompt_calib_file ON
-               prompt_calib_file.run_id = prompt_calib.run_id AND
-               prompt_calib_file.stream_id = prompt_calib.stream_id
-             LEFT OUTER JOIN wmbs_sub_files_acquired ON
-               wmbs_sub_files_acquired.fileid = prompt_calib_file.fileid
-             LEFT OUTER JOIN wmbs_file_details ON
-               wmbs_file_details.id = wmbs_sub_files_acquired.fileid
-             WHERE checkForZeroState(prompt_calib.finished) = 0
-             """
+    sqlNotFinished = """SELECT prompt_calib.run_id,
+                               run.cond_timeout,
+                               run.db_host,
+                               run.valid_mode,
+                               prompt_calib.stream_id,
+                               prompt_calib_file.fileid,
+                               prompt_calib_file.subscription,
+                               wmbs_file_details.lfn
+                        FROM prompt_calib
+                        INNER JOIN run ON
+                          run.run_id = prompt_calib.run_id
+                        LEFT OUTER JOIN prompt_calib_file ON
+                          prompt_calib_file.run_id = prompt_calib.run_id AND
+                          prompt_calib_file.stream_id = prompt_calib.stream_id
+                        LEFT OUTER JOIN wmbs_sub_files_acquired ON
+                          wmbs_sub_files_acquired.fileid = prompt_calib_file.fileid
+                        LEFT OUTER JOIN wmbs_file_details ON
+                          wmbs_file_details.id = wmbs_sub_files_acquired.fileid
+                        WHERE checkForZeroState(prompt_calib.finished) = 0
+                        """
 
-    def execute(self, conn = None, transaction = False):
+    sqlFinished = """SELECT prompt_calib.run_id,
+                            run.cond_timeout,
+                            run.db_host,
+                            run.valid_mode,
+                            prompt_calib.stream_id,
+                            prompt_calib_file.fileid,
+                            prompt_calib_file.subscription,
+                            wmbs_file_details.lfn
+                     FROM prompt_calib
+                     INNER JOIN run ON
+                       run.run_id = prompt_calib.run_id
+                     INNER JOIN prompt_calib_file ON
+                       prompt_calib_file.run_id = prompt_calib.run_id AND
+                       prompt_calib_file.stream_id = prompt_calib.stream_id
+                     INNER JOIN wmbs_sub_files_acquired ON
+                       wmbs_sub_files_acquired.fileid = prompt_calib_file.fileid
+                     INNER JOIN wmbs_file_details ON
+                       wmbs_file_details.id = wmbs_sub_files_acquired.fileid
+                     WHERE prompt_calib.finished = 1
+                     """
 
-        results = self.dbi.processData(self.sql, {},
-                                       conn = conn, transaction = transaction)[0].fetchall()
+    def execute(self, finished, conn = None, transaction = False):
+
+        if finished:
+            results = self.dbi.processData(self.sqlFinished, {},
+                                           conn = conn, transaction = transaction)[0].fetchall()
+        else:
+            results = self.dbi.processData(self.sqlNotFinished, {},
+                                           conn = conn, transaction = transaction)[0].fetchall()
 
         conditions = {}
         for result in results:

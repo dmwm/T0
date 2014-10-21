@@ -51,11 +51,43 @@ def uploadConditions(username, password, serviceProxy):
     isPromptCalibrationFinishedDAO = daoFactory(classname = "ConditionUpload.IsPromptCalibrationFinished")
     markPromptCalibrationFinishedDAO = daoFactory(classname = "ConditionUpload.MarkPromptCalibrationFinished")
 
+    # look at all runs which are finished with conditions uploads
+    # check for late arriving payloads and upload them
+    conditions = findConditionsDAO.execute(finished = True, transaction = False)
+
+    for (index, run) in enumerate(sorted(conditions.keys()), 1):
+
+        dropboxHost = conditions[run]['dropboxHost']
+        validationMode = conditions[run]['validationMode']
+
+        for streamid, uploadableFiles in conditions[run]['streams'].items():
+
+            if len(uploadableFiles) > 0:
+
+                uploadedFiles = uploadToDropbox(uploadableFiles, dropboxHost, validationMode,
+                                                username, password, serviceProxy)
+
+                if len(uploadedFiles) > 0:
+
+                    bindVarList = []
+                    for uploadedFile in uploadedFiles:
+                        bindVarList.append( { 'FILEID' : uploadedFile['fileid'],
+                                              'SUBSCRIPTION' : uploadedFile['subscription'] } )
+
+                    # need a transaction here so we don't have files in
+                    # state acquired and complete at the same time
+                    try:
+                        myThread.transaction.begin()
+                        completeFilesDAO.execute(bindVarList, conn = myThread.transaction.conn, transaction = True)
+                    except:
+                        myThread.transaction.rollback()
+                        raise
+                    else:
+                        myThread.transaction.commit()
+
     # look at all runs not completely finished with condition uploads
     # return acquired (to be uploaded) files for them 
-    conditions = findConditionsDAO.execute(transaction = False)
-
-    now = time.time()
+    conditions = findConditionsDAO.execute(finished = False, transaction = False)
 
     for (index, run) in enumerate(sorted(conditions.keys()), 1):
 
@@ -114,7 +146,7 @@ def uploadConditions(username, password, serviceProxy):
             getRunEndTimeDAO = daoFactory(classname = "ConditionUpload.GetRunEndTime")
             endTime = getRunEndTimeDAO.execute(run, transaction = False)
 
-            if now < endTime + timeout:
+            if time.time() < endTime + timeout:
                 break
 
     return
