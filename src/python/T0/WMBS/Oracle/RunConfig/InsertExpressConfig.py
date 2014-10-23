@@ -13,14 +13,15 @@ class InsertExpressConfig(DBFormatter):
 
         sql = """INSERT INTO express_config
                  (RUN_ID, STREAM_ID, PROC_VERSION, WRITE_TIERS, GLOBAL_TAG,
-                  MAX_EVENTS, MAX_SIZE, MAX_FILES, MAX_LATENCY, DQM_INTERVAL,
-                  BLOCK_DELAY,CMSSW_ID, SCRAM_ARCH, RECO_CMSSW_ID,
-                  RECO_SCRAM_ARCH, ALCA_SKIM, DQM_SEQ)
+                  MAX_RATE, MAX_EVENTS, MAX_SIZE, MAX_FILES, MAX_LATENCY,
+                  DQM_INTERVAL, BLOCK_DELAY,CMSSW_ID, SCRAM_ARCH,
+                  RECO_CMSSW_ID, RECO_SCRAM_ARCH, ALCA_SKIM, DQM_SEQ)
                  VALUES (:RUN,
                          (SELECT id FROM stream WHERE name = :STREAM),
                          :PROC_VER,
                          :WRITE_TIERS,
                          :GLOBAL_TAG,
+                         :MAX_RATE,
                          :MAX_EVENTS,
                          :MAX_SIZE,
                          :MAX_FILES,

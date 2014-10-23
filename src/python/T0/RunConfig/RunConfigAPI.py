@@ -338,6 +338,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                    'PROC_VER' : streamConfig.Express.ProcessingVersion,
                                    'WRITE_TIERS' : ",".join(streamConfig.Express.DataTiers),
                                    'GLOBAL_TAG' : streamConfig.Express.GlobalTag,
+                                   'MAX_RATE' : streamConfig.Express.MaxInputRate,
                                    'MAX_EVENTS' : streamConfig.Express.MaxInputEvents,
                                    'MAX_SIZE' : streamConfig.Express.MaxInputSize,
                                    'MAX_FILES' : streamConfig.Express.MaxInputFiles,
@@ -527,6 +528,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             specArguments['GlobalTag'] = streamConfig.Express.GlobalTag
             specArguments['GlobalTagTransaction'] = "Express_%d" % run
+            specArguments['MaxInputRate'] = streamConfig.Express.MaxInputRate
             specArguments['MaxInputEvents'] = streamConfig.Express.MaxInputEvents
             specArguments['MaxInputSize'] = streamConfig.Express.MaxInputSize
             specArguments['MaxInputFiles'] = streamConfig.Express.MaxInputFiles

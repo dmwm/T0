@@ -29,6 +29,7 @@ class Express(JobFactory):
         """
         # extract some global scheduling parameters
         self.jobNamePrefix = kwargs.get('jobNamePrefix', "Express")
+        self.maxInputRate = kwargs['maxInputRate']
         self.maxInputEvents = kwargs['maxInputEvents']
 
         self.createdGroup = False
@@ -77,6 +78,15 @@ class Express(JobFactory):
         for lumi in sorted(streamersByLumi.keys()):
 
             lumiStreamerList = streamersByLumi[lumi]
+
+            # first check if we are over the max allowed rate
+            lumiEvents = 0
+            for streamer in lumiStreamerList:
+                lumiEvents = lumiEvents + streamer['events']
+
+            if lumiEvents > self.maxInputRate:
+                self.markComplete(lumiStreamerList)
+                continue
 
             createdMultipleJobs = False
             while len(lumiStreamerList) > 0:
@@ -135,3 +145,20 @@ class Express(JobFactory):
                      lfn = streamer['lfn'])
             f.setLocation(streamer['location'], immediateSave = False)
             self.currentJob.addFile(f)
+
+        return
+
+
+    def markComplete(self, streamerList):
+        """
+        _markComplete_
+
+        mark all streamers as complete
+        """
+        fileList = []
+        for streamer in streamerList:
+            fileList.append( File(id = streamer['id'],
+                                  lfn = streamer['lfn']) )
+        self.subscription.completeFiles(fileList)
+
+        return

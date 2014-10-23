@@ -1229,6 +1229,9 @@ class RunConfigTest(unittest.TestCase):
         self.assertEqual(expressConfig['global_tag'], "GlobalTag1",
                          "ERROR: wrong global tag for stream Express")
 
+        self.assertEqual(expressConfig['max_rate'], 1234,
+                         "ERROR: wrong max input rate for stream Express")
+
         self.assertEqual(expressConfig['max_events'], 123,
                          "ERROR: wrong max input events for stream Express")
 
