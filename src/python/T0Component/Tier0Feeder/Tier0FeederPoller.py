@@ -408,7 +408,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                                       'SCRAM_ARCH' : config['scram_arch'],
                                       'RECO_CMSSW' : config['reco_cmssw'],
                                       'RECO_SCRAM_ARCH' : config['reco_scram_arch'],
-                                      'GLOBAL_TAG' : config['global_tag'],
+                                      'GLOBAL_TAG' : config['global_tag'][:50],
                                       'SCENARIO' : config['scenario'] } )
                 bindsUpdate.append( { 'RUN' : config['run'],
                                       'STREAM' : config['stream'] } )
@@ -442,7 +442,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                                       'PRIMDS' : config['primds'],
                                       'CMSSW' : config['cmssw'],
                                       'SCRAM_ARCH' : config['scram_arch'],
-                                      'GLOBAL_TAG' : config['global_tag'],
+                                      'GLOBAL_TAG' : config['global_tag'][:50],
                                       'SCENARIO' : config['scenario'] } )
                 bindsUpdate.append( { 'RUN' : config['run'],
                                       'PRIMDS' : config['primds'] } )
