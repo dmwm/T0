@@ -281,6 +281,7 @@ class Create(DBCreator):
                  cmssw_id        int           not null,
                  scram_arch      varchar2(50)  not null,
                  reco_cmssw_id   int,
+                 multicore       int,
                  reco_scram_arch varchar2(50),
                  alca_skim       varchar2(1000),
                  dqm_seq         varchar2(1000),
@@ -320,6 +321,7 @@ class Create(DBCreator):
                  cmssw_id       int            not null,
                  scram_arch     varchar2(50)   not null,
                  global_tag     varchar2(255)  not null,
+                 multicore      int,
                  alca_skim      varchar2(1000),
                  dqm_seq        varchar2(1000),
                  primary key (run_id, primds_id)

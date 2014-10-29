@@ -52,8 +52,6 @@ class ExpressWorkloadFactory(StdBase):
 
         cmsswStepType = "CMSSW"
         taskType = "Processing"
-        if self.multicore:
-            taskType = "MultiProcessing"
 
         # complete output configuration
         for output in self.outputs:
@@ -122,6 +120,11 @@ class ExpressWorkloadFactory(StdBase):
             template(stepTwoCmssw.data)
 
             stepTwoCmsswHelper = stepTwoCmssw.getTypeHelper()
+
+            if self.multicore:
+                # if multicore, poke in the number of cores setting
+                stepTwoCmsswHelper.setMulticoreCores(self.multicoreNCores)
+
             stepTwoCmsswHelper.setGlobalTag(self.globalTag)
             stepTwoCmsswHelper.setupChainedProcessing("cmsRun1", conversionOutLabel)
             stepTwoCmsswHelper.cmsswSetup(self.frameworkVersion, softwareEnvironment = "",
@@ -184,7 +187,8 @@ class ExpressWorkloadFactory(StdBase):
                                                            splitAlgo = "ExpressMerge",
                                                            splitArgs = mySplitArgs,
                                                            stepType = cmsswStepType,
-                                                           forceMerged = True)
+                                                           forceMerged = True,
+                                                           useMulticore = False)
 
                 alcaSkimTask.setTaskType("Express")
 

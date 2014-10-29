@@ -52,9 +52,10 @@ class Tier0FeederTest(unittest.TestCase):
 
             wmAgentConfig = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
 
-            self.dqmUploadProxy = getattr(wmAgentConfig.WMBSService, "proxy", None)
-            self.localSummaryCouchDB = RequestDBWriter(wmAgentConfig.AnalyticsDataCollector.localWMStatsURL,
-                                                       couchapp = "T0Request")
+            self.dqmUploadProxy = getattr(wmAgentConfig.Tier0Feeder, "dqmUploadProxy", None)
+
+            self.localRequestCouchDB = RequestDBWriter(wmAgentConfig.AnalyticsDataCollector.localT0RequestDBURL,
+                                                       couchapp = wmAgentConfig.AnalyticsDataCollector.RequestCouchApp)
 
             if hasattr(wmAgentConfig, "HLTConfDatabase"):
 
@@ -1185,12 +1186,11 @@ class Tier0FeederTest(unittest.TestCase):
             for (workflowId, run, workflowName) in workflows:
                 logging.info(" Publishing workflow %s to monitoring" % workflowName)
                 doc = {}
-                doc["RequestName"] =   workflowName
-                doc["Run"]      =   run
-                response = self.localSummaryCouchDB.insertGenericRequest(doc)
+                doc["RequestName"] = workflowName
+                doc["Run"] = run
+                response = self.localRequestCouchDB.insertGenericRequest(doc)
                 if response == "OK" or "EXISTS":
                     logging.info(" Successfully uploaded request %s" % workflowName)
-                    # Here we have to trust the insert, if it doesn't happen will be easy to spot on the logs
                     self.markTrackedWorkflowMonitoringDAO.execute(workflowId)
 
         return

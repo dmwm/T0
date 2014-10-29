@@ -45,8 +45,6 @@ class RepackWorkloadFactory(StdBase):
 
         cmsswStepType = "CMSSW"
         taskType = "Processing"
-        if self.multicore:
-            taskType = "MultiProcessing"
 
         # complete output configuration
         for output in self.outputs:
@@ -65,7 +63,8 @@ class RepackWorkloadFactory(StdBase):
                                                  splitAlgo = "Repack",
                                                  splitArgs = mySplitArgs,
                                                  stepType = cmsswStepType,
-                                                 forceUnmerged = True)
+                                                 forceUnmerged = True,
+                                                 useMulticore = False)
 
         repackTask.setTaskType("Repack")
 

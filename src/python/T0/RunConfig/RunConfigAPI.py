@@ -96,7 +96,8 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
             insertStreamDatasetDAO.execute(bindsStreamDataset, conn = myThread.transaction.conn, transaction = True)
             insertTriggerDAO.execute(bindsTrigger, conn = myThread.transaction.conn, transaction = True)
             insertDatasetTriggerDAO.execute(bindsDatasetTrigger, conn = myThread.transaction.conn, transaction = True)
-        except:
+        except Exception as ex:
+            logging.exception(ex)
             myThread.transaction.rollback()
             raise RuntimeError("Problem in configureRun() database transaction !")
         else:
@@ -118,7 +119,8 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         try:
             myThread.transaction.begin()
             updateRunDAO.execute(bindsUpdateRun, conn = myThread.transaction.conn, transaction = True)
-        except:
+        except Exception as ex:
+            logging.exception(ex)
             myThread.transaction.rollback()
             raise RuntimeError("Problem in configureRun() database transaction !")
         else:
@@ -349,6 +351,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                    'SCRAM_ARCH' : streamConfig.Express.ScramArch,
                                    'RECO_CMSSW' : streamConfig.Express.RecoCMSSWVersion,
                                    'RECO_SCRAM_ARCH' : streamConfig.Express.RecoScramArch,
+                                   'MULTICORE' : streamConfig.Express.Multicore,
                                    'ALCA_SKIM' : alcaSkim,
                                    'DQM_SEQ' : dqmSeq }
 
@@ -474,7 +477,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             specArguments['TimePerEvent'] = 1
             specArguments['SizePerEvent'] = 200
-            specArguments['Memory'] = 1000
+            specArguments['Memory'] = 1800
 
             specArguments['RequestPriority'] = 0
 
@@ -514,6 +517,10 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['TimePerEvent'] = 12
             specArguments['SizePerEvent'] = 512
             specArguments['Memory'] = 1800
+
+            if streamConfig.Express.Multicore:
+                specArguments['Multicore'] = streamConfig.Express.Multicore
+                specArguments['Memory'] = 1800 * streamConfig.Express.Multicore
 
             specArguments['RequestPriority'] = 0
 
@@ -632,7 +639,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 insertRecoReleaseConfigDAO.execute(bindsRecoReleaseConfig, conn = myThread.transaction.conn, transaction = True)
             elif streamConfig.ProcessingStyle == "Express":
                 markWorkflowsInjectedDAO.execute([workflowName], injected = True, conn = myThread.transaction.conn, transaction = True)
-        except:
+        except Exception as ex:
+            logging.exception(ex)
             myThread.transaction.rollback()
             raise RuntimeError("Problem in configureRunStream() database transaction !")
         else:
@@ -747,6 +755,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                       'BLOCK_DELAY' : datasetConfig.BlockCloseDelay,
                                       'CMSSW' : datasetConfig.CMSSWVersion,
                                       'SCRAM_ARCH' : datasetConfig.ScramArch,
+                                      'MULTICORE' : datasetConfig.Multicore,
                                       'GLOBAL_TAG' : datasetConfig.GlobalTag } )
 
             phedexConfig = phedexConfigs[dataset]
@@ -827,6 +836,10 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 specArguments['SizePerEvent'] = 512
                 specArguments['Memory'] = 1800
 
+                if datasetConfig.Multicore:
+                    specArguments['Multicore'] = datasetConfig.Multicore
+                    specArguments['Memory'] = 1800 * datasetConfig.Multicore
+
                 specArguments['RequestPriority'] = 0
 
                 specArguments['AcquisitionEra'] = runInfo['acq_era']
@@ -906,7 +919,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
             insertWorkflowMonitoringDAO.execute([fileset],  conn = myThread.transaction.conn, transaction = True)
         if len(recoSpecs) > 0:
             markWorkflowsInjectedDAO.execute(recoSpecs.keys(), injected = True, conn = myThread.transaction.conn, transaction = True)
-    except:
+    except Exception as ex:
+        logging.exception(ex)
         myThread.transaction.rollback()
         raise RuntimeError("Problem in releasePromptReco() database transaction !")
     else:

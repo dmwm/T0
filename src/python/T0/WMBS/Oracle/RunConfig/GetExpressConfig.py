@@ -27,6 +27,7 @@ class GetExpressConfig(DBFormatter):
                         express_config.scram_arch AS scram_arch,
                         reco_version.name AS reco_cmssw,
                         express_config.reco_scram_arch AS reco_scram_arch,
+                        express_config.multicore AS multicore,
                         express_config.alca_skim AS alca_skim,
                         express_config.dqm_seq AS dqm_seq,
                         event_scenario.name AS scenario
