@@ -35,3 +35,5 @@ config.JobArchiver.handleInjected = False
 config.DBS3Upload.primaryDatasetType = "data"
 
 config.DBSInterface.primaryDatasetType = "data"
+
+config.AnalyticsDataCollector.pluginName = "Tier0Plugin"
