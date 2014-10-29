@@ -535,6 +535,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             specArguments['GlobalTag'] = streamConfig.Express.GlobalTag
             specArguments['GlobalTagTransaction'] = "Express_%d" % run
+            specArguments['GlobalTagConnect'] = streamConfig.Express.GlobalTagConnect
+
             specArguments['MaxInputRate'] = streamConfig.Express.MaxInputRate
             specArguments['MaxInputEvents'] = streamConfig.Express.MaxInputEvents
             specArguments['MaxInputSize'] = streamConfig.Express.MaxInputSize
@@ -854,7 +856,9 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 specArguments['ProcessingString'] = "PromptReco"
                 specArguments['ProcessingVersion'] = datasetConfig.ProcessingVersion
                 specArguments['Scenario'] = datasetConfig.Scenario
+
                 specArguments['GlobalTag'] = datasetConfig.GlobalTag
+                specArguments['GlobalTagConnect'] = datasetConfig.GlobalTagConnect
 
                 specArguments['InputDataset'] = "/%s/%s-%s/RAW" % (dataset, runInfo['acq_era'], repackProcVer)
 

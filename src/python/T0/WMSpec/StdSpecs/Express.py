@@ -73,15 +73,20 @@ class ExpressWorkloadFactory(StdBase):
 
             expressRecoStepName = "cmsRun1"
 
+            scenarioArgs = { 'globalTag' : self.globalTag,
+                             'globalTagTransaction' : self.globalTagTransaction,
+                             'skims' : self.alcaSkims,
+                             'dqmSeq' : self.dqmSequences,
+                             'outputs' : self.outputs,
+                             'inputSource' : "DAT" }
+
+            if self.globalTagConnect:
+                scenarioArgs['globalTagConnect'] = self.globalTagConnect
+
             expressOutMods = self.setupProcessingTask(expressTask, taskType,
                                                       scenarioName = self.procScenario,
                                                       scenarioFunc = "expressProcessing",
-                                                      scenarioArgs = { 'globalTag' : self.globalTag,
-                                                                       'globalTagTransaction' : self.globalTagTransaction,
-                                                                       'skims' : self.alcaSkims,
-                                                                       'dqmSeq' : self.dqmSequences,
-                                                                       'outputs' : self.outputs,
-                                                                       'inputSource' : "DAT" },
+                                                      scenarioArgs = scenarioArgs,
                                                       splitAlgo = "Express",
                                                       splitArgs = mySplitArgs,
                                                       stepType = cmsswStepType,
@@ -138,6 +143,9 @@ class ExpressWorkloadFactory(StdBase):
                              'outputs' : self.outputs,
                              'inputSource' : "EDM" }
 
+            if self.globalTagConnect:
+                scenarioArgs['globalTagConnect'] = self.globalTagConnect
+
             configOutput = self.determineOutputModules(scenarioFunc, scenarioArgs)
 
             expressOutMods = {}
@@ -157,7 +165,9 @@ class ExpressWorkloadFactory(StdBase):
             if 'primaryDataset' in scenarioArgs:
                 del scenarioArgs['primaryDataset']
 
-            stepTwoCmsswHelper.setDataProcessingConfig(self.procScenario, scenarioFunc, **scenarioArgs)
+            stepTwoCmsswHelper.setDataProcessingConfig(self.procScenario,
+                                                       scenarioFunc,
+                                                       **scenarioArgs)
 
 
         expressTask.setTaskType("Express")
@@ -177,13 +187,18 @@ class ExpressWorkloadFactory(StdBase):
                 alcaSkimTask.setInputReference(expressTask.getStep(expressRecoStepName),
                                                outputModule = expressOutLabel)
 
+                scenarioArgs = { 'globalTag' : self.globalTag,
+                                 'globalTagTransaction' : self.globalTagTransaction,
+                                 'skims' : self.alcaSkims,
+                                 'primaryDataset' : self.specialDataset }
+
+                if self.globalTagConnect:
+                    scenarioArgs['globalTagConnect'] = self.globalTagConnect
+
                 alcaSkimOutMods = self.setupProcessingTask(alcaSkimTask, taskType,
                                                            scenarioName = self.procScenario,
                                                            scenarioFunc = "alcaSkim",
-                                                           scenarioArgs = { 'globalTag' : self.globalTag,
-                                                                            'globalTagTransaction' : self.globalTagTransaction,
-                                                                            'skims' : self.alcaSkims,
-                                                                            'primaryDataset' : self.specialDataset },
+                                                           scenarioArgs = scenarioArgs,
                                                            splitAlgo = "ExpressMerge",
                                                            splitArgs = mySplitArgs,
                                                            stepType = cmsswStepType,
@@ -355,12 +370,18 @@ class ExpressWorkloadFactory(StdBase):
         harvestTask.setSplittingAlgorithm("AlcaHarvest",
                                           **mySplitArgs)
 
-        harvestTaskCmsswHelper.setDataProcessingConfig(self.procScenario, "alcaHarvesting",
-                                                       globalTag = self.globalTag,
-                                                       datasetName = "/%s/%s/%s" % (getattr(parentOutputModule, "primaryDataset"),
-                                                                                    getattr(parentOutputModule, "processedDataset"),
-                                                                                    getattr(parentOutputModule, "dataTier")),
-                                                       runNumber = self.runNumber)
+        scenarioArgs = { 'globalTag' : self.globalTag,
+                         'datasetName' : "/%s/%s/%s" % (getattr(parentOutputModule, "primaryDataset"),
+                                                        getattr(parentOutputModule, "processedDataset"),
+                                                        getattr(parentOutputModule, "dataTier")),
+                         'runNumber' : self.runNumber }
+
+        if self.globalTagConnect:
+            scenarioArgs['globalTagConnect'] = self.globalTagConnect
+
+        harvestTaskCmsswHelper.setDataProcessingConfig(self.procScenario,
+                                                       "alcaHarvesting",
+                                                       **scenarioArgs)
 
         harvestTaskConditionHelper = harvestTaskCondition.getTypeHelper()
         harvestTaskConditionHelper.setRunNumber(self.runNumber)
