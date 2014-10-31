@@ -286,6 +286,7 @@ def addDataset(config, datasetName, **settings):
       proc_version - processing version for all outputs
       cmssw_version - framework version
       global_tag - the global tag to use
+      global_tag_connect - connect straing for global tag
       reco_split - number of events to process per reco job
       write_reco - whether the reco jobs writes RECO output
       write_aod - whether the reco job writes AOD output
@@ -376,6 +377,12 @@ def addDataset(config, datasetName, **settings):
     elif not hasattr(datasetConfig, "WriteDQM"):
         msg = "Tier0Config.addDataset : no write_dqm defined for dataset %s or Default" % datasetName
         raise RuntimeError, msg
+
+    if hasattr(datasetConfig, "GlobalTagConnect"):
+        datasetConfig.GlobalTagConnect = settings.get('global_tag_connect', datasetConfig.GlobalTagConnect)
+    else:
+        datasetConfig.GlobalTagConnect = settings.get('global_tag_connect', None)
+
 
     if hasattr(datasetConfig, "ArchivalNode"):
         datasetConfig.ArchivalNode = settings.get('archival_node', datasetConfig.ArchivalNode)
@@ -607,8 +614,6 @@ def addExpressConfig(config, streamName, **options):
         msg = "Tier0Config.addExpressConfig : no scenario defined for stream %s" % streamName
         raise RuntimeError, msg
 
-    proc_config = options.get("proc_config", None)
-
     data_tiers = options.get("data_tiers", [])
     if type(data_tiers) != list or len(data_tiers) == 0:
         msg = "Tier0Config.addExpressConfig : data_tiers needs to be list with at least one tier"
@@ -618,8 +623,6 @@ def addExpressConfig(config, streamName, **options):
     if "ALCARECO" in data_tiers:
         alcamerge_config = options.get("alcamerge_config", None)
 
-    global_tag = options.get("global_tag", None)
-
     streamConfig = retrieveStreamConfig(config, streamName)
     streamConfig.ProcessingStyle = "Express"
     streamConfig.VersionOverride = options.get("versionOverride", {})
@@ -628,7 +631,9 @@ def addExpressConfig(config, streamName, **options):
 
     streamConfig.Express.Scenario = scenario
     streamConfig.Express.DataTiers = data_tiers
-    streamConfig.Express.GlobalTag = global_tag
+    streamConfig.Express.GlobalTag = options.get("global_tag", None)
+
+    streamConfig.Express.GlobalTagConnect = options.get("global_tag_connect", None)
 
     streamConfig.Express.RecoCMSSWVersion = options.get("reco_version", None)
 
