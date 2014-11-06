@@ -215,6 +215,7 @@ class ExpressWorkloadFactory(StdBase):
                     if alcaSkimOutInfo['dataTier'] == "ALCAPROMPT" and self.alcaHarvestDir != None:
 
                         harvestTask = self.addAlcaHarvestTask(alcaSkimTask, alcaSkimOutLabel,
+                                                              alcapromptdataset = alcaSkimOutInfo['filterName'],
                                                               condOutLabel = self.alcaHarvestOutLabel,
                                                               condUploadDir = self.alcaHarvestDir,
                                                               uploadProxy = self.dqmUploadProxy,
@@ -320,7 +321,7 @@ class ExpressWorkloadFactory(StdBase):
         return mergeTask
 
     def addAlcaHarvestTask(self, parentTask, parentOutputModuleName,
-                           condOutLabel, condUploadDir, uploadProxy,
+                           alcapromptdataset, condOutLabel, condUploadDir, uploadProxy,
                            parentStepName = "cmsRun1", doLogCollect = True):
         """
         _addAlcaHarvestTask_
@@ -374,7 +375,8 @@ class ExpressWorkloadFactory(StdBase):
                          'datasetName' : "/%s/%s/%s" % (getattr(parentOutputModule, "primaryDataset"),
                                                         getattr(parentOutputModule, "processedDataset"),
                                                         getattr(parentOutputModule, "dataTier")),
-                         'runNumber' : self.runNumber }
+                         'runNumber' : self.runNumber,
+                         'alcapromptdataset' : alcapromptdataset }
 
         if self.globalTagConnect:
             scenarioArgs['globalTagConnect'] = self.globalTagConnect
