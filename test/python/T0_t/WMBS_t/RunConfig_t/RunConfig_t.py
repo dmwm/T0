@@ -1226,8 +1226,11 @@ class RunConfigTest(unittest.TestCase):
                          "ERROR: wrong reco ScramArch for stream Express")
 
         writeTiers = expressConfig['write_tiers'].split(',')
-        self.assertEqual(set(writeTiers), set([ "FEVT", "ALCARECO", "DQM" ]),
+        self.assertEqual(set(writeTiers), set([ "FEVT" ]),
                          "ERROR: wrong data tiers for stream Express")
+
+        self.assertEqual(expressConfig['write_dqm'], True,
+                         "ERROR: wrong writeDQM for stream Express")
 
         self.assertEqual(expressConfig['global_tag'], "GlobalTag1",
                          "ERROR: wrong global tag for stream Express")
@@ -1292,6 +1295,9 @@ class RunConfigTest(unittest.TestCase):
         writeTiers = expressConfig['write_tiers'].split(',')
         self.assertEqual(set(writeTiers), set([ "FEVTHLTALL" ]),
                          "ERROR: wrong data tiers for stream HLTMON")
+
+        self.assertEqual(expressConfig['write_dqm'], False,
+                         "ERROR: wrong writeDQM for stream Express")
 
         writeSkims = []
         if expressConfig['alca_skim'] != None:
