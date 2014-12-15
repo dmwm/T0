@@ -105,6 +105,8 @@ Tier0Configuration - Global configuration object
 |             |     |
 |             |     |--> AlcaSkims - List of alca skims active for this stream.
 |             |     |
+|             |     |--> WriteDQM - whether we write out DQM information
+|             |     |
 |             |     |--> DqmSequences - List of dqm sequences active for this stream.
 |             |     |
 |             |     |--> ProcessingVersion - processing version
@@ -640,6 +642,7 @@ def addExpressConfig(config, streamName, **options):
     streamConfig.Express.Multicore = options.get('multicore', None)
 
     streamConfig.Express.AlcaSkims = options.get("alca_producers", [])
+    streamConfig.Express.WriteDQM = options.get("write_dqm", True)
     streamConfig.Express.DqmSequences = options.get("dqm_sequences", [])
     streamConfig.Express.ProcessingVersion = options.get("proc_ver", 1)
 

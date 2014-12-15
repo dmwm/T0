@@ -12,14 +12,16 @@ class InsertExpressConfig(DBFormatter):
     def execute(self, binds, conn = None, transaction = False):
 
         sql = """INSERT INTO express_config
-                 (RUN_ID, STREAM_ID, PROC_VERSION, WRITE_TIERS, GLOBAL_TAG,
-                  MAX_RATE, MAX_EVENTS, MAX_SIZE, MAX_FILES, MAX_LATENCY,
-                  DQM_INTERVAL, BLOCK_DELAY,CMSSW_ID, SCRAM_ARCH, RECO_CMSSW_ID,
-                  RECO_SCRAM_ARCH, MULTICORE, ALCA_SKIM, DQM_SEQ)
+                 (RUN_ID, STREAM_ID, PROC_VERSION, WRITE_TIERS, WRITE_DQM,
+                  GLOBAL_TAG, MAX_RATE, MAX_EVENTS, MAX_SIZE, MAX_FILES,
+                  MAX_LATENCY, DQM_INTERVAL, BLOCK_DELAY, CMSSW_ID,
+                  SCRAM_ARCH, RECO_CMSSW_ID, RECO_SCRAM_ARCH, MULTICORE,
+                  ALCA_SKIM, DQM_SEQ)
                  VALUES (:RUN,
                          (SELECT id FROM stream WHERE name = :STREAM),
                          :PROC_VER,
                          :WRITE_TIERS,
+                         :WRITE_DQM,
                          :GLOBAL_TAG,
                          :MAX_RATE,
                          :MAX_EVENTS,

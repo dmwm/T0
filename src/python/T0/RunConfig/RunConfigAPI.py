@@ -279,9 +279,9 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                            'PRIMDS' : specialDataset,
                                            'SCENARIO' : streamConfig.Express.Scenario } )
 
-            if "DQM" in streamConfig.Express.DataTiers:
-                outputModuleDetails.append( { 'dataTier' : "DQM",
-                                              'eventContent' : "DQM",
+            if streamConfig.Express.WriteDQM:
+                outputModuleDetails.append( { 'dataTier' : "DQMIO",
+                                              'eventContent' : "DQMIO",
                                               'primaryDataset' : specialDataset } )
 
             bindsStorageNode.append( { 'NODE' : expressPhEDExSubscribeNode } )
@@ -299,22 +299,21 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                     'primaryDataset' : specialDataset } )
 
             alcaSkim = None
-            if "ALCARECO" in streamConfig.Express.DataTiers:
-                if len(streamConfig.Express.AlcaSkims) > 0:
-                    outputModuleDetails.append( { 'dataTier' : "ALCARECO",
-                                                  'eventContent' : "ALCARECO",
-                                                  'primaryDataset' : specialDataset } )
-                    alcaSkim = ",".join(streamConfig.Express.AlcaSkims)
+            if len(streamConfig.Express.AlcaSkims) > 0:
+                outputModuleDetails.append( { 'dataTier' : "ALCARECO",
+                                              'eventContent' : "ALCARECO",
+                                              'primaryDataset' : specialDataset } )
+                alcaSkim = ",".join(streamConfig.Express.AlcaSkims)
 
-                    numPromptCalibProd = 0
-                    for producer in streamConfig.Express.AlcaSkims:
-                        if producer.startswith("PromptCalibProd"):
-                            numPromptCalibProd += 1
+                numPromptCalibProd = 0
+                for producer in streamConfig.Express.AlcaSkims:
+                    if producer.startswith("PromptCalibProd"):
+                        numPromptCalibProd += 1
 
-                    if numPromptCalibProd > 0:
-                        bindsPromptCalibration = { 'RUN' : run,
-                                                   'STREAM' : stream,
-                                                   'NUM_PRODUCER' : numPromptCalibProd }
+                if numPromptCalibProd > 0:
+                    bindsPromptCalibration = { 'RUN' : run,
+                                               'STREAM' : stream,
+                                               'NUM_PRODUCER' : numPromptCalibProd }
 
             dqmSeq = None
             if len(streamConfig.Express.DqmSequences) > 0:
@@ -339,6 +338,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                    'STREAM' : stream,
                                    'PROC_VER' : streamConfig.Express.ProcessingVersion,
                                    'WRITE_TIERS' : ",".join(streamConfig.Express.DataTiers),
+                                   'WRITE_DQM' : streamConfig.Express.WriteDQM,
                                    'GLOBAL_TAG' : streamConfig.Express.GlobalTag,
                                    'MAX_RATE' : streamConfig.Express.MaxInputRate,
                                    'MAX_EVENTS' : streamConfig.Express.MaxInputEvents,
@@ -441,7 +441,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             elif streamConfig.ProcessingStyle == "Express":
 
                 for dataTier in streamConfig.Express.DataTiers:
-                    if dataTier not in [ "ALCARECO", "DQM" ]:
+                    if dataTier not in [ "ALCARECO", "DQM", "DQMIO" ]:
 
                         outputModuleDetails.append( { 'dataTier' : dataTier,
                                                       'eventContent' : dataTier,
@@ -799,7 +799,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                             'autoApproveSites' : [],
                                             'priority' : "high",
                                             'primaryDataset' : dataset,
-                                            'dataTier' : "DQM" } )
+                                            'dataTier' : "DQMIO" } )
 
             if datasetConfig.WriteRECO:
                 if phedexConfig['disk_node'] != None:
@@ -816,7 +816,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
             if datasetConfig.WriteAOD:
                 writeTiers.append("AOD")
             if datasetConfig.WriteDQM:
-                writeTiers.append("DQM")
+                writeTiers.append("DQMIO")
             if len(datasetConfig.AlcaSkims) > 0:
                 writeTiers.append("ALCARECO")
 

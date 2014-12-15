@@ -302,13 +302,14 @@ class ExpressWorkloadFactory(StdBase):
         #                => disable size limits
         #  only harvest every 15 min
         #                => higher limits for latency (disabled for now)
-        dqm_format = getattr(parentOutputModule, "dataTier") == "DQM"
-        if dqm_format:
+        dataTier = getattr(parentOutputModule, "dataTier")
+        if dataTier in [ "DQM", "DQMIO" ]:
             mySplitArgs['maxInputSize'] *= 100
 
         mergeTask.setSplittingAlgorithm("ExpressMerge",
                                         **mySplitArgs)
-        mergeTaskCmsswHelper.setDataProcessingConfig(self.procScenario, "merge", dqm_format = dqm_format)
+        mergeTaskCmsswHelper.setDataProcessingConfig(self.procScenario, "merge",
+                                                     newDQMIO = (dataTier == "DQMIO"))
 
         self.addOutputModule(mergeTask, "Merged",
                              primaryDataset = getattr(parentOutputModule, "primaryDataset"),

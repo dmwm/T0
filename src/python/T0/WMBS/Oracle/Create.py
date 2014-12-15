@@ -270,6 +270,7 @@ class Create(DBCreator):
                  in_datasvc      int           default 0 not null,
                  proc_version    int           not null,
                  write_tiers     varchar2(255) not null,
+                 write_dqm       int           not null,
                  global_tag      varchar2(255) not null,
                  max_rate        int           not null,
                  max_events      int           not null,

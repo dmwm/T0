@@ -15,6 +15,7 @@ class GetExpressConfig(DBFormatter):
 
         sql = """SELECT express_config.proc_version AS proc_ver,
                         express_config.write_tiers AS write_tiers,
+                        express_config.write_dqm AS write_dqm,
                         express_config.global_tag AS global_tag,
                         express_config.max_rate AS max_rate,
                         express_config.max_events AS max_events,
