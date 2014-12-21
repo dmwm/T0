@@ -280,8 +280,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                            'SCENARIO' : streamConfig.Express.Scenario } )
 
             if streamConfig.Express.WriteDQM:
-                outputModuleDetails.append( { 'dataTier' : "DQMIO",
-                                              'eventContent' : "DQMIO",
+                outputModuleDetails.append( { 'dataTier' : tier0Config.Global.DQMDataTier,
+                                              'eventContent' : tier0Config.Global.DQMDataTier,
                                               'primaryDataset' : specialDataset } )
 
             bindsStorageNode.append( { 'NODE' : expressPhEDExSubscribeNode } )
@@ -799,7 +799,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                             'autoApproveSites' : [],
                                             'priority' : "high",
                                             'primaryDataset' : dataset,
-                                            'dataTier' : "DQMIO" } )
+                                            'dataTier' : tier0Config.Global.DQMDataTier } )
 
             if datasetConfig.WriteRECO:
                 if phedexConfig['disk_node'] != None:
@@ -816,7 +816,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
             if datasetConfig.WriteAOD:
                 writeTiers.append("AOD")
             if datasetConfig.WriteDQM:
-                writeTiers.append("DQMIO")
+                writeTiers.append(tier0Config.Global.DQMDataTier)
             if len(datasetConfig.AlcaSkims) > 0:
                 writeTiers.append("ALCARECO")
 
