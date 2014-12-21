@@ -20,6 +20,8 @@ Tier0Configuration - Global configuration object
 | |       |
 | |       |--> BulkDataLocation - The bulk data location for the run (to be used as phedex source site)
 | |       |
+| |       |--> DQMDataTier - The data tier used for DQM (default is DQMIO).
+| |       |
 | |       |--> DQMUploadURL - The URL used for DQM uploads
 | |       |
 | |       |--> AlcaHarvestTimeout - AlcaHarvesting for a run/stream is normally trigered by
@@ -211,6 +213,8 @@ def createTier0Config():
 
     tier0Config.Global.ScramArches = {}
     tier0Config.Global.Backfill = None
+
+    tier0Config.Global.DQMDataTier = "DQMIO"
 
     return tier0Config
 
@@ -477,6 +481,20 @@ def setBulkDataLocation(config, location):
     
     """
     config.Global.BulkDataLocation = location
+    return
+
+def setDQMDataTier(config, datatier):
+    """
+    _setDQMDataTier_
+
+    Set the DQM data tier
+
+    """
+    if datatier not in [ "DQM", "DQMIO" ]:
+        msg = "Tier0Config.setDQMDataTier : %s not an allowed DQM data tier !" % datatier
+        raise RuntimeError, msg
+
+    config.Global.DQMDataTier = datatier
     return
 
 def setDQMUploadUrl(config, dqmuploadurl):
