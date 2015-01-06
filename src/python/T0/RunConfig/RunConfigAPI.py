@@ -45,9 +45,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
     if hltConfig == None and referenceHltConfig != None:
         hltConfig = referenceHltConfig
 
-    #
     # treat centralDAQ or miniDAQ runs (have an HLT key) different from local runs
-    #
     if hltConfig != None:
 
         # write stream/dataset/trigger mapping
@@ -153,9 +151,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
     getRunInfoDAO = daoFactory(classname = "RunConfig.GetRunInfo")
     runInfo = getRunInfoDAO.execute(run, transaction = False)[0]
 
-    #
     # treat centralDAQ or miniDAQ runs (have an HLT key) different from local runs
-    #
     if runInfo['hltkey'] != None:
 
         # streams not explicitely configured are repacked
@@ -471,10 +467,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             specArguments = {}
 
-            specArguments['Group'] = "unknown"
-            specArguments['Requestor'] = "unknown"
-            specArguments['RequestorDN'] = "unknown"
-
             specArguments['TimePerEvent'] = 1
             specArguments['SizePerEvent'] = 200
             specArguments['Memory'] = 1800
@@ -509,10 +501,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             workflowName = "Express_Run%d_Stream%s" % (run, stream)
 
             specArguments = {}
-
-            specArguments['Group'] = "unknown"
-            specArguments['Requestor'] = "unknown"
-            specArguments['RequestorDN'] = "unknown"
 
             specArguments['TimePerEvent'] = 12
             specArguments['SizePerEvent'] = 512
@@ -830,10 +818,6 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
 
                 specArguments = {}
 
-                specArguments['Group'] = "unknown"
-                specArguments['Requestor'] = "unknown"
-                specArguments['RequestorDN'] = "unknown"
-
                 specArguments['TimePerEvent'] = 12
                 specArguments['SizePerEvent'] = 512
                 specArguments['Memory'] = 1800
@@ -884,9 +868,6 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 specArguments['SiteWhitelist'] = datasetConfig.SiteWhitelist
                 specArguments['SiteBlacklist'] = []
                 specArguments['TrustSitelists'] = "True"
-
-                # not used, but needed by the validation
-                specArguments['CouchURL'] = "http://fakehost:1234"
 
                 factory = PromptRecoWorkloadFactory()
                 wmSpec = factory.factoryWorkloadConstruction(workflowName, specArguments)
