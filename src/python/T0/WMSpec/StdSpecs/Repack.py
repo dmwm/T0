@@ -184,19 +184,27 @@ class RepackWorkloadFactory(StdBase):
 
     @staticmethod
     def getWorkloadArguments():
+        """
+         If arg is not specifyed, automatically set by following default value
+        - default: None
+        - type: str
+        - optional: True
+        - assign_optional: True
+        - validate: None
+        - attr: change first letter to lower case
+        - null: False
+        """
         baseArgs = StdBase.getWorkloadArguments()
 ##         specArgs = {"Outputs" : {"default" : {}, "type" : dict,
 ##                                  "optional" : False, "validate" : None,
 ##                                  "attr" : "outputs", "null" : False},
-        specArgs = {"Scenario" : {"default" : "fake", "type" : str,
-                                  "optional" : True, "validate" : None,
-                                  "attr" : "procScenario", "null" : False},
-                    "GlobalTag" : {"default" : "fake", "type" : str,
-                                   "optional" : True, "validate" : None,
-                                   "attr" : "globalTag", "null" : False},
-                    "BlockCloseDelay" : {"default" : None, "type" : int,
-                                         "optional" : False, "validate" : lambda x : x > 0,
-                                         "attr" : "blockCloseDelay", "null" : False},
+        specArgs = {"RequestType" : {"default" : "Repack"},
+                    "Scenario" : {"default" : "fake", "attr" : "procScenario"},
+                    "GlobalTag" : {"default" : "fake"},
+                    "BlockCloseDelay" : {"type" : int, "optional" : False, 
+                                         "validate" : lambda x : x > 0,
+                                         },
                     }
         baseArgs.update(specArgs)
+        StdBase.setDefaultArgumentsProperty(baseArgs)
         return baseArgs

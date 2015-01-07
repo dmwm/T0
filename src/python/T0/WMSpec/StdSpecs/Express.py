@@ -465,46 +465,37 @@ class ExpressWorkloadFactory(StdBase):
 
     @staticmethod
     def getWorkloadArguments():
+        """
+         If arg is not specifyed, automatically set by following default value
+        - default: None
+        - type: str
+        - optional: True
+        - assign_optional: True
+        - validate: None
+        - attr: change first letter to lower case
+        - null: False
+
+        """
         baseArgs = StdBase.getWorkloadArguments()
 ##         specArgs = {"Outputs" : {"default" : {}, "type" : dict,
 ##                                  "optional" : False, "validate" : None,
 ##                                  "attr" : "outputs", "null" : False},
-        specArgs = {"Scenario" : {"default" : None, "type" : str,
-                                  "optional" : False, "validate" : None,
-                                  "attr" : "procScenario", "null" : False},
-                    "RecoCMSSWVersion" : {"default" : None, "type" : str,
-                                          "optional" : False, "validate" : cmsswversion,
+        specArgs = {"RequestType" : {"default" : "Express"},
+                    "Scenario" : {"optional" : False, "attr" : "procScenario"},
+                    "RecoCMSSWVersion" : {"optional" : False, "validate" : cmsswversion,
                                           "attr" : "recoFrameworkVersion", "null" : True},
-                    "RecoScramArch" : {"default" : None, "type" : str,
-                                       "optional" : False, "validate" : None,
-                                       "attr" : "recoScramArch", "null" : True},
-                    "GlobalTag" : {"default" : None, "type" : str,
-                                   "optional" : False, "validate" : None,
-                                   "attr" : "globalTag", "null" : False},
-                    "GlobalTagTransaction" : {"default" : None, "type" : str,
-                                              "optional" : False, "validate" : None,
-                                              "attr" : "globalTagTransaction", "null" : False},
-                    "StreamName" : {"default" : None, "type" : str,
-                                    "optional" : False, "validate" : None,
-                                    "attr" : "streamName", "null" : False},
-                    "SpecialDataset" : {"default" : None, "type" : str,
-                                        "optional" : False, "validate" : None,
-                                        "attr" : "specialDataset", "null" : False},
-                    "AlcaHarvestTimeout" : {"default" : None, "type" : int,
-                                            "optional" : False, "validate" : None,
-                                            "attr" : "alcaHarvestTimeout", "null" : False},
-                    "AlcaHarvestDir" : {"default" : None, "type" : str,
-                                        "optional" : False, "validate" : None,
-                                        "attr" : "alcaHarvestDir", "null" : True},
-                    "AlcaSkims" : {"default" : None, "type" : makeList,
-                                   "optional" : False, "validate" : None,
-                                   "attr" : "alcaSkims", "null" : False},
-                    "DqmSequences" : {"default" : None, "type" : makeList,
-                                      "optional" : False, "validate" : None,
-                                      "attr" : "dqmSequences", "null" : False},
-                    "BlockCloseDelay" : {"default" : None, "type" : int,
-                                         "optional" : False, "validate" : lambda x : x > 0,
-                                         "attr" : "blockCloseDelay", "null" : False},
+                    "RecoScramArch" : {"optional" : False, "null" : True},
+                    "GlobalTag" : {"optional" : False},
+                    "GlobalTagTransaction" : {"optional" : False},
+                    "StreamName" : {"optional" : False},
+                    "SpecialDataset" : {"optional" : False},
+                    "AlcaHarvestTimeout" : {"type" : int, "optional" : False},
+                    "AlcaHarvestDir" : {"optional" : False, "null" : True},
+                    "AlcaSkims" : {"type" : makeList, "optional" : False},
+                    "DqmSequences" : {"type" : makeList, "optional" : False},
+                    "BlockCloseDelay" : {"type" : int, "optional" : False, 
+                                         "validate" : lambda x : x > 0},
                     }
         baseArgs.update(specArgs)
+        StdBase.setDefaultArgumentsProperty(baseArgs)
         return baseArgs
