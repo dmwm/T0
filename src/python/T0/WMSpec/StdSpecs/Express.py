@@ -227,7 +227,7 @@ class ExpressWorkloadFactory(StdBase):
 
                 mergeTask = self.addExpressMergeTask(expressTask, expressRecoStepName, expressOutLabel)
 
-                if expressOutInfo['dataTier'] in [ "DQM", "DQMROOT" ]:
+                if expressOutInfo['dataTier'] in [ "DQM", "DQMIO" ]:
 
                     self.addDQMHarvestTask(mergeTask, "Merged",
                                            uploadProxy = self.dqmUploadProxy,
