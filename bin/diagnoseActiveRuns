@@ -20,7 +20,7 @@ from WMCore.Configuration import loadConfigurationFile
 from WMCore.DAOFactory import DAOFactory
 from WMCore.Database.DBFactory import DBFactory
 from WMCore.Database.Transaction import Transaction
-from WMCore.Services.WMStats.WMStatsReader import WMStatsReader
+from WMCore.Services.RequestDB.RequestDBReader import RequestDBReader
 
 def buildLumiRanges(lumiList):
     """
@@ -74,9 +74,9 @@ def diagnoseRun(runNumber, doChange):
                                  logger = logging,
                                  dbinterface = dbInterfaceSM)
 
-    # It needs WMStats as well
-    localWmstatsUrl = wmat0Config.AnalyticsDataCollector.localWMStatsURL
-    localDBreader = WMStatsReader(localWmstatsUrl)
+    # Connect to the request db
+    requestDBurl = wmat0Config.AnalyticsDataCollector.centralRequestDBURL
+    requestDBreader = RequestDBReader(requestDBurl, couchapp = 'T0Request')
 
     # Start the checks
     findActiveRunsDAO = daoFactoryT0AST(classname = "RunLumiCloseout.FindActiveRuns")
@@ -109,8 +109,8 @@ def diagnoseRun(runNumber, doChange):
     
     all_status =  ["new","Closed","Merge","Harvesting","Processing Done","AlcaSkim","completed"]
     
-    activeWorkflows = localDBreader.workflowsByStatus(["new"])
-    closedWorkflows = localDBreader.workflowsByStatus(all_status)
+    activeWorkflows = requestDBreader.getRequestByStatus(["new"])
+    closedWorkflows = requestDBreader.getRequestByStatus(all_status)
     regex = re.compile(r"^[\w]+_Run%s_[\w]+$" % runNumber)
     matchingWorkflows = filter(regex.match, activeWorkflows)
     matchingAllWorkflows = filter(regex.match, closedWorkflows)
