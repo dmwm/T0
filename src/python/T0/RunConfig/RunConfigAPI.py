@@ -750,28 +750,19 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
 
             phedexConfig = phedexConfigs[dataset]
 
-            if datasetConfig.WriteAOD:
+            # do things different based on whether we have TapeNode/DiskNode or ArchivalNode
+            if phedexConfig['tape_node'] != None and phedexConfig['disk_node'] != None:
 
-                custodialSites = []
-                nonCustodialSites = []
-                autoApproveSites = []
-
-                if phedexConfig['tape_node'] != None:
-                    custodialSites.append(phedexConfig['tape_node'])
-                if phedexConfig['disk_node'] != None:
-                    nonCustodialSites.append(phedexConfig['disk_node'])
-                    autoApproveSites.append(phedexConfig['disk_node'])
-
-                subscriptions.append( { 'custodialSites' : custodialSites,
+                if datasetConfig.WriteAOD:
+                    subscriptions.append( { 'custodialSites' : [phedexConfig['tape_node']],
                                             'custodialSubType' : "Replica",
-                                            'nonCustodialSites' : nonCustodialSites,
-                                            'autoApproveSites' : autoApproveSites,
+                                            'nonCustodialSites' : [phedexConfig['disk_node']],
+                                            'autoApproveSites' : [phedexConfig['disk_node']],
                                             'priority' : "high",
                                             'primaryDataset' : dataset,
                                             'dataTier' : "AOD" } )
 
-            if len(datasetConfig.AlcaSkims) > 0:
-                if phedexConfig['tape_node'] != None:
+                if len(datasetConfig.AlcaSkims) > 0:
                     subscriptions.append( { 'custodialSites' : [phedexConfig['tape_node']],
                                             'custodialSubType' : "Replica",
                                             'nonCustodialSites' : [],
@@ -779,8 +770,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                             'priority' : "high",
                                             'primaryDataset' : dataset,
                                             'dataTier' : "ALCARECO" } )
-            if datasetConfig.WriteDQM:
-                if phedexConfig['tape_node'] != None:
+
+                if datasetConfig.WriteDQM:
                     subscriptions.append( { 'custodialSites' : [phedexConfig['tape_node']],
                                             'custodialSubType' : "Replica",
                                             'nonCustodialSites' : [],
@@ -789,14 +780,51 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                             'primaryDataset' : dataset,
                                             'dataTier' : tier0Config.Global.DQMDataTier } )
 
-            if datasetConfig.WriteRECO:
-                if phedexConfig['disk_node'] != None:
+                if datasetConfig.WriteRECO:
                     subscriptions.append( { 'custodialSites' : [],
                                             'nonCustodialSites' : [phedexConfig['disk_node']],
                                             'autoApproveSites' : [phedexConfig['disk_node']],
                                             'priority' : "high",
                                             'primaryDataset' : dataset,
                                             'dataTier' : "RECO" } )
+
+            elif phedexConfig['archival_node'] != None:
+
+                    if datasetConfig.WriteAOD:
+                        subscriptions.append( { 'custodialSites' : [phedexConfig['archival_node']],
+                                                'custodialSubType' : "Replica",
+                                                'nonCustodialSites' : [],
+                                                'autoApproveSites' : [phedexConfig['archival_node']],
+                                                'priority' : "high",
+                                                'primaryDataset' : dataset,
+                                                'dataTier' : "AOD" } )
+
+                    if len(datasetConfig.AlcaSkims) > 0:
+                        subscriptions.append( { 'custodialSites' : [phedexConfig['archival_node']],
+                                                'custodialSubType' : "Replica",
+                                                'nonCustodialSites' : [],
+                                                'autoApproveSites' : [phedexConfig['archival_node']],
+                                                'priority' : "high",
+                                                'primaryDataset' : dataset,
+                                                'dataTier' : "ALCARECO" } )
+
+                    if datasetConfig.WriteDQM:
+                        subscriptions.append( { 'custodialSites' : [phedexConfig['archival_node']],
+                                                'custodialSubType' : "Replica",
+                                                'nonCustodialSites' : [],
+                                                'autoApproveSites' : [phedexConfig['archival_node']],
+                                                'priority' : "high",
+                                                'primaryDataset' : dataset,
+                                                'dataTier' : tier0Config.Global.DQMDataTier } )
+
+                    if datasetConfig.WriteRECO:
+                        subscriptions.append( { 'custodialSites' : [phedexConfig['archival_node']],
+                                                'custodialSubType' : "Replica",
+                                                'nonCustodialSites' : [],
+                                                'autoApproveSites' : [phedexConfig['archival_node']],
+                                                'priority' : "high",
+                                                'primaryDataset' : dataset,
+                                                'dataTier' : "RECO" } )
 
             writeTiers = []
             if datasetConfig.WriteRECO:

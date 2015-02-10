@@ -389,11 +389,20 @@ def addDataset(config, datasetName, **settings):
     else:
         datasetConfig.GlobalTagConnect = settings.get('global_tag_connect', None)
 
-
     if hasattr(datasetConfig, "ArchivalNode"):
         datasetConfig.ArchivalNode = settings.get('archival_node', datasetConfig.ArchivalNode)
     else:
         datasetConfig.ArchivalNode = settings.get('archival_node', None)
+
+    if hasattr(datasetConfig, "TapeNode"):
+        datasetConfig.TapeNode = settings.get('tape_node', datasetConfig.TapeNode)
+    else:
+        datasetConfig.TapeNode = settings.get('tape_node', None)
+
+    if hasattr(datasetConfig, "DiskNode"):
+        datasetConfig.DiskNode = settings.get('disk_node', datasetConfig.DiskNode)
+    else:
+        datasetConfig.DiskNode = settings.get('disk_node', None)
 
     if hasattr(datasetConfig, "Multicore"):
         datasetConfig.Multicore = settings.get('multicore', datasetConfig.Multicore)
@@ -418,9 +427,6 @@ def addDataset(config, datasetName, **settings):
     #
     datasetConfig.AlcaSkims = settings.get("alca_producers", [])
     datasetConfig.DqmSequences = settings.get("dqm_sequences", [])
-
-    datasetConfig.TapeNode = settings.get("tape_node", None)
-    datasetConfig.DiskNode = settings.get("disk_node", None)
 
     return
 
@@ -616,9 +622,6 @@ def addRepackConfig(config, streamName, **options):
         streamConfig.Repack.BlockCloseDelay = options.get("blockCloseDelay", streamConfig.Repack.BlockCloseDelay)
     else:
         streamConfig.Repack.BlockCloseDelay = options.get("blockCloseDelay", 24 * 3600)
-
-    streamConfig.Repack.TapeNodes = options.get("tapeNodes", [])
-    streamConfig.Repack.DiskNodes = options.get("diskNodes", [])
 
     return
 
