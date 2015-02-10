@@ -19,12 +19,11 @@ class GetExpressReadyRuns(DBFormatter):
 
     def execute(self, binds, conn = None, transaction = False):
 
-        sql = """SELECT lastsince
-                 FROM CMS_COND_31X_POPCONLOG.COND_LOG_TABLE
-                 WHERE execmessage = 'OK'
-                 AND iovtag like 'runinfo_start_%_hlt'
-                 AND lastsince = :RUN
-                 GROUP BY lastsince
+        sql = """SELECT since
+                 FROM CMS_CONDITIONS.IOV
+                 WHERE tag_name LIKE 'runinfo_start_%_hlt'
+                 AND SINCE = :RUN
+                 GROUP BY since
                  HAVING COUNT(*) > 0
                  """
 
