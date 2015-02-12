@@ -569,7 +569,7 @@ def uploadTier0Files(filenames, username, password, cookieFileName = defaultCook
 
     This has the following requirements:
         * Username/Password based authentication.
-        * Uses the tier0 backend.
+        * Uses the online backend.
         * Ignores errors related to the upload/content (e.g. duplicated file).
     '''
 
@@ -579,7 +579,7 @@ def uploadTier0Files(filenames, username, password, cookieFileName = defaultCook
 
     for filename in filenames:
         try:
-            dropBox.uploadFile(filename, backend = 'tier0')
+            dropBox.uploadFile(filename, backend = 'online')
         except HTTPError as e:
             if e.code == 400:
                 # 400 Bad Request: This is an exception related to the upload
