@@ -148,7 +148,7 @@ class Repack(JobFactory):
 
                 # repack what we have to preserve order
                 if len(jobStreamerList) > 0:
-                    self.createJob(jobStreamerList)
+                    self.createJob(jobStreamerList, jobEventsTotal, jobSizeTotal)
                     jobSizeTotal = 0
                     jobEventsTotal = 0
                     jobStreamerList = []
@@ -181,7 +181,7 @@ class Repack(JobFactory):
 
                     # allow large single lumi repack to use multiple cores
                     numberOfCores = 1 + (int)(sizeTotal/(20*1000*1000*1000))
-                    self.createJob(streamerList, numberOfCores)
+                    self.createJob(streamerList, eventsTotal, sizeTotal, numberOfCores)
 
                     for streamer in streamerList:
                         lumiStreamerList.remove(streamer)
@@ -225,7 +225,7 @@ class Repack(JobFactory):
                 # over limits with new lumi, issue repack job
                 else:
 
-                    self.createJob(jobStreamerList)
+                    self.createJob(jobStreamerList, jobEventsTotal, jobSizeTotal)
 
                     jobSizeTotal = lumiSizeTotal
                     jobEventsTotal = lumiEventsTotal
@@ -233,7 +233,7 @@ class Repack(JobFactory):
 
         # if we are in closeout issue repack job for leftovers
         if len(jobStreamerList) > 0 and not filesetOpen:
-            self.createJob(jobStreamerList)
+            self.createJob(jobStreamerList, jobEventsTotal, jobSizeTotal)
 
         if len(splitLumis) > 0:
             self.insertSplitLumisDAO.execute(binds = splitLumis)
@@ -241,7 +241,7 @@ class Repack(JobFactory):
         return
 
 
-    def createJob(self, streamerList, numberOfCores = 1):
+    def createJob(self, streamerList, jobEvents, jobSize, numberOfCores = 1):
         """
         _createJob_
 
@@ -260,5 +260,15 @@ class Repack(JobFactory):
                      lfn = streamer['lfn'])
             f.setLocation(streamer['location'], immediateSave = False)
             self.currentJob.addFile(f)
+
+        # job time based on
+        #   - 5 min initialization
+        #   - 0.5MB/s repack speed
+        #   - checksum calculation at 5MB/s (twice)
+        #   - stageout at 5MB/s
+        # job disk based on
+        #   - RAW on local disk (factor 1)
+        jobTime = 300 + jobSize/500000 + (jobSize*3)/5000000
+        self.currentJob.addResourceEstimates(jobTime = jobTime, disk = jobSize/1024)
 
         return

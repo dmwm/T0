@@ -157,7 +157,7 @@ class RepackMerge(JobFactory):
 
                 # merge what we have to preserve order
                 if len(jobFileList) > 0:
-                    self.createJob(jobFileList)
+                    self.createJob(jobFileList, jobSizeTotal)
                     jobSizeTotal = 0
                     jobEventsTotal = 0
                     jobInputFiles = 0
@@ -189,7 +189,7 @@ class RepackMerge(JobFactory):
                                 sizeTotal = newSizeTotal
                                 fileList.append(fileInfo)
 
-                    self.createJob(fileList, errorDataset = True)
+                    self.createJob(fileList, eventsTotal, errorDataset = True)
 
                     for fileInfo in fileList:
                         lumiFileList.remove(fileInfo)
@@ -199,14 +199,14 @@ class RepackMerge(JobFactory):
 
                 # merge what we have to preserve order
                 if len(jobFileList) > 0:
-                    self.createJob(jobFileList)
+                    self.createJob(jobFileList, jobSizeTotal)
                     jobSizeTotal = 0
                     jobEventsTotal = 0
                     jobInputFiles = 0
                     jobFileList = []
 
                 # then issue merge on new lumi
-                self.createJob(lumiFileList)
+                self.createJob(lumiFileList, lumiSizeTotal)
 
             else:
 
@@ -228,7 +228,7 @@ class RepackMerge(JobFactory):
                 # issue merge job (regular)
                 elif jobSizeTotal > self.minInputSize:
 
-                    self.createJob(jobFileList)
+                    self.createJob(jobFileList, jobSizeTotal)
                     jobSizeTotal = lumiSizeTotal
                     jobEventsTotal = lumiEventsTotal
                     jobInputFiles = lumiInputFiles
@@ -242,7 +242,7 @@ class RepackMerge(JobFactory):
                          newEventsTotal <= self.maxInputEvents:
 
                     jobFileList.extend(lumiFileList)
-                    self.createJob(jobFileList)
+                    self.createJob(jobFileList, jobSizeTotal)
                     jobSizeTotal = 0
                     jobEventsTotal = 0
                     jobInputFiles = 0
@@ -253,7 +253,7 @@ class RepackMerge(JobFactory):
                 # issue merge job (too small)
                 else:
 
-                    self.createJob(jobFileList)
+                    self.createJob(jobFileList, jobSizeTotal)
                     jobSizeTotal = lumiSizeTotal
                     jobEventsTotal = lumiEventsTotal
                     jobInputFiles = lumiInputFiles
@@ -261,12 +261,12 @@ class RepackMerge(JobFactory):
 
         # finish out leftovers if we are in closeout
         if len(jobFileList) > 0 and not filesetOpen:
-            self.createJob(jobFileList)
+            self.createJob(jobFileList, jobSizeTotal)
 
         return
 
 
-    def createJob(self, fileList, errorDataset = False):
+    def createJob(self, fileList, jobSize, errorDataset = False):
         """
         _createJob_
 
@@ -283,10 +283,23 @@ class RepackMerge(JobFactory):
         if errorDataset:
             self.currentJob.addBaggageParameter("useErrorDataset", True)
 
+        largestFile = 0
         for fileInfo in fileList:
+            largestFile = max(largestFile, fileInfo['filesize'])
             f = File(id = fileInfo['id'],
                      lfn = fileInfo['lfn'])
             f.setLocation(fileInfo['location'], immediateSave = False)
             self.currentJob.addFile(f)
+
+        # job time based on
+        #   - 5 min initialization
+        #   - 5MB/s merge speed
+        #   - checksum calculation at 5MB/s (twice)
+        #   - stageout at 5MB/s
+        # job disk based on
+        #  - input for largest file on local disk
+        #  - output on local disk (factor 1)
+        jobTime = 300 + (jobSize*4)/5000000
+        self.currentJob.addResourceEstimates(jobTime = jobTime, disk = (jobSize+largestFile)/1024)
 
         return

@@ -79,12 +79,15 @@ class Express(JobFactory):
 
             lumiStreamerList = streamersByLumi[lumi]
 
-            # first check if we are over the max allowed rate
-            lumiEvents = 0
+            # calculate lumi size and event count
+            lumiSizeTotal = 0
+            lumiEventsTotal = 0
             for streamer in lumiStreamerList:
-                lumiEvents = lumiEvents + streamer['events']
+                lumiEventsTotal += streamer['events']
+                lumiSizeTotal += streamer['filesize']
 
-            if lumiEvents > self.maxInputRate:
+            # check if we are over the max allowed rate
+            if lumiEventsTotal > self.maxInputRate:
                 self.markComplete(lumiStreamerList)
                 continue
 
@@ -92,6 +95,7 @@ class Express(JobFactory):
             while len(lumiStreamerList) > 0:
 
                 eventsTotal = 0
+                sizeTotal = 0
                 streamerList = []
 
                 for streamer in lumiStreamerList:
@@ -99,16 +103,19 @@ class Express(JobFactory):
                     # if first streamer, always use it
                     if len(streamerList) == 0:
                         eventsTotal = streamer['events']
+                        sizeTotal = streamer['filesize']
                         streamerList.append(streamer)
                     # otherwise calculate new totals and check if to use streamer
                     else:
                         newEventsTotal = eventsTotal + streamer['events']
+                        newSizeTotal = sizeTotal + streamer['filesize']
 
                         if newEventsTotal <= self.maxInputEvents:
                             eventsTotal = newEventsTotal
+                            sizeTotal = newSizeTotal
                             streamerList.append(streamer)
 
-                self.createJob(streamerList)
+                self.createJob(streamerList, eventsTotal, sizeTotal)
 
                 for streamer in streamerList:
                     lumiStreamerList.remove(streamer)
@@ -126,7 +133,7 @@ class Express(JobFactory):
         return
 
 
-    def createJob(self, streamerList):
+    def createJob(self, streamerList, jobEvents, jobSize):
         """
         _createJob_
 
@@ -145,6 +152,19 @@ class Express(JobFactory):
                      lfn = streamer['lfn'])
             f.setLocation(streamer['location'], immediateSave = False)
             self.currentJob.addFile(f)
+
+        # job time based on
+        #   - 5 min initialization
+        #   - 0.5MB/s repack speed
+        #   - 45s/evt reco speed
+        #   - checksum calculation at 5MB/s (twice)
+        #   - stageout at 5MB/s
+        # job disk based on
+        #   - streamer on local disk (factor 1)
+        #   - RAW on local disk (factor 1)
+        #   - FEVT/ALCARECO/DQM on local disk (factor 4)
+        jobTime = 300 + jobSize/500000 + jobEvents*45 + (jobSize*4*3)/5000000
+        self.currentJob.addResourceEstimates(jobTime = jobTime, disk = (jobSize*6)/1024)
 
         return
 

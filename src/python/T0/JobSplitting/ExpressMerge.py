@@ -120,7 +120,7 @@ class ExpressMerge(JobFactory):
                     break
             # if self.maxLatency 0, just expressmerge lumi by lumi
             elif self.maxLatency == 0:
-                self.createJob(jobFileList)
+                self.createJob(jobFileList, jobSizeTotal)
                 jobFileList = lumiFileList
                 lastLumi = lumi
                 jobSizeTotal = lumiSizeTotal
@@ -128,7 +128,7 @@ class ExpressMerge(JobFactory):
             # triggers new age check on next out of sequence lumi
             # bail if not old enough
             elif lumi != lastLumi + 1:
-                self.createJob(jobFileList)
+                self.createJob(jobFileList, jobSizeTotal)
                 if lumiAge > self.maxLatency:
                     jobFileList = lumiFileList
                     lastLumi = lumi
@@ -144,19 +144,19 @@ class ExpressMerge(JobFactory):
                 jobSizeTotal = newSizeTotal
             # over limits => expressmerge
             else:
-                self.createJob(jobFileList)
+                self.createJob(jobFileList, jobSizeTotal)
                 jobFileList = lumiFileList
                 lastLumi = lumi
                 jobSizeTotal = lumiSizeTotal
 
         # sequential leftovers that are old enough
         if len(jobFileList) > 0:
-            self.createJob(jobFileList)
+            self.createJob(jobFileList, jobSizeTotal)
 
         return
 
 
-    def createJob(self, fileList):
+    def createJob(self, fileList, jobSize):
         """
         _createJob_
 
@@ -170,10 +170,23 @@ class ExpressMerge(JobFactory):
 
         self.newJob(name = "%s-%s" % (self.jobNamePrefix, makeUUID()))
 
+        largestFile = 0
         for fileInfo in fileList:
+            largestFile = max(largestFile, fileInfo['filesize'])
             f = File(id = fileInfo['id'],
                      lfn = fileInfo['lfn'])
             f.setLocation(fileInfo['location'], immediateSave = False)
             self.currentJob.addFile(f)
+
+        # job time based on
+        #   - 5 min initialization
+        #   - 5MB/s merge speed
+        #   - checksum calculation at 5MB/s (twice)
+        #   - stageout at 5MB/s
+        # job disk based on
+        #  - input for largest file on local disk
+        #  - output on local disk (factor 1)
+        jobTime = 300 + (jobSize*4)/5000000
+        self.currentJob.addResourceEstimates(jobTime = jobTime, disk = (jobSize+largestFile)/1024)
 
         return
