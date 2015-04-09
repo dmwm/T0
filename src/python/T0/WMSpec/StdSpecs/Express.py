@@ -128,7 +128,7 @@ class ExpressWorkloadFactory(StdBase):
 
             if self.multicore:
                 # if multicore, poke in the number of cores setting
-                stepTwoCmsswHelper.setMulticoreCores(self.multicoreNCores)
+                stepTwoCmsswHelper.setNumberOfCores(self.multicoreNCores)
 
             stepTwoCmsswHelper.setGlobalTag(self.globalTag)
             stepTwoCmsswHelper.setupChainedProcessing("cmsRun1", conversionOutLabel)
