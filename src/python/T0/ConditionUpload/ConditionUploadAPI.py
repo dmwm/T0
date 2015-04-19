@@ -210,7 +210,7 @@ def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationM
     metaFile['pfn'] = eosPrefix + metaFile['lfn']
 
     command = "export X509_USER_PROXY=%s\n" % serviceProxy
-    command += "xrdcp -s -f %s %s" % (sqliteFile['pfn'], filenameDB)
+    command += "env KRB5CCNAME=/tmp/bla xrdcp -s -f %s %s" % (sqliteFile['pfn'], filenameDB)
     p = subprocess.Popen(command, shell = True,
                          stdout=subprocess.PIPE,
                          stderr=subprocess.STDOUT)
@@ -223,7 +223,7 @@ def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationM
         files2delete.append(filenameDB)
 
     command = "export X509_USER_PROXY=%s\n" % serviceProxy
-    command += "xrdcp -s -f %s %s" % (metaFile['pfn'], filenameTXT)
+    command += "env KRB5CCNAME=/tmp/bla xrdcp -s -f %s %s" % (metaFile['pfn'], filenameTXT)
     p = subprocess.Popen(command, shell = True,
                          stdout=subprocess.PIPE,
                          stderr=subprocess.STDOUT)
@@ -264,7 +264,7 @@ def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationM
         else:
             # needed by the PCL monitoring to know whether we uploaded to prod or validation
             command = "export X509_USER_PROXY=%s\n" % serviceProxy
-            command += "xrdcp -s -f %s %s" % (filenameTXT, metaFile['pfn'] + ".uploaded")
+            command += "env KRB5CCNAME=/tmp/bla xrdcp -s -f %s %s" % (filenameTXT, metaFile['pfn'] + ".uploaded")
             p = subprocess.Popen(command, shell = True,
                                  stdin=subprocess.PIPE,
                                  stdout=subprocess.PIPE,
