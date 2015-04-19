@@ -179,7 +179,9 @@ class Repack(JobFactory):
                                 sizeTotal = newSizeTotal
                                 streamerList.append(streamer)
 
-                    self.createJob(streamerList)
+                    # allow large single lumi repack to use multiple cores
+                    numberOfCores = 1 + (int)(sizeTotal/(20*1000*1000*1000))
+                    self.createJob(streamerList, numberOfCores)
 
                     for streamer in streamerList:
                         lumiStreamerList.remove(streamer)
@@ -239,7 +241,7 @@ class Repack(JobFactory):
         return
 
 
-    def createJob(self, streamerList):
+    def createJob(self, streamerList, numberOfCores = 1):
         """
         _createJob_
 
@@ -249,6 +251,9 @@ class Repack(JobFactory):
             self.createdGroup = True
 
         self.newJob(name = "%s-%s" % (self.jobNamePrefix, makeUUID()))
+
+        if numberOfCores > 1:
+            self.currentJob.addBaggageParameter("numberOfCores", numberOfCores)
 
         for streamer in streamerList:
             f = File(id = streamer['id'],
