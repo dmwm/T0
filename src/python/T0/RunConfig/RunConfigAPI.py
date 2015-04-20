@@ -471,7 +471,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['SizePerEvent'] = 200
             specArguments['Memory'] = 1800
 
-            specArguments['RequestPriority'] = 0
+            specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority + 5000
 
             specArguments['CMSSWVersion'] = streamConfig.Repack.CMSSWVersion
             specArguments['ScramArch'] = streamConfig.Repack.ScramArch
@@ -510,7 +510,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 specArguments['Multicore'] = streamConfig.Express.Multicore
                 specArguments['Memory'] = 1800 * streamConfig.Express.Multicore
 
-            specArguments['RequestPriority'] = 0
+            specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority + 10000
 
             specArguments['ProcessingString'] = "Express"
             specArguments['ProcessingVersion'] = streamConfig.Express.ProcessingVersion
@@ -854,7 +854,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                     specArguments['Multicore'] = datasetConfig.Multicore
                     specArguments['Memory'] = 1800 * datasetConfig.Multicore
 
-                specArguments['RequestPriority'] = 0
+                specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority
 
                 specArguments['AcquisitionEra'] = runInfo['acq_era']
                 specArguments['CMSSWVersion'] = datasetConfig.CMSSWVersion

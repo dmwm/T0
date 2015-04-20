@@ -48,6 +48,8 @@ Tier0Configuration - Global configuration object
 | |       |--> ScramArches - Dictionary containig CMSSW release and corresponding ScramArch
 | |       |
 | |       |--> DefaultScramArch - Default ScramArch if nothing else is specified for release
+| |       |
+| |       |--> BaseRequestPriority - Base for request priorities for PromptReco/Repack/Express
 | |
 | |
 | |--> Streams - Configuration parameters that belong to a particular stream
@@ -215,6 +217,8 @@ def createTier0Config():
     tier0Config.Global.Backfill = None
 
     tier0Config.Global.DQMDataTier = "DQMIO"
+
+    tier0Config.Global.BaseRequestPriority = 150000
 
     return tier0Config
 
@@ -446,6 +450,15 @@ def setScramArch(config, cmssw, arch):
     Set the default scram arch in this configuration.
     """
     config.Global.ScramArches[cmssw] = arch
+    return
+
+def setBaseRequestPriority(config, priority):
+    """
+    _setBaseRequestPriority_
+
+    Set the base request priority.
+    """
+    config.Global.BaseRequestPriority = priority
     return
 
 def setDefaultScramArch(config, arch):
