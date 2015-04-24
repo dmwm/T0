@@ -76,15 +76,24 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         for stream, datasetDict in hltConfig['mapping'].items():
             bindsStream.append( { 'STREAM' : stream } )
             for dataset, paths in datasetDict.items():
-                bindsDataset.append( { 'PRIMDS' : dataset } )
-                bindsStreamDataset.append( { 'RUN' : run,
-                                             'PRIMDS' : dataset,
-                                             'STREAM' : stream } )
-                for path in paths:
-                    bindsTrigger.append( { 'TRIG' : path } )
-                    bindsDatasetTrigger.append( { 'RUN' : run,
-                                                  'TRIG' : path,
-                                                  'PRIMDS' : dataset } )
+
+                if dataset == "Unassigned path":
+
+                    if run < 240000:
+                        pass
+                    else:
+                        raise RuntimeError("Problem in configureRun() : Unassigned path in HLT menu !")
+
+                else:
+                    bindsDataset.append( { 'PRIMDS' : dataset } )
+                    bindsStreamDataset.append( { 'RUN' : run,
+                                                 'PRIMDS' : dataset,
+                                                 'STREAM' : stream } )
+                    for path in paths:
+                        bindsTrigger.append( { 'TRIG' : path } )
+                        bindsDatasetTrigger.append( { 'RUN' : run,
+                                                      'TRIG' : path,
+                                                      'PRIMDS' : dataset } )
 
         try:
             myThread.transaction.begin()
@@ -358,12 +367,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         datasetTriggers = getStreamDatasetTriggersDAO.execute(run, stream, transaction = False)
 
         for dataset, paths in datasetTriggers.items():
-
-            if dataset == "Unassigned path":
-                if stream == "Express" and run < 235000:
-                    continue
-                if stream == "A" and run < 235000:
-                    continue
 
             datasetConfig = retrieveDatasetConfig(tier0Config, dataset)
 
