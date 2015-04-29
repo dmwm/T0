@@ -30,7 +30,7 @@ class GetExpressReadyRuns(DBFormatter):
         try:
             results = self.dbi.processData(sql, binds, conn = conn,
                                            transaction = transaction)[0].fetchall()
-        except DatabaseError, ex:
+        except DatabaseError as ex:
             logging.error("ERROR: DatabaseError exception when checking for express ready runs")
             logging.error("   %s" % ex)
             results = []
