@@ -561,7 +561,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['OverrideCatalog'] = "trivialcatalog_file:/cvmfs/cms.cern.ch/SITECONF/T2_CH_CERN/Tier0/override_catalog.xml?protocol=override"
             specArguments['ValidStatus'] = "VALID"
 
-            specArguments['SiteWhitelist'] = [ "T2_CH_CERN_T0" ]
+            specArguments['SiteWhitelist'] = [ tier0Config.Global.CERNAISite ]
             specArguments['SiteBlacklist'] = []
 
         if streamConfig.ProcessingStyle == "Bulk":

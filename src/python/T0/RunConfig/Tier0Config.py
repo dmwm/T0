@@ -16,6 +16,8 @@ Tier0Configuration - Global configuration object
 | |       |
 | |       |--> Backfill - The backfill mode, can be None, 1 or 2
 | |       |
+| |       |--> CERNAISite - Main CERN site used for Tier0 processing.
+| |       |
 | |       |--> BulkDataType - The bulk data type for the run
 | |       |
 | |       |--> BulkDataLocation - The bulk data location for the run (to be used as phedex source site)
@@ -215,6 +217,8 @@ def createTier0Config():
 
     tier0Config.Global.ScramArches = {}
     tier0Config.Global.Backfill = None
+
+    tier0Config.Global.CERNAISite = "T2_CH_CERN_T0"
 
     tier0Config.Global.DQMDataTier = "DQMIO"
 
@@ -424,7 +428,7 @@ def addDataset(config, datasetName, **settings):
     if hasattr(datasetConfig, "SiteWhitelist"):
         datasetConfig.SiteWhitelist = settings.get("siteWhitelist", datasetConfig.SiteWhitelist)
     else:
-        datasetConfig.SiteWhitelist = settings.get("siteWhitelist", [ "T2_CH_CERN_T0" ])
+        datasetConfig.SiteWhitelist = settings.get("siteWhitelist", [ config.Global.CERNAISite ])
 
     #
     # finally some parameters for which Default isn't used
@@ -481,6 +485,15 @@ def setBackfill(config, mode):
         raise RuntimeError, msg
 
     config.Global.Backfill = mode
+    return
+
+def setCERNAISite(config, site):
+    """
+    _setCERNAISite_
+
+    Set the CERN AI site used for processing.
+    """
+    config.Global.CERNAISite = site
     return
 
 def setBulkDataType(config, type):
