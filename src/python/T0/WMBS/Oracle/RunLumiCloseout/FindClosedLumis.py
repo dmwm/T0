@@ -107,7 +107,7 @@ class FindClosedLumis(DBFormatter):
         try:
             results = self.dbi.processData(sql, bindVars, conn = conn,
                                            transaction = transaction)[0].fetchall()
-        except DatabaseError, ex:
+        except DatabaseError as ex:
             logging.error("ERROR: DatabaseError exception when checking for closed run/stream/lumi")
             logging.error("   %s" % ex)
             results = []
