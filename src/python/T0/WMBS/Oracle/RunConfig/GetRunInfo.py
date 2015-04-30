@@ -13,21 +13,29 @@ class GetRunInfo(DBFormatter):
 
     def execute(self, run, conn = None, transaction = False):
 
-        sql = """SELECT status,
-                        hltkey,
-                        process,
-                        acq_era,
-                        backfill,
-                        bulk_data_type,
-                        bulk_data_loc,
-                        dqmuploadurl,
-                        ah_timeout,
-                        ah_dir,
-                        cond_timeout,
-                        db_host,
-                        valid_mode
+        sql = """SELECT run.status AS status,
+                        run.hltkey AS hltkey,
+                        run.process AS process,
+                        run.acq_era AS acq_era,
+                        run.backfill AS backfill,
+                        run.bulk_data_type AS bulk_data_type,
+                        bulk_inject.name AS bulk_inject,
+                        express_inject.name AS express_inject,
+                        express_subscribe.name AS express_subscribe,
+                        run.dqmuploadurl AS dqmuploadurl,
+                        run.ah_timeout AS ah_timeout,
+                        run.ah_dir AS ah_dir,
+                        run.cond_timeout AS cond_timeout,
+                        run.db_host AS db_host,
+                        run.valid_mode AS valid_mode
                  FROM run
-                 WHERE run_id = :RUN
+                 INNER JOIN storage_node bulk_inject ON
+                   bulk_inject.id = run.bulk_inject
+                 INNER JOIN storage_node express_inject ON
+                   express_inject.id = run.express_inject
+                 INNER JOIN storage_node express_subscribe ON
+                   express_subscribe.id = run.express_subscribe
+                 WHERE run.run_id = :RUN
                  """
 
         binds = { 'RUN' : run }
