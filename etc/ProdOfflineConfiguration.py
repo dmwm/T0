@@ -61,7 +61,7 @@ setPromptCalibrationConfig(tier0Config,
 
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_3_5_patch2"
+defaultCMSSWVersion = "CMSSW_7_4_2"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -73,9 +73,9 @@ expressProcVersion = 1
 alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "GR_E_V43"
-promptrecoGlobalTag = "GR_P_V50"
-alcap0GlobalTag = "GR_P_V50"
+expressGlobalTag = "GR_E_V47"
+promptrecoGlobalTag = "GR_P_V54"
+alcap0GlobalTag = "GR_P_V54"
 
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 
@@ -153,17 +153,17 @@ addDataset(tier0Config, "MET",
            scenario = "ppRun2")
 addDataset(tier0Config, "SingleMu",
            do_reco = True,
-           alca_producers = [ "MuAlCalIsolatedMu", "MuAlOverlaps", "TkAlMuonIsolated", "DtCalib" ],
+#           alca_producers = [ "MuAlCalIsolatedMu", "MuAlOverlaps", "TkAlMuonIsolated", "DtCalib" ],
            dqm_sequences = [ "@common", "@muon", "@jetmet" ],
            scenario = "ppRun2")
 addDataset(tier0Config, "DoubleMu",
            do_reco = True,
-           alca_producers = [ "MuAlCalIsolatedMu", "MuAlOverlaps", "DtCalib", "TkAlZMuMu" ],
+#           alca_producers = [ "MuAlCalIsolatedMu", "MuAlOverlaps", "DtCalib", "TkAlZMuMu" ],
            dqm_sequences = [ "@common", "@muon", "@egamma" ],
            scenario = "ppRun2")
 addDataset(tier0Config, "MuOnia",
            do_reco = True,
-           alca_producers = [ "TkAlJpsiMuMu", "TkAlUpsilonMuMu" ],
+#           alca_producers = [ "TkAlJpsiMuMu", "TkAlUpsilonMuMu" ],
            dqm_sequences = [ "@common" ],
            scenario = "ppRun2")
 addDataset(tier0Config, "SinglePhoton",
@@ -180,17 +180,17 @@ addDataset(tier0Config, "DoublePhotonHighPt",
            scenario = "ppRun2")
 addDataset(tier0Config, "SingleElectron",
            do_reco = True,
-           alca_producers = [ "EcalCalElectron" ],
+#           alca_producers = [ "EcalCalElectron" ],
            dqm_sequences = [ "@common", "@ecal" ],
            scenario = "ppRun2")
 addDataset(tier0Config, "DoubleElectron",
            do_reco = True,
-           alca_producers = [ "EcalCalElectron" ],
+#           alca_producers = [ "EcalCalElectron" ],
            dqm_sequences = [ "@common" ],
            scenario = "ppRun2")
 addDataset(tier0Config, "Commissioning",
            do_reco = True,
-           alca_producers = [ "HcalCalIsoTrk" ],
+#           alca_producers = [ "HcalCalIsoTrk" ],
            scenario = "ppRun2")
 addDataset(tier0Config, "ParkingMonitor",
            do_reco = True,
@@ -219,7 +219,7 @@ datasets = [ "MinimumBias", "MinimumBias0", "MinimumBias1", "MinimumBias2",
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               alca_producers = [ "TkAlMinBias", "SiStripCalZeroBias" ],
+               alca_producers = [ "TkAlMinBias", "SiStripCalZeroBias", "SiStripCalMinBias" ],
                dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
                scenario = "ppRun2")
 
@@ -270,7 +270,7 @@ addDataset(tier0Config,"AlCaLumiPixels",
            write_reco = False, write_aod = False, write_dqm = True,
            reco_split = alcarawSplitting,
            proc_version = alcarawProcVersion,
-           alca_producers = [ "LumiPixels" ],
+#           alca_producers = [ "LumiPixels" ],
            scenario = "AlCaLumiPixels")
 
 
@@ -330,13 +330,13 @@ for dataset in datasets:
 addDataset(tier0Config, "PAMinBiasUPC",
            do_reco = True,
            reco_split = hiRecoSplitting,
-           alca_producers = [ "SiStripCalMinBias", "TkAlMinBias" ],
+#           alca_producers = [ "SiStripCalMinBias", "TkAlMinBias" ],
            scenario = "ppRun2")
 
 addDataset(tier0Config, "PAMuon",
            do_reco = True,
            reco_split = hiRecoSplitting,
-           alca_producers = [ "TkAlMuonIsolated", "DtCalib" ],
+#           alca_producers = [ "TkAlMuonIsolated", "DtCalib" ],
            scenario = "ppRun2")
 
 datasets = [ "PAHighPt", "PAMinBias1", "PAMinBias2" ]
@@ -379,31 +379,31 @@ for dataset in datasets:
 
 addDataset(tier0Config, "Cosmics25ns",
            do_reco = True,
-           alca_producers = ["TkAlCosmics0T", "MuAlGlobalCosmics", "HcalCalHOCosmics", "DtCalibCosmics"],
+#           alca_producers = ["TkAlCosmics0T", "MuAlGlobalCosmics", "HcalCalHOCosmics", "DtCalibCosmics"],
            scenario = "cosmicsRun2")
 addDataset(tier0Config, "DoubleElectron25ns",
            do_reco = True,
-           alca_producers = ["EcalCalElectron"],
+#           alca_producers = ["EcalCalElectron"],
            scenario = "ppRun2")
 addDataset(tier0Config, "DoubleMu25ns",
            do_reco = True,
-           alca_producers = ["MuAlCalIsolatedMu", "MuAlOverlaps", "DtCalib", "TkAlZMuMu"],
+#           alca_producers = ["MuAlCalIsolatedMu", "MuAlOverlaps", "DtCalib", "TkAlZMuMu"],
            scenario = "ppRun2")
 addDataset(tier0Config, "DoubleMuParked25ns",
            do_reco = True,
-           alca_producers = ["MuAlCalIsolatedMu", "MuAlOverlaps", "DtCalib", "TkAlZMuMu"],
+#           alca_producers = ["MuAlCalIsolatedMu", "MuAlOverlaps", "DtCalib", "TkAlZMuMu"],
            scenario = "ppRun2")
 addDataset(tier0Config,"HcalNZS25ns",
            do_reco = True,
-           alca_producers = ["HcalCalMinBias"],
+#           alca_producers = ["HcalCalMinBias"],
            scenario = "hcalnzsRun2")
 addDataset(tier0Config,"MinimumBias25ns",
            do_reco = True,
-           alca_producers = ["SiStripCalMinBias", "TkAlMinBias"],
+#           alca_producers = ["SiStripCalMinBias", "TkAlMinBias"],
            scenario = "ppRun2")
 addDataset(tier0Config,"SingleMu25ns",
            do_reco = True,
-           alca_producers = ["MuAlCalIsolatedMu", "MuAlOverlaps", "TkAlMuonIsolated", "DtCalib"],
+#           alca_producers = ["MuAlCalIsolatedMu", "MuAlOverlaps", "TkAlMuonIsolated", "DtCalib"],
            scenario = "ppRun2")
 
 datasets = [ "BJetPlusX25ns", "BTag25ns", "Commissioning25ns", "DoublePhoton25ns", "DoublePhotonHighPt25ns",
@@ -435,7 +435,7 @@ addExpressConfig(tier0Config, "HIExpress",
                  scenario = "HeavyIons",
                  data_tiers = [ "FEVT" ],
                  write_dqm = True,
-		 alca_producers = [ "SiStripCalZeroBias", "TkAlMinBiasHI", "PromptCalibProd" ],
+#		 alca_producers = [ "SiStripCalZeroBias", "TkAlMinBiasHI", "PromptCalibProd" ],
                  reco_version = defaultCMSSWVersion,
                  global_tag = expressGlobalTag,
 		 global_tag_connect = globalTagConnect,
@@ -453,8 +453,7 @@ addExpressConfig(tier0Config, "Express",
                  scenario = "ppRun2",
                  data_tiers = [ "FEVT" ],
                  write_dqm = True,
-                 alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "MuAlCalIsolatedMu", "DtCalib", "PromptCalibProd" ],
-#                 dqm_sequences = [ "@common", "@jetmet" ],
+                 alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "TkAlMinBias", "PromptCalibProd" ],
                  reco_version = defaultCMSSWVersion,
 		 global_tag_connect = globalTagConnect,
                  global_tag = expressGlobalTag,
