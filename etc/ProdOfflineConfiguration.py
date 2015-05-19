@@ -61,7 +61,7 @@ setPromptCalibrationConfig(tier0Config,
 
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_4_2"
+defaultCMSSWVersion = "CMSSW_7_4_2_patch1"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -88,8 +88,10 @@ alcarawSplitting = 100000
 # Setup repack and express mappings
 #
 repackVersionOverride = {
+    "CMSSW_7_4_2" : "CMSSW_7_4_2_patch1",
     }
 expressVersionOverride = {
+    "CMSSW_7_4_2" : "CMSSW_7_4_2_patch1",
     }
 
 #hltmonVersionOverride = {
@@ -266,7 +268,7 @@ addDataset(tier0Config,"AlCaPhiSym",
            proc_version = alcarawProcVersion,
            scenario = "AlCaPhiSymEcal")
 addDataset(tier0Config,"AlCaLumiPixels",
-           do_reco = True,
+           do_reco = False,
            write_reco = False, write_aod = False, write_dqm = True,
            reco_split = alcarawSplitting,
            proc_version = alcarawProcVersion,
@@ -453,7 +455,7 @@ addExpressConfig(tier0Config, "Express",
                  scenario = "ppRun2",
                  data_tiers = [ "FEVT" ],
                  write_dqm = True,
-                 alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "TkAlMinBias", "PromptCalibProd" ],
+                 alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "TkAlMinBias", "PromptCalibProd", "PromptCalibProdSiStrip" ],
                  reco_version = defaultCMSSWVersion,
 		 global_tag_connect = globalTagConnect,
                  global_tag = expressGlobalTag,
