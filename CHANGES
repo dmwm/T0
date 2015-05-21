@@ -1,3 +1,172 @@
+1.9.28 to 1.9.92:
+  - Merge pull request #4128 from lucacopa/release_updated_742_patch1
+  - Configuration updates for CMSSW_7_4_2_patch1
+  - Merge pull request #4127 from hufnagel/update-config
+  - update prod config
+  - Merge pull request #4126 from hufnagel/update-prodconfig
+  - update prod configuration
+  - Merge pull request #4125 from hufnagel/cernai-configurable
+  - make CERN AI site configurable
+  - Merge pull request #4124 from ericvaandering/fix_except
+  - Do except as -- the modern way
+  - Merge pull request #4123 from hufnagel/unassigned-path-fix
+  - deal with unassigned path in HLT menu in better way
+  - Merge pull request #4122 from hufnagel/disk-estimate
+  - Merge pull request #4121 from hufnagel/configurable-priority
+  - configurable request priority
+  - add disk estimate for express and repack jobs
+  - Merge pull request #4120 from hufnagel/xrootd-auth
+  - Merge pull request #4119 from hufnagel/repack-multicore
+  - Merge pull request #4118 from hufnagel/promptreco-lumisplit
+  - Merge pull request #4117 from hufnagel/condbv2-migration
+  - Merge pull request #4116 from lucacopa/fix_express_multicore
+  - Express multicore configuration changed to setNumberOfCores
+  - change repack to use multicore if too much data
+  - Merge pull request #4115 from lucacopa/add_hcalnzsRun2_scenario
+  - Add hcalnzsRun2 Scenario
+  - Merge pull request #4114 from hufnagel/unassigned-path
+  - extend unassigned path workaround to all pre-CRUZET runs
+  - disable kerberos authentication for xrdcp calls in PCL upload
+  - Merge pull request #4113 from hufnagel/pclupload-backend
+  - switch PromptReco to lumi splitting
+  - change the PCL upload backend
+  - change express release query for condbv2 migration
+  - Merge pull request #4112 from hufnagel/subscription-fixes
+  - fix subscription creation
+  - Merge pull request #4110 from hufnagel/hltconfig-confdbv2
+  - adjust HLT configuration retrieval query to work with ConfDBv2
+  - Merge pull request #4109 from hufnagel/express-dqmio
+  - add DQMIO as valid DQM data tier to Express
+  - Merge pull request #4107 from hufnagel/mandatory-spec-parameter
+  - cleanup spec parameter initialization
+  - Merge pull request #4108 from ticoann/spec_update
+  - change the default spec argument
+  - Merge pull request #4106 from hufnagel/configurable-dqm
+  - make the choice between DQM and DQMIO configurable
+  - Merge pull request #4105 from hufnagel/enable-dqmio
+  - use DQMIO instead of DQM data tier
+  - Merge pull request #4104 from hufnagel/alcaharvest-alcapromptdataset
+  - pass additional parameter to alcaHarvestiong Config.DP
+  - Merge pull request #4103 from hufnagel/globaltag-connect
+  - Merge pull request #4102 from lucacopa/tier0plugin_datacollector
+  - support a connect string passed with global tag
+  - Add Tier0Plugin config to AnalyticsDataCollector
+  - Merge pull request #4101 from hufnagel/multicore
+  - add multicore support to Tier0
+  - Merge pull request #4100 from hufnagel/long-globaltag-t0datasvc
+  - cut off global tags that are too long in t0datasvc
+  - Merge pull request #4099 from hufnagel/longer-globaltag
+  - support longer global tag names
+  - Merge pull request #4098 from hufnagel/express-ratelimit
+  - put a rate limit on express processing
+  - Merge pull request #4097 from hufnagel/conditions-late-upload
+  - Merge pull request #4095 from ticoann/t0_wmstats
+  - Merge pull request #4093 from lucacopa/active_runs_script_fix
+  - fix unittest
+  - separate tier0 request db and temporary db
+  - also upload late arriving conditions payloads
+  - Merge pull request #4094 from hufnagel/fix-ignorestream
+  - change order of consistency checks so ignorestream works again
+  - Updates a WMStatsReader call from diagnoseActiveRuns script
+  - Merge pull request #4091 from hufnagel/pcl-authenticate-reads
+  - also authenticate EOS reads in the PCL upload
+  - Merge pull request #4090 from hufnagel/promptreco-t1
+  - Merge pull request #4088 from hufnagel/subscribing-error
+  - PhEDEx subscription for Error datasets
+  - Merge pull request #4089 from hufnagel/raw-t1-disk
+  - Merge pull request #4086 from hufnagel/backfill-lfn
+  - Merge pull request #4087 from hufnagel/conditionsupload-transaction
+  - fix for transaction handling in conditions upload
+  - adjust unmerged backfill lfn
+  - Merge pull request #4084 from hufnagel/pcl-uploaded-take2
+  - switch the PCL uploaded file copy to authenticate with a proxy
+  - Merge pull request #4083 from lucacopa/fix_list_repackMerge
+  - This fixes a bug in the RepackMerge job splitting
+  - Merge pull request #4082 from hufnagel/pcl-uploaded-conditional
+  - make the uploaded file from PCL optional
+  - also subscribe RAW to t1 disk
+  - Merge pull request #4081 from hufnagel/repack-thresholds
+  - Merge pull request #4080 from hufnagel/force-run-closeout
+  - adjust application of event limits for repack
+  - Merge pull request #4079 from hufnagel/lumi-splitting-optimize
+  - Merge pull request #4078 from hufnagel/pcl-uploaded
+  - create uploaded file before conditions upload
+  - minimize creation of lumi split records
+  - force complete all consistency checks to closeout run
+  - add configuration option to set PromptReco site whitelist
+  - Merge pull request #4076 from hufnagel/phedex-subscriptions
+  - Merge pull request #4077 from hufnagel/missing-stream
+  - deal with case of stream injected but not in HLT menu
+  - change the way PhEDex subscriptions are made
+  - Merge pull request #4075 from hufnagel/run2-scenarios
+  - add new run2 scenarios
+  - Merge pull request #4074 from hufnagel/spec-parameters
+  - add some mandatory parameters to the spec creation
+  - Merge pull request #4073 from hufnagel/spec-initarguments
+  - change how default arguments for spec are initialised
+  - Merge pull request #4072 from hufnagel/promptreco-eventsplit
+  - fix number of events per job parameter passing to PromptReco Spec
+  - Merge pull request #4071 from hufnagel/multiple-promptcalibprod
+  - Merge pull request #4070 from hufnagel/tier0dataservice
+  - support multiple PromptCalibProd per stream
+  - add support for new external Tier0 data service
+  - Merge pull request #4069 from hufnagel/t0temp-unmerged
+  - change from t0temp to unmerged
+  - Merge pull request #4068 from hufnagel/pcl-eos
+  - take pcl files from alcaharvest from EOS
+  - Merge pull request #4067 from hufnagel/alcaharvest-userproxy
+  - don't pass user proxy with alcaharvest jobs
+  - Merge pull request #4066 from hufnagel/dqmharvest-noafs
+  - allow not passing any proxy to the DQM harvesting
+  - Merge pull request #4064 from hufnagel/remove-jobupdater
+  - Merge pull request #4065 from hufnagel/cvmfs-overridecatalog
+  - take override catalog from cvmfs
+  - remove JobUpdater frm Tier0 configuration
+  - Merge pull request #4063 from hufnagel/expressdqm-config
+  - make express dqm harvest interval configurable
+  - Merge pull request #4062 from hufnagel/configure-blockclose
+  - make Repack, Express and PromptReco block closing timeout configurable
+  - Merge pull request #4061 from hufnagel/clean-configs
+  - cleanup offline configs
+  - Merge pull request #4060 from hufnagel/updateconfigs
+  - update configuration options, code and the replay and production example configs
+  - Merge pull request #4059 from hufnagel/scramarch
+  - allow configuring scram arch for everything, fixes #3257
+  - Merge pull request #4058 from hufnagel/tier0-lfn
+  - Merge pull request #4057 from hufnagel/express-refactor
+  - override LFN in Workload
+  - support doing express in separate repack and reco steps, fixes #4038
+  - Merge pull request #4054 from hufnagel/badhlt
+  - Merge pull request #4053 from ticoann/aqc_fix
+  - Merge pull request #4056 from hufnagel/promptreco-harvest
+  - reenable DQM harvesting for PromptReco
+  - Merge pull request #4055 from hufnagel/override-promptreco
+  - fix override catalog used for PromptReco to use T2 rules
+  - workaround for bad HLT menu in Minidaq
+  - fix acquisition era
+  - Merge pull request #4052 from ticoann/dbs_datatype_fix
+  - set primary dataset type to data
+  - Merge pull request #4051 from hufnagel/promptreco-subscriptions
+  - fix problem with subscriptions of PromptReco data
+  - Merge pull request #4050 from hufnagel/tier0-scram
+  - support different scram archs for different Tier0 parts
+  - Merge pull request #4049 from hufnagel/t2-override
+  - switch to T2_CH_CERN override catalog
+  - Merge pull request #4048 from hufnagel/spec-update
+  - update Repack and Express spec to follow new WMCore conventions
+  - Merge pull request #4047 from hufnagel/spec-updates
+  - catch up to changes with recent WMCore versions
+  - Merge pull request #4046 from hufnagel/replicasubscriptions
+  - make replica instead of move subscriptions
+  - Merge pull request #4045 from hufnagel/dropboxoptional
+  - Merge pull request #4044 from hufnagel/expressclosing
+  - make dropbox upload for express optional
+  - make express block closing delay configurable
+  - Merge pull request #4041 from hufnagel/errordatasetschema
+  - Merge pull request #4043 from hufnagel/offlineconfigs
+  - add OfflineConfigs
+  - remove error datasets from schema
+
 1.9.27 to 1.9.28:
   - remove setTaskPriority calls from Repack and Express Specs, pull request #4040
   - Add the missing operational tools for the WMAT0, pull request #4037
