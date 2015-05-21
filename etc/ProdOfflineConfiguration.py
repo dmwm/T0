@@ -268,11 +268,11 @@ addDataset(tier0Config,"AlCaPhiSym",
            proc_version = alcarawProcVersion,
            scenario = "AlCaPhiSymEcal")
 addDataset(tier0Config,"AlCaLumiPixels",
-           do_reco = False,
+           do_reco = True,
            write_reco = False, write_aod = False, write_dqm = True,
            reco_split = alcarawSplitting,
            proc_version = alcarawProcVersion,
-#           alca_producers = [ "LumiPixels" ],
+           alca_producers = [ "LumiPixels" ],
            scenario = "AlCaLumiPixels")
 
 
