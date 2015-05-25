@@ -229,6 +229,7 @@ class Create(DBCreator):
                  subscription   int not null,
                  run_id         int not null,
                  lumi_id        int not null,
+                 nfiles         int not null,
                  primary key(subscription, run_id, lumi_id)
                ) ORGANIZATION INDEX"""
 
