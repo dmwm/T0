@@ -398,6 +398,7 @@ class ExpressWorkloadFactory(StdBase):
 
         harvestTaskUploadHelper = harvestTaskUpload.getTypeHelper()
         harvestTaskUploadHelper.setProxyFile(uploadProxy)
+        harvestTaskUploadHelper.setServerURL(self.dqmUploadUrl)
 
         return harvestTask
 
