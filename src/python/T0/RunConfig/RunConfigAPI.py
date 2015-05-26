@@ -39,6 +39,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
                             dbinterface = myThread.dbi)
 
     # dao to update global run settings
+    insertStorageNodeDAO = daoFactory(classname = "RunConfig.InsertStorageNode")
     updateRunDAO = daoFactory(classname = "RunConfig.UpdateRun")
 
     # workaround to make unit test work without HLTConfDatabase
@@ -55,12 +56,20 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         insertTriggerDAO = daoFactory(classname = "RunConfig.InsertTrigger")
         insertDatasetTriggerDAO = daoFactory(classname = "RunConfig.InsertDatasetTrigger")
 
+        bindsStorageNode = []
+        for node in list(set([tier0Config.Global.BulkInjectNode,
+                              tier0Config.Global.ExpressInjectNode,
+                              tier0Config.Global.ExpressSubscribeNode])):
+            bindsStorageNode.append( { 'NODE' : node } )
+
         bindsUpdateRun = { 'RUN' : run,
                            'PROCESS' : hltConfig['process'],
                            'ACQERA' : tier0Config.Global.AcquisitionEra,
                            'BACKFILL' : tier0Config.Global.Backfill,
                            'BULKDATATYPE' : tier0Config.Global.BulkDataType,
-                           'BULKDATALOC' : tier0Config.Global.BulkDataLocation,
+                           'BULK_INJECT' : tier0Config.Global.BulkInjectNode,
+                           'EXPRESS_INJECT' : tier0Config.Global.ExpressInjectNode,
+                           'EXPRESS_SUBSCRIBE' : tier0Config.Global.ExpressSubscribeNode,
                            'DQMUPLOADURL' : tier0Config.Global.DQMUploadUrl,
                            'AHTIMEOUT' : tier0Config.Global.AlcaHarvestTimeout,
                            'AHDIR' : tier0Config.Global.AlcaHarvestDir,
@@ -73,6 +82,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         bindsStreamDataset = []
         bindsTrigger = []
         bindsDatasetTrigger = []
+
         for stream, datasetDict in hltConfig['mapping'].items():
             bindsStream.append( { 'STREAM' : stream } )
             for dataset, paths in datasetDict.items():
@@ -97,6 +107,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
 
         try:
             myThread.transaction.begin()
+            insertStorageNodeDAO.execute(bindsStorageNode, conn = myThread.transaction.conn, transaction = True)
             updateRunDAO.execute(bindsUpdateRun, conn = myThread.transaction.conn, transaction = True)
             insertStreamDAO.execute(bindsStream, conn = myThread.transaction.conn, transaction = True)
             insertDatasetDAO.execute(bindsDataset, conn = myThread.transaction.conn, transaction = True)
@@ -237,10 +248,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         #
         subscriptions = []
 
-        # some hardcoded PhEDEx defaults
-        expressPhEDExInjectNode = "T2_CH_CERN"
-        expressPhEDExSubscribeNode = "T2_CH_CERN"
-
         #
         # first take care of all stream settings
         #
@@ -289,17 +296,15 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                               'eventContent' : tier0Config.Global.DQMDataTier,
                                               'primaryDataset' : specialDataset } )
 
-            bindsStorageNode.append( { 'NODE' : expressPhEDExSubscribeNode } )
-
             bindsPhEDExConfig.append( { 'RUN' : run,
                                         'PRIMDS' : specialDataset,
                                         'ARCHIVAL_NODE' : None,
                                         'TAPE_NODE' : None,
-                                        'DISK_NODE' : expressPhEDExSubscribeNode } )
+                                        'DISK_NODE' :  runInfo['express_subscribe']} )
 
             subscriptions.append( { 'custodialSites' : [],
-                                    'nonCustodialSites' : [ expressPhEDExSubscribeNode ],
-                                    'autoApproveSites' : [ expressPhEDExSubscribeNode ],
+                                    'nonCustodialSites' : [ runInfo['express_subscribe'] ],
+                                    'autoApproveSites' : [ runInfo['express_subscribe'] ],
                                     'priority' : "high",
                                     'primaryDataset' : specialDataset } )
 
@@ -423,9 +428,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 if datasetConfig.ArchivalNode != None:
                     custodialSites.append(datasetConfig.ArchivalNode)
                     autoApproveSites.append(datasetConfig.ArchivalNode)
-                if datasetConfig.ArchivalNode != expressPhEDExInjectNode:
-                    nonCustodialSites.append(expressPhEDExInjectNode)
-                    autoApproveSites.append(expressPhEDExInjectNode)
 
                 if len(custodialSites) > 0 or len(nonCustodialSites) > 0:
                     subscriptions.append( { 'custodialSites' : custodialSites,
@@ -451,11 +453,11 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                             'PRIMDS' : dataset,
                                             'ARCHIVAL_NODE' : None,
                                             'TAPE_NODE' : None,
-                                            'DISK_NODE' : expressPhEDExSubscribeNode } )
+                                            'DISK_NODE' : runInfo['express_subscribe'] } )
 
                 subscriptions.append( { 'custodialSites' : [],
-                                        'nonCustodialSites' : [ expressPhEDExSubscribeNode ],
-                                        'autoApproveSites' : [ expressPhEDExSubscribeNode ],
+                                        'nonCustodialSites' : [ runInfo['express_subscribe'] ],
+                                        'autoApproveSites' : [ runInfo['express_subscribe'] ],
                                         'priority' : "high",
                                         'primaryDataset' : dataset } )
 
@@ -556,24 +558,24 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         if streamConfig.ProcessingStyle in [ 'Bulk', 'Express' ]:
 
             specArguments['RunNumber'] = run
-            specArguments['AcquisitionEra'] = tier0Config.Global.AcquisitionEra
+            specArguments['AcquisitionEra'] = runInfo['acq_era']
             specArguments['Outputs'] = outputModuleDetails
             specArguments['OverrideCatalog'] = "trivialcatalog_file:/cvmfs/cms.cern.ch/SITECONF/T2_CH_CERN/Tier0/override_catalog.xml?protocol=override"
             specArguments['ValidStatus'] = "VALID"
 
-            specArguments['SiteWhitelist'] = [ tier0Config.Global.CERNAISite ]
+            specArguments['SiteWhitelist'] = [ tier0Config.Global.ProcessingSite ]
             specArguments['SiteBlacklist'] = []
 
         if streamConfig.ProcessingStyle == "Bulk":
             factory = RepackWorkloadFactory()
             wmSpec = factory.factoryWorkloadConstruction(workflowName, specArguments)
-            wmSpec.setPhEDExInjectionOverride(runInfo['bulk_data_loc'])
+            #wmSpec.setPhEDExInjectionOverride(runInfo['bulk_inject'])
             for subscription in subscriptions:
                 wmSpec.setSubscriptionInformation(**subscription)
         elif streamConfig.ProcessingStyle == "Express":
             factory = ExpressWorkloadFactory()
             wmSpec = factory.factoryWorkloadConstruction(workflowName, specArguments)
-            wmSpec.setPhEDExInjectionOverride(expressPhEDExInjectNode)
+            #wmSpec.setPhEDExInjectionOverride(runInfo['express_inject'])
             for subscription in subscriptions:
                 wmSpec.setSubscriptionInformation(**subscription)
 
@@ -903,7 +905,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 factory = PromptRecoWorkloadFactory()
                 wmSpec = factory.factoryWorkloadConstruction(workflowName, specArguments)
 
-                wmSpec.setPhEDExInjectionOverride(runInfo['bulk_data_loc'])
+                #wmSpec.setPhEDExInjectionOverride(runInfo['bulk_inject'])
                 for subscription in subscriptions:
                     wmSpec.setSubscriptionInformation(**subscription)
 

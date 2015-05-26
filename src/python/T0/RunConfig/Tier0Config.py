@@ -16,11 +16,15 @@ Tier0Configuration - Global configuration object
 | |       |
 | |       |--> Backfill - The backfill mode, can be None, 1 or 2
 | |       |
-| |       |--> CERNAISite - Main CERN site used for Tier0 processing.
+| |       |--> ProcessingSite - Main (CERN) site where processing is done.
+| |       |
+| |       |--> BulkInjectNode - Node from which bulk Tier0 data is injected.
+| |       |
+| |       |--> ExpressInjectNode - Node from which express Tier0 data is injected.
+| |       |
+| |       |--> ExpressSubscribeNode - Node to which Express is subscribed.
 | |       |
 | |       |--> BulkDataType - The bulk data type for the run
-| |       |
-| |       |--> BulkDataLocation - The bulk data location for the run (to be used as phedex source site)
 | |       |
 | |       |--> DQMDataTier - The data tier used for DQM (default is DQMIO).
 | |       |
@@ -218,7 +222,12 @@ def createTier0Config():
     tier0Config.Global.ScramArches = {}
     tier0Config.Global.Backfill = None
 
-    tier0Config.Global.CERNAISite = "T2_CH_CERN_T0"
+    tier0Config.Global.ProcessingSite = "T2_CH_CERN_T0"
+
+    tier0Config.Global.BulkInjectNode = "T2_CH_CERN"
+    tier0Config.Global.ExpressInjectNode = "T2_CH_CERN"
+
+    tier0Config.Global.ExpressSubscribeNode = "T2_CH_CERN"
 
     tier0Config.Global.DQMDataTier = "DQMIO"
 
@@ -428,7 +437,7 @@ def addDataset(config, datasetName, **settings):
     if hasattr(datasetConfig, "SiteWhitelist"):
         datasetConfig.SiteWhitelist = settings.get("siteWhitelist", datasetConfig.SiteWhitelist)
     else:
-        datasetConfig.SiteWhitelist = settings.get("siteWhitelist", [ config.Global.CERNAISite ])
+        datasetConfig.SiteWhitelist = settings.get("siteWhitelist", [ config.Global.ProcessingSite ])
 
     #
     # finally some parameters for which Default isn't used
@@ -487,13 +496,40 @@ def setBackfill(config, mode):
     config.Global.Backfill = mode
     return
 
-def setCERNAISite(config, site):
+def setProcessingSite(config, site):
     """
-    _setCERNAISite_
+    _setProcessingSite_
 
-    Set the CERN AI site used for processing.
+    Set the (CERN) site used for processing.
     """
-    config.Global.CERNAISite = site
+    config.Global.ProcessingSite = site
+    return
+
+def setBulkInjectNode(config, node):
+    """
+    _setBulkInjectNode_
+
+    Set the node from which bulk Tier0 data is injected.
+    """
+    config.Global.BulkInjectNode = node
+    return
+
+def setExpressInjectNode(config, node):
+    """
+    _setExpressInjectNode_
+
+    Set the node from which express Tier0 data is injected.
+    """
+    config.Global.ExpressInjectNode = node
+    return
+
+def setExpressSubscribeNode(config, node):
+    """
+    _setExpressSubscribeNode_
+
+    Set the node to which Express is subscribed.
+    """
+    config.Global.ExpressSubscribeNode = node
     return
 
 def setBulkDataType(config, type):
@@ -503,16 +539,6 @@ def setBulkDataType(config, type):
     Set the bulk data type in the configuration.
     """
     config.Global.BulkDataType = type
-    return
-
-def setBulkDataLocation(config, location):
-    """
-    _setBulkDataLocation_
-
-    Set the bulk data location (to be used as source for phedex injections) in the configuration.
-    
-    """
-    config.Global.BulkDataLocation = location
     return
 
 def setDQMDataTier(config, datatier):
