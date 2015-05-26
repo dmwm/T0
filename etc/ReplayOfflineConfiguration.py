@@ -11,7 +11,11 @@ from T0.RunConfig.Tier0Config import setScramArch
 from T0.RunConfig.Tier0Config import setDefaultScramArch
 from T0.RunConfig.Tier0Config import setLFNPrefix
 from T0.RunConfig.Tier0Config import setBulkDataType
-from T0.RunConfig.Tier0Config import setBulkDataLocation
+from T0.RunConfig.Tier0Config import setProcessingSite
+from T0.RunConfig.Tier0Config import setBulkInjectNode
+from T0.RunConfig.Tier0Config import setExpressInjectNode
+from T0.RunConfig.Tier0Config import setExpressSubscribeNode
+from T0.RunConfig.Tier0Config import setDQMDataTier
 from T0.RunConfig.Tier0Config import setDQMUploadUrl
 from T0.RunConfig.Tier0Config import setPromptCalibrationConfig
 from T0.RunConfig.Tier0Config import setConfigVersion
@@ -27,15 +31,29 @@ tier0Config = createTier0Config()
 # Set the verstion configuration (not used at the moment)
 setConfigVersion(tier0Config, "replace with real version")
 
+# Settings up sites
+processingSite = "T2_CH_CERN_T0"
+cernPhedexNode = "T2_CH_CERN"
+#processingSite = "T2_CH_CERN_AI"
+#cernPhedexNode = "T0_CH_CERN_Disk"
+
+
 # Set global parameters:
 #  Acquisition era
 #  LFN prefix
 #  Data type
-#  PhEDEx location for Bulk data
+#  Processing site (where jobs run)
+#  PhEDEx locations
 setAcquisitionEra(tier0Config, "Tier0_Test_SUPERBUNNIES_vocms229")
 setLFNPrefix(tier0Config, "/store/backfill/1")
 setBulkDataType(tier0Config, "data")
-setBulkDataLocation(tier0Config, "T2_CH_CERN")
+setProcessingSite(tier0Config, processingSite)
+setBulkInjectNode(tier0Config, cernPhedexNode)
+setExpressInjectNode(tier0Config, cernPhedexNode)
+setExpressSubscribeNode(tier0Config, "T2_CH_CERN")
+
+# Override for DQM data tier
+setDQMDataTier(tier0Config, "DQMIO")
 
 # Define the two default timeouts for reco release
 # First timeout is used directly for reco release
@@ -57,48 +75,62 @@ setPromptCalibrationConfig(tier0Config,
 
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_6_2_4"
+defaultCMSSWVersion = "CMSSW_7_4_3"
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "slc5_amd64_gcc462")
-setScramArch(tier0Config, "CMSSW_6_2_4", "slc5_amd64_gcc472")
+setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
+setScramArch(tier0Config, "CMSSW_5_3_20", "slc6_amd64_gcc472")
+
+# Configure scenarios
+cosmicsScenario = "cosmicsRun2"
+ppScenario = "ppRun2"
+hcalnzsScenario = "hcalnzsRun2"
+#cosmicsScenario = "cosmics"
+#ppScenario = "pp"
+#hcalnzsScenario = "hcalnzs"
 
 # Defaults for processing version
 defaultProcVersion = 1
 expressProcVersion = 1
 alcarawProcVersion = 1
 
-# Defaults for GlobalTag 
-promptrecoGlobalTag = "GR_R_62_V1::All"
-#promptrecoGlobalTag = "GR_P_V43D::All"
-expressGlobalTag    = "GR_E_V33A::All"
-hltmonGlobalTag     = "GR_E_V29::All"
-alcap0GlobalTag     = "GR_P_V43D::All"
+# Defaults for GlobalTag
+expressGlobalTag = "GR_E_V47"
+promptrecoGlobalTag = "GR_P_V54"
+alcap0GlobalTag = "GR_P_V54"
+
+# Mandatory for CondDBv2
+globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
+
+# Multicore settings
+numberOfCores = 4
 
 # Splitting parameters for PromptReco
-defaultRecoSplitting = 5000 
-hiRecoSplitting = 1000
-alcarawSplitting = 100000
+defaultRecoSplitting = 2000 * numberOfCores
+hiRecoSplitting = 200 * numberOfCores
+alcarawSplitting = 20000 * numberOfCores
 
 #
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_5_2_7" : "CMSSW_5_3_14",
-    "CMSSW_5_2_8" : "CMSSW_5_3_14",
-    "CMSSW_5_2_9" : "CMSSW_5_3_14",
+    "CMSSW_5_2_7" : "CMSSW_5_3_20",
+    "CMSSW_5_2_8" : "CMSSW_5_3_20",
+    "CMSSW_5_2_9" : "CMSSW_5_3_20",
+    "CMSSW_7_4_2" : "CMSSW_7_4_patch1",
     }
 expressVersionOverride = {
-    "CMSSW_5_2_7" : "CMSSW_5_3_14",
-    "CMSSW_5_2_8" : "CMSSW_5_3_14",
-    "CMSSW_5_2_9" : "CMSSW_5_3_14",
+    "CMSSW_5_2_7" : "CMSSW_5_3_20",
+    "CMSSW_5_2_8" : "CMSSW_5_3_20",
+    "CMSSW_5_2_9" : "CMSSW_5_3_20",
+    "CMSSW_7_4_2" : "CMSSW_7_4_2_patch1",
     }
 
-hltmonVersionOverride = {
-    "CMSSW_5_2_7" : "CMSSW_5_2_7_hltpatch1",
-    "CMSSW_5_2_8" : "CMSSW_5_2_7_hltpatch1",
-    "CMSSW_5_2_9" : "CMSSW_5_2_7_hltpatch1",
-    }
+#hltmonVersionOverride = {
+#    "CMSSW_5_2_7" : "CMSSW_5_2_7_hltpatch1",
+#    "CMSSW_5_2_8" : "CMSSW_5_2_7_hltpatch1",
+#    "CMSSW_5_2_9" : "CMSSW_5_2_7_hltpatch1",
+#    }
 
 #set default repack settings for bulk streams
 addRepackConfig(tier0Config, "Default",
@@ -109,24 +141,27 @@ addRepackConfig(tier0Config, "Default",
                 maxInputSize = 4 * 1024 * 1024 * 1024,
                 maxEdmSize = 10 * 1024 * 1024 * 1024,
                 maxOverSize = 8 * 1024 * 1024 * 1024,
-                maxInputEvents = 10 * 1000 * 1000,
+                maxInputEvents = 250 * 1000,
                 maxInputFiles = 1000,
                 blockCloseDelay = 1200,
                 versionOverride = repackVersionOverride)
 
 addDataset(tier0Config, "Default",
            do_reco = False,
-           write_reco = False, write_aod = True, write_dqm = True,
+           write_reco = True, write_aod = True, write_miniaod = False, write_dqm = True,
            reco_delay = defaultRecoTimeout,
            reco_delay_offset = defaultRecoLockTimeout,
            reco_split = defaultRecoSplitting,
            proc_version = defaultProcVersion,
            cmssw_version = defaultCMSSWVersion,
+           multicore = numberOfCores,
            global_tag = promptrecoGlobalTag,
-           archival_node = "T0_CH_CERN",
+           global_tag_connect = globalTagConnect,
+#           archival_node = "T0_CH_CERN_MSS",
+#           tape_node = "T1_US_FNAL_MSS",
+#           disk_node = "T1_CH_FNAL_Disk",
            blockCloseDelay = 1200,
-           scenario = "pp")
-
+           scenario = ppScenario)
 
 ###############################
 ### PDs used during Run2012 ###
@@ -135,68 +170,72 @@ addDataset(tier0Config, "Default",
 # special scouting PD for parked data
 addDataset(tier0Config, "DataScouting",
            do_reco = True,
-           write_reco = False, write_aod = False, write_dqm = True,
+           write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
            reco_split = 3 * defaultRecoSplitting,
            dqm_sequences = [ "@common" ],
-           scenario = "cosmics")
+           scenario = "DataScouting")
 
 addDataset(tier0Config, "Cosmics",
            do_reco = True,
            alca_producers = [ "TkAlCosmics0T", "MuAlGlobalCosmics", "HcalCalHOCosmics", "DtCalibCosmics" ],
-           scenario = "cosmics")
+#           tape_node = "T1_US_FNAL_MSS",
+#           disk_node = "T1_US_FNAL_Disk",
+#           siteWhitelist = [ "T1_US_FNAL_Disk" ],
+           scenario = cosmicsScenario)
 addDataset(tier0Config, "JetHT",
            do_reco = True,
            dqm_sequences = [ "@common", "@jetmet" ],
-           scenario = "pp")
+
+           scenario = ppScenario)
 addDataset(tier0Config, "MET",
            do_reco = True,
            dqm_sequences = [ "@common", "@jetmet", "@hcal" ],
-           scenario = "pp")
+           scenario = ppScenario)
 addDataset(tier0Config, "SingleMu",
            do_reco = True,
-           alca_producers = [ "MuAlCalIsolatedMu", "MuAlOverlaps", "TkAlMuonIsolated", "DtCalib" ],
+#           alca_producers = [ "MuAlCalIsolatedMu", "MuAlOverlaps", "TkAlMuonIsolated", "DtCalib" ],
            dqm_sequences = [ "@common", "@muon", "@jetmet" ],
-           scenario = "pp")
+           scenario = ppScenario)
 addDataset(tier0Config, "DoubleMu",
            do_reco = True,
-           alca_producers = [ "MuAlCalIsolatedMu", "MuAlOverlaps", "DtCalib", "TkAlZMuMu" ],
+#           alca_producers = [ "MuAlCalIsolatedMu", "MuAlOverlaps", "DtCalib", "TkAlZMuMu" ],
            dqm_sequences = [ "@common", "@muon", "@egamma" ],
-           scenario = "pp")
+           scenario = ppScenario)
 addDataset(tier0Config, "MuOnia",
            do_reco = True,
-           alca_producers = [ "TkAlJpsiMuMu", "TkAlUpsilonMuMu" ],
+#           alca_producers = [ "TkAlJpsiMuMu", "TkAlUpsilonMuMu" ],
            dqm_sequences = [ "@common" ],
-           scenario = "pp")
+           scenario = ppScenario)
 addDataset(tier0Config, "SinglePhoton",
            do_reco = True,
            dqm_sequences = [ "@common", "@ecal", "@egamma" ],
-           scenario = "pp")
+           scenario = ppScenario)
 addDataset(tier0Config, "DoublePhoton",
            do_reco = True,
            dqm_sequences = [ "@common", "@ecal", "@egamma" ],
-           scenario = "pp")
+           scenario = ppScenario)
 addDataset(tier0Config, "DoublePhotonHighPt",
            do_reco = True,
            dqm_sequences = [ "@common", "@ecal", "@egamma" ],
-           scenario = "pp")
+           scenario = ppScenario)
 addDataset(tier0Config, "SingleElectron",
            do_reco = True,
-           alca_producers = [ "EcalCalElectron" ],
+#           alca_producers = [ "EcalCalElectron" ],
            dqm_sequences = [ "@common", "@ecal" ],
-           scenario = "pp")
+           scenario = ppScenario)
 addDataset(tier0Config, "DoubleElectron",
            do_reco = True,
-           alca_producers = [ "EcalCalElectron" ],
+#           alca_producers = [ "EcalCalElectron" ],
            dqm_sequences = [ "@common" ],
-           scenario = "pp")
+           scenario = ppScenario)
 addDataset(tier0Config, "Commissioning",
            do_reco = True,
-           alca_producers = [ "HcalCalIsoTrk" ],
-           scenario = "pp")
+#           alca_producers = [ "HcalCalIsoTrk" ],
+           scenario = ppScenario)
 addDataset(tier0Config, "ParkingMonitor",
            do_reco = True,
            dqm_sequences = [ "@common", "@muon", "@hcal", "@jetmet", "@ecal", "@egamma" ],
-           scenario = "pp")
+           scenario = ppScenario)
 
 datasets = [ "BJetPlusX", "BTag", "MultiJet", "MuEG", "MuHad"," ElectronHad",
              "PhotonHad", "HTMHT", "Tau", "TauPlusX", "NoBPTX", "JetMon" ]
@@ -205,7 +244,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                dqm_sequences = [ "@common" ],
-               scenario = "pp")
+               scenario = ppScenario)
 
 datasets = [ "MinimumBias", "MinimumBias1", "MinimumBias2" ]
 
@@ -214,7 +253,7 @@ for dataset in datasets:
                do_reco = True,
                alca_producers = [ "TkAlMinBias", "SiStripCalMinBias" ],
                dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
-               scenario = "pp")
+               scenario = ppScenario)
 
 datasets = [ "L1Accept", "HcalHPDNoise", "LogMonitor", "RPCMonitor", "FEDMonitor" ]
 
@@ -236,7 +275,7 @@ addDataset(tier0Config,"TestEnablesEcalHcalDT",
            scenario = "AlCaTestEnable")
 addDataset(tier0Config,"TestEnablesTracker",
            do_reco = True,
-           write_reco = False, write_aod = False, write_dqm = True,
+           write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
            alca_producers = [ "TkAlLAS" ],
            scenario = "AlCaTestEnable")
 
@@ -247,20 +286,20 @@ addDataset(tier0Config,"TestEnablesTracker",
 
 addDataset(tier0Config,"AlCaP0",
            do_reco = False,
-           write_reco = False, write_aod = False, write_dqm = True,
+           write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
            reco_split = alcarawSplitting,
            proc_version = alcarawProcVersion,
            global_tag = alcap0GlobalTag,
            scenario = "AlCaP0")
 addDataset(tier0Config,"AlCaPhiSym",
            do_reco = False,
-           write_reco = False, write_aod = False, write_dqm = True,
+           write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
            reco_split = alcarawSplitting,
            proc_version = alcarawProcVersion,
            scenario = "AlCaPhiSymEcal")
 addDataset(tier0Config,"AlCaLumiPixels",
            do_reco = True,
-           write_reco = False, write_aod = False, write_dqm = True,
+           write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
            reco_split = alcarawSplitting,
            proc_version = alcarawProcVersion,
            alca_producers = [ "LumiPixels" ],
@@ -300,7 +339,7 @@ datasets = [ "LP_L1Jets", "LP_ExclEGMU", "LP_Jets1", "LP_Jets2", "LP_MinBias1", 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               scenario = "pp")
+               scenario = ppScenario)
 
 
 ############################
@@ -313,7 +352,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                reco_split = hiRecoSplitting,
-               scenario = "pp")
+               scenario = ppScenario)
 
 
 ###############################
@@ -323,14 +362,14 @@ for dataset in datasets:
 addDataset(tier0Config, "PAMinBiasUPC",
            do_reco = True,
            reco_split = hiRecoSplitting,
-           alca_producers = [ "SiStripCalMinBias", "TkAlMinBias" ],
-           scenario = "pp")
+#           alca_producers = [ "SiStripCalMinBias", "TkAlMinBias" ],
+           scenario = ppScenario)
 
 addDataset(tier0Config, "PAMuon",
            do_reco = True,
            reco_split = hiRecoSplitting,
-           alca_producers = [ "TkAlMuonIsolated", "DtCalib" ],
-           scenario = "pp")
+#           alca_producers = [ "TkAlMuonIsolated", "DtCalib" ],
+           scenario = ppScenario)
 
 datasets = [ "PAHighPt", "PAMinBias1", "PAMinBias2" ]
 
@@ -338,7 +377,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                reco_split = hiRecoSplitting,
-               scenario = "pp")
+               scenario = ppScenario)
 
 
 ########################################################
@@ -351,7 +390,7 @@ datasets = [ "ZeroBias", "ZeroBias1", "ZeroBias2", "ZeroBias3", "ZeroBias4",
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               scenario = "pp")
+               scenario = ppScenario)
 
 #################################
 ### PDs used for High PU runs ###
@@ -363,7 +402,7 @@ datasets = [ "HighPileUpHPF", "L1EGHPF", "L1MuHPF", "L1JetHPF",
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               scenario = "pp")
+               scenario = ppScenario)
 
 
 #####################
@@ -372,32 +411,32 @@ for dataset in datasets:
 
 addDataset(tier0Config, "Cosmics25ns",
            do_reco = True,
-           alca_producers = ["TkAlCosmics0T", "MuAlGlobalCosmics", "HcalCalHOCosmics", "DtCalibCosmics"],
-           scenario = "cosmics")
+#           alca_producers = ["TkAlCosmics0T", "MuAlGlobalCosmics", "HcalCalHOCosmics", "DtCalibCosmics"],
+           scenario = cosmicsScenario)
 addDataset(tier0Config, "DoubleElectron25ns",
            do_reco = True,
-           alca_producers = ["EcalCalElectron"],
-           scenario = "pp")
+#           alca_producers = ["EcalCalElectron"],
+           scenario = ppScenario)
 addDataset(tier0Config, "DoubleMu25ns",
            do_reco = True,
-           alca_producers = ["MuAlCalIsolatedMu", "MuAlOverlaps", "DtCalib", "TkAlZMuMu"],
-           scenario = "pp")
+#           alca_producers = ["MuAlCalIsolatedMu", "MuAlOverlaps", "DtCalib", "TkAlZMuMu"],
+           scenario = ppScenario)
 addDataset(tier0Config, "DoubleMuParked25ns",
            do_reco = True,
-           alca_producers = ["MuAlCalIsolatedMu", "MuAlOverlaps", "DtCalib", "TkAlZMuMu"],
-           scenario = "pp")
+#           alca_producers = ["MuAlCalIsolatedMu", "MuAlOverlaps", "DtCalib", "TkAlZMuMu"],
+           scenario = ppScenario)
 addDataset(tier0Config,"HcalNZS25ns",
            do_reco = True,
-           alca_producers = ["HcalCalMinBias"],
+#           alca_producers = ["HcalCalMinBias"],
            scenario = "hcalnzs")
 addDataset(tier0Config,"MinimumBias25ns",
            do_reco = True,
-           alca_producers = ["SiStripCalMinBias", "TkAlMinBias"],
-           scenario = "pp")
+#           alca_producers = ["SiStripCalMinBias", "TkAlMinBias"],
+           scenario = ppScenario)
 addDataset(tier0Config,"SingleMu25ns",
            do_reco = True,
-           alca_producers = ["MuAlCalIsolatedMu", "MuAlOverlaps", "TkAlMuonIsolated", "DtCalib"],
-           scenario = "pp")
+#           alca_producers = ["MuAlCalIsolatedMu", "MuAlOverlaps", "TkAlMuonIsolated", "DtCalib"],
+           scenario = ppScenario)
 
 datasets = [ "BJetPlusX25ns", "BTag25ns", "Commissioning25ns", "DoublePhoton25ns", "DoublePhotonHighPt25ns",
              "ElectronHad25ns", "HLTPhysics25ns1", "HLTPhysics25ns2", "HLTPhysics25ns3", "HLTPhysics25ns4",
@@ -411,7 +450,7 @@ datasets = [ "BJetPlusX25ns", "BTag25ns", "Commissioning25ns", "DoublePhoton25ns
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               scenario = "pp")
+               scenario = ppScenario)
 
 datasets = [ "HcalHPDNoise25ns", "LogMonitor25ns", "FEDMonitor25ns" ]
 
@@ -426,74 +465,89 @@ for dataset in datasets:
 
 addExpressConfig(tier0Config, "HIExpress",
                  scenario = "HeavyIons",
-                 data_tiers = [ "FEVT", "ALCARECO", "DQM" ],
-                 alca_producers = [ "SiStripCalZeroBias", "TkAlMinBiasHI", "PromptCalibProd" ],
+                 data_tiers = [ "FEVT" ],
+#                 alca_producers = [ "SiStripCalZeroBias", "TkAlMinBiasHI", "PromptCalibProd" ],
+                 reco_version = defaultRecoVersion,
+                 multicore = numberOfCores,
                  global_tag = expressGlobalTag,
+                 global_tag_connect = globalTagConnect,
                  proc_ver = expressProcVersion,
-                 maxInputEvents = 200,
+                 maxInputRate = 23 * 1000,
+                 maxInputEvents = 23 * 1000,
                  maxInputSize = 2 * 1024 * 1024 * 1024,
-                 maxInputFiles = 500,
-                 maxLatency = 5 * 23,
+                 maxInputFiles = 20,
+                 maxLatency = 15 * 23,
                  periodicHarvestInterval = 20 * 60,
                  blockCloseDelay = 1200,
                  versionOverride = expressVersionOverride)
 
 addExpressConfig(tier0Config, "Express",
-                 scenario = "pp",
-                 data_tiers = [ "FEVT", "ALCARECO", "DQM" ],
-                 alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "MuAlCalIsolatedMu", "DtCalib", "PromptCalibProd" ],
-                 dqm_sequences = [ "@common", "@jetmet" ],
-#                 reco_version = defaultRecoVersion,
+                 scenario = ppScenario,
+                 data_tiers = [ "FEVT" ],
+                 alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "TkAlMinBias", "PromptCalibProd", "PromptCalibProdSiStrip" ],
+#                 alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "TkAlMinBias", "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiStripGains" ],
+                 reco_version = defaultRecoVersion,
+                 multicore = numberOfCores,
                  global_tag = expressGlobalTag,
+                 global_tag_connect = globalTagConnect,
                  proc_ver = expressProcVersion,
-                 maxInputEvents = 200,
+                 maxInputRate = 23 * 1000,
+                 maxInputEvents = 23 * 1000,
                  maxInputSize = 2 * 1024 * 1024 * 1024,
-                 maxInputFiles = 500,
+                 maxInputFiles = 20,
                  maxLatency = 15 * 23,
                  periodicHarvestInterval = 20 * 60,
                  blockCloseDelay = 1200,
                  versionOverride = expressVersionOverride)
 
 addExpressConfig(tier0Config, "ExpressCosmics",
-                 scenario = "cosmics",
-                 data_tiers = [ "FEVT", "ALCARECO", "DQM" ],
-                 alca_producers = [ "SiStripCalZeroBias", "TkAlCosmics0T" ],
+                 scenario = cosmicsScenario,
+                 data_tiers = [ "FEVT" ],
+                 alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T", "PromptCalibProdSiStrip" ],
+                 reco_version = defaultRecoVersion,
+                 multicore = numberOfCores,
                  global_tag = expressGlobalTag,
+                 global_tag_connect = globalTagConnect,
                  proc_ver = expressProcVersion,
-                 maxInputEvents = 200,
+                 maxInputRate = 23 * 1000,
+                 maxInputEvents = 23 * 1000,
                  maxInputSize = 2 * 1024 * 1024 * 1024,
-                 maxInputFiles = 500,
+                 maxInputFiles = 20,
                  maxLatency = 15 * 23,
                  periodicHarvestInterval = 20 * 60,
                  blockCloseDelay = 1200,
                  versionOverride = expressVersionOverride)
 
-addExpressConfig(tier0Config, "HLTMON",
-                 scenario = "pp",
-                 data_tiers = [ "FEVTHLTALL", "DQM" ],
-                 global_tag = hltmonGlobalTag,
-                 proc_ver = expressProcVersion,
-                 maxInputEvents = 200,
-                 maxInputSize = 2 * 1024 * 1024 * 1024,
-                 maxInputFiles = 500,
-                 maxLatency = 15 * 23,
-                 blockCloseDelay = 1200,
-                 versionOverride = hltmonVersionOverride)
+#addExpressConfig(tier0Config, "HLTMON",
+#                 scenario = ppScenario,
+#                 data_tiers = [ "FEVTHLTALL" ],
+#                 write_dqm = True,
+#                 global_tag = hltmonGlobalTag,
+#                 proc_ver = expressProcVersion,
+#                 blockCloseDelay = 1200,
+#                 versionOverride = hltmonVersionOverride)
 
+#######################
+### ignored streams ###
+#######################
+
+ignoreStream(tier0Config, "Error")
+ignoreStream(tier0Config, "HLTMON")
+ignoreStream(tier0Config, "EventDisplay")
+ignoreStream(tier0Config, "DQM")
+ignoreStream(tier0Config, "LookArea")
 
 ###################################
 ### currently inactive settings ###
 ###################################
 
-##ignoreStream(tier0Config, "Express")
-##
 ##addRegistrationConfig(tier0Config, "UserStreamExample1",
 ##                      primds = "ExamplePrimDS1",
 ##                      acq_era = "AcqEra1",
 ##                      proc_string = "OptionalProcString",
 ##                      proc_version = "v1",
 ##                      data_tier = "RAW")
-##
+
 ##addConversionConfig(tier0Config, "UserStreamExample",
 ##                    primds = "PrimDSTest6",
 ##                    acq_era = "AquEraTest6",

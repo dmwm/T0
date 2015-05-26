@@ -319,6 +319,7 @@ class Create(DBCreator):
                  write_reco     int            not null,
                  write_dqm      int            not null,
                  write_aod      int            not null,
+                 write_miniaod  int            not null,
                  proc_version   int            not null,
                  block_delay    int            not null,
                  cmssw_id       int            not null,

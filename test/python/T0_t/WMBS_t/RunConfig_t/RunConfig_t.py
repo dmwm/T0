@@ -149,7 +149,9 @@ class RunConfigTest(unittest.TestCase):
         self.referenceRunInfo = [ { 'status': 1,
                                     'backfill' : None,
                                     'bulk_data_type' : "data",
-                                    'bulk_data_loc' : "T2_CH_CERN",
+                                    'bulk_inject' : "T2_CH_CERN",
+                                    'express_inject' : 'T2_CH_CERN',
+                                    'express_subscribe' : 'T2_CH_CERN',
                                     'dqmuploadurl' : "https://cmsweb.cern.ch/dqm/dev",
                                     'process': 'HLT',
                                     'hltkey': self.hltkey,
@@ -604,6 +606,7 @@ class RunConfigTest(unittest.TestCase):
         self.referenceMapping['Express']['ExpressPhysics'].append("HLT_Mu100_eta2p1_v1")
         self.referenceMapping['Express']['ExpressPhysics'].append("HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v4")
         self.referenceMapping['Express']['ExpressPhysics'].append("HLT_Mu17_Mu8_v7")
+        self.referenceMapping['Express']['ExpressPhysics'].append("HLT_Photon200_NoHE_v4")
         self.referenceMapping['Express']['ExpressPhysics'].append("HLT_Photon36_CaloIdL_IsoVL_Photon22_CaloIdL_IsoVL_v4")
         self.referenceMapping['Express']['ExpressPhysics'].append("HLT_Photon400_v2")
         self.referenceMapping['Express']['ExpressPhysics'].append("HLT_Photon75_CaloIdVL_IsoL_v8")
@@ -1395,19 +1398,22 @@ class RunConfigTest(unittest.TestCase):
 
                 self.assertEqual(recoConfig['scram_arch'], "slc5_amd64_gcc462",
                                  "ERROR: problem in reco configuration")
-            
+
                 self.assertEqual(recoConfig['reco_split'], 100,
                                  "ERROR: problem in reco configuration")
-            
+
                 self.assertEqual(recoConfig['write_reco'], 1,
                                  "ERROR: problem in reco configuration")
-            
+
                 self.assertEqual(recoConfig['write_aod'], 1,
                                  "ERROR: problem in reco configuration")
-            
+
+                self.assertEqual(recoConfig['write_miniaod'], 1,
+                                 "ERROR: problem in reco configuration")
+
                 self.assertEqual(recoConfig['write_dqm'], 1,
                                  "ERROR: problem in reco configuration")
-            
+
                 self.assertEqual(recoConfig['proc_ver'], 5,
                                  "ERROR: problem in reco configuration")
 
@@ -1416,10 +1422,10 @@ class RunConfigTest(unittest.TestCase):
                     writeSkims = recoConfig['alca_skim'].split(',')
                 self.assertEqual(set(writeSkims), set([ "Skim1", "Skim2", "Skim3" ]),
                                  "ERROR: problem in reco configuration")
-            
+
                 self.assertEqual(recoConfig['global_tag'], "GlobalTag4",
                                  "ERROR: problem in reco configuration")
-            
+
                 self.assertEqual(recoConfig['scenario'], "cosmics",
                                  "ERROR: problem in reco configuration")
 
@@ -1427,7 +1433,7 @@ class RunConfigTest(unittest.TestCase):
 
                 self.assertEqual(recoConfig['do_reco'], 0,
                                  "ERROR: problem in reco configuration")
-            
+
                 self.assertEqual(recoConfig['cmssw'], "CMSSW_6_2_4",
                                  "ERROR: problem in reco configuration")
 
@@ -1439,16 +1445,19 @@ class RunConfigTest(unittest.TestCase):
 
                 self.assertEqual(recoConfig['reco_split'], 200,
                                  "ERROR: problem in reco configuration")
-            
+
                 self.assertEqual(recoConfig['write_reco'], 0,
                                  "ERROR: problem in reco configuration")
-            
+
                 self.assertEqual(recoConfig['write_aod'], 0,
                                  "ERROR: problem in reco configuration")
-            
+
+                self.assertEqual(recoConfig['write_miniaod'], 0,
+                                 "ERROR: problem in reco configuration")
+
                 self.assertEqual(recoConfig['write_dqm'], 0,
                                  "ERROR: problem in reco configuration")
-            
+
                 self.assertEqual(recoConfig['proc_ver'], 6,
                                  "ERROR: problem in reco configuration")
 
@@ -1457,10 +1466,10 @@ class RunConfigTest(unittest.TestCase):
                     writeSkims = recoConfig['alca_skim'].split(',')
                 self.assertEqual(set(writeSkims), set([]),
                                  "ERROR: problem in reco configuration")
-            
+
                 self.assertEqual(recoConfig['global_tag'], "GlobalTag5",
                                  "ERROR: problem in reco configuration")
-            
+
                 self.assertEqual(recoConfig['scenario'], "pp",
                                  "ERROR: problem in reco configuration")
 
@@ -1468,7 +1477,7 @@ class RunConfigTest(unittest.TestCase):
 
                 self.assertEqual(recoConfig['do_reco'], 0,
                                  "ERROR: problem in reco configuration")
-            
+
                 self.assertEqual(recoConfig['cmssw'], "CMSSW_5_3_8",
                                  "ERROR: problem in reco configuration")
 
@@ -1480,16 +1489,19 @@ class RunConfigTest(unittest.TestCase):
 
                 self.assertEqual(recoConfig['reco_split'], 2000,
                                  "ERROR: problem in reco configuration")
-            
+
                 self.assertEqual(recoConfig['write_reco'], 0,
                                  "ERROR: problem in reco configuration")
-            
+
                 self.assertEqual(recoConfig['write_aod'], 1,
                                  "ERROR: problem in reco configuration")
-            
+
+                self.assertEqual(recoConfig['write_miniaod'], 1,
+                                 "ERROR: problem in reco configuration")
+
                 self.assertEqual(recoConfig['write_dqm'], 1,
                                  "ERROR: problem in reco configuration")
-            
+
                 self.assertEqual(recoConfig['proc_ver'], 4,
                                  "ERROR: problem in reco configuration")
 
@@ -1498,13 +1510,12 @@ class RunConfigTest(unittest.TestCase):
                     writeSkims = recoConfig['alca_skim'].split(',')
                 self.assertEqual(set(writeSkims), set([]),
                                  "ERROR: problem in reco configuration")
-            
+
                 self.assertEqual(recoConfig['global_tag'], "GlobalTag3",
                                  "ERROR: problem in reco configuration")
-            
+
                 self.assertEqual(recoConfig['scenario'], "pp",
                                  "ERROR: problem in reco configuration")
-
 
         datasetsStreamA = self.getStreamDatasetsDAO.execute(176161, "A",
                                                             transaction = False)
