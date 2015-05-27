@@ -153,7 +153,8 @@ class Repack(JobFactory):
                     jobEventsTotal = 0
                     jobStreamerList = []
 
-                createdMultipleJobs = False
+                createdJobs = 0
+                nFiles = len(lumiStreamerList)
                 while len(lumiStreamerList) > 0:
 
                     eventsTotal = 0
@@ -186,12 +187,11 @@ class Repack(JobFactory):
                     for streamer in streamerList:
                         lumiStreamerList.remove(streamer)
 
-                    if len(lumiStreamerList) > 0:
-                        createdMultipleJobs = True
+                    createdJobs += 1
 
-                if createdMultipleJobs:
+                if createdJobs > 1:
                     splitLumis.append( { 'SUB' : self.subscription["id"],
-                                         'LUMI' : lumi } )
+                                         'LUMI' : lumi, 'NFILES' : nFiles } )
 
             # lumi is smaller than split limits
             # check if it can be combined with previous lumi(s)

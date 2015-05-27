@@ -91,7 +91,8 @@ class Express(JobFactory):
                 self.markComplete(lumiStreamerList)
                 continue
 
-            createdMultipleJobs = False
+            createdJobs = 0
+            nFiles = len(lumiStreamerList)
             while len(lumiStreamerList) > 0:
 
                 eventsTotal = 0
@@ -120,12 +121,11 @@ class Express(JobFactory):
                 for streamer in streamerList:
                     lumiStreamerList.remove(streamer)
 
-                if len(lumiStreamerList) > 0:
-                    createdMultipleJobs = True
+                createdJobs += 1
 
-            if createdMultipleJobs:
+            if createdJobs > 1:
                 splitLumis.append( { 'SUB' : self.subscription["id"],
-                                     'LUMI' : lumi } )
+                                     'LUMI' : lumi, 'NFILES' : nFiles } )
 
         if len(splitLumis) > 0:
             self.insertSplitLumisDAO.execute(binds = splitLumis)
