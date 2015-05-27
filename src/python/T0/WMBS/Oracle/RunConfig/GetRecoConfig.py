@@ -18,6 +18,7 @@ class GetRecoConfig(DBFormatter):
                         reco_config.reco_split,
                         reco_config.write_reco,
                         reco_config.write_aod,
+                        reco_config.write_miniaod,
                         reco_config.write_dqm,
                         reco_config.proc_version,
                         reco_config.alca_skim,
@@ -62,15 +63,16 @@ class GetRecoConfig(DBFormatter):
             resultDict[primds]['reco_split'] = result[2]
             resultDict[primds]['write_reco'] = result[3]
             resultDict[primds]['write_aod'] = result[4]
-            resultDict[primds]['write_dqm'] = result[5]
-            resultDict[primds]['proc_ver'] = result[6]
-            resultDict[primds]['alca_skim'] = result[7]
-            resultDict[primds]['dqm_seq'] = result[8]
-            resultDict[primds]['block_delay'] = result[9]
-            resultDict[primds]['cmssw'] = result[10]
-            resultDict[primds]['scram_arch'] = result[11]
-            resultDict[primds]['multicore'] = result[12]
-            resultDict[primds]['global_tag'] = result[13]
-            resultDict[primds]['scenario'] = result[14]
+            resultDict[primds]['write_miniaod'] = result[5]
+            resultDict[primds]['write_dqm'] = result[6]
+            resultDict[primds]['proc_ver'] = result[7]
+            resultDict[primds]['alca_skim'] = result[8]
+            resultDict[primds]['dqm_seq'] = result[9]
+            resultDict[primds]['block_delay'] = result[10]
+            resultDict[primds]['cmssw'] = result[11]
+            resultDict[primds]['scram_arch'] = result[12]
+            resultDict[primds]['multicore'] = result[13]
+            resultDict[primds]['global_tag'] = result[14]
+            resultDict[primds]['scenario'] = result[15]
 
         return resultDict

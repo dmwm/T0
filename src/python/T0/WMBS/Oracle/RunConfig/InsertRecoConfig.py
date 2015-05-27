@@ -12,9 +12,9 @@ class InsertRecoConfig(DBFormatter):
     def execute(self, binds, conn = None, transaction = False):
 
         sql = """INSERT INTO reco_config
-                 (RUN_ID, PRIMDS_ID, DO_RECO, RECO_SPLIT, WRITE_RECO, WRITE_DQM, WRITE_AOD,
-                  PROC_VERSION, ALCA_SKIM, DQM_SEQ, BLOCK_DELAY, CMSSW_ID, MULTICORE,
-                  SCRAM_ARCH, GLOBAL_TAG)
+                 (RUN_ID, PRIMDS_ID, DO_RECO, RECO_SPLIT, WRITE_RECO, WRITE_DQM,
+                  WRITE_AOD, WRITE_MINIAOD, PROC_VERSION, ALCA_SKIM, DQM_SEQ,
+                  BLOCK_DELAY, CMSSW_ID, MULTICORE, SCRAM_ARCH, GLOBAL_TAG)
                  VALUES (:RUN,
                          (SELECT id FROM primary_dataset WHERE name = :PRIMDS),
                          :DO_RECO,
@@ -22,6 +22,7 @@ class InsertRecoConfig(DBFormatter):
                          :WRITE_RECO,
                          :WRITE_DQM,
                          :WRITE_AOD,
+                         :WRITE_MINIAOD,
                          :PROC_VER,
                          :ALCA_SKIM,
                          :DQM_SEQ,

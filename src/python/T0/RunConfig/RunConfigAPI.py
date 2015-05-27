@@ -744,6 +744,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                       'WRITE_RECO' : int(datasetConfig.WriteRECO),
                                       'WRITE_DQM' : int(datasetConfig.WriteDQM),
                                       'WRITE_AOD' : int(datasetConfig.WriteAOD),
+                                      'WRITE_MINIAOD' : int(datasetConfig.WriteMINIAOD),
                                       'PROC_VER' : datasetConfig.ProcessingVersion,
                                       'ALCA_SKIM' : alcaSkim,
                                       'DQM_SEQ' : dqmSeq,
@@ -766,6 +767,15 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                             'priority' : "high",
                                             'primaryDataset' : dataset,
                                             'dataTier' : "AOD" } )
+
+                if datasetConfig.WriteMINIAOD:
+                    subscriptions.append( { 'custodialSites' : [phedexConfig['tape_node']],
+                                            'custodialSubType' : "Replica",
+                                            'nonCustodialSites' : [phedexConfig['disk_node']],
+                                            'autoApproveSites' : [phedexConfig['disk_node']],
+                                            'priority' : "high",
+                                            'primaryDataset' : dataset,
+                                            'dataTier' : "MINIAOD" } )
 
                 if len(datasetConfig.AlcaSkims) > 0:
                     subscriptions.append( { 'custodialSites' : [phedexConfig['tape_node']],
@@ -804,6 +814,15 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                                 'primaryDataset' : dataset,
                                                 'dataTier' : "AOD" } )
 
+                    if datasetConfig.WriteMINIAOD:
+                        subscriptions.append( { 'custodialSites' : [phedexConfig['archival_node']],
+                                                'custodialSubType' : "Replica",
+                                                'nonCustodialSites' : [],
+                                                'autoApproveSites' : [phedexConfig['archival_node']],
+                                                'priority' : "high",
+                                                'primaryDataset' : dataset,
+                                                'dataTier' : "MINIAOD" } )
+
                     if len(datasetConfig.AlcaSkims) > 0:
                         subscriptions.append( { 'custodialSites' : [phedexConfig['archival_node']],
                                                 'custodialSubType' : "Replica",
@@ -836,6 +855,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 writeTiers.append("RECO")
             if datasetConfig.WriteAOD:
                 writeTiers.append("AOD")
+            if datasetConfig.WriteMINIAOD:
+                writeTiers.append("MINIAOD")
             if datasetConfig.WriteDQM:
                 writeTiers.append(tier0Config.Global.DQMDataTier)
             if len(datasetConfig.AlcaSkims) > 0:

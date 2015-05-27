@@ -11,7 +11,11 @@ from T0.RunConfig.Tier0Config import setScramArch
 from T0.RunConfig.Tier0Config import setDefaultScramArch
 from T0.RunConfig.Tier0Config import setBackfill
 from T0.RunConfig.Tier0Config import setBulkDataType
-from T0.RunConfig.Tier0Config import setBulkDataLocation
+from T0.RunConfig.Tier0Config import setProcessingSite
+from T0.RunConfig.Tier0Config import setBulkInjectNode
+from T0.RunConfig.Tier0Config import setExpressInjectNode
+from T0.RunConfig.Tier0Config import setExpressSubscribeNode
+from T0.RunConfig.Tier0Config import setDQMDataTier
 from T0.RunConfig.Tier0Config import setDQMUploadUrl
 from T0.RunConfig.Tier0Config import setPromptCalibrationConfig
 from T0.RunConfig.Tier0Config import setConfigVersion
@@ -27,6 +31,10 @@ tier0Config = createTier0Config()
 # set the config version (not really used at the moment)
 setConfigVersion(tier0Config, "replace with real version")
 
+# Settings up sites
+processingSite = "T2_CH_CERN_T0"
+cernPhedexNode = "T2_CH_CERN"
+
 # Set global parameters:
 #  acquisition era
 #  backfill mode
@@ -34,8 +42,18 @@ setConfigVersion(tier0Config, "replace with real version")
 setAcquisitionEra(tier0Config, "ExampleConfig_UnitTest")
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
-setBulkDataLocation(tier0Config, "T2_CH_CERN")
+setProcessingSite(tier0Config, processingSite)
+setBulkInjectNode(tier0Config, cernPhedexNode)
+setExpressInjectNode(tier0Config, cernPhedexNode)
+setExpressSubscribeNode(tier0Config, "T2_CH_CERN")
+
+# Override for DQM data tier
+setDQMDataTier(tier0Config, "DQMIO")
+
+# DQM Server
 setDQMUploadUrl(tier0Config, "https://cmsweb.cern.ch/dqm/dev")
+
+# PCL parameters
 setPromptCalibrationConfig(tier0Config,
                            alcaHarvestTimeout = 12*3600,
                            alcaHarvestDir = "/some/afs/dir",
@@ -99,7 +117,7 @@ addExpressConfig(tier0Config, "HLTMON",
 
 addDataset(tier0Config, "Default",
            do_reco = False,
-           write_reco = False, write_aod = True, write_dqm = True,
+           write_reco = False, write_aod = True, write_miniaod = True, write_dqm = True,
            reco_delay = 60,
            reco_delay_offset = 30,
            reco_split = 2000,
@@ -126,7 +144,7 @@ addDataset(tier0Config, "Cosmics",
            scenario = "cosmics")
 
 addDataset(tier0Config, "MinimumBias",
-           write_reco = False, write_aod = False, write_dqm = False,
+           write_reco = False, write_aod = False, write_miniaod = False, write_dqm = False,
            reco_split = 200,
            proc_version = 6,
            cmssw_version = "CMSSW_6_2_4",

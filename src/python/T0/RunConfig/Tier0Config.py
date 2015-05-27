@@ -313,6 +313,7 @@ def addDataset(config, datasetName, **settings):
       reco_split - number of events to process per reco job
       write_reco - whether the reco jobs writes RECO output
       write_aod - whether the reco job writes AOD output
+      write_miniaod - whether the reco job writes MINIAOD output
       write_dqm - whether the reco job writes DQM output
       archival_node - PhEDEx archival node for this dataset
                       (defaults to None)
@@ -394,6 +395,13 @@ def addDataset(config, datasetName, **settings):
     elif not hasattr(datasetConfig, "WriteAOD"):
         msg = "Tier0Config.addDataset : no write_aod defined for dataset %s or Default" % datasetName
         raise RuntimeError, msg
+
+    if 'write_miniaod' in settings:
+        datasetConfig.WriteMINIAOD = settings['write_miniaod']
+    elif not hasattr(datasetConfig, "WriteMINIAOD"):
+        msg = "Tier0Config.addDataset : no write_miniaod defined for dataset %s or Default" % datasetName
+        raise RuntimeError, msg
+
 
     if 'write_dqm' in settings:
         datasetConfig.WriteDQM = settings['write_dqm']
