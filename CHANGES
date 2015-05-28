@@ -1,3 +1,15 @@
+1.9.92 to 1.9.93:
+  - Merge pull request #4133 from hufnagel/active-split-streamer-query
+  - optimize the active split streamer query
+  - Merge pull request #4132 from hufnagel/promptreco-miniaod
+  - add MINIAOD support to PromptReco
+  - Merge pull request #4131 from hufnagel/alcaharvest-dqmupload
+  - fix settings for dqmupload from alcaharvest
+  - Merge pull request #4130 from hufnagel/express-sites-configurable
+  - make express inject and subscription sites configurable
+  - Merge pull request #4129 from lucacopa/alcalumipixels_dataset
+  - Re enabling AlCaLumiPixels dataset
+
 1.9.28 to 1.9.92:
   - Merge pull request #4128 from lucacopa/release_updated_742_patch1
   - Configuration updates for CMSSW_7_4_2_patch1
