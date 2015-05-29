@@ -73,7 +73,6 @@ setPromptCalibrationConfig(tier0Config,
                            dropboxHost = "webcondvm.cern.ch",
                            validationMode = True)
 
-
 # Defaults for CMSSW version
 defaultCMSSWVersion = "CMSSW_7_4_3"
 
@@ -177,6 +176,7 @@ addDataset(tier0Config, "DataScouting",
 
 addDataset(tier0Config, "Cosmics",
            do_reco = True,
+           write_reco = True, write_aod = True, write_miniaod = False, write_dqm = True,
            alca_producers = [ "TkAlCosmics0T", "MuAlGlobalCosmics", "HcalCalHOCosmics", "DtCalibCosmics" ],
 #           tape_node = "T1_US_FNAL_MSS",
 #           disk_node = "T1_US_FNAL_Disk",
@@ -411,6 +411,7 @@ for dataset in datasets:
 
 addDataset(tier0Config, "Cosmics25ns",
            do_reco = True,
+           write_reco = True, write_aod = True, write_miniaod = False, write_dqm = True,
 #           alca_producers = ["TkAlCosmics0T", "MuAlGlobalCosmics", "HcalCalHOCosmics", "DtCalibCosmics"],
            scenario = cosmicsScenario)
 addDataset(tier0Config, "DoubleElectron25ns",
