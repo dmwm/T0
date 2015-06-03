@@ -15,8 +15,8 @@ class InsertRecoReleaseConfig(DBFormatter):
                  VALUES (:RUN,
                          (SELECT id FROM primary_dataset WHERE name = :PRIMDS),
                          :FILESET,
-                         :RECODELAY,
-                         :RECODELAYOFFSET)
+                         0,
+                         0)
                  """
 
         self.dbi.processData(sql, binds, conn = conn,

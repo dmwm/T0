@@ -1,10 +1,7 @@
 """
 _ReleasePromptReco_
-
 Oracle implementation of ReleasePromptReco
-
 Release PromptReco for given run and primary dataset.
-
 """
 
 from WMCore.Database.DBFormatter import DBFormatter
