@@ -14,30 +14,34 @@ class GetHLTConfig(DBFormatter):
 
     def execute(self, hltkey, conn = None, transaction = False):
 
-        sql = """SELECT distinct a.name AS stream, 
-                                 b.name AS dataset, 
-                                 c.name AS path, 
-                                 d.processname AS process 
-                 FROM cms_hlt_gdr.u_streams a, 
-                      cms_hlt_gdr.u_datasets b, 
-                      cms_hlt_gdr.u_paths c, 
-                      cms_hlt_gdr.u_confversions d, 
-                      cms_hlt_gdr.u_pathid2strdst e, 
-                      cms_hlt_gdr.u_streamids f, 
-                      cms_hlt_gdr.u_datasetids g, 
-                      cms_hlt_gdr.u_pathids h, 
-                      cms_hlt_gdr.u_pathid2conf i 
-                 WHERE d.name = :HLTKEY
-                 AND i.id_confver = d.id 
-                 AND h.id = i.id_pathid 
-                 AND c.id = h.id_path 
-                 AND e.id_pathid = h.id 
-                 AND f.id = e.id_streamid 
-                 AND f.fractodisk > 0 
-                 AND a.id = f.id_stream 
-                 AND g.id = e.id_datasetid 
-                 AND b.id = g.id_dataset 
-                 ORDER BY stream, dataset, path
+        sql = """SELECT distinct a.name AS stream,   
+                                 b.name AS dataset,   
+                                 c.name AS path,   
+                                 d.processname AS process   
+                       FROM cms_hlt_gdr.u_streams a,   
+                            cms_hlt_gdr.u_datasets b,   
+                            cms_hlt_gdr.u_paths c,   
+                            cms_hlt_gdr.u_confversions d,   
+                            cms_hlt_gdr.u_pathid2strdst e,   
+                            cms_hlt_gdr.u_streamids f,   
+                            cms_hlt_gdr.u_datasetids g,   
+                            cms_hlt_gdr.u_pathids h,   
+                            cms_hlt_gdr.u_pathid2conf i,   
+                            cms_hlt_gdr.u_conf2strdst j 
+                       WHERE d.name = :HLTKEY  
+                       AND i.id_confver = d.id   
+                       AND h.id = i.id_pathid   
+                       AND c.id = h.id_path   
+                       AND e.id_pathid = h.id   
+                       AND f.id = e.id_streamid   
+                       AND f.fractodisk > 0   
+                       AND a.id = f.id_stream   
+                       AND g.id = e.id_datasetid   
+                       AND b.id = g.id_dataset  
+                       AND j.id_confver=d.id 
+                       AND j.id_streamid= e.id_streamid 
+                       AND j.id_datasetid= e.id_datasetid 
+                       ORDER BY stream, dataset, path
                  """
 
 #        sql = """SELECT d.streamlabel AS stream,
