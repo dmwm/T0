@@ -238,12 +238,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         specialDataset = None
 
         #
-        # for PromptReco delay settings
-        #
-        promptRecoDelay = {}
-        promptRecoDelayOffset = {}
-
-        #
         # for PhEDEx subscription settings
         #
         subscriptions = []
@@ -380,9 +374,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 selectEvents.append("%s:%s" % (path, runInfo['process']))
 
             if streamConfig.ProcessingStyle == "Bulk":
-
-                promptRecoDelay[datasetConfig.Name] = datasetConfig.RecoDelay
-                promptRecoDelayOffset[datasetConfig.Name] = datasetConfig.RecoDelayOffset
 
                 outputModuleDetails.append( { 'dataTier' : "RAW",
                                               'eventContent' : "ALL",
@@ -628,9 +619,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 for fileset, primds in wmbsHelper.getMergeOutputMapping().items():
                     bindsRecoReleaseConfig.append( { 'RUN' : run,
                                                      'PRIMDS' : primds,
-                                                     'FILESET' : fileset,
-                                                     'RECODELAY' : promptRecoDelay[primds],
-                                                     'RECODELAYOFFSET' : promptRecoDelayOffset[primds] } )
+                                                     'FILESET' : fileset } )
                 insertRecoReleaseConfigDAO.execute(bindsRecoReleaseConfig, conn = myThread.transaction.conn, transaction = True)
             elif streamConfig.ProcessingStyle == "Express":
                 markWorkflowsInjectedDAO.execute([workflowName], injected = True, conn = myThread.transaction.conn, transaction = True)
@@ -668,6 +657,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                             logger = logging,
                             dbinterface = myThread.dbi)
 
+    findRecoReleaseDatasetsDAO = daoFactory(classname = "RunConfig.FindRecoReleaseDatasets")
+    findRecoReleaseDAO = daoFactory(classname = "RunConfig.FindRecoRelease")
     insertDatasetScenarioDAO = daoFactory(classname = "RunConfig.InsertDatasetScenario")
     insertCMSSWVersionDAO = daoFactory(classname = "RunConfig.InsertCMSSWVersion")
     insertRecoConfigDAO = daoFactory(classname = "RunConfig.InsertRecoConfig")
@@ -698,9 +689,17 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
     #
     subscriptions = []
 
-    findRecoReleaseDAO = daoFactory(classname = "RunConfig.FindRecoRelease")
-    recoRelease = findRecoReleaseDAO.execute(transaction = False)
+    #
+    # handle PromptReco release for datasets
+    #
+    recoReleaseDatasets = findRecoReleaseDatasetsDAO.execute(transaction = False)
 
+    datasetDelays = {}
+    for dataset in recoReleaseDatasets:
+        datasetConfig = retrieveDatasetConfig(tier0Config, dataset)
+        datasetDelays[dataset] = (datasetConfig.RecoDelay, datasetConfig.RecoDelayOffset)
+
+    recoRelease = findRecoReleaseDAO.execute(datasetDelays, transaction = False)
     for run in sorted(recoRelease.keys()):
 
         # retrieve some basic run information
