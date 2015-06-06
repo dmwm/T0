@@ -61,7 +61,7 @@ setPromptCalibrationConfig(tier0Config,
 
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_4_4_patch1"
+defaultCMSSWVersion = "CMSSW_7_4_4_patch2"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -79,8 +79,8 @@ alcarawProcVersion = 1
 
 # Defaults for GlobalTag
 expressGlobalTag = "GR_E_V48"
-promptrecoGlobalTag = "GR_P_V55"
-alcap0GlobalTag = "GR_P_V55"
+promptrecoGlobalTag = "GR_P_V56"
+alcap0GlobalTag = "GR_P_V56"
 
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 
@@ -144,11 +144,12 @@ addDataset(tier0Config, "Cosmics",
            scenario = cosmicsScenario)
 addDataset(tier0Config, "SingleMu",
            do_reco = True,
+	   alca_producers = [ "TkAlMuonIsolated", "DtCalib" ],
            dqm_sequences = [ "@common", "@muon", "@jetmet" ],
            scenario = ppScenario)
 addDataset(tier0Config, "Commissioning",
            do_reco = True,
-	   alca_producers = [ "TkAlMinBias", "SiStripCalZeroBias", "SiStripCalMinBias" ],
+	   alca_producers = [ "TkAlMinBias", "SiStripCalMinBias" ],
            scenario = ppScenario)
 
 datasets = [ "NoBPTX" ]
@@ -173,6 +174,13 @@ for dataset in datasets:
                do_reco = True,
                alca_producers = [ "TkAlMinBias", "SiStripCalZeroBias", "SiStripCalMinBias" ],
                dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
+               scenario = ppScenario)
+
+datasets = [ "L1TechBPTXPlusOnly", "L1TechBPTXMinusOnly", "L1TechBPTXQuiet" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
                scenario = ppScenario)
 
 ########################
@@ -216,7 +224,7 @@ addExpressConfig(tier0Config, "Express",
                  scenario = ppScenario,
                  data_tiers = [ "FEVT" ],
                  write_dqm = True,
-                 alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "TkAlMinBias", "PromptCalibProd", "PromptCalibProdSiStrip" ],
+		 alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias", "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiStripGains" ],
                  reco_version = defaultCMSSWVersion,
 		 global_tag_connect = globalTagConnect,
                  global_tag = expressGlobalTag,
