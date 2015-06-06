@@ -34,7 +34,6 @@ class RepackMerge(JobFactory):
         self.minInputSize = kwargs['minInputSize']
         self.maxInputSize = kwargs['maxInputSize']
 
-        self.maxInputEvents = kwargs['maxInputEvents']
         self.maxInputFiles = kwargs['maxInputFiles']
 
         self.maxEdmSize = kwargs['maxEdmSize']
@@ -152,8 +151,7 @@ class RepackMerge(JobFactory):
             #
             # => split up lumi and merge individual parts
             #
-            if lumiSizeTotal > self.maxEdmSize or \
-                    lumiEventsTotal > self.maxInputEvents:
+            if lumiSizeTotal > self.maxEdmSize:
 
                 # merge what we have to preserve order
                 if len(jobFileList) > 0:
@@ -182,8 +180,7 @@ class RepackMerge(JobFactory):
                             newEventsTotal = eventsTotal + fileInfo['events']
                             newSizeTotal = sizeTotal + fileInfo['filesize']
 
-                            if newSizeTotal <= self.maxEdmSize and \
-                                   newEventsTotal <= self.maxInputEvents:
+                            if newSizeTotal <= self.maxEdmSize:
 
                                 eventsTotal = newEventsTotal
                                 sizeTotal = newSizeTotal
@@ -216,7 +213,6 @@ class RepackMerge(JobFactory):
 
                 # still safe with new file, just add it
                 if newSizeTotal <= self.maxInputSize and \
-                       newEventsTotal <= self.maxInputEvents and \
                        newInputFiles <= self.maxInputFiles:
 
                     jobSizeTotal = newSizeTotal
@@ -238,8 +234,7 @@ class RepackMerge(JobFactory):
                 # over limits with new file, below minimum without it
                 # still below override limits (and below event limit)
                 # add file, issue merge job (too large)
-                elif newSizeTotal <= self.maxOverSize and \
-                         newEventsTotal <= self.maxInputEvents:
+                elif newSizeTotal <= self.maxOverSize:
 
                     jobFileList.extend(lumiFileList)
                     self.createJob(jobFileList, jobSizeTotal)
