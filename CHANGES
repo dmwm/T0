@@ -1,3 +1,23 @@
+1.9.94 to 1.9.95:
+  - Merge pull request #4142 from lucacopa/config_updates_June6
+  - Configuration changes
+  - Merge pull request #4140 from hufnagel/repackmerge-events
+  - Merge pull request #4141 from lucacopa/fixed_HLT_query
+  - Fixed query for getting the HLT config
+  - do not route data to error datasets on event count
+  - Merge pull request #4139 from lucacopa/PDs_for_2015A
+  - Configuration updates for Run2015A
+  - Merge pull request #4138 from hufnagel/promptreco-delay-late-binding
+  - take the PromptReco delay from the configuration file
+  - Merge pull request #4137 from lucacopa/new_configs_stable_beam
+  - Configuration updates for stable beam 2015
+  - Merge pull request #4136 from hufnagel/add-pp0T0-scenario
+  - add ppRun2B0T scenario to schema
+  - Merge pull request #4135 from hufnagel/cosmics-no-miniaod
+  - MINIAOD is not supported for cosmics data
+  - Merge pull request #4134 from hufnagel/deploy-scripts
+  - add deploy scripts
+
 
 1.9.92 to 1.9.94:
   - Merge pull request #4133 from hufnagel/active-split-streamer-query
