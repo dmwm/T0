@@ -18,7 +18,7 @@ import re
 import os
 import sys
 
-from WMCore.Services.WMStats.WMStatsReader import WMStatsReader
+from WMCore.Services.RequestDB.RequestDBReader import RequestDBReader
 from WMCore.Configuration import loadConfigurationFile
 
 promptRecoRegexp = re.compile(r'^PromptReco_.*$')
@@ -44,19 +44,26 @@ def loadLimitsFromConfig(config):
             limits[workflowType][state] = getattr(workflowTypeInfo, state)
     return limits
 
-def processWorkflows(wmStats, workflowLimits):
+def processWorkflows(requestDBreader, workflowLimits, statusList):
     """
     _processWorkflows_
 
-    The core logic of the tool, it gets a WMStatsReader object
+    The core logic of the tool, it gets a RequestDBReader object
     and checks all the available workflows in it. It uses the
     workflowLimits to check which workflows have remained in a state
     longer than expected, finally it returns a dictionary with the problematic
     workflows, their states and the time spent in them.
     """
-
-    workflowStates = wmStats.workflowStatus(stale = False)
-    workflowStates = dict(map(lambda (key, value): (key.replace(' ', ''), value), workflowStates.items()))
+    workflowStates = {}
+    workflowInfo = requestDBreader.getRequestByStatus(statusList, detail = True)
+    for workflow in workflowInfo.keys():
+        workflowStatus = workflowInfo[workflow]['RequestStatus']
+        statusTimestamps = workflowInfo[workflow]['RequestTransition']
+        for stateInfo in statusTimestamps:
+            if stateInfo['Status'] == workflowStatus:
+                if workflowStatus not in workflowStates:
+                    workflowStates[workflowStatus] = {}
+                workflowStates[workflowStatus][workflow] = stateInfo['UpdateTime']
     problematicWorkflows = []
     currentTime = int(time.time())
     for workflowType in workflowLimits:
@@ -129,7 +136,7 @@ def buildSLSXML(outputFilePath, data, runBlacklist, interventionInfo):
         intervention = inteventionTemplate.format(**interventionInfo)
 
     template = """<?xml version="1.0" encoding="utf-8"?>
-    <serviceupdate xmlns="http://sls.cern.ch/SLS/XML/update">
+    <serviceupdate>
         <id>CMST0-late-workflows</id>
         <availability>{availability}</availability>
         <timestamp>{timestamp}</timestamp>
@@ -154,39 +161,58 @@ def buildSLSXML(outputFilePath, data, runBlacklist, interventionInfo):
     return
 
 def main():
+    """
+    _main_
+    
+    Script's main function
+    """
+    try:
+        #Load configuration files
+        if os.environ.has_key("config"):
+            os.environ['WMAGENT_CONFIG'] = os.path.join(os.environ.get("config"), 'config.py')
+        agentConfig = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
+        
+        alarmConfigPath = os.path.join(os.environ.get("SLS_CONFIG") or
+                                       os.environ["T0_ROOT"], 'etc/SLSAlarmsConfig.py')
+        alarmConfig = loadConfigurationFile(alarmConfigPath)
+        
+        # Connect to the request db
+        requestDBurl = agentConfig.AnalyticsDataCollector.centralRequestDBURL
+        requestDBreader = RequestDBReader(requestDBurl, couchapp = 'T0Request')
+    
+        statusList = ["new","Closed","Merge","Harvesting","Processing Done","AlcaSkim","completed"]
+        
+        workflowLimits = loadLimitsFromConfig(alarmConfig)
+        data = processWorkflows(requestDBreader, workflowLimits, statusList)
+    
+        interventionInfo = {}
+        if hasattr(alarmConfig.cmst0_late_workflows, "Intervention"):
+            startTime = alarmConfig.cmst0_late_workflows.Intervention.startTime
+            duration = alarmConfig.cmst0_late_workflows.Intervention.duration
+            message = alarmConfig.cmst0_late_workflows.Intervention.message
+    
+            # Check that the intervention is present or in the future
+            structStartTime = time.strptime(startTime, "%Y-%m-%dT%H:%M:%S")
+            startTimeSeconds = time.mktime(structStartTime)
+            if (startTimeSeconds + duration * 3600) >= time.time():
+                interventionInfo = {'startTime' : startTime,
+                                    'duration' : duration,
+                                    'message' : message}
+    
+        runBlacklist = getattr(alarmConfig.cmst0_late_workflows, "RunBlacklist", [])
+    
+        xmlFile = getattr(alarmConfig.cmst0_late_workflows, "xmlFile", None) or "cmst0_late_workflows.xml"
+        xmlPath = os.path.join(alarmConfig.Settings.xmlDir, xmlFile)
+        buildSLSXML(xmlPath, data, runBlacklist, interventionInfo)
+    
+        return
 
-    agentConfig = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
-    localWMStatsURL = agentConfig.AnalyticsDataCollector.localWMStatsURL
-    wmstatsReader = WMStatsReader(couchURL = localWMStatsURL)
-
-    alarmConfigPath = os.path.join(os.environ.get("SLS_CONFIG") or
-                                   os.environ["T0_ROOT"], 'etc/SLSAlarmsConfig.py')
-    alarmConfig = loadConfigurationFile(alarmConfigPath)
-
-    workflowLimits = loadLimitsFromConfig(alarmConfig)
-    data = processWorkflows(wmstatsReader, workflowLimits)
-
-    interventionInfo = {}
-    if hasattr(alarmConfig.cmst0_late_workflows, "Intervention"):
-        startTime = alarmConfig.cmst0_late_workflows.Intervention.startTime
-        duration = alarmConfig.cmst0_late_workflows.Intervention.duration
-        message = alarmConfig.cmst0_late_workflows.Intervention.message
-
-        # Check that the intervention is present or in the future
-        structStartTime = time.strptime(startTime, "%Y-%m-%dT%H:%M:%S")
-        startTimeSeconds = time.mktime(structStartTime)
-        if (startTimeSeconds + duration * 3600) >= time.time():
-            interventionInfo = {'startTime' : startTime,
-                                'duration' : duration,
-                                'message' : message}
-
-    runBlacklist = getattr(alarmConfig.cmst0_late_workflows, "RunBlacklist", [])
-
-    xmlFile = getattr(alarmConfig.cmst0_late_workflows, "xmlFile", None) or "cmst0_late_workflows.xml"
-    xmlPath = os.path.join(alarmConfig.Settings.xmlDir, xmlFile)
-    buildSLSXML(xmlPath, data, runBlacklist, interventionInfo)
-
-    return
+    except Exception, e:
+        timezone = str(int(-time.timezone / 3600)).zfill(2)
+        timestamp = time.strftime("%Y-%m-%dT%H:%M:%S+")
+        timestamp += "%s:00" % timezone
+        sys.stderr.write('\n'+str(timestamp)+'\n')
+        raise e
 
 if __name__ == '__main__':
     sys.exit(main())
