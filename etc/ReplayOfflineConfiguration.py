@@ -9,7 +9,8 @@ from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
 from T0.RunConfig.Tier0Config import setScramArch
 from T0.RunConfig.Tier0Config import setDefaultScramArch
-from T0.RunConfig.Tier0Config import setLFNPrefix
+from T0.RunConfig.Tier0Config import setBaseRequestPriority
+from T0.RunConfig.Tier0Config import setBackfill
 from T0.RunConfig.Tier0Config import setBulkDataType
 from T0.RunConfig.Tier0Config import setProcessingSite
 from T0.RunConfig.Tier0Config import setBulkInjectNode
@@ -40,12 +41,14 @@ cernPhedexNode = "T2_CH_CERN"
 
 # Set global parameters:
 #  Acquisition era
-#  LFN prefix
+#  BaseRequestPriority
+#  Backfill mode
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
 setAcquisitionEra(tier0Config, "Tier0_Test_SUPERBUNNIES_vocms229")
-setLFNPrefix(tier0Config, "/store/backfill/1")
+setBaseRequestPriority(tier0Config, 250000)
+setBackfill(tier0Config, 2)
 setBulkDataType(tier0Config, "data")
 setProcessingSite(tier0Config, processingSite)
 setBulkInjectNode(tier0Config, cernPhedexNode)
@@ -59,8 +62,8 @@ setDQMDataTier(tier0Config, "DQMIO")
 # First timeout is used directly for reco release
 # Second timeout is used for the data service PromptReco start check
 # (to basically say we started PromptReco even though we haven't)
-defaultRecoTimeout =  600
-defaultRecoLockTimeout = 60
+defaultRecoTimeout =  10 * 60
+defaultRecoLockTimeout = 5 * 60
 
 # DQM Server
 setDQMUploadUrl(tier0Config, "https://cmsweb.cern.ch/dqm/dev")
@@ -68,13 +71,13 @@ setDQMUploadUrl(tier0Config, "https://cmsweb.cern.ch/dqm/dev")
 # PCL parameters
 setPromptCalibrationConfig(tier0Config,
                            alcaHarvestTimeout = 12*3600,
-                           alcaHarvestDir = "/afs/cern.ch/user/c/cmsprod/scratch2/tier0_harvest",
+                           alcaHarvestDir = "/store/unmerged/tier0_harvest",
                            conditionUploadTimeout = 18*3600,
                            dropboxHost = "webcondvm.cern.ch",
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_4_3"
+defaultCMSSWVersion = "CMSSW_7_4_4_patch4"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -83,6 +86,7 @@ setScramArch(tier0Config, "CMSSW_5_3_20", "slc6_amd64_gcc472")
 # Configure scenarios
 cosmicsScenario = "cosmicsRun2"
 ppScenario = "ppRun2"
+#ppScenario = "ppRun2B0T"
 hcalnzsScenario = "hcalnzsRun2"
 #cosmicsScenario = "cosmics"
 #ppScenario = "pp"
@@ -94,9 +98,9 @@ expressProcVersion = 1
 alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "GR_E_V47"
-promptrecoGlobalTag = "GR_P_V54"
-alcap0GlobalTag = "GR_P_V54"
+expressGlobalTag = "GR_E_V48"
+promptrecoGlobalTag = "GR_P_V56"
+alcap0GlobalTag = "GR_P_V56"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -116,13 +120,13 @@ repackVersionOverride = {
     "CMSSW_5_2_7" : "CMSSW_5_3_20",
     "CMSSW_5_2_8" : "CMSSW_5_3_20",
     "CMSSW_5_2_9" : "CMSSW_5_3_20",
-    "CMSSW_7_4_2" : "CMSSW_7_4_patch1",
+    "CMSSW_7_4_2" : "CMSSW_7_4_4_patch4",
     }
 expressVersionOverride = {
     "CMSSW_5_2_7" : "CMSSW_5_3_20",
     "CMSSW_5_2_8" : "CMSSW_5_3_20",
     "CMSSW_5_2_9" : "CMSSW_5_3_20",
-    "CMSSW_7_4_2" : "CMSSW_7_4_2_patch1",
+    "CMSSW_7_4_2" : "CMSSW_7_4_4_patch4",
     }
 
 #hltmonVersionOverride = {
@@ -170,7 +174,7 @@ addDataset(tier0Config, "Default",
 addDataset(tier0Config, "DataScouting",
            do_reco = True,
            write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
-           reco_split = 3 * defaultRecoSplitting,
+           reco_split = 10 * defaultRecoSplitting,
            dqm_sequences = [ "@common" ],
            scenario = "DataScouting")
 
@@ -185,7 +189,6 @@ addDataset(tier0Config, "Cosmics",
 addDataset(tier0Config, "JetHT",
            do_reco = True,
            dqm_sequences = [ "@common", "@jetmet" ],
-
            scenario = ppScenario)
 addDataset(tier0Config, "MET",
            do_reco = True,
@@ -269,7 +272,7 @@ for dataset in datasets:
 addDataset(tier0Config, "HcalNZS",
            do_reco = True,
            alca_producers = [ "HcalCalMinBias" ],
-           scenario = "hcalnzs")
+           scenario = hcalnzsScenario)
 addDataset(tier0Config,"TestEnablesEcalHcalDT",
            do_reco = False,
            scenario = "AlCaTestEnable")
@@ -429,7 +432,7 @@ addDataset(tier0Config, "DoubleMuParked25ns",
 addDataset(tier0Config,"HcalNZS25ns",
            do_reco = True,
 #           alca_producers = ["HcalCalMinBias"],
-           scenario = "hcalnzs")
+           scenario = hcalnzsScenario)
 addDataset(tier0Config,"MinimumBias25ns",
            do_reco = True,
 #           alca_producers = ["SiStripCalMinBias", "TkAlMinBias"],
@@ -467,8 +470,9 @@ for dataset in datasets:
 addExpressConfig(tier0Config, "HIExpress",
                  scenario = "HeavyIons",
                  data_tiers = [ "FEVT" ],
+                 write_dqm = True,
 #                 alca_producers = [ "SiStripCalZeroBias", "TkAlMinBiasHI", "PromptCalibProd" ],
-                 reco_version = defaultRecoVersion,
+                 reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
                  global_tag = expressGlobalTag,
                  global_tag_connect = globalTagConnect,
@@ -485,9 +489,10 @@ addExpressConfig(tier0Config, "HIExpress",
 addExpressConfig(tier0Config, "Express",
                  scenario = ppScenario,
                  data_tiers = [ "FEVT" ],
+                 write_dqm = True,
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "TkAlMinBias", "PromptCalibProd", "PromptCalibProdSiStrip" ],
 #                 alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "TkAlMinBias", "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiStripGains" ],
-                 reco_version = defaultRecoVersion,
+                 reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
                  global_tag = expressGlobalTag,
                  global_tag_connect = globalTagConnect,
@@ -504,8 +509,9 @@ addExpressConfig(tier0Config, "Express",
 addExpressConfig(tier0Config, "ExpressCosmics",
                  scenario = cosmicsScenario,
                  data_tiers = [ "FEVT" ],
+                 write_dqm = True,
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T", "PromptCalibProdSiStrip" ],
-                 reco_version = defaultRecoVersion,
+                 reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
                  global_tag = expressGlobalTag,
                  global_tag_connect = globalTagConnect,
