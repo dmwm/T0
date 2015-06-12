@@ -169,7 +169,6 @@ addDataset(tier0Config, "Cosmics",
 addDataset(tier0Config, "SingleMu",
            do_reco = True,
            alca_producers = [ "TkAlMuonIsolated", "DtCalib" ],
-           dqm_sequences = [ "@common", "@muon", "@jetmet" ],
            scenario = ppScenario)
 addDataset(tier0Config, "Commissioning",
            do_reco = True,
