@@ -61,7 +61,7 @@ setPromptCalibrationConfig(tier0Config,
 
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_4_4_patch2"
+defaultCMSSWVersion = "CMSSW_7_4_5"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -78,7 +78,7 @@ expressProcVersion = 1
 alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "GR_E_V48"
+expressGlobalTag = "GR_E_V49"
 promptrecoGlobalTag = "GR_P_V56"
 alcap0GlobalTag = "GR_P_V56"
 
@@ -93,14 +93,14 @@ alcarawSplitting = 100000
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_4_patch1",
-    "CMSSW_7_4_3" : "CMSSW_7_4_4_patch1",
-    "CMSSW_7_4_4" : "CMSSW_7_4_4_patch1",
+    "CMSSW_7_4_2" : "CMSSW_7_4_5",
+    "CMSSW_7_4_3" : "CMSSW_7_4_5",
+    "CMSSW_7_4_4" : "CMSSW_7_4_5",
     }
 expressVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_4_patch1",
-    "CMSSW_7_4_3" : "CMSSW_7_4_4_patch1",
-    "CMSSW_7_4_4" : "CMSSW_7_4_4_patch1",
+    "CMSSW_7_4_2" : "CMSSW_7_4_5",
+    "CMSSW_7_4_3" : "CMSSW_7_4_5",
+    "CMSSW_7_4_4" : "CMSSW_7_4_5",
     }
 
 #set default repack settings for bulk streams
@@ -130,9 +130,8 @@ addDataset(tier0Config, "Default",
            archival_node = "T0_CH_CERN_MSS",
            tape_node = "T1_US_FNAL_MSS",
            disk_node = "T1_US_FNAL_Disk",
-	   blockCloseDelay = 24 * 3600,
+           blockCloseDelay = 24 * 3600,
            scenario = ppScenario)
-
 
 ###############################
 ### PDs used during Run2015 ###
@@ -144,12 +143,12 @@ addDataset(tier0Config, "Cosmics",
            scenario = cosmicsScenario)
 addDataset(tier0Config, "SingleMu",
            do_reco = True,
-	   alca_producers = [ "TkAlMuonIsolated", "DtCalib" ],
+           alca_producers = [ "TkAlMuonIsolated", "DtCalib" ],
            dqm_sequences = [ "@common", "@muon", "@jetmet" ],
            scenario = ppScenario)
 addDataset(tier0Config, "Commissioning",
            do_reco = True,
-	   alca_producers = [ "TkAlMinBias", "SiStripCalMinBias" ],
+           alca_producers = [ "TkAlMinBias", "SiStripCalMinBias" ],
            scenario = ppScenario)
 
 datasets = [ "NoBPTX" ]
@@ -157,7 +156,6 @@ datasets = [ "NoBPTX" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               dqm_sequences = [ "@common" ],
                scenario = ppScenario)
 
 datasets = [ "Jet", "EGamma" ]
@@ -173,7 +171,6 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                alca_producers = [ "TkAlMinBias", "SiStripCalZeroBias", "SiStripCalMinBias" ],
-               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
                scenario = ppScenario)
 
 datasets = [ "L1TechBPTXPlusOnly", "L1TechBPTXMinusOnly", "L1TechBPTXQuiet" ]
@@ -209,7 +206,35 @@ addDataset(tier0Config,"AlCaLumiPixels",
 ########################################################
 
 datasets = [ "ZeroBias1", "ZeroBias2", "ZeroBias3", "ZeroBias4",
-             "ZeroBias5", "ZeroBias6", "ZeroBias7", "ZeroBias8"  ]
+             "ZeroBias5", "ZeroBias6", "ZeroBias7", "ZeroBias8",
+             "ZeroBias"  ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               alca_producers = [ "SiStripCalZeroBias", "LumiPixelsMinBias" ],
+               scenario = ppScenario)
+
+################################
+### Low PU collisions 13 TeV ###
+################################
+
+datasets = [ "CastorJets", "EGMLowPU", "EmptyBX", "FSQJets1", "FSQJets2", "FSQJets3", 
+            "FullTrack", "HINCaloJet40", "HINCaloJetsOther", "HINMuon", "HINPFJetsOther", 
+            "HINPhoton", "HLTPhysics", "HcalHPDNoise", "HighMultiplicity", "L1MinimumBias", 
+            "L1MinimumBiasHF1", "L1MinimumBiasHF2", "L1MinimumBiasHF3", "L1MinimumBiasHF4", 
+            "L1MinimumBiasHF5", "L1MinimumBiasHF6", "L1MinimumBiasHF7", "L1MinimumBiasHF8" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               scenario = ppScenario)
+
+################################
+### Special Totem runs       ###
+################################
+
+datasets = [ "TOTEMMinBias", "TOTEMRomanPots", "ToTOTEM", "ZeroBiasTotem", "MinimumBiasTotem"  ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -224,9 +249,9 @@ addExpressConfig(tier0Config, "Express",
                  scenario = ppScenario,
                  data_tiers = [ "FEVT" ],
                  write_dqm = True,
-		 alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias", "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiStripGains" ],
+                 alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias", "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiStripGains" ],
                  reco_version = defaultCMSSWVersion,
-		 global_tag_connect = globalTagConnect,
+                 global_tag_connect = globalTagConnect,
                  global_tag = expressGlobalTag,
                  proc_ver = expressProcVersion,
                  maxInputRate = 23 * 1000,
@@ -244,7 +269,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  write_dqm = True,
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T", "PromptCalibProdSiStrip" ],
                  reco_version = defaultCMSSWVersion,
-		 global_tag_connect = globalTagConnect,
+                 global_tag_connect = globalTagConnect,
                  global_tag = expressGlobalTag,
                  proc_ver = expressProcVersion,
                  maxInputRate = 23 * 1000,
