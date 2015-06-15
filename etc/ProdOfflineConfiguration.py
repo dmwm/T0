@@ -254,6 +254,19 @@ for dataset in datasets:
                do_reco = True,
                scenario = ppScenario)
 
+################################
+### 50 ns Physics Menu       ###
+################################
+
+datasets = [ "BTagCSV", "BTagMu", "Charmonium", "DisplacedJet", "DoubleEG", "DoubleMuon", 
+             "DoubleMuonLowMass", "HTMHT", "JetHT", "MET", "MuOnia", "MuonEG", "SingleElectron",
+             "SingleMuon", "SinglePhoton", "Tau" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               scenario = ppScenario)
+
 #############################
 ### Express configuration ###
 #############################

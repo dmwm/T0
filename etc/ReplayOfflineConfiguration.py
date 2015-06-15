@@ -239,15 +239,29 @@ for dataset in datasets:
                alca_producers = [ "SiStripCalZeroBias", "LumiPixelsMinBias" ],
                scenario = ppScenario)
 
+########################################################
+### HLTPhysics PDs                                   ###
+########################################################
+
+datasets = [ "HLTPhysics1", "HLTPhysics2", "HLTPhysics3", "HLTPhysics4",
+             "HLTPhysics5", "HLTPhysics6", "HLTPhysics7", "HLTPhysics8",
+             "HLTPhysics"  ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               scenario = ppScenario)
+
+
 ################################
 ### Low PU collisions 13 TeV ###
 ################################
 
 datasets = [ "CastorJets", "EGMLowPU", "EmptyBX", "FSQJets1", "FSQJets2", "FSQJets3", 
-            "FullTrack", "HINCaloJet40", "HINCaloJetsOther", "HINMuon", "HINPFJetsOther", 
-            "HINPhoton", "HLTPhysics", "HcalHPDNoise", "HighMultiplicity", "L1MinimumBias", 
-            "L1MinimumBiasHF1", "L1MinimumBiasHF2", "L1MinimumBiasHF3", "L1MinimumBiasHF4", 
-            "L1MinimumBiasHF5", "L1MinimumBiasHF6", "L1MinimumBiasHF7", "L1MinimumBiasHF8" ]
+             "FullTrack", "HINCaloJet40", "HINCaloJetsOther", "HINMuon", "HINPFJetsOther", 
+             "HINPhoton", "HcalHPDNoise", "HighMultiplicity", "L1MinimumBias",
+             "L1MinimumBiasHF1", "L1MinimumBiasHF2", "L1MinimumBiasHF3", "L1MinimumBiasHF4",
+             "L1MinimumBiasHF5", "L1MinimumBiasHF6", "L1MinimumBiasHF7", "L1MinimumBiasHF8" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -259,6 +273,19 @@ for dataset in datasets:
 ################################
 
 datasets = [ "TOTEMMinBias", "TOTEMRomanPots", "ToTOTEM", "ZeroBiasTotem", "MinimumBiasTotem"  ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               scenario = ppScenario)
+
+################################
+### 50 ns Physics Menu       ###
+################################
+
+datasets = [ "BTagCSV", "BTagMu", "Charmonium", "DisplacedJet", "DoubleEG", "DoubleMuon", 
+             "DoubleMuonLowMass", "HTMHT", "JetHT", "MET", "MuOnia", "MuonEG", "SingleElectron",
+             "SingleMuon", "SinglePhoton", "Tau" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
