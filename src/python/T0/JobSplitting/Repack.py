@@ -38,6 +38,9 @@ class Repack(JobFactory):
 
         self.createdGroup = False
 
+        timePerEvent, sizePerEvent, memoryRequirement = \
+                    self.getPerformanceParameters(kwargs.get('performance', {}))
+        
         myThread = threading.currentThread()
         daoFactory = DAOFactory(package = "T0.WMBS",
                                 logger = logging,
@@ -106,12 +109,12 @@ class Repack(JobFactory):
         fileset = self.subscription.getFileset()
         fileset.load()
 
-        self.defineJobs(streamersByLumi, fileset.open)
+        self.defineJobs(streamersByLumi, fileset.open, memoryRequirement)
 
         return
 
 
-    def defineJobs(self, streamersByLumi, filesetOpen):
+    def defineJobs(self, streamersByLumi, filesetOpen, memoryRequirement):
         """
         _defineStrictJobs_
 
@@ -148,7 +151,7 @@ class Repack(JobFactory):
 
                 # repack what we have to preserve order
                 if len(jobStreamerList) > 0:
-                    self.createJob(jobStreamerList, jobEventsTotal, jobSizeTotal)
+                    self.createJob(jobStreamerList, jobEventsTotal, jobSizeTotal, memoryRequirement)
                     jobSizeTotal = 0
                     jobEventsTotal = 0
                     jobStreamerList = []
@@ -182,7 +185,7 @@ class Repack(JobFactory):
 
                     # allow large single lumi repack to use multiple cores
                     numberOfCores = 1 + (int)(sizeTotal/(20*1000*1000*1000))
-                    self.createJob(streamerList, eventsTotal, sizeTotal, numberOfCores)
+                    self.createJob(streamerList, eventsTotal, sizeTotal, memoryRequirement, numberOfCores)
 
                     for streamer in streamerList:
                         lumiStreamerList.remove(streamer)
@@ -225,7 +228,7 @@ class Repack(JobFactory):
                 # over limits with new lumi, issue repack job
                 else:
 
-                    self.createJob(jobStreamerList, jobEventsTotal, jobSizeTotal)
+                    self.createJob(jobStreamerList, jobEventsTotal, jobSizeTotal, memoryRequirement)
 
                     jobSizeTotal = lumiSizeTotal
                     jobEventsTotal = lumiEventsTotal
@@ -233,7 +236,7 @@ class Repack(JobFactory):
 
         # if we are in closeout issue repack job for leftovers
         if len(jobStreamerList) > 0 and not filesetOpen:
-            self.createJob(jobStreamerList, jobEventsTotal, jobSizeTotal)
+            self.createJob(jobStreamerList, jobEventsTotal, jobSizeTotal, memoryRequirement)
 
         if len(splitLumis) > 0:
             self.insertSplitLumisDAO.execute(binds = splitLumis)
@@ -241,7 +244,7 @@ class Repack(JobFactory):
         return
 
 
-    def createJob(self, streamerList, jobEvents, jobSize, numberOfCores = 1):
+    def createJob(self, streamerList, jobEvents, jobSize, memoryRequirement, numberOfCores = 1):
         """
         _createJob_
 
@@ -269,6 +272,6 @@ class Repack(JobFactory):
         # job disk based on
         #   - RAW on local disk (factor 1)
         jobTime = 300 + jobSize/500000 + (jobSize*3)/5000000
-        self.currentJob.addResourceEstimates(jobTime = jobTime, disk = jobSize/1024)
+        self.currentJob.addResourceEstimates(jobTime = jobTime, disk = jobSize/1024, memory = memoryRequirement)
 
         return
