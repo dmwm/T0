@@ -48,7 +48,7 @@ cernPhedexNode = "T2_CH_CERN"
 #  PhEDEx locations
 setAcquisitionEra(tier0Config, "Tier0_Test_SUPERBUNNIES_vocms229")
 setBaseRequestPriority(tier0Config, 250000)
-setBackfill(tier0Config, 2)
+setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
 setProcessingSite(tier0Config, processingSite)
 setBulkInjectNode(tier0Config, cernPhedexNode)
