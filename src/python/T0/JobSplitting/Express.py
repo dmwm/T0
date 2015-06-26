@@ -33,7 +33,10 @@ class Express(JobFactory):
         self.maxInputEvents = kwargs['maxInputEvents']
 
         self.createdGroup = False
-
+        
+        timePerEvent, sizePerEvent, memoryRequirement = \
+                    self.getPerformanceParameters(kwargs.get('performance', {}))
+        
         myThread = threading.currentThread()
         daoFactory = DAOFactory(package = "T0.WMBS",
                                 logger = logging,
@@ -59,12 +62,12 @@ class Express(JobFactory):
             else:
                 streamersByLumi[lumi] = [ result ]
 
-        self.defineJobs(streamersByLumi)
+        self.defineJobs(streamersByLumi, memoryRequirement)
 
         return
 
 
-    def defineJobs(self, streamersByLumi):
+    def defineJobs(self, streamersByLumi, memoryRequirement):
         """
         _defineJobs_
 
@@ -116,7 +119,7 @@ class Express(JobFactory):
                             sizeTotal = newSizeTotal
                             streamerList.append(streamer)
 
-                self.createJob(streamerList, eventsTotal, sizeTotal)
+                self.createJob(streamerList, eventsTotal, sizeTotal, memoryRequirement)
 
                 for streamer in streamerList:
                     lumiStreamerList.remove(streamer)
@@ -133,7 +136,7 @@ class Express(JobFactory):
         return
 
 
-    def createJob(self, streamerList, jobEvents, jobSize):
+    def createJob(self, streamerList, jobEvents, jobSize, memoryRequirement):
         """
         _createJob_
 
@@ -164,7 +167,7 @@ class Express(JobFactory):
         #   - RAW on local disk (factor 1)
         #   - FEVT/ALCARECO/DQM on local disk (factor 4)
         jobTime = 300 + jobSize/500000 + jobEvents*45 + (jobSize*4*3)/5000000
-        self.currentJob.addResourceEstimates(jobTime = jobTime, disk = (jobSize*6)/1024)
+        self.currentJob.addResourceEstimates(jobTime = jobTime, disk = (jobSize*6)/1024, memory = memoryRequirement)
 
         return
 
