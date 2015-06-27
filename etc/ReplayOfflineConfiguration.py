@@ -77,7 +77,7 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_4_5"
+defaultCMSSWVersion = "CMSSW_7_4_6_patch2"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -115,14 +115,18 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_5",
-    "CMSSW_7_4_3" : "CMSSW_7_4_5",
-    "CMSSW_7_4_4" : "CMSSW_7_4_5",
+    "CMSSW_7_4_2" : "CMSSW_7_4_6_patch2",
+    "CMSSW_7_4_3" : "CMSSW_7_4_6_patch2",
+    "CMSSW_7_4_4" : "CMSSW_7_4_6_patch2",
+    "CMSSW_7_4_5" : "CMSSW_7_4_6_patch2",
+    "CMSSW_7_4_6" : "CMSSW_7_4_6_patch2",
     }
 expressVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_5",
-    "CMSSW_7_4_3" : "CMSSW_7_4_5",
-    "CMSSW_7_4_4" : "CMSSW_7_4_5",
+    "CMSSW_7_4_2" : "CMSSW_7_4_6_patch2",
+    "CMSSW_7_4_3" : "CMSSW_7_4_6_patch2",
+    "CMSSW_7_4_4" : "CMSSW_7_4_6_patch2",
+    "CMSSW_7_4_5" : "CMSSW_7_4_6_patch2",
+    "CMSSW_7_4_6" : "CMSSW_7_4_6_patch2",
     }
 
 #set default repack settings for bulk streams

@@ -77,7 +77,7 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_4_5"
+defaultCMSSWVersion = "CMSSW_7_4_6_patch2"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
