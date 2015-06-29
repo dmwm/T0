@@ -267,11 +267,11 @@ class Repack(JobFactory):
         # job time based on
         #   - 5 min initialization
         #   - 0.5MB/s repack speed
-        #   - checksum calculation at 5MB/s (twice)
+        #   - checksum calculation at 5MB/s
         #   - stageout at 5MB/s
         # job disk based on
         #   - RAW on local disk (factor 1)
-        jobTime = 300 + jobSize/500000 + (jobSize*3)/5000000
+        jobTime = 300 + jobSize/500000 + (jobSize*2)/5000000
         self.currentJob.addResourceEstimates(jobTime = jobTime, disk = jobSize/1024, memory = memoryRequirement)
 
         return

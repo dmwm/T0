@@ -160,14 +160,13 @@ class Express(JobFactory):
         #   - 5 min initialization
         #   - 0.5MB/s repack speed
         #   - 45s/evt reco speed
-        #   - checksum calculation at 5MB/s (twice)
+        #   - checksum calculation at 5MB/s
         #   - stageout at 5MB/s
         # job disk based on
-        #   - streamer on local disk (factor 1)
-        #   - RAW on local disk (factor 1)
+        #   - streamer or RAW on local disk (factor 1)
         #   - FEVT/ALCARECO/DQM on local disk (factor 4)
-        jobTime = 300 + jobSize/500000 + jobEvents*45 + (jobSize*4*3)/5000000
-        self.currentJob.addResourceEstimates(jobTime = jobTime, disk = (jobSize*6)/1024, memory = memoryRequirement)
+        jobTime = 300 + jobSize/500000 + jobEvents*45 + (jobSize*4*2)/5000000
+        self.currentJob.addResourceEstimates(jobTime = jobTime, disk = (jobSize*5)/1024, memory = memoryRequirement)
 
         return
 
