@@ -181,12 +181,12 @@ class ExpressMerge(JobFactory):
         # job time based on
         #   - 5 min initialization
         #   - 5MB/s merge speed
-        #   - checksum calculation at 5MB/s (twice)
+        #   - checksum calculation at 5MB/s
         #   - stageout at 5MB/s
         # job disk based on
         #  - input for largest file on local disk
         #  - output on local disk (factor 1)
-        jobTime = 300 + (jobSize*4)/5000000
+        jobTime = 300 + (jobSize*3)/5000000
         self.currentJob.addResourceEstimates(jobTime = jobTime, disk = (jobSize+largestFile)/1024)
 
         return
