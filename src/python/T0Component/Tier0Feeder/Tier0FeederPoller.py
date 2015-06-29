@@ -108,7 +108,7 @@ class Tier0FeederPoller(BaseWorkerThread):
         findNewExpressRunsDAO = self.daoFactory(classname = "Tier0Feeder.FindNewExpressRuns")
         releaseExpressDAO = self.daoFactory(classname = "Tier0Feeder.ReleaseExpress")
         feedStreamersDAO = self.daoFactory(classname = "Tier0Feeder.FeedStreamers")
-        markRepackInjectedDAO = self.daoFactory(classname = "Tier0Feeder.MarkRepackInjected")
+        markWorkflowsInjectedDAO = self.daoFactory(classname = "Tier0Feeder.MarkWorkflowsInjected")
 
         tier0Config = None
         try:
@@ -203,11 +203,11 @@ class Tier0FeederPoller(BaseWorkerThread):
             self.updateRecoReleaseConfigsT0DataSvc()
 
         #
-        # check if all datasets for a stream had their PromptReco released
-        # then mark the repack workflow as injected (if we don't wait, the
-        # task archiver will cleanup too early)
+        # mark express and repack workflows as injected if certain conditions are met
+        # (we don't do it immediately to prevent the TaskArchiver from cleaning up too early)
         #
-        markRepackInjectedDAO.execute(transaction = False)
+        markWorkflowsInjectedDAO.execute(self.transferSystemBaseDir != None,
+                                         transaction = False)
 
         #
         # close stream/lumis for run/streams that are active (fileset exists and open)

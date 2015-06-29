@@ -450,7 +450,7 @@ class Create(DBCreator):
             """CREATE INDEX idx_streamer_2 ON streamer (checkForZeroState(used))"""
 
         self.indexes[len(self.indexes)] = \
-            """CREATE INDEX idx_streamer_3 ON streamer (checkForZeroOneState(deleted))"""
+            """CREATE INDEX idx_streamer_3 ON streamer (checkForZeroState(deleted))"""
 
         self.indexes[len(self.indexes)] = \
             """CREATE INDEX idx_prompt_calib_1 ON prompt_calib (checkForZeroState(finished))"""
