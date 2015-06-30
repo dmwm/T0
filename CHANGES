@@ -1,3 +1,29 @@
+1.9.95 to 1.9.96:
+  - Merge pull request #4154 from hufnagel/streamer-notification-delay
+  - make sure repack and express workflows wait for streamer notifications
+  - Merge pull request #4153 from hufnagel/performance-repack-express
+  - tweak time and size event numbers in repack and express job splitter
+  - Merge pull request #4152 from lucacopa/config_update_746patch1
+  - Update release to CMSSW_7_4_6_patch1
+  - Merge pull request #4151 from lucacopa/pass_memory_estimates
+  - Pass memory estimates through the splitting algorithms
+  - Merge pull request #4150 from lucacopa/backfill_1_replays
+  - Use backfill 1 in the replay configurations
+  - Merge pull request #4149 from lucacopa/multiple_dqmUrl_config
+  - Multiple DQM url uploads in the Tier-0 Config
+  - Merge pull request #4148 from lucacopa/50ns_physiscs_menu
+  - Add 50ns physics menu datasets
+  - Merge pull request #4147 from hufnagel/prodconfig-14June2015
+  - add HLTPhysics1-8 datasets
+  - Merge pull request #4146 from lucacopa/remove_dqmsec_singlemu
+  - Remove dqm sequences from SingleMu dataset
+  - Merge pull request #4145 from lucacopa/replayConfigs_run1_2
+  - Add new Replay Configuration for Run1 scale tests
+  - Merge pull request #4144 from hufnagel/replayconfig-9June2015
+  - update replay configuration
+  - Merge pull request #4111 from lucacopa/sls_alarm_update
+  - Updates to tier0 sls alarms scripts
+
 1.9.94 to 1.9.95:
   - Merge pull request #4142 from lucacopa/config_updates_June6
   - Configuration changes
