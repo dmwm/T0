@@ -221,12 +221,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         bindsStorageNode = []
         bindsPhEDExConfig = []
 
-        # mark workflows as injected
-        wmbsDaoFactory = DAOFactory(package = "WMCore.WMBS",
-                                    logger = logging,
-                                    dbinterface = myThread.dbi)
-        markWorkflowsInjectedDAO = wmbsDaoFactory(classname = "Workflow.MarkInjectedWorkflows")
-
         #
         # for spec creation, details for all outputs
         #
@@ -621,8 +615,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                                      'PRIMDS' : primds,
                                                      'FILESET' : fileset } )
                 insertRecoReleaseConfigDAO.execute(bindsRecoReleaseConfig, conn = myThread.transaction.conn, transaction = True)
-            elif streamConfig.ProcessingStyle == "Express":
-                markWorkflowsInjectedDAO.execute([workflowName], injected = True, conn = myThread.transaction.conn, transaction = True)
         except Exception as ex:
             logging.exception(ex)
             myThread.transaction.rollback()
