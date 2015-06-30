@@ -1,3 +1,7 @@
+1.9.96 to 1.9.97:
+  - Merge pull request #4155 from hufnagel/spec-memory-demands
+  - adjust memory demands in specs
+
 1.9.95 to 1.9.96:
   - Merge pull request #4154 from hufnagel/streamer-notification-delay
   - make sure repack and express workflows wait for streamer notifications
