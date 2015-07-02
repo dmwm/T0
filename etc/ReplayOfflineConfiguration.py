@@ -47,7 +47,7 @@ cernPhedexNode = "T2_CH_CERN"
 #  Processing site (where jobs run)
 #  PhEDEx locations
 setAcquisitionEra(tier0Config, "Tier0_Test_SUPERBUNNIES_vocms229")
-setBaseRequestPriority(tier0Config, 250000)
+setBaseRequestPriority(tier0Config, 200000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
 setProcessingSite(tier0Config, processingSite)
@@ -66,7 +66,7 @@ defaultRecoTimeout =  10 * 60
 defaultRecoLockTimeout = 5 * 60
 
 # DQM Server
-setDQMUploadUrl(tier0Config, "https://cmsweb.cern.ch/dqm/dev;https://cmsweb-testbed.cern.ch/dqm/dev")
+setDQMUploadUrl(tier0Config, "https://cmsweb-testbed.cern.ch/dqm/dev")
 
 # PCL parameters
 setPromptCalibrationConfig(tier0Config,
@@ -77,7 +77,7 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_4_6_patch2"
+defaultCMSSWVersion = "CMSSW_7_4_6_patch3"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -115,18 +115,18 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_6_patch2",
-    "CMSSW_7_4_3" : "CMSSW_7_4_6_patch2",
-    "CMSSW_7_4_4" : "CMSSW_7_4_6_patch2",
-    "CMSSW_7_4_5" : "CMSSW_7_4_6_patch2",
-    "CMSSW_7_4_6" : "CMSSW_7_4_6_patch2",
+    "CMSSW_7_4_2" : "CMSSW_7_4_6_patch3",
+    "CMSSW_7_4_3" : "CMSSW_7_4_6_patch3",
+    "CMSSW_7_4_4" : "CMSSW_7_4_6_patch3",
+    "CMSSW_7_4_5" : "CMSSW_7_4_6_patch3",
+    "CMSSW_7_4_6" : "CMSSW_7_4_6_patch3",
     }
 expressVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_6_patch2",
-    "CMSSW_7_4_3" : "CMSSW_7_4_6_patch2",
-    "CMSSW_7_4_4" : "CMSSW_7_4_6_patch2",
-    "CMSSW_7_4_5" : "CMSSW_7_4_6_patch2",
-    "CMSSW_7_4_6" : "CMSSW_7_4_6_patch2",
+    "CMSSW_7_4_2" : "CMSSW_7_4_6_patch3",
+    "CMSSW_7_4_3" : "CMSSW_7_4_6_patch3",
+    "CMSSW_7_4_4" : "CMSSW_7_4_6_patch3",
+    "CMSSW_7_4_5" : "CMSSW_7_4_6_patch3",
+    "CMSSW_7_4_6" : "CMSSW_7_4_6_patch3",
     }
 
 #set default repack settings for bulk streams

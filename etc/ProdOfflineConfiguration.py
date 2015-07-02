@@ -9,9 +9,14 @@ from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
 from T0.RunConfig.Tier0Config import setScramArch
 from T0.RunConfig.Tier0Config import setDefaultScramArch
+from T0.RunConfig.Tier0Config import setBaseRequestPriority
 from T0.RunConfig.Tier0Config import setBackfill
 from T0.RunConfig.Tier0Config import setBulkDataType
-from T0.RunConfig.Tier0Config import setBulkDataLocation
+from T0.RunConfig.Tier0Config import setProcessingSite
+from T0.RunConfig.Tier0Config import setBulkInjectNode
+from T0.RunConfig.Tier0Config import setExpressInjectNode
+from T0.RunConfig.Tier0Config import setExpressSubscribeNode
+from T0.RunConfig.Tier0Config import setDQMDataTier
 from T0.RunConfig.Tier0Config import setDQMUploadUrl
 from T0.RunConfig.Tier0Config import setPromptCalibrationConfig
 from T0.RunConfig.Tier0Config import setConfigVersion
@@ -20,7 +25,6 @@ from T0.RunConfig.Tier0Config import addRepackConfig
 from T0.RunConfig.Tier0Config import addExpressConfig
 from T0.RunConfig.Tier0Config import addRegistrationConfig
 from T0.RunConfig.Tier0Config import addConversionConfig
-from T0.RunConfig.Tier0Config import setDQMDataTier
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -28,15 +32,28 @@ tier0Config = createTier0Config()
 # Set the verstion configuration (not used at the moment)
 setConfigVersion(tier0Config, "replace with real version")
 
+# Settings up sites
+processingSite = "T2_CH_CERN_T0"
+cernPhedexNode = "T2_CH_CERN"
+#processingSite = "T2_CH_CERN_AI"
+#cernPhedexNode = "T0_CH_CERN_Disk"
+
+
 # Set global parameters:
 #  Acquisition era
-#  LFN prefix
+#  BaseRequestPriority
+#  Backfill mode
 #  Data type
-#  PhEDEx location for Bulk data
+#  Processing site (where jobs run)
+#  PhEDEx locations
 setAcquisitionEra(tier0Config, "Run2015A")
+setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
-setBulkDataLocation(tier0Config, "T2_CH_CERN")
+setProcessingSite(tier0Config, processingSite)
+setBulkInjectNode(tier0Config, cernPhedexNode)
+setExpressInjectNode(tier0Config, cernPhedexNode)
+setExpressSubscribeNode(tier0Config, "T2_CH_CERN")
 
 # Override for DQM data tier
 setDQMDataTier(tier0Config, "DQMIO")
@@ -61,7 +78,7 @@ setPromptCalibrationConfig(tier0Config,
 
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_4_6_patch2"
+defaultCMSSWVersion = "CMSSW_7_4_6_patch3"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -84,27 +101,30 @@ alcap0GlobalTag = "GR_P_V56"
 
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 
+# Multicore settings
+numberOfCores = 1
+
 # Splitting parameters for PromptReco
-defaultRecoSplitting = 2000
-hiRecoSplitting = 1000
-alcarawSplitting = 100000
+defaultRecoSplitting = 2000 * numberOfCores
+hiRecoSplitting = 200 * numberOfCores
+alcarawSplitting = 20000 * numberOfCores
 
 #
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_6_patch2",
-    "CMSSW_7_4_3" : "CMSSW_7_4_6_patch2",
-    "CMSSW_7_4_4" : "CMSSW_7_4_6_patch2",
-    "CMSSW_7_4_5" : "CMSSW_7_4_6_patch2",
-    "CMSSW_7_4_6" : "CMSSW_7_4_6_patch2",
+    "CMSSW_7_4_2" : "CMSSW_7_4_6_patch3",
+    "CMSSW_7_4_3" : "CMSSW_7_4_6_patch3",
+    "CMSSW_7_4_4" : "CMSSW_7_4_6_patch3",
+    "CMSSW_7_4_5" : "CMSSW_7_4_6_patch3",
+    "CMSSW_7_4_6" : "CMSSW_7_4_6_patch3",
     }
 expressVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_6_patch2",
-    "CMSSW_7_4_3" : "CMSSW_7_4_6_patch2",
-    "CMSSW_7_4_4" : "CMSSW_7_4_6_patch2",
-    "CMSSW_7_4_5" : "CMSSW_7_4_6_patch2",
-    "CMSSW_7_4_6" : "CMSSW_7_4_6_patch2",
+    "CMSSW_7_4_2" : "CMSSW_7_4_6_patch3",
+    "CMSSW_7_4_3" : "CMSSW_7_4_6_patch3",
+    "CMSSW_7_4_4" : "CMSSW_7_4_6_patch3",
+    "CMSSW_7_4_5" : "CMSSW_7_4_6_patch3",
+    "CMSSW_7_4_6" : "CMSSW_7_4_6_patch3",
     }
 
 #set default repack settings for bulk streams
@@ -123,12 +143,13 @@ addRepackConfig(tier0Config, "Default",
 
 addDataset(tier0Config, "Default",
            do_reco = False,
-           write_reco = True, write_aod = True, write_dqm = True,
+           write_reco = True, write_aod = True, write_miniaod = False, write_dqm = True,
            reco_delay = defaultRecoTimeout,
            reco_delay_offset = defaultRecoLockTimeout,
            reco_split = defaultRecoSplitting,
            proc_version = defaultProcVersionReco,
            cmssw_version = defaultCMSSWVersion,
+           multicore = numberOfCores,
            global_tag = promptrecoGlobalTag,
            global_tag_connect = globalTagConnect,
            archival_node = "T0_CH_CERN_MSS",
@@ -143,6 +164,7 @@ addDataset(tier0Config, "Default",
 
 addDataset(tier0Config, "Cosmics",
            do_reco = True,
+           write_reco = True, write_aod = True, write_miniaod = False, write_dqm = True,
            alca_producers = [ "TkAlCosmics0T", "MuAlGlobalCosmics", "HcalCalHOCosmics", "DtCalibCosmics" ],
            scenario = cosmicsScenario)
 addDataset(tier0Config, "SingleMu",
@@ -198,7 +220,7 @@ addDataset(tier0Config, "HcalNZS",
 
 addDataset(tier0Config,"AlCaLumiPixels",
            do_reco = True,
-           write_reco = False, write_aod = False, write_dqm = True,
+           write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
            reco_split = alcarawSplitting,
            proc_version = alcarawProcVersion,
            alca_producers = [ "LumiPixels" ],

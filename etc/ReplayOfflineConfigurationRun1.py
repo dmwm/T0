@@ -47,7 +47,7 @@ cernPhedexNode = "T2_CH_CERN"
 #  Processing site (where jobs run)
 #  PhEDEx locations
 setAcquisitionEra(tier0Config, "Tier0_Test_SUPERBUNNIES_vocms229")
-setBaseRequestPriority(tier0Config, 250000)
+setBaseRequestPriority(tier0Config, 200000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
 setProcessingSite(tier0Config, processingSite)
@@ -77,7 +77,7 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_4_6_patch2"
+defaultCMSSWVersion = "CMSSW_7_4_6_patch3"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
