@@ -77,7 +77,7 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_4_6_patch3"
+defaultCMSSWVersion = "CMSSW_7_4_6_patch6"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -94,9 +94,9 @@ expressProcVersion = 1
 alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "GR_E_V49"
-promptrecoGlobalTag = "GR_P_V56"
-alcap0GlobalTag = "GR_P_V56"
+expressGlobalTag = "74X_dataRun2_Express_v0"
+promptrecoGlobalTag = "74X_dataRun2_Prompt_v0"
+alcap0GlobalTag = "74X_dataRun2_Prompt_v0"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -145,7 +145,7 @@ addRepackConfig(tier0Config, "Default",
 
 addDataset(tier0Config, "Default",
            do_reco = False,
-           write_reco = True, write_aod = True, write_miniaod = False, write_dqm = True,
+           write_reco = True, write_aod = True, write_miniaod = True, write_dqm = True,
            reco_delay = defaultRecoTimeout,
            reco_delay_offset = defaultRecoLockTimeout,
            reco_split = defaultRecoSplitting,

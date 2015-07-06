@@ -77,7 +77,7 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_4_6_patch3"
+defaultCMSSWVersion = "CMSSW_7_4_6_patch6"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -85,7 +85,7 @@ setScramArch(tier0Config, "CMSSW_5_3_20", "slc6_amd64_gcc472")
 
 # Configure scenarios
 #ppScenario = "ppRun2"
-ppScenario = "ppRun2B0T"
+ppScenario = "ppRun2"
 cosmicsScenario = "cosmicsRun2"
 hcalnzsScenario = "hcalnzsRun2"
 
@@ -96,9 +96,9 @@ expressProcVersion = 1
 alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "GR_E_V49"
-promptrecoGlobalTag = "GR_P_V56"
-alcap0GlobalTag = "GR_P_V56"
+expressGlobalTag = "74X_dataRun2_Express_v0"
+promptrecoGlobalTag = "74X_dataRun2_Prompt_v0"
+alcap0GlobalTag = "74X_dataRun2_Prompt_v0"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -115,18 +115,18 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_6_patch3",
-    "CMSSW_7_4_3" : "CMSSW_7_4_6_patch3",
-    "CMSSW_7_4_4" : "CMSSW_7_4_6_patch3",
-    "CMSSW_7_4_5" : "CMSSW_7_4_6_patch3",
-    "CMSSW_7_4_6" : "CMSSW_7_4_6_patch3",
+    "CMSSW_7_4_2" : "CMSSW_7_4_6_patch6",
+    "CMSSW_7_4_3" : "CMSSW_7_4_6_patch6",
+    "CMSSW_7_4_4" : "CMSSW_7_4_6_patch6",
+    "CMSSW_7_4_5" : "CMSSW_7_4_6_patch6",
+    "CMSSW_7_4_6" : "CMSSW_7_4_6_patch6",
     }
 expressVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_6_patch3",
-    "CMSSW_7_4_3" : "CMSSW_7_4_6_patch3",
-    "CMSSW_7_4_4" : "CMSSW_7_4_6_patch3",
-    "CMSSW_7_4_5" : "CMSSW_7_4_6_patch3",
-    "CMSSW_7_4_6" : "CMSSW_7_4_6_patch3",
+    "CMSSW_7_4_2" : "CMSSW_7_4_6_patch6",
+    "CMSSW_7_4_3" : "CMSSW_7_4_6_patch6",
+    "CMSSW_7_4_4" : "CMSSW_7_4_6_patch6",
+    "CMSSW_7_4_5" : "CMSSW_7_4_6_patch6",
+    "CMSSW_7_4_6" : "CMSSW_7_4_6_patch6",
     }
 
 #set default repack settings for bulk streams
@@ -145,7 +145,7 @@ addRepackConfig(tier0Config, "Default",
 
 addDataset(tier0Config, "Default",
            do_reco = False,
-           write_reco = True, write_aod = True, write_miniaod = False, write_dqm = True,
+           write_reco = True, write_aod = True, write_miniaod = True, write_dqm = True,
            reco_delay = defaultRecoTimeout,
            reco_delay_offset = defaultRecoLockTimeout,
            reco_split = defaultRecoSplitting,
@@ -172,7 +172,7 @@ addDataset(tier0Config, "Cosmics",
            scenario = cosmicsScenario)
 addDataset(tier0Config, "SingleMu",
            do_reco = True,
-           alca_producers = [ "TkAlMuonIsolated", "DtCalib" ],
+           alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
            scenario = ppScenario)
 addDataset(tier0Config, "Commissioning",
            do_reco = True,
@@ -198,7 +198,7 @@ datasets = [ "MinimumBias" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               alca_producers = [ "TkAlMinBias", "SiStripCalZeroBias", "SiStripCalMinBias" ],
+               alca_producers = [ "SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias" ],
                scenario = ppScenario)
 
 datasets = [ "L1TechBPTXPlusOnly", "L1TechBPTXMinusOnly", "L1TechBPTXQuiet" ]
@@ -240,7 +240,7 @@ datasets = [ "ZeroBias1", "ZeroBias2", "ZeroBias3", "ZeroBias4",
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               alca_producers = [ "SiStripCalZeroBias", "LumiPixelsMinBias" ],
+               alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias" ],
                scenario = ppScenario)
 
 ########################################################
@@ -254,8 +254,8 @@ datasets = [ "HLTPhysics1", "HLTPhysics2", "HLTPhysics3", "HLTPhysics4",
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
+               alca_producers = [ "SiStripCalMinBias", "TkAlMinBias" ],
                scenario = ppScenario)
-
 
 ################################
 ### Low PU collisions 13 TeV ###
@@ -287,13 +287,92 @@ for dataset in datasets:
 ### 50 ns Physics Menu       ###
 ################################
 
-datasets = [ "BTagCSV", "BTagMu", "Charmonium", "DisplacedJet", "DoubleEG", "DoubleMuon", 
-             "DoubleMuonLowMass", "HTMHT", "JetHT", "MET", "MuOnia", "MuonEG", "SingleElectron",
-             "SingleMuon", "SinglePhoton", "Tau" ]
+datasets = [ "BTagCSV", "BTagMu", "DisplacedJet", "DoubleMuon", 
+            "DoubleMuonLowMass", "HTMHT", "MuonEG", "SingleMuon", "Tau" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
+               scenario = ppScenario)
+
+datasets = [ "Charmonium" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               alca_producers = [ "TkAlJpsiMuMu" ],
+               scenario = ppScenario)
+
+datasets = [ "DoubleEG" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               alca_producers = [ "EcalCalZElectron", "EcalUncalZElectron", "HcalCalIterativePhiSym" ],
+               scenario = ppScenario)
+
+datasets = [ "DoubleMu" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               alca_producers = [ "TkAlZMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "DtCalib" ],
+               scenario = ppScenario)
+
+datasets = [ "JetHT" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               alca_producers = [ "HcalCalDijets" ],
+               scenario = ppScenario)
+
+datasets = [ "MET" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               alca_producers = [ "HcalCalNoise" ],
+               scenario = ppScenario)
+
+datasets = [ "MuOnia" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               alca_producers = [ "TkAlUpsilonMuMu" ],
+               scenario = ppScenario)
+
+datasets = [ "SingleElectron" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               alca_producers = [ "EcalCalWElectron", "EcalUncalWElectron", "EcalCalZElectron", "EcalUncalZElectron", "HcalCalIterativePhiSym" ],
+               scenario = ppScenario)
+
+datasets = [ "MuOnia" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               alca_producers = [ "HcalCalGammaJet" ],
+               scenario = ppScenario)
+
+datasets = [ "TestEnablesEcalHcal" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = False,
+               alca_producers = [ "HcalCalPedestals" ],
+               scenario = ppScenario)
+
+datasets = [ "SinglePhoton" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               alca_producers = [ "HcalCalGammaJet" ],
                scenario = ppScenario)
 
 #############################
@@ -304,8 +383,11 @@ addExpressConfig(tier0Config, "Express",
                  scenario = ppScenario,
                  data_tiers = [ "FEVT" ],
                  write_dqm = True,
-                 alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias", "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiStripGains" ],
+                 alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias",
+                                    "TkAlMinBias", "DtCalib", "PromptCalibProd", 
+                                    "PromptCalibProdSiStrip", "PromptCalibProdSiStripGains" ],
                  reco_version = defaultCMSSWVersion,
+                 multicore = numberOfCores,
                  global_tag_connect = globalTagConnect,
                  global_tag = expressGlobalTag,
                  proc_ver = expressProcVersion,
@@ -324,6 +406,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  write_dqm = True,
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T", "PromptCalibProdSiStrip" ],
                  reco_version = defaultCMSSWVersion,
+                 multicore = numberOfCores,
                  global_tag_connect = globalTagConnect,
                  global_tag = expressGlobalTag,
                  proc_ver = expressProcVersion,
