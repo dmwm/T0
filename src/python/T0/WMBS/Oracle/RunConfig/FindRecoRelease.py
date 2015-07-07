@@ -73,7 +73,6 @@ class FindRecoRelease(DBFormatter):
                    repack_config.stream_id = run_primds_stream_assoc.stream_id
                  WHERE checkForZeroOneState(reco_release_config.released) = 1
                  AND run.end_time + reco_release_config.delay < :NOW
-                 AND run.end_time > 0
                  """
 
         results = self.dbi.processData(sql, binds, conn = conn,
