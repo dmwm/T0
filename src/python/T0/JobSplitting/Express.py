@@ -91,7 +91,7 @@ class Express(JobFactory):
 
             # check if we are over the max allowed rate
             if lumiEventsTotal > self.maxInputRate:
-                self.markComplete(lumiStreamerList)
+                self.markFailed(lumiStreamerList)
                 continue
 
             createdJobs = 0
@@ -171,16 +171,16 @@ class Express(JobFactory):
         return
 
 
-    def markComplete(self, streamerList):
+    def markFailed(self, streamerList):
         """
-        _markComplete_
+        _markFailed_
 
-        mark all streamers as complete
+        mark all streamers as failed
         """
         fileList = []
         for streamer in streamerList:
             fileList.append( File(id = streamer['id'],
                                   lfn = streamer['lfn']) )
-        self.subscription.completeFiles(fileList)
+        self.subscription.failFiles(fileList)
 
         return

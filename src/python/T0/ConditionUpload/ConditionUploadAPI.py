@@ -45,15 +45,17 @@ def uploadConditions(username, password, serviceProxy):
                             logger = logging,
                             dbinterface = myThread.dbi)
 
-    findConditionsDAO = daoFactory(classname = "ConditionUpload.GetConditions")
+    getConditionsDAO = daoFactory(classname = "ConditionUpload.GetConditions")
     completeFilesDAO = daoFactory(classname = "ConditionUpload.CompleteFiles")
+
+    finishPCLforEmptyExpressDAO = daoFactory(classname = "ConditionUpload.FinishPCLforEmptyExpress")
 
     isPromptCalibrationFinishedDAO = daoFactory(classname = "ConditionUpload.IsPromptCalibrationFinished")
     markPromptCalibrationFinishedDAO = daoFactory(classname = "ConditionUpload.MarkPromptCalibrationFinished")
 
     # look at all runs which are finished with conditions uploads
     # check for late arriving payloads and upload them
-    conditions = findConditionsDAO.execute(finished = True, transaction = False)
+    conditions = getConditionsDAO.execute(finished = True, transaction = False)
 
     for (index, run) in enumerate(sorted(conditions.keys()), 1):
 
@@ -85,9 +87,14 @@ def uploadConditions(username, password, serviceProxy):
                     else:
                         myThread.transaction.commit()
 
+
+    # check for pathological runs with no express data that will never
+    # create conditions for upload and set them to finished
+    finishPCLforEmptyExpressDAO.execute(transaction = False)
+
     # look at all runs not completely finished with condition uploads
     # return acquired (to be uploaded) files for them 
-    conditions = findConditionsDAO.execute(finished = False, transaction = False)
+    conditions = getConditionsDAO.execute(finished = False, transaction = False)
 
     for (index, run) in enumerate(sorted(conditions.keys()), 1):
 
