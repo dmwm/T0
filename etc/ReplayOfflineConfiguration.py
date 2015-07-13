@@ -77,7 +77,7 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_4_6_patch6"
+defaultCMSSWVersion = "CMSSW_7_4_7"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -115,18 +115,18 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_6_patch6",
-    "CMSSW_7_4_3" : "CMSSW_7_4_6_patch6",
-    "CMSSW_7_4_4" : "CMSSW_7_4_6_patch6",
-    "CMSSW_7_4_5" : "CMSSW_7_4_6_patch6",
-    "CMSSW_7_4_6" : "CMSSW_7_4_6_patch6",
+    "CMSSW_7_4_2" : "CMSSW_7_4_7",
+    "CMSSW_7_4_3" : "CMSSW_7_4_7",
+    "CMSSW_7_4_4" : "CMSSW_7_4_7",
+    "CMSSW_7_4_5" : "CMSSW_7_4_7",
+    "CMSSW_7_4_6" : "CMSSW_7_4_7",
     }
 expressVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_6_patch6",
-    "CMSSW_7_4_3" : "CMSSW_7_4_6_patch6",
-    "CMSSW_7_4_4" : "CMSSW_7_4_6_patch6",
-    "CMSSW_7_4_5" : "CMSSW_7_4_6_patch6",
-    "CMSSW_7_4_6" : "CMSSW_7_4_6_patch6",
+    "CMSSW_7_4_2" : "CMSSW_7_4_7",
+    "CMSSW_7_4_3" : "CMSSW_7_4_7",
+    "CMSSW_7_4_4" : "CMSSW_7_4_7",
+    "CMSSW_7_4_5" : "CMSSW_7_4_7",
+    "CMSSW_7_4_6" : "CMSSW_7_4_7",
     }
 
 #set default repack settings for bulk streams
@@ -170,10 +170,7 @@ addDataset(tier0Config, "Cosmics",
            write_reco = True, write_aod = True, write_miniaod = False, write_dqm = True,
            alca_producers = [ "TkAlCosmics0T", "MuAlGlobalCosmics", "HcalCalHOCosmics", "DtCalibCosmics" ],
            scenario = cosmicsScenario)
-addDataset(tier0Config, "SingleMu",
-           do_reco = True,
-           alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
-           scenario = ppScenario)
+
 addDataset(tier0Config, "Commissioning",
            do_reco = True,
            alca_producers = [ "TkAlMinBias", "SiStripCalMinBias" ],
@@ -287,8 +284,8 @@ for dataset in datasets:
 ### 50 ns Physics Menu       ###
 ################################
 
-datasets = [ "BTagCSV", "BTagMu", "DisplacedJet", "DoubleMuon", 
-            "DoubleMuonLowMass", "HTMHT", "MuonEG", "SingleMuon", "Tau" ]
+datasets = [ "BTagCSV", "BTagMu", "DisplacedJet", "DoubleMuonLowMass",
+             "HTMHT", "MuonEG", "Tau" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -311,7 +308,31 @@ for dataset in datasets:
                alca_producers = [ "EcalCalZElectron", "EcalUncalZElectron", "HcalCalIterativePhiSym" ],
                scenario = ppScenario)
 
+datasets = [ "SingleMu" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
+               scenario = ppScenario)
+
+datasets = [ "SingleMuon" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
+               scenario = ppScenario)
+
 datasets = [ "DoubleMu" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               alca_producers = [ "TkAlZMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "DtCalib" ],
+               scenario = ppScenario)
+
+datasets = [ "DoubleMuon" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -374,6 +395,22 @@ for dataset in datasets:
                do_reco = True,
                alca_producers = [ "HcalCalGammaJet" ],
                scenario = ppScenario)
+
+datasets = [ "HINPFJet100", "HINCaloJet100", "HighMultiplicity" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               scenario = ppScenario)
+
+datasets = [ "HLTPhysicsCosmics", "HLTPhysicsCosmics1", "HLTPhysicsCosmics2",
+            "HLTPhysicsCosmics3", "HLTPhysicsCosmics4", "HLTPhysicsCosmics5",
+            "HLTPhysicsCosmics6", "HLTPhysicsCosmics7", "HLTPhysicsCosmics8" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               scenario = cosmicsScenario)
 
 #############################
 ### Express configuration ###
