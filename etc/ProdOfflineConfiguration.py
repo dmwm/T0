@@ -78,7 +78,7 @@ setPromptCalibrationConfig(tier0Config,
 
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_4_7"
+defaultCMSSWVersion = "CMSSW_7_4_7_patch2"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -113,18 +113,20 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_7",
-    "CMSSW_7_4_3" : "CMSSW_7_4_7",
-    "CMSSW_7_4_4" : "CMSSW_7_4_7",
-    "CMSSW_7_4_5" : "CMSSW_7_4_7",
-    "CMSSW_7_4_6" : "CMSSW_7_4_7",
+    "CMSSW_7_4_2" : "CMSSW_7_4_7_patch2",
+    "CMSSW_7_4_3" : "CMSSW_7_4_7_patch2",
+    "CMSSW_7_4_4" : "CMSSW_7_4_7_patch2",
+    "CMSSW_7_4_5" : "CMSSW_7_4_7_patch2",
+    "CMSSW_7_4_6" : "CMSSW_7_4_7_patch2",
+    "CMSSW_7_4_7" : "CMSSW_7_4_7_patch2",
     }
 expressVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_7",
-    "CMSSW_7_4_3" : "CMSSW_7_4_7",
-    "CMSSW_7_4_4" : "CMSSW_7_4_7",
-    "CMSSW_7_4_5" : "CMSSW_7_4_7",
-    "CMSSW_7_4_6" : "CMSSW_7_4_7",
+    "CMSSW_7_4_2" : "CMSSW_7_4_7_patch2",
+    "CMSSW_7_4_3" : "CMSSW_7_4_7_patch2",
+    "CMSSW_7_4_4" : "CMSSW_7_4_7_patch2",
+    "CMSSW_7_4_5" : "CMSSW_7_4_7_patch2",
+    "CMSSW_7_4_6" : "CMSSW_7_4_7_patch2",
+    "CMSSW_7_4_7" : "CMSSW_7_4_7_patch2",
     }
 
 #set default repack settings for bulk streams
@@ -407,6 +409,7 @@ datasets = [ "HLTPhysicsCosmics", "HLTPhysicsCosmics1", "HLTPhysicsCosmics2",
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
+               write_reco = True, write_aod = True, write_miniaod = False, write_dqm = True,
                scenario = cosmicsScenario)
 
 #############################
@@ -418,7 +421,7 @@ addExpressConfig(tier0Config, "Express",
                  data_tiers = [ "FEVT" ],
                  write_dqm = True,
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias",
-                                    "TkAlMinBias", "DtCalib", "PromptCalibProd", 
+                                    "TkAlMinBias", "DtCalib", "PromptCalibProd", "Hotline",
                                     "PromptCalibProdSiStrip", "PromptCalibProdSiStripGains" ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
