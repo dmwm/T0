@@ -457,8 +457,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             specArguments = {}
 
-            specArguments['TimePerEvent'] = 1
-            specArguments['SizePerEvent'] = 200
             specArguments['Memory'] = 1000
 
             specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority + 5000
@@ -492,8 +490,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             specArguments = {}
 
-            specArguments['TimePerEvent'] = 12
-            specArguments['SizePerEvent'] = 512
+            specArguments['TimePerEvent'] = streamConfig.Express.TimePerEvent
+            specArguments['SizePerEvent'] = streamConfig.Express.SizePerEvent
             specArguments['Memory'] = 2500
 
             if streamConfig.Express.Multicore:
@@ -863,8 +861,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
 
                 specArguments = {}
 
-                specArguments['TimePerEvent'] = 12
-                specArguments['SizePerEvent'] = 512
+                specArguments['TimePerEvent'] = datasetConfig.TimePerEvent
+                specArguments['SizePerEvent'] = datasetConfig.SizePerEvent
                 specArguments['Memory'] = 2500
 
                 if datasetConfig.Multicore:

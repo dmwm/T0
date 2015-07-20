@@ -187,6 +187,8 @@ class ExpressMerge(JobFactory):
         #  - input for largest file on local disk
         #  - output on local disk (factor 1)
         jobTime = 300 + (jobSize*3)/5000000
-        self.currentJob.addResourceEstimates(jobTime = jobTime, disk = (jobSize+largestFile)/1024)
+        self.currentJob.addResourceEstimates(jobTime = jobTime,
+                                             disk = (jobSize+largestFile)/1024,
+                                             memory = 1000)
 
         return
