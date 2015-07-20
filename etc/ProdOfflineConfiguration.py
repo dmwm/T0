@@ -84,8 +84,8 @@ defaultCMSSWVersion = "CMSSW_7_4_7_patch2"
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
 
 # Configure scenarios
+ppScenario = "ppRun2B0T"
 cosmicsScenario = "cosmicsRun2"
-ppScenario = "ppRun2"
 hcalnzsScenario = "hcalnzsRun2"
 
 # Defaults for processing version
