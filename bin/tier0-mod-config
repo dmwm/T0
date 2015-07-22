@@ -81,6 +81,9 @@ def modifyConfiguration(config, **args):
                                                                    config.Tier0Feeder.requestDBName)
     config.AnalyticsDataCollector.RequestCouchApp = "T0Request"
 
+    # don't set bad exit codes for the tier0 jobs
+    config.ErrorHandler.failureExitCodes = []
+    
     if 'confdb_url' in args:
         config.section_("HLTConfDatabase")
         config.HLTConfDatabase.connectUrl = args['confdb_url']
