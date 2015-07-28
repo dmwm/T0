@@ -85,7 +85,7 @@ setScramArch(tier0Config, "CMSSW_5_3_20", "slc6_amd64_gcc472")
 
 # Configure scenarios
 #ppScenario = "ppRun2"
-ppScenario = "ppRun2"
+ppScenario = "ppRun2B0T"
 cosmicsScenario = "cosmicsRun2"
 hcalnzsScenario = "hcalnzsRun2"
 
@@ -97,8 +97,8 @@ alcarawProcVersion = 1
 
 # Defaults for GlobalTag
 expressGlobalTag = "74X_dataRun2_Express_v0"
-promptrecoGlobalTag = "74X_dataRun2_Prompt_v0"
-alcap0GlobalTag = "74X_dataRun2_Prompt_v0"
+promptrecoGlobalTag = "74X_dataRun2_Prompt_v1"
+alcap0GlobalTag = "74X_dataRun2_Prompt_v1"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
