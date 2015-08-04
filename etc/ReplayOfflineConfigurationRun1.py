@@ -77,7 +77,7 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_4_7_patch2"
+defaultCMSSWVersion = "CMSSW_7_4_8_patch1"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -94,7 +94,7 @@ expressProcVersion = 1
 alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "74X_dataRun2_Express_v0"
+expressGlobalTag = "74X_dataRun2_Express_v1"
 promptrecoGlobalTag = "74X_dataRun2_Prompt_v1"
 alcap0GlobalTag = "74X_dataRun2_Prompt_v1"
 
@@ -158,6 +158,8 @@ addDataset(tier0Config, "Default",
 #           tape_node = "T1_US_FNAL_MSS",
 #           disk_node = "T1_CH_FNAL_Disk",
            blockCloseDelay = 1200,
+           timePerEvent = 5,
+           sizePerEvent = 1500,
            scenario = ppScenario)
 
 ###############################
@@ -177,6 +179,8 @@ addDataset(tier0Config, "Cosmics",
 #           tape_node = "T1_US_FNAL_MSS",
 #           disk_node = "T1_US_FNAL_Disk",
 #           siteWhitelist = [ "T1_US_FNAL_Disk" ],
+           timePerEvent = 0.5,
+           sizePerEvent = 155,
            scenario = cosmicsScenario)
 addDataset(tier0Config, "JetHT",
            do_reco = True,
@@ -273,6 +277,8 @@ addDataset(tier0Config,"AlCaLumiPixels",
            write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
            reco_split = alcarawSplitting,
            proc_version = alcarawProcVersion,
+           timePerEvent = 0.02,
+           sizePerEvent = 38,
            scenario = "AlCaLumiPixels")
 
 
@@ -441,6 +447,8 @@ addExpressConfig(tier0Config, "HIExpress",
                  maxLatency = 15 * 23,
                  periodicHarvestInterval = 20 * 60,
                  blockCloseDelay = 1200,
+                 timePerEvent = 4,
+                 sizePerEvent = 1700,
                  versionOverride = expressVersionOverride)
 
 addExpressConfig(tier0Config, "Express",
@@ -459,6 +467,8 @@ addExpressConfig(tier0Config, "Express",
                  maxLatency = 15 * 23,
                  periodicHarvestInterval = 20 * 60,
                  blockCloseDelay = 1200,
+                 timePerEvent = 4,
+                 sizePerEvent = 1700,
                  versionOverride = expressVersionOverride)
 
 addExpressConfig(tier0Config, "ExpressCosmics",
@@ -477,6 +487,8 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  maxLatency = 15 * 23,
                  periodicHarvestInterval = 20 * 60,
                  blockCloseDelay = 1200,
+                 timePerEvent = 4,
+                 sizePerEvent = 1700,
                  versionOverride = expressVersionOverride)
 
 #addExpressConfig(tier0Config, "HLTMON",
