@@ -194,6 +194,8 @@ Tier0Configuration - Global configuration object
             |
             |--> AlcaSkims - List of alca skims active for this dataset
             |
+            |--> PhysicsSkims - List of physics skims active for this dataset
+            |
             |--> DqmSequences - List of dqm sequences active for this dataset
             |
             |--> BlockCloseDelay - Delay to close block in WMAgent
@@ -451,6 +453,7 @@ def addDataset(config, datasetName, **settings):
     # finally some parameters for which Default isn't used
     #
     datasetConfig.AlcaSkims = settings.get("alca_producers", [])
+    datasetConfig.PhysicsSkims = settings.get("physics_skims", [])
     datasetConfig.DqmSequences = settings.get("dqm_sequences", [])
 
     return

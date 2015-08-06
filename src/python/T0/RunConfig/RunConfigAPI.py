@@ -521,7 +521,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['MaxInputFiles'] = streamConfig.Express.MaxInputFiles
             specArguments['MaxLatency'] = streamConfig.Express.MaxLatency
             specArguments['AlcaSkims'] = streamConfig.Express.AlcaSkims
-            specArguments['DqmSequences'] = streamConfig.Express.DqmSequences
+            specArguments['DQMSequences'] = streamConfig.Express.DqmSequences
             specArguments['AlcaHarvestTimeout'] = runInfo['ah_timeout']
             specArguments['AlcaHarvestDir'] = runInfo['ah_dir']
             specArguments['DQMUploadProxy'] = dqmUploadProxy
@@ -871,6 +871,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                     specArguments['Multicore'] = datasetConfig.Multicore
                     specArguments['Memory'] = 2500 + (datasetConfig.Multicore - 1) * 500
 
+                specArguments['Memory'] += len(datasetConfig.PhysicsSkims) * 100
+
                 specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority
 
                 specArguments['AcquisitionEra'] = runInfo['acq_era']
@@ -893,7 +895,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
 
                 specArguments['WriteTiers'] = writeTiers
                 specArguments['AlcaSkims'] = datasetConfig.AlcaSkims
-                specArguments['DqmSequences'] = datasetConfig.DqmSequences
+                specArguments['PhysicsSkims'] = datasetConfig.PhysicsSkims
+                specArguments['DQMSequences'] = datasetConfig.DqmSequences
 
                 specArguments['UnmergedLFNBase'] = "/store/unmerged/%s" % runInfo['bulk_data_type']
                 if runInfo['backfill']:

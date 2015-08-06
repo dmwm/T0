@@ -493,7 +493,7 @@ class ExpressWorkloadFactory(StdBase):
                     "AlcaHarvestTimeout" : {"type" : int, "optional" : False},
                     "AlcaHarvestDir" : {"optional" : False, "null" : True},
                     "AlcaSkims" : {"type" : makeList, "optional" : False},
-                    "DqmSequences" : {"type" : makeList, "optional" : False},
+                    "DQMSequences" : {"type" : makeList, "attr" : "dqmSequences", "optional" : False},
                     "BlockCloseDelay" : {"type" : int, "optional" : False, 
                                          "validate" : lambda x : x > 0},
                     }
