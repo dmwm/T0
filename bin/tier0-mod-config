@@ -76,6 +76,12 @@ def modifyConfiguration(config, **args):
     if hasattr(config, "JobUpdater"):
         delattr(config, "JobUpdater")
     
+    # don't use workqueue
+    if hasattr(config, "WorkQueueManager"):
+        delattr(config, "WorkQueueManager")
+    
+    config.TaskArchiver.useWorkQueue = False
+    
     # t0 wmstats specific configuration
     config.AnalyticsDataCollector.localT0RequestDBURL = "%s/%s" % (config.JobStateMachine.couchurl, 
                                                                    config.Tier0Feeder.requestDBName)
