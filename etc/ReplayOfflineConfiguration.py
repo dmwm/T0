@@ -77,7 +77,7 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_4_7_patch2"
+defaultCMSSWVersion = "CMSSW_7_4_8_patch1"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -85,7 +85,7 @@ setScramArch(tier0Config, "CMSSW_5_3_20", "slc6_amd64_gcc472")
 
 # Configure scenarios
 #ppScenario = "ppRun2"
-ppScenario = "ppRun2B0T"
+ppScenario = "ppRun2"
 cosmicsScenario = "cosmicsRun2"
 hcalnzsScenario = "hcalnzsRun2"
 
@@ -96,7 +96,7 @@ expressProcVersion = 1
 alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "74X_dataRun2_Express_v0"
+expressGlobalTag = "74X_dataRun2_Express_v1"
 promptrecoGlobalTag = "74X_dataRun2_Prompt_v1"
 alcap0GlobalTag = "74X_dataRun2_Prompt_v1"
 
@@ -115,20 +115,22 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_7_patch2",
-    "CMSSW_7_4_3" : "CMSSW_7_4_7_patch2",
-    "CMSSW_7_4_4" : "CMSSW_7_4_7_patch2",
-    "CMSSW_7_4_5" : "CMSSW_7_4_7_patch2",
-    "CMSSW_7_4_6" : "CMSSW_7_4_7_patch2",
-    "CMSSW_7_4_7" : "CMSSW_7_4_7_patch2",
+    "CMSSW_7_4_2" : "CMSSW_7_4_8_patch1",
+    "CMSSW_7_4_3" : "CMSSW_7_4_8_patch1",
+    "CMSSW_7_4_4" : "CMSSW_7_4_8_patch1",
+    "CMSSW_7_4_5" : "CMSSW_7_4_8_patch1",
+    "CMSSW_7_4_6" : "CMSSW_7_4_8_patch1",
+    "CMSSW_7_4_7" : "CMSSW_7_4_8_patch1",
+    "CMSSW_7_4_8" : "CMSSW_7_4_8_patch1",
     }
 expressVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_7_patch2",
-    "CMSSW_7_4_3" : "CMSSW_7_4_7_patch2",
-    "CMSSW_7_4_4" : "CMSSW_7_4_7_patch2",
-    "CMSSW_7_4_5" : "CMSSW_7_4_7_patch2",
-    "CMSSW_7_4_6" : "CMSSW_7_4_7_patch2",
-    "CMSSW_7_4_7" : "CMSSW_7_4_7_patch2",
+    "CMSSW_7_4_2" : "CMSSW_7_4_8_patch1",
+    "CMSSW_7_4_3" : "CMSSW_7_4_8_patch1",
+    "CMSSW_7_4_4" : "CMSSW_7_4_8_patch1",
+    "CMSSW_7_4_5" : "CMSSW_7_4_8_patch1",
+    "CMSSW_7_4_6" : "CMSSW_7_4_8_patch1",
+    "CMSSW_7_4_7" : "CMSSW_7_4_8_patch1",
+    "CMSSW_7_4_8" : "CMSSW_7_4_8_patch1",
     }
 
 #set default repack settings for bulk streams
@@ -160,6 +162,8 @@ addDataset(tier0Config, "Default",
 #           tape_node = "T1_US_FNAL_MSS",
 #           disk_node = "T1_CH_FNAL_Disk",
            blockCloseDelay = 1200,
+           timePerEvent = 5,
+           sizePerEvent = 1500,
            scenario = ppScenario)
 
 
@@ -171,11 +175,16 @@ addDataset(tier0Config, "Cosmics",
            do_reco = True,
            write_reco = True, write_aod = True, write_miniaod = False, write_dqm = True,
            alca_producers = [ "TkAlCosmics0T", "MuAlGlobalCosmics", "HcalCalHOCosmics", "DtCalibCosmics" ],
+           timePerEvent = 0.5,
+           sizePerEvent = 155,
            scenario = cosmicsScenario)
 
 addDataset(tier0Config, "Commissioning",
            do_reco = True,
            alca_producers = [ "TkAlMinBias", "SiStripCalMinBias" ],
+           dqm_sequences = [ "@common", "@hcal" ],
+           timePerEvent = 12,
+           sizePerEvent = 4000,
            scenario = ppScenario)
 
 datasets = [ "NoBPTX" ]
@@ -214,6 +223,8 @@ for dataset in datasets:
 addDataset(tier0Config, "HcalNZS",
            do_reco = True,
            alca_producers = [ "HcalCalMinBias" ],
+           timePerEvent = 4.2,
+           sizePerEvent = 1900,
            scenario = hcalnzsScenario)
 
 ###########################
@@ -226,6 +237,8 @@ addDataset(tier0Config,"AlCaLumiPixels",
            reco_split = alcarawSplitting,
            proc_version = alcarawProcVersion,
            alca_producers = [ "LumiPixels" ],
+           timePerEvent = 0.02,
+           sizePerEvent = 38,
            scenario = "AlCaLumiPixels")
 
 ########################################################
@@ -240,6 +253,9 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias" ],
+               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
+               timePerEvent = 3.5,
+               sizePerEvent = 1500,
                scenario = ppScenario)
 
 ########################################################
@@ -286,8 +302,37 @@ for dataset in datasets:
 ### 50 ns Physics Menu       ###
 ################################
 
-datasets = [ "BTagCSV", "BTagMu", "DisplacedJet", "DoubleMuonLowMass",
-             "HTMHT", "MuonEG", "Tau" ]
+datasets = [ "BTagCSV", "DisplacedJet" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               scenario = ppScenario)
+
+datasets = [ "DoubleMuonLowMass", "MuonEG" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               scenario = ppScenario)
+
+datasets = [ "HTMHT" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               timePerEvent = 9.4,
+               sizePerEvent = 2000,
+               scenario = ppScenario)
+
+datasets = [ "Tau" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               scenario = ppScenario)
+
+datasets = [ "BTagMu" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -308,6 +353,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                alca_producers = [ "EcalCalZElectron", "EcalUncalZElectron", "HcalCalIterativePhiSym" ],
+               dqm_sequences = [ "@common", "@ecal", "@egamma" ],
                scenario = ppScenario)
 
 datasets = [ "SingleMu" ]
@@ -324,6 +370,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
+               dqm_sequences = [ "@common", "@muon" ],
                scenario = ppScenario)
 
 datasets = [ "DoubleMu" ]
@@ -340,6 +387,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                alca_producers = [ "TkAlZMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "DtCalib" ],
+               dqm_sequences = [ "@common", "@muon" ],
                scenario = ppScenario)
 
 datasets = [ "JetHT" ]
@@ -348,6 +396,9 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                alca_producers = [ "HcalCalDijets" ],
+               dqm_sequences = [ "@common", "@jetmet", "@hcal" ],
+               timePerEvent = 5.7,
+               sizePerEvent = 2250,
                scenario = ppScenario)
 
 datasets = [ "MET" ]
@@ -356,6 +407,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                alca_producers = [ "HcalCalNoise" ],
+               dqm_sequences = [ "@common", "@jetmet", "@hcal" ],
                scenario = ppScenario)
 
 datasets = [ "MuOnia" ]
@@ -364,6 +416,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                alca_producers = [ "TkAlUpsilonMuMu" ],
+               dqm_sequences = [ "@common", "@muon" ],
                scenario = ppScenario)
 
 datasets = [ "SingleElectron" ]
@@ -372,14 +425,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                alca_producers = [ "EcalCalWElectron", "EcalUncalWElectron", "EcalCalZElectron", "EcalUncalZElectron", "HcalCalIterativePhiSym" ],
-               scenario = ppScenario)
-
-datasets = [ "MuOnia" ]
-
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
-               do_reco = True,
-               alca_producers = [ "HcalCalGammaJet" ],
+               dqm_sequences = [ "@common", "@ecal", "@egamma" ],
                scenario = ppScenario)
 
 datasets = [ "TestEnablesEcalHcal" ]
@@ -396,6 +442,15 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                alca_producers = [ "HcalCalGammaJet" ],
+               dqm_sequences = [ "@common", "@ecal", "@egamma" ],
+               scenario = ppScenario)
+
+datasets = [ "DoublePhoton" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               dqm_sequences = [ "@common", "@ecal", "@egamma" ],
                scenario = ppScenario)
 
 datasets = [ "HINPFJet100", "HINCaloJet100", "HighMultiplicity" ]
@@ -438,6 +493,8 @@ addExpressConfig(tier0Config, "Express",
                  maxLatency = 15 * 23,
                  periodicHarvestInterval = 20 * 60,
                  blockCloseDelay = 1200,
+                 timePerEvent = 4,
+                 sizePerEvent = 1700,
                  versionOverride = expressVersionOverride)
 
 addExpressConfig(tier0Config, "ExpressCosmics",
@@ -457,6 +514,29 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  maxLatency = 15 * 23,
                  periodicHarvestInterval = 20 * 60,
                  blockCloseDelay = 1200,
+                 timePerEvent = 4, #I have to get some stats to set this properly
+                 sizePerEvent = 1700, #I have to get some stats to set this properly
+                 versionOverride = expressVersionOverride)
+
+addExpressConfig(tier0Config, "HLTMonitor",
+                 scenario = ppScenario,
+                 data_tiers = [ "FEVTHLTALL" ],
+                 write_dqm = True,
+                 alca_producers = [],
+                 dqm_sequences = [ "@HLTMon" ],
+                 reco_version = defaultCMSSWVersion,
+                 global_tag_connect = globalTagConnect,
+                 global_tag = expressGlobalTag,
+                 proc_ver = expressProcVersion,
+                 maxInputRate = 23 * 1000,
+                 maxInputEvents = 400,
+                 maxInputSize = 2 * 1024 * 1024 * 1024,
+                 maxInputFiles = 15,
+                 maxLatency = 15 * 23,
+                 periodicHarvestInterval = 20 * 60,
+                 blockCloseDelay = 1200,
+                 timePerEvent = 4, #I have to get some stats to set this properly
+                 sizePerEvent = 1700, #I have to get some stats to set this properly
                  versionOverride = expressVersionOverride)
 
 #######################
