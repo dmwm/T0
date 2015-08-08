@@ -179,7 +179,7 @@ addDataset(tier0Config, "Cosmics",
 addDataset(tier0Config, "Commissioning",
            do_reco = True,
            alca_producers = [ "TkAlMinBias", "SiStripCalMinBias" ],
-           dqm_sequences = [ "@common", "@hcal" ],
+#           dqm_sequences = [ "@common", "@hcal" ],
            timePerEvent = 12,
            sizePerEvent = 4000,
            scenario = ppScenario)
@@ -250,7 +250,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias" ],
-               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
+#               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
                timePerEvent = 3.5,
                sizePerEvent = 1500,
                scenario = ppScenario)
@@ -364,7 +364,7 @@ for dataset in datasets:
                tape_node = "T1_US_FNAL_MSS",
                disk_node = "T1_US_FNAL_Disk",
                alca_producers = [ "EcalCalZElectron", "EcalUncalZElectron", "HcalCalIterativePhiSym" ],
-               dqm_sequences = [ "@common", "@ecal", "@egamma" ],
+#               dqm_sequences = [ "@common", "@ecal", "@egamma" ],
                scenario = ppScenario)
 
 datasets = [ "SingleMu" ]
@@ -383,7 +383,7 @@ for dataset in datasets:
                tape_node = "T1_US_FNAL_MSS",
                disk_node = "T1_US_FNAL_Disk",
                alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
-               dqm_sequences = [ "@common", "@muon" ],
+#               dqm_sequences = [ "@common", "@muon" ],
                scenario = ppScenario)
 
 datasets = [ "DoubleMu" ]
@@ -402,7 +402,7 @@ for dataset in datasets:
                tape_node = "T1_ES_PIC_MSS",
                disk_node = "T1_ES_PIC_Disk",
                alca_producers = [ "TkAlZMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "DtCalib" ],
-               dqm_sequences = [ "@common", "@muon" ],
+#               dqm_sequences = [ "@common", "@muon" ],
                scenario = ppScenario)
 
 datasets = [ "JetHT" ]
@@ -413,7 +413,7 @@ for dataset in datasets:
                tape_node = "T1_IT_CNAF_MSS",
                disk_node = "T1_IT_CNAF_Disk",
                alca_producers = [ "HcalCalDijets" ],
-               dqm_sequences = [ "@common", "@jetmet", "@hcal" ],
+#               dqm_sequences = [ "@common", "@jetmet", "@hcal" ],
                timePerEvent = 5.7,
                sizePerEvent = 2250,
                scenario = ppScenario)
@@ -426,7 +426,7 @@ for dataset in datasets:
                tape_node = "T1_FR_IN2P3_MSS",
                disk_node = "T1_FR_IN2P3_Disk",
                alca_producers = [ "HcalCalNoise" ],
-               dqm_sequences = [ "@common", "@jetmet", "@hcal" ],
+#               dqm_sequences = [ "@common", "@jetmet", "@hcal" ],
                scenario = ppScenario)
 
 datasets = [ "MuOnia" ]
@@ -437,7 +437,7 @@ for dataset in datasets:
                tape_node = "T1_UK_RAL_MSS",
                disk_node = "T1_UK_RAL_Disk",
                alca_producers = [ "TkAlUpsilonMuMu" ],
-               dqm_sequences = [ "@common", "@muon" ],
+#               dqm_sequences = [ "@common", "@muon" ],
                scenario = ppScenario)
 
 datasets = [ "SingleElectron" ]
@@ -448,7 +448,7 @@ for dataset in datasets:
                tape_node = "T1_US_FNAL_MSS",
                disk_node = "T1_US_FNAL_Disk",
                alca_producers = [ "EcalCalWElectron", "EcalUncalWElectron", "EcalCalZElectron", "EcalUncalZElectron", "HcalCalIterativePhiSym" ],
-               dqm_sequences = [ "@common", "@ecal", "@egamma" ],
+#               dqm_sequences = [ "@common", "@ecal", "@egamma" ],
                scenario = ppScenario)
 
 datasets = [ "TestEnablesEcalHcal" ]
@@ -467,7 +467,7 @@ for dataset in datasets:
                tape_node = "T1_DE_KIT_MSS",
                disk_node = "T1_DE_KIT_Disk",
                alca_producers = [ "HcalCalGammaJet" ],
-               dqm_sequences = [ "@common", "@ecal", "@egamma" ],
+#               dqm_sequences = [ "@common", "@ecal", "@egamma" ],
                scenario = ppScenario)
 
 datasets = [ "DoublePhoton" ]
@@ -475,7 +475,7 @@ datasets = [ "DoublePhoton" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               dqm_sequences = [ "@common", "@ecal", "@egamma" ],
+#               dqm_sequences = [ "@common", "@ecal", "@egamma" ],
                scenario = ppScenario)
 
 datasets = [ "HINPFJet100", "HINCaloJet100", "HighMultiplicity" ]
