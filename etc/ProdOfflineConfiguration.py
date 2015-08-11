@@ -313,8 +313,8 @@ datasets = [ "DoubleMuonLowMass", "MuonEG" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               tape_node = "T1_FR_IN2P3_MSS",
-               disk_node = "T1_FR_IN2P3_Disk",
+               tape_node = "T1_FR_CCIN2P3_MSS",
+               disk_node = "T1_FR_CCIN2P3_Disk",
                scenario = ppScenario)
 
 datasets = [ "HTMHT" ]
@@ -423,8 +423,8 @@ datasets = [ "MET" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               tape_node = "T1_FR_IN2P3_MSS",
-               disk_node = "T1_FR_IN2P3_Disk",
+               tape_node = "T1_FR_CCIN2P3_MSS",
+               disk_node = "T1_FR_CCIN2P3_Disk",
                alca_producers = [ "HcalCalNoise" ],
 #               dqm_sequences = [ "@common", "@jetmet", "@hcal" ],
                scenario = ppScenario)
