@@ -71,7 +71,7 @@ def modifyConfiguration(config, **args):
 ##                 section = getattr(config, p[0])
 ##                 setattr(section, p[1], v)
 
-    config.BossAir.pluginNames = ["LsfPlugin"]
+    config.BossAir.pluginNames = ["PyCondorPlugin"]
 
     if hasattr(config, "JobUpdater"):
         delattr(config, "JobUpdater")
