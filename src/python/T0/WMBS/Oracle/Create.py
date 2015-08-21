@@ -61,14 +61,6 @@ class Create(DBCreator):
                ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
-            """CREATE TABLE data_tier (
-                 id     int          not null,
-                 name   varchar2(25) not null,
-                 primary key(id),
-                 constraint dat_tie_name_uq unique(name)
-               ) ORGANIZATION INDEX"""
-
-        self.create[len(self.create)] = \
             """CREATE TABLE cmssw_version (
                  id     int           not null,
                  name   varchar2(255) not null,
@@ -864,24 +856,10 @@ class Create(DBCreator):
                            10 : "ppRun2",
                            11 : "cosmicsRun2",
                            12 : "hcalnzsRun2",
-                           13 : "ppRun2B0T" }
+                           13 : "ppRun2B0T",
+                           14 : "AlCa" }
         for id, name in eventScenarios.items():
             sql = """INSERT INTO event_scenario
-                     (ID, NAME)
-                     VALUES (%d, '%s')
-                     """ % (id, name)
-            self.inserts[len(self.inserts)] = sql
-
-        dataTiers = { 1 : "RAW",
-                      2 : "RECO",
-                      3 : "FEVT",
-                      4 : "FEVTHLTALL",
-                      5 : "AOD",
-                      6 : "ALCARECO",
-                      7 : "DQM",
-                      8 : "ALCAPROMPT" }
-        for id, name in dataTiers.items():
-            sql = """INSERT INTO data_tier
                      (ID, NAME)
                      VALUES (%d, '%s')
                      """ % (id, name)
