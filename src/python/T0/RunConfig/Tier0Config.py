@@ -402,11 +402,22 @@ def addDataset(config, datasetName, **settings):
         msg = "Tier0Config.addDataset : no write_miniaod defined for dataset %s or Default" % datasetName
         raise RuntimeError, msg
 
-
     if 'write_dqm' in settings:
         datasetConfig.WriteDQM = settings['write_dqm']
     elif not hasattr(datasetConfig, "WriteDQM"):
         msg = "Tier0Config.addDataset : no write_dqm defined for dataset %s or Default" % datasetName
+        raise RuntimeError, msg
+
+    if 'timePerEvent' in settings:
+        datasetConfig.TimePerEvent = settings['timePerEvent']
+    elif not hasattr(datasetConfig, "TimePerEvent"):
+        msg = "Tier0Config.addDataset : no timePerEvent defined for dataset %s or Default" % datasetName
+        raise RuntimeError, msg
+
+    if 'sizePerEvent' in settings:
+        datasetConfig.SizePerEvent = settings['sizePerEvent']
+    elif not hasattr(datasetConfig, "SizePerEvent"):
+        msg = "Tier0Config.addDataset : no sizePerEvent defined for dataset %s or Default" % datasetName
         raise RuntimeError, msg
 
     if hasattr(datasetConfig, "GlobalTagConnect"):
@@ -692,28 +703,29 @@ def addExpressConfig(config, streamName, **options):
     Add an express configuration to a given stream.
 
     """
+    streamConfig = retrieveStreamConfig(config, streamName)
+    streamConfig.ProcessingStyle = "Express"
+
+    streamConfig.VersionOverride = options.get("versionOverride", {})
+
+    streamConfig.section_("Express")
+
     scenario = options.get("scenario", None)
     if scenario == None:
         msg = "Tier0Config.addExpressConfig : no scenario defined for stream %s" % streamName
         raise RuntimeError, msg
+    streamConfig.Express.Scenario = scenario
 
     data_tiers = options.get("data_tiers", [])
     if type(data_tiers) != list or len(data_tiers) == 0:
         msg = "Tier0Config.addExpressConfig : data_tiers needs to be list with at least one tier"
         raise RuntimeError, msg
+    streamConfig.Express.DataTiers = data_tiers
 
     alcamerge_config = None
     if "ALCARECO" in data_tiers:
         alcamerge_config = options.get("alcamerge_config", None)
 
-    streamConfig = retrieveStreamConfig(config, streamName)
-    streamConfig.ProcessingStyle = "Express"
-    streamConfig.VersionOverride = options.get("versionOverride", {})
-
-    streamConfig.section_("Express")
-
-    streamConfig.Express.Scenario = scenario
-    streamConfig.Express.DataTiers = data_tiers
     streamConfig.Express.GlobalTag = options.get("global_tag", None)
 
     streamConfig.Express.GlobalTagConnect = options.get("global_tag_connect", None)
@@ -726,6 +738,18 @@ def addExpressConfig(config, streamName, **options):
     streamConfig.Express.WriteDQM = options.get("write_dqm", True)
     streamConfig.Express.DqmSequences = options.get("dqm_sequences", [])
     streamConfig.Express.ProcessingVersion = options.get("proc_ver", 1)
+
+    timePerEvent = options.get("timePerEvent", None)
+    if timePerEvent == None:
+        msg = "Tier0Config.addExpressConfig : no timePerEvent defined for stream %s" % streamName
+        raise RuntimeError, msg
+    streamConfig.Express.TimePerEvent = timePerEvent
+
+    sizePerEvent = options.get("sizePerEvent", None)
+    if sizePerEvent == None:
+        msg = "Tier0Config.addExpressConfig : no sizePerEvent defined for stream %s" % streamName
+        raise RuntimeError, msg
+    streamConfig.Express.SizePerEvent = sizePerEvent
 
     streamConfig.Express.MaxInputRate = options.get("maxInputRate", 23 * 1000)
     streamConfig.Express.MaxInputEvents = options.get("maxInputEvents", 200)

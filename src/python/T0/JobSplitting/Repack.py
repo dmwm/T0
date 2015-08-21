@@ -272,6 +272,8 @@ class Repack(JobFactory):
         # job disk based on
         #   - RAW on local disk (factor 1)
         jobTime = 300 + jobSize/500000 + (jobSize*2)/5000000
-        self.currentJob.addResourceEstimates(jobTime = jobTime, disk = jobSize/1024, memory = memoryRequirement)
+        self.currentJob.addResourceEstimates(jobTime = jobTime,
+                                             disk = jobSize/1024,
+                                             memory = memoryRequirement)
 
         return

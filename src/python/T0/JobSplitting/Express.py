@@ -62,12 +62,12 @@ class Express(JobFactory):
             else:
                 streamersByLumi[lumi] = [ result ]
 
-        self.defineJobs(streamersByLumi, memoryRequirement)
+        self.defineJobs(streamersByLumi, timePerEvent, sizePerEvent, memoryRequirement)
 
         return
 
 
-    def defineJobs(self, streamersByLumi, memoryRequirement):
+    def defineJobs(self, streamersByLumi, timePerEvent, sizePerEvent, memoryRequirement):
         """
         _defineJobs_
 
@@ -119,7 +119,7 @@ class Express(JobFactory):
                             sizeTotal = newSizeTotal
                             streamerList.append(streamer)
 
-                self.createJob(streamerList, eventsTotal, sizeTotal, memoryRequirement)
+                self.createJob(streamerList, eventsTotal, sizeTotal, timePerEvent, sizePerEvent, memoryRequirement)
 
                 for streamer in streamerList:
                     lumiStreamerList.remove(streamer)
@@ -136,7 +136,7 @@ class Express(JobFactory):
         return
 
 
-    def createJob(self, streamerList, jobEvents, jobSize, memoryRequirement):
+    def createJob(self, streamerList, jobEvents, jobSize, timePerEvent, sizePerEvent, memoryRequirement):
         """
         _createJob_
 
@@ -157,16 +157,18 @@ class Express(JobFactory):
             self.currentJob.addFile(f)
 
         # job time based on
-        #   - 5 min initialization
+        #   - 5 min initialization (twice)
         #   - 0.5MB/s repack speed
-        #   - 45s/evt reco speed
+        #   - reco with timePerEvent
         #   - checksum calculation at 5MB/s
         #   - stageout at 5MB/s
         # job disk based on
         #   - streamer or RAW on local disk (factor 1)
-        #   - FEVT/ALCARECO/DQM on local disk (factor 4)
-        jobTime = 300 + jobSize/500000 + jobEvents*45 + (jobSize*4*2)/5000000
-        self.currentJob.addResourceEstimates(jobTime = jobTime, disk = (jobSize*5)/1024, memory = memoryRequirement)
+        #   - FEVT/ALCARECO/DQM on local disk (sizePerEvent)
+        jobTime = 600 + jobSize/500000 + jobEvents*timePerEvent + (jobEvents*sizePerEvent*2)/5000000
+        self.currentJob.addResourceEstimates(jobTime = min(jobTime, 47*3600),
+                                             disk = min(jobSize/1024 + jobEvents*sizePerEvent, 20000000),
+                                             memory = memoryRequirement)
 
         return
 
