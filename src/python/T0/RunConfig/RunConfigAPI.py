@@ -294,7 +294,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                     'nonCustodialSites' : [ runInfo['express_subscribe'] ],
                                     'autoApproveSites' : [ runInfo['express_subscribe'] ],
                                     'priority' : "high",
-                                    'primaryDataset' : specialDataset } )
+                                    'primaryDataset' : specialDataset,
+                                    'deleteFromSource' : True } )
 
             alcaSkim = None
             if len(streamConfig.Express.AlcaSkims) > 0:
@@ -402,6 +403,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                             'autoApproveSites' : autoApproveSites,
                                             'priority' : "high",
                                             'primaryDataset' : dataset,
+                                            'deleteFromSource' : True,
                                             'dataTier' : "RAW" } )
 
                 #
@@ -421,6 +423,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                             'autoApproveSites' : autoApproveSites,
                                             'priority' : "high",
                                             'primaryDataset' : "%s-Error" % dataset,
+                                            'deleteFromSource' : True,
                                             'dataTier' : "RAW" } )
 
 
@@ -444,7 +447,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                         'nonCustodialSites' : [ runInfo['express_subscribe'] ],
                                         'autoApproveSites' : [ runInfo['express_subscribe'] ],
                                         'priority' : "high",
-                                        'primaryDataset' : dataset } )
+                                        'primaryDataset' : dataset,
+                                        'deleteFromSource' : True } )
 
         #
         # finally create WMSpec
@@ -756,6 +760,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                             'autoApproveSites' : [phedexConfig['disk_node']],
                                             'priority' : "high",
                                             'primaryDataset' : dataset,
+                                            'deleteFromSource' : True,
                                             'dataTier' : "AOD" } )
 
                 if datasetConfig.WriteMINIAOD:
@@ -765,6 +770,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                             'autoApproveSites' : [phedexConfig['disk_node']],
                                             'priority' : "high",
                                             'primaryDataset' : dataset,
+                                            'deleteFromSource' : True,
                                             'dataTier' : "MINIAOD" } )
 
                 if len(datasetConfig.AlcaSkims) > 0:
@@ -774,6 +780,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                             'autoApproveSites' : [],
                                             'priority' : "high",
                                             'primaryDataset' : dataset,
+                                            'deleteFromSource' : True,
                                             'dataTier' : "ALCARECO" } )
 
                 if datasetConfig.WriteDQM:
@@ -783,6 +790,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                             'autoApproveSites' : [],
                                             'priority' : "high",
                                             'primaryDataset' : dataset,
+                                            'deleteFromSource' : True,
                                             'dataTier' : tier0Config.Global.DQMDataTier } )
 
                 if datasetConfig.WriteRECO:
@@ -791,6 +799,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                             'autoApproveSites' : [phedexConfig['disk_node']],
                                             'priority' : "high",
                                             'primaryDataset' : dataset,
+                                            'deleteFromSource' : True,
                                             'dataTier' : "RECO" } )
 
             elif phedexConfig['archival_node'] != None:
@@ -802,6 +811,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                                 'autoApproveSites' : [phedexConfig['archival_node']],
                                                 'priority' : "high",
                                                 'primaryDataset' : dataset,
+                                                'deleteFromSource' : True,
                                                 'dataTier' : "AOD" } )
 
                     if datasetConfig.WriteMINIAOD:
@@ -811,6 +821,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                                 'autoApproveSites' : [phedexConfig['archival_node']],
                                                 'priority' : "high",
                                                 'primaryDataset' : dataset,
+                                                'deleteFromSource' : True,
                                                 'dataTier' : "MINIAOD" } )
 
                     if len(datasetConfig.AlcaSkims) > 0:
@@ -820,6 +831,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                                 'autoApproveSites' : [phedexConfig['archival_node']],
                                                 'priority' : "high",
                                                 'primaryDataset' : dataset,
+                                                'deleteFromSource' : True,
                                                 'dataTier' : "ALCARECO" } )
 
                     if datasetConfig.WriteDQM:
@@ -829,6 +841,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                                 'autoApproveSites' : [phedexConfig['archival_node']],
                                                 'priority' : "high",
                                                 'primaryDataset' : dataset,
+                                                'deleteFromSource' : True,
                                                 'dataTier' : tier0Config.Global.DQMDataTier } )
 
                     if datasetConfig.WriteRECO:
@@ -838,6 +851,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                                 'autoApproveSites' : [phedexConfig['archival_node']],
                                                 'priority' : "high",
                                                 'primaryDataset' : dataset,
+                                                'deleteFromSource' : True,
                                                 'dataTier' : "RECO" } )
 
             writeTiers = []
