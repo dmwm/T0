@@ -78,7 +78,7 @@ setPromptCalibrationConfig(tier0Config,
 
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_4_9_patch1"
+defaultCMSSWVersion = "CMSSW_7_4_10_patch1"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -113,24 +113,26 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_9_patch1",
-    "CMSSW_7_4_3" : "CMSSW_7_4_9_patch1",
-    "CMSSW_7_4_4" : "CMSSW_7_4_9_patch1",
-    "CMSSW_7_4_5" : "CMSSW_7_4_9_patch1",
-    "CMSSW_7_4_6" : "CMSSW_7_4_9_patch1",
-    "CMSSW_7_4_7" : "CMSSW_7_4_9_patch1",
-    "CMSSW_7_4_8" : "CMSSW_7_4_9_patch1",
-    "CMSSW_7_4_9" : "CMSSW_7_4_9_patch1",
+    "CMSSW_7_4_2" : "CMSSW_7_4_10_patch1",
+    "CMSSW_7_4_3" : "CMSSW_7_4_10_patch1",
+    "CMSSW_7_4_4" : "CMSSW_7_4_10_patch1",
+    "CMSSW_7_4_5" : "CMSSW_7_4_10_patch1",
+    "CMSSW_7_4_6" : "CMSSW_7_4_10_patch1",
+    "CMSSW_7_4_7" : "CMSSW_7_4_10_patch1",
+    "CMSSW_7_4_8" : "CMSSW_7_4_10_patch1",
+    "CMSSW_7_4_9" : "CMSSW_7_4_10_patch1",
+    "CMSSW_7_4_10" : "CMSSW_7_4_10_patch1",
     }
 expressVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_9_patch1",
-    "CMSSW_7_4_3" : "CMSSW_7_4_9_patch1",
-    "CMSSW_7_4_4" : "CMSSW_7_4_9_patch1",
-    "CMSSW_7_4_5" : "CMSSW_7_4_9_patch1",
-    "CMSSW_7_4_6" : "CMSSW_7_4_9_patch1",
-    "CMSSW_7_4_7" : "CMSSW_7_4_9_patch1",
-    "CMSSW_7_4_8" : "CMSSW_7_4_9_patch1",
-    "CMSSW_7_4_9" : "CMSSW_7_4_9_patch1",
+    "CMSSW_7_4_2" : "CMSSW_7_4_10_patch1",
+    "CMSSW_7_4_3" : "CMSSW_7_4_10_patch1",
+    "CMSSW_7_4_4" : "CMSSW_7_4_10_patch1",
+    "CMSSW_7_4_5" : "CMSSW_7_4_10_patch1",
+    "CMSSW_7_4_6" : "CMSSW_7_4_10_patch1",
+    "CMSSW_7_4_7" : "CMSSW_7_4_10_patch1",
+    "CMSSW_7_4_8" : "CMSSW_7_4_10_patch1",
+    "CMSSW_7_4_9" : "CMSSW_7_4_10_patch1",
+    "CMSSW_7_4_10" : "CMSSW_7_4_10_patch1",
     }
 
 #set default repack settings for bulk streams
@@ -274,7 +276,9 @@ for dataset in datasets:
 
 datasets = [ "HLTPhysics1", "HLTPhysics2", "HLTPhysics3", "HLTPhysics4",
              "HLTPhysics5", "HLTPhysics6", "HLTPhysics7", "HLTPhysics8",
-             "HLTPhysics"  ]
+             "HLTPhysics", "HLTPhysicspart0", "HLTPhysicspart1",
+             "HLTPhysicspart2", "HLTPhysicspart3", "HLTPhysicspart4",
+             "HLTPhysicspart5", "HLTPhysicspart6", "HLTPhysicspart7"  ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
