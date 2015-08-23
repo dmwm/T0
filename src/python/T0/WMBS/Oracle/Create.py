@@ -857,7 +857,8 @@ class Create(DBCreator):
                            11 : "cosmicsRun2",
                            12 : "hcalnzsRun2",
                            13 : "ppRun2B0T",
-                           14 : "AlCa" }
+                           14 : "AlCa",
+                           15 : "ppRun2at50ns" }
         for id, name in eventScenarios.items():
             sql = """INSERT INTO event_scenario
                      (ID, NAME)
