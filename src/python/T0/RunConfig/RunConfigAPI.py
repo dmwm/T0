@@ -660,27 +660,11 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
     releasePromptRecoDAO = daoFactory(classname = "RunConfig.ReleasePromptReco")
     insertWorkflowMonitoringDAO = daoFactory(classname = "RunConfig.InsertWorkflowMonitoring")
 
-    bindsDatasetScenario = []
-    bindsCMSSWVersion = []
-    bindsRecoConfig = []
-    bindsStorageNode = []
-    bindsReleasePromptReco = []
-
     # mark workflows as injected
     wmbsDaoFactory = DAOFactory(package = "WMCore.WMBS",
                                 logger = logging,
                                 dbinterface = myThread.dbi)
     markWorkflowsInjectedDAO   = wmbsDaoFactory(classname = "Workflow.MarkInjectedWorkflows")
-
-    #
-    # for creating PromptReco specs
-    #
-    recoSpecs = {}
-
-    #
-    # for PhEDEx subscription settings
-    #
-    subscriptions = []
 
     #
     # handle PromptReco release for datasets
@@ -694,6 +678,18 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
 
     recoRelease = findRecoReleaseDAO.execute(datasetDelays, transaction = False)
     for run in sorted(recoRelease.keys()):
+
+        # for creating PromptReco specs
+        recoSpecs = {}
+
+        # for PhEDEx subscription settings
+        subscriptions = []
+
+        bindsDatasetScenario = []
+        bindsCMSSWVersion = []
+        bindsRecoConfig = []
+        bindsStorageNode = []
+        bindsReleasePromptReco = []
 
         # retrieve some basic run information
         getRunInfoDAO = daoFactory(classname = "RunConfig.GetRunInfo")
@@ -946,28 +942,28 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
 
                 recoSpecs[workflowName] = (wmbsHelper, wmSpec, fileset)
 
-    try:
-        myThread.transaction.begin()
-        if len(bindsDatasetScenario) > 0:
-            insertDatasetScenarioDAO.execute(bindsDatasetScenario, conn = myThread.transaction.conn, transaction = True)
-        if len(bindsCMSSWVersion) > 0:
-            insertCMSSWVersionDAO.execute(bindsCMSSWVersion, conn = myThread.transaction.conn, transaction = True)
-        if len(bindsRecoConfig) > 0:
-            insertRecoConfigDAO.execute(bindsRecoConfig, conn = myThread.transaction.conn, transaction = True)
-        if len(bindsStorageNode) > 0:
-            insertStorageNodeDAO.execute(bindsStorageNode, conn = myThread.transaction.conn, transaction = True)
-        if len(bindsReleasePromptReco) > 0:
-            releasePromptRecoDAO.execute(bindsReleasePromptReco, conn = myThread.transaction.conn, transaction = True)
-        for (wmbsHelper, wmSpec, fileset) in recoSpecs.values():
-            wmbsHelper.createSubscription(wmSpec.getTask(taskName), Fileset(id = fileset), alternativeFilesetClose = True)
-            insertWorkflowMonitoringDAO.execute([fileset],  conn = myThread.transaction.conn, transaction = True)
-        if len(recoSpecs) > 0:
-            markWorkflowsInjectedDAO.execute(recoSpecs.keys(), injected = True, conn = myThread.transaction.conn, transaction = True)
-    except Exception as ex:
-        logging.exception(ex)
-        myThread.transaction.rollback()
-        raise RuntimeError("Problem in releasePromptReco() database transaction !")
-    else:
-        myThread.transaction.commit()
+        try:
+            myThread.transaction.begin()
+            if len(bindsDatasetScenario) > 0:
+                insertDatasetScenarioDAO.execute(bindsDatasetScenario, conn = myThread.transaction.conn, transaction = True)
+            if len(bindsCMSSWVersion) > 0:
+                insertCMSSWVersionDAO.execute(bindsCMSSWVersion, conn = myThread.transaction.conn, transaction = True)
+            if len(bindsRecoConfig) > 0:
+                insertRecoConfigDAO.execute(bindsRecoConfig, conn = myThread.transaction.conn, transaction = True)
+            if len(bindsStorageNode) > 0:
+                insertStorageNodeDAO.execute(bindsStorageNode, conn = myThread.transaction.conn, transaction = True)
+            if len(bindsReleasePromptReco) > 0:
+                releasePromptRecoDAO.execute(bindsReleasePromptReco, conn = myThread.transaction.conn, transaction = True)
+            for (wmbsHelper, wmSpec, fileset) in recoSpecs.values():
+                wmbsHelper.createSubscription(wmSpec.getTask(taskName), Fileset(id = fileset), alternativeFilesetClose = True)
+                insertWorkflowMonitoringDAO.execute([fileset],  conn = myThread.transaction.conn, transaction = True)
+            if len(recoSpecs) > 0:
+                markWorkflowsInjectedDAO.execute(recoSpecs.keys(), injected = True, conn = myThread.transaction.conn, transaction = True)
+        except Exception as ex:
+            logging.exception(ex)
+            myThread.transaction.rollback()
+            raise RuntimeError("Problem in releasePromptReco() database transaction !")
+        else:
+            myThread.transaction.commit()
 
     return
