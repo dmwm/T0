@@ -319,7 +319,8 @@ for dataset in datasets:
 ### Special Totem runs       ###
 ################################
 
-datasets = [ "TOTEM_minBias", "TOTEM_romanPots", "ToTOTEM", "ZeroBiasTotem", "MinimumBiasTotem"  ]
+datasets = [ "TOTEM_minBias", "TOTEM_romanPots", "ToTOTEM", "ZeroBiasTotem", "MinimumBiasTotem",
+             "TOTEM_minBias1", "TOTEM_minBias2", "TOTEM_romanPots1", "TOTEM_romanPots2" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
