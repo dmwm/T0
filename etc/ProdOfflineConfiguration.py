@@ -317,7 +317,7 @@ for dataset in datasets:
 ################################
 
 datasets = [ "TOTEM_minBias", "TOTEM_romanPots", "ToTOTEM", "ZeroBiasTotem", "MinimumBiasTotem",
-             "TOTEM_minBias1", "TOTEM_minBias2", "TOTEM_romanPots1", "TOTEM_romanPots2" ]
+             "TOTEM_minBias1", "TOTEM_minBias2", "TOTEM_romanPots1", "TOTEM_romanPots2", "TOTEM_romanPots3" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
