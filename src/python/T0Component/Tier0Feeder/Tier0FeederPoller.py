@@ -355,8 +355,8 @@ class Tier0FeederPoller(BaseWorkerThread):
 
         allFinishedStreamers = getFinishedStreamersDAO.execute(transaction = False)
 
-        num = len(allFinishedStreamers)/50
-        for finishedStreamers in [allFinishedStreamers[i::num] for i in range(num)]:
+        chunkSize = 50
+        for finishedStreamers in [ allFinishedStreamers[i:i+chunkSize] for i in range(0, len(allFinishedStreamers), chunkSize) ]:
 
             streamers = []
             filenameParams = ""
