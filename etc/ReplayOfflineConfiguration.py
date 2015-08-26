@@ -85,7 +85,8 @@ setScramArch(tier0Config, "CMSSW_5_3_20", "slc6_amd64_gcc472")
 
 # Configure scenarios
 #ppScenario = "ppRun2"
-ppScenario = "ppRun2"
+ppScenarioExpress = "ppRun2"
+ppScenario = "ppRun2at50ns"
 cosmicsScenario = "cosmicsRun2"
 hcalnzsScenario = "hcalnzsRun2"
 
@@ -534,7 +535,7 @@ for dataset in datasets:
 #############################
 
 addExpressConfig(tier0Config, "Express",
-                 scenario = ppScenario,
+                 scenario = ppScenarioExpress,
                  data_tiers = [ "FEVT" ],
                  write_dqm = True,
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias",
@@ -579,7 +580,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  versionOverride = expressVersionOverride)
 
 addExpressConfig(tier0Config, "HLTMonitor",
-                 scenario = ppScenario,
+                 scenario = ppScenarioExpress,
                  data_tiers = [ "FEVTHLTALL" ],
                  write_dqm = True,
                  alca_producers = [],
