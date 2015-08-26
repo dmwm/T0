@@ -224,12 +224,12 @@ def createTier0Config():
     tier0Config.Global.ScramArches = {}
     tier0Config.Global.Backfill = None
 
-    tier0Config.Global.ProcessingSite = "T2_CH_CERN_T0"
+    tier0Config.Global.ProcessingSite = "T2_CH_CERN_AI"
 
-    tier0Config.Global.BulkInjectNode = "T2_CH_CERN"
-    tier0Config.Global.ExpressInjectNode = "T2_CH_CERN"
+    tier0Config.Global.BulkInjectNode = "T0_CH_CERN_Disk"
+    tier0Config.Global.ExpressInjectNode = "T0_CH_CERN_Disk"
 
-    tier0Config.Global.ExpressSubscribeNode = "T2_CH_CERN"
+    tier0Config.Global.ExpressSubscribeNode = None
 
     tier0Config.Global.DQMDataTier = "DQMIO"
 
