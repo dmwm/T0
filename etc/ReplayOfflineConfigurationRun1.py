@@ -33,10 +33,10 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Settings up sites
-processingSite = "T2_CH_CERN_T0"
-cernPhedexNode = "T2_CH_CERN"
-#processingSite = "T2_CH_CERN_AI"
-#cernPhedexNode = "T0_CH_CERN_Disk"
+#processingSite = "T2_CH_CERN_T0"
+#ernPhedexNode = "T2_CH_CERN"
+processingSite = "T2_CH_CERN_AI"
+cernPhedexNode = "T0_CH_CERN_Disk"
 
 
 # Set global parameters:
@@ -53,7 +53,7 @@ setBulkDataType(tier0Config, "data")
 setProcessingSite(tier0Config, processingSite)
 setBulkInjectNode(tier0Config, cernPhedexNode)
 setExpressInjectNode(tier0Config, cernPhedexNode)
-setExpressSubscribeNode(tier0Config, "T2_CH_CERN")
+setExpressSubscribeNode(tier0Config, None)
 
 # Override for DQM data tier
 setDQMDataTier(tier0Config, "DQMIO")
