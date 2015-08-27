@@ -1,3 +1,67 @@
+1.9.97 to 1.9.98:
+  - Merge pull request #4188 from hufnagel/express-subscribenode
+  - do not subscribe express data anywhere by default
+  - Merge pull request #4187 from johnhcasallasl/ppRun2at50ns
+  - xSetting ppScenario to ppRun2at50ns
+  - Merge pull request #4186 from hufnagel/streamer-notify-tails
+  - fix streamer notify skipping tails
+  - Merge pull request #4185 from johnhcasallasl/TOTEM_romanPots3
+  - Adding a new TOTEM PD
+  - Merge pull request #4184 from hufnagel/promptreco-release-runbyrun
+  - release PromptReco run by run
+  - Merge pull request #4183 from hufnagel/config-20150823
+  - config update 25.08.2015
+  - Merge pull request #4176 from johnhcasallasl/CMSSW_7_4_10_patch1_HLTPhysics
+  - Merge pull request #4182 from hufnagel/scenario-ppRun2at50ns
+  - add ppRun2at50ns scenario
+  - Merge pull request #4181 from hufnagel/promptreco-physicsskims
+  - Merge pull request #4180 from hufnagel/event-size-config
+  - Merge pull request #4179 from hufnagel/enable-copydelete
+  - Merge pull request #4178 from hufnagel/remove-tfc-override
+  - Merge pull request #4177 from hufnagel/alca-scenario
+  - CMSSW_7_4_10_patch1 and new HLTPhysics PDs
+  - add AlCa scenario
+  - Merge pull request #4175 from ebohorqu/fix_typo_totem
+  - Change in TOTEM PDs on low PU HLT menu
+  - Merge pull request #4174 from hufnagel/configuration-20150818
+  - remove PromptCalibProdSiStripGains from ExpressCosmics
+  - Merge pull request #4172 from lucacopa/add_skims
+  - Add Skims to the Tier0 configuration
+  - Merge pull request #4168 from lucacopa/remove_wq_mgr
+  - Merge pull request #4173 from lucacopa/pyCondorPlugin_default
+  - Changes default plugin to PyCondorPlugin
+  - add PhysicsSkims to PromptReco
+  - Merge pull request #4171 from hufnagel/prodconfig-in2p3
+  - fix a type in the production config
+  - Merge pull request #4169 from hufnagel/config-update-08August2015
+  - comment out dqm_sequences
+  - Merge pull request #4167 from lucacopa/25ns_conf_update
+  - Remove WorkQueueManager from the Tier0 config
+  - Configuration updates - CMSSW_7_4_8_patch1 - New Express GT 74X_dataRun2_Express_v1 - DQM sequences updated - HLTMonitor dataset added - Time and Size per event estimates - Add T1 subsciptions - Use T2_CH_CERN_AI resources for production configuration - AcqEra to Run2015C
+  - allow to set event and sizer estimates per dataset or stream
+  - Merge pull request #4164 from lucacopa/74X_dataRun2_Prompt_v1
+  - Merge pull request #4160 from hufnagel/pclupload-finished-nodata
+  - Merge pull request #4165 from lucacopa/remove_failureExitCodes
+  - Remove bad exit codes from the failureExitCodes config
+  - Update to PromptReco GT 74X_dataRun2_Prompt_v1
+  - Merge pull request #4163 from johnhcasallasl/master
+  - Update of the scenario for 0T
+  - Merge pull request #4162 from lucacopa/HighMultiplicity85
+  - Add the HighMultiplicity85 dataset
+  - Merge pull request #4161 from lucacopa/747patch1
+  - Update release to CMSSW_7_4_7_patch1
+  - Merge pull request #4159 from lucacopa/FSQ_HIN_pds
+  - Add FSQ/HIN datasets and update release to 7_4_7
+  - don't wait for PCL uploads from runs with no data
+  - Merge pull request #4157 from lucacopa/50ns_ramp_up
+  - Configuration changes for 50ns ramp up
+  - Merge pull request #4158 from hufnagel/promptreco-allow-forcerelease
+  - allow force releaseing PromptReco
+  - Merge pull request #4156 from lucacopa/cmssw_7_4_6_patch3
+  - Update tier0 configuration for new instances in 1.9.97 deployment
+  - enable copy+delete subscriptions for Tier0
+  - remove TFC override
+
 1.9.96 to 1.9.97:
   - Merge pull request #4155 from hufnagel/spec-memory-demands
   - adjust memory demands in specs
