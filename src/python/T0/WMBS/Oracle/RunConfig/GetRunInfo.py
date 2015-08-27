@@ -33,7 +33,7 @@ class GetRunInfo(DBFormatter):
                    bulk_inject.id = run.bulk_inject
                  INNER JOIN storage_node express_inject ON
                    express_inject.id = run.express_inject
-                 INNER JOIN storage_node express_subscribe ON
+                 LEFT OUTER JOIN storage_node express_subscribe ON
                    express_subscribe.id = run.express_subscribe
                  WHERE run.run_id = :RUN
                  """
