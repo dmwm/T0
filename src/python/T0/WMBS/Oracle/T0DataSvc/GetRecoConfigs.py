@@ -17,6 +17,9 @@ class GetRecoConfigs(DBFormatter):
                         primary_dataset.name AS primds,
                         cmssw_version.name AS cmssw,
                         reco_config.scram_arch AS scram_arch,
+                        reco_config.alca_skim AS alca_skim,
+                        reco_config.physics_skim AS physics_skim,
+                        reco_config.dqm_seq AS dqm_seq,
                         reco_config.global_tag AS global_tag,
                         event_scenario.name AS scenario
                  FROM reco_config
