@@ -18,12 +18,17 @@ class InsertRecoConfigs(DBFormatter):
                  WHEN MATCHED THEN
                    UPDATE SET cmssw = :CMSSW,
                               scram_arch = :SCRAM_ARCH,
+                              alca_skim = :ALCA_SKIM,
+                              physics_skim = :PHYSICS_SKIM,
+                              dqm_seq = :DQM_SEQ,
                               global_tag = :GLOBAL_TAG,
                               scenario = :SCENARIO
                  WHEN NOT MATCHED THEN
                    INSERT (run, primds, cmssw, scram_arch,
+                           alca_skim, physics_skim, dqm_seq,
                            global_tag, scenario)
                    VALUES (:RUN, :PRIMDS, :CMSSW, :SCRAM_ARCH,
+                           :ALCA_SKIM, :PHYSICS_SKIM, :DQM_SEQ,
                            :GLOBAL_TAG, :SCENARIO)
                  """
 
