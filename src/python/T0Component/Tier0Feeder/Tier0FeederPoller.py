@@ -373,7 +373,12 @@ class Tier0FeederPoller(BaseWorkerThread):
             export CONFIG=${T0_BASE_DIR}/Config/TransferSystem_CERN.cfg
  
             export PERL5LIB=${T0ROOT}/perl_lib
- 
+
+            unset LANGUAGE
+            unset LC_ALL
+            unset LC_CTYPE
+            export LANG=C
+
             ${T0ROOT}/operations/sendRepackedStatus.pl --config $CONFIG %s
             """ % (self.transferSystemBaseDir, filenameParams))
 
