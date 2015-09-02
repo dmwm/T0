@@ -275,9 +275,6 @@ class RepackMerge(JobFactory):
 
         self.newJob(name = "%s-%s" % (self.jobNamePrefix, makeUUID()))
 
-        if errorDataset:
-            self.currentJob.addBaggageParameter("useErrorDataset", True)
-
         largestFile = 0
         for fileInfo in fileList:
             largestFile = max(largestFile, fileInfo['filesize'])
@@ -285,6 +282,14 @@ class RepackMerge(JobFactory):
                      lfn = fileInfo['lfn'])
             f.setLocation(fileInfo['location'], immediateSave = False)
             self.currentJob.addFile(f)
+
+        if errorDataset:
+            self.currentJob.addBaggageParameter("useErrorDataset", True)
+
+        # allow large (single lumi) repackmerge to use multiple cores
+        numberOfCores = 1 + (int)((jobSize+largestFile)/(20*1000*1000*1000))
+        if numberOfCores > 1:
+            self.currentJob.addBaggageParameter("numberOfCores", numberOfCores)
 
         # job time based on
         #   - 5 min initialization
