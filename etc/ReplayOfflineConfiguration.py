@@ -98,7 +98,7 @@ alcarawProcVersion = 1
 
 # Defaults for GlobalTag
 expressGlobalTag = "74X_dataRun2_Express_v2"
-promptrecoGlobalTag = "74X_dataRun2_Prompt_v2"
+promptrecoGlobalTag = "74X_dataRun2_Prompt_v3"
 alcap0GlobalTag = "74X_dataRun2_Prompt_v2"
 
 # Mandatory for CondDBv2
