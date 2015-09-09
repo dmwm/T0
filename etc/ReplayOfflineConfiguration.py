@@ -66,7 +66,7 @@ defaultRecoTimeout =  10 * 60
 defaultRecoLockTimeout = 5 * 60
 
 # DQM Server
-setDQMUploadUrl(tier0Config, "https://cmsweb-testbed.cern.ch/dqm/dev")
+setDQMUploadUrl(tier0Config, "https://cmsweb.cern.ch/dqm/dev;https://cmsweb-testbed.cern.ch/dqm/offline-test")
 
 # PCL parameters
 setPromptCalibrationConfig(tier0Config,
