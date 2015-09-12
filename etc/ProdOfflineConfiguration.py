@@ -78,7 +78,7 @@ setPromptCalibrationConfig(tier0Config,
 
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_4_11_patch1"
+defaultCMSSWVersion = "CMSSW_7_4_12"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -91,9 +91,9 @@ hcalnzsScenario = "hcalnzsRun2"
 
 # Defaults for processing version
 defaultProcVersionRAW = 1
-defaultProcVersionReco = 2
-expressProcVersion = 2
-alcarawProcVersion = 2
+defaultProcVersionReco = 3
+expressProcVersion = 3
+alcarawProcVersion = 3
 
 # Defaults for GlobalTag
 expressGlobalTag = "74X_dataRun2_Express_v2"
@@ -114,28 +114,28 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_11_patch1",
-    "CMSSW_7_4_3" : "CMSSW_7_4_11_patch1",
-    "CMSSW_7_4_4" : "CMSSW_7_4_11_patch1",
-    "CMSSW_7_4_5" : "CMSSW_7_4_11_patch1",
-    "CMSSW_7_4_6" : "CMSSW_7_4_11_patch1",
-    "CMSSW_7_4_7" : "CMSSW_7_4_11_patch1",
-    "CMSSW_7_4_8" : "CMSSW_7_4_11_patch1",
-    "CMSSW_7_4_9" : "CMSSW_7_4_11_patch1",
-    "CMSSW_7_4_10" : "CMSSW_7_4_11_patch1",
-    "CMSSW_7_4_11" : "CMSSW_7_4_11_patch1",
+    "CMSSW_7_4_2" : "CMSSW_7_4_12",
+    "CMSSW_7_4_3" : "CMSSW_7_4_12",
+    "CMSSW_7_4_4" : "CMSSW_7_4_12",
+    "CMSSW_7_4_5" : "CMSSW_7_4_12",
+    "CMSSW_7_4_6" : "CMSSW_7_4_12",
+    "CMSSW_7_4_7" : "CMSSW_7_4_12",
+    "CMSSW_7_4_8" : "CMSSW_7_4_12",
+    "CMSSW_7_4_9" : "CMSSW_7_4_12",
+    "CMSSW_7_4_10" : "CMSSW_7_4_12",
+    "CMSSW_7_4_11" : "CMSSW_7_4_12",
     }
 expressVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_11_patch1",
-    "CMSSW_7_4_3" : "CMSSW_7_4_11_patch1",
-    "CMSSW_7_4_4" : "CMSSW_7_4_11_patch1",
-    "CMSSW_7_4_5" : "CMSSW_7_4_11_patch1",
-    "CMSSW_7_4_6" : "CMSSW_7_4_11_patch1",
-    "CMSSW_7_4_7" : "CMSSW_7_4_11_patch1",
-    "CMSSW_7_4_8" : "CMSSW_7_4_11_patch1",
-    "CMSSW_7_4_9" : "CMSSW_7_4_11_patch1",
-    "CMSSW_7_4_10" : "CMSSW_7_4_11_patch1",
-    "CMSSW_7_4_11" : "CMSSW_7_4_11_patch1",
+    "CMSSW_7_4_2" : "CMSSW_7_4_12",
+    "CMSSW_7_4_3" : "CMSSW_7_4_12",
+    "CMSSW_7_4_4" : "CMSSW_7_4_12",
+    "CMSSW_7_4_5" : "CMSSW_7_4_12",
+    "CMSSW_7_4_6" : "CMSSW_7_4_12",
+    "CMSSW_7_4_7" : "CMSSW_7_4_12",
+    "CMSSW_7_4_8" : "CMSSW_7_4_12",
+    "CMSSW_7_4_9" : "CMSSW_7_4_12",
+    "CMSSW_7_4_10" : "CMSSW_7_4_12",
+    "CMSSW_7_4_11" : "CMSSW_7_4_12",
     }
 
 #set default repack settings for bulk streams
