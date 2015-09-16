@@ -379,8 +379,8 @@ for dataset in datasets:
 ################################
 
 datasets = [ "CastorJets", "EGMLowPU", "EmptyBX", "FSQJets1", "FSQJets2", "FSQJets3", 
-             "FullTrack", "HINCaloJet40", "HINCaloJetsOther", "HINMuon", "HINPFJetsOther", 
-             "HINPhoton", "HighMultiplicity85", "L1MinimumBias",
+             "FullTrack", "HINCaloJet40", "HINCaloJets", "HINCaloJetsOther", "HINMuon", 
+             "HINPFJets", "HINPFJetsOther", "HINPhoton", "HighMultiplicity85", "L1MinimumBias",
              "L1MinimumBiasHF1", "L1MinimumBiasHF2", "L1MinimumBiasHF3", "L1MinimumBiasHF4",
              "L1MinimumBiasHF5", "L1MinimumBiasHF6", "L1MinimumBiasHF7", "L1MinimumBiasHF8" ]
 
@@ -390,8 +390,8 @@ for dataset in datasets:
                scenario = ppScenario)
 
 datasets = [ "CastorJets_0T", "EGMLowPU_0T", "EmptyBX_0T", "FSQJets1_0T", "FSQJets2_0T", "FSQJets3_0T",
-             "FullTrack_0T", "HINCaloJet40_0T", "HINCaloJetsOther_0T", "HINMuon_0T", "HINPFJetsOther_0T",
-             "HINPhoton_0T", "HighMultiplicity85_0T", "L1MinimumBias_0T",
+             "FullTrack_0T", "HINCaloJet40_0T", "HINCaloJets_0T", "HINCaloJetsOther_0T", "HINMuon_0T", 
+             "HINPFJets_0T", "HINPFJetsOther_0T", "HINPhoton_0T", "HighMultiplicity85_0T", "L1MinimumBias_0T",
              "L1MinimumBiasHF1_0T", "L1MinimumBiasHF2_0T", "L1MinimumBiasHF3_0T", "L1MinimumBiasHF4_0T",
              "L1MinimumBiasHF5_0T", "L1MinimumBiasHF6_0T", "L1MinimumBiasHF7_0T", "L1MinimumBiasHF8_0T" ]
 
@@ -888,6 +888,29 @@ for dataset in datasets:
                write_miniaod = False,
                scenario = cosmicsScenario)
 
+datasets = [ "ParkingMonitor" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_dqm = True,
+               dqm_sequences = [ "@common" ],
+               tape_node = "T1_US_FNAL_MSS",
+               disk_node = "T1_US_FNAL_Disk",
+               scenario = ppScenario)
+
+
+datasets = [ "ParkingMonitor_0T" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_dqm = True,
+               dqm_sequences = [ "@common" ],
+               tape_node = "T1_US_FNAL_MSS",
+               disk_node = "T1_US_FNAL_Disk",
+               scenario = ppScenarioB0T)
+    
 #############################
 ### Express configuration ###
 #############################
