@@ -894,7 +894,6 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                write_dqm = True,
-               dqm_sequences = [ "@common" ],
                tape_node = "T1_US_FNAL_MSS",
                disk_node = "T1_US_FNAL_Disk",
                scenario = ppScenario)
@@ -906,7 +905,6 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                write_dqm = True,
-               dqm_sequences = [ "@common" ],
                tape_node = "T1_US_FNAL_MSS",
                disk_node = "T1_US_FNAL_Disk",
                scenario = ppScenarioB0T)
