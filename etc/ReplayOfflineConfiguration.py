@@ -77,7 +77,7 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_4_12_patch4"
+defaultCMSSWVersion = "CMSSW_7_4_12_patch2"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -116,30 +116,30 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_3" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_4" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_5" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_6" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_7" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_8" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_9" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_10" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_11" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_12" : "CMSSW_7_4_12_patch4",
+    "CMSSW_7_4_2" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_3" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_4" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_5" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_6" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_7" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_8" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_9" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_10" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_11" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_12" : "CMSSW_7_4_12_patch2",
     }
 expressVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_3" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_4" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_5" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_6" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_7" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_8" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_9" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_10" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_11" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_12" : "CMSSW_7_4_12_patch4",
+    "CMSSW_7_4_2" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_3" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_4" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_5" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_6" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_7" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_8" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_9" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_10" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_11" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_12" : "CMSSW_7_4_12_patch2",
     }
 
 #set default repack settings for bulk streams
@@ -861,6 +861,27 @@ for dataset in datasets:
                do_reco = True,
                write_miniaod = False,
                scenario = cosmicsScenario)
+
+datasets = [ "ParkingMonitor" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_dqm = True,
+               tape_node = "T1_US_FNAL_MSS",
+               disk_node = "T1_US_FNAL_Disk",
+               scenario = ppScenario)
+
+
+datasets = [ "ParkingMonitor_0T" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_dqm = True,
+               tape_node = "T1_US_FNAL_MSS",
+               disk_node = "T1_US_FNAL_Disk",
+               scenario = ppScenarioB0T)
 
 #############################
 ### Express configuration ###

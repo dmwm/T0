@@ -78,7 +78,7 @@ setPromptCalibrationConfig(tier0Config,
 
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_4_12_patch4"
+defaultCMSSWVersion = "CMSSW_7_4_12_patch2"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -114,30 +114,30 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_3" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_4" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_5" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_6" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_7" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_8" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_9" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_10" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_11" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_12" : "CMSSW_7_4_12_patch4",
+    "CMSSW_7_4_2" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_3" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_4" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_5" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_6" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_7" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_8" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_9" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_10" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_11" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_12" : "CMSSW_7_4_12_patch2",
     }
 expressVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_3" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_4" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_5" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_6" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_7" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_8" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_9" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_10" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_11" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_12" : "CMSSW_7_4_12_patch4",
+    "CMSSW_7_4_2" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_3" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_4" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_5" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_6" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_7" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_8" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_9" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_10" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_11" : "CMSSW_7_4_12_patch2",
+    "CMSSW_7_4_12" : "CMSSW_7_4_12_patch2",
     }
 
 #set default repack settings for bulk streams
@@ -348,9 +348,9 @@ for dataset in datasets:
 
 datasets = [ "HLTPhysics1", "HLTPhysics2", "HLTPhysics3", "HLTPhysics4",
              "HLTPhysics5", "HLTPhysics6", "HLTPhysics7", "HLTPhysics8",
-             "HLTPhysics", "HLTPhysicspart0", "HLTPhysicspart1",
-             "HLTPhysicspart2", "HLTPhysicspart3", "HLTPhysicspart4",
-             "HLTPhysicspart5", "HLTPhysicspart6", "HLTPhysicspart7"  ]
+             "HLTPhysics", "HLTPhysicspart0", "HLTPhysicspart1", 
+	     "HLTPhysicspart2", "HLTPhysicspart3", "HLTPhysicspart4",
+             "HLTPhysicspart5", "HLTPhysicspart6", "HLTPhysicspart7" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -381,7 +381,7 @@ for dataset in datasets:
 ################################
 
 datasets = [ "CastorJets", "EGMLowPU", "EmptyBX", "FSQJets1", "FSQJets2", "FSQJets3", 
-             "FullTrack", "HINCaloJet40", "HINCaloJetsOther", "HINMuon", "HINPFJetsOther", 
+             "FullTrack", "HINCaloJet40", "HINCaloJets", "HINCaloJetsOther", "HINMuon", "HINPFJets", "HINPFJetsOther", 
              "HINPhoton", "HighMultiplicity85", "L1MinimumBias",
              "L1MinimumBiasHF1", "L1MinimumBiasHF2", "L1MinimumBiasHF3", "L1MinimumBiasHF4",
              "L1MinimumBiasHF5", "L1MinimumBiasHF6", "L1MinimumBiasHF7", "L1MinimumBiasHF8" ]
@@ -392,7 +392,7 @@ for dataset in datasets:
                scenario = ppScenario)
 
 datasets = [ "CastorJets_0T", "EGMLowPU_0T", "EmptyBX_0T", "FSQJets1_0T", "FSQJets2_0T", "FSQJets3_0T",
-             "FullTrack_0T", "HINCaloJet40_0T", "HINCaloJetsOther_0T", "HINMuon_0T", "HINPFJetsOther_0T",
+             "FullTrack_0T", "HINCaloJet40_0T", "HINCaloJets_0T", "HINCaloJetsOther_0T", "HINMuon_0T", "HINPFJets_0T", "HINPFJetsOther_0T",
              "HINPhoton_0T", "HighMultiplicity85_0T", "L1MinimumBias_0T",
              "L1MinimumBiasHF1_0T", "L1MinimumBiasHF2_0T", "L1MinimumBiasHF3_0T", "L1MinimumBiasHF4_0T",
              "L1MinimumBiasHF5_0T", "L1MinimumBiasHF6_0T", "L1MinimumBiasHF7_0T", "L1MinimumBiasHF8_0T" ]
@@ -423,7 +423,7 @@ for dataset in datasets:
 ################################
 
 datasets = [ "TOTEM_minBias", "TOTEM_romanPots", "ToTOTEM", "ZeroBiasTotem", "MinimumBiasTotem",
-             "TOTEM_minBias1", "TOTEM_minBias2", "TOTEM_romanPots1", "TOTEM_romanPots2", "TOTEM_romanPots3" ]
+             "TOTEM_minBias1", "TOTEM_minBias2", "TOTEM_romanPots1", "TOTEM_romanPots2", 'TOTEM_romanPots3'  ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -889,6 +889,27 @@ for dataset in datasets:
                do_reco = True,
                write_miniaod = False,
                scenario = cosmicsScenario)
+
+datasets = [ "ParkingMonitor" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_dqm = True,
+               tape_node = "T1_US_FNAL_MSS",
+               disk_node = "T1_US_FNAL_Disk",
+               scenario = ppScenario)
+
+
+datasets = [ "ParkingMonitor_0T" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_dqm = True,
+               tape_node = "T1_US_FNAL_MSS",
+               disk_node = "T1_US_FNAL_Disk",
+               scenario = ppScenarioB0T)
 
 #############################
 ### Express configuration ###
