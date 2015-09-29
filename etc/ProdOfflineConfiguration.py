@@ -911,6 +911,27 @@ for dataset in datasets:
                disk_node = "T1_US_FNAL_Disk",
                scenario = ppScenarioB0T)
     
+datasets = [ "ScoutingMonitor" ]    
+
+addDataset(tier0Config, dataset,
+             do_reco = True,
+             write_reco = False, write_aod = False, write_miniaod =True, write_dqm = True,
+             dqm_sequences = [ "@common" ],
+             tape_node = "T1_US_FNAL_MSS",
+             disk_node = "T1_US_FNAL_Disk",
+             scenario = ppScenario)
+
+datasets = [ "ScoutingMonitor_0T" ]    
+
+addDataset(tier0Config, dataset,
+             do_reco = True,
+             write_reco = False, write_aod = False, write_miniaod =True, write_dqm = True,
+             dqm_sequences = [ "@common" ],
+             tape_node = "T1_US_FNAL_MSS",
+             disk_node = "T1_US_FNAL_Disk",
+             scenario = ppScenarioB0T)
+
+    
 #############################
 ### Express configuration ###
 #############################
