@@ -890,45 +890,25 @@ for dataset in datasets:
                write_miniaod = False,
                scenario = cosmicsScenario)
 
-datasets = [ "ParkingMonitor" ]
+datasets = [ "ParkingMonitor", "ParkingScoutingMonitor" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_dqm = True,
+               write_reco = False, write_aod = False, write_miniaod = True, write_dqm = True,
                tape_node = "T1_US_FNAL_MSS",
                disk_node = "T1_US_FNAL_Disk",
                scenario = ppScenario)
 
-
-datasets = [ "ParkingMonitor_0T" ]
+datasets = [ "ParkingMonitor_0T", "ParkingScoutingMonitor_0T" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_dqm = True,
+               write_reco = False, write_aod = False, write_miniaod = True, write_dqm = True,
                tape_node = "T1_US_FNAL_MSS",
                disk_node = "T1_US_FNAL_Disk",
                scenario = ppScenarioB0T)
-    
-datasets = [ "ParkingScoutingMonitor" ]    
-
-addDataset(tier0Config, dataset,
-             do_reco = True,
-             write_reco = False, write_aod = False, write_miniaod =True, write_dqm = True,
-             tape_node = "T1_US_FNAL_MSS",
-             disk_node = "T1_US_FNAL_Disk",
-             scenario = ppScenario)
-
-datasets = [ "ParkingScoutingMonitor_0T" ]    
-
-addDataset(tier0Config, dataset,
-             do_reco = True,
-             write_reco = False, write_aod = False, write_miniaod =True, write_dqm = True,
-             tape_node = "T1_US_FNAL_MSS",
-             disk_node = "T1_US_FNAL_Disk",
-             scenario = ppScenarioB0T)
-
     
 #############################
 ### Express configuration ###
