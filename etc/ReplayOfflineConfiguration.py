@@ -97,9 +97,9 @@ expressProcVersion = 1
 alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "74X_dataRun2_Express_v2"
-promptrecoGlobalTag = "74X_dataRun2_Prompt_v2"
-alcap0GlobalTag = "74X_dataRun2_Prompt_v2"
+expressGlobalTag = "74X_dataRun2_Express_v3"
+promptrecoGlobalTag = "74X_dataRun2_Prompt_v4"
+alcap0GlobalTag = "74X_dataRun2_Prompt_v4"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -116,30 +116,32 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_3" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_4" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_5" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_6" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_7" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_8" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_9" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_10" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_11" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_12" : "CMSSW_7_4_12_patch4",
+    "CMSSW_7_4_2" : "CMSSW_7_4_14",
+    "CMSSW_7_4_3" : "CMSSW_7_4_14",
+    "CMSSW_7_4_4" : "CMSSW_7_4_14",
+    "CMSSW_7_4_5" : "CMSSW_7_4_14",
+    "CMSSW_7_4_6" : "CMSSW_7_4_14",
+    "CMSSW_7_4_7" : "CMSSW_7_4_14",
+    "CMSSW_7_4_8" : "CMSSW_7_4_14",
+    "CMSSW_7_4_9" : "CMSSW_7_4_14",
+    "CMSSW_7_4_10" : "CMSSW_7_4_14",
+    "CMSSW_7_4_11" : "CMSSW_7_4_14",
+    "CMSSW_7_4_12" : "CMSSW_7_4_14",
+    "CMSSW_7_4_13" : "CMSSW_7_4_14"
     }
 expressVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_3" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_4" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_5" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_6" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_7" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_8" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_9" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_10" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_11" : "CMSSW_7_4_12_patch4",
-    "CMSSW_7_4_12" : "CMSSW_7_4_12_patch4",
+    "CMSSW_7_4_2" : "CMSSW_7_4_14",
+    "CMSSW_7_4_3" : "CMSSW_7_4_14",
+    "CMSSW_7_4_4" : "CMSSW_7_4_14",
+    "CMSSW_7_4_5" : "CMSSW_7_4_14",
+    "CMSSW_7_4_6" : "CMSSW_7_4_14",
+    "CMSSW_7_4_7" : "CMSSW_7_4_14",
+    "CMSSW_7_4_8" : "CMSSW_7_4_14",
+    "CMSSW_7_4_9" : "CMSSW_7_4_14",
+    "CMSSW_7_4_10" : "CMSSW_7_4_14",
+    "CMSSW_7_4_11" : "CMSSW_7_4_14",
+    "CMSSW_7_4_12" : "CMSSW_7_4_14",
+    "CMSSW_7_4_13" : "CMSSW_7_4_14"
     }
 
 #set default repack settings for bulk streams
@@ -858,7 +860,7 @@ addExpressConfig(tier0Config, "Express",
                  write_dqm = True,
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias",
                                     "TkAlMinBias", "DtCalib", "PromptCalibProd", "Hotline",
-                                    "PromptCalibProdSiStrip", "PromptCalibProdSiStripGains" ],
+                                    "PromptCalibProdSiStrip", "PromptCalibProdSiStripGains", "LumiPixelsMinBias" ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
                  global_tag_connect = globalTagConnect,
@@ -881,7 +883,7 @@ addExpressConfig(tier0Config, "Express0T",
                  write_dqm = True,
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias",
                                     "TkAlMinBias", "DtCalib", "PromptCalibProd", "Hotline",
-                                    "PromptCalibProdSiStrip", "PromptCalibProdSiStripGains" ],
+                                    "PromptCalibProdSiStrip", "PromptCalibProdSiStripGains", "LumiPixelsMinBias" ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
                  global_tag_connect = globalTagConnect,
