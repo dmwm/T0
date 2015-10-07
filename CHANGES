@@ -1,3 +1,49 @@
+1.9.98 to 1.9.99:
+  - Merge pull request #4211 from johnhcasallasl/newAlca_LumiPixelsMinBias
+  - Adding the LumiPixelsMinBias AlCa producer to Express, also updating Global Tags, Processing Version and CMSSW version
+  - Merge pull request #4210 from hufnagel/replay-remove-subscriptions
+  - remove subscriptions from replay configs
+  - Merge pull request #4209 from hufnagel/parkingscoutingmonitor-fix-typo
+  - fix typo in ParkingScoutingMonitor config
+  - Merge pull request #4208 from ebohorqu/parking_scouting_monitor
+  - Changing ScoutingMonitor to ParkingScoutingMonitor
+  - Merge pull request #4207 from ebohorqu/scouting_monitor
+  - Adding ScoutingMonitor datasets
+  - Merge pull request #4206 from blallen/7412_patch4
+  - Update to 7_4_12_patch4
+  - Merge pull request #4204 from blallen/7412_patch1
+  - Merge pull request #4203 from hufnagel/config-20150916
+  - adjust ParkingMonitor configuration
+  - Merge pull request #4202 from ebohorqu/datasets_3.8T_HLT_menu
+  - Adding datasets of the 3.8T HLT menu
+  - Merge pull request #4201 from hufnagel/config-20150915
+  - change acquisition era to Run2015D
+  - update to 7_4_12_patch1. also updated AcqEra to 2015D
+  - Merge pull request #4200 from johnhcasallasl/CMSSW_7_4_12_And_v3
+  - Switch to CMSS_7_4_12 and processing version 3
+  - Merge pull request #4199 from ebohorqu/gt_74X_dataRun2_Prompt_v2
+  - Change of GlobalTag
+  - Merge pull request #4198 from johnhcasallasl/DQM_URLS_update
+  - Updating the DQMUpload URLs
+  - Merge pull request #4197 from johnhcasallasl/switchTo_74X_dataRun2_Prompt_v3
+  - Switch to 74X_dataRun2_Prompt_v3 PromptReco Global Tag
+  - Merge pull request #4196 from johnhcasallasl/74X_dataRun2_Express_v2
+  - Switch to the new Express GT 74X_dataRun2_Express_v2
+  - Merge pull request #4195 from johnhcasallasl/CMSSW_7_4_11_patch1
+  - swtich to CMSSW_7_4_11_patch1 version
+  - Merge pull request #4194 from johnhcasallasl/CMSSW_7_4_11_And_0T_PDs
+  - switch cmssw version, procVersion and PromptReco GT. Added PDs for 0T
+  - Merge pull request #4193 from hufnagel/repackmerge-multicore
+  - Merge pull request #4192 from hufnagel/smnotify-perl-locale
+  - fix SM notification perl locale warnings
+  - use multiple cores for repackmerge to process large files
+  - Merge pull request #4191 from johnhcasallasl/CMSSW_7_4_10_p2
+  - Switch to CMSSW_7_4_10_patch2
+  - Merge pull request #4190 from hufnagel/express-reco-config
+  - complete express and reco config, also in t0wmadatasvc
+  - Merge pull request #4189 from hufnagel/replay-config-ai
+  - change replay configs to use T2_CH_CERN_AI and to not subscribe Express data
+
 1.9.97 to 1.9.98:
   - Merge pull request #4188 from hufnagel/express-subscribenode
   - do not subscribe express data anywhere by default
