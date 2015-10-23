@@ -33,11 +33,8 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Settings up sites
-#processingSite = "T2_CH_CERN_T0"
-#ernPhedexNode = "T2_CH_CERN"
-processingSite = "T2_CH_CERN_AI"
+processingSite = "T0_CH_CERN"
 cernPhedexNode = "T0_CH_CERN_Disk"
-
 
 # Set global parameters:
 #  Acquisition era
@@ -122,12 +119,6 @@ expressVersionOverride = {
     "CMSSW_5_2_8" : "CMSSW_5_3_20",
     "CMSSW_5_2_9" : "CMSSW_5_3_20",
     }
-
-#hltmonVersionOverride = {
-#    "CMSSW_5_2_7" : "CMSSW_5_2_7_hltpatch1",
-#    "CMSSW_5_2_8" : "CMSSW_5_2_7_hltpatch1",
-#    "CMSSW_5_2_9" : "CMSSW_5_2_7_hltpatch1",
-#    }
 
 #set default repack settings for bulk streams
 addRepackConfig(tier0Config, "Default",
@@ -490,15 +481,6 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  timePerEvent = 4,
                  sizePerEvent = 1700,
                  versionOverride = expressVersionOverride)
-
-#addExpressConfig(tier0Config, "HLTMON",
-#                 scenario = ppScenario,
-#                 data_tiers = [ "FEVTHLTALL" ],
-#                 write_dqm = True,
-#                 global_tag = hltmonGlobalTag,
-#                 proc_ver = expressProcVersion,
-#                 blockCloseDelay = 1200,
-#                 versionOverride = hltmonVersionOverride)
 
 #######################
 ### ignored streams ###
