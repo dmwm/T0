@@ -33,11 +33,8 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Settings up sites
-#processingSite = "T2_CH_CERN_T0"
-#cernPhedexNode = "T2_CH_CERN"
-processingSite = "T2_CH_CERN_AI"
+processingSite = "T0_CH_CERN"
 cernPhedexNode = "T0_CH_CERN_Disk"
-
 
 # Set global parameters:
 #  Acquisition era
@@ -84,7 +81,6 @@ setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
 setScramArch(tier0Config, "CMSSW_5_3_20", "slc6_amd64_gcc472")
 
 # Configure scenarios
-#ppScenario = "ppRun2"
 ppScenario = "ppRun2"
 ppScenarioB0T = "ppRun2"
 cosmicsScenario = "cosmicsRun2"
@@ -108,9 +104,9 @@ globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 numberOfCores = 4
 
 # Splitting parameters for PromptReco
-defaultRecoSplitting = 2000 * numberOfCores
-hiRecoSplitting = 200 * numberOfCores
-alcarawSplitting = 20000 * numberOfCores
+defaultRecoSplitting = 1000 * numberOfCores
+hiRecoSplitting = 100 * numberOfCores
+alcarawSplitting = 10000 * numberOfCores
 
 #
 # Setup repack and express mappings
