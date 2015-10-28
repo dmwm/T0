@@ -108,7 +108,7 @@ class RepackMerge(JobFactory):
         # figure out what data to create jobs for
         for fileInfo in availableFiles:
             lumi = fileInfo['first_lumi']
-            if filesByLumi.has_key(lumi):
+            if lumi in filesByLumi:
                 filesByLumi[lumi].append(fileInfo)
 
         logging.debug("DEBUG Sub %d, create jobs for lumis = %s" % (self.subscription["id"], sorted(filesByLumi.keys())))

@@ -5,6 +5,7 @@ _RunConfig_t_
 Testing the RunConfig code
 
 """
+from __future__ import print_function
 import unittest
 import threading
 import logging
@@ -37,7 +38,7 @@ class RunConfigTest(unittest.TestCase):
         self.testInit.setLogging()
         self.testInit.setDatabaseConnection()
 
-        self.testInit.setSchema(customModules = ["T0.WMBS","WMComponent.DBS3Buffer"])
+        self.testInit.setSchema(customModules = ["T0.WMBS", "WMComponent.DBS3Buffer"])
 
         self.testDir  = self.testInit.generateWorkDir()
 
@@ -45,7 +46,7 @@ class RunConfigTest(unittest.TestCase):
         self.hltConfig = None
         self.dqmUploadProxy = None
 
-        if os.environ.has_key('WMAGENT_CONFIG'):
+        if 'WMAGENT_CONFIG' in os.environ:
 
             wmAgentConfig = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
 
@@ -66,15 +67,15 @@ class RunConfigTest(unittest.TestCase):
                 self.hltConfig = getHLTConfigDAO.execute(self.hltkey, transaction = False)
 
                 if self.hltConfig['process'] == None or len(self.hltConfig['mapping']) == 0:
-                    raise RuntimeError, "HLTConfDB query returned no process or mapping"
+                    raise RuntimeError("HLTConfDB query returned no process or mapping")
 
             else:
-                print "Your config is missing the HLTConfDatabase section"
-                print "Using reference HLT config instead"
+                print("Your config is missing the HLTConfDatabase section")
+                print("Using reference HLT config instead")
 
         else:
-            print "You do not have WMAGENT_CONFIG in your environment"
-            print "Using reference HLT config instead"
+            print("You do not have WMAGENT_CONFIG in your environment")
+            print("Using reference HLT config instead")
 
         myThread = threading.currentThread()
         daoFactory = DAOFactory(package = "T0.WMBS",
@@ -1265,7 +1266,7 @@ class RunConfigTest(unittest.TestCase):
             self.assertEqual(set(dqmSeq), set([ "@common" ]),
                              "ERROR: wrong dqm sequences for stream Express")
 
-        self.assertEqual(expressConfig['scenario'], "pp" ,
+        self.assertEqual(expressConfig['scenario'], "pp",
                          "ERROR: wrong scenario for stream Express")
 
         self.assertEqual(expressConfig['dqm_interval'], 20 * 60,
@@ -1308,10 +1309,10 @@ class RunConfigTest(unittest.TestCase):
         self.assertEqual(set(writeSkims), set([]),
                          "ERROR: wrong alca skims for stream HLTMON")
 
-        self.assertEqual(expressConfig['global_tag'], "GlobalTag2" ,
+        self.assertEqual(expressConfig['global_tag'], "GlobalTag2",
                          "ERROR: wrong global tag for stream HLTMON")
 
-        self.assertEqual(expressConfig['scenario'], "cosmics" ,
+        self.assertEqual(expressConfig['scenario'], "cosmics",
                          "ERROR: wrong scenario for stream HLTMON")
 
         self.assertEqual(expressConfig['dqm_interval'], 0,

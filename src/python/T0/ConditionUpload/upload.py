@@ -2,6 +2,7 @@
 '''Script that uploads to the new CMS conditions uploader.
 Adapted to the new infrastructure from v6 of the upload.py script for the DropBox from Miguel Ojeda.
 '''
+from __future__ import print_function
 
 __author__ = 'Andreas Pfeiffer'
 __copyright__ = 'Copyright 2015, CERN CMS'
@@ -102,9 +103,9 @@ def getInputRepeat(prompt = ''):
 
 def runWizard(basename, dataFilename, metadataFilename):
     while True:
-        print '''\nWizard for metadata for %s
+        print('''\nWizard for metadata for %s
 
-I will ask you some questions to fill the metadata file. For some of the questions there are defaults between square brackets (i.e. []), leave empty (i.e. hit Enter) to use them.''' % basename
+I will ask you some questions to fill the metadata file. For some of the questions there are defaults between square brackets (i.e. []), leave empty (i.e. hit Enter) to use them.''' % basename)
 
         # Try to get the available inputTags
         try:
@@ -134,15 +135,15 @@ I will ask you some questions to fill the metadata file. For some of the questio
             inputTags = []
 
         if len(inputTags) == 0:
-            print '\nI could not find any input tag in your data file, but you can still specify one manually.'
+            print('\nI could not find any input tag in your data file, but you can still specify one manually.')
 
             inputTag = getInputRepeat(
                 '\nWhich is the input tag (i.e. the tag to be read from the SQLite data file)?\ne.g. BeamSpotObject_ByRun\ninputTag: ')
 
         else:
-            print '\nI found the following input tags in your SQLite data file:'
+            print('\nI found the following input tags in your SQLite data file:')
             for (index, inputTag) in enumerate(inputTags):
-                print '   %s) %s' % (index, inputTag)
+                print('   %s) %s' % (index, inputTag))
 
             inputTag = getInputChoose(inputTags, '0',
                                       '\nWhich is the input tag (i.e. the tag to be read from the SQLite data file)?\ne.g. 0 (you select the first in the list)\ninputTag [0]: ')
@@ -166,13 +167,13 @@ I will ask you some questions to fill the metadata file. For some of the questio
         userText = getInput('',
                             '\nWrite any comments/text you may want to describe your request\ne.g. Muon alignment scenario for...\nuserText []: ')
 
-        print '''
+        print('''
 Finally, we are going to add the destination tags. There must be at least one.
 The tags (and its dependencies) can be synchronized to several workflows. You can synchronize to the following workflows:
    * "offline" means no checks/synchronization will be done.
    * "hlt" and "express" means that the IOV will be synchronized to the last online run number plus one (as seen by RunInfo).
    * "prompt" means that the IOV will be synchronized to the smallest run number waiting for Prompt Reconstruction not having larger run numbers already released (as seen by the Tier0 monitoring).
-   * "pcl" is like "prompt", but the exportation will occur if and only if the begin time of the first IOV (as stored in the SQLite file or established by the since field in the metadata file) is larger than the first condition safe run number obtained from Tier0.'''
+   * "pcl" is like "prompt", but the exportation will occur if and only if the begin time of the first IOV (as stored in the SQLite file or established by the since field in the metadata file) is larger than the first condition safe run number obtained from Tier0.''')
 
         destinationTags = {}
         while True:
@@ -192,8 +193,8 @@ The tags (and its dependencies) can be synchronized to several workflows. You ca
                 '\n  * To which workflow (see above) this tag %s has to be synchronized to?\n    e.g. offline\n    synchronizeTo [%s]: ' % (
                 destinationTag, defaultWorkflow))
 
-            print '''
-    If you need to add dependencies to this tag (i.e. tags that will be duplicated from this tag to another workflow), you can specify them now. There may be none.'''
+            print('''
+    If you need to add dependencies to this tag (i.e. tags that will be duplicated from this tag to another workflow), you can specify them now. There may be none.''')
 
             dependencies = {}
             while True:
@@ -226,7 +227,7 @@ The tags (and its dependencies) can be synchronized to several workflows. You ca
         }
 
         metadata = json.dumps(metadata, sort_keys=True, indent=4)
-        print '\nThis is the generated metadata:\n%s' % metadata
+        print('\nThis is the generated metadata:\n%s' % metadata)
 
         if getInput('n',
                     '\nIs it fine (i.e. save in %s and *upload* the conditions if this is the latest file)?\nAnswer [n]: ' % metadataFilename).lower() == 'y':
@@ -350,7 +351,7 @@ class HTTP(object):
 
         try:
             self.token = json.loads( response.getvalue() )['token']
-        except Exception, e:
+        except Exception as e:
             logging.error('http::getToken> got error from server: %s ', str(e) )
             if 'No JSON object could be decoded' in str(e):
                 return None
@@ -441,7 +442,7 @@ class HTTP(object):
 
 def addToTarFile(tarFile, fileobj, arcname):
     tarInfo = tarFile.gettarinfo(fileobj = fileobj, arcname = arcname)
-    tarInfo.mode = 0400
+    tarInfo.mode = 0o400
     tarInfo.uid = tarInfo.gid = tarInfo.mtime = 0
     tarInfo.uname = tarInfo.gname = 'root'
     tarFile.addfile(tarInfo, fileobj)
@@ -464,7 +465,7 @@ class ConditionsUploader(object):
         logging.info('%s: Signing in user %s ...', self.hostname, username)
         try:
             self.token = self.http.getToken(username, password)
-        except Exception, e:
+        except Exception as e:
             logging.error("Caught exception when trying to get token for user %s from %s: %s" % (username, self.hostname, str(e)) )
             return False
 
@@ -574,7 +575,7 @@ class ConditionsUploader(object):
         skippedTags = []
         failedTags  = []
         for tag, info in statusInfo['itemStatus'].items():
-            logging.debug('checking tag %s, info %s', tag, str(json.dumps(info, indent=4,sort_keys=True)) )
+            logging.debug('checking tag %s, info %s', tag, str(json.dumps(info, indent=4, sort_keys=True)) )
             if 'ok'   in info['status'].lower() :
                 okTags.append( tag )
                 logging.info('tag %s successfully uploaded', tag)
@@ -760,7 +761,7 @@ def main():
 
     (options, arguments) = parser.parse_args()
 
-    print "args=", arguments
+    print("args=", arguments)
     if not arguments:
         arguments = ['./testFiles/localSqlite']
 
@@ -778,9 +779,9 @@ def main():
 
     results = uploadAllFiles(options, arguments)
 
-    print "uploadAllFiles returned:"
+    print("uploadAllFiles returned:")
     for hash, res in results.items():
-        print "\t %s : %s " % (hash, str(res))
+        print("\t %s : %s " % (hash, str(res)))
 
 def testTier0Upload():
 

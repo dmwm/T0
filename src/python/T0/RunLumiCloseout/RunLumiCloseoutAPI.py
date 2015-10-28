@@ -114,7 +114,7 @@ def closeLumiSections(dbInterfaceStorageManager):
         for closedLumi in closedLumis:
             run = closedLumi['RUN']
             lumi = closedLumi['LUMI']
-            if not runLumis.has_key(run):
+            if run not in runLumis:
                 runLumis[run] = set()
             runLumis[run].add(lumi)
 

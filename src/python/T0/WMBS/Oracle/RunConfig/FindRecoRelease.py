@@ -27,7 +27,7 @@ class FindRecoRelease(DBFormatter):
         now = int(time.time())
 
         binds = []
-        for dataset,delays in datasetDelays.items():
+        for dataset, delays in datasetDelays.items():
             binds.append( { 'NOW' : now,
                             'DATASET' : dataset,
                             'DELAY' : delays[0],
@@ -83,7 +83,7 @@ class FindRecoRelease(DBFormatter):
 
             run = result[0]
 
-            if not recoRelease.has_key(run):
+            if run not in recoRelease:
                 recoRelease[run] = []
 
             recoRelease[run].append((result[1],

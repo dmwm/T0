@@ -6,6 +6,7 @@ _Tier0Feeder_
 Component wrapper, for real work look at Tier0FeederPoller
 
 """
+from __future__ import print_function
 import logging
 import threading
 
@@ -29,14 +30,14 @@ class Tier0Feeder(Harness):
         Harness.__init__(self, config)
         self.pollTime = 1
 
-        print "Tier0Feeder.__init__"
+        print("Tier0Feeder.__init__")
 
     def preInitialization(self):
         """
         Step that actually adds the worker thread properly
 
         """
-        print "Tier0Feeder.preInitialization"
+        print("Tier0Feeder.preInitialization")
 
 
         # Add event loop to worker manager

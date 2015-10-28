@@ -102,7 +102,7 @@ class Repack(JobFactory):
         # figure out what data to create jobs for
         for fileInfo in availableFiles:
             lumi = fileInfo['lumi']
-            if streamersByLumi.has_key(lumi):
+            if lumi in streamersByLumi:
                 streamersByLumi[lumi].append(fileInfo)
 
         # check if fileset is closed

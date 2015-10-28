@@ -69,7 +69,7 @@ class ExpressMergeTest(unittest.TestCase):
                              transaction = False)
 
         insertLumiDAO = daoFactory(classname = "RunConfig.InsertLumiSection")
-        for lumi in range(1,5):
+        for lumi in range(1, 5):
             insertLumiDAO.execute(binds = { 'RUN' : 1,
                                             'LUMI' : lumi },
                                   transaction = False)
@@ -234,7 +234,7 @@ class ExpressMergeTest(unittest.TestCase):
         """
         mySplitArgs = self.splitArgs.copy()
 
-        for lumi in [1,2]:
+        for lumi in [1, 2]:
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
@@ -274,7 +274,7 @@ class ExpressMergeTest(unittest.TestCase):
         """
         mySplitArgs = self.splitArgs.copy()
 
-        for lumi in [1,2]:
+        for lumi in [1, 2]:
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
@@ -314,7 +314,7 @@ class ExpressMergeTest(unittest.TestCase):
         """
         mySplitArgs = self.splitArgs.copy()
 
-        for lumi in [1,2]:
+        for lumi in [1, 2]:
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
@@ -348,7 +348,7 @@ class ExpressMergeTest(unittest.TestCase):
         """
         mySplitArgs = self.splitArgs.copy()
 
-        for lumi in [1,2,4]:
+        for lumi in [1, 2, 4]:
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))

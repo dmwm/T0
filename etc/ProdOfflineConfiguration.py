@@ -3,6 +3,7 @@ _OfflineConfiguration_
 
 Processing configuration for the Tier0 - Production version
 """
+from __future__ import print_function
 
 from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
@@ -302,7 +303,7 @@ addDataset(tier0Config, "HcalNZS_0T",
 ### special AlcaRaw PDs ###
 ###########################
 
-addDataset(tier0Config,"AlCaLumiPixels",
+addDataset(tier0Config, "AlCaLumiPixels",
            do_reco = True,
            write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
            reco_split = alcarawSplitting,
@@ -445,7 +446,7 @@ for dataset in datasets:
 datasets = [ "TOTEM_minBias", "TOTEM_romanPots", "ToTOTEM", "ToTOTEM_DoubleJet32_0", "ToTOTEM_DoubleJet32_1",
              "ToTOTEM_DoubleJet32_2", "ToTOTEM_DoubleJet32_3", "ZeroBiasTotem", "MinimumBiasTotem",
              "TOTEM_minBias1", "TOTEM_minBias2", "TOTEM_romanPots1", "TOTEM_romanPots2", "TOTEM_romanPots2_0",
-             "TOTEM_romanPots2_1", "TOTEM_romanPots2_2", "TOTEM_romanPots2_3","TOTEM_romanPots2_4",
+             "TOTEM_romanPots2_1", "TOTEM_romanPots2_2", "TOTEM_romanPots2_3", "TOTEM_romanPots2_4",
              "TOTEM_romanPots2_5", "TOTEM_romanPots2_6", "TOTEM_romanPots2_7", "TOTEM_romanPots3", 
              "TOTEM_romanPotsTTBB_0", "TOTEM_romanPotsTTBB_1", "TOTEM_romanPotsTTBB_2", "TOTEM_romanPotsTTBB_3",
 	     "TOTEM_romanPotsTTBB_4", "TOTEM_romanPotsTTBB_5", "TOTEM_romanPotsTTBB_6", "TOTEM_romanPotsTTBB_7" ]
@@ -458,7 +459,7 @@ for dataset in datasets:
 datasets = [ "TOTEM_minBias_0T", "TOTEM_romanPots_0T", "ToTOTEM_0T", "ToTOTEM_DoubleJet32_0_0T", "ToTOTEM_DoubleJet32_1_0T",
 	     "ToTOTEM_DoubleJet32_2_0T", "ToTOTEM_DoubleJet32_3_0T", "ZeroBiasTotem_0T", "MinimumBiasTotem_0T",
              "TOTEM_minBias1_0T", "TOTEM_minBias2_0T", "TOTEM_romanPots1_0T", "TOTEM_romanPots2_0T", "TOTEM_romanPots2_0_0T",
-             "TOTEM_romanPots2_1_0T", "TOTEM_romanPots2_2_0T", "TOTEM_romanPots2_3_0T","TOTEM_romanPots2_4_0T",
+             "TOTEM_romanPots2_1_0T", "TOTEM_romanPots2_2_0T", "TOTEM_romanPots2_3_0T", "TOTEM_romanPots2_4_0T",
              "TOTEM_romanPots2_5_0T", "TOTEM_romanPots2_6_0T", "TOTEM_romanPots2_7_0T", "TOTEM_romanPots3_0T",  
              "TOTEM_romanPotsTTBB_0_0T", "TOTEM_romanPotsTTBB_1_0T", "TOTEM_romanPotsTTBB_2_0T", "TOTEM_romanPotsTTBB_3_0T",
              "TOTEM_romanPotsTTBB_4_0T", "TOTEM_romanPotsTTBB_5_0T", "TOTEM_romanPotsTTBB_6_0T", "TOTEM_romanPotsTTBB_7_0T" ]
@@ -1066,4 +1067,4 @@ ignoreStream(tier0Config, "DQMOffline")
 ##                    conv_type = "streamer")
 
 if __name__ == '__main__':
-    print tier0Config
+    print(tier0Config)

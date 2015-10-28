@@ -3,6 +3,7 @@ _OfflineConfiguration_
 
 Processing configuration for the Tier0 - Replay version - Run1 Scale Tests
 """
+from __future__ import print_function
 
 from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
@@ -110,14 +111,14 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_5_2_7" : "CMSSW_5_3_20",
-    "CMSSW_5_2_8" : "CMSSW_5_3_20",
-    "CMSSW_5_2_9" : "CMSSW_5_3_20",
+    "CMSSW_5_2_7": "CMSSW_5_3_20",
+    "CMSSW_5_2_8": "CMSSW_5_3_20",
+    "CMSSW_5_2_9": "CMSSW_5_3_20",
     }
 expressVersionOverride = {
-    "CMSSW_5_2_7" : "CMSSW_5_3_20",
-    "CMSSW_5_2_8" : "CMSSW_5_3_20",
-    "CMSSW_5_2_9" : "CMSSW_5_3_20",
+    "CMSSW_5_2_7": "CMSSW_5_3_20",
+    "CMSSW_5_2_8": "CMSSW_5_3_20",
+    "CMSSW_5_2_9": "CMSSW_5_3_20",
     }
 
 #set default repack settings for bulk streams
@@ -210,7 +211,7 @@ addDataset(tier0Config, "ParkingMonitor",
            do_reco = True,
            scenario = ppScenario)
 
-datasets = [ "BJetPlusX", "BTag", "MultiJet", "MuEG", "MuHad"," ElectronHad",
+datasets = [ "BJetPlusX", "BTag", "MultiJet", "MuEG", "MuHad", "ElectronHad",
              "PhotonHad", "HTMHT", "Tau", "TauPlusX", "NoBPTX", "JetMon" ]
 
 for dataset in datasets:
@@ -238,10 +239,10 @@ for dataset in datasets:
 addDataset(tier0Config, "HcalNZS",
            do_reco = True,
            scenario = hcalnzsScenario)
-addDataset(tier0Config,"TestEnablesEcalHcalDT",
+addDataset(tier0Config, "TestEnablesEcalHcalDT",
            do_reco = False,
            scenario = "AlCaTestEnable")
-addDataset(tier0Config,"TestEnablesTracker",
+addDataset(tier0Config, "TestEnablesTracker",
            do_reco = True,
            write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
            scenario = "AlCaTestEnable")
@@ -250,20 +251,20 @@ addDataset(tier0Config,"TestEnablesTracker",
 ### special AlcaRaw PDs ###
 ###########################
 
-addDataset(tier0Config,"AlCaP0",
+addDataset(tier0Config, "AlCaP0",
            do_reco = False,
            write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
            reco_split = alcarawSplitting,
            proc_version = alcarawProcVersion,
            global_tag = alcap0GlobalTag,
            scenario = "AlCaP0")
-addDataset(tier0Config,"AlCaPhiSym",
+addDataset(tier0Config, "AlCaPhiSym",
            do_reco = False,
            write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
            reco_split = alcarawSplitting,
            proc_version = alcarawProcVersion,
            scenario = "AlCaPhiSymEcal")
-addDataset(tier0Config,"AlCaLumiPixels",
+addDataset(tier0Config, "AlCaLumiPixels",
            do_reco = True,
            write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
            reco_split = alcarawSplitting,
@@ -362,7 +363,7 @@ for dataset in datasets:
 #################################
 
 datasets = [ "HighPileUpHPF", "L1EGHPF", "L1MuHPF", "L1JetHPF",
-             "ZeroBiasHPF0","HLTPhysics1", "HLTPhysics2" ]
+             "ZeroBiasHPF0", "HLTPhysics1", "HLTPhysics2" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -387,13 +388,13 @@ addDataset(tier0Config, "DoubleMu25ns",
 addDataset(tier0Config, "DoubleMuParked25ns",
            do_reco = True,
            scenario = ppScenario)
-addDataset(tier0Config,"HcalNZS25ns",
+addDataset(tier0Config, "HcalNZS25ns",
            do_reco = True,
            scenario = hcalnzsScenario)
-addDataset(tier0Config,"MinimumBias25ns",
+addDataset(tier0Config, "MinimumBias25ns",
            do_reco = True,
            scenario = ppScenario)
-addDataset(tier0Config,"SingleMu25ns",
+addDataset(tier0Config, "SingleMu25ns",
            do_reco = True,
            scenario = ppScenario)
 
@@ -512,4 +513,4 @@ ignoreStream(tier0Config, "LookArea")
 ##                    conv_type = "streamer")
 
 if __name__ == '__main__':
-    print tier0Config
+    print(tier0Config)

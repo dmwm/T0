@@ -41,7 +41,7 @@ class GetStreamDatasetTriggers(DBFormatter):
             primds = result[0]
             trig = result[1]
 
-            if not resultDict.has_key(primds):
+            if primds not in resultDict:
                 resultDict[primds] = []
 
             resultDict[primds].append(trig)

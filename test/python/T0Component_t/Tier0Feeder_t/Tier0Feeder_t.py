@@ -5,6 +5,7 @@ _Tier0Feeder_t_
 Testing the Tier0Feeder code
 
 """
+from __future__ import print_function
 import unittest
 import threading
 import logging
@@ -38,7 +39,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.testInit.setLogging()
         self.testInit.setDatabaseConnection()
 
-        self.testInit.setSchema(customModules = ["T0.WMBS","WMComponent.DBS3Buffer"])
+        self.testInit.setSchema(customModules = ["T0.WMBS", "WMComponent.DBS3Buffer"])
 
         self.testDir  = self.testInit.generateWorkDir()
 
@@ -48,7 +49,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.dbInterfaceStorageManager = None
         self.getExpressReadyRunsDAO = None
 
-        if os.environ.has_key('WMAGENT_CONFIG'):
+        if 'WMAGENT_CONFIG' in os.environ:
 
             wmAgentConfig = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
 
@@ -72,11 +73,11 @@ class Tier0FeederTest(unittest.TestCase):
                 self.hltConfig = getHLTConfigDAO.execute(self.hltkey, transaction = False)
 
                 if self.hltConfig['process'] == None or len(self.hltConfig['mapping']) == 0:
-                    raise RuntimeError, "HLTConfDB query returned no process or mapping"
+                    raise RuntimeError("HLTConfDB query returned no process or mapping")
 
             else:
-                print "Your config is missing the HLTConfDatabase section"
-                print "Using reference HLT config instead"
+                print("Your config is missing the HLTConfDatabase section")
+                print("Using reference HLT config instead")
 
             if hasattr(wmAgentConfig, "StorageManagerDatabase"):
 
@@ -98,8 +99,8 @@ class Tier0FeederTest(unittest.TestCase):
                 self.getExpressReadyRunsDAO = daoFactory(classname = "Tier0Feeder.GetExpressReadyRuns")
 
         else:
-            print "You do not have WMAGENT_CONFIG in your environment"
-            print "Using reference HLT config instead"
+            print("You do not have WMAGENT_CONFIG in your environment")
+            print("Using reference HLT config instead")
 
         myThread = threading.currentThread()
         daoFactory = DAOFactory(package = "T0.WMBS",
@@ -1114,9 +1115,9 @@ class Tier0FeederTest(unittest.TestCase):
             lumi = result[2]
             filecount = result[3]
 
-            if not runStreamLumiDict.has_key(run):
+            if run not in runStreamLumiDict:
                 runStreamLumiDict[run] = {}
-            if not runStreamLumiDict[run].has_key(stream):
+            if stream not in runStreamLumiDict[run]:
                 runStreamLumiDict[run][stream] = {}
 
             runStreamLumiDict[run][stream][lumi] = filecount
@@ -1379,9 +1380,9 @@ class Tier0FeederTest(unittest.TestCase):
         runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
         self.assertEqual(set(runStreams.keys()), set([176162, 176163]),
                          "ERROR: there should be new run/stream for run 176162 and 176163")
-        self.assertEqual(set(runStreams[176162]), set(["A","Express","HLTMON"]),
+        self.assertEqual(set(runStreams[176162]), set(["A", "Express", "HLTMON"]),
                          "ERROR: there should be new run/stream for run 176162 and stream A, Express and HLTMON")
-        self.assertEqual(set(runStreams[176163]), set(["A","Express"]),
+        self.assertEqual(set(runStreams[176163]), set(["A", "Express"]),
                          "ERROR: there should be new run/stream for run 176162 and stream A and Express")
 
         self.feedStreamers()
@@ -1394,7 +1395,7 @@ class Tier0FeederTest(unittest.TestCase):
         runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
         self.assertEqual(set(runStreams.keys()), set([176162, 176163]),
                          "ERROR: there should be new run/stream for run 176162 and 176163")
-        self.assertEqual(set(runStreams[176162]), set(["Express","HLTMON"]),
+        self.assertEqual(set(runStreams[176162]), set(["Express", "HLTMON"]),
                          "ERROR: there should be new run/stream for run 176162 and stream Express and HLTMON")
         self.assertEqual(set(runStreams[176163]), set(["A"]),
                          "ERROR: there should be new run/stream for run 176162 and stream A")
@@ -1498,8 +1499,8 @@ class Tier0FeederTest(unittest.TestCase):
 
         """
         if self.dbInterfaceStorageManager == None:
-            print "Your config is missing the StorageManagerDatabase section"
-            print "Skipping run/lumi closing test"
+            print("Your config is missing the StorageManagerDatabase section")
+            print("Skipping run/lumi closing test")
             return
 
         RunLumiCloseoutAPI.endRuns(self.dbInterfaceStorageManager)
@@ -1547,10 +1548,10 @@ class Tier0FeederTest(unittest.TestCase):
                          "ERROR: there should be closed lumis for run 176161")
         self.assertEqual(runStreamLumiDict[176161].keys(), ['A'],
                          "ERROR: there should be closed lumis for run 176161 and stream A")
-        self.assertEqual(sorted(runStreamLumiDict[176161]['A'].keys()), range(1,24),
+        self.assertEqual(sorted(runStreamLumiDict[176161]['A'].keys()), range(1, 24),
                          "ERROR: there should be closed lumis for run 176161, stream A and lumi 1 to 23")
 
-        for lumi in range(1,24):
+        for lumi in range(1, 24):
             self.assertEqual(runStreamLumiDict[176161]['A'][lumi], 14,
                              "ERROR: there should be 14 closed lumis for run 176161, stream A and lumi %d" % lumi)
 
@@ -1565,12 +1566,12 @@ class Tier0FeederTest(unittest.TestCase):
                          "ERROR: there should be closed lumis for run 176161")
         self.assertEqual(sorted(runStreamLumiDict[176161].keys()), ['A', 'HLTMON'],
                          "ERROR: there should be closed lumis for run 176161 and stream A and HLTMON")
-        self.assertEqual(sorted(runStreamLumiDict[176161]['A'].keys()), range(1,24),
+        self.assertEqual(sorted(runStreamLumiDict[176161]['A'].keys()), range(1, 24),
                          "ERROR: there should be closed lumis for run 176161, stream A and lumi 1 to 23")
-        self.assertEqual(sorted(runStreamLumiDict[176161]['HLTMON'].keys()), range(1,24),
+        self.assertEqual(sorted(runStreamLumiDict[176161]['HLTMON'].keys()), range(1, 24),
                          "ERROR: there should be closed lumis for run 176161, stream HLTMON and lumi 1 to 23")
 
-        for lumi in range(1,24):
+        for lumi in range(1, 24):
             self.assertEqual(runStreamLumiDict[176161]['A'][lumi], 14,
                              "ERROR: there should be 14 closed lumis for run 176161, stream A and lumi %d" % lumi)
 
@@ -1578,7 +1579,7 @@ class Tier0FeederTest(unittest.TestCase):
                          "ERROR: there should be 9 closed lumis for run 176161, stream HLTMON and lumi 1")
         self.assertEqual(runStreamLumiDict[176161]['HLTMON'][2], 1,
                          "ERROR: there should be 1 closed lumis for run 176161, stream HLTMON and lumi 2")
-        for lumi in range(3,23):
+        for lumi in range(3, 23):
             self.assertEqual(runStreamLumiDict[176161]['HLTMON'][lumi], 14,
                              "ERROR: there should be 14 closed lumis for run 176161, stream HLTMON and lumi %d" % lumi)
         self.assertEqual(runStreamLumiDict[176161]['HLTMON'][23], 6,
@@ -1595,8 +1596,8 @@ class Tier0FeederTest(unittest.TestCase):
 
         """
         if self.dbInterfaceStorageManager == None:
-            print "Your config is missing the StorageManagerDatabase section"
-            print "Skipping run/lumi closing test"
+            print("Your config is missing the StorageManagerDatabase section")
+            print("Skipping run/lumi closing test")
             return
 
         RunLumiCloseoutAPI.closeRunStreamFilesets()
@@ -1627,7 +1628,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(len(self.getClosedRunStreamFilesets()), 0,
                          "ERROR: there should be no closed run/stream filesets")
 
-        for lumi in range(2,24):
+        for lumi in range(2, 24):
             for count in range(14):
                 self.insertRunStreamLumi(176161, "A", lumi)
 
@@ -1767,8 +1768,8 @@ class Tier0FeederTest(unittest.TestCase):
 
         """
         if self.getExpressReadyRunsDAO == None:
-            print "Your config is missing the PopConLogDatabase section"
-            print "Skipping PopConLog based express release test"
+            print("Your config is missing the PopConLogDatabase section")
+            print("Skipping PopConLog based express release test")
             return
 
         self.insertRun(176161)

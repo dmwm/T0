@@ -200,7 +200,7 @@ class RepackMergeTest(unittest.TestCase):
         """
         mySplitArgs = self.splitArgs.copy()
 
-        for lumi in [1,2]:
+        for lumi in [1, 2]:
             for i in range(2 * lumi):
                 newFile = File(makeUUID(), size = 1000 * lumi * lumi, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
@@ -255,7 +255,7 @@ class RepackMergeTest(unittest.TestCase):
         """
         mySplitArgs = self.splitArgs.copy()
 
-        for lumi in [1,2]:
+        for lumi in [1, 2]:
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000 * lumi, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
@@ -303,7 +303,7 @@ class RepackMergeTest(unittest.TestCase):
         """
         mySplitArgs = self.splitArgs.copy()
 
-        for lumi in [1,2]:
+        for lumi in [1, 2]:
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000, events = 100 * lumi)
                 newFile.addRun(Run(1, *[lumi]))
@@ -351,7 +351,7 @@ class RepackMergeTest(unittest.TestCase):
         """
         mySplitArgs = self.splitArgs.copy()
 
-        for lumi in [1,2]:
+        for lumi in [1, 2]:
             for i in range(lumi * 2):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
@@ -398,7 +398,7 @@ class RepackMergeTest(unittest.TestCase):
         """
         mySplitArgs = self.splitArgs.copy()
 
-        for lumi in [1,2,3]:
+        for lumi in [1, 2, 3]:
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
@@ -456,7 +456,7 @@ class RepackMergeTest(unittest.TestCase):
         """
         mySplitArgs = self.splitArgs.copy()
 
-        for lumi in [1,2,3]:
+        for lumi in [1, 2, 3]:
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
@@ -514,7 +514,7 @@ class RepackMergeTest(unittest.TestCase):
         """
         mySplitArgs = self.splitArgs.copy()
 
-        for lumi in [1,2,3]:
+        for lumi in [1, 2, 3]:
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
@@ -573,7 +573,7 @@ class RepackMergeTest(unittest.TestCase):
         """
         mySplitArgs = self.splitArgs.copy()
 
-        for lumi in [1,2]:
+        for lumi in [1, 2]:
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000 * lumi * lumi, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
@@ -613,7 +613,7 @@ class RepackMergeTest(unittest.TestCase):
         """
         mySplitArgs = self.splitArgs.copy()
 
-        for lumi in [1,2]:
+        for lumi in [1, 2]:
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000 * lumi * lumi, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
@@ -668,7 +668,7 @@ class RepackMergeTest(unittest.TestCase):
         """
         mySplitArgs = self.splitArgs.copy()
 
-        for lumi in [1,2]:
+        for lumi in [1, 2]:
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000 * lumi * lumi, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
@@ -724,7 +724,7 @@ class RepackMergeTest(unittest.TestCase):
         """
         mySplitArgs = self.splitArgs.copy()
 
-        for lumi in [1,2,5]:
+        for lumi in [1, 2, 5]:
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))

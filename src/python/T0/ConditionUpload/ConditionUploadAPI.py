@@ -180,7 +180,7 @@ def uploadToDropbox(condFiles, dropboxHost, validationMode,
             completeFiles.append(condFile)
         else:
             (filenamePrefix, filenameExt) = os.path.basename(condFile['lfn']).split('.')
-            if not filesDict.has_key(filenamePrefix):
+            if filenamePrefix not in filesDict:
                 filesDict[filenamePrefix] = {}
             filesDict[filenamePrefix][filenameExt] = condFile
 

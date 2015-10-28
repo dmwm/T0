@@ -54,7 +54,7 @@ class ExpressMerge(JobFactory):
         filesByLumi = {}
         for result in availableFiles:
             lumi = result['lumi']
-            if filesByLumi.has_key(lumi):
+            if lumi in filesByLumi:
                 filesByLumi[lumi].append(result)
             else:
                 filesByLumi[lumi] = [ result ]

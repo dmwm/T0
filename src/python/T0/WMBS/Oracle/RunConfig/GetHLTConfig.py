@@ -85,9 +85,9 @@ class GetHLTConfig(DBFormatter):
             if dataset == "VBF1Parked ":
                 dataset = "VBF1Parked"
 
-            if not streamDict.has_key(stream):
+            if stream not in streamDict:
                 streamDict[stream] = {}
-            if not streamDict[stream].has_key(dataset):
+            if dataset not in streamDict[stream]:
                 streamDict[stream][dataset] = set([])
             streamDict[stream][dataset].add(path)
 
