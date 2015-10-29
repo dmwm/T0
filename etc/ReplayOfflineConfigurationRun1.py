@@ -111,14 +111,14 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_5_2_7": "CMSSW_5_3_20",
-    "CMSSW_5_2_8": "CMSSW_5_3_20",
-    "CMSSW_5_2_9": "CMSSW_5_3_20",
+    "CMSSW_5_2_7" : "CMSSW_5_3_20",
+    "CMSSW_5_2_8" : "CMSSW_5_3_20",
+    "CMSSW_5_2_9" : "CMSSW_5_3_20"
     }
 expressVersionOverride = {
-    "CMSSW_5_2_7": "CMSSW_5_3_20",
-    "CMSSW_5_2_8": "CMSSW_5_3_20",
-    "CMSSW_5_2_9": "CMSSW_5_3_20",
+    "CMSSW_5_2_7" : "CMSSW_5_3_20",
+    "CMSSW_5_2_8" : "CMSSW_5_3_20",
+    "CMSSW_5_2_9" : "CMSSW_5_3_20"
     }
 
 #set default repack settings for bulk streams
