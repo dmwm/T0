@@ -35,7 +35,7 @@ class FindNewRunStreams(DBFormatter):
         for result in results:
             run = result[0]
             stream = result[1]
-            if not runStreams.has_key(run):
+            if run not in runStreams:
                 runStreams[run] = []
             runStreams[run].append(stream)
 

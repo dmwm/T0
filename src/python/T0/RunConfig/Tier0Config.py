@@ -342,85 +342,85 @@ def addDataset(config, datasetName, **settings):
         datasetConfig.Scenario = settings['scenario']
     elif not hasattr(datasetConfig, "Scenario"):
         msg = "Tier0Config.addDataset : no scenario defined for dataset %s or Default" % datasetName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     if 'do_reco' in settings:
         datasetConfig.DoReco = settings['do_reco']
     elif not hasattr(datasetConfig, "DoReco"):
         msg = "Tier0Config.addDataset : no do_reco defined for dataset %s or Default" % datasetName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     if 'reco_delay' in settings:
         datasetConfig.RecoDelay = settings['reco_delay']
     elif not hasattr(datasetConfig, "RecoDelay"):
         msg = "Tier0Config.addDataset : no reco_delay defined for dataset %s or Default" % datasetName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     if 'reco_delay_offset' in settings:
         datasetConfig.RecoDelayOffset = settings['reco_delay_offset']
     elif not hasattr(datasetConfig, "RecoDelayOffset"):
         msg = "Tier0Config.addDataset : no reco_delay_offset defined for dataset %s or Default" % datasetName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     if 'proc_version' in settings:
         datasetConfig.ProcessingVersion = settings['proc_version']
     elif not hasattr(datasetConfig, "ProcessingVersion"):
         msg = "Tier0Config.addDataset : no proc_version defined for dataset %s or Default" % datasetName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     if 'cmssw_version' in settings:
         datasetConfig.CMSSWVersion = settings['cmssw_version']
     elif not hasattr(datasetConfig, "CMSSWVersion"):
         msg = "Tier0Config.addDataset : no cmssw_version defined for dataset %s or Default" % datasetName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     if 'global_tag' in settings:
         datasetConfig.GlobalTag = settings['global_tag']
     elif not hasattr(datasetConfig, "GlobalTag"):
         msg = "Tier0Config.addDataset : no global_tag defined for dataset %s or Default" % datasetName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     if 'reco_split' in settings:
         datasetConfig.RecoSplit = settings['reco_split']
     elif not hasattr(datasetConfig, "RecoSplit"):
         msg = "Tier0Config.addDataset : no reco_split defined for dataset %s or Default" % datasetName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     if 'write_reco' in settings:
         datasetConfig.WriteRECO = settings['write_reco']
     elif not hasattr(datasetConfig, "WriteRECO"):
         msg = "Tier0Config.addDataset : no write_reco defined for dataset %s or Default" % datasetName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     if 'write_aod' in settings:
         datasetConfig.WriteAOD = settings['write_aod']
     elif not hasattr(datasetConfig, "WriteAOD"):
         msg = "Tier0Config.addDataset : no write_aod defined for dataset %s or Default" % datasetName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     if 'write_miniaod' in settings:
         datasetConfig.WriteMINIAOD = settings['write_miniaod']
     elif not hasattr(datasetConfig, "WriteMINIAOD"):
         msg = "Tier0Config.addDataset : no write_miniaod defined for dataset %s or Default" % datasetName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     if 'write_dqm' in settings:
         datasetConfig.WriteDQM = settings['write_dqm']
     elif not hasattr(datasetConfig, "WriteDQM"):
         msg = "Tier0Config.addDataset : no write_dqm defined for dataset %s or Default" % datasetName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     if 'timePerEvent' in settings:
         datasetConfig.TimePerEvent = settings['timePerEvent']
     elif not hasattr(datasetConfig, "TimePerEvent"):
         msg = "Tier0Config.addDataset : no timePerEvent defined for dataset %s or Default" % datasetName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     if 'sizePerEvent' in settings:
         datasetConfig.SizePerEvent = settings['sizePerEvent']
     elif not hasattr(datasetConfig, "SizePerEvent"):
         msg = "Tier0Config.addDataset : no sizePerEvent defined for dataset %s or Default" % datasetName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     if hasattr(datasetConfig, "GlobalTagConnect"):
         datasetConfig.GlobalTagConnect = settings.get('global_tag_connect', datasetConfig.GlobalTagConnect)
@@ -513,7 +513,7 @@ def setBackfill(config, mode):
     """
     if mode not in [ None, 1, 2 ]:
         msg = "Tier0Config.setBackfill : %s is not a valid backfill mode" % mode
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     config.Global.Backfill = mode
     return
@@ -572,7 +572,7 @@ def setDQMDataTier(config, datatier):
     """
     if datatier not in [ "DQM", "DQMIO" ]:
         msg = "Tier0Config.setDQMDataTier : %s not an allowed DQM data tier !" % datatier
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     config.Global.DQMDataTier = datatier
     return
@@ -716,13 +716,13 @@ def addExpressConfig(config, streamName, **options):
     scenario = options.get("scenario", None)
     if scenario == None:
         msg = "Tier0Config.addExpressConfig : no scenario defined for stream %s" % streamName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
     streamConfig.Express.Scenario = scenario
 
     data_tiers = options.get("data_tiers", [])
-    if type(data_tiers) != list or len(data_tiers) == 0:
+    if not isinstance(data_tiers, list) or len(data_tiers) == 0:
         msg = "Tier0Config.addExpressConfig : data_tiers needs to be list with at least one tier"
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
     streamConfig.Express.DataTiers = data_tiers
 
     alcamerge_config = None
@@ -745,13 +745,13 @@ def addExpressConfig(config, streamName, **options):
     timePerEvent = options.get("timePerEvent", None)
     if timePerEvent == None:
         msg = "Tier0Config.addExpressConfig : no timePerEvent defined for stream %s" % streamName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
     streamConfig.Express.TimePerEvent = timePerEvent
 
     sizePerEvent = options.get("sizePerEvent", None)
     if sizePerEvent == None:
         msg = "Tier0Config.addExpressConfig : no sizePerEvent defined for stream %s" % streamName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
     streamConfig.Express.SizePerEvent = sizePerEvent
 
     streamConfig.Express.MaxInputRate = options.get("maxInputRate", 23 * 1000)
@@ -779,22 +779,22 @@ def addRegistrationConfig(config, streamName, **options):
     primds = options.get("primds", None)
     if primds == None:
         msg = "Tier0Config.addRegistrationConfig : no primary dataset defined for stream %s" % streamName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     data_tier = options.get("data_tier", None)
     if data_tier == None:
         msg = "Tier0Config.addRegistrationConfig : no data_tier defined for stream %s" % streamName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     acq_era = options.get("acq_era", None)
     if acq_era == None:
         msg = "Tier0Config.addRegistrationConfig : no acquisition era defined for stream %s" % streamName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     proc_version = options.get("proc_version", None)
     if proc_version == None:
         msg = "Tier0Config.addRegistrationConfig : no processing version defined for stream %s" % streamName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     proc_string = options.get("proc_string", None)
 
@@ -831,27 +831,27 @@ def addConversionConfig(config, streamName, **options):
     primds = options.get("primds", None)
     if primds == None:
         msg = "Tier0Config.addConversionConfig : no primary dataset defined for stream %s" % streamName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     data_tier = options.get("data_tier", None)
     if data_tier == None:
         msg = "Tier0Config.addConversionConfig : no data tier defined for stream %s" % streamName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     conv_type = options.get("conv_type", None)
     if conv_type == None:
         msg = "Tier0Config.addConversionConfig : no conversion type defined for stream %s" % streamName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     acq_era = options.get("acq_era", None)
     if acq_era == None:
         msg = "Tier0Config.addConversionConfig : no acquisition era defined for stream %s" % streamName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     proc_version = options.get("proc_version", None)
     if proc_version == None:
         msg = "Tier0Config.addConversionConfig : no processing version defined for stream %s" % streamName
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
 
     proc_string = options.get("proc_string", None)
 

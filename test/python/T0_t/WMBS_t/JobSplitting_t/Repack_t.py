@@ -69,7 +69,7 @@ class RepackTest(unittest.TestCase):
                              transaction = False)
 
         insertLumiDAO = daoFactory(classname = "RunConfig.InsertLumiSection")
-        for lumi in [1,2,3,4]:
+        for lumi in [1, 2, 3, 4]:
             insertLumiDAO.execute(binds = { 'RUN' : 1,
                                             'LUMI' : lumi },
                                   transaction = False)
@@ -140,7 +140,7 @@ class RepackTest(unittest.TestCase):
         """
         mySplitArgs = self.splitArgs.copy()
 
-        for lumi in [1,2,3,4]:
+        for lumi in [1, 2, 3, 4]:
             filecount = 2
             for i in range(filecount):
                 newFile = File(makeUUID(), size = 1000, events = 100)
@@ -209,7 +209,7 @@ class RepackTest(unittest.TestCase):
         mySplitArgs = self.splitArgs.copy()
 
         insertClosedLumiBinds = []
-        for lumi in [1,2,3,4]:
+        for lumi in [1, 2, 3, 4]:
             filecount = 2
             for i in range(filecount):
                 newFile = File(makeUUID(), size = 1000, events = 100)
@@ -399,7 +399,7 @@ class RepackTest(unittest.TestCase):
         mySplitArgs = self.splitArgs.copy()
 
         insertClosedLumiBinds = []
-        for lumi in [1,2,3,4]:
+        for lumi in [1, 2, 3, 4]:
             filecount = 2
             for i in range(filecount):
                 newFile = File(makeUUID(), size = 1000, events = 100)
@@ -469,7 +469,7 @@ class RepackTest(unittest.TestCase):
         mySplitArgs = self.splitArgs.copy()
 
         insertClosedLumiBinds = []
-        for lumi in [1,2,4]:
+        for lumi in [1, 2, 4]:
             filecount = 2
             for i in range(filecount):
                 newFile = File(makeUUID(), size = 1000, events = 100)
@@ -533,7 +533,7 @@ class RepackTest(unittest.TestCase):
         mySplitArgs = self.splitArgs.copy()
 
         insertClosedLumiBinds = []
-        for lumi in [1,2,3]:
+        for lumi in [1, 2, 3]:
             filecount = 2
             for i in range(filecount):
                 if lumi == 3:

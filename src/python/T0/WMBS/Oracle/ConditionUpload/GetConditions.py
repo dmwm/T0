@@ -69,13 +69,13 @@ class GetConditions(DBFormatter):
             run = result[0]
             streamid = result[4]
 
-            if not conditions.has_key(run):
+            if run not in conditions:
                 conditions[run] = {}
                 conditions[run]['condUploadTimeout'] = result[1]
                 conditions[run]['dropboxHost'] = result[2]
                 conditions[run]['validationMode'] = bool(result[3])
                 conditions[run]['streams'] = {}
-            if not conditions[run]['streams'].has_key(streamid):
+            if streamid not in conditions[run]['streams']:
                 conditions[run]['streams'][streamid] = []
 
             # only return file information for aquired files

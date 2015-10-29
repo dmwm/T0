@@ -4,6 +4,7 @@ _ExampleConfig_
 Example configuration for RunConfig unittest
 
 """
+from __future__ import print_function
 from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
@@ -69,10 +70,10 @@ setScramArch(tier0Config, "CMSSW_6_2_4", "slc5_amd64_gcc472")
 repackVersionOverride = {
     }
 expressVersionOverride = {
-    "CMSSW_5_2_7" : "CMSSW_5_3_14",
+    "CMSSW_5_2_7": "CMSSW_5_3_14",
     }
 hltmonVersionOverride = {
-    "CMSSW_5_2_7" : "CMSSW_5_3_8",
+    "CMSSW_5_2_7": "CMSSW_5_3_8",
     }
 
 addRepackConfig(tier0Config, "Default",
@@ -154,4 +155,4 @@ addDataset(tier0Config, "MinimumBias",
            scenario = "pp")
 
 if __name__ == '__main__':
-    print tier0Config
+    print(tier0Config)

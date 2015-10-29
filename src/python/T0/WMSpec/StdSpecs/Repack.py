@@ -195,15 +195,12 @@ class RepackWorkloadFactory(StdBase):
         - null: False
         """
         baseArgs = StdBase.getWorkloadArguments()
-##         specArgs = {"Outputs" : {"default" : {}, "type" : dict,
-##                                  "optional" : False, "validate" : None,
-##                                  "attr" : "outputs", "null" : False},
-        specArgs = {"RequestType" : {"default" : "Repack"},
-                    "Scenario" : {"default" : "fake", "attr" : "procScenario"},
-                    "GlobalTag" : {"default" : "fake"},
-                    "BlockCloseDelay" : {"type" : int, "optional" : False, 
-                                         "validate" : lambda x : x > 0,
-                                         },
+        specArgs = {"RequestType": {"default" : "Repack"},
+                    "Scenario": {"default" : "fake", "attr" : "procScenario"},
+                    "GlobalTag": {"default" : "fake"},
+                    "BlockCloseDelay": {"type": int, "optional": False,
+                                        "validate": lambda x : x > 0,
+                                        },
                     }
         baseArgs.update(specArgs)
         StdBase.setDefaultArgumentsProperty(baseArgs)

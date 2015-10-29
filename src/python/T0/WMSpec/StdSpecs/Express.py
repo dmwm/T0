@@ -478,24 +478,22 @@ class ExpressWorkloadFactory(StdBase):
 
         """
         baseArgs = StdBase.getWorkloadArguments()
-##         specArgs = {"Outputs" : {"default" : {}, "type" : dict,
-##                                  "optional" : False, "validate" : None,
-##                                  "attr" : "outputs", "null" : False},
-        specArgs = {"RequestType" : {"default" : "Express"},
-                    "Scenario" : {"optional" : False, "attr" : "procScenario"},
-                    "RecoCMSSWVersion" : {"optional" : False, "validate" : cmsswversion,
-                                          "attr" : "recoFrameworkVersion", "null" : True},
-                    "RecoScramArch" : {"optional" : False, "null" : True},
-                    "GlobalTag" : {"optional" : False},
-                    "GlobalTagTransaction" : {"optional" : False},
-                    "StreamName" : {"optional" : False},
-                    "SpecialDataset" : {"optional" : False},
-                    "AlcaHarvestTimeout" : {"type" : int, "optional" : False},
-                    "AlcaHarvestDir" : {"optional" : False, "null" : True},
-                    "AlcaSkims" : {"type" : makeList, "optional" : False},
-                    "DQMSequences" : {"type" : makeList, "attr" : "dqmSequences", "optional" : False},
-                    "BlockCloseDelay" : {"type" : int, "optional" : False, 
-                                         "validate" : lambda x : x > 0},
+        specArgs = {"RequestType": {"default" : "Express"},
+                    "Scenario": {"optional" : False, "attr" : "procScenario"},
+                    "RecoCMSSWVersion": {"optional" : False, "validate" : cmsswversion,
+                                         "attr" : "recoFrameworkVersion", "null" : True},
+                    "RecoScramArch": {"optional" : False, "null" : True},
+                    "GlobalTag": {"optional" : False},
+                    "GlobalTagTransaction": {"optional" : False},
+                    "StreamName": {"optional" : False},
+                    "SpecialDataset": {"optional" : False},
+                    "AlcaHarvestTimeout": {"type" : int, "optional" : False},
+                    "AlcaHarvestDir": {"optional" : False, "null" : True},
+                    "AlcaSkims": {"type" : makeList, "optional" : False},
+                    "DQMSequences": {"type" : makeList, "attr" : "dqmSequences", "optional" : False},
+                    "BlockCloseDelay": {"type" : int, "optional" : False,
+                                        "validate" : lambda x : x > 0
+                                        },
                     }
         baseArgs.update(specArgs)
         StdBase.setDefaultArgumentsProperty(baseArgs)

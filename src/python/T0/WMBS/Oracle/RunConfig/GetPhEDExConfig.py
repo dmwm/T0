@@ -39,7 +39,7 @@ class GetPhEDExConfig(DBFormatter):
 
             primds = result[0]
 
-            if not resultDict.has_key(primds):
+            if primds not in resultDict:
                 resultDict[primds] = {}
 
             resultDict[primds]['archival_node'] = result[1]

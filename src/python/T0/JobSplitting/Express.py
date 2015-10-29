@@ -57,7 +57,7 @@ class Express(JobFactory):
         streamersByLumi = {}
         for result in availableFiles:
             lumi = result['lumi']
-            if streamersByLumi.has_key(lumi):
+            if lumi in streamersByLumi:
                 streamersByLumi[lumi].append(result)
             else:
                 streamersByLumi[lumi] = [ result ]

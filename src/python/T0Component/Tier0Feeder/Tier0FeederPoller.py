@@ -135,7 +135,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                     try:
                         hltConfig = self.getHLTConfigDAO.execute(hltkey, transaction = False)
                         if hltConfig['process'] == None or len(hltConfig['mapping']) == 0:
-                            raise RuntimeError, "HLTConfDB query returned no process or mapping"
+                            raise RuntimeError("HLTConfDB query returned no process or mapping")
                     except:
                         logging.exception("Can't retrieve hltkey %s for run %d" % (hltkey, run))
                         continue
@@ -366,7 +366,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                 filenameParams += "-FILENAME %s " % os.path.basename(lfn)
 
             logging.debug("Notifying transfer system about processed streamers")
-            p = subprocess.Popen("/bin/bash",stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+            p = subprocess.Popen("/bin/bash", stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             output, error = p.communicate("""
             export T0_BASE_DIR=%s
             export T0ROOT=${T0_BASE_DIR}/T0

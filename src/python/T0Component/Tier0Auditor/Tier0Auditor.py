@@ -6,6 +6,7 @@ _Tier0Auditor_
 Component wrapper, for real work look at Tier0AuditorPoller
 
 """
+from __future__ import print_function
 import logging
 import threading
 
@@ -29,14 +30,14 @@ class Tier0Auditor(Harness):
         Harness.__init__(self, config)
         self.pollTime = 1
 
-        print "Tier0Auditor.__init__"
+        print("Tier0Auditor.__init__")
 
     def preInitialization(self):
         """
         Step that actually adds the worker thread properly
 
         """
-        print "Tier0Auditor.preInitialization"
+        print("Tier0Auditor.preInitialization")
 
 
         # Add event loop to worker manager

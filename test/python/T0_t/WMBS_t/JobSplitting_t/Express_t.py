@@ -70,7 +70,7 @@ class ExpressTest(unittest.TestCase):
                              transaction = False)
 
         insertLumiDAO = daoFactory(classname = "RunConfig.InsertLumiSection")
-        for lumi in [1,2]:
+        for lumi in [1, 2]:
             insertLumiDAO.execute(binds = { 'RUN' : 1,
                                             'LUMI' : lumi },
                                   transaction = False)
@@ -258,7 +258,7 @@ class ExpressTest(unittest.TestCase):
 
         """
         insertClosedLumiBinds = []
-        for lumi in [1,2]:
+        for lumi in [1, 2]:
             filecount = 1
             for i in range(filecount):
                 newFile = File(makeUUID(), size = 1000, events = 100)
