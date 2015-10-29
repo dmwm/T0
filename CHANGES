@@ -1,3 +1,21 @@
+1.9.99 to 2.0.0:
+  - Merge pull request #4219 from hufnagel/config-20150929
+  - config python formating changes
+  - Merge pull request #4217 from johnhcasallasl/CMSSW_7_4_15_patch1
+  - Merge pull request #4218 from hufnagel/python-futurize
+  - Switch to the CMSSW_7_4_15_patch1
+  - python futurize fixes
+  - Merge pull request #4216 from hufnagel/new-pcl-upload
+  - Merge pull request #4215 from hufnagel/replayconfig-20151023
+  - clean up replay config
+  - Merge pull request #4214 from hufnagel/scenario-heavyionsruns2
+  - add HeavyIonRuns2 scenario
+  - Merge pull request #4213 from johnhcasallasl/Low_PU_PDs_Update
+  - Adding new PDs to the configuration for Low PU
+  - Merge pull request #4212 from ebohorqu/cmssw_7_4_15
+  - Change of CMSWS release to 7_4_15
+  - change the PCL upload code
+
 1.9.98 to 1.9.99:
   - Merge pull request #4211 from johnhcasallasl/newAlca_LumiPixelsMinBias
   - Adding the LumiPixelsMinBias AlCa producer to Express, also updating Global Tags, Processing Version and CMSSW version
