@@ -25,27 +25,18 @@ import sqlite3
 import json
 import tempfile
 
-# defaultBackend = 'offline'
-# defaultHostname = 'cms-conddb-prod.cern.ch'
-# defaultUrlTemplate = 'https://%s/cmsDbUpload/'
-# defaultTemporaryFile = 'upload.tar.bz2'
-# defaultNetrcHost = 'DropBox'
-
-defaultBackend = 'test'
-defaultHostname = 'cms-conddb-dev.cern.ch'
+defaultBackend = 'online'
+defaultHostname = 'cms-conddb-prod.cern.ch'
+defaultHostnamePrep = 'cms-conddb-dev.cern.ch'
 defaultUrlTemplate = 'https://%s/cmsDbUpload/'
 defaultTemporaryFile = 'upload.tar.bz2'
 defaultNetrcHost = 'Dropbox'
 defaultWorkflow = 'offline'
 
 # common/http.py start (plus the "# Try to extract..." section bit)
-import re
 import time
 import logging
 import cStringIO
-from base64 import b64encode
-import HTMLParser
-import urllib
 
 import pycurl
 import copy
@@ -253,6 +244,7 @@ class HTTPError(Exception):
         except Exception:
             self.args = (self.response, )
 
+
 CERN_SSO_CURL_CAPATH = '/etc/pki/tls/certs'
 
 class HTTP(object):
@@ -268,7 +260,8 @@ class HTTP(object):
         self.curl = pycurl.Curl()
         self.curl.setopt(self.curl.COOKIEFILE, '')      # in memory
 
-        #ToDo: make sure we have the right options set here to use ssl
+        #-toDo: make sure we have the right options set here to use ssl
+        #-review(2015-09-25): check and see - action: AP
         # self.curl.setopt(self.curl.SSL_VERIFYPEER, 1)
         self.curl.setopt(self.curl.SSL_VERIFYPEER, 0)
         self.curl.setopt(self.curl.SSL_VERIFYHOST, 2)
@@ -329,11 +322,13 @@ class HTTP(object):
         self.curl.setopt(pycurl.URL, url)
         self.curl.setopt(pycurl.VERBOSE, 0)
 
-        #ToDo: check if/why these are needed ...
+        #-toDo: check if/why these are needed ...
         #-ap: hmm ...
         # self.curl.setopt(pycurl.DNS_CACHE_TIMEOUT, 0)
         # self.curl.setopt(pycurl.IPRESOLVE, pycurl.IPRESOLVE_V4)
         #-end hmmm ...
+        #-review(2015-09-25): check and see - action: AP
+
 
         self.curl.setopt(pycurl.HTTPHEADER, ['Accept: application/json'])
         # self.curl.setopt( self.curl.POST, {})
@@ -452,10 +447,11 @@ class ConditionsUploader(object):
     '''
 
     def __init__(self, hostname = defaultHostname, urlTemplate = defaultUrlTemplate):
+        self.urlTemplate = urlTemplate
         self.hostname = hostname
         self.userName = None
         self.http = HTTP()
-        self.http.setBaseUrl(urlTemplate % hostname)
+        self.http.setBaseUrl(self.urlTemplate % hostname)
 
 
     def signIn(self, username, password):
@@ -511,6 +507,15 @@ class ConditionsUploader(object):
         logging.info('%s: ... executing the new version...', self.hostname)
         os.execl(sys.executable, *([sys.executable] + sys.argv))
 
+    def getDestDbFromMetaData(self, filename):
+
+        with open(filename, 'r') as jFile:
+            md = json.load( jFile )
+
+        destDb = 'prod'
+        if 'oracle://cms_orcoff_prep' in md['destinationDatabase'] : destDb = 'prep'
+
+        return destDb
 
     def uploadFile(self, filename, backend = defaultBackend, temporaryFile = defaultTemporaryFile):
         '''Uploads a file to the dropBox.
@@ -522,12 +527,31 @@ class ConditionsUploader(object):
         basepath = filename.rsplit('.db', 1)[0].rsplit('.txt', 1)[0]
         basename = os.path.basename(basepath)
 
+        logging.debug('%s: %s: extracting destDB from MetaData ...', self.hostname, basename)
+        destDb = self.getDestDbFromMetaData('%s.txt' %basepath)
+        if 'prep' in destDb:
+            self.hostname = defaultHostnamePrep
+            self.http.setBaseUrl(self.urlTemplate % self.hostname)
+            logging.info('%s: %s: redirecting upload to %s service as needed for Prep DB',  self.hostname, basename, self.hostname)
+        # make sure we are logged in:
+        if not self.userName:
+            username, password = getCredentials(defaultNetrcHost)
+            self.signIn( username, password )
+
+        logging.debug('%s: %s: found destDB "%s" from MetaData, destHost updated as needed', self.hostname, basename, destDb)
+
         logging.debug('%s: %s: Creating tar file for upload ...', self.hostname, basename)
+        try:
+            tarFile = tarfile.open(temporaryFile, 'w:bz2')
 
-        tarFile = tarfile.open(temporaryFile, 'w:bz2')
-
-        with open('%s.db' % basepath, 'rb') as data:
-            addToTarFile(tarFile, data, 'data.db')
+            with open('%s.db' % basepath, 'rb') as data:
+                addToTarFile(tarFile, data, 'data.db')
+        except Exception as e:
+            msg = 'Error when creating tar file. \n'
+            msg += 'Please check that you have write access to the directory you are running,\n'
+            msg += 'and that you have enough space on this disk (df -h .)\n'
+            logging.error(msg)
+            raise Exception(msg)
 
         with tempfile.NamedTemporaryFile() as metadata:
             with open('%s.txt' % basepath, 'rb') as originalMetadata:
@@ -556,7 +580,8 @@ class ConditionsUploader(object):
 
         logging.info('%s: %s: Uploading file (%s, size %s) to the %s backend...', self.hostname, basename, fileHash, fileSize, backend)
         os.rename(temporaryFile, fileHash)
-        ret = self.http.query('uploadFile',
+        try:
+            ret = self.http.query('uploadFile',
                               {
                                 'backend': backend,
                                 'fileName': basename,
@@ -566,6 +591,10 @@ class ConditionsUploader(object):
                                         'uploadedFile': fileHash,
                                       }
                               )
+        except Exception as e:
+            logging.error('Error from uploading: %s' % str(e))
+            ret = json.dumps( { "status": -1, "upload" : { 'itemStatus' : { basename : {'status':'failed', 'info':str(e)}}}, "error" : str(e)} )
+
         os.unlink(fileHash)
 
         statusInfo = json.loads(ret)['upload']
@@ -595,16 +624,16 @@ class ConditionsUploader(object):
 
         return len(okTags)>0
 
-def authenticateUser(dropBox, options):
+def getCredentials(hostName):
 
     try:
         # Try to find the netrc entry
-        (username, account, password) = netrc.netrc().authenticators(options.netrcHost)
+        (username, account, password) = netrc.netrc().authenticators(hostName)
     except Exception:
         # netrc entry not found, ask for the username and password
         logging.info(
             'netrc entry "%s" not found: if you wish not to have to retype your password, you can add an entry in your .netrc file. However, beware of the risks of having your password stored as plaintext. Instead.',
-            options.netrcHost)
+            hostName)
 
         # Try to get a default username
         defaultUsername = getpass.getuser()
@@ -614,8 +643,14 @@ def authenticateUser(dropBox, options):
         username = getInput(defaultUsername, '\nUsername [%s]: ' % defaultUsername)
         password = getpass.getpass('Password: ')
 
+    return username, password
+
+def authenticateUser(dropBox, options):
+
+    username, password = getCredentials(options.netrcHost)
     # Now we have a username and password, authenticate with them
     return dropBox.signIn(username, password)
+
 
 def uploadAllFiles(options, arguments):
 
@@ -655,6 +690,8 @@ def uploadAllFiles(options, arguments):
             # Wizard
             runWizard(basename, dataFilename, metadataFilename)
 
+
+
     # Upload files
     try:
         dropBox = ConditionsUploader(options.hostname, options.urlTemplate)
@@ -669,6 +706,7 @@ def uploadAllFiles(options, arguments):
 
         for filename in arguments:
             results[filename] = dropBox.uploadFile(filename, options.backend, options.temporaryFile)
+        logging.debug("all files uploaded, logging out now.")
 
         dropBox.signOut()
 
@@ -692,21 +730,23 @@ def uploadTier0Files(filenames, username, password, cookieFileName = None):
 
     for filename in filenames:
         try:
-            result = dropBox.uploadFile(filename, backend = 'test')
+            result = dropBox.uploadFile(filename)
         except HTTPError as e:
             if e.code == 400:
                 # 400 Bad Request: This is an exception related to the upload
                 # being wrong for some reason (e.g. duplicated file).
                 # Since for Tier0 this is not an issue, continue
-                logging.error('HTTP Exception 400 Bad Request: Upload-related, skipping. Message: %s', e)
+                logging.error('Got HTTP Exception 400 Bad Request for %s: Upload-related, skipping. Message: %s', (filename, e) )
                 continue
 
             # In any other case, re-raise.
             raise
 
-        #-toDo: add a flag to say if we should retry or not. So far, all retries are done server-side,
+        #-toDo: add a flag to say if we should retry or not. So far, all retries are done server-side (Tier-0),
         #       if we flag as failed any retry would not help and would result in the same error (e.g.
         #       when a file with an identical hash is uploaded again)
+        #-review(2015-09-25): get feedback from tests at Tier-0 (action: AP)
+
         if not result: # dropbox reported an error when uploading, do not retry.
             logging.error('Error from dropbox, upload-related, skipping.')
             continue
@@ -761,10 +801,6 @@ def main():
 
     (options, arguments) = parser.parse_args()
 
-    print("args=", arguments)
-    if not arguments:
-        arguments = ['./testFiles/localSqlite']
-
     if len(arguments) < 1:
         parser.print_help()
         return -2
@@ -797,4 +833,4 @@ def testTier0Upload():
 if __name__ == '__main__':
 
     sys.exit(main())
-    # testTier0Upload()
+    #testTier0Upload()
