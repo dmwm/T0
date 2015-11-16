@@ -47,7 +47,7 @@ cernPhedexNode = "T0_CH_CERN_Disk"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2015D")
+setAcquisitionEra(tier0Config, "Run2015E")
 setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -79,7 +79,7 @@ setPromptCalibrationConfig(tier0Config,
 
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_4_15_patch1"
+defaultCMSSWVersion = "CMSSW_7_5_5_patch2"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -92,14 +92,14 @@ hcalnzsScenario = "hcalnzsRun2"
 
 # Defaults for processing version
 defaultProcVersionRAW = 1
-defaultProcVersionReco = 4
-expressProcVersion = 4
-alcarawProcVersion = 4
+defaultProcVersionReco = 1
+expressProcVersion = 1
+alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "74X_dataRun2_Express_v3"
-promptrecoGlobalTag = "74X_dataRun2_Prompt_v4"
-alcap0GlobalTag = "74X_dataRun2_Prompt_v4"
+expressGlobalTag = "75X_dataRun2_Express_ppAt5TeV_v0"
+promptrecoGlobalTag = "75X_dataRun2_Prompt_ppAt5TeV_v0"
+alcap0GlobalTag = "75X_dataRun2_Prompt_ppAt5TeV_v0"
 
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 
@@ -115,36 +115,20 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_3" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_4" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_5" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_6" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_7" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_8" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_9" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_10" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_11" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_12" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_13" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_14" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_15" : "CMSSW_7_4_15_patch1"
+    "CMSSW_7_5_0" : "CMSSW_7_5_5_patch2",
+    "CMSSW_7_5_1" : "CMSSW_7_5_5_patch2",
+    "CMSSW_7_5_2" : "CMSSW_7_5_5_patch2",
+    "CMSSW_7_5_3" : "CMSSW_7_5_5_patch2",
+    "CMSSW_7_5_4" : "CMSSW_7_5_5_patch2",
+    "CMSSW_7_5_5" : "CMSSW_7_5_5_patch2"
     }
 expressVersionOverride = {
-    "CMSSW_7_4_2" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_3" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_4" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_5" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_6" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_7" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_8" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_9" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_10" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_11" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_12" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_13" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_14" : "CMSSW_7_4_15_patch1",
-    "CMSSW_7_4_15" : "CMSSW_7_4_15_patch1"
+    "CMSSW_7_5_0" : "CMSSW_7_5_5_patch2",
+    "CMSSW_7_5_1" : "CMSSW_7_5_5_patch2",
+    "CMSSW_7_5_2" : "CMSSW_7_5_5_patch2",
+    "CMSSW_7_5_3" : "CMSSW_7_5_5_patch2",
+    "CMSSW_7_5_4" : "CMSSW_7_5_5_patch2",
+    "CMSSW_7_5_5" : "CMSSW_7_5_5_patch2"
     }
 
 #set default repack settings for bulk streams
@@ -243,7 +227,12 @@ for dataset in datasets:
                do_reco = True,
                scenario = ppScenarioB0T)
 
-datasets = [ "MinimumBias" ]
+datasets = [ "MinimumBias1", "MinimumBias2", "MinimumBias3", "MinimumBias4",
+             "MinimumBias5", "MinimumBias6", "MinimumBias7", "MinimumBias8",
+             "MinimumBias9", "MinimumBias10", "MinimumBias11", "MinimumBias12",
+             "MinimumBias13", "MinimumBias14", "MinimumBias15", "MinimumBias16",
+             "MinimumBias17", "MinimumBias18", "MinimumBias19", "MinimumBias20",
+             "MinimumBias" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -253,7 +242,12 @@ for dataset in datasets:
                alca_producers = [ "SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias" ],
                scenario = ppScenario)
 
-datasets = [ "MinimumBias_0T" ]
+datasets = [ "MinimumBias1_0T", "MinimumBias2_0T", "MinimumBias3_0T", "MinimumBias4_0T",
+             "MinimumBias5_0T", "MinimumBias6_0T", "MinimumBias7_0T", "MinimumBias8_0T",
+             "MinimumBias9_0T", "MinimumBias10_0T", "MinimumBias11_0T", "MinimumBias12_0T",
+             "MinimumBias13_0T", "MinimumBias14_0T", "MinimumBias15_0T", "MinimumBias16_0T",
+             "MinimumBias17_0T", "MinimumBias18_0T", "MinimumBias19_0T", "MinimumBias20_0T",
+             "MinimumBias_0T" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -321,6 +315,9 @@ addDataset(tier0Config, "AlCaLumiPixels",
 
 datasets = [ "ZeroBias1", "ZeroBias2", "ZeroBias3", "ZeroBias4",
              "ZeroBias5", "ZeroBias6", "ZeroBias7", "ZeroBias8",
+             "ZeroBias9", "ZeroBias10", "ZeroBias11", "ZeroBias12",
+             "ZeroBias13", "ZeroBias14", "ZeroBias15", "ZeroBias16",
+             "ZeroBias17", "ZeroBias18", "ZeroBias19", "ZeroBias20",
              "ZeroBias"  ]
 
 for dataset in datasets:
@@ -336,6 +333,9 @@ for dataset in datasets:
 
 datasets = [ "ZeroBias1_0T", "ZeroBias2_0T", "ZeroBias3_0T", "ZeroBias4_0T",
              "ZeroBias5_0T", "ZeroBias6_0T", "ZeroBias7_0T", "ZeroBias8_0T",
+             "ZeroBias9_0T", "ZeroBias10_0T", "ZeroBias11_0T", "ZeroBias12_0T",
+             "ZeroBias13_0T", "ZeroBias14_0T", "ZeroBias15_0T", "ZeroBias16_0T",
+             "ZeroBias17_0T", "ZeroBias18_0T", "ZeroBias19_0T", "ZeroBias20_0T",
              "ZeroBias_0T"  ]
 
 for dataset in datasets:
@@ -446,7 +446,7 @@ for dataset in datasets:
 ################################
 
 datasets = [ "TOTEM_minBias", "TOTEM_romanPots", "ToTOTEM", "ToTOTEM_DoubleJet32_0", "ToTOTEM_DoubleJet32_1",
-             "ToTOTEM_DoubleJet32_2", "ToTOTEM_DoubleJet32_3", "ZeroBiasTotem", "MinimumBiasTotem",
+             "ToTOTEM_DoubleJet32_2", "ToTOTEM_DoubleJet32_3", "TOTEM_zeroBias", "ZeroBiasTotem", "MinimumBiasTotem",
              "TOTEM_minBias1", "TOTEM_minBias2", "TOTEM_romanPots1", "TOTEM_romanPots2", "TOTEM_romanPots2_0",
              "TOTEM_romanPots2_1", "TOTEM_romanPots2_2", "TOTEM_romanPots2_3", "TOTEM_romanPots2_4",
              "TOTEM_romanPots2_5", "TOTEM_romanPots2_6", "TOTEM_romanPots2_7", "TOTEM_romanPots3", 
@@ -459,7 +459,7 @@ for dataset in datasets:
                scenario = ppScenario)
 
 datasets = [ "TOTEM_minBias_0T", "TOTEM_romanPots_0T", "ToTOTEM_0T", "ToTOTEM_DoubleJet32_0_0T", "ToTOTEM_DoubleJet32_1_0T",
-	     "ToTOTEM_DoubleJet32_2_0T", "ToTOTEM_DoubleJet32_3_0T", "ZeroBiasTotem_0T", "MinimumBiasTotem_0T",
+	     "ToTOTEM_DoubleJet32_2_0T", "ToTOTEM_DoubleJet32_3_0T", "TOTEM_zeroBias_0T", "ZeroBiasTotem_0T", "MinimumBiasTotem_0T",
              "TOTEM_minBias1_0T", "TOTEM_minBias2_0T", "TOTEM_romanPots1_0T", "TOTEM_romanPots2_0T", "TOTEM_romanPots2_0_0T",
              "TOTEM_romanPots2_1_0T", "TOTEM_romanPots2_2_0T", "TOTEM_romanPots2_3_0T", "TOTEM_romanPots2_4_0T",
              "TOTEM_romanPots2_5_0T", "TOTEM_romanPots2_6_0T", "TOTEM_romanPots2_7_0T", "TOTEM_romanPots3_0T",  
@@ -942,7 +942,83 @@ for dataset in datasets:
                tape_node = "T1_US_FNAL_MSS",
                disk_node = "T1_US_FNAL_Disk",
                scenario = ppScenarioB0T)
-    
+   
+#########################################
+### New PDs for pp Reference Run 2015 ###
+#########################################
+
+addDataset(tier0Config, "HighPtLowerPhotons",
+               do_reco = True,
+               scenario = ppScenario)
+
+addDataset(tier0Config, "HighPtLowerPhotons_0T",
+               do_reco = True,
+               scenario = ppScenario)
+
+addDataset(tier0Config, "HighPtPhoton30AndZ",
+               do_reco = True,
+               scenario = ppScenario)
+
+addDataset(tier0Config, "HighPtPhoton30AndZ_0T",
+               do_reco = True,
+               scenario = ppScenario)
+
+addDataset(tier0Config, "ppForward",
+               do_reco = True,
+               scenario = ppScenario)
+
+addDataset(tier0Config, "ppForward_0T",
+               do_reco = True,
+               scenario = ppScenario)
+
+addDataset(tier0Config, "HeavyFlavor",
+               do_reco = True,
+               scenario = ppScenario)
+
+addDataset(tier0Config, "HeavyFlavor_0T",
+               do_reco = True,
+               scenario = ppScenario)
+
+addDataset(tier0Config, "HighPtJet80",
+               do_reco = True,
+               scenario = ppScenario)
+
+addDataset(tier0Config, "HighPtJet80_0T",
+               do_reco = True,
+               scenario = ppScenario)
+
+addDataset(tier0Config, "HighPtLowerJets",
+               do_reco = True,
+               scenario = ppScenario)
+
+addDataset(tier0Config, "HighPtLowerJets_0T",
+               do_reco = True,
+               scenario = ppScenario)
+
+addDataset(tier0Config, "MuPlusX",
+               do_reco = True,
+               scenario = ppScenario)
+
+addDataset(tier0Config, "MuPlusX_0T",
+               do_reco = True,
+               scenario = ppScenario)
+
+addDataset(tier0Config, "SingleMuHighPt",
+               do_reco = True,
+               scenario = ppScenario)
+
+addDataset(tier0Config, "SingleMuHighPt_0T",
+               do_reco = True,
+               scenario = ppScenario)
+
+addDataset(tier0Config, "SingleMuLowPt",
+               do_reco = True,
+               scenario = ppScenario)
+
+addDataset(tier0Config, "SingleMuLowPt_0T",
+               do_reco = True,
+               scenario = ppScenario)
+
 #############################
 ### Express configuration ###
 #############################
