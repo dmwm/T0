@@ -84,6 +84,7 @@ setScramArch(tier0Config, "CMSSW_5_3_20", "slc6_amd64_gcc472")
 # Configure scenarios
 ppScenario = "ppRun2"
 ppScenarioB0T = "ppRun2"
+hiScenario = "HeavyIonsRun2"
 cosmicsScenario = "cosmicsRun2"
 hcalnzsScenario = "hcalnzsRun2"
 
@@ -888,7 +889,7 @@ addDataset(tier0Config, "HighPtLowerPhotons",
 
 addDataset(tier0Config, "HighPtLowerPhotons_0T",
                do_reco = True,
-               scenario = ppScenario)
+               scenario = ppScenarioB0T)
 
 addDataset(tier0Config, "HighPtPhoton30AndZ",
                do_reco = True,
@@ -896,7 +897,7 @@ addDataset(tier0Config, "HighPtPhoton30AndZ",
 
 addDataset(tier0Config, "HighPtPhoton30AndZ_0T",
                do_reco = True,
-               scenario = ppScenario)
+               scenario = ppScenarioB0T)
 
 addDataset(tier0Config, "ppForward",
                do_reco = True,
@@ -904,7 +905,7 @@ addDataset(tier0Config, "ppForward",
 
 addDataset(tier0Config, "ppForward_0T",
                do_reco = True,
-               scenario = ppScenario)
+               scenario = ppScenarioB0T)
 
 addDataset(tier0Config, "HeavyFlavor",
                do_reco = True,
@@ -912,7 +913,7 @@ addDataset(tier0Config, "HeavyFlavor",
 
 addDataset(tier0Config, "HeavyFlavor_0T",
                do_reco = True,
-               scenario = ppScenario)
+               scenario = ppScenarioB0T)
 
 addDataset(tier0Config, "HighPtJet80",
                do_reco = True,
@@ -920,7 +921,7 @@ addDataset(tier0Config, "HighPtJet80",
 
 addDataset(tier0Config, "HighPtJet80_0T",
                do_reco = True,
-               scenario = ppScenario)
+               scenario = ppScenarioB0T)
 
 addDataset(tier0Config, "HighPtLowerJets",
                do_reco = True,
@@ -928,7 +929,7 @@ addDataset(tier0Config, "HighPtLowerJets",
 
 addDataset(tier0Config, "HighPtLowerJets_0T",
                do_reco = True,
-               scenario = ppScenario)
+               scenario = ppScenarioB0T)
 
 addDataset(tier0Config, "MuPlusX",
                do_reco = True,
@@ -936,7 +937,7 @@ addDataset(tier0Config, "MuPlusX",
 
 addDataset(tier0Config, "MuPlusX_0T",
                do_reco = True,
-               scenario = ppScenario)
+               scenario = ppScenarioB0T)
 
 addDataset(tier0Config, "SingleMuHighPt",
                do_reco = True,
@@ -944,7 +945,7 @@ addDataset(tier0Config, "SingleMuHighPt",
 
 addDataset(tier0Config, "SingleMuHighPt_0T",
                do_reco = True,
-               scenario = ppScenario)
+               scenario = ppScenarioB0T)
 
 addDataset(tier0Config, "SingleMuLowPt",
                do_reco = True,
@@ -952,7 +953,21 @@ addDataset(tier0Config, "SingleMuLowPt",
 
 addDataset(tier0Config, "SingleMuLowPt_0T",
                do_reco = True,
-               scenario = ppScenario)
+               scenario = ppScenarioB0T)
+
+###############################
+### New PDs for HI Run 2015 ###
+###############################
+
+datasets = [ "HIEWQExo", "HIEWQExo_0T", "HIHardProbes", "HIHardProbes_0T"
+             "HIMinimumBias1", "HIMinimumBias1_0T", "HIOnia", "HIOnia_0T"
+             "HIOniaTnP", "HIOniaTnP_0T", "HIPhoton40AndZ", "HIPhoton40AndZ_0T"
+             "HITrackerVirginRaw", "HITrackerVirginRaw_0T" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True, write_reco = False, write_aod = True, write_miniaod = False,  write_dqm = False,
+               scenario = hiScenario)
 
 #############################
 ### Express configuration ###
