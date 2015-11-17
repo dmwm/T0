@@ -36,7 +36,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # Settings up sites
 #processingSite = "T2_CH_CERN_T0"
 #cernPhedexNode = "T2_CH_CERN"
-processingSite = "T2_CH_CERN_AI"
+processingSite = "T0_CH_CERN"
 cernPhedexNode = "T0_CH_CERN_Disk"
 
 
@@ -79,7 +79,7 @@ setPromptCalibrationConfig(tier0Config,
 
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_5_5_patch2"
+defaultCMSSWVersion = "CMSSW_7_5_5_patch3"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -102,6 +102,10 @@ expressGlobalTag = "75X_dataRun2_Express_ppAt5TeV_v0"
 promptrecoGlobalTag = "75X_dataRun2_Prompt_ppAt5TeV_v0"
 alcap0GlobalTag = "75X_dataRun2_Prompt_ppAt5TeV_v0"
 
+# HI GlobalTags
+hiExpressGlobalTag = "75X_dataRun2_ExpressHI_v1"
+hiPromptrecoGlobalTag = "75X_dataRun2_PromptHI_v1"
+
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 
 # Multicore settings
@@ -116,20 +120,20 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_5_0" : "CMSSW_7_5_5_patch2",
-    "CMSSW_7_5_1" : "CMSSW_7_5_5_patch2",
-    "CMSSW_7_5_2" : "CMSSW_7_5_5_patch2",
-    "CMSSW_7_5_3" : "CMSSW_7_5_5_patch2",
-    "CMSSW_7_5_4" : "CMSSW_7_5_5_patch2",
-    "CMSSW_7_5_5" : "CMSSW_7_5_5_patch2"
+    "CMSSW_7_5_0" : "CMSSW_7_5_5_patch3",
+    "CMSSW_7_5_1" : "CMSSW_7_5_5_patch3",
+    "CMSSW_7_5_2" : "CMSSW_7_5_5_patch3",
+    "CMSSW_7_5_3" : "CMSSW_7_5_5_patch3",
+    "CMSSW_7_5_4" : "CMSSW_7_5_5_patch3",
+    "CMSSW_7_5_5" : "CMSSW_7_5_5_patch3"
     }
 expressVersionOverride = {
-    "CMSSW_7_5_0" : "CMSSW_7_5_5_patch2",
-    "CMSSW_7_5_1" : "CMSSW_7_5_5_patch2",
-    "CMSSW_7_5_2" : "CMSSW_7_5_5_patch2",
-    "CMSSW_7_5_3" : "CMSSW_7_5_5_patch2",
-    "CMSSW_7_5_4" : "CMSSW_7_5_5_patch2",
-    "CMSSW_7_5_5" : "CMSSW_7_5_5_patch2"
+    "CMSSW_7_5_0" : "CMSSW_7_5_5_patch3",
+    "CMSSW_7_5_1" : "CMSSW_7_5_5_patch3",
+    "CMSSW_7_5_2" : "CMSSW_7_5_5_patch3",
+    "CMSSW_7_5_3" : "CMSSW_7_5_5_patch3",
+    "CMSSW_7_5_4" : "CMSSW_7_5_5_patch3",
+    "CMSSW_7_5_5" : "CMSSW_7_5_5_patch3"
     }
 
 #set default repack settings for bulk streams
@@ -697,6 +701,8 @@ datasets = [ "DoubleMu" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
+	       alca_producers = [ "TkAlZMuMu", "TkAlJpsiMuMu", "TkAlUpsilonMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "DtCalib" ],
+	       physics_skims = [ "Onia" ],
                scenario = ppScenario)
 
 datasets = [ "DoubleMu_0T" ]
@@ -704,6 +710,8 @@ datasets = [ "DoubleMu_0T" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
+               alca_producers = [ "TkAlZMuMu", "TkAlJpsiMuMu", "TkAlUpsilonMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "DtCalib" ],
+	       physics_skims = [ "Onia" ],
                scenario = ppScenarioB0T)
 
 datasets = [ "DoubleMuon" ]
@@ -974,18 +982,22 @@ addDataset(tier0Config, "ppForward_0T",
 
 addDataset(tier0Config, "HeavyFlavor",
                do_reco = True,
+	       physics_skims = [ "D0Meson" ],
                scenario = ppScenario)
 
 addDataset(tier0Config, "HeavyFlavor_0T",
                do_reco = True,
+               physics_skims = [ "D0Meson" ],
                scenario = ppScenarioB0T)
 
 addDataset(tier0Config, "HighPtJet80",
                do_reco = True,
+	       physics_skims = [ "HighPtJet" ],
                scenario = ppScenario)
 
 addDataset(tier0Config, "HighPtJet80_0T",
                do_reco = True,
+               physics_skims = [ "HighPtJet" ],
                scenario = ppScenarioB0T)
 
 addDataset(tier0Config, "HighPtLowerJets",
@@ -1006,32 +1018,38 @@ addDataset(tier0Config, "MuPlusX_0T",
 
 addDataset(tier0Config, "SingleMuHighPt",
                do_reco = True,
+	       alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
+               physics_skims = [ "ZMM" ],
                scenario = ppScenario)
 
 addDataset(tier0Config, "SingleMuHighPt_0T",
                do_reco = True,
+	       alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
+               physics_skims = [ "ZMM" ],	     
                scenario = ppScenarioB0T)
 
 addDataset(tier0Config, "SingleMuLowPt",
                do_reco = True,
+               alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
                scenario = ppScenario)
 
 addDataset(tier0Config, "SingleMuLowPt_0T",
                do_reco = True,
+	       alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
                scenario = ppScenarioB0T)
 
 ###############################
 ### New PDs for HI Run 2015 ###
 ###############################
 
-datasets = [ "HIEWQExo", "HIEWQExo_0T", "HIHardProbes", "HIHardProbes_0T"
-             "HIMinimumBias1", "HIMinimumBias1_0T", "HIOnia", "HIOnia_0T"
-             "HIOniaTnP", "HIOniaTnP_0T", "HIPhoton40AndZ", "HIPhoton40AndZ_0T"
-             "HITrackerVirginRaw", "HITrackerVirginRaw_0T" ]
+datasets = [ "HIEWQExo", "HIHardProbes", "HIMinimumBias1", "HIOnia",
+             "HIOniaTnP", "HIPhoton40AndZ", "HITrackerVirginRaw" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True, write_reco = False, write_aod = True, write_miniaod = False,  write_dqm = False,
+               global_tag = hiPromptrecoGlobalTag,
+               global_tag_connect = globalTagConnect, 
                scenario = hiScenario)
 
 #############################
@@ -1042,10 +1060,10 @@ addExpressConfig(tier0Config, "HIExpress",
                  scenario = hiScenario,
                  data_tiers = [ "FEVT" ],
                  write_dqm = True,
-                 alca_producers = [ "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiStripGains" ],
+                 alca_producers = [ "TkAlMinBiasHI" , "SiStripCalZeroBiasHI" ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
-                 global_tag_connect = globalTagConnect,
+                 global_tag_connect = hiExpressGlobalTag ,
                  global_tag = expressGlobalTag,
                  proc_ver = expressProcVersion,
                  maxInputRate = 23 * 1000,
