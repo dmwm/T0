@@ -34,8 +34,6 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Settings up sites
-#processingSite = "T2_CH_CERN_T0"
-#cernPhedexNode = "T2_CH_CERN"
 processingSite = "T0_CH_CERN"
 cernPhedexNode = "T0_CH_CERN_Disk"
 
@@ -956,87 +954,73 @@ for dataset in datasets:
 ### New PDs for pp Reference Run 2015 ###
 #########################################
 
-addDataset(tier0Config, "HighPtLowerPhotons",
+datasets = [ "HighPtLowerPhotons", "HighPtPhoton30AndZ", "ppForward",
+             "HighPtLowerJets", "MuPlusX" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
                do_reco = True,
+               write_dqm = True,
                scenario = ppScenario)
 
-addDataset(tier0Config, "HighPtLowerPhotons_0T",
-               do_reco = True,
-               scenario = ppScenarioB0T)
+datasets = [ "HighPtLowerPhotons_0T", "HighPtPhoton30AndZ_0T", "ppForward_0T",
+             "HighPtLowerJets_0T", "MuPlusX_0T" ]
 
-addDataset(tier0Config, "HighPtPhoton30AndZ",
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
                do_reco = True,
-               scenario = ppScenario)
-
-addDataset(tier0Config, "HighPtPhoton30AndZ_0T",
-               do_reco = True,
-               scenario = ppScenarioB0T)
-
-addDataset(tier0Config, "ppForward",
-               do_reco = True,
-               scenario = ppScenario)
-
-addDataset(tier0Config, "ppForward_0T",
-               do_reco = True,
+               write_dqm = True,
                scenario = ppScenarioB0T)
 
 addDataset(tier0Config, "HeavyFlavor",
-               do_reco = True,
-	       physics_skims = [ "D0Meson" ],
-               scenario = ppScenario)
+           do_reco = True,
+           write_dqm = True,
+           physics_skims = [ "D0Meson" ],
+           scenario = ppScenario)
 
 addDataset(tier0Config, "HeavyFlavor_0T",
-               do_reco = True,
-               physics_skims = [ "D0Meson" ],
-               scenario = ppScenarioB0T)
+           do_reco = True,
+           write_dqm = True,
+           physics_skims = [ "D0Meson" ],
+           scenario = ppScenarioB0T)
 
 addDataset(tier0Config, "HighPtJet80",
-               do_reco = True,
-	       physics_skims = [ "HighPtJet" ],
-               scenario = ppScenario)
+           do_reco = True,
+           write_dqm = True,
+           physics_skims = [ "HighPtJet" ],
+           scenario = ppScenario)
 
 addDataset(tier0Config, "HighPtJet80_0T",
-               do_reco = True,
-               physics_skims = [ "HighPtJet" ],
-               scenario = ppScenarioB0T)
-
-addDataset(tier0Config, "HighPtLowerJets",
-               do_reco = True,
-               scenario = ppScenario)
-
-addDataset(tier0Config, "HighPtLowerJets_0T",
-               do_reco = True,
-               scenario = ppScenarioB0T)
-
-addDataset(tier0Config, "MuPlusX",
-               do_reco = True,
-               scenario = ppScenario)
-
-addDataset(tier0Config, "MuPlusX_0T",
-               do_reco = True,
-               scenario = ppScenarioB0T)
+           do_reco = True,
+           write_dqm = True,
+           physics_skims = [ "HighPtJet" ],
+           scenario = ppScenarioB0T)
 
 addDataset(tier0Config, "SingleMuHighPt",
-               do_reco = True,
-	       alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
-               physics_skims = [ "ZMM" ],
-               scenario = ppScenario)
+           do_reco = True,
+           write_dqm = True,
+           alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
+           physics_skims = [ "ZMM" ],
+           scenario = ppScenario)
 
 addDataset(tier0Config, "SingleMuHighPt_0T",
-               do_reco = True,
-	       alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
-               physics_skims = [ "ZMM" ],	     
-               scenario = ppScenarioB0T)
+           do_reco = True,
+           write_dqm = True,
+           alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
+           physics_skims = [ "ZMM" ],
+           scenario = ppScenarioB0T)
 
 addDataset(tier0Config, "SingleMuLowPt",
-               do_reco = True,
-               alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
-               scenario = ppScenario)
+           do_reco = True,
+           write_dqm = True,
+           alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
+           scenario = ppScenario)
 
 addDataset(tier0Config, "SingleMuLowPt_0T",
-               do_reco = True,
-	       alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
-               scenario = ppScenarioB0T)
+           do_reco = True,
+           write_dqm = True,
+           alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
+           scenario = ppScenarioB0T)
 
 ###############################
 ### New PDs for HI Run 2015 ###
@@ -1047,9 +1031,10 @@ datasets = [ "HIEWQExo", "HIHardProbes", "HIMinimumBias1", "HIOnia",
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
-               do_reco = True, write_reco = False, write_aod = True, write_miniaod = False,  write_dqm = False,
+               do_reco = True,
+               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = False,
                global_tag = hiPromptrecoGlobalTag,
-               global_tag_connect = globalTagConnect, 
+               global_tag_connect = globalTagConnect,
                scenario = hiScenario)
 
 #############################
