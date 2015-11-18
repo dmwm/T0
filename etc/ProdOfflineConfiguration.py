@@ -1027,7 +1027,7 @@ addDataset(tier0Config, "SingleMuLowPt_0T",
 ###############################
 
 datasets = [ "HIEWQExo", "HIHardProbes", "HIMinimumBias1", "HIOnia",
-             "HIOniaTnP", "HIPhoton40AndZ", "HITrackerVirginRaw" ]
+             "HIOniaTnP", "HIPhoton40AndZ" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
