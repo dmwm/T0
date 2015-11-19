@@ -138,11 +138,11 @@ expressVersionOverride = {
 #set default repack settings for bulk streams
 addRepackConfig(tier0Config, "Default",
                 proc_ver = defaultProcVersion,
-                maxSizeSingleLumi = 10 * 1024 * 1024 * 1024,
+                maxSizeSingleLumi = 12 * 1024 * 1024 * 1024,
                 maxSizeMultiLumi = 8 * 1024 * 1024 * 1024,
                 minInputSize =  2.1 * 1024 * 1024 * 1024,
                 maxInputSize = 4 * 1024 * 1024 * 1024,
-                maxEdmSize = 10 * 1024 * 1024 * 1024,
+                maxEdmSize = 12 * 1024 * 1024 * 1024,
                 maxOverSize = 8 * 1024 * 1024 * 1024,
                 maxInputEvents = 250 * 1000,
                 maxInputFiles = 1000,
@@ -971,7 +971,8 @@ for dataset in datasets:
                do_reco = True,
                write_reco = False, write_aod = True, write_miniaod = False, write_dqm = False,
                global_tag = hiPromptrecoGlobalTag,
-               global_tag_connect = globalTagConnect,
+               timePerEvent = 45,
+               sizePerEvent = 4000,
                scenario = hiScenario)
 
 #############################
@@ -994,8 +995,8 @@ addExpressConfig(tier0Config, "HIExpress",
                  maxLatency = 15 * 23,
                  periodicHarvestInterval = 20 * 60,
                  blockCloseDelay = 1200,
-                 timePerEvent = 40,
-                 sizePerEvent = 3700,
+                 timePerEvent = 45,
+                 sizePerEvent = 4000,
                  versionOverride = expressVersionOverride)
 
 addExpressConfig(tier0Config, "Express",
