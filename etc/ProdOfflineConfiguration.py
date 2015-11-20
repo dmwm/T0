@@ -97,12 +97,12 @@ alcarawProcVersion = 1
 
 # Defaults for GlobalTag
 expressGlobalTag = "75X_dataRun2_Express_ppAt5TeV_v0"
-promptrecoGlobalTag = "75X_dataRun2_Prompt_ppAt5TeV_v0"
-alcap0GlobalTag = "75X_dataRun2_Prompt_ppAt5TeV_v0"
+promptrecoGlobalTag = "75X_dataRun2_Prompt_ppAt5TeV_v1"
+alcap0GlobalTag = "75X_dataRun2_Prompt_ppAt5TeV_v1"
 
 # HI GlobalTags
-hiExpressGlobalTag = "75X_dataRun2_ExpressHI_v1"
-hiPromptrecoGlobalTag = "75X_dataRun2_PromptHI_v2"
+hiExpressGlobalTag = "75X_dataRun2_ExpressHI_v2"
+hiPromptrecoGlobalTag = "75X_dataRun2_PromptHI_v3"
 
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 
@@ -1131,7 +1131,7 @@ addExpressConfig(tier0Config, "HIExpress",
                  scenario = hiScenario,
                  data_tiers = [ "FEVT" ],
                  write_dqm = True,
-	         alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBiasHI", "DtCalibHI", "LumiPixelsMinBias" ]
+	         alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBiasHI", "DtCalibHI", "LumiPixelsMinBias" ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
                  global_tag_connect = globalTagConnect,
