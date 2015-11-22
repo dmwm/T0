@@ -75,7 +75,7 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_5_6"
+defaultCMSSWVersion = "CMSSW_7_5_6_patch1"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -118,21 +118,23 @@ alcarawSplitting = 10000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_5_0" : "CMSSW_7_5_6",
-    "CMSSW_7_5_1" : "CMSSW_7_5_6",
-    "CMSSW_7_5_2" : "CMSSW_7_5_6",
-    "CMSSW_7_5_3" : "CMSSW_7_5_6",
-    "CMSSW_7_5_4" : "CMSSW_7_5_6",
-    "CMSSW_7_5_5" : "CMSSW_7_5_6"
+    "CMSSW_7_5_0" : "CMSSW_7_5_6_patch1",
+    "CMSSW_7_5_1" : "CMSSW_7_5_6_patch1",
+    "CMSSW_7_5_2" : "CMSSW_7_5_6_patch1",
+    "CMSSW_7_5_3" : "CMSSW_7_5_6_patch1",
+    "CMSSW_7_5_4" : "CMSSW_7_5_6_patch1",
+    "CMSSW_7_5_5" : "CMSSW_7_5_6_patch1",
+    "CMSSW_7_5_6" : "CMSSW_7_5_6_patch1"
     }
 
 expressVersionOverride = {
-    "CMSSW_7_5_0" : "CMSSW_7_5_6",
-    "CMSSW_7_5_1" : "CMSSW_7_5_6",
-    "CMSSW_7_5_2" : "CMSSW_7_5_6",
-    "CMSSW_7_5_3" : "CMSSW_7_5_6",
-    "CMSSW_7_5_4" : "CMSSW_7_5_6",
-    "CMSSW_7_5_5" : "CMSSW_7_5_6"
+    "CMSSW_7_5_0" : "CMSSW_7_5_6_patch1",
+    "CMSSW_7_5_1" : "CMSSW_7_5_6_patch1",
+    "CMSSW_7_5_2" : "CMSSW_7_5_6_patch1",
+    "CMSSW_7_5_3" : "CMSSW_7_5_6_patch1",
+    "CMSSW_7_5_4" : "CMSSW_7_5_6_patch1",
+    "CMSSW_7_5_5" : "CMSSW_7_5_6_patch1",
+    "CMSSW_7_5_6" : "CMSSW_7_5_6_patch1"
     }
 
 #set default repack settings for bulk streams
@@ -964,12 +966,12 @@ addDataset(tier0Config, "SingleMuLowPt_0T",
 ###############################
 
 datasets = [ "HIFlowCorr", "HIHardProbesPeripheral", "HIMinimumBias2",
-             "HITrackerVirginRaw", "HIOnia" ]
+             "HIOnia" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = False,
+               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = True,
                global_tag = hiPromptrecoGlobalTag,
                timePerEvent = 45,
                sizePerEvent = 4000,
@@ -977,7 +979,7 @@ for dataset in datasets:
 
 addDataset(tier0Config, "HIOniaL1DoubleMu0",
                do_reco = True,
-               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = False,
+               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = True,
                global_tag = hiPromptrecoGlobalTag,
                alca_producers = [ "TkAlJpsiMuMuHI", "TkAlUpsilonMuMuHI" ],
                timePerEvent = 45,
@@ -986,7 +988,7 @@ addDataset(tier0Config, "HIOniaL1DoubleMu0",
 
 addDataset(tier0Config, "HIHardProbes",
                do_reco = True,
-               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = False,
+               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = True,
                global_tag = hiPromptrecoGlobalTag,
                alca_producers = [ "TkAlMinBiasHI" ],
                physics_skims = [ "BJet", "D0Meson", "HighPtJet", "SingleTrack" ],
@@ -996,7 +998,7 @@ addDataset(tier0Config, "HIHardProbes",
 
 addDataset(tier0Config, "HIOniaCentral30L2L3",
                do_reco = True,
-               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = False,
+               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = True,
                global_tag = hiPromptrecoGlobalTag,
                alca_producers = [ "TkAlJpsiMuMuHI", "TkAlUpsilonMuMuHI" ],
                physics_skims = [ "OniaCentral" ],
@@ -1006,7 +1008,7 @@ addDataset(tier0Config, "HIOniaCentral30L2L3",
 
 addDataset(tier0Config, "HIOniaPeripheral30100",
                do_reco = True,
-               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = False,
+               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = True,
                global_tag = hiPromptrecoGlobalTag,
                alca_producers = [ "TkAlJpsiMuMuHI", "TkAlUpsilonMuMuHI" ],
                physics_skims = [ "OniaPeripheral" ],
@@ -1016,7 +1018,7 @@ addDataset(tier0Config, "HIOniaPeripheral30100",
 
 addDataset(tier0Config, "HIEWQExo",
                do_reco = True,
-               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = False,
+               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = True,
                global_tag = hiPromptrecoGlobalTag,
                alca_producers = [ "TkAlZMuMuHI", "TkAlMuonIsolatedHI" ],
                physics_skims = [ "ZMM" ],
@@ -1026,7 +1028,7 @@ addDataset(tier0Config, "HIEWQExo",
 
 addDataset(tier0Config, "HIOniaTnP",
                do_reco = True,
-               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = False,
+               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = True,
                global_tag = hiPromptrecoGlobalTag,
                alca_producers = [ "TkAlJpsiMuMuHI", "TkAlUpsilonMuMuHI", "TkAlMuonIsolatedHI" ],
                timePerEvent = 45,
@@ -1035,7 +1037,7 @@ addDataset(tier0Config, "HIOniaTnP",
 
 addDataset(tier0Config, "HIPhoton40AndZ",
                do_reco = True,
-               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = False,
+               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = True,
                global_tag = hiPromptrecoGlobalTag,
                physics_skims = [ "Photon", "ZEE" ],
                timePerEvent = 45,
@@ -1044,7 +1046,7 @@ addDataset(tier0Config, "HIPhoton40AndZ",
 
 addDataset(tier0Config, "HIMinimumBias1",
                do_reco = True,
-               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = False,
+               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = True,
                global_tag = hiPromptrecoGlobalTag,
                physics_skims = [ "MinBias" ],
                timePerEvent = 45,
@@ -1053,7 +1055,7 @@ addDataset(tier0Config, "HIMinimumBias1",
 
 addDataset(tier0Config, "HIForward",
                do_reco = True,
-               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = False,
+               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = True,
                global_tag = hiPromptrecoGlobalTag,
                physics_skims = [ "OniaUPC" ],
                timePerEvent = 45,
