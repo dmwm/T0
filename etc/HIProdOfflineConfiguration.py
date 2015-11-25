@@ -1,7 +1,7 @@
 """
 _OfflineConfiguration_
 
-Processing configuration for the Tier0 - Production version
+Processing configuration for the Tier0 - Production version for HI
 """
 from __future__ import print_function
 
@@ -37,7 +37,6 @@ setConfigVersion(tier0Config, "replace with real version")
 processingSite = "T0_CH_CERN"
 cernPhedexNode = "T0_CH_CERN_Disk"
 
-
 # Set global parameters:
 #  Acquisition era
 #  BaseRequestPriority
@@ -48,7 +47,7 @@ cernPhedexNode = "T0_CH_CERN_Disk"
 setAcquisitionEra(tier0Config, "HIRun2015")
 setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
-setBulkDataType(tier0Config, "data")
+setBulkDataType(tier0Config, "hidata")
 setProcessingSite(tier0Config, processingSite)
 setBulkInjectNode(tier0Config, cernPhedexNode)
 setExpressInjectNode(tier0Config, cernPhedexNode)
@@ -105,6 +104,7 @@ alcap0GlobalTag = "75X_dataRun2_Prompt_ppAt5TeV_v1"
 hiExpressGlobalTag = "75X_dataRun2_ExpressHI_v2"
 hiPromptrecoGlobalTag = "75X_dataRun2_PromptHI_v3"
 
+# Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 
 # Multicore settings
