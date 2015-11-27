@@ -503,11 +503,19 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             specArguments['TimePerEvent'] = streamConfig.Express.TimePerEvent
             specArguments['SizePerEvent'] = streamConfig.Express.SizePerEvent
-            specArguments['Memory'] = 2500
+
+            if streamConfig.Express.Scenario == "HeavyIonsRun2":
+                baseMemory = 3000
+                perCoreMemory = 1300
+            else:
+                baseMemory = 2000
+                perCoreMemory = 500
+
+            specArguments['Memory'] = baseMemory + perCoreMemory
 
             if streamConfig.Express.Multicore:
                 specArguments['Multicore'] = streamConfig.Express.Multicore
-                specArguments['Memory'] = 2500 + (streamConfig.Express.Multicore - 1) * 500
+                specArguments['Memory'] += (streamConfig.Express.Multicore - 1) * perCoreMemory
 
             specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority + 10000
 
@@ -923,11 +931,19 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
 
                 specArguments['TimePerEvent'] = datasetConfig.TimePerEvent
                 specArguments['SizePerEvent'] = datasetConfig.SizePerEvent
-                specArguments['Memory'] = 2500
+
+                if datasetConfig.Scenario == "HeavyIonsRun2":
+                    baseMemory = 3000
+                    perCoreMemory = 1300
+                else:
+                    baseMemory = 2000
+                    perCoreMemory = 500
+
+                specArguments['Memory'] = baseMemory + perCoreMemory
 
                 if datasetConfig.Multicore:
                     specArguments['Multicore'] = datasetConfig.Multicore
-                    specArguments['Memory'] = 2500 + (datasetConfig.Multicore - 1) * 500
+                    specArguments['Memory'] += (datasetConfig.Multicore - 1) * perCoreMemory
 
                 specArguments['Memory'] += len(datasetConfig.PhysicsSkims) * 100
 
