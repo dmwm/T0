@@ -79,7 +79,6 @@ defaultCMSSWVersion = "CMSSW_7_5_6_patch1"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
-setScramArch(tier0Config, "CMSSW_5_3_20", "slc6_amd64_gcc472")
 
 # Configure scenarios
 ppScenario = "ppRun2"
@@ -667,7 +666,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
 	       alca_producers = [ "TkAlZMuMu", "TkAlJpsiMuMu", "TkAlUpsilonMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "DtCalib" ],
-	       physics_skims = [ "Onia" ],
+               physics_skims = [ "Onia" ],
                scenario = ppScenario)
 
 datasets = [ "DoubleMu_0T" ]
