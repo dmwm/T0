@@ -76,7 +76,7 @@ setPromptCalibrationConfig(tier0Config,
 
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_5_7_patch1"
+defaultCMSSWVersion = "CMSSW_7_5_7_patch2"
 expressDefaultCMSSWVersion = defaultCMSSWVersion
 
 # Configure ScramArch
@@ -118,24 +118,24 @@ alcarawSplitting = 10000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_5_0" : "CMSSW_7_5_7_patch1",
-    "CMSSW_7_5_1" : "CMSSW_7_5_7_patch1",
-    "CMSSW_7_5_2" : "CMSSW_7_5_7_patch1",
-    "CMSSW_7_5_3" : "CMSSW_7_5_7_patch1",
-    "CMSSW_7_5_4" : "CMSSW_7_5_7_patch1",
-    "CMSSW_7_5_5" : "CMSSW_7_5_7_patch1",
-    "CMSSW_7_5_6" : "CMSSW_7_5_7_patch1",
-    "CMSSW_7_5_7" : "CMSSW_7_5_7_patch1"
+    "CMSSW_7_5_0" : "CMSSW_7_5_7_patch2",
+    "CMSSW_7_5_1" : "CMSSW_7_5_7_patch2",
+    "CMSSW_7_5_2" : "CMSSW_7_5_7_patch2",
+    "CMSSW_7_5_3" : "CMSSW_7_5_7_patch2",
+    "CMSSW_7_5_4" : "CMSSW_7_5_7_patch2",
+    "CMSSW_7_5_5" : "CMSSW_7_5_7_patch2",
+    "CMSSW_7_5_6" : "CMSSW_7_5_7_patch2",
+    "CMSSW_7_5_7" : "CMSSW_7_5_7_patch2"
     }
 expressVersionOverride = {
-    "CMSSW_7_5_0" : "CMSSW_7_5_7_patch1",
-    "CMSSW_7_5_1" : "CMSSW_7_5_7_patch1",
-    "CMSSW_7_5_2" : "CMSSW_7_5_7_patch1",
-    "CMSSW_7_5_3" : "CMSSW_7_5_7_patch1",
-    "CMSSW_7_5_4" : "CMSSW_7_5_7_patch1",
-    "CMSSW_7_5_5" : "CMSSW_7_5_7_patch1",
-    "CMSSW_7_5_6" : "CMSSW_7_5_7_patch1",
-    "CMSSW_7_5_7" : "CMSSW_7_5_7_patch1"
+    "CMSSW_7_5_0" : "CMSSW_7_5_7_patch2",
+    "CMSSW_7_5_1" : "CMSSW_7_5_7_patch2",
+    "CMSSW_7_5_2" : "CMSSW_7_5_7_patch2",
+    "CMSSW_7_5_3" : "CMSSW_7_5_7_patch2",
+    "CMSSW_7_5_4" : "CMSSW_7_5_7_patch2",
+    "CMSSW_7_5_5" : "CMSSW_7_5_7_patch2",
+    "CMSSW_7_5_6" : "CMSSW_7_5_7_patch2",
+    "CMSSW_7_5_7" : "CMSSW_7_5_7_patch2"
     }
 
 #set default repack settings for bulk streams
@@ -966,7 +966,7 @@ addDataset(tier0Config, "SingleMuLowPt_0T",
 ### New PDs for HI Run 2015 ###
 ###############################
 
-datasets = [ "HIFlowCorr", "HIHardProbesPeripheral", "HIMinimumBias2",
+datasets = [ "HIHardProbesPeripheral", "HIMinimumBias2",
              "HIOnia" ]
 
 for dataset in datasets:
@@ -975,6 +975,17 @@ for dataset in datasets:
                reco_split = hiRecoSplitting,
                write_reco = False, write_aod = True, write_miniaod = False, write_dqm = True,
                global_tag = hiPromptrecoGlobalTag,
+               timePerEvent = 45,
+               sizePerEvent = 4000,
+               scenario = hiScenario)
+
+addDataset(tier0Config, "HIFlowCorr",
+               do_reco = True,
+               reco_split = hiRecoSplitting,                             
+               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = True,
+               global_tag = hiPromptrecoGlobalTag,
+               alca_producers = [ "TkAlJpsiMuMuHI", "TkAlUpsilonMuMuHI" ],
+               dqm_sequences = [ "@liteDQMHI" ],
                timePerEvent = 45,
                sizePerEvent = 4000,
                scenario = hiScenario)
