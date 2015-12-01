@@ -966,8 +966,8 @@ addDataset(tier0Config, "SingleMuLowPt_0T",
 ### New PDs for HI Run 2015 ###
 ###############################
 
-datasets = [ "HIHardProbesPeripheral", "HIMinimumBias2",
-             "HIOnia" ]
+datasets = [ "HIHardProbesPeripheral", "HIOnia",
+             "HIMinimumBias2", "HIMinimumBias3" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
