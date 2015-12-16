@@ -76,7 +76,7 @@ setPromptCalibrationConfig(tier0Config,
 
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_5_7_patch3"
+defaultCMSSWVersion = "CMSSW_7_5_8_patch1"
 expressDefaultCMSSWVersion = defaultCMSSWVersion
 
 # Configure ScramArch
@@ -119,24 +119,26 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_5_0" : "CMSSW_7_5_7_patch3",
-    "CMSSW_7_5_1" : "CMSSW_7_5_7_patch3",
-    "CMSSW_7_5_2" : "CMSSW_7_5_7_patch3",
-    "CMSSW_7_5_3" : "CMSSW_7_5_7_patch3",
-    "CMSSW_7_5_4" : "CMSSW_7_5_7_patch3",
-    "CMSSW_7_5_5" : "CMSSW_7_5_7_patch3",
-    "CMSSW_7_5_6" : "CMSSW_7_5_7_patch3",
-    "CMSSW_7_5_7" : "CMSSW_7_5_7_patch3"
+    "CMSSW_7_5_0" : "CMSSW_7_5_8_patch1",
+    "CMSSW_7_5_1" : "CMSSW_7_5_8_patch1",
+    "CMSSW_7_5_2" : "CMSSW_7_5_8_patch1",
+    "CMSSW_7_5_3" : "CMSSW_7_5_8_patch1",
+    "CMSSW_7_5_4" : "CMSSW_7_5_8_patch1",
+    "CMSSW_7_5_5" : "CMSSW_7_5_8_patch1",
+    "CMSSW_7_5_6" : "CMSSW_7_5_8_patch1",
+    "CMSSW_7_5_7" : "CMSSW_7_5_8_patch1",
+    "CMSSW_7_5_8" : "CMSSW_7_5_8_patch1"
     }
 expressVersionOverride = {
-    "CMSSW_7_5_0" : "CMSSW_7_5_7_patch3",
-    "CMSSW_7_5_1" : "CMSSW_7_5_7_patch3",
-    "CMSSW_7_5_2" : "CMSSW_7_5_7_patch3",
-    "CMSSW_7_5_3" : "CMSSW_7_5_7_patch3",
-    "CMSSW_7_5_4" : "CMSSW_7_5_7_patch3",
-    "CMSSW_7_5_5" : "CMSSW_7_5_7_patch3",
-    "CMSSW_7_5_6" : "CMSSW_7_5_7_patch3",
-    "CMSSW_7_5_7" : "CMSSW_7_5_7_patch3"
+    "CMSSW_7_5_0" : "CMSSW_7_5_8_patch1",
+    "CMSSW_7_5_1" : "CMSSW_7_5_8_patch1",
+    "CMSSW_7_5_2" : "CMSSW_7_5_8_patch1",
+    "CMSSW_7_5_3" : "CMSSW_7_5_8_patch1",
+    "CMSSW_7_5_4" : "CMSSW_7_5_8_patch1",
+    "CMSSW_7_5_5" : "CMSSW_7_5_8_patch1",
+    "CMSSW_7_5_6" : "CMSSW_7_5_8_patch1",
+    "CMSSW_7_5_7" : "CMSSW_7_5_8_patch1",
+    "CMSSW_7_5_8" : "CMSSW_7_5_8_patch1"
     }
 
 #set default repack settings for bulk streams
