@@ -585,8 +585,10 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                    { 'vogroup': 'DEFAULT', 'vorole': 'DEFAULT',
                                      'dn' : "Dirk.Hufnagel@cern.ch" } )
 
-            wmSpec.setupPerformanceMonitoring(maxRSS = 10485760, maxVSize = 10485760,
-                                              softTimeout = 604800, gracePeriod = 3600)
+            wmSpec.setupPerformanceMonitoring(maxRSS = specArguments['Memory'] + 10,
+                                              maxVSize = 104857600, #100GB, effectively disabled
+                                              softTimeout = 604800, #7 days, effectively disabled
+                                              gracePeriod = 3600)
 
             wmbsHelper = WMBSHelper(wmSpec, taskName, cachepath = specDirectory)
 
@@ -1062,8 +1064,10 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                        { 'vogroup': 'DEFAULT', 'vorole': 'DEFAULT',
                                          'dn' : "Dirk.Hufnagel@cern.ch" } )
 
-                wmSpec.setupPerformanceMonitoring(maxRSS = 10485760, maxVSize = 10485760,
-                                                  softTimeout = 604800, gracePeriod = 3600)
+                wmSpec.setupPerformanceMonitoring(maxRSS = specArguments['Memory'] + 10,
+                                                  maxVSize = 104857600, #100GB, effectively disabled
+                                                  softTimeout = 604800, #7 days, effectively disabled
+                                                  gracePeriod = 3600)
 
                 wmbsHelper = WMBSHelper(wmSpec, taskName, cachepath = specDirectory)
 
