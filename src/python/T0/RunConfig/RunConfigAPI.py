@@ -759,7 +759,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
 
                 phedexConfig = phedexConfigs[dataset]
 
-                # do things different based on whether we have TapeNode/DiskNode or ArchivalNode
+                # do things different based on whether we have TapeNode/DiskNode, only TapeNode or ArchivalNode
                 if phedexConfig['tape_node'] != None and phedexConfig['disk_node'] != None:
 
                     if datasetConfig.WriteAOD:
@@ -828,6 +828,66 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                                 'primaryDataset' : dataset,
                                                 'deleteFromSource' : True,
                                                 'dataTier' : "RECO" } )
+
+                elif phedexConfig['tape_node'] != None and phedexConfig['disk_node'] == None:
+
+                    if datasetConfig.WriteAOD:
+                        subscriptions.append( { 'custodialSites' : [phedexConfig['tape_node']],
+                                                'custodialSubType' : "Replica",
+                                                'nonCustodialSites' : [],
+                                                'autoApproveSites' : [],
+                                                'priority' : "high",
+                                                'primaryDataset' : dataset,
+                                                'deleteFromSource' : True,
+                                                'dataTier' : "AOD" } )
+
+                    if datasetConfig.WriteMINIAOD:
+                        subscriptions.append( { 'custodialSites' : [phedexConfig['tape_node']],
+                                                'custodialSubType' : "Replica",
+                                                'nonCustodialSites' : [],
+                                                'autoApproveSites' : [],
+                                                'priority' : "high",
+                                                'primaryDataset' : dataset,
+                                                'deleteFromSource' : True,
+                                                'dataTier' : "MINIAOD" } )
+
+                    if len(datasetConfig.AlcaSkims) > 0:
+                        subscriptions.append( { 'custodialSites' : [phedexConfig['tape_node']],
+                                                'custodialSubType' : "Replica",
+                                                'nonCustodialSites' : [],
+                                                'autoApproveSites' : [],
+                                                'priority' : "high",
+                                                'primaryDataset' : dataset,
+                                                'deleteFromSource' : True,
+                                                'dataTier' : "ALCARECO" } )
+
+                    if len(datasetConfig.PhysicsSkims) > 0:
+                        subscriptions.append( { 'custodialSites' : [phedexConfig['tape_node']],
+                                                'custodialSubType' : "Replica",
+                                                'nonCustodialSites' : [],
+                                                'autoApproveSites' : [],
+                                                'priority' : "high",
+                                                'primaryDataset' : dataset,
+                                                'deleteFromSource' : True,
+                                                'dataTier' : "RAW-RECO" } )
+                        subscriptions.append( { 'custodialSites' : [phedexConfig['tape_node']],
+                                                'custodialSubType' : "Replica",
+                                                'nonCustodialSites' : [],
+                                                'autoApproveSites' : [],
+                                                'priority' : "high",
+                                                'primaryDataset' : dataset,
+                                                'deleteFromSource' : True,
+                                                'dataTier' : "USER" } )
+
+                    if datasetConfig.WriteDQM:
+                        subscriptions.append( { 'custodialSites' : [phedexConfig['tape_node']],
+                                                'custodialSubType' : "Replica",
+                                                'nonCustodialSites' : [],
+                                                'autoApproveSites' : [],
+                                                'priority' : "high",
+                                                'primaryDataset' : dataset,
+                                                'deleteFromSource' : True,
+                                                'dataTier' : tier0Config.Global.DQMDataTier } )
 
                 elif phedexConfig['archival_node'] != None:
 
