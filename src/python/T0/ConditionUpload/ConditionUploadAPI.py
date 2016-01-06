@@ -283,13 +283,11 @@ def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationM
             else:
                 uploadStatus = True
                 try:
-                    # normally I would want to evanluate the return code here,
-                    # but as long as the dropbox resturns errors for non-fixable
-                    # problems, I cannot do that (would retry forever)
                     upload.uploadTier0Files([filenameDB], username, password)
                 except:
                     logging.exception("Something went wrong with the Dropbox upload...")
-                
+                    uploadStatus = False
+
                 if uploadStatus:
                     completeFiles.append(sqliteFile)
                     completeFiles.append(metaFile)
