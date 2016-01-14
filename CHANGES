@@ -1,3 +1,63 @@
+2.0.0 to 2.0.1:
+  - Merge pull request #4250 from hufnagel/mem-kill-limits
+  - adjust RSS and VSize runtime limits
+  - Merge pull request #4249 from hufnagel/pcl-upload-error
+  - Merge pull request #4248 from hufnagel/heavyions-memory
+  - Merge pull request #4235 from hufnagel/nodisk-subscriptions
+  - Merge pull request #4220 from hufnagel/prod-pcl-upload
+  - Merge pull request #4247 from johnhcasallasl/CMSSW_7_5_8_p1
+  - Switch to CMSSW_7_5_8_patch1
+  - Merge pull request #4246 from ebohorqu/more_himinimumbias_ds
+  - More HIMinimumBias Datasets
+  - Merge pull request #4244 from ebohorqu/multicore_hiexpress
+  - Multicore to 6 for HIExpress
+  - Merge pull request #4243 from johnhcasallasl/CMSSW_7_5_7_p3
+  - Switching to CMSSW_7_5_7_patch3 and setting multicore = 6 for HI PDs
+  - Merge pull request #4242 from ebohorqu/hi_multicore
+  - Multicore for HI
+  - Merge pull request #4241 from ebohorqu/more_hi_datasets
+  - More HI data sets
+  - Merge pull request #4240 from hufnagel/config-20151201-1
+  - config changes
+  - Merge pull request #4239 from hufnagel/config-20151201
+  - config changes
+  - Merge pull request #4238 from blallen/757_p2
+  - change memory requirements for HeavyIonsRun2 scenario
+  - Replay to test 757_p2 and lite dqm.
+  - Merge pull request #4237 from hufnagel/hi-replay-config
+  - create HI replay config
+  - support tape supscriptions with no disk
+  - Merge pull request #4236 from ebohorqu/hi_configuration_file
+  - Last HI configuration
+  - Merge pull request #4234 from johnhcasallasl/CMSSW_7_5_6_patch1
+  - Switching to CMSSW_7_5_6_patch1
+  - Merge pull request #4232 from hufnagel/express-alca-fix
+  - fix express alca producers
+  - Merge pull request #4231 from johnhcasallasl/new_HI_GlobalTags
+  - New GTs and typo correction
+  - Merge pull request #4230 from johnhcasallasl/HI2015_config_updates
+  - Updates in the CMSSW version, PR GT, AlCa Matrix and Skims for HI
+  - Merge pull request #4229 from hufnagel/hi-event-estimates
+  - reco event/size estimates for HI
+  - Merge pull request #4228 from johnhcasallasl/FixesTypoInHIExpressConfig
+  - Fixes a typo in the HIExpress GT config
+  - Merge pull request #4227 from johnhcasallasl/removeAlCaProdsFrom_HIExpress
+  - Removing AlCa producers from HIExpress config
+  - Merge pull request #4226 from hufnagel/hiconfig-virginraw
+  - remove virginraw dataset from config
+  - Merge pull request #4225 from hufnagel/config-tweaks-ppref
+  - some last minute config tweaks for ppref data
+  - make new PCL upload code work with prod Tier0
+  - Merge pull request #4224 from johnhcasallasl/ppReferenceRun_HI_Config
+  - CMSSW_7_5_5_patch3, HI GTs, updated AlcaMatrix, Removing _0T for HI PDs, Updating processing site
+  - Merge pull request #4223 from hufnagel/hiexpress-add
+  - add HIExpress config
+  - Merge pull request #4222 from johnhcasallasl/HI_2015_PDs
+  - Adding PDs for HI Run 2015
+  - Merge pull request #4221 from johnhcasallasl/HI_ppReferenceRunSetup
+  - Configuration for pp Reference Run 2015 (HI)
+  - enable error detection in PCL upload
+
 1.9.99 to 2.0.0:
   - Merge pull request #4219 from hufnagel/config-20150929
   - config python formating changes
