@@ -585,7 +585,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                    { 'vogroup': 'DEFAULT', 'vorole': 'DEFAULT',
                                      'dn' : "Dirk.Hufnagel@cern.ch" } )
 
-            wmSpec.setupPerformanceMonitoring(maxRSS = specArguments['Memory'] + 10,
+            wmSpec.setupPerformanceMonitoring(maxRSS = 1024 * specArguments['Memory'] + 10,
                                               maxVSize = 104857600, #100GB, effectively disabled
                                               softTimeout = 604800, #7 days, effectively disabled
                                               gracePeriod = 3600)
@@ -1064,7 +1064,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                        { 'vogroup': 'DEFAULT', 'vorole': 'DEFAULT',
                                          'dn' : "Dirk.Hufnagel@cern.ch" } )
 
-                wmSpec.setupPerformanceMonitoring(maxRSS = specArguments['Memory'] + 10,
+                wmSpec.setupPerformanceMonitoring(maxRSS = 1024 * specArguments['Memory'] + 10,
                                                   maxVSize = 104857600, #100GB, effectively disabled
                                                   softTimeout = 604800, #7 days, effectively disabled
                                                   gracePeriod = 3600)
