@@ -189,6 +189,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             if len(datasets) == 0:
                 raise RuntimeError("Stream is not defined in HLT menu or has no datasets !")
 
+        # write run/stream processing completion record
+        insertRunStreamDoneDAO = daoFactory(classname = "RunConfig.InsertRunStreamDone")
 
         # write stream/dataset mapping (for special express and error datasets)
         insertDatasetDAO = daoFactory(classname = "RunConfig.InsertPrimaryDataset")
@@ -208,6 +210,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         insertStorageNodeDAO = daoFactory(classname = "RunConfig.InsertStorageNode")
         insertPhEDExConfigDAO = daoFactory(classname = "RunConfig.InsertPhEDExConfig")
 
+        bindsRunStreamDone = {'RUN' : run,
+                              'STREAM' : stream}
         bindsCMSSWVersion = []
         bindsDataset = []
         bindsStreamDataset = []
@@ -625,6 +629,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 insertStorageNodeDAO.execute(bindsStorageNode, conn = myThread.transaction.conn, transaction = True)
             if len(bindsPhEDExConfig) > 0:
                 insertPhEDExConfigDAO.execute(bindsPhEDExConfig, conn = myThread.transaction.conn, transaction = True)
+            insertRunStreamDoneDAO.execute(bindsRunStreamDone, conn = myThread.transaction.conn, transaction = True)
             insertStreamStyleDAO.execute(bindsStreamStyle, conn = myThread.transaction.conn, transaction = True)
             if streamConfig.ProcessingStyle in [ 'Bulk', 'Express' ]:
                 insertStreamFilesetDAO.execute(run, stream, filesetName, conn = myThread.transaction.conn, transaction = True)
