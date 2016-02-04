@@ -179,6 +179,14 @@ class Create(DBCreator):
                )"""
 
         self.create[len(self.create)] = \
+            """CREATE TABLE run_stream_done (
+                 run_id      int not null,
+                 stream_id   int not null,
+                 in_datasvc  int default 0 not null,
+                 primary key(run_id, stream_id)
+               )"""
+
+        self.create[len(self.create)] = \
             """CREATE TABLE reco_release_config (
                  run_id         int not null,
                  primds_id      int not null,
@@ -428,6 +436,9 @@ class Create(DBCreator):
             """CREATE INDEX idx_run_primds_stream_1 ON run_primds_stream_assoc (run_id, stream_id)"""
 
         self.indexes[len(self.indexes)] = \
+            """CREATE INDEX idx_run_stream_done_1 ON run_stream_done (checkForZeroOneState(in_datasvc))"""
+
+        self.indexes[len(self.indexes)] = \
             """CREATE INDEX idx_reco_release_config_2 ON reco_release_config (checkForZeroOneState(in_datasvc))"""
 
         self.indexes[len(self.indexes)] = \
@@ -600,6 +611,18 @@ class Create(DBCreator):
                  FOREIGN KEY (fileset)
                  REFERENCES wmbs_fileset(id)
                  ON DELETE CASCADE"""
+
+        self.constraints[len(self.constraints)] = \
+            """ALTER TABLE run_stream_done
+                 ADD CONSTRAINT run_str_don_run_id_fk
+                 FOREIGN KEY (run_id)
+                 REFERENCES run(run_id)"""
+
+        self.constraints[len(self.constraints)] = \
+            """ALTER TABLE run_stream_done
+                 ADD CONSTRAINT run_str_don_str_id_fk
+                 FOREIGN KEY (stream_id)
+                 REFERENCES stream(id)"""
 
         self.constraints[len(self.constraints)] = \
             """ALTER TABLE reco_release_config

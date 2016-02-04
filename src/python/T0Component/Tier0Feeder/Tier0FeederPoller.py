@@ -198,6 +198,7 @@ class Tier0FeederPoller(BaseWorkerThread):
         # insert express and reco configs into Tier0 Data Service
         #
         if self.haveT0DataSvc:
+            self.updateRunStreamDoneT0DataSvc()
             self.updateExpressConfigsT0DataSvc()
             self.updateRecoConfigsT0DataSvc()
             self.updateRecoReleaseConfigsT0DataSvc()
@@ -387,6 +388,32 @@ class Tier0FeederPoller(BaseWorkerThread):
                 logging.error("ERROR: %s" % error)
 
             markStreamersFinishedDAO.execute(streamers, transaction = False)
+
+        return
+
+    def updateRunStreamDoneT0DataSvc(self):
+        """
+        _updateRunStreamDoneT0DataSvc_
+
+        Check if a run/stream workflow (express or repack) is finished and
+        cleaned up and push a completion record into the Tier0 Data Service.
+
+        """
+        getRunStreamDoneDAO = self.daoFactory(classname = "T0DataSvc.GetRunStreamDone")
+        runStreamDone = getRunStreamDoneDAO.execute(transaction = False)
+
+        if len(runStreamDone) > 0:
+
+            binds = []
+            for runStream in runStreamDone:
+                binds.append( { 'RUN' : runStream['run'],
+                                'STREAM' : runStream['stream'] } )
+
+            insertRunStreamDoneDAO = self.daoFactoryT0DataSvc(classname = "T0DataSvc.InsertRunStreamDone")
+            insertRunStreamDoneDAO.execute(binds = binds, transaction = False)
+
+            updateRunStreamDoneDAO = self.daoFactory(classname = "T0DataSvc.UpdateRunStreamDone")
+            updateRunStreamDoneDAO.execute(binds = binds, transaction = False)
 
         return
 
