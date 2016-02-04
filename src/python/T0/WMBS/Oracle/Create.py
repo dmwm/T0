@@ -344,6 +344,12 @@ class Create(DBCreator):
                ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
+            """CREATE TABLE dataset_locked (
+                 dataset_id  int not null,
+                 primary key (dataset_id)
+               ) ORGANIZATION INDEX"""
+
+        self.create[len(self.create)] = \
             """CREATE FUNCTION checkForZeroState (value IN int)
                RETURN int DETERMINISTIC IS
                BEGIN
@@ -801,6 +807,13 @@ class Create(DBCreator):
                  ADD CONSTRAINT wor_mon_wor_fk
                  FOREIGN KEY (workflow)
                  REFERENCES wmbs_workflow(id)
+                 ON DELETE CASCADE"""
+
+        self.constraints[len(self.constraints)] = \
+            """ALTER TABLE dataset_locked
+                 ADD CONSTRAINT dat_loc
+                 FOREIGN KEY (dataset_id)
+                 REFERENCES dbsbuffer_dataset(id)
                  ON DELETE CASCADE"""
 
         subTypes = ["Express", "Repack"]
