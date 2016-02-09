@@ -97,6 +97,8 @@ Tier0Configuration - Global configuration object
 |             |     |
 |             |     |--> MaxInputFiles - max input files for repack and repack merge job
 |             |     |
+|             |     |--> MaxLatency - max latency to trigger repack or repack merge job
+|             |     |
 |             |     |--> BlockCloseDelay - delay to close block in WMAgent
 |             |
 |             |--> Express - Configuration section for express streams
@@ -688,6 +690,11 @@ def addRepackConfig(config, streamName, **options):
         streamConfig.Repack.MaxInputFiles = options.get("maxInputFiles", streamConfig.Repack.MaxInputFiles)
     else:
         streamConfig.Repack.MaxInputFiles = options.get("maxInputFiles", 1000)
+
+    if hasattr(streamConfig.Repack, "MaxLatency"):
+        streamConfig.Repack.MaxLatency = options.get("maxLatency", streamConfig.Repack.MaxLatency)
+    else:
+        streamConfig.Repack.MaxLatency = options.get("maxLatency", 12 * 3600)
 
     if streamConfig.Repack.MaxOverSize > streamConfig.Repack.MaxEdmSize:
         streamConfig.Repack.MaxOverSize = streamConfig.Repack.MaxEdmSize

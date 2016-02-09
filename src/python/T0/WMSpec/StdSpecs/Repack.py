@@ -172,6 +172,7 @@ class RepackWorkloadFactory(StdBase):
         self.repackSplitArgs['maxSizeMultiLumi'] = arguments['MaxSizeMultiLumi']
         self.repackSplitArgs['maxInputEvents'] = arguments['MaxInputEvents']
         self.repackSplitArgs['maxInputFiles'] = arguments['MaxInputFiles']
+        self.repackSplitArgs['maxLatency'] = arguments['MaxLatency']
         self.repackMergeSplitArgs = {}
         self.repackMergeSplitArgs['minInputSize'] = arguments['MinInputSize']
         self.repackMergeSplitArgs['maxInputSize'] = arguments['MaxInputSize']
@@ -179,6 +180,7 @@ class RepackWorkloadFactory(StdBase):
         self.repackMergeSplitArgs['maxOverSize'] = arguments['MaxOverSize']
         self.repackMergeSplitArgs['maxInputEvents'] = arguments['MaxInputEvents']
         self.repackMergeSplitArgs['maxInputFiles'] = arguments['MaxInputFiles']
+        self.repackMergeSplitArgs['maxLatency'] = arguments['MaxLatency']
 
         return self.buildWorkload()
 
