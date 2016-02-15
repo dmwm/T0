@@ -75,7 +75,7 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_7_5_6_patch1"
+defaultCMSSWVersion = "CMSSW_7_5_8_patch3"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -83,7 +83,6 @@ setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
 # Configure scenarios
 ppScenario = "ppRun2"
 ppScenarioB0T = "ppRun2"
-hiScenario = "HeavyIonsRun2"
 cosmicsScenario = "cosmicsRun2"
 hcalnzsScenario = "hcalnzsRun2"
 
@@ -94,13 +93,9 @@ expressProcVersion = 1
 alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "75X_dataRun2_Express_ppAt5TeV_v0"
-promptrecoGlobalTag = "75X_dataRun2_Prompt_ppAt5TeV_v1"
-alcap0GlobalTag = "75X_dataRun2_Prompt_ppAt5TeV_v1"
-
-# HI GlobalTags
-hiExpressGlobalTag = "75X_dataRun2_ExpressHI_v2"
-hiPromptrecoGlobalTag = "75X_dataRun2_PromptHI_v3"
+expressGlobalTag = "75X_dataRun2_Express_v0"
+promptrecoGlobalTag = "75X_dataRun2_Prompt_v2"
+alcap0GlobalTag = "75X_dataRun2_Prompt_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -117,23 +112,27 @@ alcarawSplitting = 10000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_5_0" : "CMSSW_7_5_6_patch1",
-    "CMSSW_7_5_1" : "CMSSW_7_5_6_patch1",
-    "CMSSW_7_5_2" : "CMSSW_7_5_6_patch1",
-    "CMSSW_7_5_3" : "CMSSW_7_5_6_patch1",
-    "CMSSW_7_5_4" : "CMSSW_7_5_6_patch1",
-    "CMSSW_7_5_5" : "CMSSW_7_5_6_patch1",
-    "CMSSW_7_5_6" : "CMSSW_7_5_6_patch1"
+    "CMSSW_7_5_0" : "CMSSW_7_5_8_patch3",
+    "CMSSW_7_5_1" : "CMSSW_7_5_8_patch3",
+    "CMSSW_7_5_2" : "CMSSW_7_5_8_patch3",
+    "CMSSW_7_5_3" : "CMSSW_7_5_8_patch3",
+    "CMSSW_7_5_4" : "CMSSW_7_5_8_patch3",
+    "CMSSW_7_5_5" : "CMSSW_7_5_8_patch3",
+    "CMSSW_7_5_6" : "CMSSW_7_5_8_patch3",
+    "CMSSW_7_5_7" : "CMSSW_7_5_8_patch3",
+    "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3"
     }
 
 expressVersionOverride = {
-    "CMSSW_7_5_0" : "CMSSW_7_5_6_patch1",
-    "CMSSW_7_5_1" : "CMSSW_7_5_6_patch1",
-    "CMSSW_7_5_2" : "CMSSW_7_5_6_patch1",
-    "CMSSW_7_5_3" : "CMSSW_7_5_6_patch1",
-    "CMSSW_7_5_4" : "CMSSW_7_5_6_patch1",
-    "CMSSW_7_5_5" : "CMSSW_7_5_6_patch1",
-    "CMSSW_7_5_6" : "CMSSW_7_5_6_patch1"
+    "CMSSW_7_5_0" : "CMSSW_7_5_8_patch3",
+    "CMSSW_7_5_1" : "CMSSW_7_5_8_patch3",
+    "CMSSW_7_5_2" : "CMSSW_7_5_8_patch3",
+    "CMSSW_7_5_3" : "CMSSW_7_5_8_patch3",
+    "CMSSW_7_5_4" : "CMSSW_7_5_8_patch3",
+    "CMSSW_7_5_5" : "CMSSW_7_5_8_patch3",
+    "CMSSW_7_5_6" : "CMSSW_7_5_8_patch3",
+    "CMSSW_7_5_7" : "CMSSW_7_5_8_patch3",
+    "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3"
     }
 
 #set default repack settings for bulk streams
@@ -960,133 +959,9 @@ addDataset(tier0Config, "SingleMuLowPt_0T",
            alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
            scenario = ppScenarioB0T)
 
-###############################
-### New PDs for HI Run 2015 ###
-###############################
-
-datasets = [ "HIFlowCorr", "HIHardProbesPeripheral", "HIMinimumBias2",
-             "HIOnia" ]
-
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
-               do_reco = True,
-               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = True,
-               global_tag = hiPromptrecoGlobalTag,
-               timePerEvent = 45,
-               sizePerEvent = 4000,
-               scenario = hiScenario)
-
-addDataset(tier0Config, "HIOniaL1DoubleMu0",
-               do_reco = True,
-               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = True,
-               global_tag = hiPromptrecoGlobalTag,
-               alca_producers = [ "TkAlJpsiMuMuHI", "TkAlUpsilonMuMuHI" ],
-               timePerEvent = 45,
-               sizePerEvent = 4000,
-               scenario = hiScenario)
-
-addDataset(tier0Config, "HIHardProbes",
-               do_reco = True,
-               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = True,
-               global_tag = hiPromptrecoGlobalTag,
-               alca_producers = [ "TkAlMinBiasHI" ],
-               physics_skims = [ "BJet", "D0Meson", "HighPtJet", "SingleTrack" ],
-               timePerEvent = 45,
-               sizePerEvent = 4000,
-               scenario = hiScenario)
-
-addDataset(tier0Config, "HIOniaCentral30L2L3",
-               do_reco = True,
-               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = True,
-               global_tag = hiPromptrecoGlobalTag,
-               alca_producers = [ "TkAlJpsiMuMuHI", "TkAlUpsilonMuMuHI" ],
-               physics_skims = [ "OniaCentral" ],
-               timePerEvent = 45,
-               sizePerEvent = 4000,
-               scenario = hiScenario)
-
-addDataset(tier0Config, "HIOniaPeripheral30100",
-               do_reco = True,
-               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = True,
-               global_tag = hiPromptrecoGlobalTag,
-               alca_producers = [ "TkAlJpsiMuMuHI", "TkAlUpsilonMuMuHI" ],
-               physics_skims = [ "OniaPeripheral" ],
-               timePerEvent = 45,
-               sizePerEvent = 4000,
-               scenario = hiScenario)
-
-addDataset(tier0Config, "HIEWQExo",
-               do_reco = True,
-               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = True,
-               global_tag = hiPromptrecoGlobalTag,
-               alca_producers = [ "TkAlZMuMuHI", "TkAlMuonIsolatedHI" ],
-               physics_skims = [ "ZMM" ],
-               timePerEvent = 45,
-               sizePerEvent = 4000,
-               scenario = hiScenario)
-
-addDataset(tier0Config, "HIOniaTnP",
-               do_reco = True,
-               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = True,
-               global_tag = hiPromptrecoGlobalTag,
-               alca_producers = [ "TkAlJpsiMuMuHI", "TkAlUpsilonMuMuHI", "TkAlMuonIsolatedHI" ],
-               timePerEvent = 45,
-               sizePerEvent = 4000,
-               scenario = hiScenario)
-
-addDataset(tier0Config, "HIPhoton40AndZ",
-               do_reco = True,
-               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = True,
-               global_tag = hiPromptrecoGlobalTag,
-               physics_skims = [ "Photon", "ZEE" ],
-               timePerEvent = 45,
-               sizePerEvent = 4000,
-               scenario = hiScenario)
-
-addDataset(tier0Config, "HIMinimumBias1",
-               do_reco = True,
-               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = True,
-               global_tag = hiPromptrecoGlobalTag,
-               physics_skims = [ "MinBias" ],
-               timePerEvent = 45,
-               sizePerEvent = 4000,
-               scenario = hiScenario)
-
-addDataset(tier0Config, "HIForward",
-               do_reco = True,
-               write_reco = False, write_aod = True, write_miniaod = False, write_dqm = True,
-               global_tag = hiPromptrecoGlobalTag,
-               physics_skims = [ "OniaUPC" ],
-               timePerEvent = 45,
-               sizePerEvent = 4000,
-               scenario = hiScenario)
-
 #############################
 ### Express configuration ###
 #############################
-
-addExpressConfig(tier0Config, "HIExpress",
-                 scenario = hiScenario,
-                 data_tiers = [ "FEVT" ],
-                 write_dqm = True,
-                 alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias",
-                                    "TkAlMinBiasHI", "DtCalibHI", "LumiPixelsMinBias",
-                                    "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiStripGains" ],
-                 reco_version = defaultCMSSWVersion,
-                 multicore = numberOfCores,
-                 global_tag_connect = globalTagConnect,
-                 global_tag = hiExpressGlobalTag,
-                 proc_ver = expressProcVersion,
-                 maxInputRate = 23 * 1000,
-                 maxInputEvents = 400,
-                 maxInputSize = 2 * 1024 * 1024 * 1024,
-                 maxInputFiles = 15,
-                 maxLatency = 15 * 23,
-                 periodicHarvestInterval = 20 * 60,
-                 blockCloseDelay = 1200,
-                 timePerEvent = 45,
-                 sizePerEvent = 4000,
-                 versionOverride = expressVersionOverride)
 
 addExpressConfig(tier0Config, "Express",
                  scenario = ppScenario,
