@@ -75,7 +75,7 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_8_0_0_patch1"
+defaultCMSSWVersion = "CMSSW_8_0_0_patch2"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc493")
@@ -132,6 +132,7 @@ addRepackConfig(tier0Config, "Default",
                 maxOverSize = 8 * 1024 * 1024 * 1024,
                 maxInputEvents = 250 * 1000,
                 maxInputFiles = 1000,
+                maxLatency = 30 * 60,
                 blockCloseDelay = 1200,
                 versionOverride = repackVersionOverride)
 
