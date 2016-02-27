@@ -77,23 +77,23 @@ setPromptCalibrationConfig(tier0Config,
 
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_8_0_0_patch1"
+defaultCMSSWVersion = "CMSSW_8_0_0_patch2"
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
-setScramArch(tier0Config, "CMSSW_8_0_0_patch1", "slc6_amd64_gcc493")
+setDefaultScramArch(tier0Config, "slc6_amd64_gcc493")
+setScramArch(tier0Config, "CMSSW_7_5_8", "slc6_amd64_gcc491")
 
 # Configure scenarios
-ppScenario = "ppRun2"
-ppScenarioB0T = "ppRun2"
-cosmicsScenario = "cosmicsRun2"
-hcalnzsScenario = "hcalnzsRun2"
+#ppScenario = "ppRun2"
+#ppScenarioB0T = "ppRun2"
+#cosmicsScenario = "cosmicsRun2"
+#hcalnzsScenario = "hcalnzsRun2"
 
 # Configure scenarios
-#ppScenario = "ppEra_Run2_2016"
-#ppScenarioB0T = "ppEra_Run2_2016"
-#cosmicsScenario = "cosmicsEra_Run2_2016"
-#hcalnzsScenario = "hcalnzsEra_Run2_2016"
+ppScenario = "ppEra_Run2_2016"
+ppScenarioB0T = "ppEra_Run2_2016"
+cosmicsScenario = "cosmicsEra_Run2_2016"
+hcalnzsScenario = "hcalnzsEra_Run2_2016"
 
 # Defaults for processing version
 defaultProcVersionRAW = 1
@@ -121,28 +121,14 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_5_0" : "CMSSW_7_5_8_patch3",
-    "CMSSW_7_5_1" : "CMSSW_7_5_8_patch3",
-    "CMSSW_7_5_2" : "CMSSW_7_5_8_patch3",
-    "CMSSW_7_5_3" : "CMSSW_7_5_8_patch3",
-    "CMSSW_7_5_4" : "CMSSW_7_5_8_patch3",
-    "CMSSW_7_5_5" : "CMSSW_7_5_8_patch3",
-    "CMSSW_7_5_6" : "CMSSW_7_5_8_patch3",
-    "CMSSW_7_5_7" : "CMSSW_7_5_8_patch3",
     "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_0_patch1"
+    "CMSSW_8_0_0" : "CMSSW_8_0_0_patch2",
+    "CMSSW_8_0_0_patch1" : "CMSSW_8_0_0_patch2"
     }
 expressVersionOverride = {
-    "CMSSW_7_5_0" : "CMSSW_7_5_8_patch3",
-    "CMSSW_7_5_1" : "CMSSW_7_5_8_patch3",
-    "CMSSW_7_5_2" : "CMSSW_7_5_8_patch3",
-    "CMSSW_7_5_3" : "CMSSW_7_5_8_patch3",
-    "CMSSW_7_5_4" : "CMSSW_7_5_8_patch3",
-    "CMSSW_7_5_5" : "CMSSW_7_5_8_patch3",
-    "CMSSW_7_5_6" : "CMSSW_7_5_8_patch3",
-    "CMSSW_7_5_7" : "CMSSW_7_5_8_patch3",
     "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_0_patch1"
+    "CMSSW_8_0_0" : "CMSSW_8_0_0_patch2",
+    "CMSSW_8_0_0_patch1" : "CMSSW_8_0_0_patch2"
     }
 
 #set default repack settings for bulk streams
@@ -156,6 +142,7 @@ addRepackConfig(tier0Config, "Default",
                 maxOverSize = 8 * 1024 * 1024 * 1024,
                 maxInputEvents = 250 * 1000,
                 maxInputFiles = 1000,
+                maxLatency = 24 * 3600,
                 blockCloseDelay = 24 * 3600,
                 versionOverride = repackVersionOverride)
 
