@@ -77,7 +77,7 @@ setPromptCalibrationConfig(tier0Config,
 
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_8_0_0_patch2"
+defaultCMSSWVersion = "CMSSW_8_0_0_patch3"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc493")
@@ -122,13 +122,15 @@ alcarawSplitting = 20000 * numberOfCores
 #
 repackVersionOverride = {
     "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_0_patch2",
-    "CMSSW_8_0_0_patch1" : "CMSSW_8_0_0_patch2"
+    "CMSSW_8_0_0" : "CMSSW_8_0_0_patch3",
+    "CMSSW_8_0_0_patch1" : "CMSSW_8_0_0_patch3",
+    "CMSSW_8_0_0_patch2" : "CMSSW_8_0_0_patch3"
     }
 expressVersionOverride = {
     "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_0_patch2",
-    "CMSSW_8_0_0_patch1" : "CMSSW_8_0_0_patch2"
+    "CMSSW_8_0_0" : "CMSSW_8_0_0_patch3",
+    "CMSSW_8_0_0_patch1" : "CMSSW_8_0_0_patch3",
+    "CMSSW_8_0_0_patch2" : "CMSSW_8_0_0_patch3"
     }
 
 #set default repack settings for bulk streams
