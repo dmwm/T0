@@ -75,24 +75,26 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_8_0_0_patch3"
+defaultCMSSWVersion = "CMSSW_8_0_1"
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "slc6_amd64_gcc493")
-setScramArch(tier0Config, "CMSSW_7_5_8", "slc6_amd64_gcc491")
-setScramArch(tier0Config, "CMSSW_7_4_15", "slc6_amd64_gcc491")
+setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
+setScramArch(tier0Config, "CMSSW_8_0_0", "slc6_amd64_gcc493")
+setScramArch(tier0Config, "CMSSW_8_0_0_patch1", "slc6_amd64_gcc493")
+setScramArch(tier0Config, "CMSSW_8_0_0_patch2", "slc6_amd64_gcc493")
+setScramArch(tier0Config, "CMSSW_8_0_0_patch3", "slc6_amd64_gcc493")
+setScramArch(tier0Config, "CMSSW_8_0_1", "slc6_amd64_gcc493")
 
 # Configure scenarios
-ppScenario = "ppEra_Run2_25ns"
-ppScenarioB0T = "ppEra_Run2_25ns"
-cosmicsScenario = "cosmicsEra_Run2_25ns"
-hcalnzsScenario = "hcalnzsEra_Run2_25ns" 
+#ppScenario = "ppEra_Run2_25ns"
+#ppScenarioB0T = "ppEra_Run2_25ns"
+#cosmicsScenario = "cosmicsEra_Run2_25ns"
+#hcalnzsScenario = "hcalnzsEra_Run2_25ns" 
 
-#ppScenario = "ppEra_Run2_2016"
-#ppScenarioB0T = "ppEra_Run2_2016"
-#cosmicsScenario = "cosmicsEra_Run2_2016"
-#hcalnzsScenario = "hcalnzsEra_Run2_2016"
-
+ppScenario = "ppEra_Run2_2016"
+ppScenarioB0T = "ppEra_Run2_2016"
+cosmicsScenario = "cosmicsEra_Run2_2016"
+hcalnzsScenario = "hcalnzsEra_Run2_2016"
 
 # Defaults for processing version
 defaultProcVersion = 1
@@ -100,9 +102,9 @@ expressProcVersion = 1
 alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "80X_dataRun2_Express_v1"
-promptrecoGlobalTag = "80X_dataRun2_Prompt_v1"
-alcap0GlobalTag = "80X_dataRun2_Prompt_v1"
+expressGlobalTag = "80X_dataRun2_Express_v2"
+promptrecoGlobalTag = "80X_dataRun2_Prompt_v2"
+alcap0GlobalTag = "80X_dataRun2_Prompt_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -120,16 +122,12 @@ alcarawSplitting = 10000 * numberOfCores
 #
 repackVersionOverride = {
     "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_0_patch3",
-    "CMSSW_8_0_0_patch1" : "CMSSW_8_0_0_patch3",
-    "CMSSW_8_0_0_patch2" : "CMSSW_8_0_0_patch3"
+    "CMSSW_8_0_0" : "CMSSW_8_0_1"
     }
 
 expressVersionOverride = {
     "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_0_patch3",
-    "CMSSW_8_0_0_patch1" : "CMSSW_8_0_0_patch3",
-    "CMSSW_8_0_0_patch2" : "CMSSW_8_0_0_patch3"
+    "CMSSW_8_0_0" : "CMSSW_8_0_1",
     }
 
 #set default repack settings for bulk streams
