@@ -493,6 +493,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['MaxOverSize'] = streamConfig.Repack.MaxOverSize
             specArguments['MaxInputEvents'] = streamConfig.Repack.MaxInputEvents
             specArguments['MaxInputFiles'] = streamConfig.Repack.MaxInputFiles
+            specArguments['MaxLatency'] = streamConfig.Repack.MaxLatency
 
             specArguments['UnmergedLFNBase'] = "/store/unmerged/%s" % runInfo['bulk_data_type']
             if runInfo['backfill']:

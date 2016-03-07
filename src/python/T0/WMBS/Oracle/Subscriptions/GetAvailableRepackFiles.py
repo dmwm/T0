@@ -21,7 +21,8 @@ class GetAvailableRepackFiles(DBFormatter):
                         wmbs_file_details.events AS events,
                         wmbs_file_details.filesize AS filesize,
                         wmbs_file_details.lfn AS lfn,
-                        wmbs_location_senames.se_name AS location
+                        wmbs_location_senames.se_name AS location,
+                        wmbs_fileset_files.insert_time AS insert_time
                  FROM wmbs_sub_files_available
                  INNER JOIN run_stream_fileset_assoc ON
                    run_stream_fileset_assoc.fileset =
@@ -37,6 +38,11 @@ class GetAvailableRepackFiles(DBFormatter):
                    wmbs_location.id = wmbs_file_location.location
                  INNER JOIN wmbs_location_senames ON
                    wmbs_location_senames.location = wmbs_location.id
+                 INNER JOIN wmbs_subscription repack_subscription ON
+                   repack_subscription.id = wmbs_sub_files_available.subscription
+                 INNER JOIN wmbs_fileset_files ON
+                   wmbs_fileset_files.fileid = wmbs_sub_files_available.fileid AND
+                   wmbs_fileset_files.fileset = repack_subscription.fileset
                  WHERE wmbs_sub_files_available.subscription = :subscription
                  """
 

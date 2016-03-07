@@ -4,9 +4,9 @@ _RepackMerge_
 Splitting algorithm for express merging
 """
 
+import time
 import logging
 import threading
-import time
 
 from WMCore.WMBS.File import File
 
@@ -30,18 +30,18 @@ class RepackMerge(JobFactory):
         """
         # extract some global scheduling parameters
         self.jobNamePrefix = kwargs.get('jobNamePrefix', "RepackMerge")
-
         self.minInputSize = kwargs['minInputSize']
         self.maxInputSize = kwargs['maxInputSize']
-
         self.maxInputFiles = kwargs['maxInputFiles']
-
         self.maxEdmSize = kwargs['maxEdmSize']
         self.maxOverSize = kwargs['maxOverSize']
+        self.maxLatency = kwargs['maxLatency']
 
         # catch configuration errors
         if self.maxOverSize > self.maxEdmSize:
             self.maxOverSize = self.maxEdmSize
+
+        self.currentTime = time.time()
 
         self.createdGroup = False
 
@@ -50,75 +50,106 @@ class RepackMerge(JobFactory):
                                 logger = logging,
                                 dbinterface = myThread.dbi)
 
-        maxLumiWithJobDAO = daoFactory(classname = "Subscriptions.MaxLumiWithJob")
-        getGoodLumiHolesDAO = daoFactory(classname = "JobSplitting.GetGoodLumiHoles")
-
-        # highest lumi with a job
-        maxLumiWithJob = maxLumiWithJobDAO.execute(self.subscription["id"])
-
-        logging.debug("DEBUG Sub %d, maxLumiWithJob = %d" % (self.subscription["id"], maxLumiWithJob))
-
-        # find good lumi holes (needs to be done before data discovery)
-        goodLumiHoles = getGoodLumiHolesDAO.execute(self.subscription["id"], maxLumiWithJob)
-
-        logging.debug("DEBUG Sub %d, goodLumiHoles = %s" % (self.subscription["id"], sorted(goodLumiHoles)))
-
         # data discovery
-        getFilesDAO = daoFactory(classname = "Subscriptions.GetAvailableRepackMergeFiles")
-        availableFiles = getFilesDAO.execute(self.subscription["id"])
+        getAvailableFilesDAO = daoFactory(classname = "Subscriptions.GetAvailableRepackMergeFiles")
+        availableFiles = getAvailableFilesDAO.execute(self.subscription["id"])
 
         # nothing to do, stop immediately
         if len(availableFiles) == 0:
             return
 
-        # lumis we have data for
-        lumiList = set([])
+        # data discovery for already used lumis
+        getUsedLumisDAO = daoFactory(classname = "Subscriptions.GetUsedLumis")
+        usedLumis = getUsedLumisDAO.execute(self.subscription["id"])
+
+        # sort available files by lumi
+        availableFileLumiDict = {}
         for result in availableFiles:
-            for lumi in range(result['first_lumi'], result['last_lumi'] + 1):
-                lumiList.add(lumi)
-        lumiList = sorted(list(lumiList))
+            for lumi in range(result['first_lumi'], 1+result['last_lumi']):
+                if lumi not in availableFileLumiDict:
+                    availableFileLumiDict[lumi] = []
+                if lumi == result['first_lumi']:
+                    availableFileLumiDict[lumi].append(result)
 
-        logging.debug("DEBUG Sub %d, lumiList = %s" % (self.subscription["id"], lumiList))
-
-        # check if fileset is closed
-        fileset = self.subscription.getFileset()
-        fileset.load()
-
-        # extended lumi range for job creation
-        firstLumi = maxLumiWithJob + 1
-        lastLumi = lumiList[-1]
-
-        # consistency check (ignore at end of run)
-        if lumiList[0] <= maxLumiWithJob:
-            if fileset.open:
-                logging.error("ERROR: finding data that can't be there, bailing out...")
-                return
-            else:
-                logging.info("WARNING: finding data that can't be there, fileset is closed, merge anyways...")
-                firstLumi = lumiList[0]
-
-        # narrow down lumi range for job creation
+        # loop through lumis in order
+        haveLumiHole = False
         filesByLumi = {}
-        for lumi in range(firstLumi, lastLumi + 1):
-            if (lumi in lumiList) or (lumi in goodLumiHoles):
-                filesByLumi[lumi] = []
+        maxUsedLumi = max(usedLumis) if usedLumis else 0
+        for lumi in range(1, 1+max(maxUsedLumi,max(availableFileLumiDict.keys()))):
+
+            # lumi contains data => remember it for potential processing
+            if lumi in availableFileLumiDict:
+
+                filesByLumi[lumi] = availableFileLumiDict[lumi]
+
+            # lumi is used and we have data => trigger processing
+            elif lumi in usedLumis:
+
+                if len(filesByLumi) > 0:
+
+                    if haveLumiHole:
+                        # if lumi hole check for maxLatency first
+                        if self.getDataAge(filesByLumi) > self.maxLatency:
+                            self.defineJobs(filesByLumi, True)
+                            filesByLumi = {}
+                        # if maxLatency not met ignore data for now
+                        else:
+                            filesByLumi = {}
+                    else:
+                        self.defineJobs(filesByLumi, True)
+                        filesByLumi = {}
+
+                # if we had a lumi hole it is now not relevant anymore
+                # the next data will have a used lumi in front of it
+                haveLumiHole = False
+
+            # lumi has no data and isn't used, ie. we have a lumi hole
+            # also has an impact on how to handle later data
             else:
-                break
 
-        # figure out what data to create jobs for
-        for fileInfo in availableFiles:
-            lumi = fileInfo['first_lumi']
-            if lumi in filesByLumi:
-                filesByLumi[lumi].append(fileInfo)
+                if len(filesByLumi) > 0:
 
-        logging.debug("DEBUG Sub %d, create jobs for lumis = %s" % (self.subscription["id"], sorted(filesByLumi.keys())))
+                    # forceClose if maxLatency trigger is met
+                    if self.getDataAge(filesByLumi) > self.maxLatency:
+                        self.defineJobs(filesByLumi, True)
+                        filesByLumi = {}
+                    # follow the normal thresholds, but only if
+                    # there is no lumi hole in front of the data
+                    elif not haveLumiHole:
+                        self.defineJobs(filesByLumi, False)
+                        filesByLumi = {}
+                    # otherwise ignore the data for now
+                    else:
+                        filesByLumi = {}
 
-        self.defineJobs(filesByLumi, fileset.open)
+                haveLumiHole = True
+
+        # now handle whatever data is still left (at the high end of the lumi range)
+        if haveLumiHole:
+            if self.getDataAge(filesByLumi) > self.maxLatency:
+                self.defineJobs(filesByLumi, True)
+        else:
+            fileset = self.subscription.getFileset()
+            fileset.load()
+            self.defineJobs(filesByLumi, not fileset.open)
 
         return
 
+    def getDataAge(self, filesByLumi):
+        """
+        _getDataAge_
 
-    def defineJobs(self, filesByLumi, filesetOpen):
+        Return age of youngest streamer in filesByLumi
+        """
+        maxInsertTime = 0
+        for filesInfos in filesByLumi.values():
+            for fileInfo in filesInfos:
+                if fileInfo['insert_time'] > maxInsertTime:
+                    maxInsertTime = fileInfo['insert_time']
+
+        return self.currentTime - maxInsertTime
+
+    def defineJobs(self, filesByLumi, forceClose):
         """
         _defineJobs_
 
@@ -255,7 +286,7 @@ class RepackMerge(JobFactory):
                     jobFileList = lumiFileList
 
         # finish out leftovers if we are in closeout
-        if len(jobFileList) > 0 and not filesetOpen:
+        if len(jobFileList) > 0 and forceClose:
             self.createJob(jobFileList, jobSizeTotal)
 
         return
