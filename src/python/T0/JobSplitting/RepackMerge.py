@@ -60,7 +60,12 @@ class RepackMerge(JobFactory):
 
         # data discovery for already used lumis
         getUsedLumisDAO = daoFactory(classname = "Subscriptions.GetUsedLumis")
-        usedLumis = getUsedLumisDAO.execute(self.subscription["id"])
+        usedLumis = getUsedLumisDAO.execute(self.subscription["id"], True)
+
+        # empty lumis (as declared by StorageManager) are treated the
+        # same way as used lumis, ie. we process around them
+        getEmptyLumisDAO = daoFactory(classname = "Subscriptions.GetLumiHolesForRepackMerge")
+        usedLumis |= getEmptyLumisDAO.execute(self.subscription["id"])
 
         # sort available files by lumi
         availableFileLumiDict = {}
