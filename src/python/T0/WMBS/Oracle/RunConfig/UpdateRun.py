@@ -16,8 +16,6 @@ class UpdateRun(DBFormatter):
                      acq_era = :ACQERA,
                      backfill = :BACKFILL,
                      bulk_data_type = :BULKDATATYPE,
-                     bulk_inject = (SELECT id FROM storage_node WHERE name = :BULK_INJECT),
-                     express_inject = (SELECT id FROM storage_node WHERE name = :EXPRESS_INJECT),
                      express_subscribe = (SELECT id FROM storage_node WHERE name = :EXPRESS_SUBSCRIBE),
                      dqmuploadurl = :DQMUPLOADURL,
                      ah_timeout = :AHTIMEOUT,

@@ -115,8 +115,6 @@ class Create(DBCreator):
                  acq_era            varchar2(255),
                  backfill           varchar2(255),
                  bulk_data_type     varchar2(255),
-                 bulk_inject        int,
-                 express_inject     int,
                  express_subscribe  int,
                  dqmuploadurl       varchar2(255),
                  ah_timeout         int,
@@ -490,18 +488,6 @@ class Create(DBCreator):
                  ADD CONSTRAINT run_sta_fk
                  FOREIGN KEY (status)
                  REFERENCES run_status(id)"""
-
-        self.constraints[len(self.constraints)] = \
-            """ALTER TABLE run
-                 ADD CONSTRAINT run_bul_inj
-                 FOREIGN KEY (bulk_inject)
-                 REFERENCES storage_node(id)"""
-
-        self.constraints[len(self.constraints)] = \
-            """ALTER TABLE run
-                 ADD CONSTRAINT run_exp_inj
-                 FOREIGN KEY (express_inject)
-                 REFERENCES storage_node(id)"""
 
         self.constraints[len(self.constraints)] = \
             """ALTER TABLE run

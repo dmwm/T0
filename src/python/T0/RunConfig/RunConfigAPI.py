@@ -57,19 +57,14 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         insertDatasetTriggerDAO = daoFactory(classname = "RunConfig.InsertDatasetTrigger")
 
         bindsStorageNode = []
-        for node in list(set([tier0Config.Global.BulkInjectNode,
-                              tier0Config.Global.ExpressInjectNode,
-                              tier0Config.Global.ExpressSubscribeNode])):
-            if node:
-                bindsStorageNode.append( { 'NODE' : node } )
+        if tier0Config.Global.ExpressSubscribeNode:
+            bindsStorageNode.append( { 'NODE' : tier0Config.Global.ExpressSubscribeNode } )
 
         bindsUpdateRun = { 'RUN' : run,
                            'PROCESS' : hltConfig['process'],
                            'ACQERA' : tier0Config.Global.AcquisitionEra,
                            'BACKFILL' : tier0Config.Global.Backfill,
                            'BULKDATATYPE' : tier0Config.Global.BulkDataType,
-                           'BULK_INJECT' : tier0Config.Global.BulkInjectNode,
-                           'EXPRESS_INJECT' : tier0Config.Global.ExpressInjectNode,
                            'EXPRESS_SUBSCRIBE' : tier0Config.Global.ExpressSubscribeNode,
                            'DQMUPLOADURL' : tier0Config.Global.DQMUploadUrl,
                            'AHTIMEOUT' : tier0Config.Global.AlcaHarvestTimeout,
@@ -303,7 +298,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                         'autoApproveSites' : [ runInfo['express_subscribe'] ],
                                         'priority' : "high",
                                         'primaryDataset' : specialDataset,
-                                        'deleteFromSource' : True } )
+                                        'deleteFromSource' : bool(runInfo['express_subscribe']) } )
 
             alcaSkim = None
             if len(streamConfig.Express.AlcaSkims) > 0:
@@ -464,7 +459,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                             'autoApproveSites' : [ runInfo['express_subscribe'] ],
                                             'priority' : "high",
                                             'primaryDataset' : dataset,
-                                            'deleteFromSource' : True } )
+                                            'deleteFromSource' : bool(runInfo['express_subscribe']) } )
 
         #
         # finally create WMSpec
@@ -584,13 +579,11 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         if streamConfig.ProcessingStyle == "Bulk":
             factory = RepackWorkloadFactory()
             wmSpec = factory.factoryWorkloadConstruction(workflowName, specArguments)
-            #wmSpec.setPhEDExInjectionOverride(runInfo['bulk_inject'])
             for subscription in subscriptions:
                 wmSpec.setSubscriptionInformation(**subscription)
         elif streamConfig.ProcessingStyle == "Express":
             factory = ExpressWorkloadFactory()
             wmSpec = factory.factoryWorkloadConstruction(workflowName, specArguments)
-            #wmSpec.setPhEDExInjectionOverride(runInfo['express_inject'])
             for subscription in subscriptions:
                 wmSpec.setSubscriptionInformation(**subscription)
 
@@ -941,8 +934,6 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
 
                 factory = PromptRecoWorkloadFactory()
                 wmSpec = factory.factoryWorkloadConstruction(workflowName, specArguments)
-
-                #wmSpec.setPhEDExInjectionOverride(runInfo['bulk_inject'])
                 for subscription in subscriptions:
                     wmSpec.setSubscriptionInformation(**subscription)
 

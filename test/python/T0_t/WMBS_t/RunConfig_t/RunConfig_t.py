@@ -150,8 +150,6 @@ class RunConfigTest(unittest.TestCase):
         self.referenceRunInfo = [ { 'status': 1,
                                     'backfill' : None,
                                     'bulk_data_type' : "data",
-                                    'bulk_inject' : "T2_CH_CERN",
-                                    'express_inject' : 'T2_CH_CERN',
                                     'express_subscribe' : 'T2_CH_CERN',
                                     'dqmuploadurl' : "https://cmsweb.cern.ch/dqm/dev",
                                     'process': 'HLT',
