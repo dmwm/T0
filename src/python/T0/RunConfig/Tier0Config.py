@@ -18,10 +18,6 @@ Tier0Configuration - Global configuration object
 | |       |
 | |       |--> ProcessingSite - Main (CERN) site where processing is done.
 | |       |
-| |       |--> BulkInjectNode - Node from which bulk Tier0 data is injected.
-| |       |
-| |       |--> ExpressInjectNode - Node from which express Tier0 data is injected.
-| |       |
 | |       |--> ExpressSubscribeNode - Node to which Express is subscribed.
 | |       |
 | |       |--> BulkDataType - The bulk data type for the run
@@ -226,10 +222,7 @@ def createTier0Config():
     tier0Config.Global.ScramArches = {}
     tier0Config.Global.Backfill = None
 
-    tier0Config.Global.ProcessingSite = "T2_CH_CERN_AI"
-
-    tier0Config.Global.BulkInjectNode = "T0_CH_CERN_Disk"
-    tier0Config.Global.ExpressInjectNode = "T0_CH_CERN_Disk"
+    tier0Config.Global.ProcessingSite = "T0_CH_CERN"
 
     tier0Config.Global.ExpressSubscribeNode = None
 
@@ -513,7 +506,7 @@ def setBackfill(config, mode):
 
     Set the backfill mode in the configuration.
     """
-    if mode not in [ None, 1, 2 ]:
+    if mode not in [ None, 1, 2, 3 ]:
         msg = "Tier0Config.setBackfill : %s is not a valid backfill mode" % mode
         raise RuntimeError(msg)
 
@@ -527,24 +520,6 @@ def setProcessingSite(config, site):
     Set the (CERN) site used for processing.
     """
     config.Global.ProcessingSite = site
-    return
-
-def setBulkInjectNode(config, node):
-    """
-    _setBulkInjectNode_
-
-    Set the node from which bulk Tier0 data is injected.
-    """
-    config.Global.BulkInjectNode = node
-    return
-
-def setExpressInjectNode(config, node):
-    """
-    _setExpressInjectNode_
-
-    Set the node from which express Tier0 data is injected.
-    """
-    config.Global.ExpressInjectNode = node
     return
 
 def setExpressSubscribeNode(config, node):

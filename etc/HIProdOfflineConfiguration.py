@@ -14,8 +14,6 @@ from T0.RunConfig.Tier0Config import setBaseRequestPriority
 from T0.RunConfig.Tier0Config import setBackfill
 from T0.RunConfig.Tier0Config import setBulkDataType
 from T0.RunConfig.Tier0Config import setProcessingSite
-from T0.RunConfig.Tier0Config import setBulkInjectNode
-from T0.RunConfig.Tier0Config import setExpressInjectNode
 from T0.RunConfig.Tier0Config import setExpressSubscribeNode
 from T0.RunConfig.Tier0Config import setDQMDataTier
 from T0.RunConfig.Tier0Config import setDQMUploadUrl
@@ -35,7 +33,6 @@ setConfigVersion(tier0Config, "replace with real version")
 
 # Settings up sites
 processingSite = "T0_CH_CERN"
-cernPhedexNode = "T0_CH_CERN_Disk"
 
 # Set global parameters:
 #  Acquisition era
@@ -49,8 +46,6 @@ setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "hidata")
 setProcessingSite(tier0Config, processingSite)
-setBulkInjectNode(tier0Config, cernPhedexNode)
-setExpressInjectNode(tier0Config, cernPhedexNode)
 setExpressSubscribeNode(tier0Config, "T2_CH_CERN")
 
 # Override for DQM data tier
