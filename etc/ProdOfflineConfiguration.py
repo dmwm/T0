@@ -77,7 +77,7 @@ setPromptCalibrationConfig(tier0Config,
 
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_8_0_2"
+defaultCMSSWVersion = "CMSSW_8_0_3"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -87,6 +87,7 @@ setScramArch(tier0Config, "CMSSW_8_0_0_patch2", "slc6_amd64_gcc493")
 setScramArch(tier0Config, "CMSSW_8_0_0_patch3", "slc6_amd64_gcc493")
 setScramArch(tier0Config, "CMSSW_8_0_1", "slc6_amd64_gcc493")
 setScramArch(tier0Config, "CMSSW_8_0_2", "slc6_amd64_gcc493")
+setScramArch(tier0Config, "CMSSW_8_0_3", "slc6_amd64_gcc493")
 
 # Configure scenarios
 #ppScenario = "ppRun2"
@@ -107,9 +108,9 @@ expressProcVersion = 1
 alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "80X_dataRun2_Express_v3"
-promptrecoGlobalTag = "80X_dataRun2_Prompt_v3"
-alcap0GlobalTag = "80X_dataRun2_Prompt_v3"
+expressGlobalTag = "80X_dataRun2_Express_v4"
+promptrecoGlobalTag = "80X_dataRun2_Prompt_v4"
+alcap0GlobalTag = "80X_dataRun2_Prompt_v4"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -127,11 +128,11 @@ alcarawSplitting = 20000 * numberOfCores
 #
 repackVersionOverride = {
     "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_2",
+    "CMSSW_8_0_0" : "CMSSW_8_0_3",
     }
 expressVersionOverride = {
     "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_2",
+    "CMSSW_8_0_0" : "CMSSW_8_0_3",
     }
 
 #set default repack settings for bulk streams
