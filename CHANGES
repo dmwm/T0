@@ -1,3 +1,39 @@
+2.0.1 to 2.0.2:
+  - Merge pull request #4267 from hufnagel/subscriptions-groups
+  - some minor fixes for subscriptions code
+  - Merge pull request #4266 from hufnagel/skim-subscription
+  - Merge pull request #4265 from hufnagel/inject-override-adjust
+  - Merge pull request #4264 from johnhcasallasl/MWGR4_2016_config
+  - CMSSW_8_0_3 and new GTs
+  - set different subscription for skim
+  - remove the injection site override option
+  - Merge pull request #4263 from hufnagel/repack-stageout-merged
+  - Merge pull request #4262 from johnhcasallasl/CMSSW_8_0_2
+  - Switch to CMSSW_8_0_2
+  - implemet stageout to merged for repack
+  - Merge pull request #4261 from hufnagel/repack-maxlatency
+  - Merge pull request #4260 from johnhcasallasl/MWGR3_2016
+  - Configuration changes for 2016 MWGR3
+  - Merge pull request #4259 from ebohorqu/cmssw_800p3
+  - CMSSW_8_0_0_patch3
+  - Merge pull request #4258 from ebohorqu/cmssw_800p2
+  - CMSSW_800p2, default arch slc6_amd64_gcc493, parameter maxLatency to use repack patch
+  - Merge pull request #4257 from ebohorqu/GTs_80X_v1
+  - New GTs: 80X v1
+  - Merge pull request #4256 from johnhcasallasl/MWGR2_2016
+  - Changes for MWGR2 2016
+  - Merge pull request #4255 from johnhcasallasl/Commissioning2016_MGWR1
+  - AqcEra set to Commissioning 2016. Using CMSSW_7_5_8_patch3. HI configs removed from here
+  - implemeted max latency rules for repack and repackmerge
+  - Merge pull request #4254 from hufnagel/dataset_locked
+  - Merge pull request #4253 from hufnagel/runstream-done
+  - forward run/stream processing completion into t0wmadatasvc
+  - forward produced datasets to t0wmadatasvc
+  - Merge pull request #4252 from hufnagel/subscriptions-groups
+  - Merge pull request #4251 from hufnagel/memkill-fix
+  - configure different PhEDEx groups for various subscriptions
+  - adjust runtime memory kill limits
+
 2.0.0 to 2.0.1:
   - Merge pull request #4250 from hufnagel/mem-kill-limits
   - adjust RSS and VSize runtime limits
