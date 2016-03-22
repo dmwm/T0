@@ -293,7 +293,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                             'DISK_NODE' :  runInfo['express_subscribe']} )
 
                 subscriptions.append( { 'nonCustodialSites' : [ runInfo['express_subscribe'] ],
-                                        'nonCustodialSubTyp' : "Replica",
+                                        'nonCustodialSubType' : "Replica",
                                         'nonCustodialGroup' : "express",
                                         'autoApproveSites' : [ runInfo['express_subscribe'] ],
                                         'priority' : "high",
@@ -781,6 +781,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 diskDataTiers = set()
                 skimDataTiers = set()
                 alcaDataTiers = set()
+
                 if datasetConfig.WriteRECO:
                     diskDataTiers.add("RECO")
                 if datasetConfig.WriteAOD:
@@ -827,7 +828,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                                 'nonCustodialSites' : [phedexConfig['disk_node']] if phedexConfig['disk_node'] else [],
                                                 'nonCustodialSubType' : "Replica",
                                                 'nonCustodialGroup' : "AnalysisOps",
-                                                'autoApproveSites' : [phedexConfig['disk_node']],
+                                                'autoApproveSites' : [phedexConfig['disk_node']] if phedexConfig['disk_node'] else [],
                                                 'priority' : "high",
                                                 'primaryDataset' : dataset,
                                                 'useSkim' : True,
@@ -859,7 +860,6 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                                 'deleteFromSource' : True,
                                                 'dataTier' : dataTier } )
 
-
                     for dataTier in diskDataTiers - tapeDataTiers:
                         subscriptions.append( { 'nonCustodialSites' : [phedexConfig['disk_node']],
                                                 'nonCustodialSubType' : "Replica",
@@ -875,6 +875,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 elif phedexConfig['archival_node'] != None:
 
                     for dataTier in tapeDataTiers | diskDataTiers | skimDataTiers | alcaDataTiers:
+
                         subscriptions.append( { 'custodialSites' : [phedexConfig['archival_node']],
                                                 'custodialSubType' : "Replica",
                                                 'custodialGroup' : "DataOps",
