@@ -3,10 +3,10 @@ _CloseRunStreamFilesets_
 
 Oracle implementation of CloseRunStreamFilesets
 
-IF a run has ended and the run/stream fileset is still open, check
-for complete lumi_closed records, that all lumis are finally closed
-(all data for them in T0AST) and that all data has been feed to
-the filesets for processing.
+If a run has stopped (run summary), is closed (storage manager) and the
+run/stream fileset is still open, check for complete lumi_closed records,
+that all lumis are finally closed (all data for them in T0AST) and that
+all data has been feed to the filesets for processing.
 
 If all these conditions are satisifed, close the run/stream fileset.
 
@@ -34,7 +34,8 @@ class CloseRunStreamFilesets(DBFormatter):
                        wmbs_fileset.open = 1
                      INNER JOIN run ON
                        run.run_id = run_stream_fileset_assoc.run_id AND
-                       run.end_time > 0
+                       run.stop_time > 0 AND
+                       run.close_time > 0
                      INNER JOIN lumi_section_closed ON
                        lumi_section_closed.run_id = run_stream_fileset_assoc.run_id AND
                        lumi_section_closed.stream_id = run_stream_fileset_assoc.stream_id

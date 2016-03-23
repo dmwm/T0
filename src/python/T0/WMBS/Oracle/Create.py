@@ -108,7 +108,7 @@ class Create(DBCreator):
                  express_released   int           default 0 not null,
                  hltkey             varchar2(255) not null,
                  start_time         int           not null,
-                 end_time           int           default 0 not null,
+                 stop_time          int           default 0 not null,
                  close_time         int           default 0 not null,
                  lumicount          int           default 0 not null,
                  process            varchar2(255),

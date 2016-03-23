@@ -161,9 +161,10 @@ class Tier0FeederPoller(BaseWorkerThread):
                         logging.exception("Can't configure for run %d and stream %s" % (run, stream))
 
         #
-        # end runs which are active and have ended according to the EoR StorageManager records
+        # stop and close runs based on RunSummary and StorageManager records
         #
-        RunLumiCloseoutAPI.endRuns(self.dbInterfaceStorageManager)
+        RunLumiCloseoutAPI.stopRuns(self.dbInterfaceStorageManager)
+        RunLumiCloseoutAPI.closeRuns(self.dbInterfaceStorageManager)
 
         #
         # release runs for Express

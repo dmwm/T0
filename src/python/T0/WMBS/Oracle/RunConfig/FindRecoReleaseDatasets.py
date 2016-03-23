@@ -21,7 +21,7 @@ class FindRecoReleaseDatasets(DBFormatter):
                  INNER JOIN primary_dataset ON
                    primary_dataset.id = reco_release_config.primds_id
                  WHERE checkForZeroOneState(reco_release_config.released) = 0
-                 AND run.end_time > 0
+                 AND run.stop_time > 0
                  GROUP BY primary_dataset.name
                  """
 
