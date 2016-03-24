@@ -103,7 +103,8 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
 
         try:
             myThread.transaction.begin()
-            insertStorageNodeDAO.execute(bindsStorageNode, conn = myThread.transaction.conn, transaction = True)
+            if len(bindsStorageNode) > 0:
+                insertStorageNodeDAO.execute(bindsStorageNode, conn = myThread.transaction.conn, transaction = True)
             updateRunDAO.execute(bindsUpdateRun, conn = myThread.transaction.conn, transaction = True)
             insertStreamDAO.execute(bindsStream, conn = myThread.transaction.conn, transaction = True)
             insertDatasetDAO.execute(bindsDataset, conn = myThread.transaction.conn, transaction = True)
