@@ -29,8 +29,7 @@ Tier0Configuration - Global configuration object
 | |       |--> AlcaHarvestTimeout - AlcaHarvesting for a run/stream is normally trigered by
 | |       |                         fileset closing (ie. all data received and processed).
 | |       |                         This timeout will configure an additional time trigger
-| |       |                         based on the run end_time (or when the last streamer
-| |       |                         file was received).
+| |       |                         based on the run stop_time.
 | |       |
 | |       |--> AlcaHarvestDir - Directory to which the AlcaHarvest job copies the
 | |       |                     sqlite file and associated metadata.
@@ -39,8 +38,7 @@ Tier0Configuration - Global configuration object
 | |       |                             if the current run is completely finished (ie. all data
 | |       |                             received, processed, alca harvested and conditions
 | |       |                             uploaded). This timeout will configure an additional
-| |       |                             time trigger based on the run end_time ( or when the
-| |       |                             last streamer file was received).
+| |       |                             time trigger based on the run stop_time.
 | |       |
 | |       |--> DropBoxHost - Machine where we upload the PCL conditions to
 | |       |

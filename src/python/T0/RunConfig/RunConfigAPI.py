@@ -662,8 +662,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
     Called by Tier0Feeder
 
     Finds all run/primds that need to be released for PromptReco
-    ( run.end_time + reco_release_config.delay > now
-      AND run.end_time > 0 )
+    ( run.stop_time + reco_release_config.delay > now AND run.stop_time > 0 )
 
     Create workflows and subscriptions for the processing
     of runs/datasets.

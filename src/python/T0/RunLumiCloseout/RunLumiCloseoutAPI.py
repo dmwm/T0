@@ -11,18 +11,20 @@ import time
 from WMCore.DAOFactory import DAOFactory
 
 
-def endRuns(dbInterfaceStorageManager):
+def stopRuns(dbInterfaceStorageManager):
     """
-    _endRuns_
+    _stopRuns_
 
     Called by Tier0Feeder
 
-    For all active runs check the StorageManager EoR
-    records to see if the run has ended. If it has,
-    update T0AST to reflect this.
+    For all active runs check the RunSummary records to see if the
+    run has stoppedended. If it has, update T0AST to reflect this.
+
+    Replays are handled differently, they will update stop_time with
+    close_time (once that has been set) and leave start_time as-is.
 
     """
-    logging.debug("findEndedRuns()")
+    logging.debug("stopRuns()")
     myThread = threading.currentThread()
     
     daoFactory = DAOFactory(package = "T0.WMBS",
@@ -34,26 +36,76 @@ def endRuns(dbInterfaceStorageManager):
                                           dbinterface = dbInterfaceStorageManager)
 
     findActiveRunsDAO = daoFactory(classname = "RunLumiCloseout.FindActiveRuns")
-    findEndedRunsDAO = daoFactoryStorageManager(classname = "RunLumiCloseout.FindEndedRuns")
-    endRunsDAO = daoFactory(classname = "RunLumiCloseout.EndRuns")
+    findStoppedRunsDAO = daoFactoryStorageManager(classname = "RunLumiCloseout.FindStoppedRuns")
+    stopRunsDAO = daoFactory(classname = "RunLumiCloseout.StopRuns")
 
     # find all active runs
+    #
+    # for replays this does all the work of checking close_time
+    # and setting stop_time to the same (skipped the other checks)
     activeRuns = findActiveRunsDAO.execute(transaction = False)
 
     # then check which one of them have ended
     if len(activeRuns) > 0:
-        endedRuns = findEndedRunsDAO.execute(runs = activeRuns, transaction = False)
+
+        stoppedRuns = findStoppedRunsDAO.execute(runs = activeRuns, transaction = False)
+
+        bindVarList = []
+        for run, (start_time, stop_time) in stoppedRuns.items():
+            bindVarList.append( { 'RUN' : run,
+                                  'START_TIME' : start_time,
+                                  'STOP_TIME' : stop_time } )
+
+        # and mark them as stopped in T0AST
+        if len(bindVarList) > 0:
+            stopRunsDAO.execute(binds = bindVarList, transaction = False)
+
+    return
+
+
+def closeRuns(dbInterfaceStorageManager):
+    """
+    _closeRuns_
+
+    Called by Tier0Feeder
+
+    For all open runs check the StorageManager EoR records to see if the
+    run has ended. If it has, update T0AST to reflect this.
+
+    """
+    logging.debug("closeRuns()")
+    myThread = threading.currentThread()
+
+    daoFactory = DAOFactory(package = "T0.WMBS",
+                            logger = logging,
+                            dbinterface = myThread.dbi)
+
+    daoFactoryStorageManager = DAOFactory(package = "T0.WMBS",
+                                          logger = logging,
+                                          dbinterface = dbInterfaceStorageManager)
+
+    findOpenRunsDAO = daoFactory(classname = "RunLumiCloseout.FindOpenRuns")
+    findClosedRunsDAO = daoFactoryStorageManager(classname = "RunLumiCloseout.FindClosedRuns")
+    closeRunsDAO = daoFactory(classname = "RunLumiCloseout.CloseRuns")
+
+    # find all active runs
+    openRuns = findOpenRunsDAO.execute(transaction = False)
+
+    # then check which one of them have ended
+    if len(openRuns) > 0:
+
+        closedRuns = findClosedRunsDAO.execute(runs = openRuns, transaction = False)
 
         bindVarList = []
         currentTime = int(time.time())
-        for run, lumicount in endedRuns.items():
+        for run, lumicount in closedRuns.items():
             bindVarList.append( { 'RUN' : run,
                                   'LUMICOUNT' : lumicount,
-                                  'END_TIME' : currentTime } )
+                                  'CLOSE_TIME' : currentTime } )
 
         # and mark them as ended in T0AST
         if len(bindVarList) > 0:
-            endRunsDAO.execute(binds = bindVarList, transaction = False)
+            closeRunsDAO.execute(binds = bindVarList, transaction = False)
 
     return
 

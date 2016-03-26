@@ -150,10 +150,10 @@ def uploadConditions(username, password, serviceProxy):
         # check for timeout, but only if there is a next run
         if not advanceToNextRun and index < len(conditions.keys()):
 
-            getRunEndTimeDAO = daoFactory(classname = "ConditionUpload.GetRunEndTime")
-            endTime = getRunEndTimeDAO.execute(run, transaction = False)
+            getRunStopTimeDAO = daoFactory(classname = "ConditionUpload.GetRunStopTime")
+            stopTime = getRunStopTimeDAO.execute(run, transaction = False)
 
-            if time.time() < endTime + timeout:
+            if time.time() < stopTime + timeout:
                 break
 
     return

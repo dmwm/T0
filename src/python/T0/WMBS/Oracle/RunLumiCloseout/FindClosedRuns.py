@@ -1,17 +1,17 @@
 """
-_FindEndedRuns_
+_FindClosedRuns_
 
-Oracle implementation of FindActiveRuns
+Oracle implementation of FindClosedRuns
 
-Checks the given runs whether the have ended according to
+Checks the given runs whether they are closed according to
 the StorageManager EoR records and returns a list of all
-ended runs together with the high lumi section for each run.
+closed runs together with the high lumi section for each run.
 
 """
 
 from WMCore.Database.DBFormatter import DBFormatter
 
-class FindEndedRuns(DBFormatter):
+class FindClosedRuns(DBFormatter):
 
     def execute(self, runs, conn = None, transaction = False):
 
@@ -30,8 +30,8 @@ class FindEndedRuns(DBFormatter):
         results = self.dbi.processData(sql, binds, conn = conn,
                                        transaction = transaction)[0].fetchall()
 
-        endedRuns = {}
+        closedRuns = {}
         for result in results:
-            endedRuns[result[0]] = result[1]
+            closedRuns[result[0]] = result[1]
 
-        return endedRuns
+        return closedRuns
