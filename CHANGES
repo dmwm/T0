@@ -1,3 +1,11 @@
+2.0.2 to 2.0.3:
+  - Merge pull request #4270 from hufnagel/run-start-stop
+  - get run start and stop times from run summary
+  - Merge pull request #4269 from ebohorqu/cmssw803p1
+  - CMSSW_8_0_3_patch1
+  - Merge pull request #4268 from hufnagel/storage-node-insert
+  - fix bug in storage node insert
+
 2.0.1 to 2.0.2:
   - Merge pull request #4267 from hufnagel/subscriptions-groups
   - some minor fixes for subscriptions code
