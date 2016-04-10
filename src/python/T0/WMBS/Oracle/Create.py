@@ -55,7 +55,7 @@ class Create(DBCreator):
         self.create[len(self.create)] = \
             """CREATE TABLE event_scenario (
                  id     int          not null,
-                 name   varchar2(25) not null,
+                 name   varchar2(50) not null,
                  primary key(id),
                  constraint eve_sce_name_uq unique(name)
                ) ORGANIZATION INDEX"""
@@ -888,7 +888,8 @@ class Create(DBCreator):
                            19 : "hcalnzsEra_Run2_25ns",
                            20 : "ppEra_Run2_2016",
                            21 : "cosmicsEra_Run2_2016",
-                           22 : "hcalnzsEra_Run2_2016" }
+                           22 : "hcalnzsEra_Run2_2016",
+                           23 : "ppEra_Run2_2016_trackingLowPU" }
         for id, name in eventScenarios.items():
             sql = """INSERT INTO event_scenario
                      (ID, NAME)
