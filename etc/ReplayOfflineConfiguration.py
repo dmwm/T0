@@ -70,7 +70,7 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_8_0_3_patch1"
+defaultCMSSWVersion = "CMSSW_8_0_4"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -82,6 +82,7 @@ setScramArch(tier0Config, "CMSSW_8_0_1", "slc6_amd64_gcc493")
 setScramArch(tier0Config, "CMSSW_8_0_2", "slc6_amd64_gcc493")
 setScramArch(tier0Config, "CMSSW_8_0_3", "slc6_amd64_gcc493")
 setScramArch(tier0Config, "CMSSW_8_0_3_patch1", "slc6_amd64_gcc493")
+setScramArch(tier0Config, "CMSSW_8_0_4", "slc6_amd64_gcc493")
 
 # Configure scenarios
 #ppScenario = "ppEra_Run2_25ns"
@@ -89,8 +90,8 @@ setScramArch(tier0Config, "CMSSW_8_0_3_patch1", "slc6_amd64_gcc493")
 #cosmicsScenario = "cosmicsEra_Run2_25ns"
 #hcalnzsScenario = "hcalnzsEra_Run2_25ns" 
 
-ppScenario = "ppEra_Run2_2016"
-ppScenarioB0T = "ppEra_Run2_2016"
+ppScenario = "ppEra_Run2_2016_trackingLowPU"
+ppScenarioB0T = "ppEra_Run2_2016_trackingLowPU"
 cosmicsScenario = "cosmicsEra_Run2_2016"
 hcalnzsScenario = "hcalnzsEra_Run2_2016"
 
@@ -120,18 +121,18 @@ alcarawSplitting = 10000 * numberOfCores
 #
 repackVersionOverride = {
     "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_3_patch1",
-    "CMSSW_8_0_1" : "CMSSW_8_0_3_patch1",
-    "CMSSW_8_0_2" : "CMSSW_8_0_3_patch1",
-    "CMSSW_8_0_3" : "CMSSW_8_0_3_patch1"
+    "CMSSW_8_0_0" : "CMSSW_8_0_4",
+    "CMSSW_8_0_1" : "CMSSW_8_0_4",
+    "CMSSW_8_0_2" : "CMSSW_8_0_4",
+    "CMSSW_8_0_3" : "CMSSW_8_0_4"
     }
 
 expressVersionOverride = {
     "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_3_patch1",
-    "CMSSW_8_0_1" : "CMSSW_8_0_3_patch1",
-    "CMSSW_8_0_2" : "CMSSW_8_0_3_patch1",
-    "CMSSW_8_0_3" : "CMSSW_8_0_3_patch1"
+    "CMSSW_8_0_0" : "CMSSW_8_0_4",
+    "CMSSW_8_0_1" : "CMSSW_8_0_4",
+    "CMSSW_8_0_2" : "CMSSW_8_0_4",
+    "CMSSW_8_0_3" : "CMSSW_8_0_4"
     }
 
 #set default repack settings for bulk streams
@@ -337,7 +338,6 @@ for dataset in datasets:
                do_reco = True,
                write_dqm = True,
                alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias" ],
-               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                timePerEvent = 3.5,
                sizePerEvent = 1500,
@@ -1013,7 +1013,6 @@ addExpressConfig(tier0Config, "Express",
                  scenario = ppScenario,
                  data_tiers = [ "FEVT" ],
                  write_dqm = True,
-                 dqm_sequences = [ "@common" ],
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias",
                                     "TkAlMinBias", "DtCalib", "PromptCalibProd", "Hotline",
                                     "PromptCalibProdSiStrip", "PromptCalibProdSiStripGains",
