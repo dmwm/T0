@@ -107,9 +107,9 @@ expressProcVersion = 2
 alcarawProcVersion = 2
 
 # Defaults for GlobalTag
-expressGlobalTag = "80X_dataRun2_Express_v5"
-promptrecoGlobalTag = "80X_dataRun2_Prompt_v6"
-alcap0GlobalTag = "80X_dataRun2_Prompt_v6"
+expressGlobalTag = "80X_dataRun2_Express_v6"
+promptrecoGlobalTag = "80X_dataRun2_Prompt_v8"
+alcap0GlobalTag = "80X_dataRun2_Prompt_v8"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -345,6 +345,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                write_dqm = True,
+               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
                alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                timePerEvent = 3.5,
@@ -362,6 +363,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                write_dqm = True,
+               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
                alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                timePerEvent = 3.5,
@@ -404,9 +406,9 @@ for dataset in datasets:
 ### Low PU collisions 13 TeV ###
 ################################
 
-datasets = [ "CastorJets", "EGMLowPU", "EmptyBX", "FSQJets1", "FSQJets2", "FSQJets3", 
-             "FullTrack", "HINCaloJet40", "HINCaloJets", "HINCaloJetsOther", "HINMuon", 
-             "HINPFJets", "HINPFJetsOther", "HINPhoton", "HighMultiplicity85", "L1MinimumBias",
+datasets = [ "CastorJets", "EGMLowPU", "EmptyBX", "FSQJets", "FSQJets1", "FSQJets2", "FSQJets3",
+             "FullTrack", "HINCaloJet40", "HINCaloJets", "HINCaloJetsOther", "HINMuon", "HINPFJets",
+             "HINPFJetsOther", "HINPhoton", "HighMultiplicity85", "HighMultiplicity85EOF", "L1MinimumBias",
              "L1MinimumBiasHF1", "L1MinimumBiasHF2", "L1MinimumBiasHF3", "L1MinimumBiasHF4",
              "L1MinimumBiasHF5", "L1MinimumBiasHF6", "L1MinimumBiasHF7", "L1MinimumBiasHF8" ]
 
@@ -416,9 +418,9 @@ for dataset in datasets:
                dqm_sequences = [ "@common" ],
                scenario = ppScenario)
 
-datasets = [ "CastorJets_0T", "EGMLowPU_0T", "EmptyBX_0T", "FSQJets1_0T", "FSQJets2_0T", "FSQJets3_0T",
-             "FullTrack_0T", "HINCaloJet40_0T", "HINCaloJets_0T", "HINCaloJetsOther_0T", "HINMuon_0T", 
-             "HINPFJets_0T", "HINPFJetsOther_0T", "HINPhoton_0T", "HighMultiplicity85_0T", "L1MinimumBias_0T",
+datasets = [ "CastorJets_0T", "EGMLowPU_0T", "EmptyBX_0T", "FSQJets_0T", "FSQJets1_0T", "FSQJets2_0T", "FSQJets3_0T",
+             "FullTrack_0T", "HINCaloJet40_0T", "HINCaloJets_0T", "HINCaloJetsOther_0T", "HINMuon_0T",  "HINPFJets_0T",
+             "HINPFJetsOther_0T", "HINPhoton_0T", "HighMultiplicity85_0T", "HighMultiplicity85EOF_0T", "L1MinimumBias_0T",
              "L1MinimumBiasHF1_0T", "L1MinimumBiasHF2_0T", "L1MinimumBiasHF3_0T", "L1MinimumBiasHF4_0T",
              "L1MinimumBiasHF5_0T", "L1MinimumBiasHF6_0T", "L1MinimumBiasHF7_0T", "L1MinimumBiasHF8_0T" ]
 
@@ -944,7 +946,7 @@ for dataset in datasets:
                dqm_sequences = [ "@common", "@ecal", "@egamma" ],
                scenario = ppScenarioB0T)
 
-datasets = [ "HINPFJet100", "HINCaloJet100", "HighMultiplicity" ]
+datasets = [ "HINPFJet100", "HINCaloJet100", "HighMultiplicity", "HighMultiplicityEOF" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -952,7 +954,7 @@ for dataset in datasets:
                dqm_sequences = [ "@common" ],
                scenario = ppScenario)
 
-datasets = [ "HINPFJet100_0T", "HINCaloJet100_0T", "HighMultiplicity_0T" ]
+datasets = [ "HINPFJet100_0T", "HINCaloJet100_0T", "HighMultiplicity_0T", "HighMultiplicityEOF_0T" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -1177,6 +1179,7 @@ ignoreStream(tier0Config, "Error")
 ignoreStream(tier0Config, "HLTMON")
 ignoreStream(tier0Config, "EventDisplay")
 ignoreStream(tier0Config, "DQM")
+ignoreStream(tier0Config, "DQMEventDisplay")
 ignoreStream(tier0Config, "LookArea")
 ignoreStream(tier0Config, "DQMOffline")
 
