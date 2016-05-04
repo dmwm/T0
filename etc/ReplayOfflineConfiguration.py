@@ -70,7 +70,7 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_8_0_6"
+defaultCMSSWVersion = "CMSSW_8_0_7"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
@@ -86,6 +86,7 @@ setScramArch(tier0Config, "CMSSW_8_0_4", "slc6_amd64_gcc493")
 setScramArch(tier0Config, "CMSSW_8_0_5", "slc6_amd64_gcc493")
 setScramArch(tier0Config, "CMSSW_8_0_5_patch1", "slc6_amd64_gcc493")
 setScramArch(tier0Config, "CMSSW_8_0_6", "slc6_amd64_gcc493")
+setScramArch(tier0Config, "CMSSW_8_0_7", "slc6_amd64_gcc493")
 
 # Configure scenarios
 #ppScenario = "ppEra_Run2_25ns"
@@ -124,22 +125,24 @@ alcarawSplitting = 10000 * numberOfCores
 #
 repackVersionOverride = {
     "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_6",
-    "CMSSW_8_0_1" : "CMSSW_8_0_6",
-    "CMSSW_8_0_2" : "CMSSW_8_0_6",
-    "CMSSW_8_0_3" : "CMSSW_8_0_6",
-    "CMSSW_8_0_4" : "CMSSW_8_0_6",
-    "CMSSW_8_0_5" : "CMSSW_8_0_6"
+    "CMSSW_8_0_0" : "CMSSW_8_0_7",
+    "CMSSW_8_0_1" : "CMSSW_8_0_7",
+    "CMSSW_8_0_2" : "CMSSW_8_0_7",
+    "CMSSW_8_0_3" : "CMSSW_8_0_7",
+    "CMSSW_8_0_4" : "CMSSW_8_0_7",
+    "CMSSW_8_0_5" : "CMSSW_8_0_7",
+    "CMSSW_8_0_6" : "CMSSW_8_0_7"
     }
 
 expressVersionOverride = {
     "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_6",
-    "CMSSW_8_0_1" : "CMSSW_8_0_6",
-    "CMSSW_8_0_2" : "CMSSW_8_0_6",
-    "CMSSW_8_0_3" : "CMSSW_8_0_6",
-    "CMSSW_8_0_4" : "CMSSW_8_0_6",
-    "CMSSW_8_0_5" : "CMSSW_8_0_6"
+    "CMSSW_8_0_0" : "CMSSW_8_0_7",
+    "CMSSW_8_0_1" : "CMSSW_8_0_7",
+    "CMSSW_8_0_2" : "CMSSW_8_0_7",
+    "CMSSW_8_0_3" : "CMSSW_8_0_7",
+    "CMSSW_8_0_4" : "CMSSW_8_0_7",
+    "CMSSW_8_0_5" : "CMSSW_8_0_7",
+    "CMSSW_8_0_6" : "CMSSW_8_0_7"
     }
 
 #set default repack settings for bulk streams
