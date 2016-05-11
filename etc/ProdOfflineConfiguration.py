@@ -71,23 +71,12 @@ setPromptCalibrationConfig(tier0Config,
 
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_8_0_7"
+defaultCMSSWVersion = "CMSSW_8_0_7_patch1"
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "slc6_amd64_gcc491")
-setScramArch(tier0Config, "CMSSW_8_0_0", "slc6_amd64_gcc493")
-setScramArch(tier0Config, "CMSSW_8_0_0_patch1", "slc6_amd64_gcc493")
-setScramArch(tier0Config, "CMSSW_8_0_0_patch2", "slc6_amd64_gcc493")
-setScramArch(tier0Config, "CMSSW_8_0_0_patch3", "slc6_amd64_gcc493")
-setScramArch(tier0Config, "CMSSW_8_0_1", "slc6_amd64_gcc493")
-setScramArch(tier0Config, "CMSSW_8_0_2", "slc6_amd64_gcc493")
-setScramArch(tier0Config, "CMSSW_8_0_3", "slc6_amd64_gcc493")
-setScramArch(tier0Config, "CMSSW_8_0_3_patch1", "slc6_amd64_gcc493")
-setScramArch(tier0Config, "CMSSW_8_0_4", "slc6_amd64_gcc493")
-setScramArch(tier0Config, "CMSSW_8_0_5", "slc6_amd64_gcc493")
-setScramArch(tier0Config, "CMSSW_8_0_5_patch1", "slc6_amd64_gcc493")
-setScramArch(tier0Config, "CMSSW_8_0_6", "slc6_amd64_gcc493")
-setScramArch(tier0Config, "CMSSW_8_0_7", "slc6_amd64_gcc493")
+setDefaultScramArch(tier0Config, "slc6_amd64_gcc493")
+setScramArch(tier0Config, "CMSSW_7_5_8", "slc6_amd64_gcc491")
+setScramArch(tier0Config, "CMSSW_7_5_8_patch3", "slc6_amd64_gcc491")
 
 # Configure scenarios
 #ppScenario = "ppRun2"
@@ -102,10 +91,10 @@ cosmicsScenario = "cosmicsEra_Run2_2016"
 hcalnzsScenario = "hcalnzsEra_Run2_2016"
 
 # Defaults for processing version
-defaultProcVersionRAW = 1
+defaultProcVersionRAW = 2
 defaultProcVersionReco = 1
-expressProcVersion = 1
-alcarawProcVersion = 1
+expressProcVersion = 2
+alcarawProcVersion = 2
 
 # Defaults for GlobalTag
 expressGlobalTag = "80X_dataRun2_Express_v7"
@@ -128,23 +117,25 @@ alcarawSplitting = 20000 * numberOfCores
 #
 repackVersionOverride = {
     "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_7",
-    "CMSSW_8_0_1" : "CMSSW_8_0_7",
-    "CMSSW_8_0_2" : "CMSSW_8_0_7",
-    "CMSSW_8_0_3" : "CMSSW_8_0_7",
-    "CMSSW_8_0_4" : "CMSSW_8_0_7",
-    "CMSSW_8_0_5" : "CMSSW_8_0_7",
-    "CMSSW_8_0_6" : "CMSSW_8_0_7"
+    "CMSSW_8_0_0" : "CMSSW_8_0_7_patch1",
+    "CMSSW_8_0_1" : "CMSSW_8_0_7_patch1",
+    "CMSSW_8_0_2" : "CMSSW_8_0_7_patch1",
+    "CMSSW_8_0_3" : "CMSSW_8_0_7_patch1",
+    "CMSSW_8_0_4" : "CMSSW_8_0_7_patch1",
+    "CMSSW_8_0_5" : "CMSSW_8_0_7_patch1",
+    "CMSSW_8_0_6" : "CMSSW_8_0_7_patch1",
+    "CMSSW_8_0_7" : "CMSSW_8_0_7_patch1" 
     }
 expressVersionOverride = {
     "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_7",
-    "CMSSW_8_0_1" : "CMSSW_8_0_7",
-    "CMSSW_8_0_2" : "CMSSW_8_0_7",
-    "CMSSW_8_0_3" : "CMSSW_8_0_7",
-    "CMSSW_8_0_4" : "CMSSW_8_0_7",
-    "CMSSW_8_0_5" : "CMSSW_8_0_7",
-    "CMSSW_8_0_6" : "CMSSW_8_0_7"
+    "CMSSW_8_0_0" : "CMSSW_8_0_7_patch1",
+    "CMSSW_8_0_1" : "CMSSW_8_0_7_patch1",
+    "CMSSW_8_0_2" : "CMSSW_8_0_7_patch1",
+    "CMSSW_8_0_3" : "CMSSW_8_0_7_patch1",
+    "CMSSW_8_0_4" : "CMSSW_8_0_7_patch1",
+    "CMSSW_8_0_5" : "CMSSW_8_0_7_patch1",
+    "CMSSW_8_0_6" : "CMSSW_8_0_7_patch1",
+    "CMSSW_8_0_7" : "CMSSW_8_0_7_patch1" 
     }
 
 #set default repack settings for bulk streams
