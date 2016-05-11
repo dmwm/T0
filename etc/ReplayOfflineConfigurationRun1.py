@@ -87,7 +87,7 @@ expressProcVersion = 1
 alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "80X_dataRun2_Express_v6"
+expressGlobalTag = "80X_dataRun2_Express_v7"
 promptrecoGlobalTag = "80X_dataRun2_Prompt_v8"
 alcap0GlobalTag = "80X_dataRun2_Prompt_v8"
 
