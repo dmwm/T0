@@ -519,7 +519,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 perCoreMemory = 1300
             else:
                 baseMemory = 2000
-                perCoreMemory = 1000
+                perCoreMemory = 900
 
             specArguments['Memory'] = baseMemory + perCoreMemory
 
@@ -915,7 +915,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                     perCoreMemory = 1300
                 else:
                     baseMemory = 2000
-                    perCoreMemory = 1000
+                    perCoreMemory = 900
 
                 specArguments['Memory'] = baseMemory + perCoreMemory
 
