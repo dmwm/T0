@@ -1,3 +1,33 @@
+2.0.3 to 2.0.4:
+  - Merge pull request #4285 from hufnagel/memory-reservation
+  - adjust the memory reservation
+  - Merge pull request #4284 from ebohorqu/cmssw807p1_procVersion2
+  - CMSSW_8_0_7_patch1, processingVersion 2 and cleaning default architecture and overrides
+  - Merge pull request #4283 from ebohorqu/alcaProducers
+  - New alca producers and express GT v7
+  - Merge pull request #4281 from ebohorqu/cmssw807
+  - CMSSW_8_0_7 and acquisition era Run2016B
+  - Merge pull request #4280 from ebohorqu/newPDs_and_DQMseqs
+  - New PDs, lastest GTs (express v6, prompt v8), DQM seqs for ZeroBias
+  - Merge pull request #4279 from ebohorqu/cmssw806
+  - CMSSW_8_0_6
+  - Merge pull request #4278 from ebohorqu/hltphysics0
+  - Adding HLTPhysics0 and HLTPhysics0_0T.
+  - Merge pull request #4277 from johnhcasallasl/CMSSW_8_0_5_patch1
+  - Switch to CMSSW_8_0_5_patch1
+  - Merge pull request #4276 from johnhcasallasl/CMSS_8_0_5
+  - Changes for first collision 2016
+  - Merge pull request #4275 from hufnagel/memory-limits
+  - adjust memory limits for Express and PromptReco
+  - Merge pull request #4274 from ebohorqu/no_alcaprod_for_express_and_no_common_for_hlt
+  - Removing @common sequence in HTLPhysics PDs and PromptCalibProdSiStripGains producer in Express
+  - Merge pull request #4273 from johnhcasallasl/RemoveDQMSeqs
+  - Removing DQM sequences from Express0T an ZeroBias*_0T
+  - Merge pull request #4272 from johnhcasallasl/CMSSW_8_0_4
+  - Changes for the Quiet Beam 2016
+  - Merge pull request #4271 from hufnagel/lowpu-scenario
+  - add low pileup scenario
+
 2.0.2 to 2.0.3:
   - Merge pull request #4270 from hufnagel/run-start-stop
   - get run start and stop times from run summary
