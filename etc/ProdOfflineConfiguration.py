@@ -404,7 +404,9 @@ datasets = [ "CastorJets", "EGMLowPU", "EmptyBX", "FSQJets", "FSQJets1", "FSQJet
              "FullTrack", "HINCaloJet40", "HINCaloJets", "HINCaloJetsOther", "HINMuon", "HINPFJets",
              "HINPFJetsOther", "HINPhoton", "HighMultiplicity85", "HighMultiplicity85EOF", "L1MinimumBias",
              "L1MinimumBiasHF1", "L1MinimumBiasHF2", "L1MinimumBiasHF3", "L1MinimumBiasHF4",
-             "L1MinimumBiasHF5", "L1MinimumBiasHF6", "L1MinimumBiasHF7", "L1MinimumBiasHF8" ]
+             "L1MinimumBiasHF5", "L1MinimumBiasHF6", "L1MinimumBiasHF7", "L1MinimumBiasHF8",
+             "L1MinimumBias0", "L1MinimumBias1", "L1MinimumBias2", "L1MinimumBias3", "L1MinimumBias4",
+             "L1MinimumBias5", "L1MinimumBias6", "L1MinimumBias7", "L1MinimumBias8", "L1MinimumBias9" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -416,7 +418,9 @@ datasets = [ "CastorJets_0T", "EGMLowPU_0T", "EmptyBX_0T", "FSQJets_0T", "FSQJet
              "FullTrack_0T", "HINCaloJet40_0T", "HINCaloJets_0T", "HINCaloJetsOther_0T", "HINMuon_0T",  "HINPFJets_0T",
              "HINPFJetsOther_0T", "HINPhoton_0T", "HighMultiplicity85_0T", "HighMultiplicity85EOF_0T", "L1MinimumBias_0T",
              "L1MinimumBiasHF1_0T", "L1MinimumBiasHF2_0T", "L1MinimumBiasHF3_0T", "L1MinimumBiasHF4_0T",
-             "L1MinimumBiasHF5_0T", "L1MinimumBiasHF6_0T", "L1MinimumBiasHF7_0T", "L1MinimumBiasHF8_0T" ]
+             "L1MinimumBiasHF5_0T", "L1MinimumBiasHF6_0T", "L1MinimumBiasHF7_0T", "L1MinimumBiasHF8_0T",
+             "L1MinimumBias0_0T", "L1MinimumBias1_0T", "L1MinimumBias2_0T", "L1MinimumBias3_0T", "L1MinimumBias4_0T",
+             "L1MinimumBias5_0T", "L1MinimumBias6_0T", "L1MinimumBias7_0T", "L1MinimumBias8_0T", "L1MinimumBias9_0T" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
