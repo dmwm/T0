@@ -70,7 +70,7 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_8_0_7_patch1"
+defaultCMSSWVersion = "CMSSW_8_0_8"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc493")
@@ -115,26 +115,26 @@ alcarawSplitting = 10000 * numberOfCores
 #
 repackVersionOverride = {
     "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_7_patch1",
-    "CMSSW_8_0_1" : "CMSSW_8_0_7_patch1",
-    "CMSSW_8_0_2" : "CMSSW_8_0_7_patch1",
-    "CMSSW_8_0_3" : "CMSSW_8_0_7_patch1",
-    "CMSSW_8_0_4" : "CMSSW_8_0_7_patch1",
-    "CMSSW_8_0_5" : "CMSSW_8_0_7_patch1",
-    "CMSSW_8_0_6" : "CMSSW_8_0_7_patch1",
-    "CMSSW_8_0_7" : "CMSSW_8_0_7_patch1" 
+    "CMSSW_8_0_0" : "CMSSW_8_0_8",
+    "CMSSW_8_0_1" : "CMSSW_8_0_8",
+    "CMSSW_8_0_2" : "CMSSW_8_0_8",
+    "CMSSW_8_0_3" : "CMSSW_8_0_8",
+    "CMSSW_8_0_4" : "CMSSW_8_0_8",
+    "CMSSW_8_0_5" : "CMSSW_8_0_8",
+    "CMSSW_8_0_6" : "CMSSW_8_0_8",
+    "CMSSW_8_0_7" : "CMSSW_8_0_8"
     }
 
 expressVersionOverride = {
     "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_7_patch1",
-    "CMSSW_8_0_1" : "CMSSW_8_0_7_patch1",
-    "CMSSW_8_0_2" : "CMSSW_8_0_7_patch1",
-    "CMSSW_8_0_3" : "CMSSW_8_0_7_patch1",
-    "CMSSW_8_0_4" : "CMSSW_8_0_7_patch1",
-    "CMSSW_8_0_5" : "CMSSW_8_0_7_patch1",
-    "CMSSW_8_0_6" : "CMSSW_8_0_7_patch1",
-    "CMSSW_8_0_7" : "CMSSW_8_0_7_patch1" 
+    "CMSSW_8_0_0" : "CMSSW_8_0_8",
+    "CMSSW_8_0_1" : "CMSSW_8_0_8",
+    "CMSSW_8_0_2" : "CMSSW_8_0_8",
+    "CMSSW_8_0_3" : "CMSSW_8_0_8",
+    "CMSSW_8_0_4" : "CMSSW_8_0_8",
+    "CMSSW_8_0_5" : "CMSSW_8_0_8",
+    "CMSSW_8_0_6" : "CMSSW_8_0_8",
+    "CMSSW_8_0_7" : "CMSSW_8_0_8"
     }
 
 #set default repack settings for bulk streams
@@ -328,12 +328,12 @@ addDataset(tier0Config, "AlCaLumiPixels",
 ### ZeroBias PDs                                     ###
 ########################################################
 
-datasets = [ "ZeroBias1", "ZeroBias2", "ZeroBias3", "ZeroBias4",
-             "ZeroBias5", "ZeroBias6", "ZeroBias7", "ZeroBias8",
-             "ZeroBias9", "ZeroBias10", "ZeroBias11", "ZeroBias12",
-             "ZeroBias13", "ZeroBias14", "ZeroBias15", "ZeroBias16",
-             "ZeroBias17", "ZeroBias18", "ZeroBias19", "ZeroBias20",
-             "ZeroBias" ]
+datasets = [ "ZeroBias", "ZeroBias0", "ZeroBias1", "ZeroBias2", 
+             "ZeroBias3", "ZeroBias4", "ZeroBias5", "ZeroBias6", 
+             "ZeroBias7", "ZeroBias8", "ZeroBias9", "ZeroBias10", 
+             "ZeroBias11", "ZeroBias12", "ZeroBias13", "ZeroBias14", 
+             "ZeroBias15", "ZeroBias16", "ZeroBias17", "ZeroBias18", 
+             "ZeroBias19", "ZeroBias20" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -346,12 +346,12 @@ for dataset in datasets:
                sizePerEvent = 1500,
                scenario = ppScenario)
 
-datasets = [ "ZeroBias1_0T", "ZeroBias2_0T", "ZeroBias3_0T", "ZeroBias4_0T",
-             "ZeroBias5_0T", "ZeroBias6_0T", "ZeroBias7_0T", "ZeroBias8_0T",
-             "ZeroBias9_0T", "ZeroBias10_0T", "ZeroBias11_0T", "ZeroBias12_0T",
-             "ZeroBias13_0T", "ZeroBias14_0T", "ZeroBias15_0T", "ZeroBias16_0T",
-             "ZeroBias17_0T", "ZeroBias18_0T", "ZeroBias19_0T", "ZeroBias20_0T",
-             "ZeroBias_0T" ]
+datasets = [ "ZeroBias_0T", "ZeroBias0_0T", "ZeroBias1_0T", "ZeroBias2_0T",
+             "ZeroBias3_0T", "ZeroBias4_0T", "ZeroBias5_0T", "ZeroBias6_0T", 
+             "ZeroBias7_0T", "ZeroBias8_0T", "ZeroBias9_0T", "ZeroBias10_0T", 
+             "ZeroBias11_0T", "ZeroBias12_0T", "ZeroBias13_0T", "ZeroBias14_0T", 
+             "ZeroBias15_0T", "ZeroBias16_0T", "ZeroBias17_0T", "ZeroBias18_0T", 
+             "ZeroBias19_0T", "ZeroBias20_0T" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
