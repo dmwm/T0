@@ -14,23 +14,24 @@ class FindStoppedRuns(DBFormatter):
 
     def execute(self, runs, conn = None, transaction = False):
 
-        sql = """WITH I AS (SELECT (starttime - TO_TIMESTAMP_TZ('01/01/1970 00:00:00 GMT', 'DD/MM/YYYY HH24:MI:SS TZR')) AS start_interval,
-                                   (stoptime - TO_TIMESTAMP_TZ('01/01/1970 00:00:00 GMT', 'DD/MM/YYYY HH24:MI:SS TZR')) AS stop_interval,
-                                   runnumber AS runnumber
-                            FROM CMS_WBM.RUNSUMMARY
-                            WHERE runnumber = :RUN
-                            AND starttime IS NOT NULL
-                            AND stoptime IS NOT NULL)
-                 SELECT runnumber,
+        sql = """SELECT runnumber,
                         (EXTRACT(DAY FROM start_interval)  * 86400) +
                         (EXTRACT(HOUR FROM start_interval) * 3600) +
-                        (EXTRACT(MINUTE FROM start_interval) * 60) + 
+                        (EXTRACT(MINUTE FROM start_interval) * 60) +
                         (EXTRACT(SECOND FROM start_interval)) AS starttime,
                         (EXTRACT(DAY FROM stop_interval)  * 86400) +
                         (EXTRACT(HOUR FROM stop_interval) * 3600) +
-                        (EXTRACT(MINUTE FROM stop_interval) * 60) + 
+                        (EXTRACT(MINUTE FROM stop_interval) * 60) +
                         (EXTRACT(SECOND FROM stop_interval)) AS stoptime
-                 FROM I
+                 FROM (
+                   SELECT (RUNSUMMARY.starttime - TO_TIMESTAMP_TZ('01/01/1970 00:00:00 GMT', 'DD/MM/YYYY HH24:MI:SS TZR')) AS start_interval,
+                          (RUNSUMMARY.stoptime - TO_TIMESTAMP_TZ('01/01/1970 00:00:00 GMT', 'DD/MM/YYYY HH24:MI:SS TZR')) AS stop_interval,
+                          RUNSUMMARY.runnumber AS runnumber
+                   FROM CMS_WBM.RUNSUMMARY
+                   WHERE RUNSUMMARY.runnumber = :RUN
+                   AND RUNSUMMARY.starttime IS NOT NULL
+                   AND RUNSUMMARY.stoptime IS NOT NULL
+                 )
                  """
 
         binds = []
