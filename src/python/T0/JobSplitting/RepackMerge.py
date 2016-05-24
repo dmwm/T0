@@ -32,6 +32,7 @@ class RepackMerge(JobFactory):
         self.jobNamePrefix = kwargs.get('jobNamePrefix', "RepackMerge")
         self.minInputSize = kwargs['minInputSize']
         self.maxInputSize = kwargs['maxInputSize']
+        self.maxInputEvents = kwargs['maxInputEvents']
         self.maxInputFiles = kwargs['maxInputFiles']
         self.maxEdmSize = kwargs['maxEdmSize']
         self.maxOverSize = kwargs['maxOverSize']
@@ -228,7 +229,8 @@ class RepackMerge(JobFactory):
                         lumiFileList.remove(fileInfo)
 
             elif lumiSizeTotal > self.maxInputSize or \
-                     lumiInputFiles > self.maxInputFiles:
+                    lumiEventsTotal > self.maxInputEvents or \
+                    lumiInputFiles > self.maxInputFiles:
 
                 # merge what we have to preserve order
                 if len(jobFileList) > 0:
@@ -249,7 +251,8 @@ class RepackMerge(JobFactory):
 
                 # still safe with new file, just add it
                 if newSizeTotal <= self.maxInputSize and \
-                       newInputFiles <= self.maxInputFiles:
+                        newEventsTotal <= self.maxInputEvents and \
+                        newInputFiles <= self.maxInputFiles:
 
                     jobSizeTotal = newSizeTotal
                     jobEventsTotal = newEventsTotal

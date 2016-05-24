@@ -217,7 +217,7 @@ class Repack(JobFactory):
                             newSizeTotal = sizeTotal + streamer['filesize']                        
 
                             if newSizeTotal <= self.maxSizeSingleLumi and \
-                                   newEventsTotal <= self.maxInputEvents:
+                                    newEventsTotal <= self.maxInputEvents:
 
                                 eventsTotal = newEventsTotal
                                 sizeTotal = newSizeTotal
@@ -256,8 +256,8 @@ class Repack(JobFactory):
 
                 # still safe with new lumi, just add it
                 elif newSizeTotal <= self.maxSizeMultiLumi and \
-                       newEventsTotal <= self.maxInputEvents and \
-                       newInputfiles <= self.maxInputFiles:
+                        newEventsTotal <= self.maxInputEvents and \
+                        newInputfiles <= self.maxInputFiles:
 
                     jobSizeTotal = newSizeTotal
                     jobEventsTotal = newEventsTotal
