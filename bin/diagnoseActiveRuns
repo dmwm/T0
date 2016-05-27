@@ -98,10 +98,10 @@ def diagnoseRun(runNumber, doChange):
             print "Run %s has not ended yet according to SM." % runNumber
         return 0
 
-    findEndedRunsDAO = daoFactorySM(classname = "RunLumiCloseout.FindEndedRuns")
-    endedRuns = findEndedRunsDAO.execute([runNumber])
+    findClosedRunsDAO = daoFactorySM(classname = "RunLumiCloseout.FindClosedRuns")
+    closedRuns = findClosedRunsDAO.execute([runNumber])
 
-    if not endedRuns:
+    if not closedRuns:
         logging.error("Run does not exist. Exiting.")
         return 1
 
