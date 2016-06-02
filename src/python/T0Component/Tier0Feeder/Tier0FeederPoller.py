@@ -388,8 +388,8 @@ class Tier0FeederPoller(BaseWorkerThread):
             if len(error) > 0:
                 logging.error("ERROR: Could not notify transfer system about processed streamers")
                 logging.error("ERROR: %s" % error)
-
-            markStreamersFinishedDAO.execute(streamers, transaction = False)
+            else:
+                markStreamersFinishedDAO.execute(streamers, transaction = False)
 
         return
 
