@@ -71,7 +71,7 @@ setPromptCalibrationConfig(tier0Config,
 
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_8_0_8_patch1"
+defaultCMSSWVersion = "CMSSW_8_0_10"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc493")
@@ -97,7 +97,7 @@ expressProcVersion = 2
 alcarawProcVersion = 2
 
 # Defaults for GlobalTag
-expressGlobalTag = "80X_dataRun2_Express_v7"
+expressGlobalTag = "80X_dataRun2_Express_v8"
 promptrecoGlobalTag = "80X_dataRun2_Prompt_v8"
 alcap0GlobalTag = "80X_dataRun2_Prompt_v8"
 
@@ -117,27 +117,29 @@ alcarawSplitting = 20000 * numberOfCores
 #
 repackVersionOverride = {
     "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_8_patch1",
-    "CMSSW_8_0_1" : "CMSSW_8_0_8_patch1",
-    "CMSSW_8_0_2" : "CMSSW_8_0_8_patch1",
-    "CMSSW_8_0_3" : "CMSSW_8_0_8_patch1",
-    "CMSSW_8_0_4" : "CMSSW_8_0_8_patch1",
-    "CMSSW_8_0_5" : "CMSSW_8_0_8_patch1",
-    "CMSSW_8_0_6" : "CMSSW_8_0_8_patch1",
-    "CMSSW_8_0_7" : "CMSSW_8_0_8_patch1",
-    "CMSSW_8_0_8" : "CMSSW_8_0_8_patch1"
+    "CMSSW_8_0_0" : "CMSSW_8_0_10",
+    "CMSSW_8_0_1" : "CMSSW_8_0_10",
+    "CMSSW_8_0_2" : "CMSSW_8_0_10",
+    "CMSSW_8_0_3" : "CMSSW_8_0_10",
+    "CMSSW_8_0_4" : "CMSSW_8_0_10",
+    "CMSSW_8_0_5" : "CMSSW_8_0_10",
+    "CMSSW_8_0_6" : "CMSSW_8_0_10",
+    "CMSSW_8_0_7" : "CMSSW_8_0_10",
+    "CMSSW_8_0_8" : "CMSSW_8_0_10",
+    "CMSSW_8_0_9" : "CMSSW_8_0_10"
     }
 expressVersionOverride = {
     "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_8_patch1",
-    "CMSSW_8_0_1" : "CMSSW_8_0_8_patch1",
-    "CMSSW_8_0_2" : "CMSSW_8_0_8_patch1",
-    "CMSSW_8_0_3" : "CMSSW_8_0_8_patch1",
-    "CMSSW_8_0_4" : "CMSSW_8_0_8_patch1",
-    "CMSSW_8_0_5" : "CMSSW_8_0_8_patch1",
-    "CMSSW_8_0_6" : "CMSSW_8_0_8_patch1",
-    "CMSSW_8_0_7" : "CMSSW_8_0_8_patch1",
-    "CMSSW_8_0_8" : "CMSSW_8_0_8_patch1"
+    "CMSSW_8_0_0" : "CMSSW_8_0_10",
+    "CMSSW_8_0_1" : "CMSSW_8_0_10",
+    "CMSSW_8_0_2" : "CMSSW_8_0_10",
+    "CMSSW_8_0_3" : "CMSSW_8_0_10",
+    "CMSSW_8_0_4" : "CMSSW_8_0_10",
+    "CMSSW_8_0_5" : "CMSSW_8_0_10",
+    "CMSSW_8_0_6" : "CMSSW_8_0_10",
+    "CMSSW_8_0_7" : "CMSSW_8_0_10",
+    "CMSSW_8_0_8" : "CMSSW_8_0_10",
+    "CMSSW_8_0_9" : "CMSSW_8_0_10"
     }
 
 #set default repack settings for bulk streams
@@ -1087,7 +1089,8 @@ addExpressConfig(tier0Config, "Express",
                  write_dqm = True,
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAfterAbortGap",
                                     "TkAlMinBias", "DtCalib", "PromptCalibProd", "Hotline", "LumiPixelsMinBias",
-                                    "PromptCalibProdSiStrip", "PromptCalibProdSiStripGains", "PromptCalibProdSiPixelAli" ],
+                                    "PromptCalibProdSiStrip", "PromptCalibProdSiStripGains", "PromptCalibProdSiPixelAli",
+				     "PromptCalibProdSiStripGainsAfterAbortGap" ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
                  global_tag_connect = globalTagConnect,
@@ -1110,7 +1113,8 @@ addExpressConfig(tier0Config, "Express0T",
                  write_dqm = True,
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAfterAbortGap",
                                     "TkAlMinBias", "DtCalib", "PromptCalibProd", "Hotline", "LumiPixelsMinBias",
-                                    "PromptCalibProdSiStrip", "PromptCalibProdSiStripGains", "PromptCalibProdSiPixelAli" ],
+                                    "PromptCalibProdSiStrip", "PromptCalibProdSiStripGains", "PromptCalibProdSiPixelAli", 
+				     "PromptCalibProdSiStripGainsAfterAbortGap" ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
                  global_tag_connect = globalTagConnect,
