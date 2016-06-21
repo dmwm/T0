@@ -333,6 +333,7 @@ class ExpressWorkloadFactory(StdBase):
         mySplitArgs = {}
         mySplitArgs['algo_package'] = "T0.JobSplitting"
         mySplitArgs['runNumber'] = self.runNumber
+        mySplitArgs['alcapromptdataset'] = alcapromptdataset
         mySplitArgs['timeout'] = self.alcaHarvestTimeout
 
         harvestTask = parentTask.addTask("%sAlcaHarvest%s" % (parentTask.name(), parentOutputModuleName))
