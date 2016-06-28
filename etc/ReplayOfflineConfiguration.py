@@ -70,7 +70,7 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_8_0_11"
+defaultCMSSWVersion = "CMSSW_8_0_12"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc493")
@@ -78,6 +78,7 @@ setScramArch(tier0Config, "CMSSW_7_5_8", "slc6_amd64_gcc491")
 setScramArch(tier0Config, "CMSSW_7_5_8_patch3", "slc6_amd64_gcc491")
 setScramArch(tier0Config, "CMSSW_8_0_10_patch1", "slc6_amd64_gcc530")
 setScramArch(tier0Config, "CMSSW_8_0_11", "slc6_amd64_gcc530")
+setScramArch(tier0Config, "CMSSW_8_0_12", "slc6_amd64_gcc530")
 
 # Configure scenarios
 #ppScenario = "ppEra_Run2_25ns"
@@ -96,9 +97,9 @@ expressProcVersion = 1
 alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "80X_dataRun2_Express_v8"
-promptrecoGlobalTag = "80X_dataRun2_Prompt_v8"
-alcap0GlobalTag = "80X_dataRun2_Prompt_v8"
+expressGlobalTag = "80X_dataRun2_Express_v10"
+promptrecoGlobalTag = "80X_dataRun2_Prompt_v9"
+alcap0GlobalTag = "80X_dataRun2_Prompt_v9"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -116,32 +117,34 @@ alcarawSplitting = 10000 * numberOfCores
 #
 repackVersionOverride = {
     "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_11",
-    "CMSSW_8_0_1" : "CMSSW_8_0_11",
-    "CMSSW_8_0_2" : "CMSSW_8_0_11",
-    "CMSSW_8_0_3" : "CMSSW_8_0_11",
-    "CMSSW_8_0_4" : "CMSSW_8_0_11",
-    "CMSSW_8_0_5" : "CMSSW_8_0_11",
-    "CMSSW_8_0_6" : "CMSSW_8_0_11",
-    "CMSSW_8_0_7" : "CMSSW_8_0_11",
-    "CMSSW_8_0_8" : "CMSSW_8_0_11",
-    "CMSSW_8_0_9" : "CMSSW_8_0_11",
-    "CMSSW_8_0_10" : "CMSSW_8_0_11"
+    "CMSSW_8_0_0" : "CMSSW_8_0_12",
+    "CMSSW_8_0_1" : "CMSSW_8_0_12",
+    "CMSSW_8_0_2" : "CMSSW_8_0_12",
+    "CMSSW_8_0_3" : "CMSSW_8_0_12",
+    "CMSSW_8_0_4" : "CMSSW_8_0_12",
+    "CMSSW_8_0_5" : "CMSSW_8_0_12",
+    "CMSSW_8_0_6" : "CMSSW_8_0_12",
+    "CMSSW_8_0_7" : "CMSSW_8_0_12",
+    "CMSSW_8_0_8" : "CMSSW_8_0_12",
+    "CMSSW_8_0_9" : "CMSSW_8_0_12",
+    "CMSSW_8_0_10" : "CMSSW_8_0_12",
+    "CMSSW_8_0_11" : "CMSSW_8_0_12"
     }
 
 expressVersionOverride = {
     "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_11",
-    "CMSSW_8_0_1" : "CMSSW_8_0_11",
-    "CMSSW_8_0_2" : "CMSSW_8_0_11",
-    "CMSSW_8_0_3" : "CMSSW_8_0_11",
-    "CMSSW_8_0_4" : "CMSSW_8_0_11",
-    "CMSSW_8_0_5" : "CMSSW_8_0_11",
-    "CMSSW_8_0_6" : "CMSSW_8_0_11",
-    "CMSSW_8_0_7" : "CMSSW_8_0_11",
-    "CMSSW_8_0_8" : "CMSSW_8_0_11",
-    "CMSSW_8_0_9" : "CMSSW_8_0_11",
-    "CMSSW_8_0_10" : "CMSSW_8_0_11"
+    "CMSSW_8_0_0" : "CMSSW_8_0_12",
+    "CMSSW_8_0_1" : "CMSSW_8_0_12",
+    "CMSSW_8_0_2" : "CMSSW_8_0_12",
+    "CMSSW_8_0_3" : "CMSSW_8_0_12",
+    "CMSSW_8_0_4" : "CMSSW_8_0_12",
+    "CMSSW_8_0_5" : "CMSSW_8_0_12",
+    "CMSSW_8_0_6" : "CMSSW_8_0_12",
+    "CMSSW_8_0_7" : "CMSSW_8_0_12",
+    "CMSSW_8_0_8" : "CMSSW_8_0_12",
+    "CMSSW_8_0_9" : "CMSSW_8_0_12",
+    "CMSSW_8_0_10" : "CMSSW_8_0_12",
+    "CMSSW_8_0_11" : "CMSSW_8_0_12"
     }
 
 #set default repack settings for bulk streams
@@ -321,6 +324,50 @@ addDataset(tier0Config, "HcalNZS_0T",
 ###########################
 
 addDataset(tier0Config, "AlCaLumiPixels",
+           do_reco = True,
+           write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
+           reco_split = alcarawSplitting,
+           proc_version = alcarawProcVersion,
+           alca_producers = [ "LumiPixels" ],
+           dqm_sequences = [ "@common" ],
+           timePerEvent = 0.02,
+           sizePerEvent = 38,
+           scenario = "AlCaLumiPixels")
+
+addDataset(tier0Config, "AlCaLumiPixels0",
+           do_reco = True,
+           write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
+           reco_split = alcarawSplitting,
+           proc_version = alcarawProcVersion,
+           alca_producers = [ "LumiPixels" ],
+           dqm_sequences = [ "@common" ],
+           timePerEvent = 0.02,
+           sizePerEvent = 38,
+           scenario = "AlCaLumiPixels")
+
+addDataset(tier0Config, "AlCaLumiPixels1",
+           do_reco = True,
+           write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
+           reco_split = alcarawSplitting,
+           proc_version = alcarawProcVersion,
+           alca_producers = [ "LumiPixels" ],
+           dqm_sequences = [ "@common" ],
+           timePerEvent = 0.02,
+           sizePerEvent = 38,
+           scenario = "AlCaLumiPixels")
+
+addDataset(tier0Config, "AlCaLumiPixels2",
+           do_reco = True,
+           write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
+           reco_split = alcarawSplitting,
+           proc_version = alcarawProcVersion,
+           alca_producers = [ "LumiPixels" ],
+           dqm_sequences = [ "@common" ],
+           timePerEvent = 0.02,
+           sizePerEvent = 38,
+           scenario = "AlCaLumiPixels")
+
+addDataset(tier0Config, "AlCaLumiPixels3",
            do_reco = True,
            write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
            reco_split = alcarawSplitting,
