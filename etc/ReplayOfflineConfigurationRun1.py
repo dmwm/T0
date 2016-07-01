@@ -70,7 +70,7 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_8_0_12"
+defaultCMSSWVersion = "CMSSW_8_0_13_patch1"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc493")
@@ -78,7 +78,7 @@ setScramArch(tier0Config, "CMSSW_5_3_20", "slc6_amd64_gcc472")
 setScramArch(tier0Config, "CMSSW_8_0_10_patch1", "slc6_amd64_gcc530")
 setScramArch(tier0Config, "CMSSW_8_0_11", "slc6_amd64_gcc530")
 setScramArch(tier0Config, "CMSSW_8_0_12", "slc6_amd64_gcc530")
-
+setScramArch(tier0Config, "CMSSW_8_0_13_patch1", "slc6_amd64_gcc530")
 
 # Configure scenarios
 ppScenario = "pp"
