@@ -21,6 +21,27 @@ from T0.WMSpec.StdSpecs.Repack import RepackWorkloadFactory
 from T0.WMSpec.StdSpecs.Express import ExpressWorkloadFactory
 from WMCore.WMSpec.StdSpecs.PromptReco import PromptRecoWorkloadFactory
 
+def extractConfigParameter(configParameter, era, run):
+    """
+    _extractConfigParameter_
+
+    Checks if configParameter is era or run dependent. If it is, use the
+    provided era and run information to extract the correct parameter.
+    """
+    if isinstance(configParameter, dict):
+        if 'acqEra' in configParameter and era in configParameter['acqEra']:
+            return configParameter['acqEra'][era]
+        elif 'maxRun' in configParameter:
+            newConfigParameter = None
+            for maxRun in sorted(configParameter['maxRun'].keys()):
+                if run <= maxRun:
+                    newConfigParameter = configParameter['maxRun'][maxRun]
+            if newConfigParameter:
+                return newConfigParameter
+        return configParameter['default']
+    else:
+        return configParameter
+
 def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
     """
     _configureRun_
@@ -736,8 +757,12 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                            'PRIMDS' : dataset,
                                            'SCENARIO' : datasetConfig.Scenario } )
 
-            if datasetConfig.CMSSWVersion != None:
-                bindsCMSSWVersion.append( { 'VERSION' : datasetConfig.CMSSWVersion } )
+            # check for era or run dependent config parameters
+            datasetConfig.CMSSWVersion = extractConfigParameter(datasetConfig.CMSSWVersion, runInfo['acq_era'], run)
+            datasetConfig.GlobalTag = extractConfigParameter(datasetConfig.GlobalTag, runInfo['acq_era'], run)
+            datasetConfig.ProcessingVersion = extractConfigParameter(datasetConfig.ProcessingVersion, runInfo['acq_era'], run)
+
+            bindsCMSSWVersion.append( { 'VERSION' : datasetConfig.CMSSWVersion } )
 
             alcaSkim = None
             if len(datasetConfig.AlcaSkims) > 0:
