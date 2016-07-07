@@ -69,6 +69,11 @@ setPromptCalibrationConfig(tier0Config,
                            dropboxHost = "webcondvm.cern.ch",
                            validationMode = False)
 
+# Special syntax supported for cmssw version, processing version and global tag
+#
+# { 'acqEra': {'Era1': Value1, 'Era2': Value2},
+#   'maxRun': {100000: Value3, 200000: Value4},
+#   'default': Value5 }
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = "CMSSW_8_0_13_patch1"
@@ -81,12 +86,6 @@ setScramArch(tier0Config, "CMSSW_8_0_10_patch1", "slc6_amd64_gcc530")
 setScramArch(tier0Config, "CMSSW_8_0_11", "slc6_amd64_gcc530")
 setScramArch(tier0Config, "CMSSW_8_0_12", "slc6_amd64_gcc530")
 setScramArch(tier0Config, "CMSSW_8_0_13_patch1", "slc6_amd64_gcc530")
-
-# Configure scenarios
-#ppScenario = "ppRun2"
-#ppScenarioB0T = "ppRun2"
-#cosmicsScenario = "cosmicsRun2"
-#hcalnzsScenario = "hcalnzsRun2"
 
 # Configure scenarios
 ppScenario = "ppEra_Run2_2016"

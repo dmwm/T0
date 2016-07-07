@@ -333,86 +333,86 @@ def addDataset(config, datasetName, **settings):
     #
     if 'scenario' in settings:
         datasetConfig.Scenario = settings['scenario']
-    elif not hasattr(datasetConfig, "Scenario"):
-        msg = "Tier0Config.addDataset : no scenario defined for dataset %s or Default" % datasetName
+    if not hasattr(datasetConfig, "Scenario") or not isinstance(datasetConfig.Scenario, str):
+        msg = "Tier0Config.addDataset : no valid scenario defined for dataset %s or Default" % datasetName
         raise RuntimeError(msg)
 
     if 'do_reco' in settings:
         datasetConfig.DoReco = settings['do_reco']
-    elif not hasattr(datasetConfig, "DoReco"):
-        msg = "Tier0Config.addDataset : no do_reco defined for dataset %s or Default" % datasetName
+    if not hasattr(datasetConfig, "DoReco") or not isinstance(datasetConfig.DoReco, bool):
+        msg = "Tier0Config.addDataset : no valid do_reco defined for dataset %s or Default" % datasetName
         raise RuntimeError(msg)
 
     if 'reco_delay' in settings:
         datasetConfig.RecoDelay = settings['reco_delay']
-    elif not hasattr(datasetConfig, "RecoDelay"):
-        msg = "Tier0Config.addDataset : no reco_delay defined for dataset %s or Default" % datasetName
+    if not hasattr(datasetConfig, "RecoDelay") or not isinstance(datasetConfig.RecoDelay, int):
+        msg = "Tier0Config.addDataset : no valid reco_delay defined for dataset %s or Default" % datasetName
         raise RuntimeError(msg)
 
     if 'reco_delay_offset' in settings:
         datasetConfig.RecoDelayOffset = settings['reco_delay_offset']
-    elif not hasattr(datasetConfig, "RecoDelayOffset"):
-        msg = "Tier0Config.addDataset : no reco_delay_offset defined for dataset %s or Default" % datasetName
+    if not hasattr(datasetConfig, "RecoDelayOffset") or not isinstance(datasetConfig.RecoDelayOffset, int):
+        msg = "Tier0Config.addDataset : no valid reco_delay_offset defined for dataset %s or Default" % datasetName
         raise RuntimeError(msg)
 
     if 'proc_version' in settings:
         datasetConfig.ProcessingVersion = settings['proc_version']
-    elif not hasattr(datasetConfig, "ProcessingVersion"):
-        msg = "Tier0Config.addDataset : no proc_version defined for dataset %s or Default" % datasetName
+    if not hasattr(datasetConfig, "ProcessingVersion") or not (isinstance(datasetConfig.ProcessingVersion, int) or isinstance(datasetConfig.ProcessingVersion, dict)):
+        msg = "Tier0Config.addDataset : no valid proc_version defined for dataset %s or Default" % datasetName
         raise RuntimeError(msg)
 
     if 'cmssw_version' in settings:
         datasetConfig.CMSSWVersion = settings['cmssw_version']
-    elif not hasattr(datasetConfig, "CMSSWVersion"):
-        msg = "Tier0Config.addDataset : no cmssw_version defined for dataset %s or Default" % datasetName
+    if not hasattr(datasetConfig, "CMSSWVersion") or not (isinstance(datasetConfig.CMSSWVersion, str) or isinstance(datasetConfig.CMSSWVersion, dict)):
+        msg = "Tier0Config.addDataset : no valid cmssw_version defined for dataset %s or Default" % datasetName
         raise RuntimeError(msg)
 
     if 'global_tag' in settings:
         datasetConfig.GlobalTag = settings['global_tag']
-    elif not hasattr(datasetConfig, "GlobalTag"):
-        msg = "Tier0Config.addDataset : no global_tag defined for dataset %s or Default" % datasetName
+    if not hasattr(datasetConfig, "GlobalTag") or not (isinstance(datasetConfig.GlobalTag, str) or isinstance(datasetConfig.GlobalTag, dict)):
+        msg = "Tier0Config.addDataset : no valid global_tag defined for dataset %s or Default" % datasetName
         raise RuntimeError(msg)
 
     if 'reco_split' in settings:
         datasetConfig.RecoSplit = settings['reco_split']
-    elif not hasattr(datasetConfig, "RecoSplit"):
-        msg = "Tier0Config.addDataset : no reco_split defined for dataset %s or Default" % datasetName
+    if not hasattr(datasetConfig, "RecoSplit") or not isinstance(datasetConfig.RecoSplit, int):
+        msg = "Tier0Config.addDataset : no valid reco_split defined for dataset %s or Default" % datasetName
         raise RuntimeError(msg)
 
     if 'write_reco' in settings:
         datasetConfig.WriteRECO = settings['write_reco']
-    elif not hasattr(datasetConfig, "WriteRECO"):
-        msg = "Tier0Config.addDataset : no write_reco defined for dataset %s or Default" % datasetName
+    if not hasattr(datasetConfig, "WriteRECO") or not isinstance(datasetConfig.WriteRECO, bool):
+        msg = "Tier0Config.addDataset : no valid write_reco defined for dataset %s or Default" % datasetName
         raise RuntimeError(msg)
 
     if 'write_aod' in settings:
         datasetConfig.WriteAOD = settings['write_aod']
-    elif not hasattr(datasetConfig, "WriteAOD"):
-        msg = "Tier0Config.addDataset : no write_aod defined for dataset %s or Default" % datasetName
+    if not hasattr(datasetConfig, "WriteAOD") or not isinstance(datasetConfig.WriteAOD, bool):
+        msg = "Tier0Config.addDataset : no valid write_aod defined for dataset %s or Default" % datasetName
         raise RuntimeError(msg)
 
     if 'write_miniaod' in settings:
         datasetConfig.WriteMINIAOD = settings['write_miniaod']
-    elif not hasattr(datasetConfig, "WriteMINIAOD"):
-        msg = "Tier0Config.addDataset : no write_miniaod defined for dataset %s or Default" % datasetName
+    if not hasattr(datasetConfig, "WriteMINIAOD") or not isinstance(datasetConfig.WriteMINIAOD, bool):
+        msg = "Tier0Config.addDataset : no valid write_miniaod defined for dataset %s or Default" % datasetName
         raise RuntimeError(msg)
 
     if 'write_dqm' in settings:
         datasetConfig.WriteDQM = settings['write_dqm']
-    elif not hasattr(datasetConfig, "WriteDQM"):
-        msg = "Tier0Config.addDataset : no write_dqm defined for dataset %s or Default" % datasetName
+    if not hasattr(datasetConfig, "WriteDQM") or not isinstance(datasetConfig.WriteDQM, bool):
+        msg = "Tier0Config.addDataset : no valid write_dqm defined for dataset %s or Default" % datasetName
         raise RuntimeError(msg)
 
     if 'timePerEvent' in settings:
         datasetConfig.TimePerEvent = settings['timePerEvent']
-    elif not hasattr(datasetConfig, "TimePerEvent"):
-        msg = "Tier0Config.addDataset : no timePerEvent defined for dataset %s or Default" % datasetName
+    if not hasattr(datasetConfig, "TimePerEvent") or not (isinstance(datasetConfig.TimePerEvent, int) or isinstance(datasetConfig.TimePerEvent, float)):
+        msg = "Tier0Config.addDataset : no valid timePerEvent defined for dataset %s or Default" % datasetName
         raise RuntimeError(msg)
 
     if 'sizePerEvent' in settings:
         datasetConfig.SizePerEvent = settings['sizePerEvent']
-    elif not hasattr(datasetConfig, "SizePerEvent"):
-        msg = "Tier0Config.addDataset : no sizePerEvent defined for dataset %s or Default" % datasetName
+    if not hasattr(datasetConfig, "SizePerEvent") or not (isinstance(datasetConfig.SizePerEvent, int) or isinstance(datasetConfig.SizePerEvent, float)):
+        msg = "Tier0Config.addDataset : no valid sizePerEvent defined for dataset %s or Default" % datasetName
         raise RuntimeError(msg)
 
     if hasattr(datasetConfig, "GlobalTagConnect"):
@@ -694,7 +694,7 @@ def addExpressConfig(config, streamName, **options):
     streamConfig.section_("Express")
 
     scenario = options.get("scenario", None)
-    if scenario == None:
+    if not scenario:
         msg = "Tier0Config.addExpressConfig : no scenario defined for stream %s" % streamName
         raise RuntimeError(msg)
     streamConfig.Express.Scenario = scenario
@@ -705,16 +705,14 @@ def addExpressConfig(config, streamName, **options):
         raise RuntimeError(msg)
     streamConfig.Express.DataTiers = data_tiers
 
-    alcamerge_config = None
-    if "ALCARECO" in data_tiers:
-        alcamerge_config = options.get("alcamerge_config", None)
-
-    streamConfig.Express.GlobalTag = options.get("global_tag", None)
+    global_tag = options.get("global_tag", None)
+    if not global_tag:
+        msg = "Tier0Config.addExpressConfig : global_tag not defined for stream %s" % streamName
+        raise RuntimeError(msg)
+    streamConfig.Express.GlobalTag = global_tag
 
     streamConfig.Express.GlobalTagConnect = options.get("global_tag_connect", None)
-
     streamConfig.Express.RecoCMSSWVersion = options.get("reco_version", None)
-
     streamConfig.Express.Multicore = options.get('multicore', None)
 
     streamConfig.Express.AlcaSkims = options.get("alca_producers", [])
