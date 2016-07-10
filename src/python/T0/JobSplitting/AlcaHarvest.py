@@ -32,6 +32,7 @@ class AlcaHarvest(JobFactory):
         """
         self.jobNamePrefix = kwargs.get('jobNamePrefix', "AlcaHarvest")
         run = kwargs['runNumber']
+        alcapromptdataset = kwargs['alcapromptdataset']
         timeout = kwargs['timeout']
 
         myThread = threading.currentThread()
@@ -57,7 +58,7 @@ class AlcaHarvest(JobFactory):
 
                     if stopTime + timeout < time.time():
 
-                        self.createJob(self.getInputFilesForJob())
+                        self.createJob(self.getInputFilesForJob(), alcapromptdataset)
 
         else:
 
@@ -66,7 +67,7 @@ class AlcaHarvest(JobFactory):
 
             if availableFile:
 
-                self.createJob(self.getInputFilesForJob())
+                self.createJob(self.getInputFilesForJob(), alcapromptdataset)
 
         return
 
@@ -81,7 +82,7 @@ class AlcaHarvest(JobFactory):
         getAllFilesDAO = self.daoFactory(classname = "Subscriptions.GetAllFiles")
         return getAllFilesDAO.execute(self.subscription["id"])
 
-    def createJob(self, fileList):
+    def createJob(self, fileList, alcapromptdataset):
         """
         _createJob_
 
@@ -91,6 +92,9 @@ class AlcaHarvest(JobFactory):
         self.newGroup()
 
         self.newJob(name = "%s-%s" % (self.jobNamePrefix, makeUUID()))
+
+        if alcapromptdataset == "PromptCalibProdSiPixelAli":
+            self.currentJob.addBaggageParameter("numberOfCores", 4)
 
         for fileInfo in fileList:
             f = File(id = fileInfo['id'],
