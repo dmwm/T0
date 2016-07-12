@@ -435,6 +435,11 @@ def addDataset(config, datasetName, **settings):
     else:
         datasetConfig.DiskNode = settings.get('disk_node', None)
 
+    if hasattr(datasetConfig, "RAWtoDisk"):
+        datasetConfig.RAWtoDisk = settings.get('raw_to_disk', datasetConfig.RAWtoDisk)
+    else:
+        datasetConfig.RAWtoDisk = settings.get('raw_to_disk', True)
+
     if hasattr(datasetConfig, "Multicore"):
         datasetConfig.Multicore = settings.get('multicore', datasetConfig.Multicore)
     else:
