@@ -634,7 +634,7 @@ for dataset in datasets:
                dqm_sequences = [ "@common" ],
                tape_node = "T1_US_FNAL_MSS",
                disk_node = "T1_US_FNAL_Disk",
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               physics_skims = [ "LogError", "LogErrorMonitor", "BPHSkim" ],
                scenario = ppScenario)
 
 datasets = [ "DoubleMuonLowMass_0T" ]
@@ -645,7 +645,7 @@ for dataset in datasets:
                dqm_sequences = [ "@common" ],
                tape_node = "T1_US_FNAL_MSS",
                disk_node = "T1_US_FNAL_Disk",
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               physics_skims = [ "LogError", "LogErrorMonitor", "BPHSkim" ],
                scenario = ppScenarioB0T)
 
 datasets = [ "HTMHT" ]
@@ -728,7 +728,7 @@ for dataset in datasets:
                tape_node = "T1_FR_CCIN2P3_MSS",
                disk_node = "T1_FR_CCIN2P3_Disk",
                alca_producers = [ "TkAlJpsiMuMu" ],
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               physics_skims = [ "LogError", "LogErrorMonitor", "BPHSkim" ],
                scenario = ppScenario)
 
 datasets = [ "Charmonium_0T" ]
@@ -741,7 +741,7 @@ for dataset in datasets:
                tape_node = "T1_FR_CCIN2P3_MSS",
                disk_node = "T1_FR_CCIN2P3_Disk",
                alca_producers = [ "TkAlJpsiMuMu" ],
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               physics_skims = [ "LogError", "LogErrorMonitor", "BPHSkim" ],
                scenario = ppScenarioB0T)
 
 datasets = [ "DoubleEG" ]
@@ -924,7 +924,7 @@ for dataset in datasets:
                disk_node = "T1_US_FNAL_Disk",
                alca_producers = [ "TkAlUpsilonMuMu" ],
                dqm_sequences = [ "@common", "@muon" ],
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               physics_skims = [ "LogError", "LogErrorMonitor", "BPHSkim" ],
                scenario = ppScenario)
 
 datasets = [ "MuOnia_0T" ]
@@ -937,7 +937,7 @@ for dataset in datasets:
                disk_node = "T1_US_FNAL_Disk",
                alca_producers = [ "TkAlUpsilonMuMu" ],
                dqm_sequences = [ "@common", "@muon" ],
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               physics_skims = [ "LogError", "LogErrorMonitor", "BPHSkim" ],
                scenario = ppScenarioB0T)
 
 datasets = [ "SingleElectron" ]

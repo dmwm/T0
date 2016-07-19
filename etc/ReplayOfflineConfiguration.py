@@ -70,7 +70,7 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_8_0_13_patch1"
+defaultCMSSWVersion = "CMSSW_8_0_14"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc493")
@@ -80,6 +80,8 @@ setScramArch(tier0Config, "CMSSW_8_0_10_patch1", "slc6_amd64_gcc530")
 setScramArch(tier0Config, "CMSSW_8_0_11", "slc6_amd64_gcc530")
 setScramArch(tier0Config, "CMSSW_8_0_12", "slc6_amd64_gcc530")
 setScramArch(tier0Config, "CMSSW_8_0_13_patch1", "slc6_amd64_gcc530")
+setScramArch(tier0Config, "CMSSW_8_0_14", "slc6_amd64_gcc530")
+
 # Configure scenarios
 #ppScenario = "ppEra_Run2_25ns"
 #ppScenarioB0T = "ppEra_Run2_25ns"
@@ -97,9 +99,9 @@ expressProcVersion = 1
 alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "80X_dataRun2_Express_v10"
-promptrecoGlobalTag = "80X_dataRun2_Prompt_v9"
-alcap0GlobalTag = "80X_dataRun2_Prompt_v9"
+expressGlobalTag = "80X_dataRun2_Express_v11"
+promptrecoGlobalTag = "80X_dataRun2_Prompt_v10"
+alcap0GlobalTag = "80X_dataRun2_Prompt_v10"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -116,39 +118,25 @@ alcarawSplitting = 10000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_1" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_2" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_3" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_4" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_5" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_6" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_7" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_8" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_9" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_10" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_11" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_12" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_13" : "CMSSW_8_0_13_patch1"
+    "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3"
     }
 
 expressVersionOverride = {
     "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_1" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_2" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_3" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_4" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_5" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_6" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_7" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_8" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_9" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_10" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_11" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_12" : "CMSSW_8_0_13_patch1",
-    "CMSSW_8_0_13" : "CMSSW_8_0_13_patch1"
+    "CMSSW_8_0_0" : "CMSSW_8_0_14",
+    "CMSSW_8_0_1" : "CMSSW_8_0_14",
+    "CMSSW_8_0_2" : "CMSSW_8_0_14",
+    "CMSSW_8_0_3" : "CMSSW_8_0_14",
+    "CMSSW_8_0_4" : "CMSSW_8_0_14",
+    "CMSSW_8_0_5" : "CMSSW_8_0_14",
+    "CMSSW_8_0_6" : "CMSSW_8_0_14",
+    "CMSSW_8_0_7" : "CMSSW_8_0_14",
+    "CMSSW_8_0_8" : "CMSSW_8_0_14",
+    "CMSSW_8_0_9" : "CMSSW_8_0_14",
+    "CMSSW_8_0_10" : "CMSSW_8_0_14",
+    "CMSSW_8_0_11" : "CMSSW_8_0_14",
+    "CMSSW_8_0_12" : "CMSSW_8_0_14",
+    "CMSSW_8_0_13" : "CMSSW_8_0_14"
     }
 
 #set default repack settings for bulk streams
@@ -599,7 +587,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                dqm_sequences = [ "@common" ],
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               physics_skims = [ "LogError", "LogErrorMonitor", "BPHSkim" ],
                scenario = ppScenario)
 
 datasets = [ "DoubleMuonLowMass_0T" ]
@@ -608,7 +596,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                dqm_sequences = [ "@common" ],
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               physics_skims = [ "LogError", "LogErrorMonitor", "BPHSkim" ],
                scenario = ppScenarioB0T)
 
 datasets = [ "HTMHT" ]
@@ -677,7 +665,7 @@ for dataset in datasets:
                write_dqm = True,
                dqm_sequences = [ "@common" ],
                alca_producers = [ "TkAlJpsiMuMu" ],
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               physics_skims = [ "LogError", "LogErrorMonitor", "BPHSkim" ],
                scenario = ppScenario)
 
 datasets = [ "Charmonium_0T" ]
@@ -688,7 +676,7 @@ for dataset in datasets:
                write_dqm = True,
                dqm_sequences = [ "@common" ],
                alca_producers = [ "TkAlJpsiMuMu" ],
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               physics_skims = [ "LogError", "LogErrorMonitor", "BPHSkim" ],
                scenario = ppScenarioB0T)
 
 datasets = [ "DoubleEG" ]
@@ -848,7 +836,7 @@ for dataset in datasets:
                write_dqm = True,
                alca_producers = [ "TkAlUpsilonMuMu" ],
                dqm_sequences = [ "@common", "@muon" ],
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               physics_skims = [ "LogError", "LogErrorMonitor", "BPHSkim" ],
                scenario = ppScenario)
 
 datasets = [ "MuOnia_0T" ]
@@ -859,7 +847,7 @@ for dataset in datasets:
                write_dqm = True,
                alca_producers = [ "TkAlUpsilonMuMu" ],
                dqm_sequences = [ "@common", "@muon" ],
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               physics_skims = [ "LogError", "LogErrorMonitor", "BPHSkim" ],
                scenario = ppScenarioB0T)
 
 datasets = [ "SingleElectron" ]

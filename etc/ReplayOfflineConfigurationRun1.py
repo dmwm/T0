@@ -70,15 +70,12 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_8_0_13_patch1"
+defaultCMSSWVersion = "CMSSW_8_0_14"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc493")
 setScramArch(tier0Config, "CMSSW_5_3_20", "slc6_amd64_gcc472")
-setScramArch(tier0Config, "CMSSW_8_0_10_patch1", "slc6_amd64_gcc530")
-setScramArch(tier0Config, "CMSSW_8_0_11", "slc6_amd64_gcc530")
-setScramArch(tier0Config, "CMSSW_8_0_12", "slc6_amd64_gcc530")
-setScramArch(tier0Config, "CMSSW_8_0_13_patch1", "slc6_amd64_gcc530")
+setScramArch(tier0Config, "CMSSW_8_0_14", "slc6_amd64_gcc530")
 
 # Configure scenarios
 ppScenario = "pp"
@@ -91,9 +88,9 @@ expressProcVersion = 1
 alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "80X_dataRun2_Express_v10"
-promptrecoGlobalTag = "80X_dataRun2_Prompt_v9"
-alcap0GlobalTag = "80X_dataRun2_Prompt_v9"
+expressGlobalTag = "80X_dataRun2_Express_v11"
+promptrecoGlobalTag = "80X_dataRun2_Prompt_v10"
+alcap0GlobalTag = "80X_dataRun2_Prompt_v10"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
