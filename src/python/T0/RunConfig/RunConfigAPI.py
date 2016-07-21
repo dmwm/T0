@@ -273,6 +273,9 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             streamConfig.Repack.ScramArch = tier0Config.Global.ScramArches.get(streamConfig.Repack.CMSSWVersion,
                                                                                tier0Config.Global.DefaultScramArch)
 
+            # check for era or run dependent config parameters
+            streamConfig.Repack.ProcessingVersion = extractConfigParameter(streamConfig.Repack.ProcessingVersion, runInfo['acq_era'], run)
+
             bindsRepackConfig = { 'RUN' : run,
                                   'STREAM' : stream,
                                   'PROC_VER': streamConfig.Repack.ProcessingVersion,
@@ -353,10 +356,17 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             streamConfig.Express.RecoScramArch = None
             if streamConfig.Express.RecoCMSSWVersion != None:
 
+                # check for era or run dependent config parameters
+                streamConfig.Express.RecoCMSSWVersion = extractConfigParameter(streamConfig.Express.RecoCMSSWVersion, runInfo['acq_era'], run)
+
                 bindsCMSSWVersion.append( { 'VERSION' : streamConfig.Express.RecoCMSSWVersion } )
 
                 streamConfig.Express.RecoScramArch = tier0Config.Global.ScramArches.get(streamConfig.Express.RecoCMSSWVersion,
                                                                                         tier0Config.Global.DefaultScramArch)
+
+            # check for era or run dependent config parameters
+            streamConfig.Express.GlobalTag = extractConfigParameter(streamConfig.Express.GlobalTag, runInfo['acq_era'], run)
+            streamConfig.Express.ProcessingVersion = extractConfigParameter(streamConfig.Express.ProcessingVersion, runInfo['acq_era'], run)
 
             bindsExpressConfig = { 'RUN' : run,
                                    'STREAM' : stream,
@@ -500,8 +510,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             specArguments['CMSSWVersion'] = streamConfig.Repack.CMSSWVersion
             specArguments['ScramArch'] = streamConfig.Repack.ScramArch
-
             specArguments['ProcessingVersion'] = streamConfig.Repack.ProcessingVersion
+
             specArguments['MaxSizeSingleLumi'] = streamConfig.Repack.MaxSizeSingleLumi
             specArguments['MaxSizeMultiLumi'] = streamConfig.Repack.MaxSizeMultiLumi
             specArguments['MinInputSize'] = streamConfig.Repack.MinInputSize
