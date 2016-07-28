@@ -111,7 +111,6 @@ alcarawSplitting = 10000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3"
     }
 
 expressVersionOverride = {
@@ -982,6 +981,24 @@ for dataset in datasets:
                write_reco = False, write_aod = False, write_miniaod = True, write_dqm = True,
                dqm_sequences = [ "@common" ],
                scenario = ppScenarioB0T)
+    
+datasets = [ "ParkingHLTPhysics", "ParkingZeroBias", "AlCaPhiSym", "AlCaP0", 
+             "AlCaElectron", "RPCMonitor", "VRRandom", "VRZeroBias", "VirginRaw" ]  
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = False,
+               raw_to_disk = True,
+               scenario = ppScenario)    
+    
+datasets = [ "ParkingHLTPhysics_0T", "ParkingZeroBias_0T", "AlCaPhiSym_0T", "AlCaP0_0T", 
+             "AlCaElectron_0T", "RPCMonitor_0T", "VRRandom_0T", "VRZeroBias_0T", "VirginRaw_0T" ]  
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = False,
+               raw_to_disk = True,
+               scenario = ppScenarioB0T)     
 
 #########################################
 ### New PDs for pp Reference Run 2015 ###
