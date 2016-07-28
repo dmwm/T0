@@ -70,17 +70,10 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_8_0_14"
+defaultCMSSWVersion = "CMSSW_8_0_15"
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "slc6_amd64_gcc493")
-setScramArch(tier0Config, "CMSSW_7_5_8", "slc6_amd64_gcc491")
-setScramArch(tier0Config, "CMSSW_7_5_8_patch3", "slc6_amd64_gcc491")
-setScramArch(tier0Config, "CMSSW_8_0_10_patch1", "slc6_amd64_gcc530")
-setScramArch(tier0Config, "CMSSW_8_0_11", "slc6_amd64_gcc530")
-setScramArch(tier0Config, "CMSSW_8_0_12", "slc6_amd64_gcc530")
-setScramArch(tier0Config, "CMSSW_8_0_13_patch1", "slc6_amd64_gcc530")
-setScramArch(tier0Config, "CMSSW_8_0_14", "slc6_amd64_gcc530")
+setDefaultScramArch(tier0Config, "slc6_amd64_gcc530")
 
 # Configure scenarios
 #ppScenario = "ppEra_Run2_25ns"
@@ -122,21 +115,21 @@ repackVersionOverride = {
     }
 
 expressVersionOverride = {
-    "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_14",
-    "CMSSW_8_0_1" : "CMSSW_8_0_14",
-    "CMSSW_8_0_2" : "CMSSW_8_0_14",
-    "CMSSW_8_0_3" : "CMSSW_8_0_14",
-    "CMSSW_8_0_4" : "CMSSW_8_0_14",
-    "CMSSW_8_0_5" : "CMSSW_8_0_14",
-    "CMSSW_8_0_6" : "CMSSW_8_0_14",
-    "CMSSW_8_0_7" : "CMSSW_8_0_14",
-    "CMSSW_8_0_8" : "CMSSW_8_0_14",
-    "CMSSW_8_0_9" : "CMSSW_8_0_14",
-    "CMSSW_8_0_10" : "CMSSW_8_0_14",
-    "CMSSW_8_0_11" : "CMSSW_8_0_14",
-    "CMSSW_8_0_12" : "CMSSW_8_0_14",
-    "CMSSW_8_0_13" : "CMSSW_8_0_14"
+    "CMSSW_8_0_0" : "CMSSW_8_0_15",
+    "CMSSW_8_0_1" : "CMSSW_8_0_15",
+    "CMSSW_8_0_2" : "CMSSW_8_0_15",
+    "CMSSW_8_0_3" : "CMSSW_8_0_15",
+    "CMSSW_8_0_4" : "CMSSW_8_0_15",
+    "CMSSW_8_0_5" : "CMSSW_8_0_15",
+    "CMSSW_8_0_6" : "CMSSW_8_0_15",
+    "CMSSW_8_0_7" : "CMSSW_8_0_15",
+    "CMSSW_8_0_8" : "CMSSW_8_0_15",
+    "CMSSW_8_0_9" : "CMSSW_8_0_15",
+    "CMSSW_8_0_10" : "CMSSW_8_0_15",
+    "CMSSW_8_0_11" : "CMSSW_8_0_15",
+    "CMSSW_8_0_12" : "CMSSW_8_0_15",
+    "CMSSW_8_0_13" : "CMSSW_8_0_15",
+    "CMSSW_8_0_14" : "CMSSW_8_0_15"
     }
 
 #set default repack settings for bulk streams

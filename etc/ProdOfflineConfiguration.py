@@ -76,21 +76,13 @@ setPromptCalibrationConfig(tier0Config,
 #   'default': Value5 }
 
 # Defaults for CMSSW version
-defaultCMSSWVersion =
-     {
+defaultCMSSWVersion = {
        'acqEra': {'Run2016D': "CMSSW_8_0_13_patch1"},
-       'default': "CMSSW_8_0_14"
+       'default': "CMSSW_8_0_15"
      }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "slc6_amd64_gcc493")
-setScramArch(tier0Config, "CMSSW_7_5_8", "slc6_amd64_gcc491")
-setScramArch(tier0Config, "CMSSW_7_5_8_patch3", "slc6_amd64_gcc491")
-setScramArch(tier0Config, "CMSSW_8_0_10_patch1", "slc6_amd64_gcc530")
-setScramArch(tier0Config, "CMSSW_8_0_11", "slc6_amd64_gcc530")
-setScramArch(tier0Config, "CMSSW_8_0_12", "slc6_amd64_gcc530")
-setScramArch(tier0Config, "CMSSW_8_0_13_patch1", "slc6_amd64_gcc530")
-setScramArch(tier0Config, "CMSSW_8_0_14", "slc6_amd64_gcc530")
+setDefaultScramArch(tier0Config, "slc6_amd64_gcc530")
 
 # Configure scenarios
 ppScenario = "ppEra_Run2_2016"
@@ -124,25 +116,24 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3"
     }
 
 expressVersionOverride = {
-    "CMSSW_7_5_8" : "CMSSW_7_5_8_patch3",
-    "CMSSW_8_0_0" : "CMSSW_8_0_14",
-    "CMSSW_8_0_1" : "CMSSW_8_0_14",
-    "CMSSW_8_0_2" : "CMSSW_8_0_14",
-    "CMSSW_8_0_3" : "CMSSW_8_0_14",
-    "CMSSW_8_0_4" : "CMSSW_8_0_14",
-    "CMSSW_8_0_5" : "CMSSW_8_0_14",
-    "CMSSW_8_0_6" : "CMSSW_8_0_14",
-    "CMSSW_8_0_7" : "CMSSW_8_0_14",
-    "CMSSW_8_0_8" : "CMSSW_8_0_14",
-    "CMSSW_8_0_9" : "CMSSW_8_0_14",
-    "CMSSW_8_0_10" : "CMSSW_8_0_14",
-    "CMSSW_8_0_11" : "CMSSW_8_0_14",
-    "CMSSW_8_0_12" : "CMSSW_8_0_14",
-    "CMSSW_8_0_13" : "CMSSW_8_0_14"
+    "CMSSW_8_0_0" : "CMSSW_8_0_15",
+    "CMSSW_8_0_1" : "CMSSW_8_0_15",
+    "CMSSW_8_0_2" : "CMSSW_8_0_15",
+    "CMSSW_8_0_3" : "CMSSW_8_0_15",
+    "CMSSW_8_0_4" : "CMSSW_8_0_15",
+    "CMSSW_8_0_5" : "CMSSW_8_0_15",
+    "CMSSW_8_0_6" : "CMSSW_8_0_15",
+    "CMSSW_8_0_7" : "CMSSW_8_0_15",
+    "CMSSW_8_0_8" : "CMSSW_8_0_15",
+    "CMSSW_8_0_9" : "CMSSW_8_0_15",
+    "CMSSW_8_0_10" : "CMSSW_8_0_15",
+    "CMSSW_8_0_11" : "CMSSW_8_0_15",
+    "CMSSW_8_0_12" : "CMSSW_8_0_15",
+    "CMSSW_8_0_13" : "CMSSW_8_0_15",
+    "CMSSW_8_0_14" : "CMSSW_8_0_15"
     }
 
 #set default repack settings for bulk streams
@@ -196,7 +187,7 @@ addDataset(tier0Config, "Cosmics",
 addDataset(tier0Config, "Commissioning",
            do_reco = True,
            write_dqm = True,
-           alca_producers = [ "TkAlMinBias", "SiStripCalMinBias" ],
+           alca_producers = [ "TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk" ],
            dqm_sequences = [ "@common", "@hcal" ],
            physics_skims = [ "EcalActivity", "LogError", "LogErrorMonitor" ],
            timePerEvent = 12,
@@ -206,7 +197,7 @@ addDataset(tier0Config, "Commissioning",
 addDataset(tier0Config, "Commissioning_0T",
            do_reco = True,
            write_dqm = True,
-           alca_producers = [ "TkAlMinBias", "SiStripCalMinBias" ],
+           alca_producers = [ "TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk" ],
            dqm_sequences = [ "@common", "@hcal" ],
            physics_skims = [ "EcalActivity", "LogError", "LogErrorMonitor" ],
            timePerEvent = 12,
