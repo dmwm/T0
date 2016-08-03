@@ -961,6 +961,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 specArguments['SplittingAlgo'] = "EventAwareLumiBased"
                 specArguments['EventsPerJob'] = datasetConfig.RecoSplit
 
+                specArguments['RobustMerge'] = False
+
                 specArguments['ProcessingString'] = "PromptReco"
                 specArguments['ProcessingVersion'] = datasetConfig.ProcessingVersion
                 specArguments['Scenario'] = datasetConfig.Scenario
