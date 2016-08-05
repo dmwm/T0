@@ -13,7 +13,7 @@ class GetAllFiles(DBFormatter):
 
     sql = """SELECT wmbs_fileset_files.fileid AS id,
                     wmbs_file_details.lfn AS lfn,
-                    wmbs_location_senames.se_name AS location
+                    wmbs_location_pnns.pnn AS location
              FROM wmbs_subscription
              INNER JOIN wmbs_fileset_files ON
                wmbs_fileset_files.fileset = wmbs_subscription.fileset
@@ -23,8 +23,8 @@ class GetAllFiles(DBFormatter):
                wmbs_file_location.fileid = wmbs_fileset_files.fileid
              INNER JOIN wmbs_location ON
                wmbs_location.id = wmbs_file_location.location
-             INNER JOIN wmbs_location_senames ON
-               wmbs_location_senames.location = wmbs_location.id
+             INNER JOIN wmbs_location_pnns ON
+               wmbs_location_pnns.location = wmbs_location.id
              WHERE wmbs_subscription.id = :subscription
              """
 

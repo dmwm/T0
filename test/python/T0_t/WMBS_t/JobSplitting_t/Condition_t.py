@@ -55,9 +55,9 @@ class ConditionTest(unittest.TestCase):
                                     (id, site_name, state)
                                     VALUES (1, 'SomeSite', 1)
                                     """, transaction = False)
-        myThread.dbi.processData("""INSERT INTO wmbs_location_senames
-                                    (location, se_name)
-                                    VALUES (1, 'SomeSE')
+        myThread.dbi.processData("""INSERT INTO wmbs_location_pnn
+                                    (location, pnn)
+                                    VALUES (1, 'SomePNN')
                                     """, transaction = False)
 
         insertRunDAO = daoFactory(classname = "RunConfig.InsertRun")
@@ -108,11 +108,11 @@ class ConditionTest(unittest.TestCase):
         # set parentage chain and sqlite fileset
         alcaRecoFile = File("/alcareco", size = 0, events = 0)
         alcaRecoFile.addRun(Run(1, *[1]))
-        alcaRecoFile.setLocation("SomeSE", immediateSave = False)
+        alcaRecoFile.setLocation("SomePNN", immediateSave = False)
         alcaRecoFile.create()
         alcaPromptFile = File("/alcaprompt", size = 0, events = 0)
         alcaPromptFile.addRun(Run(1, *[1]))
-        alcaPromptFile.setLocation("SomeSE", immediateSave = False)
+        alcaPromptFile.setLocation("SomePNN", immediateSave = False)
         alcaPromptFile.create()
         sqliteFile = File("/sqlite", size = 0, events = 0)
         sqliteFile.create()

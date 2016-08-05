@@ -52,14 +52,14 @@ class ExpressMergeTest(unittest.TestCase):
                                     (id, site_name, state)
                                     VALUES (1, 'SomeSite', 1)
                                     """, transaction = False)
-        myThread.dbi.processData("""INSERT INTO wmbs_location_senames
-                                    (location, se_name)
-                                    VALUES (1, 'SomeSE')
+        myThread.dbi.processData("""INSERT INTO wmbs_location_pnns
+                                    (location, pnn)
+                                    VALUES (1, 'SomePNN')
                                     """, transaction = False)
         
-        myThread.dbi.processData("""INSERT INTO wmbs_location_senames
-                                    (location, se_name)
-                                    VALUES (1, 'SomeSE2')
+        myThread.dbi.processData("""INSERT INTO wmbs_location_pnns
+                                    (location, pnn)
+                                    VALUES (1, 'SomePNN2')
                                     """, transaction = False)
 
         insertRunDAO = daoFactory(classname = "RunConfig.InsertRun")
@@ -155,7 +155,7 @@ class ExpressMergeTest(unittest.TestCase):
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
-                newFile.setLocation("SomeSE", immediateSave = False)
+                newFile.setLocation("SomePNN", immediateSave = False)
                 newFile.create()
                 self.fileset2.addFile(newFile)
         self.fileset2.commit()
@@ -197,7 +197,7 @@ class ExpressMergeTest(unittest.TestCase):
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
-                newFile.setLocation("SomeSE", immediateSave = False)
+                newFile.setLocation("SomePNN", immediateSave = False)
                 newFile.create()
                 self.fileset2.addFile(newFile)
         self.fileset2.commit()
@@ -238,7 +238,7 @@ class ExpressMergeTest(unittest.TestCase):
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
-                newFile.setLocation("SomeSE", immediateSave = False)
+                newFile.setLocation("SomePNN", immediateSave = False)
                 newFile.create()
                 self.fileset2.addFile(newFile)
         self.fileset2.commit()
@@ -278,7 +278,7 @@ class ExpressMergeTest(unittest.TestCase):
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
-                newFile.setLocation("SomeSE", immediateSave = False)
+                newFile.setLocation("SomePNN", immediateSave = False)
                 newFile.create()
                 self.fileset2.addFile(newFile)
         self.fileset2.commit()
@@ -318,7 +318,7 @@ class ExpressMergeTest(unittest.TestCase):
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
-                newFile.setLocation("SomeSE", immediateSave = False)
+                newFile.setLocation("SomePNN", immediateSave = False)
                 newFile.create()
                 self.fileset2.addFile(newFile)
         self.fileset2.commit()
@@ -352,7 +352,7 @@ class ExpressMergeTest(unittest.TestCase):
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
-                newFile.setLocation("SomeSE", immediateSave = False)
+                newFile.setLocation("SomePNN", immediateSave = False)
                 newFile.create()
                 self.fileset2.addFile(newFile)
         self.fileset2.commit()
@@ -386,7 +386,7 @@ class ExpressMergeTest(unittest.TestCase):
             for i in range(2):
                 newFile = File(makeUUID(), size = 1000, events = 100)
                 newFile.addRun(Run(1, *[lumi]))
-                newFile.setLocation("SomeSE", immediateSave = False)
+                newFile.setLocation("SomePNN", immediateSave = False)
                 newFile.create()
                 self.fileset2.addFile(newFile)
         self.fileset2.commit()

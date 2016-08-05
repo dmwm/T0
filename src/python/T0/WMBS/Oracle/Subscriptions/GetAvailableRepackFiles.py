@@ -21,7 +21,7 @@ class GetAvailableRepackFiles(DBFormatter):
                         wmbs_file_details.events AS events,
                         wmbs_file_details.filesize AS filesize,
                         wmbs_file_details.lfn AS lfn,
-                        wmbs_location_senames.se_name AS location,
+                        wmbs_location_pnns.pnn AS location,
                         wmbs_fileset_files.insert_time AS insert_time
                  FROM wmbs_sub_files_available
                  INNER JOIN run_stream_fileset_assoc ON
@@ -36,8 +36,8 @@ class GetAvailableRepackFiles(DBFormatter):
                    wmbs_file_location.fileid = wmbs_sub_files_available.fileid
                  INNER JOIN wmbs_location ON
                    wmbs_location.id = wmbs_file_location.location
-                 INNER JOIN wmbs_location_senames ON
-                   wmbs_location_senames.location = wmbs_location.id
+                 INNER JOIN wmbs_location_pnns ON
+                   wmbs_location_pnns.location = wmbs_location.id
                  INNER JOIN wmbs_subscription repack_subscription ON
                    repack_subscription.id = wmbs_sub_files_available.subscription
                  INNER JOIN wmbs_fileset_files ON
