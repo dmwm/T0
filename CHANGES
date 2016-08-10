@@ -1,3 +1,61 @@
+2.0.4 to 2.0.5:
+  - Merge pull request #4288 from alexanderrichards/pnn_fix
+  - Merge pull request #4313 from hufnagel/disable-robust-merge
+  - Merge pull request #4314 from johnhcasallasl/80X_dataRun2_Express_v12
+  - Switch to 80X_dataRun2_Express_v12
+  - disable robbust (ie. flaky) merge
+  - Merge pull request #4312 from johnhcasallasl/subscribe_DoubleMuonToDisk
+  - Allowing the subscription of DoubleMuon to disk
+  - Merge pull request #4311 from johnhcasallasl/switch_to_CMSSW_8_0_16
+  - Switch to CMSSW_8_0_16 and use of the TkAlCosmicsInCollisions AlCa produces on the NoBPTX PD
+  - Merge pull request #4310 from ebohorqu/Run2016E_pv1_newSubscriptions
+  - New subscription schema, AcqEra Run2016F and Processing version 1
+  - Merge pull request #4309 from ebohorqu/HcalCalIsoTrk_and_cmssw8015
+  - CMSSW_8_0_15, HcalCalIsoTrk for Commissioning PD and cleaning
+  - Merge pull request #4308 from johnhcasallasl/HTLPhysics_ConfigUpdate
+  - Updating HTLPhysics PDs config for high rates
+  - Merge pull request #4307 from ebohorqu/bhpskim_and_cmssw8014_for_replay
+  - BHPskim for some PDs and Run2016E config for replays
+  - Merge pull request #4306 from johnhcasallasl/config_for_Run2016E
+  - Proposed configuration for the new era: Run2016E
+  - Merge pull request #4305 from hufnagel/raw-disk-configurable
+  - make RAW subscription to Disk node optional
+  - Merge pull request #4304 from hufnagel/alcaharvest-sipixelali
+  - Merge pull request #4303 from hufnagel/tier0config-run-era
+  - allow some Tier0Config parameters to be era or run dependent
+  - special handling for SiPixelAli PCL
+  - Merge pull request #4302 from johnhcasallasl/subscriptionsRedefinition2016
+  - Proposed Configuration for Run2016D. New subscriptions distribution and CMSSW_8_0_13_patch1
+  - Merge pull request #4301 from johnhcasallasl/config_Run2016C
+  - Config Changes for Run2016C
+  - Merge pull request #4300 from hufnagel/run_stream_done_quicker
+  - mark run/stream as done quicker
+  - Merge pull request #4299 from johnhcasallasl/CMSSW_8_0_11
+  - Switching to CMSSW_8_0_11
+  - Merge pull request #4298 from johnhcasallasl/CMSSW_8_0_10_patch1
+  - Switching to CMSSW_8_0_10_patch1
+  - Merge pull request #4297 from johnhcasallasl/CMSSW_8_0_10
+  - Newest CMSSW release and Express GT. Adding a new AlCaProducer for Express
+  - Merge pull request #4296 from johnhcasallasl/adjustReplayBasePrio
+  - Adjust base priority for replays
+  - Merge pull request #4295 from hufnagel/repack-notifications-quicker
+  - send SM repack notifications quicker, fixes #4293
+  - Merge pull request #4294 from johnhcasallasl/adjust_diagnose_active_runs
+  - Updating diagnoseActiveRuns script
+  - Merge pull request #4292 from hufnagel/repack-event-limits
+  - consistent behavior for repack event limits
+  - Merge pull request #4291 from johnhcasallasl/increaseRepackMaxEventsValue
+  - Increase of the maxInputEvents value in the Repack config
+  - Merge pull request #4290 from hufnagel/runsummary-query-update
+  - change syntax for runsummary query
+  - Merge pull request #4289 from johnhcasallasl/CMSSW_8_0_8_patch1
+  - Switch to CMSSW_8_0_8_patch1
+  - Merge pull request #4287 from ebohorqu/l1mimbias
+  - L1MinimumBias[0..9] PDs
+  - Merge pull request #4286 from ebohorqu/cmssw808
+  - CMSSW_8_0_8, Reco Processing Version 2 and ZeroBias0
+  - migrating DB table and column names from sename to pnn
+
 2.0.3 to 2.0.4:
   - Merge pull request #4285 from hufnagel/memory-reservation
   - adjust the memory reservation
