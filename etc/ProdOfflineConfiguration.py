@@ -78,7 +78,7 @@ setPromptCalibrationConfig(tier0Config,
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
        'acqEra': {'Run2016D': "CMSSW_8_0_13_patch1"},
-       'default': "CMSSW_8_0_16"
+       'default': "CMSSW_8_0_17"
      }
 
 # Configure ScramArch
@@ -119,22 +119,23 @@ repackVersionOverride = {
     }
 
 expressVersionOverride = {
-    "CMSSW_8_0_0" : "CMSSW_8_0_16",
-    "CMSSW_8_0_1" : "CMSSW_8_0_16",
-    "CMSSW_8_0_2" : "CMSSW_8_0_16",
-    "CMSSW_8_0_3" : "CMSSW_8_0_16",
-    "CMSSW_8_0_4" : "CMSSW_8_0_16",
-    "CMSSW_8_0_5" : "CMSSW_8_0_16",
-    "CMSSW_8_0_6" : "CMSSW_8_0_16",
-    "CMSSW_8_0_7" : "CMSSW_8_0_16",
-    "CMSSW_8_0_8" : "CMSSW_8_0_16",
-    "CMSSW_8_0_9" : "CMSSW_8_0_16",
-    "CMSSW_8_0_10" : "CMSSW_8_0_16",
-    "CMSSW_8_0_11" : "CMSSW_8_0_16",
-    "CMSSW_8_0_12" : "CMSSW_8_0_16",
-    "CMSSW_8_0_13" : "CMSSW_8_0_16",
-    "CMSSW_8_0_14" : "CMSSW_8_0_16",
-    "CMSSW_8_0_15" : "CMSSW_8_0_16"
+    "CMSSW_8_0_0" : "CMSSW_8_0_17",
+    "CMSSW_8_0_1" : "CMSSW_8_0_17",
+    "CMSSW_8_0_2" : "CMSSW_8_0_17",
+    "CMSSW_8_0_3" : "CMSSW_8_0_17",
+    "CMSSW_8_0_4" : "CMSSW_8_0_17",
+    "CMSSW_8_0_5" : "CMSSW_8_0_17",
+    "CMSSW_8_0_6" : "CMSSW_8_0_17",
+    "CMSSW_8_0_7" : "CMSSW_8_0_17",
+    "CMSSW_8_0_8" : "CMSSW_8_0_17",
+    "CMSSW_8_0_9" : "CMSSW_8_0_17",
+    "CMSSW_8_0_10" : "CMSSW_8_0_17",
+    "CMSSW_8_0_11" : "CMSSW_8_0_17",
+    "CMSSW_8_0_12" : "CMSSW_8_0_17",
+    "CMSSW_8_0_13" : "CMSSW_8_0_17",
+    "CMSSW_8_0_14" : "CMSSW_8_0_17",
+    "CMSSW_8_0_15" : "CMSSW_8_0_17",
+    "CMSSW_8_0_16" : "CMSSW_8_0_17"
     }
 
 #set default repack settings for bulk streams
@@ -190,7 +191,7 @@ addDataset(tier0Config, "Commissioning",
            do_reco = True,
            raw_to_disk = True,
            write_dqm = True,
-           alca_producers = [ "TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk" ],
+           alca_producers = [ "TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk", "HcalCalIsolatedBunchSelector" ],
            dqm_sequences = [ "@common", "@hcal" ],
            physics_skims = [ "EcalActivity", "LogError", "LogErrorMonitor" ],
            timePerEvent = 12,
@@ -201,7 +202,7 @@ addDataset(tier0Config, "Commissioning_0T",
            do_reco = True,
            raw_to_disk = True,
            write_dqm = True,
-           alca_producers = [ "TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk" ],
+           alca_producers = [ "TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk", "HcalCalIsolatedBunchSelector" ],
            dqm_sequences = [ "@common", "@hcal" ],
            physics_skims = [ "EcalActivity", "LogError", "LogErrorMonitor" ],
            timePerEvent = 12,
@@ -926,7 +927,7 @@ for dataset in datasets:
                write_dqm = True,
                tape_node = "T1_DE_KIT_MSS",
                disk_node = "T1_DE_KIT_Disk",
-               alca_producers = [ "HcalCalDijets", "HcalCalIsoTrkFilter" ],
+               alca_producers = [ "HcalCalDijets", "HcalCalIsoTrkFilter", "HcalCalIsolatedBunchFilter" ],
                dqm_sequences = [ "@common", "@jetmet", "@hcal" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                timePerEvent = 5.7,
@@ -943,7 +944,7 @@ for dataset in datasets:
                write_dqm = True,
                tape_node = "T1_DE_KIT_MSS",
                disk_node = "T1_DE_KIT_Disk",
-               alca_producers = [ "HcalCalDijets", "HcalCalIsoTrkFilter" ],
+               alca_producers = [ "HcalCalDijets", "HcalCalIsoTrkFilter", "HcalCalIsolatedBunchFilter" ],
                dqm_sequences = [ "@common", "@jetmet", "@hcal" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                timePerEvent = 5.7,
