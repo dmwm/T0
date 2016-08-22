@@ -24,8 +24,8 @@ class FindStoppedRuns(DBFormatter):
                         (EXTRACT(MINUTE FROM stop_interval) * 60) +
                         (EXTRACT(SECOND FROM stop_interval)) AS stoptime
                  FROM (
-                   SELECT (RUNSUMMARY.starttime - TO_TIMESTAMP_TZ('01/01/1970 00:00:00 GMT', 'DD/MM/YYYY HH24:MI:SS TZR')) AS start_interval,
-                          (RUNSUMMARY.stoptime - TO_TIMESTAMP_TZ('01/01/1970 00:00:00 GMT', 'DD/MM/YYYY HH24:MI:SS TZR')) AS stop_interval,
+                   SELECT (RUNSUMMARY.starttime - TO_TIMESTAMP('01/01/1970 00:00:00', 'DD/MM/YYYY HH24:MI:SS')) AS start_interval,
+                          (RUNSUMMARY.stoptime - TO_TIMESTAMP('01/01/1970 00:00:00', 'DD/MM/YYYY HH24:MI:SS')) AS stop_interval,
                           RUNSUMMARY.runnumber AS runnumber
                    FROM CMS_WBM.RUNSUMMARY
                    WHERE RUNSUMMARY.runnumber = :RUN
