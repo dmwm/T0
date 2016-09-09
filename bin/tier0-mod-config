@@ -79,6 +79,10 @@ def modifyConfiguration(config, **args):
     # don't use workqueue
     if hasattr(config, "WorkQueueManager"):
         delattr(config, "WorkQueueManager")
+        
+    # don't use wmarchive data reporter
+    if hasattr(config, "ArchiveDataReporter"):
+        delattr(config, "ArchiveDataReporter")
     
     config.TaskArchiver.useWorkQueue = False
     
