@@ -1,3 +1,23 @@
+2.0.5 to 2.0.6:
+  - Merge pull request #4322 from hufnagel/promptreco-ordered
+  - Merge pull request #4323 from ticoann/remove_archivereporter
+  - remove ArchiveReporter compoent
+  - release PromptReco in run order
+  - Merge pull request #4321 from ebohorqu/cmssw8018
+  - CMSSW_8_0_18_patch1 release
+  - Merge pull request #4320 from ebohorqu/newZeroBiasFirstBunchPDs
+  - Merge pull request #4319 from hufnagel/runsummary-timezone
+  - fix timezone problem in RunSummary query
+  - Two new PDs: ZeroBiasFirstBunchAfterTrain and ZeroBiasFirstBunchInTrain
+  - Merge pull request #4318 from johnhcasallasl/EraRun2016G
+  - Switch to era Run2016G
+  - Merge pull request #4317 from hufnagel/force-close-fix
+  - Merge pull request #4316 from hufnagel/config-era-run-express
+  - Merge pull request #4315 from johnhcasallasl/CMSSW_8_0_17
+  - Switching to CMSSW_8_0_17 and adding the HcalCalIsolatedBunchSelector and HcalCalIsolatedBunchFilter AlCa producers
+  - fix forceCloseRuns script
+  - expand era and run dependent config parameters to express and repack
+
 2.0.4 to 2.0.5:
   - Merge pull request #4288 from alexanderrichards/pnn_fix
   - Merge pull request #4313 from hufnagel/disable-robust-merge
