@@ -433,26 +433,89 @@ for dataset in datasets:
                dqm_sequences = [ "@common" ],
                scenario = ppScenarioB0T)
 
-########################################################
-### HLTPhysics PDs                                   ###
-########################################################
-
-
-datasets = [ "HLTPhysics" ]
+datasets = [ "ZeroBiasIsolatedBunch", "ZeroBiasAfterIsolatedBunch",
+             "ZeroBiasIsolatedBunch0", "ZeroBiasIsolatedBunch1", "ZeroBiasIsolatedBunch2",
+             "ZeroBiasIsolatedBunch3", "ZeroBiasIsolatedBunch4", "ZeroBiasIsolatedBunch5" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
+               raw_to_disk = True,
+               write_dqm = True,
+               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
+               alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias" ],
+               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               timePerEvent = 3.5,
+               sizePerEvent = 1500,
+               scenario = ppScenario)
+
+datasets = [ "ZeroBiasIsolatedBunch_0T", "ZeroBiasAfterIsolatedBunch_0T",
+             "ZeroBiasIsolatedBunch0_0T", "ZeroBiasIsolatedBunch1_0T", "ZeroBiasIsolatedBunch2_0T",
+             "ZeroBiasIsolatedBunch3_0T", "ZeroBiasIsolatedBunch4_0T", "ZeroBiasIsolatedBunch5_0T" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               raw_to_disk = True,
+               write_dqm = True,
+               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
+               alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias" ],
+               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               timePerEvent = 3.5,
+               sizePerEvent = 1500,
+               scenario = ppScenarioB0T)
+
+datasets = [ "ZeroBiasBunchTrains0", "ZeroBiasBunchTrains1", "ZeroBiasBunchTrains2",
+             "ZeroBiasBunchTrains3", "ZeroBiasBunchTrains4", "ZeroBiasBunchTrains5" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               raw_to_disk = True,
+               write_dqm = True,
+               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
+               alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias" ],
+               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               timePerEvent = 3.5,
+               sizePerEvent = 1500,
+               scenario = ppScenario)
+
+datasets = [ "ZeroBiasBunchTrains0_0T", "ZeroBiasBunchTrains1_0T", "ZeroBiasBunchTrains2_0T",
+             "ZeroBiasBunchTrains3_0T", "ZeroBiasBunchTrains4_0T", "ZeroBiasBunchTrains5_0T" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               raw_to_disk = True,
+               write_dqm = True,
+               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
+               alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias" ],
+               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               timePerEvent = 3.5,
+               sizePerEvent = 1500,
+               scenario = ppScenarioB0T)
+
+########################################################
+### HLTPhysics PDs                                   ###
+########################################################
+
+datasets = [ "HLTPhysics", "HLTPhysicsBunchTrains", "HLTPhysicsIsolatedBunch" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               raw_to_disk = True,
                write_dqm = True,
                alca_producers = [ "SiStripCalMinBias", "TkAlMinBias", "HcalCalIsoTrkFilter" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
 
-datasets = [ "HLTPhysics_0T" ]
+datasets = [ "HLTPhysics_0T", "HLTPhysicsBunchTrains_0T", "HLTPhysicsIsolatedBunch_0T"  ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
+               raw_to_disk = True,
                write_dqm = True,
                alca_producers = [ "SiStripCalMinBias", "TkAlMinBias", "HcalCalIsoTrkFilter" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
