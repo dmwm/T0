@@ -536,6 +536,39 @@ for dataset in datasets:
                sizePerEvent = 1500,
                scenario = ppScenarioB0T)
 
+datasets = [ "ZeroBiasPixelHVScan0", "ZeroBiasPixelHVScan1", "ZeroBiasPixelHVScan2", 
+             "ZeroBiasPixelHVScan3", "ZeroBiasPixelHVScan4", "ZeroBiasPixelHVScan5",
+             "ZeroBiasPixelHVScan6", "ZeroBiasPixelHVScan7" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               raw_to_disk = True,
+               write_dqm = True,
+               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
+               alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias" ],
+               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               timePerEvent = 3.5,
+               sizePerEvent = 1500,
+               scenario = ppScenario)
+
+datasets = [ "ZeroBiasPixelHVScan0_0T", "ZeroBiasPixelHVScan1_0T", "ZeroBiasPixelHVScan2_0T",
+             "ZeroBiasPixelHVScan3_0T", "ZeroBiasPixelHVScan4_0T", "ZeroBiasPixelHVScan5_0T",
+             "ZeroBiasPixelHVScan6_0T", "ZeroBiasPixelHVScan7_0T" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               raw_to_disk = True,
+               write_dqm = True,
+               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
+               alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias" ],
+               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               timePerEvent = 3.5,
+               sizePerEvent = 1500,
+               scenario = ppScenarioB0T)
+
+
 ########################################################
 ### HLTPhysics PDs                                   ###
 ########################################################
