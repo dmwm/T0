@@ -41,7 +41,7 @@ processingSite = "T0_CH_CERN"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2016H")
+setAcquisitionEra(tier0Config, "PARun2016A")
 setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -78,7 +78,7 @@ setPromptCalibrationConfig(tier0Config,
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
        'acqEra': {'Run2016D': "CMSSW_8_0_13_patch1"},
-       'default': "CMSSW_8_0_20_patch1"
+       'default': "CMSSW_8_0_22"
      }
 
 # Configure ScramArch
@@ -92,9 +92,21 @@ hcalnzsScenario = "hcalnzsEra_Run2_2016"
 
 # Defaults for processing version
 defaultProcVersionRAW = 1
-defaultProcVersionReco = 2
-expressProcVersion = 2
-alcarawProcVersion = 2
+
+defaultProcVersionReco = {
+       'acqEra': {'Run2016H': "3"},
+       'default': "1"
+     }
+
+expressProcVersion = {
+       'acqEra': {'Run2016H': "3"},
+       'default': "1"
+     }
+
+alcarawProcVersion = {
+       'acqEra': {'Run2016H': "2"},
+       'default': "1"
+     }
 
 # Defaults for GlobalTag
 expressGlobalTag = "80X_dataRun2_Express_v15"
@@ -119,27 +131,28 @@ repackVersionOverride = {
     }
 
 expressVersionOverride = {
-    "CMSSW_8_0_0" : "CMSSW_8_0_20_patch1",
-    "CMSSW_8_0_1" : "CMSSW_8_0_20_patch1",
-    "CMSSW_8_0_2" : "CMSSW_8_0_20_patch1",
-    "CMSSW_8_0_3" : "CMSSW_8_0_20_patch1",
-    "CMSSW_8_0_4" : "CMSSW_8_0_20_patch1",
-    "CMSSW_8_0_5" : "CMSSW_8_0_20_patch1",
-    "CMSSW_8_0_6" : "CMSSW_8_0_20_patch1",
-    "CMSSW_8_0_7" : "CMSSW_8_0_20_patch1",
-    "CMSSW_8_0_8" : "CMSSW_8_0_20_patch1",
-    "CMSSW_8_0_9" : "CMSSW_8_0_20_patch1",
-    "CMSSW_8_0_10" : "CMSSW_8_0_20_patch1",
-    "CMSSW_8_0_11" : "CMSSW_8_0_20_patch1",
-    "CMSSW_8_0_12" : "CMSSW_8_0_20_patch1",
-    "CMSSW_8_0_13" : "CMSSW_8_0_20_patch1",
-    "CMSSW_8_0_14" : "CMSSW_8_0_20_patch1",
-    "CMSSW_8_0_15" : "CMSSW_8_0_20_patch1",
-    "CMSSW_8_0_16" : "CMSSW_8_0_20_patch1",
-    "CMSSW_8_0_17" : "CMSSW_8_0_20_patch1",
-    "CMSSW_8_0_18" : "CMSSW_8_0_20_patch1",
-    "CMSSW_8_0_19" : "CMSSW_8_0_20_patch1",
-    "CMSSW_8_0_20" : "CMSSW_8_0_20_patch1"
+    "CMSSW_8_0_0" : "CMSSW_8_0_22",
+    "CMSSW_8_0_1" : "CMSSW_8_0_22",
+    "CMSSW_8_0_2" : "CMSSW_8_0_22",
+    "CMSSW_8_0_3" : "CMSSW_8_0_22",
+    "CMSSW_8_0_4" : "CMSSW_8_0_22",
+    "CMSSW_8_0_5" : "CMSSW_8_0_22",
+    "CMSSW_8_0_6" : "CMSSW_8_0_22",
+    "CMSSW_8_0_7" : "CMSSW_8_0_22",
+    "CMSSW_8_0_8" : "CMSSW_8_0_22",
+    "CMSSW_8_0_9" : "CMSSW_8_0_22",
+    "CMSSW_8_0_10" : "CMSSW_8_0_22",
+    "CMSSW_8_0_11" : "CMSSW_8_0_22",
+    "CMSSW_8_0_12" : "CMSSW_8_0_22",
+    "CMSSW_8_0_13" : "CMSSW_8_0_22",
+    "CMSSW_8_0_14" : "CMSSW_8_0_22",
+    "CMSSW_8_0_15" : "CMSSW_8_0_22",
+    "CMSSW_8_0_16" : "CMSSW_8_0_22",
+    "CMSSW_8_0_17" : "CMSSW_8_0_22",
+    "CMSSW_8_0_18" : "CMSSW_8_0_22",
+    "CMSSW_8_0_19" : "CMSSW_8_0_22",
+    "CMSSW_8_0_20" : "CMSSW_8_0_22",
+    "CMSSW_8_0_21" : "CMSSW_8_0_22"
     }
 
 #set default repack settings for bulk streams
@@ -967,7 +980,7 @@ for dataset in datasets:
                write_dqm = True,
                tape_node = "T1_FR_CCIN2P3_MSS",
                disk_node = "T1_FR_CCIN2P3_Disk",
-               alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO" ],
+               alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HcalCalHBHEMuonFilter" ],
                dqm_sequences = [ "@common", "@muon" ],
                physics_skims = [ "ZMu", "MuTau", "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
@@ -982,7 +995,7 @@ for dataset in datasets:
                write_dqm = True,
                tape_node = "T1_FR_CCIN2P3_MSS",
                disk_node = "T1_FR_CCIN2P3_Disk",
-               alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO" ],
+               alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HcalCalHBHEMuonFilter" ],
                dqm_sequences = [ "@common", "@muon" ],
                physics_skims = [ "ZMu", "MuTau", "LogError", "LogErrorMonitor" ],
                scenario = ppScenarioB0T)
