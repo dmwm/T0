@@ -70,7 +70,7 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_8_0_23_patch2"
+defaultCMSSWVersion = "CMSSW_8_0_24"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc530")
@@ -99,7 +99,7 @@ globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 numberOfCores = 4
 
 # Splitting parameters for PromptReco
-defaultRecoSplitting = 1000 * numberOfCores
+defaultRecoSplitting = 10000 * numberOfCores
 hiRecoSplitting = 250 * numberOfCores
 alcarawSplitting = 10000 * numberOfCores
 
@@ -110,30 +110,30 @@ repackVersionOverride = {
     }
 
 expressVersionOverride = {
-    "CMSSW_8_0_0" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_1" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_2" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_3" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_4" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_5" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_6" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_7" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_8" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_9" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_10" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_11" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_12" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_13" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_14" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_15" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_16" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_17" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_18" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_19" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_20" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_21" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_22" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_23" : "CMSSW_8_0_23_patch2"
+    "CMSSW_8_0_0" : "CMSSW_8_0_24",
+    "CMSSW_8_0_1" : "CMSSW_8_0_24",
+    "CMSSW_8_0_2" : "CMSSW_8_0_24",
+    "CMSSW_8_0_3" : "CMSSW_8_0_24",
+    "CMSSW_8_0_4" : "CMSSW_8_0_24",
+    "CMSSW_8_0_5" : "CMSSW_8_0_24",
+    "CMSSW_8_0_6" : "CMSSW_8_0_24",
+    "CMSSW_8_0_7" : "CMSSW_8_0_24",
+    "CMSSW_8_0_8" : "CMSSW_8_0_24",
+    "CMSSW_8_0_9" : "CMSSW_8_0_24",
+    "CMSSW_8_0_10" : "CMSSW_8_0_24",
+    "CMSSW_8_0_11" : "CMSSW_8_0_24",
+    "CMSSW_8_0_12" : "CMSSW_8_0_24",
+    "CMSSW_8_0_13" : "CMSSW_8_0_24",
+    "CMSSW_8_0_14" : "CMSSW_8_0_24",
+    "CMSSW_8_0_15" : "CMSSW_8_0_24",
+    "CMSSW_8_0_16" : "CMSSW_8_0_24",
+    "CMSSW_8_0_17" : "CMSSW_8_0_24",
+    "CMSSW_8_0_18" : "CMSSW_8_0_24",
+    "CMSSW_8_0_19" : "CMSSW_8_0_24",
+    "CMSSW_8_0_20" : "CMSSW_8_0_24",
+    "CMSSW_8_0_21" : "CMSSW_8_0_24",
+    "CMSSW_8_0_22" : "CMSSW_8_0_24",
+    "CMSSW_8_0_23" : "CMSSW_8_0_24"
     }
 
 #set default repack settings for bulk streams
@@ -1236,14 +1236,14 @@ addDataset(tier0Config, "PAForward",
 addDataset(tier0Config, "PADoubleMuon",
            do_reco = True,
            write_dqm = True,
-           dqm_sequences = [ "@common" ],
+           dqm_sequences = [ "@common", "@muon" ],
            alca_producers = [ "TkAlMuonIsolatedPA", "TkAlZMuMuPA", "TkAlUpsilonMuMuPA", "DtCalib" ],
            scenario = hiScenario)
 
 addDataset(tier0Config, "PASingleMuon",
            do_reco = True,
            write_dqm = True,
-           dqm_sequences = [ "@common" ],
+           dqm_sequences = [ "@common", "@muon" ],
            alca_producers = [ "TkAlMuonIsolatedPA", "DtCalib" ],
            physics_skims = [ "PAZMM" ],
            scenario = hiScenario)
@@ -1260,7 +1260,7 @@ for dataset in datasets:
 addDataset(tier0Config, "PAEGJet1",
            do_reco = True,
            write_dqm = True,
-           dqm_sequences = [ "@common" ],
+           dqm_sequences = [ "@common", "@egamma", "@hcal", "@jetmet" ],
            physics_skims = [ "PAZEE" ],
            scenario = hiScenario)
 

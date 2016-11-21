@@ -41,7 +41,7 @@ processingSite = "T0_CH_CERN"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "PARun2016B")
+setAcquisitionEra(tier0Config, "PARun2016C")
 setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "hidata")
@@ -76,7 +76,7 @@ setPromptCalibrationConfig(tier0Config,
 #   'default': Value5 }
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_8_0_23_patch2"
+defaultCMSSWVersion = "CMSSW_8_0_24"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc530")
@@ -118,7 +118,7 @@ globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 numberOfCores = 4
 
 # Splitting parameters for PromptReco
-defaultRecoSplitting = 3000 * numberOfCores
+defaultRecoSplitting = 10000 * numberOfCores
 hiRecoSplitting = 200 * numberOfCores
 alcarawSplitting = 20000 * numberOfCores
 
@@ -129,30 +129,30 @@ repackVersionOverride = {
     }
 
 expressVersionOverride = {
-    "CMSSW_8_0_0" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_1" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_2" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_3" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_4" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_5" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_6" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_7" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_8" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_9" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_10" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_11" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_12" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_13" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_14" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_15" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_16" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_17" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_18" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_19" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_20" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_21" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_22" : "CMSSW_8_0_23_patch2",
-    "CMSSW_8_0_23" : "CMSSW_8_0_23_patch2"
+    "CMSSW_8_0_0" : "CMSSW_8_0_24",
+    "CMSSW_8_0_1" : "CMSSW_8_0_24",
+    "CMSSW_8_0_2" : "CMSSW_8_0_24",
+    "CMSSW_8_0_3" : "CMSSW_8_0_24",
+    "CMSSW_8_0_4" : "CMSSW_8_0_24",
+    "CMSSW_8_0_5" : "CMSSW_8_0_24",
+    "CMSSW_8_0_6" : "CMSSW_8_0_24",
+    "CMSSW_8_0_7" : "CMSSW_8_0_24",
+    "CMSSW_8_0_8" : "CMSSW_8_0_24",
+    "CMSSW_8_0_9" : "CMSSW_8_0_24",
+    "CMSSW_8_0_10" : "CMSSW_8_0_24",
+    "CMSSW_8_0_11" : "CMSSW_8_0_24",
+    "CMSSW_8_0_12" : "CMSSW_8_0_24",
+    "CMSSW_8_0_13" : "CMSSW_8_0_24",
+    "CMSSW_8_0_14" : "CMSSW_8_0_24",
+    "CMSSW_8_0_15" : "CMSSW_8_0_24",
+    "CMSSW_8_0_16" : "CMSSW_8_0_24",
+    "CMSSW_8_0_17" : "CMSSW_8_0_24",
+    "CMSSW_8_0_18" : "CMSSW_8_0_24",
+    "CMSSW_8_0_19" : "CMSSW_8_0_24",
+    "CMSSW_8_0_20" : "CMSSW_8_0_24",
+    "CMSSW_8_0_21" : "CMSSW_8_0_24",
+    "CMSSW_8_0_22" : "CMSSW_8_0_24",
+    "CMSSW_8_0_23" : "CMSSW_8_0_24"
     }
 
 #set default repack settings for bulk streams
@@ -337,6 +337,7 @@ for dataset in datasets:
 addDataset(tier0Config, "HcalNZS",
            do_reco = True,
            write_dqm = True,
+           write_miniaod = True,
            dqm_sequences = [ "@common", "@hcal" ],
            alca_producers = [ "HcalCalMinBias" ],
            physics_skims = [ "LogError", "LogErrorMonitor" ],
@@ -347,6 +348,7 @@ addDataset(tier0Config, "HcalNZS",
 addDataset(tier0Config, "HcalNZS_0T",
            do_reco = True,
            write_dqm = True,
+           write_miniaod = True,
            dqm_sequences = [ "@common", "@hcal" ],
            alca_producers = [ "HcalCalMinBias" ],
            physics_skims = [ "LogError", "LogErrorMonitor" ],
@@ -1455,14 +1457,14 @@ addDataset(tier0Config, "PAForward",
 addDataset(tier0Config, "PADoubleMuon",
            do_reco = True,
            write_dqm = True,
-           dqm_sequences = [ "@common" ],
+           dqm_sequences = [ "@common", "@muon" ],
            alca_producers = [ "TkAlMuonIsolatedPA", "TkAlZMuMuPA", "TkAlUpsilonMuMuPA", "DtCalib" ],
            scenario = hiScenario)
 
 addDataset(tier0Config, "PASingleMuon",
            do_reco = True,
            write_dqm = True,
-           dqm_sequences = [ "@common" ],
+           dqm_sequences = [ "@common", "@muon" ],
            alca_producers = [ "TkAlMuonIsolatedPA", "DtCalib" ],
            physics_skims = [ "PAZMM" ],
            scenario = hiScenario)
@@ -1479,7 +1481,7 @@ for dataset in datasets:
 addDataset(tier0Config, "PAEGJet1",
            do_reco = True,
            write_dqm = True,
-           dqm_sequences = [ "@common" ],
+           dqm_sequences = [ "@common", "@ecal", "@egamma", "@hcal", "@jetmet" ],
            physics_skims = [ "PAZEE" ],
            scenario = hiScenario)
 
@@ -1604,6 +1606,10 @@ addExpressConfig(tier0Config, "HLTMonitor",
                  sizePerEvent = 1700, #I have to get some stats to set this properly
                  versionOverride = expressVersionOverride)
 
+###############################
+### ExpressPA configuration ###
+###############################
+
 addExpressConfig(tier0Config, "ExpressPA",
                  scenario = hiScenario,
                  data_tiers = [ "FEVT" ],
@@ -1611,7 +1617,7 @@ addExpressConfig(tier0Config, "ExpressPA",
                  alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "DtCalib", "SiStripCalMinBias", 
                                     "SiStripCalMinBiasAfterAbortGap", "LumiPixelsMinBias", "PromptCalibProd",
                                     "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli", "PromptCalibProdSiStripGains", 
-                                    "PromptCalibProdSiStripGainsAfterAbortGap" ],
+                                    "PromptCalibProdSiStripGainsAfterAbortGap", "SiStripPCLHistos" ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
                  global_tag_connect = globalTagConnect,
