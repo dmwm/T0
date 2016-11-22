@@ -126,9 +126,7 @@ class ExpressWorkloadFactory(StdBase):
 
             stepTwoCmsswHelper = stepTwoCmssw.getTypeHelper()
 
-            if self.multicore:
-                # if multicore, poke in the number of cores setting
-                stepTwoCmsswHelper.setNumberOfCores(self.multicoreNCores)
+            stepTwoCmsswHelper.setNumberOfCores(self.multicore)
 
             stepTwoCmsswHelper.setGlobalTag(self.globalTag)
             stepTwoCmsswHelper.setupChainedProcessing("cmsRun1", conversionOutLabel)
@@ -187,6 +185,8 @@ class ExpressWorkloadFactory(StdBase):
                 alcaSkimTask.setInputReference(expressTask.getStep(expressRecoStepName),
                                                outputModule = expressOutLabel)
 
+                alcaTaskConf = {'Multicore': 1}
+
                 scenarioArgs = { 'globalTag' : self.globalTag,
                                  'globalTagTransaction' : self.globalTagTransaction,
                                  'skims' : self.alcaSkims,
@@ -203,7 +203,7 @@ class ExpressWorkloadFactory(StdBase):
                                                            splitArgs = mySplitArgs,
                                                            stepType = cmsswStepType,
                                                            forceMerged = True,
-                                                           useMulticore = False)
+                                                           taskConf=alcaTaskConf)
 
                 alcaSkimTask.setTaskType("Express")
 
