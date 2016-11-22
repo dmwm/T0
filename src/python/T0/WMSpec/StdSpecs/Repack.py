@@ -10,6 +10,8 @@ repacking -> RAW -> optional merge
 
 import os
 
+from WMCore.Lexicon import procstringT0
+
 from WMCore.WMSpec.StdSpecs.StdBase import StdBase
 
 class RepackWorkloadFactory(StdBase):
@@ -196,9 +198,10 @@ class RepackWorkloadFactory(StdBase):
         - null: False
         """
         baseArgs = StdBase.getWorkloadArguments()
-        specArgs = {"RequestType": {"default" : "Repack"},
-                    "Scenario": {"default" : "fake", "attr" : "procScenario"},
-                    "GlobalTag": {"default" : "fake"},
+        specArgs = {"RequestType": {"default": "Repack"},
+                    "Scenario": {"default": "fake", "attr": "procScenario"},
+                    "GlobalTag": {"default": "fake"},
+                    "ProcessingString": {"default": "", "validate": procstringT0},
                     "BlockCloseDelay": {"type": int, "optional": False,
                                         "validate": lambda x : x > 0,
                                         },

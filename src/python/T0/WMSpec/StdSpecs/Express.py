@@ -17,7 +17,7 @@ import logging
 import WMCore.WMSpec.Steps.StepFactory as StepFactory
 
 from WMCore.WMSpec.WMWorkloadTools import makeList
-from WMCore.Lexicon import cmsswversion
+from WMCore.Lexicon import cmsswversion,procstringT0
 
 from WMCore.WMSpec.StdSpecs.StdBase import StdBase
 
@@ -479,21 +479,22 @@ class ExpressWorkloadFactory(StdBase):
 
         """
         baseArgs = StdBase.getWorkloadArguments()
-        specArgs = {"RequestType": {"default" : "Express"},
-                    "Scenario": {"optional" : False, "attr" : "procScenario"},
-                    "RecoCMSSWVersion": {"optional" : False, "validate" : cmsswversion,
-                                         "attr" : "recoFrameworkVersion", "null" : True},
-                    "RecoScramArch": {"optional" : False, "null" : True},
-                    "GlobalTag": {"optional" : False},
-                    "GlobalTagTransaction": {"optional" : False},
-                    "StreamName": {"optional" : False},
-                    "SpecialDataset": {"optional" : False},
-                    "AlcaHarvestTimeout": {"type" : int, "optional" : False},
-                    "AlcaHarvestDir": {"optional" : False, "null" : True},
-                    "AlcaSkims": {"type" : makeList, "optional" : False},
-                    "DQMSequences": {"type" : makeList, "attr" : "dqmSequences", "optional" : False},
-                    "BlockCloseDelay": {"type" : int, "optional" : False,
-                                        "validate" : lambda x : x > 0
+        specArgs = {"RequestType": {"default": "Express"},
+                    "Scenario": {"optional": False, "attr": "procScenario"},
+                    "RecoCMSSWVersion": {"optional": False, "validate": cmsswversion,
+                                         "attr": "recoFrameworkVersion", "null": True},
+                    "RecoScramArch": {"optional": False, "null": True},
+                    "GlobalTag": {"optional": False},
+                    "GlobalTagTransaction": {"optional": False},
+                    "ProcessingString": {"default": "", "validate": procstringT0},
+                    "StreamName": {"optional": False},
+                    "SpecialDataset": {"optional": False},
+                    "AlcaHarvestTimeout": {"type": int, "optional": False},
+                    "AlcaHarvestDir": {"optional": False, "null": True},
+                    "AlcaSkims": {"type": makeList, "optional": False},
+                    "DQMSequences": {"type": makeList, "attr": "dqmSequences", "optional": False},
+                    "BlockCloseDelay": {"type": int, "optional": False,
+                                        "validate": lambda x : x > 0
                                         },
                     }
         baseArgs.update(specArgs)
