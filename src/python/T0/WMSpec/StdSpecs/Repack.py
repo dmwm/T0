@@ -62,8 +62,7 @@ class RepackWorkloadFactory(StdBase):
                                                  scenarioArgs = { 'outputs' : self.outputs },
                                                  splitAlgo = "Repack",
                                                  splitArgs = mySplitArgs,
-                                                 stepType = cmsswStepType,
-                                                 useMulticore = False)
+                                                 stepType = cmsswStepType)
 
         repackTask.setTaskType("Repack")
 
