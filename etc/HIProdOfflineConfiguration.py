@@ -1508,6 +1508,51 @@ addDataset(tier0Config, "PAEmptyBX",
            scenario = hiScenario)
 
 #############################
+### PDs pPb VdM scan  ###
+#############################
+
+datasets = [ "PAL1AlwaysTrue0", "PAL1AlwaysTrue1", "PAL1AlwaysTrue2", "PAL1AlwaysTrue3",
+             "PAL1AlwaysTrue4", "PAL1AlwaysTrue5", "PAL1AlwaysTrue6", "PAL1AlwaysTrue7",
+             "PAL1AlwaysTrue8", "PAL1AlwaysTrue9" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_dqm = True,
+               alca_producers = [ "LumiPixelsMinBias" ],
+               dqm_sequences = [ "@common" ],
+               scenario = hiScenario)
+
+datasets = [ "PAMinimumBiasHFOR0", "PAMinimumBiasHFOR1", "PAMinimumBiasHFOR2" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_dqm = True,
+               alca_producers = [ "LumiPixelsMinBias" ],
+               dqm_sequences = [ "@common" ],
+               scenario = hiScenario)
+
+datasets = [ "PAZeroBias0", "PAZeroBias1", "PAZeroBias2", "PAZeroBias3",
+             "PAZeroBias4", "PAZeroBias5", "PAZeroBias6", "PAZeroBias7",
+             "PAZeroBias8", "PAZeroBias9" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_dqm = True,
+               alca_producers = [ "LumiPixelsMinBias" ],
+               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
+               scenario = hiScenario)
+
+addDataset(tier0Config, "PADoubleMuOpen",
+           do_reco = True,
+           write_dqm = True,
+           alca_producers = [ "LumiPixelsMinBias" ],
+           dqm_sequences = [ "@common", "@muon" ],
+           scenario = hiScenario)
+
+#############################
 ### Express configuration ###
 #############################
 
