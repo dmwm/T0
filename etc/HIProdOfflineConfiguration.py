@@ -1484,7 +1484,10 @@ addDataset(tier0Config, "PAEGJet1",
            scenario = hiScenario)
 
 datasets = [ "PAMinimumBias1", "PAMinimumBias2", "PAMinimumBias3", "PAMinimumBias4", 
-             "PAMinimumBias5", "PAMinimumBias6", "PAMinimumBias7", "PAMinimumBias8" ]
+             "PAMinimumBias5", "PAMinimumBias6", "PAMinimumBias7", "PAMinimumBias8", 
+             "PAMinimumBias9", "PAMinimumBias10", "PAMinimumBias11", "PAMinimumBias12",
+             "PAMinimumBias13", "PAMinimumBias14", "PAMinimumBias15", "PAMinimumBias16",
+             "PAMinimumBias17", "PAMinimumBias18", "PAMinimumBias19", "PAMinimumBias20" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
