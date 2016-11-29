@@ -293,25 +293,28 @@ class Repack(JobFactory):
 
         self.newJob(name = "%s-%s" % (self.jobNamePrefix, makeUUID()))
 
+        largestFile = 0
         for streamer in streamerList:
+            largestFile = max(largestFile, streamer['filesize'])
             f = File(id = streamer['id'],
                      lfn = streamer['lfn'])
             f.setLocation(streamer['location'], immediateSave = False)
             self.currentJob.addFile(f)
 
         # allow large (single lumi) repack to use multiple cores
-        numberOfCores = 1 + (int)(jobSize/(20*1000*1000*1000))
+        numberOfCores = 1 + (int)((jobSize+largestFile)/(20*1000*1000*1000))
         if numberOfCores > 1:
             self.currentJob.addBaggageParameter("numberOfCores", numberOfCores)
 
         # job time based on
-        #   - 5 min initialization
-        #   - 0.5MB/s repack speed
-        #   - checksum calculation at 5MB/s
-        #   - stageout at 5MB/s
+        #  - 5 min initialization
+        #  - 1.5MB/s repack speed
+        #  - checksum calculation at 5MB/s
+        #  - stageout at 5MB/s
         # job disk based on
-        #   - RAW on local disk (factor 1)
-        jobTime = 300 + jobSize/500000 + (jobSize*2)/5000000
+        #  - input for largest file on local disk
+        #  - output on local disk (factor 1)
+        jobTime = 300 + jobSize/1500000 + (jobSize*2)/5000000
         self.currentJob.addResourceEstimates(jobTime = jobTime,
                                              disk = jobSize/1024,
                                              memory = memoryRequirement)
