@@ -16,7 +16,7 @@ from WMQuality.TestInit import TestInit
 from WMCore.DAOFactory import DAOFactory
 from WMCore.Database.DBFactory import DBFactory
 from WMCore.Configuration import loadConfigurationFile
-from WMCore.Services.UUID import makeUUID
+from WMCore.Services.UUIDLib import makeUUID
 from WMCore.Services.RequestDB.RequestDBWriter import RequestDBWriter
 
 from T0.RunConfig import RunConfigAPI

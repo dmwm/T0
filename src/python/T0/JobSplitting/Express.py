@@ -11,7 +11,7 @@ from WMCore.WMBS.File import File
 
 from WMCore.JobSplitting.JobFactory import JobFactory
 from WMCore.DAOFactory import DAOFactory
-from WMCore.Services.UUID import makeUUID
+from WMCore.Services.UUIDLib import makeUUID
 
 
 class Express(JobFactory):
