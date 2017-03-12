@@ -26,6 +26,7 @@ from WMCore.Services.RequestDB.RequestDBWriter import RequestDBWriter
 from T0.RunConfig import RunConfigAPI
 from T0.RunLumiCloseout import RunLumiCloseoutAPI
 from T0.ConditionUpload import ConditionUploadAPI
+from T0.StorageManager import StorageManagerAPI
 
 
 class Tier0FeederPoller(BaseWorkerThread):
@@ -48,28 +49,31 @@ class Tier0FeederPoller(BaseWorkerThread):
         self.dropboxuser = getattr(config.Tier0Feeder, "dropboxuser", None)
         self.dropboxpass = getattr(config.Tier0Feeder, "dropboxpass", None)
 
-        self.transferSystemBaseDir = getattr(config.Tier0Feeder, "transferSystemBaseDir", None)
-        if self.transferSystemBaseDir != None:
-            if not os.path.exists(self.transferSystemBaseDir):
-                self.transferSystemBaseDir = None
-
         self.dqmUploadProxy = getattr(config.Tier0Feeder, "dqmUploadProxy", None)
         self.serviceProxy = getattr(config.Tier0Feeder, "serviceProxy", None)
 
         self.localRequestCouchDB = RequestDBWriter(config.AnalyticsDataCollector.localT0RequestDBURL, 
                                                    couchapp = config.AnalyticsDataCollector.RequestCouchApp)
 
+        self.injectedRuns = set()
+
         hltConfConnectUrl = config.HLTConfDatabase.connectUrl
         dbFactoryHltConf = DBFactory(logging, dburl = hltConfConnectUrl, options = {})
-        dbInterfaceHltConf = dbFactoryHltConf.connect()
+        self.dbInterfaceHltConf = dbFactoryHltConf.connect()
         daoFactoryHltConf = DAOFactory(package = "T0.WMBS",
                                        logger = logging,
-                                       dbinterface = dbInterfaceHltConf)
+                                       dbinterface = self.dbInterfaceHltConf)
         self.getHLTConfigDAO = daoFactoryHltConf(classname = "RunConfig.GetHLTConfig")
 
         storageManagerConnectUrl = config.StorageManagerDatabase.connectUrl
         dbFactoryStorageManager = DBFactory(logging, dburl = storageManagerConnectUrl, options = {})
         self.dbInterfaceStorageManager = dbFactoryStorageManager.connect()
+
+        self.dbInterfaceSMNotify = None
+        if hasattr(config, "SMNotifyDatabase"):
+            smNotifyConnectUrl = config.SMNotifyDatabase.connectUrl
+            dbFactorySMNotify = DBFactory(logging, dburl = smNotifyConnectUrl, options = {})
+            self.dbInterfaceSMNotify = dbFactorySMNotify.connect()
 
         self.getExpressReadyRunsDAO = None
         if hasattr(config, "PopConLogDatabase"):
@@ -119,6 +123,30 @@ class Tier0FeederPoller(BaseWorkerThread):
 
         # only configure new runs and run/streams if we have a valid Tier0 configuration
         if tier0Config != None:
+
+            #
+            # we don't inject data if the Tier0Config is unreadable
+            #
+            # discover new data from StorageManager and inject into Tier0
+            # (if the config specifies a list of runs do it only once)
+            #
+            # replays inject data only once (and ignore data status)
+            #
+            if tier0Config.Global.InjectRuns == None:
+                StorageManagerAPI.injectNewData(self.dbInterfaceStorageManager,
+                                                self.dbInterfaceHltConf,
+                                                self.dbInterfaceSMNotify)
+            else:
+                injectRuns = set()
+                for injectRun in tier0Config.Global.InjectRuns:
+                    if injectRun not in self.injectedRuns:
+                        injectRuns.add(injectRun)
+                for injectRun in injectRuns:
+                    StorageManagerAPI.injectNewData(self.dbInterfaceStorageManager,
+                                                    self.dbInterfaceHltConf,
+                                                    self.dbInterfaceSMNotify,
+                                                    injectRun)
+                    self.injectedRuns.add(injectRun)
 
             #
             # find new runs, setup global run settings and stream/dataset/trigger mapping
@@ -209,7 +237,7 @@ class Tier0FeederPoller(BaseWorkerThread):
         # mark express and repack workflows as injected if certain conditions are met
         # (we don't do it immediately to prevent the TaskArchiver from cleaning up too early)
         #
-        markWorkflowsInjectedDAO.execute(self.transferSystemBaseDir != None,
+        markWorkflowsInjectedDAO.execute(self.dbInterfaceSMNotify != None,
                                          transaction = False)
 
         #
@@ -254,8 +282,9 @@ class Tier0FeederPoller(BaseWorkerThread):
         #
         # send repacked notifications to StorageManager
         #
-        if self.transferSystemBaseDir != None:
-            self.notifyStorageManager()
+        if self.dbInterfaceSMNotify:
+            StorageManagerAPI.markRepacked(self.dbInterfaceSMNotify)
+
 
         #
         # upload PCL conditions to DropBox
@@ -341,55 +370,6 @@ class Tier0FeederPoller(BaseWorkerThread):
         if response == "OK" or "EXISTS":
             logging.debug("Successfully closed workflow %s" % workflowName)
             markCloseoutWorkflowMonitoringDAO.execute(workflowId)
-
-        return
-
-    def notifyStorageManager(self):
-        """
-        _notifyStorageManager_
-
-        Find all finished streamers for closed all run/stream
-        Send the notification message to StorageManager
-        Update the streamer status to finished (deleted = 1)
-
-        """
-        getFinishedStreamersDAO = self.daoFactory(classname = "SMNotification.GetFinishedStreamers")
-        markStreamersFinishedDAO = self.daoFactory(classname = "SMNotification.MarkStreamersFinished")
-
-        allFinishedStreamers = getFinishedStreamersDAO.execute(transaction = False)
-
-        chunkSize = 50
-        for finishedStreamers in [ allFinishedStreamers[i:i+chunkSize] for i in range(0, len(allFinishedStreamers), chunkSize) ]:
-
-            streamers = []
-            filenameParams = ""
-
-            for (id, lfn) in finishedStreamers:
-                streamers.append(id)
-                filenameParams += "-FILENAME %s " % os.path.basename(lfn)
-
-            logging.debug("Notifying transfer system about processed streamers")
-            p = subprocess.Popen("/bin/bash", stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            output, error = p.communicate("""
-            export T0_BASE_DIR=%s
-            export T0ROOT=${T0_BASE_DIR}/T0
-            export CONFIG=${T0_BASE_DIR}/Config/TransferSystem_CERN.cfg
- 
-            export PERL5LIB=${T0ROOT}/perl_lib
-
-            unset LANGUAGE
-            unset LC_ALL
-            unset LC_CTYPE
-            export LANG=C
-
-            ${T0ROOT}/operations/sendRepackedStatus.pl --config $CONFIG %s
-            """ % (self.transferSystemBaseDir, filenameParams))
-
-            if len(error) > 0:
-                logging.error("ERROR: Could not notify transfer system about processed streamers")
-                logging.error("ERROR: %s" % error)
-            else:
-                markStreamersFinishedDAO.execute(streamers, transaction = False)
 
         return
 

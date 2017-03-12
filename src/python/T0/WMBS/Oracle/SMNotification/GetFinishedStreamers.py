@@ -16,6 +16,7 @@ class GetFinishedStreamers(DBFormatter):
     def execute(self, conn = None, transaction = False):
 
         sql = """SELECT streamer.id,
+                        streamer.p5_id,
                         wmbs_file_details.lfn
                  FROM streamer
                  LEFT OUTER JOIN wmbs_sub_files_complete ON

@@ -1011,7 +1011,6 @@ class Tier0FeederTest(unittest.TestCase):
 
         """
         self.insertRunDAO.execute(binds = { 'RUN' : run,
-                                            'TIME' : int(time.time()),
                                             'HLTKEY' : self.hltkey },
                                   transaction = False)
 

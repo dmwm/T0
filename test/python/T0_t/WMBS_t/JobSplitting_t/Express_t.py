@@ -65,7 +65,6 @@ class ExpressTest(unittest.TestCase):
 
         insertRunDAO = daoFactory(classname = "RunConfig.InsertRun")
         insertRunDAO.execute(binds = { 'RUN' : 1,
-                                       'TIME' : int(time.time()),
                                        'HLTKEY' : "someHLTKey" },
                              transaction = False)
 

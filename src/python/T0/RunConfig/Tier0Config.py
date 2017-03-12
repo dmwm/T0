@@ -12,6 +12,8 @@ Tier0Configuration - Global configuration object
 | |       |
 | |       |--> Version - The configuration version (not used at the moment)
 | |       |
+| |       |--> InjectRuns - The runs to be injected into the system from the SM database (default is None)
+| |       |
 | |       |--> AcquisitionEra - The acquisition era for the run
 | |       |
 | |       |--> Backfill - The backfill mode, can be None, 1 or 2
@@ -216,6 +218,8 @@ def createTier0Config():
     tier0Config.section_("Streams")
     tier0Config.section_("Datasets")
     tier0Config.section_("Global")
+
+    tier0Config.Global.InjectRuns = None
 
     tier0Config.Global.ScramArches = {}
     tier0Config.Global.Backfill = None
@@ -590,6 +594,15 @@ def setConfigVersion(config, version):
     revision of the configuration.
     """
     config.Global.Version = version
+    return
+
+def setInjectRuns(config, injectRuns):
+    """
+    _setInjectRuns_
+
+    Set the runs to be injected into the Tier0.
+    """
+    config.Global.InjectRuns = injectRuns
     return
 
 def ignoreStream(config, streamName):

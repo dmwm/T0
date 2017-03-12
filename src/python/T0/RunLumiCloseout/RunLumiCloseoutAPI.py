@@ -20,8 +20,8 @@ def stopRuns(dbInterfaceStorageManager):
     For all active runs check the RunSummary records to see if the
     run has stoppedended. If it has, update T0AST to reflect this.
 
-    Replays are handled differently, they will update stop_time with
-    close_time (once that has been set) and leave start_time as-is.
+    Replays are handled differently, they will update start_time and
+    stop_time with the min and max streamer insert times.
 
     """
     logging.debug("stopRuns()")
