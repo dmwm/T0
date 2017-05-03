@@ -104,10 +104,9 @@ class Create(DBCreator):
             """CREATE TABLE run (
                  run_id             int           not null,
                  status             int           default 1 not null,
-                 last_updated       int           not null,
                  express_released   int           default 0 not null,
                  hltkey             varchar2(255) not null,
-                 start_time         int           not null,
+                 start_time         int           default 0 not null,
                  stop_time          int           default 0 not null,
                  close_time         int           default 0 not null,
                  lumicount          int           default 0 not null,
@@ -236,6 +235,7 @@ class Create(DBCreator):
         self.create[len(self.create)] = \
             """CREATE TABLE streamer (
                  id            int not null,
+                 p5_id         int not null,
                  run_id        int not null,
                  stream_id     int not null,
                  lumi_id       int not null,

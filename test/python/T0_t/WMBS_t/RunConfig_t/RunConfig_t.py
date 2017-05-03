@@ -88,7 +88,6 @@ class RunConfigTest(unittest.TestCase):
 
         insertRunDAO = daoFactory(classname = "RunConfig.InsertRun")
         insertRunDAO.execute(binds = { 'RUN' : 176161,
-                                       'TIME' : int(time.time()),
                                        'HLTKEY' : self.hltkey },
                              transaction = False)
 

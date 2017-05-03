@@ -1,13 +1,13 @@
 """
-_InsertStreamCMSSWVersion_
+_InsertOfflineFileStatus_
 
-Oracle implementation of InsertStreamCMSSWVersion
+Oracle implementation of InsertOfflineFileStatus
 
 """
 
 from WMCore.Database.DBFormatter import DBFormatter
 
-class InsertStreamCMSSWVersion(DBFormatter):
+class InsertOfflineFileStatus(DBFormatter):
 
     def execute(self, binds, conn = None, transaction = False):
 
@@ -16,19 +16,14 @@ class InsertStreamCMSSWVersion(DBFormatter):
                  BEGIN
                    SELECT COUNT(*)
                    INTO cnt
-                   FROM run_stream_cmssw_assoc
-                   WHERE run_id = :RUN
-                   AND stream_id = (SELECT id FROM stream WHERE name = :STREAM)
+                   FROM file_transfer_status_offline
+                   WHERE p5_fileid = :P5_ID
                    ;
                    IF (cnt = 0)
                    THEN
-                     INSERT INTO run_stream_cmssw_assoc
-                     (RUN_ID, STREAM_ID, ONLINE_VERSION)
-                     SELECT :RUN,
-                            (SELECT id FROM stream WHERE name = :STREAM),
-                            id
-                     FROM cmssw_version
-                     WHERE name = :VERSION
+                     INSERT INTO file_transfer_status_offline
+                     (P5_FILEID, FILENAME, T0_CHECKED_TIME, CHECKED_RETRIEVE)
+                     VALUES(:P5_ID, :FILENAME, CURRENT_TIMESTAMP, 1)
                      ;
                    END IF;
                  EXCEPTION
