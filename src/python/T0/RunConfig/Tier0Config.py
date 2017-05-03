@@ -12,7 +12,11 @@ Tier0Configuration - Global configuration object
 | |       |
 | |       |--> Version - The configuration version (not used at the moment)
 | |       |
-| |       |--> InjectRuns - The runs to be injected into the system from the SM database (default is None)
+| |       |--> InjectRuns - The runs to be injected into the system from the SM database (default is auto-discovery)
+| |       |
+| |       |--> InjectMinRun - Lowest run number to be injected into the system from the SM database (default is unlimited)
+| |       |
+| |       |--> InjectMaxRun - Highest run number to be injected into the system from the SM database (default is unlimited)
 | |       |
 | |       |--> AcquisitionEra - The acquisition era for the run
 | |       |
@@ -220,6 +224,8 @@ def createTier0Config():
     tier0Config.section_("Global")
 
     tier0Config.Global.InjectRuns = None
+    tier0Config.Global.InjectMinRun = None
+    tier0Config.Global.InjectMaxRun = None
 
     tier0Config.Global.ScramArches = {}
     tier0Config.Global.Backfill = None
@@ -603,6 +609,24 @@ def setInjectRuns(config, injectRuns):
     Set the runs to be injected into the Tier0.
     """
     config.Global.InjectRuns = injectRuns
+    return
+
+def setInjectMinRun(config, injectMinRun):
+    """
+    _setInjectMinRun_
+
+    Set the lowest run to be injected into the Tier0.
+    """
+    config.Global.InjectMinRun = injectMinRun
+    return
+
+def setInjectMaxRun(config, injectMaxRun):
+    """
+    _setInjectMaxRun_
+
+    Set the highest run to be injected into the Tier0.
+    """
+    config.Global.InjectMaxRun = injectMaxRun
     return
 
 def ignoreStream(config, streamName):
