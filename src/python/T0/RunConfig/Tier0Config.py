@@ -20,8 +20,6 @@ Tier0Configuration - Global configuration object
 | |       |
 | |       |--> ProcessingSite - Main (CERN) site where processing is done.
 | |       |
-| |       |--> ExpressSubscribeNode - Node to which Express is subscribed.
-| |       |
 | |       |--> BulkDataType - The bulk data type for the run
 | |       |
 | |       |--> DQMDataTier - The data tier used for DQM (default is DQMIO).
@@ -132,6 +130,16 @@ Tier0Configuration - Global configuration object
 |             |     |
 |             |     |--> DqmInterval - periodic DQM harvesting interval
 |             |     |
+|             |     |--> DataType - The type of data in this stream (default express)
+|             |     |
+|             |     |--> ArchivalNode - The archival PhEDEx node (default None)
+|             |     |
+|             |     |--> TapeNode - The tape PhEDEx node (default None)
+|             |     |
+|             |     |--> DiskNode - The disk PhEDEx node (default None)
+|             |     |
+|             |     |--> PhEDExGroup - The PhEDEx group for the subscriptions.
+|             |     |
 |             |     |--> BlockCloseDelay - delay to close block in WMAgent
 |             |
 |             |--> Register - Configuration section for register streams
@@ -225,8 +233,6 @@ def createTier0Config():
     tier0Config.Global.Backfill = None
 
     tier0Config.Global.ProcessingSite = "T0_CH_CERN"
-
-    tier0Config.Global.ExpressSubscribeNode = None
 
     tier0Config.Global.DQMDataTier = "DQMIO"
 
@@ -529,15 +535,6 @@ def setProcessingSite(config, site):
     config.Global.ProcessingSite = site
     return
 
-def setExpressSubscribeNode(config, node):
-    """
-    _setExpressSubscribeNode_
-
-    Set the node to which Express is subscribed.
-    """
-    config.Global.ExpressSubscribeNode = node
-    return
-
 def setBulkDataType(config, type):
     """
     _setBulkDataType_
@@ -757,6 +754,13 @@ def addExpressConfig(config, streamName, **options):
     streamConfig.Express.MaxLatency = options.get("maxLatency", 15 * 23)
 
     streamConfig.Express.PeriodicHarvestInterval = options.get("periodicHarvestInterval", 0)
+
+    streamConfig.Express.DataType = options.get("dataType", "express")
+
+    streamConfig.Express.ArchivalNode = options.get("archivalNode", None)
+    streamConfig.Express.TapeNode = options.get("tapeNode", None)
+    streamConfig.Express.DiskNode = options.get("diskNode", None)
+    streamConfig.Express.PhEDExGroup = options.get("phedexGroup", "express")
 
     streamConfig.Express.BlockCloseDelay = options.get("blockCloseDelay", 3600)
 

@@ -113,8 +113,7 @@ class Create(DBCreator):
                  process            varchar2(255),
                  acq_era            varchar2(255),
                  backfill           varchar2(255),
-                 bulk_data_type     varchar2(255),
-                 express_subscribe  int,
+                 bulk_data_type     varchar2(50),
                  dqmuploadurl       varchar2(255),
                  ah_timeout         int,
                  ah_dir             varchar2(255),
@@ -282,6 +281,7 @@ class Create(DBCreator):
                  block_delay     int           not null,
                  cmssw_id        int           not null,
                  scram_arch      varchar2(50)  not null,
+                 data_type       varchar2(50)  not null,
                  reco_cmssw_id   int,
                  multicore       int,
                  reco_scram_arch varchar2(50),
@@ -488,12 +488,6 @@ class Create(DBCreator):
                  ADD CONSTRAINT run_sta_fk
                  FOREIGN KEY (status)
                  REFERENCES run_status(id)"""
-
-        self.constraints[len(self.constraints)] = \
-            """ALTER TABLE run
-                 ADD CONSTRAINT run_exp_sub
-                 FOREIGN KEY (express_subscribe)
-                 REFERENCES storage_node(id)"""
 
         self.constraints[len(self.constraints)] = \
             """ALTER TABLE run_trig_primds_assoc

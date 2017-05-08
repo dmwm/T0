@@ -16,7 +16,6 @@ class UpdateRun(DBFormatter):
                      acq_era = :ACQERA,
                      backfill = :BACKFILL,
                      bulk_data_type = :BULKDATATYPE,
-                     express_subscribe = (SELECT id FROM storage_node WHERE name = :EXPRESS_SUBSCRIBE),
                      dqmuploadurl = :DQMUPLOADURL,
                      ah_timeout = :AHTIMEOUT,
                      ah_dir = :AHDIR,

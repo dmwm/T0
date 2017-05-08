@@ -13,7 +13,6 @@ from T0.RunConfig.Tier0Config import setDefaultScramArch
 from T0.RunConfig.Tier0Config import setBackfill
 from T0.RunConfig.Tier0Config import setBulkDataType
 from T0.RunConfig.Tier0Config import setProcessingSite
-from T0.RunConfig.Tier0Config import setExpressSubscribeNode
 from T0.RunConfig.Tier0Config import setDQMDataTier
 from T0.RunConfig.Tier0Config import setDQMUploadUrl
 from T0.RunConfig.Tier0Config import setPromptCalibrationConfig
@@ -41,7 +40,6 @@ setAcquisitionEra(tier0Config, "ExampleConfig_UnitTest")
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
 setProcessingSite(tier0Config, processingSite)
-setExpressSubscribeNode(tier0Config, "T2_CH_CERN")
 
 # Override for DQM data tier
 setDQMDataTier(tier0Config, "DQMIO")
@@ -108,6 +106,7 @@ addExpressConfig(tier0Config, "HLTMON",
                  write_dqm = False,
                  global_tag = "GlobalTag2",
                  proc_ver = 3,
+                 data_type = 'test',
                  blockCloseDelay = 7200,
                  versionOverride = hltmonVersionOverride)
 
