@@ -11,10 +11,10 @@ from WMCore.Database.DBFormatter import DBFormatter
 
 class GetNewData(DBFormatter):
 
-    def execute(self, run = None, conn = None, transaction = False):
+    def execute(self, minRun = None, maxRun = None, injectRun = None, conn = None, transaction = False):
 
-        if run:
-            binds = { 'RUN': run }
+        if injectRun:
+            binds = { 'RUN': injectRun }
             whereSql = """WHERE CMS_STOMGR.FILE_TRANSFER_STATUS.STATUS_FLAG >= 2
                           AND CMS_STOMGR.FILE_TRANSFER_STATUS.INJECT_FLAG = 1
                           AND CMS_STOMGR.FILE_TRANSFER_STATUS.BAD_CHECKSUM = 0
@@ -26,6 +26,14 @@ class GetNewData(DBFormatter):
                                                      CMS_STOMGR.FILE_TRANSFER_STATUS.INJECT_FLAG,
                                                      CMS_STOMGR.FILE_TRANSFER_STATUS.BAD_CHECKSUM) = 0
                           """
+            if minRun:
+                binds['MINRUN'] = minRun
+                whereSql += """AND CMS_STOMGR.FILE_TRANSFER_STATUS.RUNNUMBER >= :MINRUN
+                               """
+            if maxRun:
+                binds['MAXRUN'] = maxRun
+                whereSql += """AND CMS_STOMGR.FILE_TRANSFER_STATUS.RUNNUMBER <= :MAXRUN
+                               """
 
         sql = """SELECT CMS_STOMGR.FILE_TRANSFER_STATUS.FILE_ID AS p5_id,
                         CMS_STOMGR.FILE_TRANSFER_STATUS.RUNNUMBER AS run,

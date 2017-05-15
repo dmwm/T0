@@ -15,6 +15,8 @@ knownStreamers = set()
 def injectNewData(dbInterfaceStorageManager,
                   dbInterfaceHltConf,
                   dbInterfaceSMNotify,
+                  minRun = None,
+                  maxRun = None,
                   injectRun = None):
     """
     _injectNewData_
@@ -57,7 +59,10 @@ def injectNewData(dbInterfaceStorageManager,
     insertLumiDAO = daoFactory(classname = "RunConfig.InsertLumiSection")
     insertStreamerDAO = daoFactory(classname = "RunConfig.InsertStreamer")
 
-    newData = getNewDataDAO.execute(run = injectRun, transaction = False)
+    newData = getNewDataDAO.execute(minRun = minRun,
+                                    maxRun = maxRun,
+                                    injectRun = injectRun, 
+                                    transaction = False)
 
     # remove already processed files
     newData[:] = [newFile for newFile in newData if newFile['p5_id'] not in knownStreamers]
