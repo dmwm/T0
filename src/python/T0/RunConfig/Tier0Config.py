@@ -343,7 +343,7 @@ def addDataset(config, datasetName, **settings):
     #
     if 'scenario' in settings:
         datasetConfig.Scenario = settings['scenario']
-    if not hasattr(datasetConfig, "Scenario") or not isinstance(datasetConfig.Scenario, str):
+    if not hasattr(datasetConfig, "Scenario") or not (isinstance(datasetConfig.Scenario, str) or isinstance(datasetConfig.Scenario, dict)):
         msg = "Tier0Config.addDataset : no valid scenario defined for dataset %s or Default" % datasetName
         raise RuntimeError(msg)
 
