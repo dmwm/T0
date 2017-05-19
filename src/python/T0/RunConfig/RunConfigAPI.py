@@ -293,6 +293,9 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
         elif streamConfig.ProcessingStyle == "Express":
 
+            # check for era or run dependent config parameters
+            streamConfig.Express.Scenario = extractConfigParameter(streamConfig.Express.Scenario, runInfo['acq_era'], run)
+
             specialDataset = "Stream%s" % stream
             bindsDataset.append( { 'PRIMDS' : specialDataset } )
             bindsStreamDataset.append( { 'RUN' : run,
@@ -763,14 +766,15 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
 
             datasetConfig = retrieveDatasetConfig(tier0Config, dataset)
 
-            bindsDatasetScenario.append( { 'RUN' : run,
-                                           'PRIMDS' : dataset,
-                                           'SCENARIO' : datasetConfig.Scenario } )
-
             # check for era or run dependent config parameters
+            datasetConfig.Scenario = extractConfigParameter(datasetConfig.Scenario, runInfo['acq_era'], run)
             datasetConfig.CMSSWVersion = extractConfigParameter(datasetConfig.CMSSWVersion, runInfo['acq_era'], run)
             datasetConfig.GlobalTag = extractConfigParameter(datasetConfig.GlobalTag, runInfo['acq_era'], run)
             datasetConfig.ProcessingVersion = extractConfigParameter(datasetConfig.ProcessingVersion, runInfo['acq_era'], run)
+
+            bindsDatasetScenario.append( { 'RUN' : run,
+                                           'PRIMDS' : dataset,
+                                           'SCENARIO' : datasetConfig.Scenario } )
 
             bindsCMSSWVersion.append( { 'VERSION' : datasetConfig.CMSSWVersion } )
 
