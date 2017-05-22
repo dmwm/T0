@@ -47,6 +47,7 @@ class GetNewData(DBFormatter):
                  INNER JOIN CMS_STOMGR.FILE_QUALITY_CONTROL ON
                    CMS_STOMGR.FILE_QUALITY_CONTROL.FILENAME = CMS_STOMGR.FILE_TRANSFER_STATUS.FILENAME
                  %s
+                 AND CMS_STOMGR.FILE_TRANSFER_STATUS.PATH IS NOT NULL
                  """ % whereSql
 
         results = self.dbi.processData(sql, binds, conn = conn,

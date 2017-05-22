@@ -130,25 +130,30 @@ class Tier0FeederPoller(BaseWorkerThread):
             # discover new data from StorageManager and inject into Tier0
             # (if the config specifies a list of runs do it only once)
             #
-            # replays inject data only once (and ignore data status)
+            # replays call data discovery only once (and ignore data status)
             #
-            if tier0Config.Global.InjectRuns == None:
-                StorageManagerAPI.injectNewData(self.dbInterfaceStorageManager,
-                                                self.dbInterfaceHltConf,
-                                                self.dbInterfaceSMNotify,
-                                                minRun = tier0Config.Global.InjectMinRun,
-                                                maxRun = tier0Config.Global.InjectMaxRun)
-            else:
-                injectRuns = set()
-                for injectRun in tier0Config.Global.InjectRuns:
-                    if injectRun not in self.injectedRuns:
-                        injectRuns.add(injectRun)
-                for injectRun in injectRuns:
+            try:
+                if tier0Config.Global.InjectRuns == None:
                     StorageManagerAPI.injectNewData(self.dbInterfaceStorageManager,
                                                     self.dbInterfaceHltConf,
                                                     self.dbInterfaceSMNotify,
-                                                    injectRun = injectRun)
-                    self.injectedRuns.add(injectRun)
+                                                    minRun = tier0Config.Global.InjectMinRun,
+                                                    maxRun = tier0Config.Global.InjectMaxRun)
+                else:
+                    injectRuns = set()
+                    for injectRun in tier0Config.Global.InjectRuns:
+                        if injectRun not in self.injectedRuns:
+                            injectRuns.add(injectRun)
+                    for injectRun in injectRuns:
+                        StorageManagerAPI.injectNewData(self.dbInterfaceStorageManager,
+                                                        self.dbInterfaceHltConf,
+                                                        self.dbInterfaceSMNotify,
+                                                        injectRun = injectRun)
+                        self.injectedRuns.add(injectRun)
+            except:
+                # shouldn't happen, just a catch all insurance
+                logging.exception("Something went wrong with data retrieval from StorageManager")
+
 
             #
             # find new runs, setup global run settings and stream/dataset/trigger mapping

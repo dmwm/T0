@@ -67,7 +67,7 @@ def injectNewData(dbInterfaceStorageManager,
     # remove already processed files
     newData[:] = [newFile for newFile in newData if newFile['p5_id'] not in knownStreamers]
 
-    logging.info("XXX found %d new files", len(newData))
+    logging.debug("StoragemanagerAPI: found %d new files", len(newData))
 
     newRuns = set()
     newRunStreams = {}
@@ -83,7 +83,7 @@ def injectNewData(dbInterfaceStorageManager,
         if stream not in newRunStreams[run]:
             newRunStreams[run].add(stream)
 
-    logging.info("XXX found %d new runs", len(newRuns))
+    logging.debug("StoragemanagerAPI: found %d new runs", len(newRuns))
 
     cmsswVersions = set()
     streams = set()
@@ -91,7 +91,7 @@ def injectNewData(dbInterfaceStorageManager,
     bindRunStreamCMSSW = []
     for run in sorted(list(newRuns)):
         (hltkey, cmssw) = getRunInfoDAO.execute(run = run, transaction = False)
-        logging.info("XXX run = %d, hltkey = %s, cmssw = %s", run, hltkey, cmssw)
+        logging.debug("StorageManagerAPI: run = %d, hltkey = %s, cmssw = %s", run, hltkey, cmssw)
         if hltkey and cmssw:
             cmsswVersions.add(cmssw)
             bindRunHltKey.append( { 'RUN': run,
@@ -167,8 +167,6 @@ def injectNewData(dbInterfaceStorageManager,
 
     for x in bindStreamer:
         knownStreamers.add(x['P5_ID'])
-
-    logging.info("XXX finished injectNewData")
 
     return
 
