@@ -48,6 +48,8 @@ class GetNewData(DBFormatter):
                    CMS_STOMGR.FILE_QUALITY_CONTROL.FILENAME = CMS_STOMGR.FILE_TRANSFER_STATUS.FILENAME
                  %s
                  AND CMS_STOMGR.FILE_TRANSFER_STATUS.PATH IS NOT NULL
+                 AND CMS_STOMGR.FILE_QUALITY_CONTROL.FILE_SIZE IS NOT NULL
+                 AND CMS_STOMGR.FILE_QUALITY_CONTROL.FILE_SIZE > 0
                  """ % whereSql
 
         results = self.dbi.processData(sql, binds, conn = conn,
