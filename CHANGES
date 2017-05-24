@@ -1,3 +1,61 @@
+2.0.6 to 2.0.7:
+  - Merge pull request #4353 from hufnagel/express-flexible
+  - Merge pull request #4352 from hufnagel/sm-discovery-null-size
+  - protect against null file size in SM discovery
+  - Merge pull request #4351 from hufnagel/sm-events-fix
+  - Merge pull request #4350 from hufnagel/sm-discovery-checks
+  - better checks for anomalous data from SM discovery
+  - Merge pull request #4349 from hufnagel/scenario-run-era-dependent
+  - allow scenario to be configured run and era dependent
+  - get the correct number of events for streamer files
+  - Merge pull request #4348 from hufnagel/sm-discovery-limits
+  - make Express more flexible, allow to configure it almost like Bulk
+  - Merge pull request #4347 from hufnagel/add-2017-scenarios
+  - add 2017 scenarios
+  - tune the SM data discovery limits one can set, adding max and min runs
+  - Merge pull request #4346 from hufnagel/transfersystem-changes
+  - changes for new transfersystem
+  - Merge pull request #4345 from ticoann/uuid_module_name_change
+  - Change the UUID module name
+  - Merge pull request #4338 from hufnagel/repack-lazy
+  - Merge pull request #4343 from johnhcasallasl/new_PAMinBias_PDs
+  - Adding PAMinimumBias[9-20] PDs to the configuration
+  - Merge pull request #4342 from johnhcasallasl/PDs_For_The_pPb_VdM_scan
+  - Merge pull request #4341 from johnhcasallasl/Remove_Disk_node
+  - New PDs for the pPb VdM scan
+  - Removing disk_node from the default configuration
+  - Merge pull request #4340 from ebohorqu/no_miniaod_for_hcalnzs
+  - Removing write_minaod = true for HcalNZS
+  - Merge pull request #4339 from hufnagel/spec-validation
+  - Merge pull request #4337 from amaltaro/express-multicore
+  - add some needed parameters for processing string validation
+  - Fix multicore handling in express and repack specs
+  - switch repack to lazy-download, changes job estimates
+  - Merge pull request #4335 from johnhcasallasl/CMSSW_8_0_24
+  - CMSSW_8_0_24, new dqm sequences
+  - Merge pull request #4334 from ebohorqu/repack-maxInputEvents
+  - Smaller value for maxInputEvents for Repack
+  - Merge pull request #4333 from johnhcasallasl/CMSSW_8_0_23_p2_AndNewPDs_for_PARun
+  - Switching to CMSSW_8_0_23_patch2 and adding PDs for the PARun
+  - Merge pull request #4332 from johnhcasallasl/Config_for_HI_2016
+  - Current Configuration in the Tier0 headnode
+  - Merge pull request #4331 from johnhcasallasl/addingScenarioForPARun
+  - Adding ppEra_Run2_2016_pA scenario to the T0AST
+  - Merge pull request #4330 from johnhcasallasl/CMSSW_8_0_22
+  - Switch to CMSSW_8_0_22 and new AlCa prod
+  - Merge pull request #4329 from johnhcasallasl/increaseEventsPerCore
+  - Increasing the number of events per core to reduce the number of merge jobs
+  - Merge pull request #4328 from johnhcasallasl/Adding_ZeroBiasPixelHVScan0_7_PDs
+  - Adding ZeroBiasPixelHVScan0-7 PDs
+  - Merge pull request #4327 from johnhcasallasl/HighPU_MenuUpdates
+  - New PDs for the HighPU2016 runs
+  - Merge pull request #4326 from ebohorqu/cmssw8020p1
+  - CMSSW_8_0_20_patch1
+  - Merge pull request #4325 from ebohorqu/hcal_seq_to_hcalnzs
+  - Adding @hcal to DQM sequences of HcalNZS
+  - Merge pull request #4324 from johnhcasallasl/CMSSW_8_0_20
+  - switch to CMSSW_8_0_20, GTs, era
+
 2.0.5 to 2.0.6:
   - Merge pull request #4322 from hufnagel/promptreco-ordered
   - Merge pull request #4323 from ticoann/remove_archivereporter
