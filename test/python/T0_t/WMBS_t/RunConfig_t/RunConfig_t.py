@@ -149,7 +149,6 @@ class RunConfigTest(unittest.TestCase):
         self.referenceRunInfo = [ { 'status': 1,
                                     'backfill' : None,
                                     'bulk_data_type' : "data",
-                                    'express_subscribe' : 'T2_CH_CERN',
                                     'dqmuploadurl' : "https://cmsweb.cern.ch/dqm/dev",
                                     'process': 'HLT',
                                     'hltkey': self.hltkey,
@@ -1226,6 +1225,9 @@ class RunConfigTest(unittest.TestCase):
         self.assertEqual(expressConfig['reco_scram_arch'], "slc5_amd64_gcc472",
                          "ERROR: wrong reco ScramArch for stream Express")
 
+        self.assertEqual(expressConfig['data_type'], "express",
+                         "ERROR: wrong data type for stream Express")
+
         writeTiers = expressConfig['write_tiers'].split(',')
         self.assertEqual(set(writeTiers), set([ "FEVT" ]),
                          "ERROR: wrong data tiers for stream Express")
@@ -1292,6 +1294,9 @@ class RunConfigTest(unittest.TestCase):
 
         self.assertEqual(expressConfig['reco_scram_arch'], None,
                          "ERROR: wrong reco ScramArch for stream Express")
+
+        self.assertEqual(expressConfig['data_type'], "test",
+                         "ERROR: wrong data type for stream Express")
 
         writeTiers = expressConfig['write_tiers'].split(',')
         self.assertEqual(set(writeTiers), set([ "FEVTHLTALL" ]),

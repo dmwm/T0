@@ -60,7 +60,6 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
                             dbinterface = myThread.dbi)
 
     # dao to update global run settings
-    insertStorageNodeDAO = daoFactory(classname = "RunConfig.InsertStorageNode")
     updateRunDAO = daoFactory(classname = "RunConfig.UpdateRun")
 
     # workaround to make unit test work without HLTConfDatabase
@@ -77,16 +76,11 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         insertTriggerDAO = daoFactory(classname = "RunConfig.InsertTrigger")
         insertDatasetTriggerDAO = daoFactory(classname = "RunConfig.InsertDatasetTrigger")
 
-        bindsStorageNode = []
-        if tier0Config.Global.ExpressSubscribeNode:
-            bindsStorageNode.append( { 'NODE' : tier0Config.Global.ExpressSubscribeNode } )
-
         bindsUpdateRun = { 'RUN' : run,
                            'PROCESS' : hltConfig['process'],
                            'ACQERA' : tier0Config.Global.AcquisitionEra,
                            'BACKFILL' : tier0Config.Global.Backfill,
                            'BULKDATATYPE' : tier0Config.Global.BulkDataType,
-                           'EXPRESS_SUBSCRIBE' : tier0Config.Global.ExpressSubscribeNode,
                            'DQMUPLOADURL' : tier0Config.Global.DQMUploadUrl,
                            'AHTIMEOUT' : tier0Config.Global.AlcaHarvestTimeout,
                            'AHDIR' : tier0Config.Global.AlcaHarvestDir,
@@ -124,8 +118,6 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
 
         try:
             myThread.transaction.begin()
-            if len(bindsStorageNode) > 0:
-                insertStorageNodeDAO.execute(bindsStorageNode, conn = myThread.transaction.conn, transaction = True)
             updateRunDAO.execute(bindsUpdateRun, conn = myThread.transaction.conn, transaction = True)
             insertStreamDAO.execute(bindsStream, conn = myThread.transaction.conn, transaction = True)
             insertDatasetDAO.execute(bindsDataset, conn = myThread.transaction.conn, transaction = True)
@@ -312,21 +304,40 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                               'eventContent' : tier0Config.Global.DQMDataTier,
                                               'primaryDataset' : specialDataset } )
 
-            if runInfo['express_subscribe']:
+            if streamConfig.Express.ArchivalNode or streamConfig.Express.TapeNode or streamConfig.Express.DiskNode:
 
                 bindsPhEDExConfig.append( { 'RUN' : run,
                                             'PRIMDS' : specialDataset,
-                                            'ARCHIVAL_NODE' : None,
-                                            'TAPE_NODE' : None,
-                                            'DISK_NODE' :  runInfo['express_subscribe']} )
+                                            'ARCHIVAL_NODE' : streamConfig.Express.ArchivalNode,
+                                            'TAPE_NODE' : streamConfig.Express.TapeNode,
+                                            'DISK_NODE' :  streamConfig.Express.DiskNode } )
 
-                subscriptions.append( { 'nonCustodialSites' : [ runInfo['express_subscribe'] ],
-                                        'nonCustodialSubType' : "Replica",
-                                        'nonCustodialGroup' : "express",
-                                        'autoApproveSites' : [ runInfo['express_subscribe'] ],
-                                        'priority' : "high",
-                                        'primaryDataset' : specialDataset,
-                                        'deleteFromSource' : bool(runInfo['express_subscribe']) } )
+                custodialSites = []
+                nonCustodialSites = []
+                autoApproveSites = []
+                if streamConfig.Express.ArchivalNode:
+                    bindsStorageNode.append( { 'NODE' : streamConfig.Express.ArchivalNode } )
+                    custodialSites.append(streamConfig.Express.ArchivalNode)
+                    autoApproveSites.append(streamConfig.Express.ArchivalNode)
+                if streamConfig.Express.TapeNode:
+                    bindsStorageNode.append( { 'NODE' : streamConfig.Express.TapeNode } )
+                    custodialSites.append(streamConfig.Express.TapeNode)
+                if streamConfig.Express.DiskNode:
+                    bindsStorageNode.append( { 'NODE' : streamConfig.Express.DiskNode } )
+                    nonCustodialSites.append(streamConfig.Express.DiskNode)
+                    autoApproveSites.append(streamConfig.Express.DiskNode)
+
+                if len(custodialSites) > 0 or len(nonCustodialSites) > 0:
+                    subscriptions.append( { 'custodialSites' : custodialSites,
+                                            'custodialSubType' : "Replica",
+                                            'custodialGroup' : "DataOps",
+                                            'nonCustodialSites' : nonCustodialSites,
+                                            'nonCustodialSubType' : "Replica",
+                                            'nonCustodialGroup' : streamConfig.Express.PhEDExGroup,
+                                            'autoApproveSites' : autoApproveSites,
+                                            'priority' : "high",
+                                            'primaryDataset' : specialDataset,
+                                            'deleteFromSource' : True } )
 
             alcaSkim = None
             if len(streamConfig.Express.AlcaSkims) > 0:
@@ -388,6 +399,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                    'SCRAM_ARCH' : streamConfig.Express.ScramArch,
                                    'RECO_CMSSW' : streamConfig.Express.RecoCMSSWVersion,
                                    'RECO_SCRAM_ARCH' : streamConfig.Express.RecoScramArch,
+                                   'DATA_TYPE' : streamConfig.Express.DataType,
                                    'MULTICORE' : streamConfig.Express.Multicore,
                                    'ALCA_SKIM' : alcaSkim,
                                    'DQM_SEQ' : dqmSeq }
@@ -480,21 +492,37 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                                       'selectEvents' : selectEvents,
                                                       'primaryDataset' : dataset } )
 
-                if runInfo['express_subscribe']:
+                if streamConfig.Express.ArchivalNode or streamConfig.Express.TapeNode or streamConfig.Express.DiskNode:
 
                     bindsPhEDExConfig.append( { 'RUN' : run,
                                                 'PRIMDS' : dataset,
-                                                'ARCHIVAL_NODE' : None,
-                                                'TAPE_NODE' : None,
-                                                'DISK_NODE' : runInfo['express_subscribe'] } )
+                                                'ARCHIVAL_NODE' : streamConfig.Express.ArchivalNode,
+                                                'TAPE_NODE' : streamConfig.Express.TapeNode,
+                                                'DISK_NODE' : streamConfig.Express.DiskNode } )
 
-                    subscriptions.append( { 'nonCustodialSites' : [ runInfo['express_subscribe'] ],
-                                            'nonCustodialSubType' : "Replica",
-                                            'nonCustodialGroup' : "express",
-                                            'autoApproveSites' : [ runInfo['express_subscribe'] ],
-                                            'priority' : "high",
-                                            'primaryDataset' : dataset,
-                                            'deleteFromSource' : bool(runInfo['express_subscribe']) } )
+                    custodialSites = []
+                    nonCustodialSites = []
+                    autoApproveSites = []
+                    if streamConfig.Express.ArchivalNode:
+                        custodialSites.append(streamConfig.Express.ArchivalNode)
+                        autoApproveSites.append(streamConfig.Express.ArchivalNode)
+                    if streamConfig.Express.TapeNode:
+                        custodialSites.append(streamConfig.Express.TapeNode)
+                    if streamConfig.Express.DiskNode:
+                        nonCustodialSites.append(streamConfig.Express.DiskNode)
+                        autoApproveSites.append(streamConfig.Express.DiskNode)
+
+                    if len(custodialSites) > 0 or len(nonCustodialSites) > 0:
+                        subscriptions.append( { 'custodialSites' : custodialSites,
+                                                'custodialSubType' : "Replica",
+                                                'custodialGroup' : streamConfig.Express.PhEDExGroup,
+                                                'nonCustodialSites' : nonCustodialSites,
+                                                'nonCustodialSubType' : "Replica",
+                                                'nonCustodialGroup' : streamConfig.Express.PhEDExGroup,
+                                                'autoApproveSites' : autoApproveSites,
+                                                'priority' : "high",
+                                                'primaryDataset' : dataset,
+                                                'deleteFromSource' : True } )
 
         #
         # finally create WMSpec
@@ -590,12 +618,12 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['StreamName'] = stream
             specArguments['SpecialDataset'] = specialDataset
 
-            specArguments['UnmergedLFNBase'] = "/store/unmerged/express"
-            specArguments['MergedLFNBase'] = "/store/express"
+            specArguments['UnmergedLFNBase'] = "/store/unmerged/%s" % streamConfig.Express.DataType
             if runInfo['backfill']:
-                specArguments['MergedLFNBase'] = "/store/backfill/%s/express" % runInfo['backfill']
+                specArguments['MergedLFNBase'] = "/store/backfill/%s/%s" % (runInfo['backfill'],
+                                                                            streamConfig.Express.DataType)
             else:
-                specArguments['MergedLFNBase'] = "/store/express"
+                specArguments['MergedLFNBase'] = "/store/%s" % streamConfig.Express.DataType
 
             specArguments['PeriodicHarvestInterval'] = streamConfig.Express.PeriodicHarvestInterval
 

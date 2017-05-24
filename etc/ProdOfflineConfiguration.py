@@ -14,7 +14,6 @@ from T0.RunConfig.Tier0Config import setBaseRequestPriority
 from T0.RunConfig.Tier0Config import setBackfill
 from T0.RunConfig.Tier0Config import setBulkDataType
 from T0.RunConfig.Tier0Config import setProcessingSite
-from T0.RunConfig.Tier0Config import setExpressSubscribeNode
 from T0.RunConfig.Tier0Config import setDQMDataTier
 from T0.RunConfig.Tier0Config import setDQMUploadUrl
 from T0.RunConfig.Tier0Config import setPromptCalibrationConfig
@@ -46,7 +45,6 @@ setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
 setProcessingSite(tier0Config, processingSite)
-setExpressSubscribeNode(tier0Config, "T2_CH_CERN")
 
 # Override for DQM data tier
 setDQMDataTier(tier0Config, "DQMIO")
@@ -1453,6 +1451,7 @@ addExpressConfig(tier0Config, "Express",
                  blockCloseDelay = 1200,
                  timePerEvent = 4,
                  sizePerEvent = 1700,
+                 diskNode = "T2_CH_CERN",
                  versionOverride = expressVersionOverride)
 
 addExpressConfig(tier0Config, "Express0T",
@@ -1477,6 +1476,7 @@ addExpressConfig(tier0Config, "Express0T",
                  blockCloseDelay = 1200,
                  timePerEvent = 4,
                  sizePerEvent = 1700,
+                 diskNode = "T2_CH_CERN",
                  versionOverride = expressVersionOverride)
 
 addExpressConfig(tier0Config, "ExpressCosmics",
@@ -1499,6 +1499,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  blockCloseDelay = 1200,
                  timePerEvent = 4, #I have to get some stats to set this properly
                  sizePerEvent = 1700, #I have to get some stats to set this properly
+                 diskNode = "T2_CH_CERN",
                  versionOverride = expressVersionOverride)
 
 addExpressConfig(tier0Config, "HLTMonitor",
@@ -1521,6 +1522,7 @@ addExpressConfig(tier0Config, "HLTMonitor",
                  blockCloseDelay = 1200,
                  timePerEvent = 4, #I have to get some stats to set this properly
                  sizePerEvent = 1700, #I have to get some stats to set this properly
+                 diskNode = "T2_CH_CERN",
                  versionOverride = expressVersionOverride)
 
 #######################
