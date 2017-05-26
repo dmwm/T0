@@ -14,6 +14,7 @@ from T0.RunConfig.Tier0Config import setBaseRequestPriority
 from T0.RunConfig.Tier0Config import setBackfill
 from T0.RunConfig.Tier0Config import setBulkDataType
 from T0.RunConfig.Tier0Config import setProcessingSite
+from T0.RunConfig.Tier0Config import setExpressSubscribeNode
 from T0.RunConfig.Tier0Config import setDQMDataTier
 from T0.RunConfig.Tier0Config import setDQMUploadUrl
 from T0.RunConfig.Tier0Config import setPromptCalibrationConfig
@@ -23,12 +24,16 @@ from T0.RunConfig.Tier0Config import addRepackConfig
 from T0.RunConfig.Tier0Config import addExpressConfig
 from T0.RunConfig.Tier0Config import addRegistrationConfig
 from T0.RunConfig.Tier0Config import addConversionConfig
+from T0.RunConfig.Tier0Config import setInjectRuns
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
 
 # Set the verstion configuration (not used at the moment)
 setConfigVersion(tier0Config, "replace with real version")
+
+# Set run number to replay
+setInjectRuns(tier0Config, [ 999999 ])
 
 # Settings up sites
 processingSite = "T0_CH_CERN"
@@ -68,7 +73,7 @@ setPromptCalibrationConfig(tier0Config,
                            validationMode = True)
 
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_8_0_23_patch2"
+defaultCMSSWVersion = "CMSSW_9_2_0_patch2"
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc530")
@@ -85,9 +90,9 @@ expressProcVersion = 1
 alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "80X_dataRun2_Express_v15"
-promptrecoGlobalTag = "80X_dataRun2_Prompt_v15"
-alcap0GlobalTag = "80X_dataRun2_Prompt_v15"
+expressGlobalTag = "92X_dataRun2_Express_v2"
+promptrecoGlobalTag = "92X_dataRun2_Prompt_v2"
+alcap0GlobalTag = "92X_dataRun2_Prompt_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
