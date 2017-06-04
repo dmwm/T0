@@ -271,7 +271,7 @@ def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationM
         else:
             # needed by the PCL monitoring to know whether we uploaded to prod or validation
             command = "export X509_USER_PROXY=%s\n" % serviceProxy
-            command += "env KRB5CCNAME=/tmp/bla xrdcp -s -f %s %s" % (filenameTXT, metaFile['pfn'] + ".uploaded")
+            command += "env KRB5CCNAME=/tmp/bla XRD_WRITERECOVERY=0 xrdcp -s -f %s %s" % (filenameTXT, metaFile['pfn'] + ".uploaded")
             p = subprocess.Popen(command, shell = True,
                                  stdin=subprocess.PIPE,
                                  stdout=subprocess.PIPE,
