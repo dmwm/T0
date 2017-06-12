@@ -369,6 +369,8 @@ datasets += [ "ZeroBiasPixelHVScan0", "ZeroBiasPixelHVScan1", "ZeroBiasPixelHVSc
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
+               raw_to_disk = True,
+               write_reco = True,
                write_dqm = True,
                dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
                alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias" ],
@@ -379,6 +381,8 @@ for dataset in datasets:
 
     addDataset(tier0Config, dataset+'_0T',
                do_reco = True,
+               raw_to_disk = True,
+               write_reco = True,
                write_dqm = True,
                dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
                alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias" ],
@@ -397,6 +401,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                raw_to_disk = True,
+               write_reco = True,
                write_dqm = True,
                alca_producers = [ "TkAlMinBias" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
@@ -408,6 +413,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                raw_to_disk = True,
+               write_reco = True,
                write_dqm = True,
                alca_producers = [ "TkAlMinBias" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
