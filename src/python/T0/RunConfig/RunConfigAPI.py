@@ -6,7 +6,9 @@ API for anyting RunConfig related
 """
 import logging
 import threading
+import os.path
 import time
+from datetime import datetime
 
 from WMCore.DAOFactory import DAOFactory
 
@@ -75,6 +77,9 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         insertStreamDatasetDAO = daoFactory(classname = "RunConfig.InsertStreamDataset")
         insertTriggerDAO = daoFactory(classname = "RunConfig.InsertTrigger")
         insertDatasetTriggerDAO = daoFactory(classname = "RunConfig.InsertDatasetTrigger")
+
+        # partition AlcaHarvest upload by year
+        tier0Config.Global.AlcaHarvestDir = os.path.join(tier0Config.Global.AlcaHarvestDir, str(datetime.now().year))
 
         bindsUpdateRun = { 'RUN' : run,
                            'PROCESS' : hltConfig['process'],
