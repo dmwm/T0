@@ -15,12 +15,14 @@ from WMCore.DAOFactory import DAOFactory
 from WMCore.WorkQueue.WMBSHelper import WMBSHelper
 from WMCore.WMBS.Fileset import Fileset
 
+from WMCore.ReqMgr.DataStructs.RequestStatus import REQUEST_START_STATE
+
 from T0.RunConfig.Tier0Config import retrieveDatasetConfig
 from T0.RunConfig.Tier0Config import addRepackConfig
 from T0.RunConfig.Tier0Config import deleteStreamConfig
 
-from T0.WMSpec.StdSpecs.Repack import RepackWorkloadFactory
-from T0.WMSpec.StdSpecs.Express import ExpressWorkloadFactory
+from WMCore.WMSpec.StdSpecs.Repack import RepackWorkloadFactory
+from WMCore.WMSpec.StdSpecs.Express import ExpressWorkloadFactory
 from WMCore.WMSpec.StdSpecs.PromptReco import PromptRecoWorkloadFactory
 
 def extractConfigParameter(configParameter, era, run):
@@ -542,6 +544,13 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             specArguments['Memory'] = 1000
 
+            specArguments['Requestor'] = "Tier0"
+            specArguments['RequestName'] = workflowName
+            specArguments['RequestString'] = workflowName
+            specArguments['RequestorDN'] = "Tier0"
+            specArguments['RequestDate'] = []
+            specArguments['RequestTransition'] = []
+            specArguments['RequestStatus'] = REQUEST_START_STATE
             specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority + 5000
 
             specArguments['CMSSWVersion'] = streamConfig.Repack.CMSSWVersion
@@ -594,6 +603,13 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 specArguments['Multicore'] = streamConfig.Express.Multicore
                 specArguments['Memory'] += (streamConfig.Express.Multicore - 1) * perCoreMemory
 
+            specArguments['Requestor'] = "Tier0"
+            specArguments['RequestName'] = workflowName
+            specArguments['RequestString'] = workflowName
+            specArguments['RequestorDN'] = "Tier0"
+            specArguments['RequestDate'] = []
+            specArguments['RequestTransition'] = []
+            specArguments['RequestStatus'] = REQUEST_START_STATE
             specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority + 10000
 
             specArguments['ProcessingString'] = "Express"
@@ -641,9 +657,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['Outputs'] = outputModuleDetails
             specArguments['ValidStatus'] = "VALID"
 
-            specArguments['SiteWhitelist'] = [ tier0Config.Global.ProcessingSite ]
-            specArguments['SiteBlacklist'] = []
-
         if streamConfig.ProcessingStyle == "Bulk":
             factory = RepackWorkloadFactory()
             wmSpec = factory.factoryWorkloadConstruction(workflowName, specArguments)
@@ -659,6 +672,10 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             wmSpec.setOwnerDetails("Dirk.Hufnagel@cern.ch", "T0",
                                    { 'vogroup': 'DEFAULT', 'vorole': 'DEFAULT',
                                      'dn' : "Dirk.Hufnagel@cern.ch" } )
+
+            wmSpec.updateArguments( { 'SiteWhitelist': [ tier0Config.Global.ProcessingSite ],
+                                      'SiteBlacklist': [],
+                                      'Dashboard': "t0" } )
 
             wmSpec.setupPerformanceMonitoring(maxRSS = 1024 * specArguments['Memory'] + 10,
                                               maxVSize = 104857600, #100GB, effectively disabled
@@ -997,6 +1014,13 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
 
                 specArguments['Memory'] += len(datasetConfig.PhysicsSkims) * 100
 
+                specArguments['Requestor'] = "Tier0"
+                specArguments['RequestName'] = workflowName
+                specArguments['RequestString'] = workflowName
+                specArguments['RequestorDN'] = "Tier0"
+                specArguments['RequestDate'] = []
+                specArguments['RequestTransition'] = []
+                specArguments['RequestStatus'] = REQUEST_START_STATE
                 specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority
 
                 specArguments['AcquisitionEra'] = runInfo['acq_era']
@@ -1039,10 +1063,6 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
 
                 specArguments['BlockCloseDelay'] = datasetConfig.BlockCloseDelay
 
-                specArguments['SiteWhitelist'] = datasetConfig.SiteWhitelist
-                specArguments['SiteBlacklist'] = []
-                specArguments['TrustSitelists'] = "True"
-
                 factory = PromptRecoWorkloadFactory()
                 wmSpec = factory.factoryWorkloadConstruction(workflowName, specArguments)
                 for subscription in subscriptions:
@@ -1051,6 +1071,11 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 wmSpec.setOwnerDetails("Dirk.Hufnagel@cern.ch", "T0",
                                        { 'vogroup': 'DEFAULT', 'vorole': 'DEFAULT',
                                          'dn' : "Dirk.Hufnagel@cern.ch" } )
+
+                wmSpec.updateArguments( { 'SiteWhitelist': datasetConfig.SiteWhitelist,
+                                          'SiteBlacklist': [],
+                                          'TrustSitelists': "True",
+                                          'Dashboard': "t0" } )
 
                 wmSpec.setupPerformanceMonitoring(maxRSS = 1024 * specArguments['Memory'] + 10,
                                                   maxVSize = 104857600, #100GB, effectively disabled
