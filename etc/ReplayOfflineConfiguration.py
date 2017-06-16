@@ -72,8 +72,17 @@ setPromptCalibrationConfig(tier0Config,
                            dropboxHost = "webcondvm.cern.ch",
                            validationMode = True)
 
+# Special syntax supported for cmssw version, processing version and global tag
+#
+# { 'acqEra': {'Era1': Value1, 'Era2': Value2},
+#   'maxRun': {100000: Value3, 200000: Value4},
+#   'default': Value5 }
+
 # Defaults for CMSSW version
-defaultCMSSWVersion = "CMSSW_9_2_0_patch2"
+defaultCMSSWVersion = {
+       'acqEra': {'Run2016D': "CMSSW_8_0_13_patch1"},
+       'default': "CMSSW_9_2_3_patch1"
+     }
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc530")
@@ -88,6 +97,7 @@ ppScenario = "ppEra_Run2_2017"
 ppScenarioB0T = "ppEra_Run2_2017"
 cosmicsScenario = "cosmicsEra_Run2_2017"
 hcalnzsScenario = "hcalnzsEra_Run2_2017"
+hiScenario = "ppEra_Run2_2016_pA"
 
 # Defaults for processing version
 defaultProcVersion = 1
@@ -96,19 +106,19 @@ alcarawProcVersion = 1
 
 # Defaults for GlobalTag
 expressGlobalTag = "92X_dataRun2_Express_v2"
-promptrecoGlobalTag = "92X_dataRun2_Prompt_v2"
-alcap0GlobalTag = "92X_dataRun2_Prompt_v2"
+promptrecoGlobalTag = "92X_dataRun2_Prompt_v4"
+alcap0GlobalTag = "92X_dataRun2_Prompt_v4"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 
 # Multicore settings
-numberOfCores = 4
+numberOfCores = 8
 
 # Splitting parameters for PromptReco
-defaultRecoSplitting = 1000 * numberOfCores
-hiRecoSplitting = 100 * numberOfCores
-alcarawSplitting = 10000 * numberOfCores
+defaultRecoSplitting = 10000 * numberOfCores
+hiRecoSplitting = 200 * numberOfCores
+alcarawSplitting = 20000 * numberOfCores
 
 #
 # Setup repack and express mappings
@@ -117,9 +127,9 @@ repackVersionOverride = {
     }
 
 expressVersionOverride = {
-    "CMSSW_9_0_0" : "CMSSW_9_2_0_patch2",
-    "CMSSW_9_1_0" : "CMSSW_9_2_0_patch2",
-    "CMSSW_9_2_0" : "CMSSW_9_2_0_patch2"
+    "CMSSW_9_0_0" : "CMSSW_9_2_3_patch1",
+    "CMSSW_9_1_0" : "CMSSW_9_2_3_patch1",
+    "CMSSW_9_2_0" : "CMSSW_9_2_3_patch1"
     }
 
 #set default repack settings for bulk streams
@@ -171,8 +181,13 @@ addDataset(tier0Config, "Cosmics",
            sizePerEvent = 155,
            scenario = cosmicsScenario)
 
-addDataset(tier0Config, "Commissioning",
+datasets = ["Commissioning", "Commissioning1", "Commissioning2", "Commissioning3", "Commissioning4",
+            "CommissioningMuons", "CommissioningEGamma", "CommissioningTaus", "CommissioningSingleJet", "CommissioningDoubleJet"]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
            do_reco = True,
+           raw_to_disk = True,
            write_dqm = True,
            alca_producers = [ "TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk", "HcalCalIsolatedBunchSelector" ],
            dqm_sequences = [ "@common", "@hcal" ],
@@ -181,34 +196,9 @@ addDataset(tier0Config, "Commissioning",
            sizePerEvent = 4000,
            scenario = ppScenario)
 
-addDataset(tier0Config, "Commissioning_0T",
+    addDataset(tier0Config, dataset+"_0T",
            do_reco = True,
-           write_dqm = True,
-           alca_producers = [ "TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk", "HcalCalIsolatedBunchSelector" ],
-           dqm_sequences = [ "@common", "@hcal" ],
-           physics_skims = [ "EcalActivity", "LogError", "LogErrorMonitor" ],
-           timePerEvent = 12,
-           sizePerEvent = 4000,
-           scenario = ppScenarioB0T)
-
-datasets = [ "Commissioning1", "Commissioning2", "Commissioning3", "Commissioning4" ]
-
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
-           do_reco = True,
-           write_dqm = True,
-           alca_producers = [ "TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk", "HcalCalIsolatedBunchSelector" ],
-           dqm_sequences = [ "@common", "@hcal" ],
-           physics_skims = [ "EcalActivity", "LogError", "LogErrorMonitor" ],
-           timePerEvent = 12,
-           sizePerEvent = 4000,
-           scenario = ppScenario)
-
-datasets = [ "Commissioning1_0T", "Commissioning2_0T", "Commissioning3_0T", "Commissioning4_0T" ]
-
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
-           do_reco = True,
+           raw_to_disk = True,
            write_dqm = True,
            alca_producers = [ "TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk", "HcalCalIsolatedBunchSelector" ],
            dqm_sequences = [ "@common", "@hcal" ],
@@ -253,12 +243,13 @@ for dataset in datasets:
                dqm_sequences = [ "@common" ],
                scenario = ppScenarioB0T)
 
-datasets = [ "MinimumBias1", "MinimumBias2", "MinimumBias3", "MinimumBias4",
+datasets = [ "MinimumBias",
+             "MinimumBias1", "MinimumBias2", "MinimumBias3", "MinimumBias4",
              "MinimumBias5", "MinimumBias6", "MinimumBias7", "MinimumBias8",
              "MinimumBias9", "MinimumBias10", "MinimumBias11", "MinimumBias12",
              "MinimumBias13", "MinimumBias14", "MinimumBias15", "MinimumBias16",
-             "MinimumBias17", "MinimumBias18", "MinimumBias19", "MinimumBias20",
-             "MinimumBias" ]
+             "MinimumBias17", "MinimumBias18", "MinimumBias19", "MinimumBias20"
+             ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -268,15 +259,7 @@ for dataset in datasets:
                alca_producers = [ "SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias" ],
                scenario = ppScenario)
 
-datasets = [ "MinimumBias1_0T", "MinimumBias2_0T", "MinimumBias3_0T", "MinimumBias4_0T",
-             "MinimumBias5_0T", "MinimumBias6_0T", "MinimumBias7_0T", "MinimumBias8_0T",
-             "MinimumBias9_0T", "MinimumBias10_0T", "MinimumBias11_0T", "MinimumBias12_0T",
-             "MinimumBias13_0T", "MinimumBias14_0T", "MinimumBias15_0T", "MinimumBias16_0T",
-             "MinimumBias17_0T", "MinimumBias18_0T", "MinimumBias19_0T", "MinimumBias20_0T",
-             "MinimumBias_0T" ]
-
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
+    addDataset(tier0Config, dataset+'_0T',
                do_reco = True,
                write_dqm = True,
                dqm_sequences = [ "@common" ],
@@ -307,6 +290,7 @@ addDataset(tier0Config, "HcalNZS",
            do_reco = True,
            write_dqm = True,
            dqm_sequences = [ "@common", "@hcal" ],
+           alca_producers = [ "HcalCalMinBias" ],
            physics_skims = [ "LogError", "LogErrorMonitor" ],
            timePerEvent = 4.2,
            sizePerEvent = 1900,
@@ -316,6 +300,7 @@ addDataset(tier0Config, "HcalNZS_0T",
            do_reco = True,
            write_dqm = True,
            dqm_sequences = [ "@common", "@hcal" ],
+           alca_producers = [ "HcalCalMinBias" ],
            physics_skims = [ "LogError", "LogErrorMonitor" ],
            timePerEvent = 4.2,
            sizePerEvent = 1900,
@@ -325,56 +310,17 @@ addDataset(tier0Config, "HcalNZS_0T",
 ### special AlcaRaw PDs ###
 ###########################
 
-addDataset(tier0Config, "AlCaLumiPixels",
-           do_reco = True,
-           write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
-           reco_split = alcarawSplitting,
-           proc_version = alcarawProcVersion,
-           alca_producers = [ "LumiPixels" ],
-           dqm_sequences = [ "@common" ],
-           timePerEvent = 0.02,
-           sizePerEvent = 38,
-           scenario = "AlCaLumiPixels")
+datasets = [ "AlCaLumiPixels", "AlCaLumiPixels0", "AlCaLumiPixels1", "AlCaLumiPixels2", "AlCaLumiPixels3" ]
 
-addDataset(tier0Config, "AlCaLumiPixels0",
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
            do_reco = True,
            write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
+           disk_node = None,
+           tape_node = None,
            reco_split = alcarawSplitting,
            proc_version = alcarawProcVersion,
-           alca_producers = [ "LumiPixels" ],
-           dqm_sequences = [ "@common" ],
-           timePerEvent = 0.02,
-           sizePerEvent = 38,
-           scenario = "AlCaLumiPixels")
-
-addDataset(tier0Config, "AlCaLumiPixels1",
-           do_reco = True,
-           write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
-           reco_split = alcarawSplitting,
-           proc_version = alcarawProcVersion,
-           alca_producers = [ "LumiPixels" ],
-           dqm_sequences = [ "@common" ],
-           timePerEvent = 0.02,
-           sizePerEvent = 38,
-           scenario = "AlCaLumiPixels")
-
-addDataset(tier0Config, "AlCaLumiPixels2",
-           do_reco = True,
-           write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
-           reco_split = alcarawSplitting,
-           proc_version = alcarawProcVersion,
-           alca_producers = [ "LumiPixels" ],
-           dqm_sequences = [ "@common" ],
-           timePerEvent = 0.02,
-           sizePerEvent = 38,
-           scenario = "AlCaLumiPixels")
-
-addDataset(tier0Config, "AlCaLumiPixels3",
-           do_reco = True,
-           write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
-           reco_split = alcarawSplitting,
-           proc_version = alcarawProcVersion,
-           alca_producers = [ "LumiPixels" ],
+           alca_producers = [ "LumiPixels", "AlCaPCCZeroBias", "AlCaPCCRandom" ],
            dqm_sequences = [ "@common" ],
            timePerEvent = 0.02,
            sizePerEvent = 38,
@@ -391,146 +337,39 @@ datasets = [ "ZeroBias", "ZeroBias0", "ZeroBias1", "ZeroBias2",
              "ZeroBias15", "ZeroBias16", "ZeroBias17", "ZeroBias18", 
              "ZeroBias19", "ZeroBias20" ]
 
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
-               do_reco = True,
-               write_dqm = True,
-               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
-               alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias" ],
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
-               timePerEvent = 3.5,
-               sizePerEvent = 1500,
-               scenario = ppScenario)
+datasets += [ "ZeroBiasIsolatedBunches", "ZeroBiasIsolatedBunches0", "ZeroBiasIsolatedBunches1", "ZeroBiasIsolatedBunches2", 
+             "ZeroBiasIsolatedBunches3", "ZeroBiasIsolatedBunches4", "ZeroBiasIsolatedBunches5", "ZeroBiasIsolatedBunches6", 
+             "ZeroBiasIsolatedBunches7", "ZeroBiasIsolatedBunches8", "ZeroBiasIsolatedBunches9", "ZeroBiasIsolatedBunches10" ]
 
-datasets = [ "ZeroBias_0T", "ZeroBias0_0T", "ZeroBias1_0T", "ZeroBias2_0T",
-             "ZeroBias3_0T", "ZeroBias4_0T", "ZeroBias5_0T", "ZeroBias6_0T", 
-             "ZeroBias7_0T", "ZeroBias8_0T", "ZeroBias9_0T", "ZeroBias10_0T", 
-             "ZeroBias11_0T", "ZeroBias12_0T", "ZeroBias13_0T", "ZeroBias14_0T", 
-             "ZeroBias15_0T", "ZeroBias16_0T", "ZeroBias17_0T", "ZeroBias18_0T", 
-             "ZeroBias19_0T", "ZeroBias20_0T" ]
-
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
-               do_reco = True,
-               write_dqm = True,
-               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
-               alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias" ],
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
-               timePerEvent = 3.5,
-               sizePerEvent = 1500,
-               scenario = ppScenarioB0T)
-    
-datasets = [ "ZeroBiasFirstBunchAfterTrain", "ZeroBiasFirstBunchInTrain" ]    
-
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
-               do_reco = True,
-               write_reco = True,
-               raw_to_disk = True,
-               write_dqm = True,
-               dqm_sequences = [ "@common" ],
-               scenario = ppScenario)
-
-datasets = [ "ZeroBiasFirstBunchAfterTrain_0T", "ZeroBiasFirstBunchInTrain_0T" ]    
-
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
-               do_reco = True,
-               write_reco = True,
-               raw_to_disk = True,
-               write_dqm = True,
-               dqm_sequences = [ "@common" ],
-               scenario = ppScenarioB0T)
-
-datasets = [ "ZeroBiasIsolatedBunch", "ZeroBiasAfterIsolatedBunch",
+datasets += [ "ZeroBiasIsolatedBunch", "ZeroBiasAfterIsolatedBunch",
              "ZeroBiasIsolatedBunch0", "ZeroBiasIsolatedBunch1", "ZeroBiasIsolatedBunch2",
              "ZeroBiasIsolatedBunch3", "ZeroBiasIsolatedBunch4", "ZeroBiasIsolatedBunch5" ]
 
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
-               do_reco = True,
-               raw_to_disk = True,
-               write_dqm = True,
-               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
-               alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias" ],
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
-               timePerEvent = 3.5,
-               sizePerEvent = 1500,
-               scenario = ppScenario)
-
-datasets = [ "ZeroBiasIsolatedBunch_0T", "ZeroBiasAfterIsolatedBunch_0T",
-             "ZeroBiasIsolatedBunch0_0T", "ZeroBiasIsolatedBunch1_0T", "ZeroBiasIsolatedBunch2_0T",
-             "ZeroBiasIsolatedBunch3_0T", "ZeroBiasIsolatedBunch4_0T", "ZeroBiasIsolatedBunch5_0T" ]
-
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
-               do_reco = True,
-               raw_to_disk = True,
-               write_dqm = True,
-               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
-               alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias" ],
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
-               timePerEvent = 3.5,
-               sizePerEvent = 1500,
-               scenario = ppScenarioB0T)
-
-datasets = [ "ZeroBiasBunchTrains0", "ZeroBiasBunchTrains1", "ZeroBiasBunchTrains2",
+datasets += [ "ZeroBiasBunchTrains0", "ZeroBiasBunchTrains1", "ZeroBiasBunchTrains2",
              "ZeroBiasBunchTrains3", "ZeroBiasBunchTrains4", "ZeroBiasBunchTrains5" ]
 
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
-               do_reco = True,
-               raw_to_disk = True,
-               write_dqm = True,
-               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
-               alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias" ],
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
-               timePerEvent = 3.5,
-               sizePerEvent = 1500,
-               scenario = ppScenario)
+datasets += [ "ZeroBiasFirstBunchAfterTrain", "ZeroBiasFirstBunchInTrain" ]    
 
-datasets = [ "ZeroBiasBunchTrains0_0T", "ZeroBiasBunchTrains1_0T", "ZeroBiasBunchTrains2_0T",
-             "ZeroBiasBunchTrains3_0T", "ZeroBiasBunchTrains4_0T", "ZeroBiasBunchTrains5_0T" ]
-
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
-               do_reco = True,
-               raw_to_disk = True,
-               write_dqm = True,
-               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
-               alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias" ],
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
-               timePerEvent = 3.5,
-               sizePerEvent = 1500,
-               scenario = ppScenarioB0T)
-
-datasets = [ "ZeroBiasPixelHVScan0", "ZeroBiasPixelHVScan1", "ZeroBiasPixelHVScan2", 
+datasets += [ "ZeroBiasPixelHVScan0", "ZeroBiasPixelHVScan1", "ZeroBiasPixelHVScan2", 
              "ZeroBiasPixelHVScan3", "ZeroBiasPixelHVScan4", "ZeroBiasPixelHVScan5", 
              "ZeroBiasPixelHVScan6", "ZeroBiasPixelHVScan7" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               raw_to_disk = True,
                write_dqm = True,
                dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
-               alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias" ],
+               alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                timePerEvent = 3.5,
                sizePerEvent = 1500,
                scenario = ppScenario)
 
-datasets = [ "ZeroBiasPixelHVScan0_0T", "ZeroBiasPixelHVScan1_0T", "ZeroBiasPixelHVScan2_0T",
-             "ZeroBiasPixelHVScan3_0T", "ZeroBiasPixelHVScan4_0T", "ZeroBiasPixelHVScan5_0T",
-             "ZeroBiasPixelHVScan6_0T", "ZeroBiasPixelHVScan7_0T" ]
-
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
+    addDataset(tier0Config, dataset+'_0T',
                do_reco = True,
-               raw_to_disk = True,
                write_dqm = True,
                dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
-               alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias" ],
+               alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                timePerEvent = 3.5,
                sizePerEvent = 1500,
@@ -540,28 +379,29 @@ for dataset in datasets:
 ### HLTPhysics PDs                                   ###
 ########################################################
 
-datasets = [ "HLTPhysics" ]
+datasets = [ "HLTPhysics", 
+             "HLTPhysics0", "HLTPhysics1", "HLTPhysics2",
+             "HLTPhysics3", "HLTPhysics4", "HLTPhysics5", 
+             "HLTPhysics6", "HLTPhysics7", "HLTPhysics8", ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                raw_to_disk = True,
+               write_reco = True,
                write_dqm = True,
                alca_producers = [ "TkAlMinBias" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
-
-datasets = [ "HLTPhysics_0T" ]
-
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
+    
+    addDataset(tier0Config, dataset+'_0T',
                do_reco = True,
                raw_to_disk = True,
+               write_reco = True,
                write_dqm = True,
                alca_producers = [ "TkAlMinBias" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenarioB0T)
-
 
 datasets = [ "HLTPhysicsBunchTrains", "HLTPhysicsIsolatedBunch" ]
 
@@ -574,10 +414,7 @@ for dataset in datasets:
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
 
-datasets = [ "HLTPhysicsBunchTrains_0T", "HLTPhysicsIsolatedBunch_0T"  ]
-
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
+    addDataset(tier0Config, dataset+'_0T',
                do_reco = True,
                raw_to_disk = True,
                write_dqm = True,
@@ -585,9 +422,7 @@ for dataset in datasets:
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenarioB0T)
 
-datasets = [ "HLTPhysics0", "HLTPhysics1", "HLTPhysics2", "HLTPhysics3",
-             "HLTPhysics4", "HLTPhysics5", "HLTPhysics6", "HLTPhysics7",
-             "HLTPhysics8", "HLTPhysicspart0", "HLTPhysicspart1",
+datasets = [ "HLTPhysicspart0", "HLTPhysicspart1",
              "HLTPhysicspart2", "HLTPhysicspart3", "HLTPhysicspart4",
              "HLTPhysicspart5", "HLTPhysicspart6", "HLTPhysicspart7"  ]
 
@@ -596,14 +431,7 @@ for dataset in datasets:
                do_reco = False,
                scenario = ppScenario)
 
-datasets = [ "HLTPhysics0_0T", "HLTPhysics1_0T", "HLTPhysics2_0T", "HLTPhysics3_0T", 
-             "HLTPhysics4_0T", "HLTPhysics5_0T", "HLTPhysics6_0T", "HLTPhysics7_0T", 
-             "HLTPhysics8_0T", "HLTPhysicspart0_0T", "HLTPhysicspart1_0T",
-             "HLTPhysicspart2_0T", "HLTPhysicspart3_0T", "HLTPhysicspart4_0T",
-             "HLTPhysicspart5_0T", "HLTPhysicspart6_0T", "HLTPhysicspart7_0T"  ]
-
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
+    addDataset(tier0Config, dataset+'_0T',
                do_reco = False,
                scenario = ppScenarioB0T)
 
@@ -709,7 +537,7 @@ for dataset in datasets:
 ### 50 ns Physics Menu       ###
 ################################
 
-datasets = [ "BTagCSV", "DisplacedJet" ]
+datasets = [ "BTagCSV" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -718,11 +546,31 @@ for dataset in datasets:
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
 
-datasets = [ "BTagCSV_0T", "DisplacedJet_0T" ]
+datasets = [ "BTagCSV_0T" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
+               dqm_sequences = [ "@common" ],
+               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               scenario = ppScenarioB0T)
+
+datasets = [ "DisplacedJet" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               raw_to_disk = True,
+               dqm_sequences = [ "@common" ],
+               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               scenario = ppScenario)
+
+datasets = [ "DisplacedJet_0T" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               raw_to_disk = True,
                dqm_sequences = [ "@common" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenarioB0T)
@@ -848,7 +696,7 @@ datasets = [ "DoubleEG" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               alca_producers = [ "EcalUncalZSCElectron", "EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym", "HcalCalIsoTrkFilter" ],
+               alca_producers = [ "EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym", "HcalCalIsoTrkFilter" ],
                dqm_sequences = [ "@common", "@ecal", "@egamma" ],
                physics_skims = [ "ZElectron", "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
@@ -859,7 +707,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                write_dqm = True,
-               alca_producers = [ "EcalUncalZSCElectron", "EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym", "HcalCalIsoTrkFilter" ],
+               alca_producers = [ "EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym", "HcalCalIsoTrkFilter" ],
                dqm_sequences = [ "@common", "@ecal", "@egamma" ],
                physics_skims = [ "ZElectron", "LogError", "LogErrorMonitor" ],
                scenario = ppScenarioB0T)
@@ -886,7 +734,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                write_dqm = True,
-               alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HBHEMuonFilter" ],
+               alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HcalCalHBHEMuonFilter" ],
                dqm_sequences = [ "@common", "@muon" ],
                physics_skims = [ "ZMu", "MuTau", "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
@@ -897,7 +745,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                write_dqm = True,
-               alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HBHEMuonFilter" ],
+               alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HcalCalHBHEMuonFilter" ],
                dqm_sequences = [ "@common", "@muon" ],
                physics_skims = [ "ZMu", "MuTau", "LogError", "LogErrorMonitor" ],
                scenario = ppScenarioB0T)
@@ -1020,7 +868,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                write_dqm = True,
-               alca_producers = [ "EcalUncalWElectron", "EcalUncalZSCElectron", "EcalUncalZElectron", "HcalCalIterativePhiSym", "EcalESAlign" ],
+               alca_producers = [ "EcalUncalWElectron", "EcalUncalZElectron", "HcalCalIterativePhiSym", "EcalESAlign" ],
                dqm_sequences = [ "@common", "@ecal", "@egamma" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
@@ -1031,7 +879,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                write_dqm = True,
-               alca_producers = [ "EcalUncalWElectron", "EcalUncalZSCElectron", "EcalUncalZElectron", "HcalCalIterativePhiSym", "EcalESAlign" ],
+               alca_producers = [ "EcalUncalWElectron", "EcalUncalZElectron", "HcalCalIterativePhiSym", "EcalESAlign" ],
                dqm_sequences = [ "@common", "@ecal", "@egamma" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenarioB0T)
@@ -1126,7 +974,6 @@ datasets = [ "ParkingMonitor", "ParkingScoutingMonitor" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = False, write_aod = False, write_miniaod = True, write_dqm = True,
                dqm_sequences = [ "@common" ],
                scenario = ppScenario)
 
@@ -1135,17 +982,43 @@ datasets = [ "ParkingMonitor_0T", "ParkingScoutingMonitor_0T" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = False, write_aod = False, write_miniaod = True, write_dqm = True,
                dqm_sequences = [ "@common" ],
                scenario = ppScenarioB0T)
     
+datasets = [ "ParkingHT410to430", "ParkingHT500to550", "ParkingHT430to450", "ParkingHT470to500", "ParkingHT450to470" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = False,
+               scenario = ppScenario)
+
+datasets = [ "ParkingHT410to430_0T", "ParkingHT500to550_0T", "ParkingHT430to450_0T", "ParkingHT470to500_0T", "ParkingHT450to470_0T" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = False,
+               scenario = ppScenarioB0T)
+
+datasets = [ "ParkingHT550to650", "ParkingHT650" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = False,
+               scenario = ppScenario)
+
+datasets = [ "ParkingHT550to650_0T", "ParkingHT650_0T" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = False,
+               scenario = ppScenarioB0T)
+
 datasets = [ "ParkingHLTPhysics", "ParkingZeroBias", "AlCaPhiSym", "AlCaP0", 
              "AlCaElectron", "RPCMonitor", "VRRandom", "VRZeroBias", "VirginRaw" ]  
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = False,
-               raw_to_disk = True,
                scenario = ppScenario)    
     
 datasets = [ "ParkingHLTPhysics_0T", "ParkingZeroBias_0T", "AlCaPhiSym_0T", "AlCaP0_0T", 
@@ -1154,8 +1027,7 @@ datasets = [ "ParkingHLTPhysics_0T", "ParkingZeroBias_0T", "AlCaPhiSym_0T", "AlC
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = False,
-               raw_to_disk = True,
-               scenario = ppScenarioB0T)     
+               scenario = ppScenarioB0T)
 
 #########################################
 ### New PDs for pp Reference Run 2015 ###
@@ -1239,6 +1111,136 @@ addDataset(tier0Config, "SingleMuLowPt_0T",
            dqm_sequences = [ "@common" ],
            scenario = ppScenarioB0T)
 
+#########################################
+### New PDs for PARun 2016 ###
+#########################################
+
+datasets = [ "PAHighMultiplicity0", "PAHighMultiplicity1", "PAHighMultiplicity2", "PAHighMultiplicity3",
+             "PAHighMultiplicity4", "PAHighMultiplicity5", "PAHighMultiplicity6", "PAHighMultiplicity7" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_dqm = True,
+               dqm_sequences = [ "@common" ],
+               scenario = hiScenario)
+
+addDataset(tier0Config, "PACastor",
+           do_reco = True,
+           write_dqm = True,
+           dqm_sequences = [ "@common" ],
+           scenario = hiScenario)
+
+addDataset(tier0Config, "PAForward",
+           do_reco = True,
+           write_dqm = True,
+           dqm_sequences = [ "@common" ],
+           scenario = hiScenario)
+
+addDataset(tier0Config, "PADoubleMuon",
+           do_reco = True,
+           write_dqm = True,
+           dqm_sequences = [ "@common", "@muon" ],
+           alca_producers = [ "TkAlMuonIsolatedPA", "TkAlZMuMuPA", "TkAlUpsilonMuMuPA", "DtCalib" ],
+           scenario = hiScenario)
+
+addDataset(tier0Config, "PASingleMuon",
+           do_reco = True,
+           write_dqm = True,
+           dqm_sequences = [ "@common", "@muon" ],
+           alca_producers = [ "TkAlMuonIsolatedPA", "DtCalib" ],
+           physics_skims = [ "PAZMM" ],
+           scenario = hiScenario)
+
+datasets = [ "PADTrack1", "PADTrack2" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_dqm = True,
+               dqm_sequences = [ "@common" ],
+               scenario = hiScenario)
+
+addDataset(tier0Config, "PAEGJet1",
+           do_reco = True,
+           write_dqm = True,
+           dqm_sequences = [ "@common", "@ecal", "@egamma", "@hcal", "@jetmet" ],
+           physics_skims = [ "PAZEE" ],
+           scenario = hiScenario)
+
+datasets = [ "PAMinimumBias1", "PAMinimumBias2", "PAMinimumBias3", "PAMinimumBias4", 
+             "PAMinimumBias5", "PAMinimumBias6", "PAMinimumBias7", "PAMinimumBias8",
+             "PAMinimumBias9", "PAMinimumBias10", "PAMinimumBias11", "PAMinimumBias12",
+             "PAMinimumBias13", "PAMinimumBias14", "PAMinimumBias15", "PAMinimumBias16",
+             "PAMinimumBias17", "PAMinimumBias18", "PAMinimumBias19", "PAMinimumBias20" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_dqm = True,
+               dqm_sequences = [ "@common" ],
+               alca_producers = [ "SiStripCalMinBias", "TkAlMinBias" ],
+               scenario = hiScenario)
+
+addDataset(tier0Config, "PAMinimumBiasBkg",
+           do_reco = True,
+           write_dqm = True,
+           dqm_sequences = [ "@common" ],
+           physics_skims = [ "PAMinBias" ],
+           scenario = hiScenario)
+
+
+addDataset(tier0Config, "PAEmptyBX",
+           do_reco = True,
+           write_dqm = True,
+           dqm_sequences = [ "@common" ],
+           scenario = hiScenario)
+
+#############################
+###   PDs pPb VdM scan    ###
+#############################
+
+datasets = [ "PAL1AlwaysTrue0", "PAL1AlwaysTrue1", "PAL1AlwaysTrue2", "PAL1AlwaysTrue3",
+             "PAL1AlwaysTrue4", "PAL1AlwaysTrue5", "PAL1AlwaysTrue6", "PAL1AlwaysTrue7",
+             "PAL1AlwaysTrue8", "PAL1AlwaysTrue9" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_dqm = True,
+               alca_producers = [ "LumiPixelsMinBias" ],
+               dqm_sequences = [ "@common" ],
+               scenario = hiScenario)
+
+datasets = [ "PAMinimumBiasHFOR0", "PAMinimumBiasHFOR1", "PAMinimumBiasHFOR2" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_dqm = True,
+               alca_producers = [ "LumiPixelsMinBias" ],
+               dqm_sequences = [ "@common" ],
+               scenario = hiScenario)
+
+datasets = [ "PAZeroBias0", "PAZeroBias1", "PAZeroBias2", "PAZeroBias3",
+             "PAZeroBias4", "PAZeroBias5", "PAZeroBias6", "PAZeroBias7",
+             "PAZeroBias8", "PAZeroBias9" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_dqm = True,
+               alca_producers = [ "LumiPixelsMinBias" ],
+               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
+               scenario = hiScenario)
+
+addDataset(tier0Config, "PADoubleMuOpen",
+           do_reco = True,
+           write_dqm = True,
+           alca_producers = [ "LumiPixelsMinBias" ],
+           dqm_sequences = [ "@common", "@muon" ],
+           scenario = hiScenario)
+
 #############################
 ### Express configuration ###
 #############################
@@ -1296,7 +1298,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  data_tiers = [ "FEVT" ],
                  write_dqm = True,
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T",
-                                    "DtCalibCosmics" ],
+                                    "DtCalibCosmics", "PromptCalibProdSiStrip" ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
                  global_tag_connect = globalTagConnect,
@@ -1334,6 +1336,57 @@ addExpressConfig(tier0Config, "HLTMonitor",
                  timePerEvent = 4, #I have to get some stats to set this properly
                  sizePerEvent = 1700, #I have to get some stats to set this properly
                  versionOverride = expressVersionOverride)
+
+###############################
+### ExpressPA configuration ###
+###############################
+
+addExpressConfig(tier0Config, "ExpressPA",
+                 scenario = hiScenario,
+                 data_tiers = [ "FEVT" ],
+                 write_dqm = True,
+                 alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "DtCalib", "SiStripCalMinBias", 
+                                    "SiStripCalMinBiasAfterAbortGap", "LumiPixelsMinBias", "PromptCalibProd",
+                                    "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli", "PromptCalibProdSiStripGains", 
+                                    "PromptCalibProdSiStripGainsAfterAbortGap", "SiStripPCLHistos" ],
+                 reco_version = defaultCMSSWVersion,
+                 multicore = numberOfCores,
+                 global_tag_connect = globalTagConnect,
+                 global_tag = expressGlobalTag,
+                 proc_ver = expressProcVersion,
+                 maxInputRate = 23 * 1000,
+                 maxInputEvents = 400,
+                 maxInputSize = 2 * 1024 * 1024 * 1024,
+                 maxInputFiles = 15,
+                 maxLatency = 15 * 23,
+                 periodicHarvestInterval = 20 * 60,
+                 blockCloseDelay = 1200,
+                 timePerEvent = 4,
+                 sizePerEvent = 1700,
+                 versionOverride = expressVersionOverride)
+
+addExpressConfig(tier0Config, "HLTMonitorPA",
+                 scenario = hiScenario,
+                 data_tiers = [ "FEVTHLTALL" ],
+                 write_dqm = True,
+                 alca_producers = [],
+                 dqm_sequences = [ "@HLTMonPA" ],
+                 reco_version = defaultCMSSWVersion,
+                 multicore = numberOfCores,
+                 global_tag_connect = globalTagConnect,
+                 global_tag = expressGlobalTag,
+                 proc_ver = expressProcVersion,
+                 maxInputRate = 23 * 1000,
+                 maxInputEvents = 400,
+                 maxInputSize = 2 * 1024 * 1024 * 1024,
+                 maxInputFiles = 15,
+                 maxLatency = 15 * 23,
+                 periodicHarvestInterval = 20 * 60,
+                 blockCloseDelay = 1200,
+                 timePerEvent = 4, #I have to get some stats to set this properly
+                 sizePerEvent = 1700, #I have to get some stats to set this properly
+                 versionOverride = expressVersionOverride)
+
 
 #######################
 ### ignored streams ###
