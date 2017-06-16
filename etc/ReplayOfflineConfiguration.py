@@ -379,28 +379,29 @@ for dataset in datasets:
 ### HLTPhysics PDs                                   ###
 ########################################################
 
-datasets = [ "HLTPhysics" ]
+datasets = [ "HLTPhysics", 
+             "HLTPhysics0", "HLTPhysics1", "HLTPhysics2",
+             "HLTPhysics3", "HLTPhysics4", "HLTPhysics5", 
+             "HLTPhysics6", "HLTPhysics7", "HLTPhysics8", ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                raw_to_disk = True,
+               write_reco = True,
                write_dqm = True,
                alca_producers = [ "TkAlMinBias" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
-
-datasets = [ "HLTPhysics_0T" ]
-
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
+    
+    addDataset(tier0Config, dataset+'_0T',
                do_reco = True,
                raw_to_disk = True,
+               write_reco = True,
                write_dqm = True,
                alca_producers = [ "TkAlMinBias" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenarioB0T)
-
 
 datasets = [ "HLTPhysicsBunchTrains", "HLTPhysicsIsolatedBunch" ]
 
@@ -413,10 +414,7 @@ for dataset in datasets:
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
 
-datasets = [ "HLTPhysicsBunchTrains_0T", "HLTPhysicsIsolatedBunch_0T"  ]
-
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
+    addDataset(tier0Config, dataset+'_0T',
                do_reco = True,
                raw_to_disk = True,
                write_dqm = True,
@@ -424,9 +422,7 @@ for dataset in datasets:
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenarioB0T)
 
-datasets = [ "HLTPhysics0", "HLTPhysics1", "HLTPhysics2", "HLTPhysics3",
-             "HLTPhysics4", "HLTPhysics5", "HLTPhysics6", "HLTPhysics7",
-             "HLTPhysics8", "HLTPhysicspart0", "HLTPhysicspart1",
+datasets = [ "HLTPhysicspart0", "HLTPhysicspart1",
              "HLTPhysicspart2", "HLTPhysicspart3", "HLTPhysicspart4",
              "HLTPhysicspart5", "HLTPhysicspart6", "HLTPhysicspart7"  ]
 
@@ -435,14 +431,7 @@ for dataset in datasets:
                do_reco = False,
                scenario = ppScenario)
 
-datasets = [ "HLTPhysics0_0T", "HLTPhysics1_0T", "HLTPhysics2_0T", "HLTPhysics3_0T", 
-             "HLTPhysics4_0T", "HLTPhysics5_0T", "HLTPhysics6_0T", "HLTPhysics7_0T", 
-             "HLTPhysics8_0T", "HLTPhysicspart0_0T", "HLTPhysicspart1_0T",
-             "HLTPhysicspart2_0T", "HLTPhysicspart3_0T", "HLTPhysicspart4_0T",
-             "HLTPhysicspart5_0T", "HLTPhysicspart6_0T", "HLTPhysicspart7_0T"  ]
-
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
+    addDataset(tier0Config, dataset+'_0T',
                do_reco = False,
                scenario = ppScenarioB0T)
 
