@@ -81,7 +81,7 @@ setPromptCalibrationConfig(tier0Config,
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
        'acqEra': {'Run2016D': "CMSSW_8_0_13_patch1"},
-       'default': "CMSSW_9_2_1"
+       'default': "CMSSW_9_2_3_patch1"
      }
 
 # Configure ScramArch
@@ -127,9 +127,9 @@ repackVersionOverride = {
     }
 
 expressVersionOverride = {
-    "CMSSW_9_0_0" : "CMSSW_9_2_1",
-    "CMSSW_9_1_0" : "CMSSW_9_2_1",
-    "CMSSW_9_2_0" : "CMSSW_9_2_1"
+    "CMSSW_9_0_0" : "CMSSW_9_2_3_patch1",
+    "CMSSW_9_1_0" : "CMSSW_9_2_3_patch1",
+    "CMSSW_9_2_0" : "CMSSW_9_2_3_patch1"
     }
 
 #set default repack settings for bulk streams
@@ -248,7 +248,7 @@ datasets = [ "MinimumBias",
              "MinimumBias5", "MinimumBias6", "MinimumBias7", "MinimumBias8",
              "MinimumBias9", "MinimumBias10", "MinimumBias11", "MinimumBias12",
              "MinimumBias13", "MinimumBias14", "MinimumBias15", "MinimumBias16",
-             "MinimumBias17", "MinimumBias18", "MinimumBias19", "MinimumBias20",
+             "MinimumBias17", "MinimumBias18", "MinimumBias19", "MinimumBias20"
              ]
 
 for dataset in datasets:
