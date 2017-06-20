@@ -1,3 +1,23 @@
+2.0.7 to 2.0.8:
+  - Merge pull request #4361 from hufnagel/reco-more-memory
+  - even more memory for Express and PromptReco
+  - Merge pull request #4357 from blallen/ProdReplayConfigMerge
+  - update to 923p1 and increment processing version.
+  - updated HLT streams to match prod.
+  - Merge pull request #4360 from hufnagel/reco-memory
+  - adjust the Express and PromptReco memory limits
+  - Merge pull request #4359 from hufnagel/repack-express-spec-move
+  - Merge pull request #4358 from hufnagel/alcaharvest-upload-partition
+  - move Repack and Express specs to WMCORE, adopt to new parameter validation rules
+  - promote HLTPhysics[0-8] to same config as HLTPhysics.
+  - Write reco for ZeroBias* and HLTPhysics. Also readded raw_to_disk option for zerobias*.
+  - brought Prod and Replay configs into sync.
+  - consolidate Commissioning section of config. also collapsing effort needed to make _0T datasets (might want to do this everywhere?)
+  - copy config from vocms0313.
+  - partition the AlCaHarvest upload directory by year
+  - Merge pull request #4354 from ebohorqu/run2017a
+  - Latest changes for stable beams (Run2017A, 92X v2 GTs, ...)
+
 2.0.6 to 2.0.7:
   - Merge pull request #4353 from hufnagel/express-flexible
   - Merge pull request #4352 from hufnagel/sm-discovery-null-size
