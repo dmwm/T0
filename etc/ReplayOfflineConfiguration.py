@@ -45,7 +45,7 @@ processingSite = "T0_CH_CERN"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Tier0_Test_SUPERBUNNIES_vocms229")
+setAcquisitionEra(tier0Config, "Tier0_REPLAY_vocms229")
 setBaseRequestPriority(tier0Config, 300000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
@@ -81,7 +81,7 @@ setPromptCalibrationConfig(tier0Config,
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
        'acqEra': {'Run2016D': "CMSSW_8_0_13_patch1"},
-       'default': "CMSSW_9_2_3_patch1"
+       'default': "CMSSW_9_2_3_patch2"
      }
 
 # Configure ScramArch
@@ -127,9 +127,12 @@ repackVersionOverride = {
     }
 
 expressVersionOverride = {
-    "CMSSW_9_0_0" : "CMSSW_9_2_3_patch1",
-    "CMSSW_9_1_0" : "CMSSW_9_2_3_patch1",
-    "CMSSW_9_2_0" : "CMSSW_9_2_3_patch1"
+    "CMSSW_9_0_0" : "CMSSW_9_2_3_patch2",
+    "CMSSW_9_1_0" : "CMSSW_9_2_3_patch2",
+    "CMSSW_9_2_0" : "CMSSW_9_2_3_patch2",
+    "CMSSW_9_2_1" : "CMSSW_9_2_3_patch2",
+    "CMSSW_9_2_2" : "CMSSW_9_2_3_patch2",
+    "CMSSW_9_2_3" : "CMSSW_9_2_3_patch2"
     }
 
 #set default repack settings for bulk streams
@@ -330,12 +333,7 @@ for dataset in datasets:
 ### ZeroBias PDs                                     ###
 ########################################################
 
-datasets = [ "ZeroBias", "ZeroBias0", "ZeroBias1", "ZeroBias2", 
-             "ZeroBias3", "ZeroBias4", "ZeroBias5", "ZeroBias6", 
-             "ZeroBias7", "ZeroBias8", "ZeroBias9", "ZeroBias10", 
-             "ZeroBias11", "ZeroBias12", "ZeroBias13", "ZeroBias14", 
-             "ZeroBias15", "ZeroBias16", "ZeroBias17", "ZeroBias18", 
-             "ZeroBias19", "ZeroBias20" ]
+datasets = [ "ZeroBias" ]
 
 datasets += [ "ZeroBiasIsolatedBunches", "ZeroBiasIsolatedBunches0", "ZeroBiasIsolatedBunches1", "ZeroBiasIsolatedBunches2", 
              "ZeroBiasIsolatedBunches3", "ZeroBiasIsolatedBunches4", "ZeroBiasIsolatedBunches5", "ZeroBiasIsolatedBunches6", 
@@ -374,6 +372,38 @@ for dataset in datasets:
                timePerEvent = 3.5,
                sizePerEvent = 1500,
                scenario = ppScenarioB0T)
+    
+datasets = [ "ZeroBias0", "ZeroBias1", "ZeroBias2",
+             "ZeroBias3", "ZeroBias4", "ZeroBias5", "ZeroBias6",
+             "ZeroBias7", "ZeroBias8", "ZeroBias9", "ZeroBias10",
+             "ZeroBias11", "ZeroBias12", "ZeroBias13", "ZeroBias14",
+             "ZeroBias15", "ZeroBias16", "ZeroBias17", "ZeroBias18",
+             "ZeroBias19", "ZeroBias20" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = False,
+               write_reco = False,
+               raw_to_disk = True,
+               write_dqm = True,
+               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
+               alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias" ],
+               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               timePerEvent = 3.5,
+               sizePerEvent = 1500,
+               scenario = ppScenario)
+
+    addDataset(tier0Config, dataset+'_0T',
+               do_reco = False,
+               write_reco = False,
+               raw_to_disk = True,
+               write_dqm = True,
+               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
+               alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias" ],
+               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               timePerEvent = 3.5,
+               sizePerEvent = 1500,
+               scenario = ppScenarioB0T)    
 
 ########################################################
 ### HLTPhysics PDs                                   ###
