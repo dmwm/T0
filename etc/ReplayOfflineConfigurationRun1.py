@@ -45,7 +45,7 @@ processingSite = "T0_CH_CERN"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Tier0_Test_SUPERBUNNIES_vocms229")
+setAcquisitionEra(tier0Config, "Tier0_REPLAY_vocms229")
 setBaseRequestPriority(tier0Config, 300000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
