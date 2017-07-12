@@ -81,7 +81,7 @@ setPromptCalibrationConfig(tier0Config,
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
        'acqEra': {'Run2016D': "CMSSW_8_0_13_patch1"},
-       'default': "CMSSW_9_2_5_patch1"
+       'default': "CMSSW_9_2_6"
      }
 
 # Configure ScramArch
@@ -105,9 +105,9 @@ expressProcVersion = 1
 alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "92X_dataRun2_Express_v2"
-promptrecoGlobalTag = "92X_dataRun2_Prompt_v4"
-alcap0GlobalTag = "92X_dataRun2_Prompt_v4"
+expressGlobalTag = "92X_dataRun2_Express_v4"
+promptrecoGlobalTag = "92X_dataRun2_Prompt_v5"
+alcap0GlobalTag = "92X_dataRun2_Prompt_v5"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -127,14 +127,14 @@ repackVersionOverride = {
     }
 
 expressVersionOverride = {
-    "CMSSW_9_0_0" : "CMSSW_9_2_5_patch1",
-    "CMSSW_9_1_0" : "CMSSW_9_2_5_patch1",
-    "CMSSW_9_2_0" : "CMSSW_9_2_5_patch1",
-    "CMSSW_9_2_1" : "CMSSW_9_2_5_patch1",
-    "CMSSW_9_2_2" : "CMSSW_9_2_5_patch1",
-    "CMSSW_9_2_3" : "CMSSW_9_2_5_patch1",
-    "CMSSW_9_2_4" : "CMSSW_9_2_5_patch1",
-    "CMSSW_9_2_5" : "CMSSW_9_2_5_patch1"
+    "CMSSW_9_0_0" : "CMSSW_9_2_6",
+    "CMSSW_9_1_0" : "CMSSW_9_2_6",
+    "CMSSW_9_2_0" : "CMSSW_9_2_6",
+    "CMSSW_9_2_1" : "CMSSW_9_2_6",
+    "CMSSW_9_2_2" : "CMSSW_9_2_6",
+    "CMSSW_9_2_3" : "CMSSW_9_2_6",
+    "CMSSW_9_2_4" : "CMSSW_9_2_6",
+    "CMSSW_9_2_5" : "CMSSW_9_2_6"
     }
 
 #set default repack settings for bulk streams
