@@ -14,7 +14,6 @@ from T0.RunConfig.Tier0Config import setBaseRequestPriority
 from T0.RunConfig.Tier0Config import setBackfill
 from T0.RunConfig.Tier0Config import setBulkDataType
 from T0.RunConfig.Tier0Config import setProcessingSite
-from T0.RunConfig.Tier0Config import setExpressSubscribeNode
 from T0.RunConfig.Tier0Config import setDQMDataTier
 from T0.RunConfig.Tier0Config import setDQMUploadUrl
 from T0.RunConfig.Tier0Config import setPromptCalibrationConfig

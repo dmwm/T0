@@ -14,7 +14,6 @@ from T0.RunConfig.Tier0Config import setBaseRequestPriority
 from T0.RunConfig.Tier0Config import setBackfill
 from T0.RunConfig.Tier0Config import setBulkDataType
 from T0.RunConfig.Tier0Config import setProcessingSite
-from T0.RunConfig.Tier0Config import setExpressSubscribeNode
 from T0.RunConfig.Tier0Config import setDQMDataTier
 from T0.RunConfig.Tier0Config import setDQMUploadUrl
 from T0.RunConfig.Tier0Config import setPromptCalibrationConfig
@@ -50,7 +49,6 @@ setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
 setProcessingSite(tier0Config, processingSite)
-setExpressSubscribeNode(tier0Config, "T2_CH_CERN")
 
 # Override for DQM data tier
 setDQMDataTier(tier0Config, "DQMIO")
