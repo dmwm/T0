@@ -45,7 +45,7 @@ processingSite = "T0_CH_CERN"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2017B")
+setAcquisitionEra(tier0Config, "Run2017C")
 setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -99,20 +99,21 @@ hiScenario = "ppEra_Run2_2016_pA"
 # Defaults for processing version
 defaultProcVersionRAW = 1
 
-defaultProcVersionReco = {
-       'acqEra': {'Run2017A': "3"},
-       'default': "2"
-     }
-
-expressProcVersion = {
-       'acqEra': {'Run2017A': "3"},
-       'default': "2"
-     }
-
 alcarawProcVersion = {
        'acqEra': {'Run2017A': "3"},
        'default': "1"
      }
+
+defaultProcVersionReco = {
+       'acqEra': {'Run2017A': "3", 'Run2017B': "2"},
+       'default': "1"
+     }
+
+expressProcVersion = {
+       'acqEra': {'Run2017A': "3", 'Run2017B': "2"},
+       'default': "1"
+     }
+
 
 # Defaults for GlobalTag
 expressGlobalTag = "92X_dataRun2_Express_v4"
