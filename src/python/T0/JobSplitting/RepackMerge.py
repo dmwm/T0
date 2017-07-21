@@ -308,15 +308,26 @@ class RepackMerge(JobFactory):
         the passed in list of files
 
         """
+        # find largest file
+        largestFile = 0
+        for fileInfo in fileList:
+            largestFile = max(largestFile, fileInfo['filesize'])
+
+        # calculate number of cores based on disk usage
+        numberOfCores = 1 + (int)((jobSize+largestFile)/(20*1000*1000*1000))
+
+        # jobs requesting more than 8 cores would never run
+        if numberOfCores > 8:
+            self.markFailed(streamerList)
+            return
+
         if not self.createdGroup:
             self.newGroup()
             self.createdGroup = True
 
         self.newJob(name = "%s-%s" % (self.jobNamePrefix, makeUUID()))
 
-        largestFile = 0
         for fileInfo in fileList:
-            largestFile = max(largestFile, fileInfo['filesize'])
             f = File(id = fileInfo['id'],
                      lfn = fileInfo['lfn'])
             f.setLocation(fileInfo['location'], immediateSave = False)
@@ -326,7 +337,6 @@ class RepackMerge(JobFactory):
             self.currentJob.addBaggageParameter("useErrorDataset", True)
 
         # allow large (single lumi) repackmerge to use multiple cores
-        numberOfCores = 1 + (int)((jobSize+largestFile)/(20*1000*1000*1000))
         if numberOfCores > 1:
             self.currentJob.addBaggageParameter("numberOfCores", numberOfCores)
 
