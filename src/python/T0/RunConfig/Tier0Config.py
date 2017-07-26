@@ -142,6 +142,8 @@ Tier0Configuration - Global configuration object
 |             |     |
 |             |     |--> DiskNode - The disk PhEDEx node (default None)
 |             |     |
+|             |     |--> DiskNodeReco - The disk PhEDEx node for bulk RECO data (default None)
+|             |     |
 |             |     |--> PhEDExGroup - The PhEDEx group for the subscriptions.
 |             |     |
 |             |     |--> BlockCloseDelay - delay to close block in WMAgent
@@ -450,6 +452,11 @@ def addDataset(config, datasetName, **settings):
         datasetConfig.DiskNode = settings.get('disk_node', datasetConfig.DiskNode)
     else:
         datasetConfig.DiskNode = settings.get('disk_node', None)
+
+    if hasattr(datasetConfig, "DiskNodeReco"):
+        datasetConfig.DiskNodeReco = settings.get('disk_node_reco', datasetConfig.DiskNodeReco)
+    else:
+        datasetConfig.DiskNodeReco = settings.get('disk_node_reco', None)
 
     if hasattr(datasetConfig, "RAWtoDisk"):
         datasetConfig.RAWtoDisk = settings.get('raw_to_disk', datasetConfig.RAWtoDisk)

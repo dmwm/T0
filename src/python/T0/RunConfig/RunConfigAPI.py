@@ -317,7 +317,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                             'PRIMDS' : specialDataset,
                                             'ARCHIVAL_NODE' : streamConfig.Express.ArchivalNode,
                                             'TAPE_NODE' : streamConfig.Express.TapeNode,
-                                            'DISK_NODE' :  streamConfig.Express.DiskNode } )
+                                            'DISK_NODE' :  streamConfig.Express.DiskNode,
+                                            'DISK_NODE_RECO' : None } )
 
                 custodialSites = []
                 nonCustodialSites = []
@@ -432,13 +433,14 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                               'selectEvents' : selectEvents,
                                               'primaryDataset' : dataset } )
 
-                if datasetConfig.ArchivalNode or datasetConfig.TapeNode or datasetConfig.DiskNode:
+                if datasetConfig.ArchivalNode or datasetConfig.TapeNode or datasetConfig.DiskNode or datasetConfig.DiskNodeReco:
 
                     bindsPhEDExConfig.append( { 'RUN' : run,
                                                 'PRIMDS' : dataset,
                                                 'ARCHIVAL_NODE' : datasetConfig.ArchivalNode,
                                                 'TAPE_NODE' : datasetConfig.TapeNode,
-                                                'DISK_NODE' : datasetConfig.DiskNode } )
+                                                'DISK_NODE' : datasetConfig.DiskNode,
+                                                'DISK_NODE_RECO' : datasetConfig.DiskNodeReco } )
 
                 custodialSites = []
                 nonCustodialSites = []
@@ -455,6 +457,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                     bindsStorageNode.append( { 'NODE' : datasetConfig.DiskNode } )
                     nonCustodialSites.append(datasetConfig.DiskNode)
                     nonCustodialAutoApproveSites.append(datasetConfig.DiskNode)
+                if datasetConfig.DiskNodeReco:
+                    bindsStorageNode.append( { 'NODE' : datasetConfig.DiskNodeReco } )
 
                 if len(custodialSites) > 0:
                     subscriptions.append( { 'custodialSites' : custodialSites,
@@ -505,7 +509,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                                 'PRIMDS' : dataset,
                                                 'ARCHIVAL_NODE' : streamConfig.Express.ArchivalNode,
                                                 'TAPE_NODE' : streamConfig.Express.TapeNode,
-                                                'DISK_NODE' : streamConfig.Express.DiskNode } )
+                                                'DISK_NODE' : streamConfig.Express.DiskNode,
+                                                'DISK_NODE_RECO' : None } )
 
                     custodialSites = []
                     nonCustodialSites = []
@@ -896,13 +901,19 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                         diskDataTiers = set()
 
                     for dataTier in tapeDataTiers & diskDataTiers:
+
+                        if dataTier == "RECO" and phedexConfig['disk_node_reco']:
+                            diskNode = phedexConfig['disk_node_reco']
+                        else:
+                            diskNode = phedexConfig['disk_node']
+
                         subscriptions.append( { 'custodialSites' : [phedexConfig['tape_node']],
                                                 'custodialSubType' : "Replica",
                                                 'custodialGroup' : "DataOps",
-                                                'nonCustodialSites' : [phedexConfig['disk_node']],
+                                                'nonCustodialSites' : [diskNode],
                                                 'nonCustodialSubType' : "Replica",
                                                 'nonCustodialGroup' : "AnalysisOps",
-                                                'autoApproveSites' : [phedexConfig['disk_node']],
+                                                'autoApproveSites' : [diskNode],
                                                 'priority' : "high",
                                                 'primaryDataset' : dataset,
                                                 'useSkim' : True,
@@ -950,10 +961,16 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                                 'dataTier' : dataTier } )
 
                     for dataTier in diskDataTiers - tapeDataTiers:
-                        subscriptions.append( { 'nonCustodialSites' : [phedexConfig['disk_node']],
+
+                        if dataTier == "RECO" and phedexConfig['disk_node_reco']:
+                            diskNode = phedexConfig['disk_node_reco']
+                        else:
+                            diskNode = phedexConfig['disk_node']
+
+                        subscriptions.append( { 'nonCustodialSites' : [diskNode],
                                                 'nonCustodialSubType' : "Replica",
                                                 'nonCustodialGroup' : "AnalysisOps",
-                                                'autoApproveSites' : [phedexConfig['disk_node']],
+                                                'autoApproveSites' : [diskNode],
                                                 'priority' : "high",
                                                 'primaryDataset' : dataset,
                                                 'useSkim' : True,

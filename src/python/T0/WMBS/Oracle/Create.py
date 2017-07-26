@@ -333,11 +333,12 @@ class Create(DBCreator):
 
         self.create[len(self.create)] = \
             """CREATE TABLE phedex_config (
-                 run_id           int not null,
-                 primds_id        int not null,
-                 archival_node_id int,
-                 tape_node_id     int,
-                 disk_node_id     int,
+                 run_id            int not null,
+                 primds_id         int not null,
+                 archival_node_id  int,
+                 tape_node_id      int,
+                 disk_node_id      int,
+                 disk_node_reco_id int,
                  primary key (run_id, primds_id)
                ) ORGANIZATION INDEX"""
 
