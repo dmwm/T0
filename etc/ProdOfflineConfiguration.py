@@ -82,8 +82,8 @@ setPromptCalibrationConfig(tier0Config,
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
        'acqEra': {'Run2016D': "CMSSW_8_0_13_patch1"},
-       'maxRun': {298808: "9_2_5_patch1"},
-       'default': "CMSSW_9_2_6"
+       'maxRun': {298808: "CMSSW_9_2_5_patch1"},
+       'default': "CMSSW_9_2_7_patch1"
      }
 
 # Configure ScramArch
@@ -106,19 +106,19 @@ alcarawProcVersion = {
 
 defaultProcVersionReco = {
        'acqEra': {'Run2017A': "3", 'Run2017B': "2"},
-       'default': "1"
+       'default': "2"
      }
 
 expressProcVersion = {
        'acqEra': {'Run2017A': "3", 'Run2017B': "2"},
-       'default': "1"
+       'default': "2"
      }
 
 
 # Defaults for GlobalTag
-expressGlobalTag = "92X_dataRun2_Express_v4"
-promptrecoGlobalTag = "92X_dataRun2_Prompt_v5"
-alcap0GlobalTag = "92X_dataRun2_Prompt_v5"
+expressGlobalTag = "92X_dataRun2_Express_v6"
+promptrecoGlobalTag = "92X_dataRun2_Prompt_v7"
+alcap0GlobalTag = "92X_dataRun2_Prompt_v7"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -127,7 +127,7 @@ globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 numberOfCores = 8
 
 # Splitting parameters for PromptReco
-defaultRecoSplitting = 10000 * numberOfCores
+defaultRecoSplitting = 3000 * numberOfCores
 hiRecoSplitting = 200 * numberOfCores
 alcarawSplitting = 20000 * numberOfCores
 
@@ -138,14 +138,16 @@ repackVersionOverride = {
     }
 
 expressVersionOverride = {
-    "CMSSW_9_0_0" : "CMSSW_9_2_6",
-    "CMSSW_9_1_0" : "CMSSW_9_2_6",
-    "CMSSW_9_2_0" : "CMSSW_9_2_6",
-    "CMSSW_9_2_1" : "CMSSW_9_2_6",
-    "CMSSW_9_2_2" : "CMSSW_9_2_6",
-    "CMSSW_9_2_3" : "CMSSW_9_2_6",
-    "CMSSW_9_2_4" : "CMSSW_9_2_6",
-    "CMSSW_9_2_5" : "CMSSW_9_2_6"
+    "CMSSW_9_0_0" : "CMSSW_9_2_7_patch1",
+    "CMSSW_9_1_0" : "CMSSW_9_2_7_patch1",
+    "CMSSW_9_2_0" : "CMSSW_9_2_7_patch1",
+    "CMSSW_9_2_1" : "CMSSW_9_2_7_patch1",
+    "CMSSW_9_2_2" : "CMSSW_9_2_7_patch1",
+    "CMSSW_9_2_3" : "CMSSW_9_2_7_patch1",
+    "CMSSW_9_2_4" : "CMSSW_9_2_7_patch1",
+    "CMSSW_9_2_5" : "CMSSW_9_2_7_patch1",
+    "CMSSW_9_2_6" : "CMSSW_9_2_7_patch1",
+    "CMSSW_9_2_7" : "CMSSW_9_2_7_patch1"
     }
 
 #set default repack settings for bulk streams
@@ -810,7 +812,7 @@ for dataset in datasets:
                tape_node = "T1_FR_CCIN2P3_MSS",
                disk_node = "T1_FR_CCIN2P3_Disk",
                alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HcalCalHBHEMuonFilter" ],
-               dqm_sequences = [ "@common", "@muon" ],
+               dqm_sequences = [ "@common", "@muon", "@lumi" ],
                physics_skims = [ "ZMu", "MuTau", "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
 
@@ -825,7 +827,7 @@ for dataset in datasets:
                tape_node = "T1_FR_CCIN2P3_MSS",
                disk_node = "T1_FR_CCIN2P3_Disk",
                alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HcalCalHBHEMuonFilter" ],
-               dqm_sequences = [ "@common", "@muon" ],
+               dqm_sequences = [ "@common", "@muon", "@lumi" ],
                physics_skims = [ "ZMu", "MuTau", "LogError", "LogErrorMonitor" ],
                scenario = ppScenarioB0T)
 
