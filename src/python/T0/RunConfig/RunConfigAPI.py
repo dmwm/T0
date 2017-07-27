@@ -286,7 +286,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                   'MAX_OVER_SIZE' : streamConfig.Repack.MaxOverSize,
                                   'MAX_EVENTS' : streamConfig.Repack.MaxInputEvents,
                                   'MAX_FILES' : streamConfig.Repack.MaxInputFiles,
-                                  'BLOCK_DELAY' : streamConfig.Repack.BlockCloseDelay,
                                   'CMSSW' : streamConfig.Repack.CMSSWVersion,
                                   'SCRAM_ARCH' : streamConfig.Repack.ScramArch }
 
@@ -401,7 +400,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                    'MAX_FILES' : streamConfig.Express.MaxInputFiles,
                                    'MAX_LATENCY' : streamConfig.Express.MaxLatency,
                                    'DQM_INTERVAL' : streamConfig.Express.PeriodicHarvestInterval,
-                                   'BLOCK_DELAY' : streamConfig.Express.BlockCloseDelay,
                                    'CMSSW' : streamConfig.Express.CMSSWVersion,
                                    'SCRAM_ARCH' : streamConfig.Express.ScramArch,
                                    'RECO_CMSSW' : streamConfig.Express.RecoCMSSWVersion,
@@ -578,7 +576,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             else:
                 specArguments['MergedLFNBase'] = "/store/%s" % runInfo['bulk_data_type']
 
-            specArguments['BlockCloseDelay'] = streamConfig.Repack.BlockCloseDelay
+            blockCloseDelay = streamConfig.Repack.BlockCloseDelay
 
         elif streamConfig.ProcessingStyle == "Express":
 
@@ -648,7 +646,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             specArguments['PeriodicHarvestInterval'] = streamConfig.Express.PeriodicHarvestInterval
 
-            specArguments['BlockCloseDelay'] = streamConfig.Express.BlockCloseDelay
+            blockCloseDelay = streamConfig.Express.BlockCloseDelay
 
         if streamConfig.ProcessingStyle in [ 'Bulk', 'Express' ]:
 
@@ -675,12 +673,12 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             wmSpec.updateArguments( { 'SiteWhitelist': [ tier0Config.Global.ProcessingSite ],
                                       'SiteBlacklist': [],
+                                      'BlockCloseMaxWaitTime': blockCloseDelay,
+                                      'MaxRSS': 1024 * specArguments['Memory'] + 10,
+                                      'MaxVSize': 104857600, #100GB, effectively disabled
+                                      'SoftTimeout': 604800, #7 days, effectively disabled
+                                      'GracePeriod': 3600,
                                       'Dashboard': "t0" } )
-
-            wmSpec.setupPerformanceMonitoring(maxRSS = 1024 * specArguments['Memory'] + 10,
-                                              maxVSize = 104857600, #100GB, effectively disabled
-                                              softTimeout = 604800, #7 days, effectively disabled
-                                              gracePeriod = 3600)
 
             wmbsHelper = WMBSHelper(wmSpec, taskName, cachepath = specDirectory)
 
@@ -855,7 +853,6 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                       'ALCA_SKIM' : alcaSkim,
                                       'PHYSICS_SKIM' : physicsSkim,
                                       'DQM_SEQ' : dqmSeq,
-                                      'BLOCK_DELAY' : datasetConfig.BlockCloseDelay,
                                       'CMSSW' : datasetConfig.CMSSWVersion,
                                       'SCRAM_ARCH' : datasetConfig.ScramArch,
                                       'MULTICORE' : datasetConfig.Multicore,
@@ -1061,8 +1058,6 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 specArguments['DQMUploadProxy'] = dqmUploadProxy
                 specArguments['DQMUploadUrl'] = runInfo['dqmuploadurl']
 
-                specArguments['BlockCloseDelay'] = datasetConfig.BlockCloseDelay
-
                 factory = PromptRecoWorkloadFactory()
                 wmSpec = factory.factoryWorkloadConstruction(workflowName, specArguments)
                 for subscription in subscriptions:
@@ -1075,12 +1070,12 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 wmSpec.updateArguments( { 'SiteWhitelist': datasetConfig.SiteWhitelist,
                                           'SiteBlacklist': [],
                                           'TrustSitelists': "True",
+                                          'BlockCloseMaxWaitTime': datasetConfig.BlockCloseDelay,
+                                          'MaxRSS': 1024 * specArguments['Memory'] + 10,
+                                          'MaxVSize': 104857600, #100GB, effectively disabled
+                                          'SoftTimeout': 604800, #7 days, effectively disabled
+                                          'GracePeriod': 3600,
                                           'Dashboard': "t0" } )
-
-                wmSpec.setupPerformanceMonitoring(maxRSS = 1024 * specArguments['Memory'] + 10,
-                                                  maxVSize = 104857600, #100GB, effectively disabled
-                                                  softTimeout = 604800, #7 days, effectively disabled
-                                                  gracePeriod = 3600)
 
                 wmbsHelper = WMBSHelper(wmSpec, taskName, cachepath = specDirectory)
 
