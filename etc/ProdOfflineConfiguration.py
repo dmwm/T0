@@ -14,7 +14,6 @@ from T0.RunConfig.Tier0Config import setBaseRequestPriority
 from T0.RunConfig.Tier0Config import setBackfill
 from T0.RunConfig.Tier0Config import setBulkDataType
 from T0.RunConfig.Tier0Config import setProcessingSite
-from T0.RunConfig.Tier0Config import setExpressSubscribeNode
 from T0.RunConfig.Tier0Config import setDQMDataTier
 from T0.RunConfig.Tier0Config import setDQMUploadUrl
 from T0.RunConfig.Tier0Config import setPromptCalibrationConfig
@@ -25,12 +24,16 @@ from T0.RunConfig.Tier0Config import addExpressConfig
 from T0.RunConfig.Tier0Config import addRegistrationConfig
 from T0.RunConfig.Tier0Config import addConversionConfig
 from T0.RunConfig.Tier0Config import setInjectRuns
+from T0.RunConfig.Tier0Config import setInjectMinRun
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
 
 # Set the verstion configuration (not used at the moment)
 setConfigVersion(tier0Config, "replace with real version")
+
+# Set the max run number:
+setInjectMinRun(tier0Config, 300716)
 
 # replay these run
 #setInjectRuns(tier0Config, [ 289461 ])
@@ -50,7 +53,6 @@ setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
 setProcessingSite(tier0Config, processingSite)
-setExpressSubscribeNode(tier0Config, "T2_CH_CERN")
 
 # Override for DQM data tier
 setDQMDataTier(tier0Config, "DQMIO")
@@ -83,7 +85,7 @@ setPromptCalibrationConfig(tier0Config,
 defaultCMSSWVersion = {
        'acqEra': {'Run2016D': "CMSSW_8_0_13_patch1"},
        'maxRun': {298808: "CMSSW_9_2_5_patch1"},
-       'default': "CMSSW_9_2_7_patch1"
+       'default': "CMSSW_9_2_8"
      }
 
 # Configure ScramArch
@@ -95,6 +97,8 @@ ppScenarioB0T = "ppEra_Run2_2017"
 cosmicsScenario = "cosmicsEra_Run2_2017"
 hcalnzsScenario = "hcalnzsEra_Run2_2017"
 hiScenario = "ppEra_Run2_2016_pA"
+alcaTrackingOnlyScenario = "ppEra_Run2_2017_trackingOnly"
+alcaTestEnableScenario = "AlCaTestEnable"
 
 # Defaults for processing version
 defaultProcVersionRAW = 1
@@ -106,19 +110,19 @@ alcarawProcVersion = {
 
 defaultProcVersionReco = {
        'acqEra': {'Run2017A': "3", 'Run2017B': "2"},
-       'default': "2"
+       'default': "3"
      }
 
 expressProcVersion = {
        'acqEra': {'Run2017A': "3", 'Run2017B': "2"},
-       'default': "2"
+       'default': "3"
      }
 
 
 # Defaults for GlobalTag
-expressGlobalTag = "92X_dataRun2_Express_v6"
-promptrecoGlobalTag = "92X_dataRun2_Prompt_v7"
-alcap0GlobalTag = "92X_dataRun2_Prompt_v7"
+expressGlobalTag = "92X_dataRun2_Express_v7"
+promptrecoGlobalTag = "92X_dataRun2_Prompt_v8"
+alcap0GlobalTag = "92X_dataRun2_Prompt_v8"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -138,16 +142,16 @@ repackVersionOverride = {
     }
 
 expressVersionOverride = {
-    "CMSSW_9_0_0" : "CMSSW_9_2_7_patch1",
-    "CMSSW_9_1_0" : "CMSSW_9_2_7_patch1",
-    "CMSSW_9_2_0" : "CMSSW_9_2_7_patch1",
-    "CMSSW_9_2_1" : "CMSSW_9_2_7_patch1",
-    "CMSSW_9_2_2" : "CMSSW_9_2_7_patch1",
-    "CMSSW_9_2_3" : "CMSSW_9_2_7_patch1",
-    "CMSSW_9_2_4" : "CMSSW_9_2_7_patch1",
-    "CMSSW_9_2_5" : "CMSSW_9_2_7_patch1",
-    "CMSSW_9_2_6" : "CMSSW_9_2_7_patch1",
-    "CMSSW_9_2_7" : "CMSSW_9_2_7_patch1"
+    "CMSSW_9_0_0" : "CMSSW_9_2_8",
+    "CMSSW_9_1_0" : "CMSSW_9_2_8",
+    "CMSSW_9_2_0" : "CMSSW_9_2_8",
+    "CMSSW_9_2_1" : "CMSSW_9_2_8",
+    "CMSSW_9_2_2" : "CMSSW_9_2_8",
+    "CMSSW_9_2_3" : "CMSSW_9_2_8",
+    "CMSSW_9_2_4" : "CMSSW_9_2_8",
+    "CMSSW_9_2_5" : "CMSSW_9_2_8",
+    "CMSSW_9_2_6" : "CMSSW_9_2_8",
+    "CMSSW_9_2_7" : "CMSSW_9_2_8"
     }
 
 #set default repack settings for bulk streams
@@ -233,7 +237,7 @@ for dataset in datasets:
                write_reco = True,
                alca_producers = [ "TkAlCosmicsInCollisions" ],
                dqm_sequences = [ "@common" ],
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               physics_skims = [ "LogError", "LogErrorMonitor", "EXONoBPTXSkim" ],
                scenario = ppScenario)
 
 datasets = [ "NoBPTX_0T" ]
@@ -244,7 +248,7 @@ for dataset in datasets:
                write_reco = True,
                alca_producers = [ "TkAlCosmicsInCollisions" ],
                dqm_sequences = [ "@common" ],
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               physics_skims = [ "LogError", "LogErrorMonitor", "EXONoBPTXSkim" ],
                scenario = ppScenarioB0T)
 
 datasets = [ "Jet", "EGamma" ]
@@ -1507,6 +1511,59 @@ addExpressConfig(tier0Config, "HLTMonitor",
                  timePerEvent = 4, #I have to get some stats to set this properly
                  sizePerEvent = 1700, #I have to get some stats to set this properly
                  versionOverride = expressVersionOverride)
+
+addExpressConfig(tier0Config, "Calibration",
+                 scenario = alcaTestEnableScenario,
+                 data_tiers = [ "RAW", "ALCARECO" ],
+                 write_dqm = True,
+                 alca_producers = [ "PromptCalibProdEcalPedestals" ],
+                 reco_version = defaultCMSSWVersion,
+                 multicore = numberOfCores,
+                 global_tag_connect = globalTagConnect,
+                 global_tag = expressGlobalTag,
+                 proc_ver = expressProcVersion,
+                 maxInputRate = 23 * 1000,
+                 maxInputEvents = 100 * 1000 * 1000,
+                 maxInputSize = 4 * 1024 * 1024 * 1024,
+                 maxInputFiles = 10000,
+                 maxLatency = 1 * 3600,
+                 periodicHarvestInterval = 24 * 3600,
+                 blockCloseDelay = 2 * 3600,
+                 timePerEvent = 4,
+                 sizePerEvent = 1700,
+                 versionOverride = expressVersionOverride,
+                 dataType = "data",
+                 archivalNode = None,
+                 tapeNode = None,
+                 diskNode = None,
+                 phedexGroup = "express")
+
+addExpressConfig(tier0Config, "ExpressAlignment",
+                 scenario = alcaTrackingOnlyScenario,
+                 data_tiers = [ "ALCARECO" ],
+                 write_dqm = True,
+                 alca_producers = [ "TkAlMinBias", "PromptCalibProd" ],
+                 dqm_sequences = [ "DQMOfflineTracking" ],
+                 reco_version = defaultCMSSWVersion,
+                 multicore = numberOfCores,
+                 global_tag_connect = globalTagConnect,
+                 global_tag = expressGlobalTag,
+                 proc_ver = expressProcVersion,
+                 maxInputRate = 23 * 1000,
+                 maxInputEvents = 100 * 1000 * 1000,
+                 maxInputSize = 4 * 1024 * 1024 * 1024,
+                 maxInputFiles = 10000,
+                 maxLatency = 1 * 3600,
+                 periodicHarvestInterval = 24 * 3600,
+                 blockCloseDelay = 2 * 3600,
+                 timePerEvent = 4,
+                 sizePerEvent = 1700,
+                 versionOverride = expressVersionOverride,
+                 dataType = "data",
+                 archivalNode = None,
+                 tapeNode = None,
+                 diskNode = None,
+                 phedexGroup = "express")
 
 ###############################
 ### ExpressPA configuration ###
