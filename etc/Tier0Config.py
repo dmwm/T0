@@ -36,4 +36,6 @@ config.DBS3Upload.primaryDatasetType = "data"
 
 config.DBSInterface.primaryDatasetType = "data"
 
+config.ErrorHandler.failureExitCodes = [8023, 8026, 50660, 50661, 50664, 71102]
+
 config.AnalyticsDataCollector.pluginName = "Tier0Plugin"
