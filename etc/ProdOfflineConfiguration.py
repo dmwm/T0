@@ -85,7 +85,7 @@ setPromptCalibrationConfig(tier0Config,
 defaultCMSSWVersion = {
        'acqEra': {'Run2016D': "CMSSW_8_0_13_patch1"},
        'maxRun': {298808: "CMSSW_9_2_5_patch1"},
-       'default': "CMSSW_9_2_8"
+       'default': "CMSSW_9_2_9_patch1"
      }
 
 # Configure ScramArch
@@ -131,7 +131,7 @@ globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 numberOfCores = 8
 
 # Splitting parameters for PromptReco
-defaultRecoSplitting = 3000 * numberOfCores
+defaultRecoSplitting = 1500 * numberOfCores # reduced from 3000
 hiRecoSplitting = 200 * numberOfCores
 alcarawSplitting = 20000 * numberOfCores
 
@@ -142,16 +142,17 @@ repackVersionOverride = {
     }
 
 expressVersionOverride = {
-    "CMSSW_9_0_0" : "CMSSW_9_2_8",
-    "CMSSW_9_1_0" : "CMSSW_9_2_8",
-    "CMSSW_9_2_0" : "CMSSW_9_2_8",
-    "CMSSW_9_2_1" : "CMSSW_9_2_8",
-    "CMSSW_9_2_2" : "CMSSW_9_2_8",
-    "CMSSW_9_2_3" : "CMSSW_9_2_8",
-    "CMSSW_9_2_4" : "CMSSW_9_2_8",
-    "CMSSW_9_2_5" : "CMSSW_9_2_8",
-    "CMSSW_9_2_6" : "CMSSW_9_2_8",
-    "CMSSW_9_2_7" : "CMSSW_9_2_8"
+    "CMSSW_9_0_0" : "CMSSW_9_2_9_patch1",
+    "CMSSW_9_1_0" : "CMSSW_9_2_9_patch1",
+    "CMSSW_9_2_0" : "CMSSW_9_2_9_patch1",
+    "CMSSW_9_2_1" : "CMSSW_9_2_9_patch1",
+    "CMSSW_9_2_2" : "CMSSW_9_2_9_patch1",
+    "CMSSW_9_2_3" : "CMSSW_9_2_9_patch1",
+    "CMSSW_9_2_4" : "CMSSW_9_2_9_patch1",
+    "CMSSW_9_2_5" : "CMSSW_9_2_9_patch1",
+    "CMSSW_9_2_6" : "CMSSW_9_2_9_patch1",
+    "CMSSW_9_2_7" : "CMSSW_9_2_9_patch1",
+    "CMSSW_9_2_8" : "CMSSW_9_2_9_patch1"
     }
 
 #set default repack settings for bulk streams
@@ -235,6 +236,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                write_reco = True,
+               write_dqm = True,
                alca_producers = [ "TkAlCosmicsInCollisions" ],
                dqm_sequences = [ "@common" ],
                physics_skims = [ "LogError", "LogErrorMonitor", "EXONoBPTXSkim" ],
@@ -246,6 +248,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                write_reco = True,
+               write_dqm = True,
                alca_producers = [ "TkAlCosmicsInCollisions" ],
                dqm_sequences = [ "@common" ],
                physics_skims = [ "LogError", "LogErrorMonitor", "EXONoBPTXSkim" ],
@@ -480,6 +483,7 @@ datasets = [ "CastorJets", "EGMLowPU", "EmptyBX", "FSQJets", "FSQJets1", "FSQJet
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
+               write_dqm = True,
                dqm_sequences = [ "@common" ],
                scenario = ppScenario)
 
@@ -494,6 +498,7 @@ datasets = [ "CastorJets_0T", "EGMLowPU_0T", "EmptyBX_0T", "FSQJets_0T", "FSQJet
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
+               write_dqm = True,
                dqm_sequences = [ "@common" ],
                scenario = ppScenarioB0T)
 
@@ -572,6 +577,7 @@ datasets = [ "BTagCSV" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
+               write_dqm = True,
                dqm_sequences = [ "@common" ],
                tape_node = "T1_UK_RAL_MSS",
                disk_node = "T1_UK_RAL_Disk",
@@ -583,6 +589,7 @@ datasets = [ "BTagCSV_0T" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
+               write_dqm = True,
                dqm_sequences = [ "@common" ],
                tape_node = "T1_UK_RAL_MSS",
                disk_node = "T1_UK_RAL_Disk",
@@ -595,6 +602,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                raw_to_disk = True,
+               write_dqm = True,
                dqm_sequences = [ "@common" ],
                tape_node = "T1_IT_CNAF_MSS",
                disk_node = "T1_IT_CNAF_Disk",
@@ -607,6 +615,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                raw_to_disk = True,
+               write_dqm = True,
                dqm_sequences = [ "@common" ],
                tape_node = "T1_IT_CNAF_MSS",
                disk_node = "T1_IT_CNAF_Disk",
@@ -618,6 +627,7 @@ datasets = [ "MuonEG" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
+               write_dqm = True,
                dqm_sequences = [ "@common" ],
                tape_node = "T1_US_FNAL_MSS",
                disk_node = "T1_US_FNAL_Disk",
@@ -629,6 +639,7 @@ datasets = [ "MuonEG_0T" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
+               write_dqm = True,
                dqm_sequences = [ "@common" ],
                tape_node = "T1_US_FNAL_MSS",
                disk_node = "T1_US_FNAL_Disk",
@@ -640,6 +651,7 @@ datasets = [ "DoubleMuonLowMass" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
+               write_dqm = True,
                dqm_sequences = [ "@common" ],
                tape_node = "T1_US_FNAL_MSS",
                disk_node = "T1_US_FNAL_Disk",
@@ -651,6 +663,7 @@ datasets = [ "DoubleMuonLowMass_0T" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
+               write_dqm = True,
                dqm_sequences = [ "@common" ],
                tape_node = "T1_US_FNAL_MSS",
                disk_node = "T1_US_FNAL_Disk",
@@ -663,6 +676,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                raw_to_disk = True,
+               write_dqm = True,
                dqm_sequences = [ "@common" ],
                tape_node = "T1_UK_RAL_MSS",
                disk_node = "T1_UK_RAL_Disk",
@@ -677,6 +691,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                raw_to_disk = True,
+               write_dqm = True,
                dqm_sequences = [ "@common" ],
                tape_node = "T1_UK_RAL_MSS",
                disk_node = "T1_UK_RAL_Disk",
@@ -691,6 +706,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                raw_to_disk = True,
+               write_dqm = True,
                dqm_sequences = [ "@common" ],
                tape_node = "T1_ES_PIC_MSS",
                disk_node = "T1_ES_PIC_Disk",
@@ -703,6 +719,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                raw_to_disk = True,
+               write_dqm = True,
                dqm_sequences = [ "@common" ],
                tape_node = "T1_ES_PIC_MSS",
                disk_node = "T1_ES_PIC_Disk",
@@ -714,6 +731,7 @@ datasets = [ "BTagMu" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
+               write_dqm = True,
                dqm_sequences = [ "@common" ],
                tape_node = "T1_US_FNAL_MSS",
                disk_node = "T1_US_FNAL_Disk",
@@ -725,6 +743,7 @@ datasets = [ "BTagMu_0T" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
+               write_dqm = True,
                dqm_sequences = [ "@common" ],
                tape_node = "T1_US_FNAL_MSS",
                disk_node = "T1_US_FNAL_Disk",
@@ -1110,7 +1129,7 @@ for dataset in datasets:
                dqm_sequences = [ "@common" ],
                scenario = cosmicsScenario)
 
-datasets = [ "ParkingMonitor", "ParkingScoutingMonitor" ]
+datasets = [ "ParkingMonitor" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -1121,7 +1140,18 @@ for dataset in datasets:
                disk_node = None,
                scenario = ppScenario)
 
-datasets = [ "ParkingMonitor_0T", "ParkingScoutingMonitor_0T" ]
+datasets = [ "ParkingScoutingMonitor" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               raw_to_disk = True,
+               dqm_sequences = [ "@common" ],
+               write_reco = False, write_aod = False, write_miniaod = True, write_dqm = True,
+               tape_node = "T1_US_FNAL_MSS",
+               scenario = ppScenario)
+
+datasets = [ "ParkingMonitor_0T" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -1130,6 +1160,17 @@ for dataset in datasets:
                write_reco = False, write_aod = False, write_miniaod = True, write_dqm = True,
                tape_node = "T1_US_FNAL_MSS",
                disk_node = None,
+               scenario = ppScenarioB0T)
+
+datasets = [ "ParkingScoutingMonitor_0T" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               raw_to_disk = True,
+               dqm_sequences = [ "@common" ],
+               write_reco = False, write_aod = False, write_miniaod = True, write_dqm = True,
+               tape_node = "T1_US_FNAL_MSS",
                scenario = ppScenarioB0T)
   
 datasets = [ "ParkingHT410to430", "ParkingHT500to550", "ParkingHT430to450", "ParkingHT470to500", "ParkingHT450to470" ]
@@ -1203,6 +1244,14 @@ for dataset in datasets:
                do_reco = False,
                raw_to_disk = True,
                scenario = ppScenarioB0T)
+
+datasets = [ "ScoutingCaloCommissioning", "ScoutingCaloHT", "ScoutingPFCommissioning",
+             "ScoutingCaloMuon", "ScoutingPFHT" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               raw_to_disk = True)
+
 
 #########################################
 ### New PDs for pp Reference Run 2015 ###
@@ -1536,9 +1585,9 @@ addExpressConfig(tier0Config, "Calibration",
                  timePerEvent = 4,
                  sizePerEvent = 1700,
                  versionOverride = expressVersionOverride,
-                 dataType = "data",
                  archivalNode = "T0_CH_CERN_MSS",
-                 phedexGroup = "DataOps")
+                 dataType = "data",
+                 tape_node = "T1_US_FNAL_MSS")
 
 addExpressConfig(tier0Config, "ExpressAlignment",
                  scenario = alcaTrackingOnlyScenario,
@@ -1561,8 +1610,7 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  timePerEvent = 4,
                  sizePerEvent = 1700,
                  versionOverride = expressVersionOverride,
-                 diskNode = "T2_CH_CERN",
-                 phedexGroup = "express")
+                 diskNode = "T2_CH_CERN")
 
 ###############################
 ### ExpressPA configuration ###
