@@ -117,7 +117,7 @@ globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 numberOfCores = 8
 
 # Splitting parameters for PromptReco
-defaultRecoSplitting = 3000 * numberOfCores
+defaultRecoSplitting = 1500 * numberOfCores
 hiRecoSplitting = 200 * numberOfCores
 alcarawSplitting = 20000 * numberOfCores
 
@@ -1331,6 +1331,62 @@ addDataset(tier0Config, "PADoubleMuOpen",
            alca_producers = [ "LumiPixelsMinBias" ],
            dqm_sequences = [ "@common", "@muon" ],
            scenario = hiScenario)
+
+#############################
+###   New Ephemeral PDs   ###
+#############################
+
+datasets = [ "EphemeralHLTPhysics1", "EphemeralHLTPhysics2", "EphemeralHLTPhysics3",
+             "EphemeralHLTPhysics4", "EphemeralHLTPhysics5", "EphemeralHLTPhysics6",
+             "EphemeralHLTPhysics7", "EphemeralHLTPhysics8", "EphemeralZeroBias1",
+             "EphemeralZeroBias2", "EphemeralZeroBias3", "EphemeralZeroBias4",
+             "EphemeralZeroBias5", "EphemeralZeroBias6", "EphemeralZeroBias7",
+             "EphemeralZeroBias8"]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_reco = False,
+               raw_to_disk = True,
+               archival_node = None,
+               tape_node = None,
+               disk_node = None,
+               scenario = ppScenario)
+
+datasets = [ "EphemeralHLTPhysics1_0T", "EphemeralHLTPhysics2_0T", "EphemeralHLTPhysics3_0T",
+             "EphemeralHLTPhysics4_0T", "EphemeralHLTPhysics5_0T", "EphemeralHLTPhysics6_0T",
+             "EphemeralHLTPhysics7_0T", "EphemeralHLTPhysics8_0T", "EphemeralZeroBias1_0T",
+             "EphemeralZeroBias2_0T", "EphemeralZeroBias3_0T", "EphemeralZeroBias4_0T",
+             "EphemeralZeroBias5_0T", "EphemeralZeroBias6_0T", "EphemeralZeroBias7_0T",
+             "EphemeralZeroBias8_0T"]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_reco = False,
+               raw_to_disk = True,
+               archival_node = None,
+               tape_node = None,
+               disk_node = None,
+               scenario = ppScenarioB0T)
+
+datasets = [ "ParkingMuon", "ParkingHT" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               archival_node = None,
+               tape_node = None,
+               disk_node = None,
+               scenario = ppScenario)
+
+datasets = [ "ParkingMuon_0T", "ParkingHT_0T" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               archival_node = None,
+               tape_node = None,
+               disk_node = None,
+               scenario = ppScenarioB0T)
 
 #############################
 ### Express configuration ###

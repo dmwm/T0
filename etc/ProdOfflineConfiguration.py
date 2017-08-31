@@ -48,7 +48,7 @@ processingSite = "T0_CH_CERN"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2017C")
+setAcquisitionEra(tier0Config, "Run2017D")
 setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -85,7 +85,7 @@ setPromptCalibrationConfig(tier0Config,
 defaultCMSSWVersion = {
        'acqEra': {'Run2016D': "CMSSW_8_0_13_patch1"},
        'maxRun': {298808: "CMSSW_9_2_5_patch1"},
-       'default': "CMSSW_9_2_9_patch1"
+       'default': "CMSSW_9_2_10"
      }
 
 # Configure ScramArch
@@ -109,14 +109,15 @@ alcarawProcVersion = {
      }
 
 defaultProcVersionReco = {
-       'acqEra': {'Run2017A': "3", 'Run2017B': "2"},
-       'default': "3"
+       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3"},
+       'default': "1"
      }
 
 expressProcVersion = {
-       'acqEra': {'Run2017A': "3", 'Run2017B': "2"},
-       'default': "3"
+       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3"},
+       'default': "1"
      }
+
 
 
 # Defaults for GlobalTag
@@ -142,17 +143,18 @@ repackVersionOverride = {
     }
 
 expressVersionOverride = {
-    "CMSSW_9_0_0" : "CMSSW_9_2_9_patch1",
-    "CMSSW_9_1_0" : "CMSSW_9_2_9_patch1",
-    "CMSSW_9_2_0" : "CMSSW_9_2_9_patch1",
-    "CMSSW_9_2_1" : "CMSSW_9_2_9_patch1",
-    "CMSSW_9_2_2" : "CMSSW_9_2_9_patch1",
-    "CMSSW_9_2_3" : "CMSSW_9_2_9_patch1",
-    "CMSSW_9_2_4" : "CMSSW_9_2_9_patch1",
-    "CMSSW_9_2_5" : "CMSSW_9_2_9_patch1",
-    "CMSSW_9_2_6" : "CMSSW_9_2_9_patch1",
-    "CMSSW_9_2_7" : "CMSSW_9_2_9_patch1",
-    "CMSSW_9_2_8" : "CMSSW_9_2_9_patch1"
+    "CMSSW_9_0_0" : "CMSSW_9_2_10",
+    "CMSSW_9_1_0" : "CMSSW_9_2_10",
+    "CMSSW_9_2_0" : "CMSSW_9_2_10",
+    "CMSSW_9_2_1" : "CMSSW_9_2_10",
+    "CMSSW_9_2_2" : "CMSSW_9_2_10",
+    "CMSSW_9_2_3" : "CMSSW_9_2_10",
+    "CMSSW_9_2_4" : "CMSSW_9_2_10",
+    "CMSSW_9_2_5" : "CMSSW_9_2_10",
+    "CMSSW_9_2_6" : "CMSSW_9_2_10",
+    "CMSSW_9_2_7" : "CMSSW_9_2_10",
+    "CMSSW_9_2_8" : "CMSSW_9_2_10",
+    "CMSSW_9_2_9" : "CMSSW_9_2_10"
     }
 
 #set default repack settings for bulk streams
@@ -282,6 +284,8 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                write_dqm = True,
+               tape_node = "T1_RU_JINR_MSS",
+               disk_node = "T1_RU_JINR_Disk",
                dqm_sequences = [ "@common" ],
                alca_producers = [ "SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias" ],
                scenario = ppScenario)
@@ -290,6 +294,8 @@ for dataset in datasets:
                do_reco = True,
                write_dqm = True,
                dqm_sequences = [ "@common" ],
+               tape_node = "T1_RU_JINR_MSS",
+               disk_node = "T1_RU_JINR_Disk",
                alca_producers = [ "SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias" ],
                scenario = ppScenarioB0T)
 
@@ -604,8 +610,8 @@ for dataset in datasets:
                raw_to_disk = True,
                write_dqm = True,
                dqm_sequences = [ "@common" ],
-               tape_node = "T1_IT_CNAF_MSS",
-               disk_node = "T1_IT_CNAF_Disk",
+               tape_node = "T1_FR_CCIN2P3_MSS",
+               disk_node = "T1_FR_CCIN2P3_Disk",
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
 
@@ -617,8 +623,8 @@ for dataset in datasets:
                raw_to_disk = True,
                write_dqm = True,
                dqm_sequences = [ "@common" ],
-               tape_node = "T1_IT_CNAF_MSS",
-               disk_node = "T1_IT_CNAF_Disk",
+               tape_node = "T1_FR_CCIN2P3_MSS",
+               disk_node = "T1_FR_CCIN2P3_Disk",
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenarioB0T)
 
@@ -629,8 +635,8 @@ for dataset in datasets:
                do_reco = True,
                write_dqm = True,
                dqm_sequences = [ "@common" ],
-               tape_node = "T1_US_FNAL_MSS",
-               disk_node = "T1_US_FNAL_Disk",
+               tape_node = "T1_FR_CCIN2P3_MSS",
+               disk_node = "T1_FR_CCIN2P3_Disk",
                physics_skims = [ "TopMuEG", "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
 
@@ -641,8 +647,8 @@ for dataset in datasets:
                do_reco = True,
                write_dqm = True,
                dqm_sequences = [ "@common" ],
-               tape_node = "T1_US_FNAL_MSS",
-               disk_node = "T1_US_FNAL_Disk",
+               tape_node = "T1_FR_CCIN2P3_MSS",
+               disk_node = "T1_FR_CCIN2P3_Disk",
                physics_skims = [ "TopMuEG", "LogError", "LogErrorMonitor" ],
                scenario = ppScenarioB0T)
 
@@ -759,8 +765,8 @@ for dataset in datasets:
                raw_to_disk = True,
                write_dqm = True,
                dqm_sequences = [ "@common" ],
-               tape_node = "T1_FR_CCIN2P3_MSS",
-               disk_node = "T1_FR_CCIN2P3_Disk",
+               tape_node = "T1_RU_JINR_MSS",
+               disk_node = "T1_RU_JINR_Disk",
                alca_producers = [ "TkAlJpsiMuMu" ],
                physics_skims = [ "LogError", "LogErrorMonitor", "BPHSkim" ],
                scenario = ppScenario)
@@ -774,8 +780,8 @@ for dataset in datasets:
                raw_to_disk = True,
                write_dqm = True,
                dqm_sequences = [ "@common" ],
-               tape_node = "T1_FR_CCIN2P3_MSS",
-               disk_node = "T1_FR_CCIN2P3_Disk",
+               tape_node = "T1_RU_JINR_MSS",
+               disk_node = "T1_RU_JINR_Disk",
                alca_producers = [ "TkAlJpsiMuMu" ],
                physics_skims = [ "LogError", "LogErrorMonitor", "BPHSkim" ],
                scenario = ppScenarioB0T)
@@ -832,8 +838,8 @@ for dataset in datasets:
                write_reco = True,
                raw_to_disk = True,
                write_dqm = True,
-               tape_node = "T1_FR_CCIN2P3_MSS",
-               disk_node = "T1_FR_CCIN2P3_Disk",
+               tape_node = "T1_IT_CNAF_MSS",
+               disk_node = "T1_IT_CNAF_Disk",
                alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HcalCalHBHEMuonFilter" ],
                dqm_sequences = [ "@common", "@muon", "@lumi" ],
                physics_skims = [ "ZMu", "MuTau", "LogError", "LogErrorMonitor" ],
@@ -847,8 +853,8 @@ for dataset in datasets:
                write_reco = True,
                raw_to_disk = True,
                write_dqm = True,
-               tape_node = "T1_FR_CCIN2P3_MSS",
-               disk_node = "T1_FR_CCIN2P3_Disk",
+               tape_node = "T1_IT_CNAF_MSS",
+               disk_node = "T1_IT_CNAF_Disk",
                alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HcalCalHBHEMuonFilter" ],
                dqm_sequences = [ "@common", "@muon", "@lumi" ],
                physics_skims = [ "ZMu", "MuTau", "LogError", "LogErrorMonitor" ],
@@ -1172,7 +1178,7 @@ for dataset in datasets:
                write_reco = False, write_aod = False, write_miniaod = True, write_dqm = True,
                tape_node = "T1_US_FNAL_MSS",
                scenario = ppScenarioB0T)
-  
+
 datasets = [ "ParkingHT410to430", "ParkingHT500to550", "ParkingHT430to450", "ParkingHT470to500", "ParkingHT450to470" ]
 
 for dataset in datasets:
@@ -1464,6 +1470,60 @@ addDataset(tier0Config, "PADoubleMuOpen",
            alca_producers = [ "LumiPixelsMinBias" ],
            dqm_sequences = [ "@common", "@muon" ],
            scenario = hiScenario)
+
+#############################
+###   New Ephemeral PDs   ###
+#############################
+
+datasets = [ "EphemeralHLTPhysics1", "EphemeralHLTPhysics2", "EphemeralHLTPhysics3",
+             "EphemeralHLTPhysics4", "EphemeralHLTPhysics5", "EphemeralHLTPhysics6",
+             "EphemeralHLTPhysics7", "EphemeralHLTPhysics8", "EphemeralZeroBias1",
+             "EphemeralZeroBias2", "EphemeralZeroBias3", "EphemeralZeroBias4",
+             "EphemeralZeroBias5", "EphemeralZeroBias6", "EphemeralZeroBias7",
+             "EphemeralZeroBias8"]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               raw_to_disk = True,
+               archival_node = None,
+               tape_node = None,
+               disk_node = "T2_CH_CERN_Disk",
+               scenario = ppScenario)
+
+datasets = [ "EphemeralHLTPhysics1_0T", "EphemeralHLTPhysics2_0T", "EphemeralHLTPhysics3_0T",
+             "EphemeralHLTPhysics4_0T", "EphemeralHLTPhysics5_0T", "EphemeralHLTPhysics6_0T",
+             "EphemeralHLTPhysics7_0T", "EphemeralHLTPhysics8_0T", "EphemeralZeroBias1_0T",
+             "EphemeralZeroBias2_0T", "EphemeralZeroBias3_0T", "EphemeralZeroBias4_0T",
+             "EphemeralZeroBias5_0T", "EphemeralZeroBias6_0T", "EphemeralZeroBias7_0T",
+             "EphemeralZeroBias8_0T"]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               raw_to_disk = True,
+               archival_node = None,
+               tape_node = None,
+               disk_node = "T2_CH_CERN_Disk",
+               scenario = ppScenarioB0T)
+
+datasets = [ "ParkingMuon", "ParkingHT" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               archival_node = "T0_CH_CERN_MSS",
+               tape_node = None,
+               disk_node = None,
+               scenario = ppScenario)
+
+datasets = [ "ParkingMuon_0T", "ParkingHT_0T" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               archival_node = "T0_CH_CERN_MSS",
+               tape_node = None,
+               disk_node = None,
+               scenario = ppScenarioB0T)
 
 #############################
 ### Express configuration ###
