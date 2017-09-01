@@ -380,6 +380,22 @@ class Create(DBCreator):
                """
 
         self.create[len(self.create)] = \
+            """CREATE FUNCTION checkForZeroOneTwoState (value IN int)
+               RETURN int DETERMINISTIC IS
+               BEGIN
+                 IF value = 0 THEN
+                   RETURN 0;
+                 ELSIF value = 1 THEN
+                   RETURN 1;
+                 ELSIF value = 2 THEN
+                   RETURN 2;
+                 ELSE
+                   RETURN NULL;
+                 END IF;
+               END checkForZeroOneTwoState;
+               """
+
+        self.create[len(self.create)] = \
             """CREATE SEQUENCE cmssw_version_SEQ
                START WITH 1
                INCREMENT BY 1
@@ -441,7 +457,7 @@ class Create(DBCreator):
             """CREATE INDEX idx_run_stream_done_1 ON run_stream_done (checkForZeroOneState(in_datasvc))"""
 
         self.indexes[len(self.indexes)] = \
-            """CREATE INDEX idx_reco_release_config_2 ON reco_release_config (checkForZeroOneState(in_datasvc))"""
+            """CREATE INDEX idx_reco_release_config_2 ON reco_release_config (checkForZeroOneTwoState(in_datasvc))"""
 
         self.indexes[len(self.indexes)] = \
             """CREATE INDEX idx_reco_release_config_3 ON reco_release_config (checkForZeroOneState(released))"""

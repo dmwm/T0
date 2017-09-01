@@ -486,30 +486,84 @@ class Tier0FeederPoller(BaseWorkerThread):
         _updateRecoReleaseConfigsT0DataSvc_
 
         Insert information about PromptReco release into the Tier0 Data Service.
-        Already aggregate by run, if one primary dataset is released that means
-        the whole run is considered released.
+
+        That means updating the reco_locked records in run granularity (where one
+        released dataset means the whole run is locked).
+
+        Also insert and update the run_primds_done records to track PromptReco status.
 
         """
-        getRecoReleaseConfigsDAO = self.daoFactory(classname = "T0DataSvc.GetRecoReleaseConfigs")
-        recoReleaseConfigs = getRecoReleaseConfigsDAO.execute(transaction = False)
+        getRunDatasetNewDAO = self.daoFactory(classname = "Tier0Feeder.GetRunDatasetNew")
+        getRunDatasetReleasedDAO = self.daoFactory(classname = "Tier0Feeder.GetRunDatasetReleased")
+        getRunDatasetDoneDAO = self.daoFactory(classname = "Tier0Feeder.GetRunDatasetDone")
 
-        if len(recoReleaseConfigs) > 0:
+        updateRecoReleaseConfigsDAO = self.daoFactory(classname = "Tier0Feeder.UpdateRecoReleaseConfigs")
 
-            bindsInsert = []
-            bindsUpdate = []
-            for config in recoReleaseConfigs:
+        insertRecoLockedDAO = self.daoFactoryT0DataSvc(classname = "T0DataSvc.InsertRecoLocked")
+        updateRecoLockedDAO = self.daoFactoryT0DataSvc(classname = "T0DataSvc.UpdateRecoLocked")
 
-                locked = int(config['released'] > 0)
+        insertRunDatasetDoneDAO = self.daoFactoryT0DataSvc(classname = "T0DataSvc.InsertRunDatasetDone")
+        updateRunDatasetDoneDAO = self.daoFactoryT0DataSvc(classname = "T0DataSvc.UpdateRunDatasetDone")
 
-                bindsInsert.append( { 'RUN' : config['run'],
-                                      'LOCKED' : locked } )
-                bindsUpdate.append( { 'RUN' : config['run'],
-                                      'IN_DATASVC' : locked + 1 } )
+        # first check for records that are completely new
+        # insert the two Tier0 Data Service records for them
+        # update reco release records accordingly
+        runDatasetNew = getRunDatasetNewDAO.execute(transaction = False)
+        foundRuns = set()
+        bindsInsertLocked = []
+        bindsInsertDone = []
+        bindsUpdate = []
+        for runDataset in runDatasetNew:
+            run = runDataset['run']
+            if run not in foundRuns:
+                bindsInsertLocked.append( { 'RUN': run } )
+                foundRuns.add(run)
+            bindsInsertDone.append( { 'RUN': run,
+                                      'PRIMDS': runDataset['primds'] } )
+            bindsUpdate.append( { 'RUN' : run,
+                                  'PRIMDS_ID': runDataset['primds_id'],
+                                  'IN_DATASVC' : 1 } )
 
-            insertRecoReleaseConfigsDAO = self.daoFactoryT0DataSvc(classname = "T0DataSvc.InsertRecoReleaseConfigs")
-            insertRecoReleaseConfigsDAO.execute(binds = bindsInsert, transaction = False)
+        if len(bindsInsertLocked) > 0:
+            insertRecoLockedDAO.execute(binds = bindsInsertLocked, transaction = False)
+        if len(bindsInsertDone) > 0:
+            insertRunDatasetDoneDAO.execute(binds = bindsInsertDone, transaction = False)
+        if len(bindsUpdate) > 0:
+            updateRecoReleaseConfigsDAO.execute(binds = bindsUpdate, transaction = False)
 
-            updateRecoReleaseConfigsDAO = self.daoFactory(classname = "T0DataSvc.UpdateRecoReleaseConfigs")
+        # then check for reco release and lock runs in the Tier0 Data Service
+        runDatasetReleased = getRunDatasetReleasedDAO.execute(transaction = False)
+        foundRuns = set()
+        bindsUpdateLocked = []
+        bindsUpdate = []
+        for runDataset in runDatasetReleased:
+            run = runDataset['run']
+            if run not in foundRuns:
+                bindsUpdateLocked.append( { 'RUN': run } )
+                foundRuns.add(run)
+            bindsUpdate.append( { 'RUN' : run,
+                                  'PRIMDS_ID': runDataset['primds_id'],
+                                  'IN_DATASVC' : 2 } )
+
+        if len(bindsUpdateLocked) > 0:
+            updateRecoLockedDAO.execute(binds = bindsUpdateLocked, transaction = False)
+        if len(bindsUpdate) > 0:
+            updateRecoReleaseConfigsDAO.execute(binds = bindsUpdate, transaction = False)
+
+        # finally check for reco completions and mark this in the Tier0 Data Service
+        runDatasetDone = getRunDatasetDoneDAO.execute(transaction = False)
+        bindsUpdateDone = []
+        bindsUpdate = []
+        for runDataset in runDatasetDone:
+            run = runDataset['run']
+            bindsUpdateDone.append( { 'RUN' : run,
+                                      'PRIMDS' : runDataset['primds'] } )
+            bindsUpdate.append( { 'RUN' : run,
+                                  'PRIMDS_ID': runDataset['primds_id'],
+                                  'IN_DATASVC' : 3 } )
+        if len(bindsUpdateDone) > 0:
+            updateRunDatasetDoneDAO.execute(binds = bindsUpdateDone, transaction = False)
+        if len(bindsUpdate) > 0:
             updateRecoReleaseConfigsDAO.execute(binds = bindsUpdate, transaction = False)
 
         return
