@@ -93,6 +93,7 @@ def injectNewData(dbInterfaceStorageManager,
         (hltkey, cmssw) = getRunInfoDAO.execute(run = run, transaction = False)
         logging.debug("StorageManagerAPI: run = %d, hltkey = %s, cmssw = %s", run, hltkey, cmssw)
         if hltkey and cmssw:
+            cmssw = '_'.join(cmssw.split('_')[0:4]) # only consider base release
             cmsswVersions.add(cmssw)
             bindRunHltKey.append( { 'RUN': run,
                                     'HLTKEY': hltkey } )
