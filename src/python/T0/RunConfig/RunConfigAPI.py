@@ -81,7 +81,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         insertDatasetTriggerDAO = daoFactory(classname = "RunConfig.InsertDatasetTrigger")
 
         # partition AlcaHarvest upload by year
-        tier0Config.Global.AlcaHarvestDir = os.path.join(tier0Config.Global.AlcaHarvestDir, str(datetime.now().year))
+        alcaHarvestDir = os.path.join(tier0Config.Global.AlcaHarvestDir, str(datetime.now().year))
 
         bindsUpdateRun = { 'RUN' : run,
                            'PROCESS' : hltConfig['process'],
@@ -90,7 +90,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
                            'BULKDATATYPE' : tier0Config.Global.BulkDataType,
                            'DQMUPLOADURL' : tier0Config.Global.DQMUploadUrl,
                            'AHTIMEOUT' : tier0Config.Global.AlcaHarvestTimeout,
-                           'AHDIR' : tier0Config.Global.AlcaHarvestDir,
+                           'AHDIR' : alcaHarvestDir,
                            'CONDTIMEOUT' : tier0Config.Global.ConditionUploadTimeout,
                            'DBHOST' : tier0Config.Global.DropboxHost,
                            'VALIDMODE' : tier0Config.Global.ValidationMode }
