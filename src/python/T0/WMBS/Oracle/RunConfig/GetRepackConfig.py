@@ -22,7 +22,6 @@ class GetRepackConfig(DBFormatter):
                         repack_config.max_over_size AS max_over_size,
                         repack_config.max_events AS max_events,
                         repack_config.max_files AS max_files,
-                        repack_config.block_delay AS block_delay,
                         cmssw_version.name AS cmssw,
                         repack_config.scram_arch AS scram_arch
                  FROM repack_config
