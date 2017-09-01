@@ -69,8 +69,11 @@ def closeRuns(dbInterfaceStorageManager):
 
     Called by Tier0Feeder
 
-    For all open runs check the StorageManager EoR records to see if the
-    run has ended. If it has, update T0AST to reflect this.
+    For all open runs check the StorageManager EoR records to see if the run has ended.
+    If it has, update T0AST to reflect this.
+
+    For all runs with open run/stream filesets recheck the StorageManager EoR records
+    to see if the lumicount has changed. Update T0AST if it has.
 
     """
     logging.debug("closeRuns()")
@@ -87,15 +90,24 @@ def closeRuns(dbInterfaceStorageManager):
     findOpenRunsDAO = daoFactory(classname = "RunLumiCloseout.FindOpenRuns")
     findClosedRunsDAO = daoFactoryStorageManager(classname = "RunLumiCloseout.FindClosedRuns")
     closeRunsDAO = daoFactory(classname = "RunLumiCloseout.CloseRuns")
+    getOpenRunStreamLumicountDAO = daoFactory(classname = "RunLumiCloseout.GetOpenRunStreamLumicount")
 
-    # find all active runs
+    # find all open runs and check which ones have ended
     openRuns = findOpenRunsDAO.execute(transaction = False)
-
-    # then check which one of them have ended
     if len(openRuns) > 0:
-
         closedRuns = findClosedRunsDAO.execute(runs = openRuns, transaction = False)
+    else:
+        closedRuns = {}
 
+    # find all runs with open run/stream filesets and check which have changed lumicount, update those
+    runLumicountT0 = getOpenRunStreamLumicountDAO.execute(transaction = False)
+    if len(runLumicountT0) > 0:
+        runLumicountSM = findClosedRunsDAO.execute(runs = runLumicountT0.keys(), transaction = False)
+        for run, lumicount in runLumicountSM.items():
+            if lumicount != runLumicountT0[run]:
+                closedRuns[run] = lumicount
+
+    if len(closedRuns) > 0:
         bindVarList = []
         currentTime = int(time.time())
         for run, lumicount in closedRuns.items():
@@ -103,7 +115,7 @@ def closeRuns(dbInterfaceStorageManager):
                                   'LUMICOUNT' : lumicount,
                                   'CLOSE_TIME' : currentTime } )
 
-        # and mark them as ended in T0AST
+        # mark run as closed and update lumicount
         if len(bindVarList) > 0:
             closeRunsDAO.execute(binds = bindVarList, transaction = False)
 
@@ -212,7 +224,7 @@ def closeRunStreamFilesets():
     """
     logging.debug("closeRunStreamFilesets()")
     myThread = threading.currentThread()
-    
+
     daoFactory = DAOFactory(package = "T0.WMBS",
                             logger = logging,
                             dbinterface = myThread.dbi)
