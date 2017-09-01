@@ -287,22 +287,32 @@ class Repack(JobFactory):
         _createJob_
 
         """
+        # find largest file
+        largestFile = 0
+        for streamer in streamerList:
+            largestFile = max(largestFile, streamer['filesize'])
+
+        # calculate number of cores based on disk usage
+        numberOfCores = 1 + (int)((jobSize+largestFile)/(20*1000*1000*1000))
+
+        # jobs requesting more than 8 cores would never run
+        if numberOfCores > 8:
+            self.markFailed(streamerList)
+            return
+
         if not self.createdGroup:
             self.newGroup()
             self.createdGroup = True
 
         self.newJob(name = "%s-%s" % (self.jobNamePrefix, makeUUID()))
 
-        largestFile = 0
         for streamer in streamerList:
-            largestFile = max(largestFile, streamer['filesize'])
             f = File(id = streamer['id'],
                      lfn = streamer['lfn'])
             f.setLocation(streamer['location'], immediateSave = False)
             self.currentJob.addFile(f)
 
         # allow large (single lumi) repack to use multiple cores
-        numberOfCores = 1 + (int)((jobSize+largestFile)/(20*1000*1000*1000))
         if numberOfCores > 1:
             self.currentJob.addBaggageParameter("numberOfCores", numberOfCores)
 
@@ -316,7 +326,22 @@ class Repack(JobFactory):
         #  - output on local disk (factor 1)
         jobTime = 300 + jobSize/1500000 + (jobSize*2)/5000000
         self.currentJob.addResourceEstimates(jobTime = jobTime,
-                                             disk = jobSize/1024,
+                                             disk = (jobSize+largestFile)/1024,
                                              memory = memoryRequirement)
+
+        return
+
+
+    def markFailed(self, streamerList):
+        """
+        _markFailed_
+
+        mark all streamers as failed
+        """
+        fileList = []
+        for streamer in streamerList:
+            fileList.append( File(id = streamer['id'],
+                                  lfn = streamer['lfn']) )
+        self.subscription.failFiles(fileList)
 
         return
