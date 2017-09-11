@@ -101,7 +101,7 @@ globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 numberOfCores = 4
 
 # Splitting parameters for PromptReco
-defaultRecoSplitting = 2000 * numberOfCores
+defaultRecoSplitting = 750 * numberOfCores
 hiRecoSplitting = 200 * numberOfCores
 alcarawSplitting = 20000 * numberOfCores
 

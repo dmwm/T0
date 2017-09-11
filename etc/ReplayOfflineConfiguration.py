@@ -117,7 +117,7 @@ globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 numberOfCores = 8
 
 # Splitting parameters for PromptReco
-defaultRecoSplitting = 1500 * numberOfCores
+defaultRecoSplitting = 750 * numberOfCores
 hiRecoSplitting = 200 * numberOfCores
 alcarawSplitting = 20000 * numberOfCores
 
@@ -332,7 +332,7 @@ for dataset in datasets:
            tape_node = None,
            reco_split = alcarawSplitting,
            proc_version = alcarawProcVersion,
-           alca_producers = [ "LumiPixels", "AlCaPCCZeroBias", "AlCaPCCRandom" ],
+           alca_producers = [ "AlCaPCCZeroBias", "AlCaPCCRandom" ],
            dqm_sequences = [ "@common" ],
            timePerEvent = 0.02,
            sizePerEvent = 38,
