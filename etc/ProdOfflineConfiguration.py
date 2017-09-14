@@ -132,7 +132,7 @@ globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 numberOfCores = 8
 
 # Splitting parameters for PromptReco
-defaultRecoSplitting = 1500 * numberOfCores # reduced from 3000
+defaultRecoSplitting = 750 * numberOfCores # reduced from 3000
 hiRecoSplitting = 200 * numberOfCores
 alcarawSplitting = 20000 * numberOfCores
 
@@ -353,7 +353,7 @@ for dataset in datasets:
            tape_node = None,
            reco_split = alcarawSplitting,
            proc_version = alcarawProcVersion,
-           alca_producers = [ "LumiPixels", "AlCaPCCZeroBias", "AlCaPCCRandom" ],
+           alca_producers = [ "AlCaPCCZeroBias", "AlCaPCCRandom" ],
            dqm_sequences = [ "@common" ],
            timePerEvent = 0.02,
            sizePerEvent = 38,
@@ -389,6 +389,16 @@ datasets += [ "ZeroBiasPixelHVScan0", "ZeroBiasPixelHVScan1", "ZeroBiasPixelHVSc
              "ZeroBiasPixelHVScan3", "ZeroBiasPixelHVScan4", "ZeroBiasPixelHVScan5", 
              "ZeroBiasPixelHVScan6", "ZeroBiasPixelHVScan7" ]
 
+datasets += [ "ZeroBias8b4e1", "ZeroBias8b4e2", "ZeroBias8b4e3",
+             "ZeroBias8b4e4", "ZeroBias8b4e5", "ZeroBias8b4e6",
+             "ZeroBias8b4e7", "ZeroBias8b4e8", "ZeroBias8b4e10",
+             "ZeroBias8b4e9" ]
+
+datasets += [ "ZeroBiasNominalTrains1", "ZeroBiasNominalTrains2", "ZeroBiasNominalTrains3",
+             "ZeroBiasNominalTrains4", "ZeroBiasNominalTrains5", "ZeroBiasNominalTrains6",
+             "ZeroBiasNominalTrains7", "ZeroBiasNominalTrains8", "ZeroBiasNominalTrains10",
+             "ZeroBiasNominalTrains9" ]
+
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
@@ -420,8 +430,9 @@ for dataset in datasets:
 
 datasets = [ "HLTPhysics", 
              "HLTPhysics0", "HLTPhysics1", "HLTPhysics2",
-             "HLTPhysics3", "HLTPhysics4", "HLTPhysics5", 
-             "HLTPhysics6", "HLTPhysics7", "HLTPhysics8", ]
+             "HLTPhysics3", "HLTPhysics4", "HLTPhysics5",
+             "HLTPhysics6", "HLTPhysics7", "HLTPhysics8",
+             "HLTPhysics9", "HLTPhysics10" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
