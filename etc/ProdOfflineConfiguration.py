@@ -1234,7 +1234,8 @@ datasets = [ "ParkingHLTPhysics", "ParkingHLTPhysics0", "ParkingHLTPhysics1",
              "ParkingZeroBias13", "ParkingZeroBias14", "ParkingZeroBias15",
              "ParkingZeroBias16", "ParkingZeroBias17", "ParkingZeroBias18",
              "ParkingZeroBias19", "ParkingZeroBias20", "AlCaPhiSym", "AlCaP0", "AlCaElectron", 
-             "RPCMonitor", "VRRandom", "VRZeroBias", "VirginRaw" ]  
+             "RPCMonitor", "VRRandom", "VRRandom0", "VRRandom1", "VRRandom2", "VRRandom3",
+             "VRRandom4", "VRRandom5", "VRRandom6", "VRRandom7", "VRZeroBias", "VirginRaw" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -1243,7 +1244,9 @@ for dataset in datasets:
                scenario = ppScenario)    
     
 datasets = [ "ParkingHLTPhysics_0T", "ParkingZeroBias_0T", "AlCaPhiSym_0T", "AlCaP0_0T", 
-             "AlCaElectron_0T", "RPCMonitor_0T", "VRRandom_0T", "VRZeroBias_0T", "VirginRaw_0T" ]  
+             "AlCaElectron_0T", "RPCMonitor_0T", "VRRandom_0T", "VRRandom0_0T", "VRRandom1_0T",
+             "VRRandom2_0T", "VRRandom3_0T", "VRRandom4_0T", "VRRandom5_0T", "VRRandom6_0T",
+             "VRRandom7_0T", "VRZeroBias_0T", "VirginRaw_0T" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
