@@ -33,7 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the max run number:
-setInjectMinRun(tier0Config, 300716)
+setInjectMinRun(tier0Config, 302030)
 
 # replay these run
 #setInjectRuns(tier0Config, [ 289461 ])
@@ -48,7 +48,7 @@ processingSite = "T0_CH_CERN"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2017D")
+setAcquisitionEra(tier0Config, "Run2017E")
 setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -83,9 +83,9 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-       'acqEra': {'Run2016D': "CMSSW_8_0_13_patch1"},
-       'maxRun': {298808: "CMSSW_9_2_5_patch1"},
-       'default': "CMSSW_9_2_10"
+       'acqEra': {'Run2017D': "CMSSW_9_2_10"},
+       'maxRun': {303435: "CMSSW_9_2_10"},
+       'default': "CMSSW_9_2_12"
      }
 
 # Configure ScramArch
@@ -109,12 +109,12 @@ alcarawProcVersion = {
      }
 
 defaultProcVersionReco = {
-       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3"},
+       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3", 'Run2017D': "1"},
        'default': "1"
      }
 
 expressProcVersion = {
-       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3"},
+       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3", 'Run2017D': "1"},
        'default': "1"
      }
 
@@ -122,8 +122,8 @@ expressProcVersion = {
 
 # Defaults for GlobalTag
 expressGlobalTag = "92X_dataRun2_Express_v7"
-promptrecoGlobalTag = "92X_dataRun2_Prompt_v8"
-alcap0GlobalTag = "92X_dataRun2_Prompt_v8"
+promptrecoGlobalTag = "92X_dataRun2_Prompt_v9"
+alcap0GlobalTag = "92X_dataRun2_Prompt_v9"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -143,18 +143,20 @@ repackVersionOverride = {
     }
 
 expressVersionOverride = {
-    "CMSSW_9_0_0" : "CMSSW_9_2_10",
-    "CMSSW_9_1_0" : "CMSSW_9_2_10",
-    "CMSSW_9_2_0" : "CMSSW_9_2_10",
-    "CMSSW_9_2_1" : "CMSSW_9_2_10",
-    "CMSSW_9_2_2" : "CMSSW_9_2_10",
-    "CMSSW_9_2_3" : "CMSSW_9_2_10",
-    "CMSSW_9_2_4" : "CMSSW_9_2_10",
-    "CMSSW_9_2_5" : "CMSSW_9_2_10",
-    "CMSSW_9_2_6" : "CMSSW_9_2_10",
-    "CMSSW_9_2_7" : "CMSSW_9_2_10",
-    "CMSSW_9_2_8" : "CMSSW_9_2_10",
-    "CMSSW_9_2_9" : "CMSSW_9_2_10"
+    "CMSSW_9_0_0" : "CMSSW_9_2_12",
+    "CMSSW_9_1_0" : "CMSSW_9_2_12",
+    "CMSSW_9_2_0" : "CMSSW_9_2_12",
+    "CMSSW_9_2_1" : "CMSSW_9_2_12",
+    "CMSSW_9_2_2" : "CMSSW_9_2_12",
+    "CMSSW_9_2_3" : "CMSSW_9_2_12",
+    "CMSSW_9_2_4" : "CMSSW_9_2_12",
+    "CMSSW_9_2_5" : "CMSSW_9_2_12",
+    "CMSSW_9_2_6" : "CMSSW_9_2_12",
+    "CMSSW_9_2_7" : "CMSSW_9_2_12",
+    "CMSSW_9_2_8" : "CMSSW_9_2_12",
+    "CMSSW_9_2_9" : "CMSSW_9_2_12",
+    "CMSSW_9_2_10" : "CMSSW_9_2_12",
+    "CMSSW_9_2_11" : "CMSSW_9_2_12"
     }
 
 #set default repack settings for bulk streams
