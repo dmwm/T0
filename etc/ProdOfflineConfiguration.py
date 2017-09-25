@@ -85,7 +85,7 @@ setPromptCalibrationConfig(tier0Config,
 defaultCMSSWVersion = {
        'acqEra': {'Run2017D': "CMSSW_9_2_10"},
        'maxRun': {303435: "CMSSW_9_2_10"},
-       'default': "CMSSW_9_2_12"
+       'default': "CMSSW_9_2_12_patch1"
      }
 
 # Configure ScramArch
@@ -143,20 +143,21 @@ repackVersionOverride = {
     }
 
 expressVersionOverride = {
-    "CMSSW_9_0_0" : "CMSSW_9_2_12",
-    "CMSSW_9_1_0" : "CMSSW_9_2_12",
-    "CMSSW_9_2_0" : "CMSSW_9_2_12",
-    "CMSSW_9_2_1" : "CMSSW_9_2_12",
-    "CMSSW_9_2_2" : "CMSSW_9_2_12",
-    "CMSSW_9_2_3" : "CMSSW_9_2_12",
-    "CMSSW_9_2_4" : "CMSSW_9_2_12",
-    "CMSSW_9_2_5" : "CMSSW_9_2_12",
-    "CMSSW_9_2_6" : "CMSSW_9_2_12",
-    "CMSSW_9_2_7" : "CMSSW_9_2_12",
-    "CMSSW_9_2_8" : "CMSSW_9_2_12",
-    "CMSSW_9_2_9" : "CMSSW_9_2_12",
-    "CMSSW_9_2_10" : "CMSSW_9_2_12",
-    "CMSSW_9_2_11" : "CMSSW_9_2_12"
+    "CMSSW_9_0_0" : "CMSSW_9_2_12_patch1",
+    "CMSSW_9_1_0" : "CMSSW_9_2_12_patch1",
+    "CMSSW_9_2_0" : "CMSSW_9_2_12_patch1",
+    "CMSSW_9_2_1" : "CMSSW_9_2_12_patch1",
+    "CMSSW_9_2_2" : "CMSSW_9_2_12_patch1",
+    "CMSSW_9_2_3" : "CMSSW_9_2_12_patch1",
+    "CMSSW_9_2_4" : "CMSSW_9_2_12_patch1",
+    "CMSSW_9_2_5" : "CMSSW_9_2_12_patch1",
+    "CMSSW_9_2_6" : "CMSSW_9_2_12_patch1",
+    "CMSSW_9_2_7" : "CMSSW_9_2_12_patch1",
+    "CMSSW_9_2_8" : "CMSSW_9_2_12_patch1",
+    "CMSSW_9_2_9" : "CMSSW_9_2_12_patch1",
+    "CMSSW_9_2_10" : "CMSSW_9_2_12_patch1",
+    "CMSSW_9_2_11" : "CMSSW_9_2_12_patch1",
+    "CMSSW_9_2_12" : "CMSSW_9_2_12_patch1"
     }
 
 #set default repack settings for bulk streams
@@ -400,6 +401,11 @@ datasets += [ "ZeroBiasNominalTrains1", "ZeroBiasNominalTrains2", "ZeroBiasNomin
              "ZeroBiasNominalTrains4", "ZeroBiasNominalTrains5", "ZeroBiasNominalTrains6",
              "ZeroBiasNominalTrains7", "ZeroBiasNominalTrains8", "ZeroBiasNominalTrains10",
              "ZeroBiasNominalTrains9" ]
+
+datasets += [ "ZeroBiasPD01", "ZeroBiasPD02", "ZeroBiasPD03",
+             "ZeroBiasPD04", "ZeroBiasPD05", "ZeroBiasPD06",
+             "ZeroBiasPD07", "ZeroBiasPD08", "ZeroBiasPD09",
+             "ZeroBiasPD10"]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
