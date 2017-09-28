@@ -1,3 +1,51 @@
+2.0.8 to 2.0.9:
+  - Merge pull request #4388 from cronot99/cmssw_9_2_12_patch1
+  - Updated configuration file to use CMSSW 9.2.12 patch1 and added new PDs ZeroBiasPD01 to ZeroBiasPD10
+  - Merge pull request #4387 from blallen/topic_restoreExpressInputRateLimit
+  - Revert to previous values to limit Express input rate.
+  - Merge pull request #4386 from cronot99/new_era_2017e
+  - New acquisition era 2017E, CMSSW 9.2.12 and GT '92X_dataRun2_Prompt_v9' for promptrecoGlobalTag and alcap0GlobalTag variables.
+  - Merge pull request #4385 from cronot99/new_vrrandom_datasets
+  - Added new PDs VRRandom0 and VRRandom7
+  - Merge pull request #4384 from cronot99/datasets_for_new_HigPU_fill
+  - Removed LumiPixels from alca_producers for AlCaLumiPixels. Added new ZeroBias and HLTPhysics PDs. Updated defaultRecoSplitting.
+  - Merge pull request #4383 from hufnagel/promptreco-express-memory
+  - update PromptReco and Express memory
+  - Merge pull request #4381 from hufnagel/alcaharvest-partition-fix
+  - Merge pull request #4380 from hufnagel/run-primds-done
+  - Merge pull request #4379 from hufnagel/stream-cmssw-override-fix
+  - Merge pull request #4378 from hufnagel/block-closing-assignment
+  - Merge pull request #4377 from hufnagel/reco-subscription
+  - Merge pull request #4376 from hufnagel/large-repack-fail
+  - Merge pull request #4375 from hufnagel/lumicount-autmatic-update
+  - Merge pull request #4374 from vytjan/NewEraNewHLTMenuV3
+  - Merge pull request #4373 from vytjan/CMSSWandDQMupdates
+  - Merge pull request #4373 from vytjan/CMSSWandDQMupdates
+  - Updated to the current configuration. Including the CMSSW update and writing to DQM updates for some PDs.
+  - automatic updates for lumicount for some runs
+  - fix for the yearly parititon added to AlcaHarvest EOS upload dir
+  - push run primds completion info to tier0 data service
+  - Merge pull request #4371 from vytjan/ExpressSubscriptionsFix
+  - Fixed broken Express subscriptions configuration.
+  - Merge pull request #4370 from vytjan/T0Release2.0.8
+  - Prod config updated for the 2.0.8 release.
+  - Merge pull request #4369 from vytjan/ZeroBiasNPDDuplicationRemoved
+  - ZeroBiasN duplicate removed. tape_node set to None in all PDs. EXONoBPTXSkim skim added. New Express config added. CMSSW 9_2_7.
+  - stop considering HLT CMSSW patch levels for override purposes
+  - set block closing delay in assignment
+  - allow to configure a separate disk location for RECO
+  - implement an upper limit for repack and repackmerge jobs
+  - Merge pull request #4367 from vytjan/Era2017CConfiguration
+  - Updated to the Era2017C.
+  - Merge pull request #4365 from vytjan/Switch_to_cmssw9_2_6
+  - Switched to cmssw926 starting from the run 298809 and new GTs.
+  - Merge pull request #4364 from vytjan/vytas_dev
+  - Modified Replay and Replay Run1 configs.
+  - Merge pull request #4363 from blallen/AddMissingZeroBiasProducer
+  - Added missing producer back to ZeroBias datasets.
+  - Merge pull request #4362 from ebohorqu/ZeroBiasX
+  - ZeroBiasX PDs not reconstructed, Run2017B and Tier0_Replay_* AcqEras, CMSSW_9_2_3_patch2, processing version to 1
+
 2.0.7 to 2.0.8:
   - Merge pull request #4361 from hufnagel/reco-more-memory
   - even more memory for Express and PromptReco
