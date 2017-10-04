@@ -60,27 +60,13 @@ def modifyConfiguration(config, **args):
     and set it to that value in the config
     
     """
-##     mapping = {
-##         "somevalue" : [("Tier0Feeder","someparameter")],
-##     }
+    config.BossAir.pluginNames = ["SimpleCondorPlugin"]
 
-##     for k,v in args.items():
-##         parameters = mapping.get(k, [])
-##         for p in parameters:
-##             if hasattr(config, p[0]):
-##                 section = getattr(config, p[0])
-##                 setattr(section, p[1], v)
-
-    config.BossAir.pluginNames = ["PyCondorPlugin"]
-
+    # remove components we don't use
     if hasattr(config, "JobUpdater"):
         delattr(config, "JobUpdater")
-    
-    # don't use workqueue
     if hasattr(config, "WorkQueueManager"):
         delattr(config, "WorkQueueManager")
-        
-    # don't use wmarchive data reporter
     if hasattr(config, "ArchiveDataReporter"):
         delattr(config, "ArchiveDataReporter")
     
@@ -90,6 +76,10 @@ def modifyConfiguration(config, **args):
     config.AnalyticsDataCollector.localT0RequestDBURL = "%s/%s" % (config.JobStateMachine.couchurl, 
                                                                    config.Tier0Feeder.requestDBName)
     config.AnalyticsDataCollector.RequestCouchApp = "T0Request"
+
+    # t0 disk monitoring specific configuration
+    config.AgentStatusWatcher.ignoreDisks = [ "/cvmfs/cvmfs-config.cern.ch", "/cvmfs/cms.cern.ch" ]
+    config.AgentStatusWatcher.diskUseThreshold = 90
 
     # don't set bad exit codes for the tier0 jobs
     config.ErrorHandler.failureExitCodes = []
