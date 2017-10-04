@@ -1,3 +1,7 @@
+2.0.9 to 2.1.0:
+  - Merge pull request #4389 from hufnagel/diskthresholds-config
+  - configure disk monitoring
+
 2.0.8 to 2.0.9:
   - Merge pull request #4388 from cronot99/cmssw_9_2_12_patch1
   - Updated configuration file to use CMSSW 9.2.12 patch1 and added new PDs ZeroBiasPD01 to ZeroBiasPD10
