@@ -78,7 +78,7 @@ def modifyConfiguration(config, **args):
     config.AnalyticsDataCollector.RequestCouchApp = "T0Request"
 
     # t0 disk monitoring specific configuration
-    config.AgentStatusWatcher.ignoreDisks = [ "/cvmfs/cvmfs-config.cern.ch", "/cvmfs/cms.cern.ch" ]
+    config.AgentStatusWatcher.ignoreDisks = [ "/cvmfs/cvmfs-config.cern.ch", "/cvmfs/cms.cern.ch", "/eos/cms" ]
     config.AgentStatusWatcher.diskUseThreshold = 90
 
     # don't set bad exit codes for the tier0 jobs
