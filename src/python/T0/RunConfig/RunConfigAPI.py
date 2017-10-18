@@ -442,36 +442,29 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
                 custodialSites = []
                 nonCustodialSites = []
-                custodialAutoApproveSites = []
-                nonCustodialAutoApproveSites = []
+                autoApproveSites = []
                 if datasetConfig.ArchivalNode:
                     bindsStorageNode.append( { 'NODE' : datasetConfig.ArchivalNode } )
                     custodialSites.append(datasetConfig.ArchivalNode)
-                    custodialAutoApproveSites.append(datasetConfig.ArchivalNode)
+                    autoApproveSites.append(datasetConfig.ArchivalNode)
                 if datasetConfig.TapeNode:
                     bindsStorageNode.append( { 'NODE' : datasetConfig.TapeNode } )
                     custodialSites.append(datasetConfig.TapeNode)
                 if datasetConfig.DiskNode and datasetConfig.RAWtoDisk:
                     bindsStorageNode.append( { 'NODE' : datasetConfig.DiskNode } )
                     nonCustodialSites.append(datasetConfig.DiskNode)
-                    nonCustodialAutoApproveSites.append(datasetConfig.DiskNode)
+                    autoApproveSites.append(datasetConfig.DiskNode)
                 if datasetConfig.DiskNodeReco:
                     bindsStorageNode.append( { 'NODE' : datasetConfig.DiskNodeReco } )
 
-                if len(custodialSites) > 0:
+                if len(custodialSites) > 0 or len(nonCustodialSites) > 0:
                     subscriptions.append( { 'custodialSites' : custodialSites,
                                             'custodialSubType' : "Replica",
                                             'custodialGroup' : "DataOps",
-                                            'autoApproveSites' : custodialAutoApproveSites,
-                                            'priority' : "high",
-                                            'primaryDataset' : dataset,
-                                            'deleteFromSource' : True,
-                                            'dataTier' : "RAW" } )
-                if len(nonCustodialSites) > 0:
-                    subscriptions.append( { 'nonCustodialSites' : nonCustodialSites,
+                                            'nonCustodialSites' : nonCustodialSites,
                                             'nonCustodialSubType' : "Replica",
                                             'nonCustodialGroup' : "AnalysisOps",
-                                            'autoApproveSites' : nonCustodialAutoApproveSites,
+                                            'autoApproveSites' : autoApproveSites,
                                             'priority' : "high",
                                             'primaryDataset' : dataset,
                                             'deleteFromSource' : True,
