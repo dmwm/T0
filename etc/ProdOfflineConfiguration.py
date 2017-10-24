@@ -33,7 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the max run number:
-setInjectMinRun(tier0Config, 302030)
+setInjectMinRun(tier0Config, 305017)
 
 # replay these run
 #setInjectRuns(tier0Config, [ 289461 ])
@@ -48,7 +48,7 @@ processingSite = "T0_CH_CERN"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2017E")
+setAcquisitionEra(tier0Config, "Run2017F")
 setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -85,7 +85,7 @@ setPromptCalibrationConfig(tier0Config,
 defaultCMSSWVersion = {
        'acqEra': {'Run2017D': "CMSSW_9_2_10"},
        'maxRun': {303435: "CMSSW_9_2_10"},
-       'default': "CMSSW_9_2_12_patch1"
+       'default': "CMSSW_9_2_13"
      }
 
 # Configure ScramArch
@@ -109,12 +109,12 @@ alcarawProcVersion = {
      }
 
 defaultProcVersionReco = {
-       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3", 'Run2017D': "1"},
+       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3", 'Run2017D': "1", 'Run2017E': "1"},
        'default': "1"
      }
 
 expressProcVersion = {
-       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3", 'Run2017D': "1"},
+       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3", 'Run2017D': "1", 'Run2017E': "1"},
        'default': "1"
      }
 
@@ -143,21 +143,21 @@ repackVersionOverride = {
     }
 
 expressVersionOverride = {
-    "CMSSW_9_0_0" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_1_0" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_0" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_1" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_2" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_3" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_4" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_5" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_6" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_7" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_8" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_9" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_10" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_11" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_12" : "CMSSW_9_2_12_patch1"
+    "CMSSW_9_0_0" : "CMSSW_9_2_13",
+    "CMSSW_9_1_0" : "CMSSW_9_2_13",
+    "CMSSW_9_2_0" : "CMSSW_9_2_13",
+    "CMSSW_9_2_1" : "CMSSW_9_2_13",
+    "CMSSW_9_2_2" : "CMSSW_9_2_13",
+    "CMSSW_9_2_3" : "CMSSW_9_2_13",
+    "CMSSW_9_2_4" : "CMSSW_9_2_13",
+    "CMSSW_9_2_5" : "CMSSW_9_2_13",
+    "CMSSW_9_2_6" : "CMSSW_9_2_13",
+    "CMSSW_9_2_7" : "CMSSW_9_2_13",
+    "CMSSW_9_2_8" : "CMSSW_9_2_13",
+    "CMSSW_9_2_9" : "CMSSW_9_2_13",
+    "CMSSW_9_2_10" : "CMSSW_9_2_13",
+    "CMSSW_9_2_11" : "CMSSW_9_2_13",
+    "CMSSW_9_2_12" : "CMSSW_9_2_13"
     }
 
 #set default repack settings for bulk streams
@@ -503,7 +503,8 @@ datasets = [ "CastorJets", "EGMLowPU", "EmptyBX", "FSQJets", "FSQJets1", "FSQJet
              "L1MinimumBiasHF1", "L1MinimumBiasHF2", "L1MinimumBiasHF3", "L1MinimumBiasHF4",
              "L1MinimumBiasHF5", "L1MinimumBiasHF6", "L1MinimumBiasHF7", "L1MinimumBiasHF8",
              "L1MinimumBias0", "L1MinimumBias1", "L1MinimumBias2", "L1MinimumBias3", "L1MinimumBias4",
-             "L1MinimumBias5", "L1MinimumBias6", "L1MinimumBias7", "L1MinimumBias8", "L1MinimumBias9" ]
+             "L1MinimumBias5", "L1MinimumBias6", "L1MinimumBias7", "L1MinimumBias8", "L1MinimumBias9",
+             "L1MinimumBias10" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -518,7 +519,8 @@ datasets = [ "CastorJets_0T", "EGMLowPU_0T", "EmptyBX_0T", "FSQJets_0T", "FSQJet
              "L1MinimumBiasHF1_0T", "L1MinimumBiasHF2_0T", "L1MinimumBiasHF3_0T", "L1MinimumBiasHF4_0T",
              "L1MinimumBiasHF5_0T", "L1MinimumBiasHF6_0T", "L1MinimumBiasHF7_0T", "L1MinimumBiasHF8_0T",
              "L1MinimumBias0_0T", "L1MinimumBias1_0T", "L1MinimumBias2_0T", "L1MinimumBias3_0T", "L1MinimumBias4_0T",
-             "L1MinimumBias5_0T", "L1MinimumBias6_0T", "L1MinimumBias7_0T", "L1MinimumBias8_0T", "L1MinimumBias9_0T" ]
+             "L1MinimumBias5_0T", "L1MinimumBias6_0T", "L1MinimumBias7_0T", "L1MinimumBias8_0T", "L1MinimumBias9_0T",
+             "L1MinimumBias10_0T" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -854,7 +856,7 @@ datasets = [ "SingleMuon" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = True,
+               write_reco = False,
                raw_to_disk = True,
                write_dqm = True,
                tape_node = "T1_IT_CNAF_MSS",
@@ -869,7 +871,7 @@ datasets = [ "SingleMuon_0T" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = True,
+               write_reco = False,
                raw_to_disk = True,
                write_dqm = True,
                tape_node = "T1_IT_CNAF_MSS",
@@ -934,7 +936,7 @@ datasets = [ "JetHT" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = True,
+               write_reco = False,
                raw_to_disk = True,
                write_dqm = True,
                tape_node = "T1_DE_KIT_MSS",
@@ -951,7 +953,7 @@ datasets = [ "JetHT_0T" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = True,
+               write_reco = False,
                raw_to_disk = True,
                write_dqm = True,
                tape_node = "T1_DE_KIT_MSS",
@@ -968,7 +970,7 @@ datasets = [ "MET" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = True,
+               write_reco = False,
                raw_to_disk = True,
                write_dqm = True,
                tape_node = "T1_DE_KIT_MSS",
@@ -983,7 +985,7 @@ datasets = [ "MET_0T" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = True,
+               write_reco = False,
                raw_to_disk = True,
                write_dqm = True,
                tape_node = "T1_DE_KIT_MSS",
@@ -1024,11 +1026,11 @@ datasets = [ "SingleElectron" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = True,
+               write_reco = False,
                raw_to_disk = True,
                write_dqm = True,
-               tape_node = "T1_IT_CNAF_MSS",
-               disk_node = "T1_IT_CNAF_Disk",
+               tape_node = "T1_US_FNAL_MSS",
+               disk_node = "T1_US_FNAL_Disk",
                alca_producers = [ "EcalUncalWElectron", "EcalUncalZElectron", "HcalCalIterativePhiSym", "EcalESAlign" ],
                dqm_sequences = [ "@common", "@ecal", "@egamma" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
@@ -1039,11 +1041,11 @@ datasets = [ "SingleElectron_0T" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = True,
+               write_reco = False,
                raw_to_disk = True,
                write_dqm = True,
-               tape_node = "T1_IT_CNAF_MSS",
-               disk_node = "T1_IT_CNAF_Disk",
+               tape_node = "T1_US_FNAL_MSS",
+               disk_node = "T1_US_FNAL_Disk",
                alca_producers = [ "EcalUncalWElectron", "EcalUncalZElectron", "HcalCalIterativePhiSym", "EcalESAlign" ],
                dqm_sequences = [ "@common", "@ecal", "@egamma" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
@@ -1510,7 +1512,7 @@ for dataset in datasets:
                raw_to_disk = True,
                archival_node = None,
                tape_node = None,
-               disk_node = "T2_CH_CERN_Disk",
+               disk_node = "T2_CH_CERN",
                scenario = ppScenario)
 
 datasets = [ "EphemeralHLTPhysics1_0T", "EphemeralHLTPhysics2_0T", "EphemeralHLTPhysics3_0T",
@@ -1526,7 +1528,7 @@ for dataset in datasets:
                raw_to_disk = True,
                archival_node = None,
                tape_node = None,
-               disk_node = "T2_CH_CERN_Disk",
+               disk_node = "T2_CH_CERN",
                scenario = ppScenarioB0T)
 
 datasets = [ "ParkingMuon", "ParkingHT" ]
