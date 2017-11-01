@@ -106,9 +106,9 @@ expressProcVersion = 1
 alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "92X_dataRun2_Express_v7"
-promptrecoGlobalTag = "92X_dataRun2_Prompt_v9"
-alcap0GlobalTag = "92X_dataRun2_Prompt_v9"
+expressGlobalTag = "92X_dataRun2_Express_v8"
+promptrecoGlobalTag = "92X_dataRun2_Prompt_v11"
+alcap0GlobalTag = "92X_dataRun2_Prompt_v11"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -148,11 +148,11 @@ expressVersionOverride = {
 #set default repack settings for bulk streams
 addRepackConfig(tier0Config, "Default",
                 proc_ver = defaultProcVersion,
-                maxSizeSingleLumi = 12 * 1024 * 1024 * 1024,
+                maxSizeSingleLumi = 16 * 1024 * 1024 * 1024,
                 maxSizeMultiLumi = 8 * 1024 * 1024 * 1024,
                 minInputSize =  2.1 * 1024 * 1024 * 1024,
                 maxInputSize = 4 * 1024 * 1024 * 1024,
-                maxEdmSize = 12 * 1024 * 1024 * 1024,
+                maxEdmSize = 16 * 1024 * 1024 * 1024,
                 maxOverSize = 8 * 1024 * 1024 * 1024,
                 maxInputEvents = 3 * 1000 * 1000,
                 maxInputFiles = 1000,
@@ -325,7 +325,9 @@ addDataset(tier0Config, "HcalNZS_0T",
 ### special AlcaRaw PDs ###
 ###########################
 
-datasets = [ "AlCaLumiPixels", "AlCaLumiPixels0", "AlCaLumiPixels1", "AlCaLumiPixels2", "AlCaLumiPixels3" ]
+datasets = [ "AlCaLumiPixels", "AlCaLumiPixels0", "AlCaLumiPixels1", "AlCaLumiPixels2", "AlCaLumiPixels3",
+            "AlCaLumiPixels4", "AlCaLumiPixels5", "AlCaLumiPixels6", "AlCaLumiPixels7", "AlCaLumiPixels8",
+            "AlCaLumiPixels9", "AlCaLumiPixels10", "AlCaLumiPixels11", "AlCaLumiPixels12" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -478,7 +480,8 @@ datasets = [ "CastorJets", "EGMLowPU", "EmptyBX", "FSQJets", "FSQJets1", "FSQJet
              "L1MinimumBiasHF1", "L1MinimumBiasHF2", "L1MinimumBiasHF3", "L1MinimumBiasHF4",
              "L1MinimumBiasHF5", "L1MinimumBiasHF6", "L1MinimumBiasHF7", "L1MinimumBiasHF8",
              "L1MinimumBias0", "L1MinimumBias1", "L1MinimumBias2", "L1MinimumBias3", "L1MinimumBias4",
-             "L1MinimumBias5", "L1MinimumBias6", "L1MinimumBias7", "L1MinimumBias8", "L1MinimumBias9" ]
+             "L1MinimumBias5", "L1MinimumBias6", "L1MinimumBias7", "L1MinimumBias8", "L1MinimumBias9",
+             "L1MinimumBias10" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -493,7 +496,8 @@ datasets = [ "CastorJets_0T", "EGMLowPU_0T", "EmptyBX_0T", "FSQJets_0T", "FSQJet
              "L1MinimumBiasHF1_0T", "L1MinimumBiasHF2_0T", "L1MinimumBiasHF3_0T", "L1MinimumBiasHF4_0T",
              "L1MinimumBiasHF5_0T", "L1MinimumBiasHF6_0T", "L1MinimumBiasHF7_0T", "L1MinimumBiasHF8_0T",
              "L1MinimumBias0_0T", "L1MinimumBias1_0T", "L1MinimumBias2_0T", "L1MinimumBias3_0T", "L1MinimumBias4_0T",
-             "L1MinimumBias5_0T", "L1MinimumBias6_0T", "L1MinimumBias7_0T", "L1MinimumBias8_0T", "L1MinimumBias9_0T" ]
+             "L1MinimumBias5_0T", "L1MinimumBias6_0T", "L1MinimumBias7_0T", "L1MinimumBias8_0T", "L1MinimumBias9_0T",
+             "L1MinimumBias10_0T" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
