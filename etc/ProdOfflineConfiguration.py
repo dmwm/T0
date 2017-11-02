@@ -121,9 +121,9 @@ expressProcVersion = {
 
 
 # Defaults for GlobalTag
-expressGlobalTag = "92X_dataRun2_Express_v7"
-promptrecoGlobalTag = "92X_dataRun2_Prompt_v9"
-alcap0GlobalTag = "92X_dataRun2_Prompt_v9"
+expressGlobalTag = "92X_dataRun2_Express_v8"
+promptrecoGlobalTag = "92X_dataRun2_Prompt_v11"
+alcap0GlobalTag = "92X_dataRun2_Prompt_v11"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -163,11 +163,11 @@ expressVersionOverride = {
 #set default repack settings for bulk streams
 addRepackConfig(tier0Config, "Default",
                 proc_ver = defaultProcVersionRAW,
-                maxSizeSingleLumi = 12 * 1024 * 1024 * 1024,
+                maxSizeSingleLumi = 16 * 1024 * 1024 * 1024,
                 maxSizeMultiLumi = 8 * 1024 * 1024 * 1024,
                 minInputSize =  2.1 * 1024 * 1024 * 1024,
                 maxInputSize = 4 * 1024 * 1024 * 1024,
-                maxEdmSize = 12 * 1024 * 1024 * 1024,
+                maxEdmSize = 16 * 1024 * 1024 * 1024,
                 maxOverSize = 8 * 1024 * 1024 * 1024,
                 maxInputEvents = 3 * 1000 * 1000,
                 maxInputFiles = 1000,
@@ -346,7 +346,9 @@ addDataset(tier0Config, "HcalNZS_0T",
 ### special AlcaRaw PDs ###
 ###########################
 
-datasets = [ "AlCaLumiPixels", "AlCaLumiPixels0", "AlCaLumiPixels1", "AlCaLumiPixels2", "AlCaLumiPixels3" ]
+datasets = [ "AlCaLumiPixels", "AlCaLumiPixels0", "AlCaLumiPixels1", "AlCaLumiPixels2", "AlCaLumiPixels3",
+            "AlCaLumiPixels4", "AlCaLumiPixels5", "AlCaLumiPixels6", "AlCaLumiPixels7", "AlCaLumiPixels8",
+            "AlCaLumiPixels9", "AlCaLumiPixels10", "AlCaLumiPixels11", "AlCaLumiPixels12" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -366,7 +368,7 @@ for dataset in datasets:
 ### ZeroBias PDs                                     ###
 ########################################################
 
-datasets = [ "ZeroBias" ] 
+datasets = [ "ZeroBias" ]
 
 datasets += [ "ZeroBias0", "ZeroBias1", "ZeroBias2",
              "ZeroBias3", "ZeroBias4", "ZeroBias5", "ZeroBias6",
@@ -762,6 +764,7 @@ for dataset in datasets:
                dqm_sequences = [ "@common" ],
                tape_node = "T1_US_FNAL_MSS",
                disk_node = "T1_US_FNAL_Disk",
+               siteWhitelist = [ "T2_CH_CERN" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
 
@@ -774,6 +777,7 @@ for dataset in datasets:
                dqm_sequences = [ "@common" ],
                tape_node = "T1_US_FNAL_MSS",
                disk_node = "T1_US_FNAL_Disk",
+               siteWhitelist = [ "T2_CH_CERN" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenarioB0T)
 
@@ -864,6 +868,7 @@ for dataset in datasets:
                alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HcalCalHBHEMuonFilter" ],
                dqm_sequences = [ "@common", "@muon", "@lumi" ],
                physics_skims = [ "ZMu", "MuTau", "LogError", "LogErrorMonitor" ],
+               siteWhitelist = [ "T2_CH_CERN" ],
                scenario = ppScenario)
 
 datasets = [ "SingleMuon_0T" ]
@@ -879,6 +884,7 @@ for dataset in datasets:
                alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HcalCalHBHEMuonFilter" ],
                dqm_sequences = [ "@common", "@muon", "@lumi" ],
                physics_skims = [ "ZMu", "MuTau", "LogError", "LogErrorMonitor" ],
+               siteWhitelist = [ "T2_CH_CERN" ],
                scenario = ppScenarioB0T)
 
 datasets = [ "DoubleMu" ]
@@ -1034,6 +1040,7 @@ for dataset in datasets:
                alca_producers = [ "EcalUncalWElectron", "EcalUncalZElectron", "HcalCalIterativePhiSym", "EcalESAlign" ],
                dqm_sequences = [ "@common", "@ecal", "@egamma" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
+               siteWhitelist = [ "T2_CH_CERN" ],
                scenario = ppScenario)
 
 datasets = [ "SingleElectron_0T" ]
@@ -1049,6 +1056,7 @@ for dataset in datasets:
                alca_producers = [ "EcalUncalWElectron", "EcalUncalZElectron", "HcalCalIterativePhiSym", "EcalESAlign" ],
                dqm_sequences = [ "@common", "@ecal", "@egamma" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
+               siteWhitelist = [ "T2_CH_CERN" ],
                scenario = ppScenarioB0T)
 
 datasets = [ "TestEnablesEcalHcal" ]
