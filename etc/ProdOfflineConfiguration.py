@@ -33,7 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the max run number:
-setInjectMinRun(tier0Config, 302030)
+setInjectMinRun(tier0Config, 305017)
 
 # replay these run
 #setInjectRuns(tier0Config, [ 289461 ])
@@ -48,7 +48,7 @@ processingSite = "T0_CH_CERN"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2017E")
+setAcquisitionEra(tier0Config, "Run2017F")
 setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -85,7 +85,7 @@ setPromptCalibrationConfig(tier0Config,
 defaultCMSSWVersion = {
        'acqEra': {'Run2017D': "CMSSW_9_2_10"},
        'maxRun': {303435: "CMSSW_9_2_10"},
-       'default': "CMSSW_9_2_12_patch1"
+       'default': "CMSSW_9_2_13"
      }
 
 # Configure ScramArch
@@ -109,21 +109,21 @@ alcarawProcVersion = {
      }
 
 defaultProcVersionReco = {
-       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3", 'Run2017D': "1"},
+       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3", 'Run2017D': "1", 'Run2017E' : "1"},
        'default': "1"
      }
 
 expressProcVersion = {
-       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3", 'Run2017D': "1"},
+       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3", 'Run2017D': "1", 'Run2017E' : "1"},
        'default': "1"
      }
 
 
 
 # Defaults for GlobalTag
-expressGlobalTag = "92X_dataRun2_Express_v7"
-promptrecoGlobalTag = "92X_dataRun2_Prompt_v9"
-alcap0GlobalTag = "92X_dataRun2_Prompt_v9"
+expressGlobalTag = "92X_dataRun2_Express_v8"
+promptrecoGlobalTag = "92X_dataRun2_Prompt_v11"
+alcap0GlobalTag = "92X_dataRun2_Prompt_v11"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -143,31 +143,31 @@ repackVersionOverride = {
     }
 
 expressVersionOverride = {
-    "CMSSW_9_0_0" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_1_0" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_0" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_1" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_2" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_3" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_4" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_5" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_6" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_7" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_8" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_9" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_10" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_11" : "CMSSW_9_2_12_patch1",
-    "CMSSW_9_2_12" : "CMSSW_9_2_12_patch1"
+    "CMSSW_9_0_0" : "CMSSW_9_2_13",
+    "CMSSW_9_1_0" : "CMSSW_9_2_13",
+    "CMSSW_9_2_0" : "CMSSW_9_2_13",
+    "CMSSW_9_2_1" : "CMSSW_9_2_13",
+    "CMSSW_9_2_2" : "CMSSW_9_2_13",
+    "CMSSW_9_2_3" : "CMSSW_9_2_13",
+    "CMSSW_9_2_4" : "CMSSW_9_2_13",
+    "CMSSW_9_2_5" : "CMSSW_9_2_13",
+    "CMSSW_9_2_6" : "CMSSW_9_2_13",
+    "CMSSW_9_2_7" : "CMSSW_9_2_13",
+    "CMSSW_9_2_8" : "CMSSW_9_2_13",
+    "CMSSW_9_2_9" : "CMSSW_9_2_13",
+    "CMSSW_9_2_10" : "CMSSW_9_2_13",
+    "CMSSW_9_2_11" : "CMSSW_9_2_13",
+    "CMSSW_9_2_12" : "CMSSW_9_2_13"
     }
 
 #set default repack settings for bulk streams
 addRepackConfig(tier0Config, "Default",
                 proc_ver = defaultProcVersionRAW,
-                maxSizeSingleLumi = 12 * 1024 * 1024 * 1024,
+                maxSizeSingleLumi = 16 * 1024 * 1024 * 1024,
                 maxSizeMultiLumi = 8 * 1024 * 1024 * 1024,
                 minInputSize =  2.1 * 1024 * 1024 * 1024,
                 maxInputSize = 4 * 1024 * 1024 * 1024,
-                maxEdmSize = 12 * 1024 * 1024 * 1024,
+                maxEdmSize = 16 * 1024 * 1024 * 1024,
                 maxOverSize = 8 * 1024 * 1024 * 1024,
                 maxInputEvents = 3 * 1000 * 1000,
                 maxInputFiles = 1000,
@@ -343,6 +343,7 @@ for dataset in datasets:
                tape_node = "T1_US_FNAL_MSS",
                disk_node = "T1_US_FNAL_Disk",
                physics_skims = [ "LogError", "LogErrorMonitor" ],
+               siteWhitelist = [ "T2_CH_CERN" ],
                scenario = ppScenario)
 
 datasets = [ "Charmonium" ]
@@ -371,6 +372,7 @@ addDataset(tier0Config, dataset,
            physics_skims = [ "CosmicSP", "CosmicTP", "LogError", "LogErrorMonitor" ],
            timePerEvent = 0.5,
            sizePerEvent = 155,
+           siteWhitelist = [ "T2_CH_CERN" ],
            scenario = cosmicsScenario)
 
 
@@ -505,7 +507,7 @@ datasets = [ "JetHT" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = True,
+               write_reco = False,
                raw_to_disk = True,
                write_dqm = True,
                tape_node = "T1_DE_KIT_MSS",
@@ -522,7 +524,7 @@ datasets = [ "MET" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = True,
+               write_reco = False,
                raw_to_disk = True,
                write_dqm = True,
                tape_node = "T1_DE_KIT_MSS",
@@ -567,6 +569,7 @@ for dataset in datasets:
                alca_producers = [ "TkAlCosmicsInCollisions" ],
                dqm_sequences = [ "@common" ],
                physics_skims = [ "LogError", "LogErrorMonitor", "EXONoBPTXSkim" ],
+               siteWhitelist = [ "T2_CH_CERN" ],
                scenario = ppScenario)
 
 datasets = [ "SingleElectron" ]
@@ -574,14 +577,15 @@ datasets = [ "SingleElectron" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = True,
+               write_reco = False,
                raw_to_disk = True,
                write_dqm = True,
-               tape_node = "T1_IT_CNAF_MSS",
-               disk_node = "T1_IT_CNAF_Disk",
+               tape_node = "T1_US_FNAL_MSS",
+               disk_node = "T1_US_FNAL_Disk",
                alca_producers = [ "EcalUncalWElectron", "EcalUncalZElectron", "HcalCalIterativePhiSym", "EcalESAlign" ],
                dqm_sequences = [ "@common", "@ecal", "@egamma" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
+               siteWhitelist = [ "T2_CH_CERN" ],
                scenario = ppScenario)
 
 datasets = [ "SingleMuon" ]
@@ -589,14 +593,15 @@ datasets = [ "SingleMuon" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = True,
+               write_reco = False,
                raw_to_disk = True,
                write_dqm = True,
-               tape_node = "T1_IT_CNAF_MSS",
-               disk_node = "T1_IT_CNAF_Disk",
+               tape_node = "T1_US_FNAL_MSS", # "T1_IT_CNAF_MSS", CNAF is underwater 
+               disk_node = "T1_US_FNAL_Disk", # "T1_IT_CNAF_MSS", CNAF is underwater 
                alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HcalCalHBHEMuonFilter" ],
                dqm_sequences = [ "@common", "@muon", "@lumi" ],
                physics_skims = [ "ZMu", "MuTau", "LogError", "LogErrorMonitor" ],
+               siteWhitelist = [ "T2_CH_CERN" ],
                scenario = ppScenario)
 
 datasets = [ "SinglePhoton" ]
@@ -659,6 +664,7 @@ addDataset(tier0Config, dataset,
            physics_skims = [ "LogError", "LogErrorMonitor" ],
            timePerEvent = 4.2,
            sizePerEvent = 1900,
+           siteWhitelist = [ "T2_CH_CERN" ],
            scenario = hcalnzsScenario)
 
 datasets = [ "TestEnablesEcalHcal" ]
@@ -675,7 +681,27 @@ for dataset in datasets:
 ### special AlcaRaw PDs ###
 ###########################
 
-datasets = [ "AlCaLumiPixels", "AlCaLumiPixels0", "AlCaLumiPixels1", "AlCaLumiPixels2", "AlCaLumiPixels3" ]
+datasets = [ "AlCaLumiPixels" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+           do_reco = True,
+           write_reco = False, write_aod = False, write_miniaod = False, write_dqm = True,
+           disk_node = None,
+           tape_node = None,
+           reco_split = alcarawSplitting,
+           proc_version = alcarawProcVersion,
+           alca_producers = [ "AlCaPCCZeroBias", "AlCaPCCRandom" ],
+           dqm_sequences = [ "@common" ],
+           timePerEvent = 0.02,
+           sizePerEvent = 38,
+           siteWhitelist = [ "T2_CH_CERN" ],    
+           scenario = "AlCaLumiPixels")
+
+datasets = [ "AlCaLumiPixels0", "AlCaLumiPixels1", "AlCaLumiPixels2", "AlCaLumiPixels3",
+             "AlCaLumiPixels4", "AlCaLumiPixels5", "AlCaLumiPixels6", "AlCaLumiPixels7",
+             "AlCaLumiPixels8", "AlCaLumiPixels9", "AlCaLumiPixels10", "AlCaLumiPixels11", 
+             "AlCaLumiPixels12" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -703,8 +729,20 @@ for dataset in datasets:
 ### HLTPhysics PDs                                   ###
 ########################################################
 
-datasets = [ "HLTPhysics", 
-             "HLTPhysics0", "HLTPhysics1", "HLTPhysics2",
+datasets = [ "HLTPhysics" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               raw_to_disk = True,
+               write_reco = True,
+               write_dqm = True,
+               alca_producers = [ "TkAlMinBias" ],
+               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               siteWhitelist = [ "T2_CH_CERN" ],
+               scenario = ppScenario)
+
+datasets = [ "HLTPhysics0", "HLTPhysics1", "HLTPhysics2",
              "HLTPhysics3", "HLTPhysics4", "HLTPhysics5",
              "HLTPhysics6", "HLTPhysics7", "HLTPhysics8",
              "HLTPhysics9", "HLTPhysics10" ]
@@ -749,7 +787,7 @@ for dataset in datasets:
                raw_to_disk = True,
                archival_node = None,
                tape_node = None,
-               disk_node = "T2_CH_CERN_Disk",
+               disk_node = "T2_CH_CERN",
                scenario = ppScenario)
 
 datasets = [ "HLTPhysicsCosmics", "HLTPhysicsCosmics1", "HLTPhysicsCosmics2",
@@ -767,8 +805,20 @@ for dataset in datasets:
 ### MinimumBias PDs                                  ###
 ########################################################
 
-datasets = [ "MinimumBias",
-             "MinimumBias1", "MinimumBias2", "MinimumBias3", "MinimumBias4",
+datasets = [ "MinimumBias" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_dqm = True,
+               tape_node = "T1_RU_JINR_MSS",
+               disk_node = "T1_RU_JINR_Disk",
+               dqm_sequences = [ "@common" ],
+               alca_producers = [ "SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias" ],
+               siteWhitelist = [ "T2_CH_CERN" ],
+               scenario = ppScenario)
+
+datasets = [ "MinimumBias1", "MinimumBias2", "MinimumBias3", "MinimumBias4",
              "MinimumBias5", "MinimumBias6", "MinimumBias7", "MinimumBias8",
              "MinimumBias9", "MinimumBias10", "MinimumBias11", "MinimumBias12",
              "MinimumBias13", "MinimumBias14", "MinimumBias15", "MinimumBias16",
@@ -791,7 +841,8 @@ datasets += [ "L1MinimumBiasHF1", "L1MinimumBiasHF2", "L1MinimumBiasHF3", "L1Min
               "L1MinimumBiasHF5", "L1MinimumBiasHF6", "L1MinimumBiasHF7", "L1MinimumBiasHF8" ]
 
 datasets += [ "L1MinimumBias0", "L1MinimumBias1", "L1MinimumBias2", "L1MinimumBias3", "L1MinimumBias4",
-              "L1MinimumBias5", "L1MinimumBias6", "L1MinimumBias7", "L1MinimumBias8", "L1MinimumBias9" ]
+              "L1MinimumBias5", "L1MinimumBias6", "L1MinimumBias7", "L1MinimumBias8", "L1MinimumBias9",
+              "L1MinimumBias10" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -868,7 +919,7 @@ for dataset in datasets:
                raw_to_disk = True,
                archival_node = None,
                tape_node = None,
-               disk_node = "T2_CH_CERN_Disk",
+               disk_node = "T2_CH_CERN",
                scenario = ppScenario)
 
 ########################################################
