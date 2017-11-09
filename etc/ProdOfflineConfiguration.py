@@ -109,12 +109,12 @@ alcarawProcVersion = {
      }
 
 defaultProcVersionReco = {
-       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3", 'Run2017D': "1", 'Run2017E' : "1"},
+       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3", 'Run2017D': "1", 'Run2017E': "1"},
        'default': "1"
      }
 
 expressProcVersion = {
-       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3", 'Run2017D': "1", 'Run2017E' : "1"},
+       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3", 'Run2017D': "1", 'Run2017E': "1"},
        'default': "1"
      }
 
@@ -342,6 +342,7 @@ for dataset in datasets:
                dqm_sequences = [ "@common" ],
                tape_node = "T1_US_FNAL_MSS",
                disk_node = "T1_US_FNAL_Disk",
+               siteWhitelist = [ "T2_CH_CERN" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                siteWhitelist = [ "T2_CH_CERN" ],
                scenario = ppScenario)
@@ -609,7 +610,7 @@ datasets = [ "SinglePhoton" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = True,
+               write_reco = False,
                raw_to_disk = True,
                write_dqm = True,
                tape_node = "T1_FR_CCIN2P3_MSS",
@@ -1329,6 +1330,7 @@ addDataset(tier0Config, "PADoubleMuOpen",
            alca_producers = [ "LumiPixelsMinBias" ],
            dqm_sequences = [ "@common", "@muon" ],
            scenario = hiScenario)
+
 
 #######################
 ### ignored streams ###
