@@ -177,7 +177,7 @@ addRepackConfig(tier0Config, "Default",
 
 addDataset(tier0Config, "Default",
            do_reco = False,
-           write_reco = True, write_aod = True, write_miniaod = True, write_dqm = False,
+           write_reco = False, write_aod = True, write_miniaod = True, write_dqm = False,
            reco_delay = defaultRecoTimeout,
            reco_delay_offset = defaultRecoLockTimeout,
            reco_split = defaultRecoSplitting,
@@ -508,7 +508,6 @@ datasets = [ "JetHT" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = False,
                raw_to_disk = True,
                write_dqm = True,
                tape_node = "T1_DE_KIT_MSS",
@@ -525,7 +524,6 @@ datasets = [ "MET" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = False,
                raw_to_disk = True,
                write_dqm = True,
                tape_node = "T1_DE_KIT_MSS",
@@ -578,7 +576,6 @@ datasets = [ "SingleElectron" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = False,
                raw_to_disk = True,
                write_dqm = True,
                tape_node = "T1_US_FNAL_MSS",
@@ -594,7 +591,6 @@ datasets = [ "SingleMuon" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = False,
                raw_to_disk = True,
                write_dqm = True,
                tape_node = "T1_US_FNAL_MSS", # "T1_IT_CNAF_MSS", CNAF is underwater 
@@ -610,7 +606,6 @@ datasets = [ "SinglePhoton" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = False,
                raw_to_disk = True,
                write_dqm = True,
                tape_node = "T1_FR_CCIN2P3_MSS",

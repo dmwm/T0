@@ -162,7 +162,7 @@ addRepackConfig(tier0Config, "Default",
 
 addDataset(tier0Config, "Default",
            do_reco = False,
-           write_reco = True, write_aod = True, write_miniaod = True, write_dqm = False,
+           write_reco = False, write_aod = True, write_miniaod = True, write_dqm = False,
            reco_delay = defaultRecoTimeout,
            reco_delay_offset = defaultRecoLockTimeout,
            reco_split = defaultRecoSplitting,
