@@ -177,7 +177,7 @@ addRepackConfig(tier0Config, "Default",
 
 addDataset(tier0Config, "Default",
            do_reco = False,
-           write_reco = False, write_aod = True, write_miniaod = True, write_dqm = False,
+           write_reco = True, write_aod = True, write_miniaod = True, write_dqm = False,
            reco_delay = defaultRecoTimeout,
            reco_delay_offset = defaultRecoLockTimeout,
            reco_split = defaultRecoSplitting,
@@ -342,7 +342,6 @@ for dataset in datasets:
                dqm_sequences = [ "@common" ],
                tape_node = "T1_US_FNAL_MSS",
                disk_node = "T1_US_FNAL_Disk",
-               siteWhitelist = [ "T2_CH_CERN" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                siteWhitelist = [ "T2_CH_CERN" ],
                scenario = ppScenario)
@@ -368,7 +367,8 @@ for dataset in datasets:
 addDataset(tier0Config, dataset,
            do_reco = True,
            write_reco = True,
-           write_miniaod = False, write_dqm = True,
+           write_miniaod = False, 
+           write_dqm = True,
            alca_producers = [ "TkAlCosmics0T", "MuAlGlobalCosmics", "DtCalibCosmics" ],
            physics_skims = [ "CosmicSP", "CosmicTP", "LogError", "LogErrorMonitor" ],
            timePerEvent = 0.5,
@@ -657,7 +657,7 @@ for dataset in datasets:
 datasets = [ "HcalNZS" ]
 
 for dataset in datasets:
-addDataset(tier0Config, dataset,
+    addDataset(tier0Config, dataset,
            do_reco = True,
            write_dqm = True,
            dqm_sequences = [ "@common", "@hcal" ],
@@ -953,6 +953,7 @@ datasets = [ "ParkingMuon", "ParkingHT" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
+               do_reco = False,
                archival_node = "T0_CH_CERN_MSS",
                tape_node = None,
                disk_node = None,
@@ -971,14 +972,15 @@ datasets = [ "ScoutingCaloCommissioning", "ScoutingCaloHT", "ScoutingCaloMuon",
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
-               raw_to_disk = True)
+               do_reco = False,
+               raw_to_disk = True
+               scenario = ppScenario)
 
 datasets = [ "ParkingHT410to430", "ParkingHT500to550", "ParkingHT430to450", "ParkingHT470to500", "ParkingHT450to470" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = False,
-               write_reco = False,
                tape_node = "T1_RU_JINR_MSS",
                disk_node = None,
                scenario = ppScenario)
@@ -988,7 +990,6 @@ datasets = [ "ParkingHT550to650", "ParkingHT650" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = False,
-               write_reco = False,
                tape_node = "T1_US_FNAL_MSS",
                disk_node = None,
                scenario = ppScenario)
