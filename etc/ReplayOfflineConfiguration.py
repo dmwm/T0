@@ -191,7 +191,7 @@ addExpressConfig(tier0Config, "Express",
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
                                     "TkAlMinBias", "DtCalib", "LumiPixelsMinBias",
                                     "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli", 
-                                    "PromptClaibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdEcalPedastals" ]
+                                    "PromptClaibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdEcalPedastals" ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
                  global_tag_connect = globalTagConnect,
@@ -928,9 +928,19 @@ for dataset in datasets:
                dqm_sequences = [ "@common" ],
                scenario = ppScenario)
 
-datsets = [ "HIZeroBias1", "HIZeroBias2", "HIZeroBias3", "HIZeroBias4",
-            "HIZeroBias5", "HIZeroBias6", "HIZeroBias7", "HIZeroBias8",
-            "HIZeroBias9", "HIZeroBias10", "HIZeroBias11", "HIZeroBias12" ]
+datasets = [ "HeavyFlavor" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_dqm = True,
+               dqm_sequences = [ "@common" ],
+               # physics_skims = [ "D0Meson" ], # does this skim still exist?
+               scenario = ppScenario)
+
+datasets = [ "HIZeroBias1", "HIZeroBias2", "HIZeroBias3", "HIZeroBias4",
+             "HIZeroBias5", "HIZeroBias6", "HIZeroBias7", "HIZeroBias8",
+             "HIZeroBias9", "HIZeroBias10", "HIZeroBias11", "HIZeroBias12" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -942,16 +952,6 @@ for dataset in datasets:
                # physics_skims = [ "LogError", "LogErrorMonitor" ],
                timePerEvent = 3.5,
                sizePerEvent = 1500,
-               scenario = ppScenario)
-
-datasets = [ "HeavyFlavor" ]
-
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
-               do_reco = True,
-               write_dqm = True,
-               dqm_sequences = [ "@common" ],
-               # physics_skims = [ "D0Meson" ], # does this skim still exist?
                scenario = ppScenario)
 
 ################################
