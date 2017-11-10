@@ -92,7 +92,7 @@ setDefaultScramArch(tier0Config, "slc6_amd64_gcc530")
 #cosmicsScenario = "cosmicsEra_Run2_25ns"
 #hcalnzsScenario = "hcalnzsEra_Run2_25ns"
 
-ppScenario = "Run2_2017_ppRef"
+ppScenario = "ppEra_Run2_2017_ppRef"
 ppScenarioB0T = "ppEra_Run2_2017" # if you want to run on _0T versions of PDs, you need to add them manually
 cosmicsScenario = "cosmicsEra_Run2_2017"
 hcalnzsScenario = "hcalnzsEra_Run2_2017"
@@ -142,7 +142,8 @@ expressVersionOverride = {
     "CMSSW_9_2_9" : "CMSSW_9_2_14_patch1",
     "CMSSW_9_2_10" : "CMSSW_9_2_14_patch1",
     "CMSSW_9_2_11" : "CMSSW_9_2_14_patch1",
-    "CMSSW_9_2_12" : "CMSSW_9_2_14_patch1"
+    "CMSSW_9_2_12" : "CMSSW_9_2_14_patch1",
+    "CMSSW_9_2_13" : "CMSSW_9_2_14_patch1"
     }
 
 #set default repack settings for bulk streams

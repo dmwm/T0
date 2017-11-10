@@ -33,7 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the max run number:
-setInjectMinRun(tier0Config, 305017)
+setInjectMinRun(tier0Config, 99999999)
 
 # replay these run
 #setInjectRuns(tier0Config, [ 289461 ])
@@ -48,7 +48,7 @@ processingSite = "T0_CH_CERN"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2017F")
+setAcquisitionEra(tier0Config, "Run2017G")
 setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -85,14 +85,14 @@ setPromptCalibrationConfig(tier0Config,
 defaultCMSSWVersion = {
        'acqEra': {'Run2017D': "CMSSW_9_2_10"},
        'maxRun': {303435: "CMSSW_9_2_10"},
-       'default': "CMSSW_9_2_13"
+       'default': "CMSSW_9_2_14_patch1"
      }
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc530")
 
 # Configure scenarios
-ppScenario = "ppEra_Run2_2017"
+ppScenario = "ppEra_Run2_2017_ppRef"
 ppScenarioB0T = "ppEra_Run2_2017"
 cosmicsScenario = "cosmicsEra_Run2_2017"
 hcalnzsScenario = "hcalnzsEra_Run2_2017"
@@ -109,12 +109,12 @@ alcarawProcVersion = {
      }
 
 defaultProcVersionReco = {
-       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3", 'Run2017D': "1", 'Run2017E': "1"},
+       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3", 'Run2017D': "1", 'Run2017E': "1", 'Run2017F': "1"},
        'default': "1"
      }
 
 expressProcVersion = {
-       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3", 'Run2017D': "1", 'Run2017E': "1"},
+       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3", 'Run2017D': "1", 'Run2017E': "1", 'Run2017F': "1"},
        'default': "1"
      }
 
@@ -143,21 +143,22 @@ repackVersionOverride = {
     }
 
 expressVersionOverride = {
-    "CMSSW_9_0_0" : "CMSSW_9_2_13",
-    "CMSSW_9_1_0" : "CMSSW_9_2_13",
-    "CMSSW_9_2_0" : "CMSSW_9_2_13",
-    "CMSSW_9_2_1" : "CMSSW_9_2_13",
-    "CMSSW_9_2_2" : "CMSSW_9_2_13",
-    "CMSSW_9_2_3" : "CMSSW_9_2_13",
-    "CMSSW_9_2_4" : "CMSSW_9_2_13",
-    "CMSSW_9_2_5" : "CMSSW_9_2_13",
-    "CMSSW_9_2_6" : "CMSSW_9_2_13",
-    "CMSSW_9_2_7" : "CMSSW_9_2_13",
-    "CMSSW_9_2_8" : "CMSSW_9_2_13",
-    "CMSSW_9_2_9" : "CMSSW_9_2_13",
-    "CMSSW_9_2_10" : "CMSSW_9_2_13",
-    "CMSSW_9_2_11" : "CMSSW_9_2_13",
-    "CMSSW_9_2_12" : "CMSSW_9_2_13"
+    "CMSSW_9_0_0" : "CMSSW_9_2_14_patch1",
+    "CMSSW_9_1_0" : "CMSSW_9_2_14_patch1",
+    "CMSSW_9_2_0" : "CMSSW_9_2_14_patch1",
+    "CMSSW_9_2_1" : "CMSSW_9_2_14_patch1",
+    "CMSSW_9_2_2" : "CMSSW_9_2_14_patch1",
+    "CMSSW_9_2_3" : "CMSSW_9_2_14_patch1",
+    "CMSSW_9_2_4" : "CMSSW_9_2_14_patch1",
+    "CMSSW_9_2_5" : "CMSSW_9_2_14_patch1",
+    "CMSSW_9_2_6" : "CMSSW_9_2_14_patch1",
+    "CMSSW_9_2_7" : "CMSSW_9_2_14_patch1",
+    "CMSSW_9_2_8" : "CMSSW_9_2_14_patch1",
+    "CMSSW_9_2_9" : "CMSSW_9_2_14_patch1",
+    "CMSSW_9_2_10" : "CMSSW_9_2_14_patch1",
+    "CMSSW_9_2_11" : "CMSSW_9_2_14_patch1",
+    "CMSSW_9_2_12" : "CMSSW_9_2_14_patch1",
+    "CMSSW_9_2_13" : "CMSSW_9_2_14_patch1"
     }
 
 #set default repack settings for bulk streams
@@ -439,8 +440,9 @@ for dataset in datasets:
                dqm_sequences = [ "@common" ],
                scenario = ppScenario)
 
-### these should be FSQJet* not FSQJets* ??????
-datasets = [ "FSQJets", "FSQJets1", "FSQJets2", "FSQJets3" ]
+datasets = [ "FSQJet1", "FSQJet2" ]
+
+datasets += [ "FSQJets", "FSQJets1", "FSQJets2", "FSQJets3" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -1015,6 +1017,46 @@ for dataset in datasets:
                raw_to_disk = True,
                scenario = ppScenario)
 
+
+#########################################
+### New PDs for pp Reference Run 2017 ###
+#########################################
+
+datasets = [ "HighEGJet", "LowEGJet", "SingleTrack" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_dqm = True,
+               dqm_sequences = [ "@common" ],
+               scenario = ppScenario)
+
+datsets = [ "HIZeroBias1", "HIZeroBias2", "HIZeroBias3", "HIZeroBias4",
+            "HIZeroBias5", "HIZeroBias6", "HIZeroBias7", "HIZeroBias8",
+            "HIZeroBias9", "HIZeroBias10", "HIZeroBias11", "HIZeroBias12" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               # write_reco = True,
+               write_dqm = True,
+               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
+               # alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias", "AlCaPCCZeroBiasFromRECO" ],
+               # physics_skims = [ "LogError", "LogErrorMonitor" ],
+               timePerEvent = 3.5,
+               sizePerEvent = 1500,
+               scenario = ppScenario)
+
+datasets = [ "HeavyFlavor" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_dqm = True,
+               dqm_sequences = [ "@common" ],
+               # physics_skims = [ "D0Meson" ], # does this skim still exist?
+scenario = ppScenario)
+
 ################################
 ### Low PU collisions 13 TeV ###
 ################################
@@ -1115,12 +1157,14 @@ for dataset in datasets:
 ### New PDs for pp Reference Run 2015 ###
 #########################################
 
-addDataset(tier0Config, "HeavyFlavor",
-           do_reco = True,
-           write_dqm = True,
-           dqm_sequences = [ "@common" ],
-           physics_skims = [ "D0Meson" ],
-           scenario = ppScenario)
+# new PD with same name added for 2017 ppRef
+# keeping this config for reference
+# addDataset(tier0Config, "HeavyFlavor",
+#           do_reco = True,
+#            write_dqm = True,
+#            dqm_sequences = [ "@common" ],
+#            physics_skims = [ "D0Meson" ],
+#            scenario = ppScenario)
 
 addDataset(tier0Config, "HighPtJet80",
            do_reco = True,
