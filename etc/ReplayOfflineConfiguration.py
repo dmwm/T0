@@ -324,7 +324,6 @@ for dataset in datasets:
                write_dqm = True,
                dqm_sequences = [ "@common" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
-               siteWhitelist = [ "T2_CH_CERN" ],
                scenario = ppScenario)
 
 datasets = [ "Charmonium" ]
@@ -349,7 +348,6 @@ for dataset in datasets:
            physics_skims = [ "CosmicSP", "CosmicTP", "LogError", "LogErrorMonitor" ],
            timePerEvent = 0.5,
            sizePerEvent = 155,
-           siteWhitelist = [ "T2_CH_CERN" ],
            scenario = cosmicsScenario)
 
 
@@ -521,7 +519,6 @@ for dataset in datasets:
                alca_producers = [ "TkAlCosmicsInCollisions" ],
                dqm_sequences = [ "@common" ],
                physics_skims = [ "LogError", "LogErrorMonitor", "EXONoBPTXSkim" ],
-               siteWhitelist = [ "T2_CH_CERN" ],
                scenario = ppScenario)
 
 datasets = [ "SingleElectron" ]
@@ -533,7 +530,6 @@ for dataset in datasets:
                alca_producers = [ "EcalUncalWElectron", "EcalUncalZElectron", "HcalCalIterativePhiSym", "EcalESAlign" ],
                dqm_sequences = [ "@common", "@ecal", "@egamma" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
-               siteWhitelist = [ "T2_CH_CERN" ],
                scenario = ppScenario)
 
 datasets = [ "SingleMuon" ]
@@ -545,7 +541,6 @@ for dataset in datasets:
                alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HcalCalHBHEMuonFilter" ],
                dqm_sequences = [ "@common", "@muon", "@lumi" ],
                physics_skims = [ "ZMu", "MuTau", "LogError", "LogErrorMonitor" ],
-               siteWhitelist = [ "T2_CH_CERN" ],
                scenario = ppScenario)
 
 datasets = [ "SinglePhoton" ]
@@ -600,7 +595,6 @@ for dataset in datasets:
            physics_skims = [ "LogError", "LogErrorMonitor" ],
            timePerEvent = 4.2,
            sizePerEvent = 1900,
-           siteWhitelist = [ "T2_CH_CERN" ],
            scenario = hcalnzsScenario)
 
 datasets = [ "TestEnablesEcalHcal" ]
@@ -628,7 +622,6 @@ for dataset in datasets:
            dqm_sequences = [ "@common" ],
            timePerEvent = 0.02,
            sizePerEvent = 38,
-           siteWhitelist = [ "T2_CH_CERN" ],
            scenario = "AlCaLumiPixels")
 
 datasets = [ "AlCaLumiPixels0", "AlCaLumiPixels1", "AlCaLumiPixels2", "AlCaLumiPixels3",
@@ -669,7 +662,6 @@ for dataset in datasets:
                write_dqm = True,
                alca_producers = [ "TkAlMinBias" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
-               siteWhitelist = [ "T2_CH_CERN" ],
                scenario = ppScenario)
 
 datasets = [ "HLTPhysics0", "HLTPhysics1", "HLTPhysics2",
@@ -737,7 +729,6 @@ for dataset in datasets:
                write_dqm = True,
                dqm_sequences = [ "@common" ],
                alca_producers = [ "SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias" ],
-               siteWhitelist = [ "T2_CH_CERN" ],
                scenario = ppScenario)
 
 datasets = [ "MinimumBias1", "MinimumBias2", "MinimumBias3", "MinimumBias4",
