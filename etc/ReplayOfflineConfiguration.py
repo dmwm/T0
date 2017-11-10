@@ -920,23 +920,13 @@ for dataset in datasets:
 ### New PDs for pp Reference Run 2017 ###
 #########################################
 
-datasets = [ "HighEGJet", "LowEGJet", "SingleTrack" ]
+datasets = [ "HighEGJet", "LowEGJet", "HeavyFlavor", "SingleTrack" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                write_dqm = True,
                dqm_sequences = [ "@common" ],
-               scenario = ppScenario)
-
-datasets = [ "HeavyFlavor" ]
-
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
-               do_reco = True,
-               write_dqm = True,
-               dqm_sequences = [ "@common" ],
-               # physics_skims = [ "D0Meson" ], # does this skim still exist?
                scenario = ppScenario)
 
 datasets = [ "HIZeroBias1", "HIZeroBias2", "HIZeroBias3", "HIZeroBias4",
@@ -946,11 +936,9 @@ datasets = [ "HIZeroBias1", "HIZeroBias2", "HIZeroBias3", "HIZeroBias4",
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               # write_reco = True,
                write_dqm = True,
                dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
-               # alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias", "AlCaPCCZeroBiasFromRECO" ],
-               # physics_skims = [ "LogError", "LogErrorMonitor" ],
+               alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias", "AlCaPCCZeroBiasFromRECO" ],
                timePerEvent = 3.5,
                sizePerEvent = 1500,
                scenario = ppScenario)
