@@ -364,10 +364,10 @@ for dataset in datasets:
 datasets = [ "Cosmics" ]
 
 for dataset in datasets:
-addDataset(tier0Config, dataset,
+    addDataset(tier0Config, dataset,
            do_reco = True,
            write_reco = True,
-           write_miniaod = False, 
+           write_miniaod = False,
            write_dqm = True,
            alca_producers = [ "TkAlCosmics0T", "MuAlGlobalCosmics", "DtCalibCosmics" ],
            physics_skims = [ "CosmicSP", "CosmicTP", "LogError", "LogErrorMonitor" ],
@@ -375,7 +375,6 @@ addDataset(tier0Config, dataset,
            sizePerEvent = 155,
            siteWhitelist = [ "T2_CH_CERN" ],
            scenario = cosmicsScenario)
-
 
 datasets = [ "DisplacedJet" ]
 
@@ -452,7 +451,7 @@ for dataset in datasets:
 
 datasets = [ "HINCaloJets", "HINPFJets" ]
 
-datasets += [ "HINCaloJet40", "HINPFJet100", "HINCaloJet100", "HINCaloJetsOther", "HINPFJetsOther" ] 
+datasets += [ "HINCaloJet40", "HINPFJet100", "HINCaloJet100", "HINCaloJetsOther", "HINPFJetsOther" ]
 
 datasets += [ "HINMuon", "HINPhoton" ]
 
@@ -593,8 +592,8 @@ for dataset in datasets:
                do_reco = True,
                raw_to_disk = True,
                write_dqm = True,
-               tape_node = "T1_US_FNAL_MSS", # "T1_IT_CNAF_MSS", CNAF is underwater 
-               disk_node = "T1_US_FNAL_Disk", # "T1_IT_CNAF_MSS", CNAF is underwater 
+               tape_node = "T1_US_FNAL_MSS", # "T1_IT_CNAF_MSS", CNAF is underwater
+               disk_node = "T1_US_FNAL_Disk", # "T1_IT_CNAF_Disk", CNAF is underwater
                alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HcalCalHBHEMuonFilter" ],
                dqm_sequences = [ "@common", "@muon", "@lumi" ],
                physics_skims = [ "ZMu", "MuTau", "LogError", "LogErrorMonitor" ],
@@ -691,12 +690,12 @@ for dataset in datasets:
            dqm_sequences = [ "@common" ],
            timePerEvent = 0.02,
            sizePerEvent = 38,
-           siteWhitelist = [ "T2_CH_CERN" ],    
+           siteWhitelist = [ "T2_CH_CERN" ],
            scenario = "AlCaLumiPixels")
 
 datasets = [ "AlCaLumiPixels0", "AlCaLumiPixels1", "AlCaLumiPixels2", "AlCaLumiPixels3",
              "AlCaLumiPixels4", "AlCaLumiPixels5", "AlCaLumiPixels6", "AlCaLumiPixels7",
-             "AlCaLumiPixels8", "AlCaLumiPixels9", "AlCaLumiPixels10", "AlCaLumiPixels11", 
+             "AlCaLumiPixels8", "AlCaLumiPixels9", "AlCaLumiPixels10", "AlCaLumiPixels11",
              "AlCaLumiPixels12" ]
 
 for dataset in datasets:
@@ -752,7 +751,7 @@ for dataset in datasets:
                alca_producers = [ "TkAlMinBias" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
-    
+
 datasets = [ "HLTPhysicsBunchTrains", "HLTPhysicsIsolatedBunch" ]
 
 for dataset in datasets:
@@ -775,7 +774,7 @@ for dataset in datasets:
 
 datasets = [ "EphemeralHLTPhysics1", "EphemeralHLTPhysics2", "EphemeralHLTPhysics3",
              "EphemeralHLTPhysics4", "EphemeralHLTPhysics5", "EphemeralHLTPhysics6",
-             "EphemeralHLTPhysics7", "EphemeralHLTPhysics8"] 
+             "EphemeralHLTPhysics7", "EphemeralHLTPhysics8"]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -851,7 +850,7 @@ for dataset in datasets:
 ### ZeroBias PDs                                     ###
 ########################################################
 
-datasets = [ "ZeroBias" ] 
+datasets = [ "ZeroBias" ]
 
 datasets += [ "ZeroBias0", "ZeroBias1", "ZeroBias2",
              "ZeroBias3", "ZeroBias4", "ZeroBias5", "ZeroBias6",
@@ -860,8 +859,8 @@ datasets += [ "ZeroBias0", "ZeroBias1", "ZeroBias2",
              "ZeroBias15", "ZeroBias16", "ZeroBias17", "ZeroBias18",
              "ZeroBias19", "ZeroBias20" ]
 
-datasets += [ "ZeroBiasIsolatedBunches", "ZeroBiasIsolatedBunches0", "ZeroBiasIsolatedBunches1", "ZeroBiasIsolatedBunches2", 
-             "ZeroBiasIsolatedBunches3", "ZeroBiasIsolatedBunches4", "ZeroBiasIsolatedBunches5", "ZeroBiasIsolatedBunches6", 
+datasets += [ "ZeroBiasIsolatedBunches", "ZeroBiasIsolatedBunches0", "ZeroBiasIsolatedBunches1", "ZeroBiasIsolatedBunches2",
+             "ZeroBiasIsolatedBunches3", "ZeroBiasIsolatedBunches4", "ZeroBiasIsolatedBunches5", "ZeroBiasIsolatedBunches6",
              "ZeroBiasIsolatedBunches7", "ZeroBiasIsolatedBunches8", "ZeroBiasIsolatedBunches9", "ZeroBiasIsolatedBunches10" ]
 
 datasets += [ "ZeroBiasIsolatedBunch", "ZeroBiasAfterIsolatedBunch",
@@ -871,10 +870,10 @@ datasets += [ "ZeroBiasIsolatedBunch", "ZeroBiasAfterIsolatedBunch",
 datasets += [ "ZeroBiasBunchTrains0", "ZeroBiasBunchTrains1", "ZeroBiasBunchTrains2",
              "ZeroBiasBunchTrains3", "ZeroBiasBunchTrains4", "ZeroBiasBunchTrains5" ]
 
-datasets += [ "ZeroBiasFirstBunchAfterTrain", "ZeroBiasFirstBunchInTrain" ]    
+datasets += [ "ZeroBiasFirstBunchAfterTrain", "ZeroBiasFirstBunchInTrain" ]
 
-datasets += [ "ZeroBiasPixelHVScan0", "ZeroBiasPixelHVScan1", "ZeroBiasPixelHVScan2", 
-             "ZeroBiasPixelHVScan3", "ZeroBiasPixelHVScan4", "ZeroBiasPixelHVScan5", 
+datasets += [ "ZeroBiasPixelHVScan0", "ZeroBiasPixelHVScan1", "ZeroBiasPixelHVScan2",
+             "ZeroBiasPixelHVScan3", "ZeroBiasPixelHVScan4", "ZeroBiasPixelHVScan5",
              "ZeroBiasPixelHVScan6", "ZeroBiasPixelHVScan7" ]
 
 datasets += [ "ZeroBias8b4e1", "ZeroBias8b4e2", "ZeroBias8b4e3",
@@ -904,9 +903,9 @@ for dataset in datasets:
                timePerEvent = 3.5,
                sizePerEvent = 1500,
                scenario = ppScenario)
-    
-datasets = [ "EphemeralZeroBias1", "EphemeralZeroBias2", "EphemeralZeroBias3", 
-             "EphemeralZeroBias4", "EphemeralZeroBias5", "EphemeralZeroBias6", 
+
+datasets = [ "EphemeralZeroBias1", "EphemeralZeroBias2", "EphemeralZeroBias3",
+             "EphemeralZeroBias4", "EphemeralZeroBias5", "EphemeralZeroBias6",
              "EphemeralZeroBias7", "EphemeralZeroBias8"]
 
 for dataset in datasets:
@@ -988,7 +987,7 @@ for dataset in datasets:
                tape_node = "T1_US_FNAL_MSS",
                disk_node = None,
                scenario = ppScenario)
-    
+
 datasets = [ "ParkingHLTPhysics", "ParkingHLTPhysics0", "ParkingHLTPhysics1",
              "ParkingHLTPhysics2", "ParkingHLTPhysics3", "ParkingHLTPhysics4",
              "ParkingHLTPhysics5", "ParkingHLTPhysics6", "ParkingHLTPhysics7",
@@ -1005,7 +1004,7 @@ datasets += [ "ParkingZeroBias", "ParkingZeroBias0",
              "ParkingZeroBias10", "ParkingZeroBias11", "ParkingZeroBias12",
              "ParkingZeroBias13", "ParkingZeroBias14", "ParkingZeroBias15",
              "ParkingZeroBias16", "ParkingZeroBias17", "ParkingZeroBias18",
-             "ParkingZeroBias19", "ParkingZeroBias20", ]
+             "ParkingZeroBias19", "ParkingZeroBias20" ]
 
 datasets += [ "AlCaElectron", "VRRandom", "VRRandom0", "VRRandom1", "VRRandom2", "VRRandom3",
              "VRRandom4", "VRRandom5", "VRRandom6", "VRRandom7", "VRZeroBias", "VirginRaw" ]
@@ -1014,7 +1013,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = False,
                raw_to_disk = True,
-               scenario = ppScenario)    
+               scenario = ppScenario)
 
 ################################
 ### Low PU collisions 13 TeV ###
@@ -1153,9 +1152,9 @@ addExpressConfig(tier0Config, "ExpressPA",
                  scenario = hiScenario,
                  data_tiers = [ "FEVT" ],
                  write_dqm = True,
-                 alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "DtCalib", "SiStripCalMinBias", 
+                 alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "DtCalib", "SiStripCalMinBias",
                                     "SiStripCalMinBiasAfterAbortGap", "LumiPixelsMinBias", "PromptCalibProd",
-                                    "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli", "PromptCalibProdSiStripGains", 
+                                    "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli", "PromptCalibProdSiStripGains",
                                     "PromptCalibProdSiStripGainsAfterAbortGap", "SiStripPCLHistos" ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
@@ -1254,7 +1253,7 @@ addDataset(tier0Config, "PAEGJet1",
            physics_skims = [ "PAZEE" ],
            scenario = hiScenario)
 
-datasets = [ "PAMinimumBias1", "PAMinimumBias2", "PAMinimumBias3", "PAMinimumBias4", 
+datasets = [ "PAMinimumBias1", "PAMinimumBias2", "PAMinimumBias3", "PAMinimumBias4",
              "PAMinimumBias5", "PAMinimumBias6", "PAMinimumBias7", "PAMinimumBias8",
              "PAMinimumBias9", "PAMinimumBias10", "PAMinimumBias11", "PAMinimumBias12",
              "PAMinimumBias13", "PAMinimumBias14", "PAMinimumBias15", "PAMinimumBias16",
