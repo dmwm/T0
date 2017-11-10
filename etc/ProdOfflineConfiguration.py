@@ -33,7 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the max run number:
-setInjectMinRun(tier0Config, 99999999)
+setInjectMinRun(tier0Config, 306464)
 
 # Settings up sites
 processingSite = "T0_CH_CERN"
@@ -82,7 +82,7 @@ setPromptCalibrationConfig(tier0Config,
 defaultCMSSWVersion = {
        'acqEra': {'Run2017D': "CMSSW_9_2_10"},
        'maxRun': {303435: "CMSSW_9_2_10"},
-       'default': "CMSSW_9_2_14_patch1"
+       'default': "CMSSW_9_2_14_patch2"
      }
 
 # Configure ScramArch
@@ -140,22 +140,22 @@ repackVersionOverride = {
     }
 
 expressVersionOverride = {
-    "CMSSW_9_0_0" : "CMSSW_9_2_14_patch1",
-    "CMSSW_9_1_0" : "CMSSW_9_2_14_patch1",
-    "CMSSW_9_2_0" : "CMSSW_9_2_14_patch1",
-    "CMSSW_9_2_1" : "CMSSW_9_2_14_patch1",
-    "CMSSW_9_2_2" : "CMSSW_9_2_14_patch1",
-    "CMSSW_9_2_3" : "CMSSW_9_2_14_patch1",
-    "CMSSW_9_2_4" : "CMSSW_9_2_14_patch1",
-    "CMSSW_9_2_5" : "CMSSW_9_2_14_patch1",
-    "CMSSW_9_2_6" : "CMSSW_9_2_14_patch1",
-    "CMSSW_9_2_7" : "CMSSW_9_2_14_patch1",
-    "CMSSW_9_2_8" : "CMSSW_9_2_14_patch1",
-    "CMSSW_9_2_9" : "CMSSW_9_2_14_patch1",
-    "CMSSW_9_2_10" : "CMSSW_9_2_14_patch1",
-    "CMSSW_9_2_11" : "CMSSW_9_2_14_patch1",
-    "CMSSW_9_2_12" : "CMSSW_9_2_14_patch1",
-    "CMSSW_9_2_13" : "CMSSW_9_2_14_patch1"
+    "CMSSW_9_0_0" : "CMSSW_9_2_14_patch2",
+    "CMSSW_9_1_0" : "CMSSW_9_2_14_patch2",
+    "CMSSW_9_2_0" : "CMSSW_9_2_14_patch2",
+    "CMSSW_9_2_1" : "CMSSW_9_2_14_patch2",
+    "CMSSW_9_2_2" : "CMSSW_9_2_14_patch2",
+    "CMSSW_9_2_3" : "CMSSW_9_2_14_patch2",
+    "CMSSW_9_2_4" : "CMSSW_9_2_14_patch2",
+    "CMSSW_9_2_5" : "CMSSW_9_2_14_patch2",
+    "CMSSW_9_2_6" : "CMSSW_9_2_14_patch2",
+    "CMSSW_9_2_7" : "CMSSW_9_2_14_patch2",
+    "CMSSW_9_2_8" : "CMSSW_9_2_14_patch2",
+    "CMSSW_9_2_9" : "CMSSW_9_2_14_patch2",
+    "CMSSW_9_2_10" : "CMSSW_9_2_14_patch2",
+    "CMSSW_9_2_11" : "CMSSW_9_2_14_patch2",
+    "CMSSW_9_2_12" : "CMSSW_9_2_14_patch2",
+    "CMSSW_9_2_13" : "CMSSW_9_2_14_patch2"
     }
 
 #set default repack settings for bulk streams
