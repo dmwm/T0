@@ -192,7 +192,8 @@ addExpressConfig(tier0Config, "Express",
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
                                     "TkAlMinBias", "DtCalib", "LumiPixelsMinBias",
                                     "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli", 
-                                    "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdEcalPedestals" ],
+                                    "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG" # , "PromptCalibProdEcalPedestals" 
+                                    ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
                  global_tag_connect = globalTagConnect,
@@ -279,7 +280,7 @@ addExpressConfig(tier0Config, "Calibration",
                  diskNode = None)
 
 addExpressConfig(tier0Config, "ExpressAlignment",
-                 scenario = alcaTrackingOnlyScenario, # should we change this?
+                 scenario = alcaTrackingOnlyScenario,
                  data_tiers = [ "ALCARECO" ],
                  write_dqm = True,
                  alca_producers = [ "TkAlMinBias", 
@@ -535,7 +536,7 @@ for dataset in datasets:
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
 
-datasets = [ "SingleMuon" ]
+datasets = [ "SingleMuon", "SingleMuonTnP" ] # SingleMuonTnP only for 2017 ppRef run
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,

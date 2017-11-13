@@ -205,7 +205,8 @@ addExpressConfig(tier0Config, "Express",
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
                                     "TkAlMinBias", "DtCalib", "LumiPixelsMinBias",
                                     "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli", 
-                                    "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdEcalPedestals" ],
+                                    "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG"  # , "PromptCalibProdEcalPedestals"
+                                    ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
                  global_tag_connect = globalTagConnect,
@@ -585,7 +586,7 @@ for dataset in datasets:
                # siteWhitelist = [ "T2_CH_CERN" ],
                scenario = ppScenario)
 
-datasets = [ "SingleMuon" ]
+datasets = [ "SingleMuon", "SingleMuonTnP" ] # SingleMuonTnP only for 2017 ppRef run
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
