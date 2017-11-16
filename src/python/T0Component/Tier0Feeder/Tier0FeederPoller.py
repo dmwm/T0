@@ -225,10 +225,12 @@ class Tier0FeederPoller(BaseWorkerThread):
 
         #
         # release runs for PromptReco
+        # check PromptRecoStatus first, i.e. big red button
         #
-        RunConfigAPI.releasePromptReco(tier0Config,
-                                       self.specDirectory,
-                                       self.dqmUploadProxy)
+        if self.getPromptRecoStatusT0DataSvc():
+            RunConfigAPI.releasePromptReco(tier0Config,
+                                           self.specDirectory,
+                                           self.dqmUploadProxy)
 
         #
         # insert express and reco configs into Tier0 Data Service
@@ -379,6 +381,17 @@ class Tier0FeederPoller(BaseWorkerThread):
             markCloseoutWorkflowMonitoringDAO.execute(workflowId)
 
         return
+
+    def getPromptRecoStatusT0DataSvc(self):
+        """
+        _getPromptRecoStatusDataSvc_
+
+        Check the PromptRecoStatus (enabled/disabled) set by the ORM
+
+        """
+        getPromptRecoStatusDAO = self.daoFactoryT0DataSvc(classname = "T0DataSvc.GetPromptRecoStatus")
+        status = getPromptRecoStatusDAO.execute(transaction = False)
+        return status
 
     def updateRunStreamDoneT0DataSvc(self):
         """
