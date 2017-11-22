@@ -58,7 +58,7 @@ setDQMDataTier(tier0Config, "DQMIO")
 # First timeout is used directly for reco release
 # Second timeout is used for the data service PromptReco start check
 # (to basically say we started PromptReco even though we haven't)
-defaultRecoTimeout =  48 * 3600 
+defaultRecoTimeout =  48 * 3600
 defaultRecoLockTimeout = 1800
 
 # DQM Server
@@ -204,7 +204,7 @@ addExpressConfig(tier0Config, "Express",
                  write_dqm = True,
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
                                     "TkAlMinBias", "DtCalib", "LumiPixelsMinBias",
-                                    "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli", 
+                                    "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
                                     "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG"  # , "PromptCalibProdEcalPedestals"
                                     ],
                  reco_version = defaultCMSSWVersion,
@@ -297,7 +297,7 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  scenario = alcaTrackingOnlyScenario,
                  data_tiers = [ "ALCARECO" ],
                  write_dqm = True,
-                 alca_producers = [ "TkAlMinBias", 
+                 alca_producers = [ "TkAlMinBias",
                                     "PromptCalibProd" ],
                  dqm_sequences = [ "DQMOfflineTracking" ],
                  reco_version = defaultCMSSWVersion,
@@ -1042,6 +1042,14 @@ for dataset in datasets:
                alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias", "AlCaPCCZeroBiasFromRECO" ],
                timePerEvent = 3.5,
                sizePerEvent = 1500,
+               scenario = ppScenario)
+
+datasets = [ "Totem12", "Totem34" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               dqm_sequences = [ "@common" ],
                scenario = ppScenario)
 
 ################################
