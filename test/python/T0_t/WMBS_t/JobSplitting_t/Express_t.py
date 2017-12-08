@@ -52,14 +52,14 @@ class ExpressTest(unittest.TestCase):
                                     (id, site_name, state)
                                     VALUES (1, 'SomeSite', 1)
                                     """, transaction = False)
-        myThread.dbi.processData("""INSERT INTO wmbs_location_pnns
-                                    (location, pnn)
-                                    VALUES (1, 'SomePNN')
+        myThread.dbi.processData("""INSERT INTO wmbs_pnns
+                                    (id, pnn)
+                                    VALUES (2, 'SomePNN')
                                     """, transaction = False)
 
         myThread.dbi.processData("""INSERT INTO wmbs_location_pnns
                                     (location, pnn)
-                                    VALUES (1, 'SomePNN2')
+                                    VALUES (1, 2)
                                     """, transaction = False)
 
 
