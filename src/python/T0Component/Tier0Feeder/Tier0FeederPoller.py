@@ -16,6 +16,7 @@ import logging
 import threading
 import subprocess
 
+from Utils.Timers import timeFunction
 from WMCore.WorkerThreads.BaseWorkerThread import BaseWorkerThread
 from WMCore.DAOFactory import DAOFactory
 from WMCore.Database.DBFactory import DBFactory
@@ -99,6 +100,7 @@ class Tier0FeederPoller(BaseWorkerThread):
 
         return
 
+    @timeFunction
     def algorithm(self, parameters = None):
         """
         _algorithm_
