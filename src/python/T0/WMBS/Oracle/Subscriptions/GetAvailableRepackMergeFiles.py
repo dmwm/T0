@@ -29,7 +29,7 @@ class GetAvailableRepackMergeFiles(DBFormatter):
                         wmbs_file_details.filesize AS filesize,
                         wmbs_file_details.events AS events,
                         wmbs_file_details.lfn AS lfn,
-                        wmbs_location_pnns.pnn AS location,
+                        wmbs_pnns.pnn AS location,
                         wmbs_fileset_files.insert_time AS insert_time,
                         MIN(wmbs_file_runlumi_map.lumi) AS first_lumi,
                         MAX(wmbs_file_runlumi_map.lumi) AS last_lumi
@@ -40,10 +40,8 @@ class GetAvailableRepackMergeFiles(DBFormatter):
                    wmbs_file_details.id = wmbs_sub_files_available.fileid
                  INNER JOIN wmbs_file_location ON
                    wmbs_file_location.fileid = wmbs_sub_files_available.fileid
-                 INNER JOIN wmbs_location ON
-                   wmbs_location.id = wmbs_file_location.location
-                 INNER JOIN wmbs_location_pnns ON
-                   wmbs_location_pnns.location = wmbs_location.id
+                 INNER JOIN wmbs_pnns ON
+                   wmbs_pnns.id = wmbs_file_location.pnn
                  INNER JOIN wmbs_subscription repackmerge_subscription ON
                    repackmerge_subscription.id = wmbs_sub_files_available.subscription
                  INNER JOIN wmbs_fileset_files ON
@@ -63,7 +61,7 @@ class GetAvailableRepackMergeFiles(DBFormatter):
                           wmbs_file_details.filesize,
                           wmbs_file_details.events,
                           wmbs_file_details.lfn,
-                          wmbs_location_pnns.pnn,
+                          wmbs_pnns.pnn,
                           wmbs_fileset_files.insert_time
                  """
 
