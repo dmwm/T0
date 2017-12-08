@@ -38,4 +38,4 @@ config.DBSInterface.primaryDatasetType = "data"
 
 config.AnalyticsDataCollector.pluginName = "Tier0Plugin"
 
-config.JobAccountant.maxAllowedRepackOutputSize = 16 * 1024 * 1024 * 1024
+config.JobAccountant.maxAllowedRepackOutputSize = 24 * 1024 * 1024 * 1024

@@ -162,11 +162,11 @@ expressVersionOverride = {
 #set default repack settings for bulk streams
 addRepackConfig(tier0Config, "Default",
                 proc_ver = defaultProcVersionRAW,
-                maxSizeSingleLumi = 16 * 1024 * 1024 * 1024,
+                maxSizeSingleLumi = 24 * 1024 * 1024 * 1024,
                 maxSizeMultiLumi = 8 * 1024 * 1024 * 1024,
                 minInputSize =  2.1 * 1024 * 1024 * 1024,
                 maxInputSize = 4 * 1024 * 1024 * 1024,
-                maxEdmSize = 16 * 1024 * 1024 * 1024,
+                maxEdmSize = 24 * 1024 * 1024 * 1024,
                 maxOverSize = 8 * 1024 * 1024 * 1024,
                 maxInputEvents = 3 * 1000 * 1000,
                 maxInputFiles = 1000,
