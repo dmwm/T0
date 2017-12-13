@@ -29,8 +29,8 @@ class InsertStreamer(DBFormatter):
                          (FILEID, RUN, LUMI)
                          VALUES (wmbs_file_details_SEQ.nextval, :RUN, :LUMI)
                        INTO wmbs_file_location
-                         (FILEID, LOCATION)
-                         VALUES (wmbs_file_details_SEQ.nextval, (SELECT id FROM wmbs_location WHERE site_name = 'T0_CH_CERN'))
+                         (FILEID, PNN)
+                         VALUES (wmbs_file_details_SEQ.nextval, (SELECT id FROM wmbs_pnns WHERE pnn = 'T0_CH_CERN_Disk'))
                        INTO streamer
                          (ID, P5_ID, RUN_ID, STREAM_ID, LUMI_ID, INSERT_TIME)
                          VALUES (wmbs_file_details_SEQ.nextval, :P5_ID, :RUN, stream_id, :LUMI, :TIME)
