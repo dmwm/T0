@@ -9,7 +9,7 @@ from WMCore.Database.DBFormatter import DBFormatter
 
 class InsertStreamer(DBFormatter):
 
-    def execute(self, binds, conn = None, transaction = False):
+    def execute(self, streamerPNN, binds, conn = None, transaction = False):
 
         sql = """DECLARE
                    cnt NUMBER(1);
@@ -30,7 +30,7 @@ class InsertStreamer(DBFormatter):
                          VALUES (wmbs_file_details_SEQ.nextval, :RUN, :LUMI)
                        INTO wmbs_file_location
                          (FILEID, PNN)
-                         VALUES (wmbs_file_details_SEQ.nextval, (SELECT id FROM wmbs_pnns WHERE pnn = 'T0_CH_CERN_Disk'))
+                         VALUES (wmbs_file_details_SEQ.nextval, (SELECT id FROM wmbs_pnns WHERE pnn = '%s'))
                        INTO streamer
                          (ID, P5_ID, RUN_ID, STREAM_ID, LUMI_ID, INSERT_TIME)
                          VALUES (wmbs_file_details_SEQ.nextval, :P5_ID, :RUN, stream_id, :LUMI, :TIME)
@@ -42,7 +42,7 @@ class InsertStreamer(DBFormatter):
                  EXCEPTION
                    WHEN DUP_VAL_ON_INDEX THEN NULL;
                  END;
-                 """
+                 """ % streamerPNN
 
         self.dbi.processData(sql, binds, conn = conn,
                              transaction = transaction)

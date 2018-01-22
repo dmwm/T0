@@ -15,6 +15,7 @@ knownStreamers = set()
 def injectNewData(dbInterfaceStorageManager,
                   dbInterfaceHltConf,
                   dbInterfaceSMNotify,
+                  streamerPNN,
                   minRun = None,
                   maxRun = None,
                   injectRun = None):
@@ -27,6 +28,8 @@ def injectNewData(dbInterfaceStorageManager,
 
     These queries will find duplicates, ie. data that was already found and
     processed in a previous polling cycle. Code has to be robust against that.
+
+    Needs to be passed the PNN on which streamer files are located
 
     """
     logging.debug("injectNewData()")
@@ -161,7 +164,7 @@ def injectNewData(dbInterfaceStorageManager,
         insertLumiDAO.execute(binds = bindLumi, transaction = False)
 
     if len(bindStreamer) > 0:
-        insertStreamerDAO.execute(binds = bindStreamer, transaction = False)
+        insertStreamerDAO.execute(streamerPNN, binds = bindStreamer, transaction = False)
 
     if len(bindInsertFileStatus) > 0:
         insertFileStatusDAO.execute(bindInsertFileStatus, transaction = False)

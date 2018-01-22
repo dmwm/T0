@@ -139,6 +139,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                     StorageManagerAPI.injectNewData(self.dbInterfaceStorageManager,
                                                     self.dbInterfaceHltConf,
                                                     self.dbInterfaceSMNotify,
+                                                    streamerPNN = tier0Config.Global.StreamerPNN,
                                                     minRun = tier0Config.Global.InjectMinRun,
                                                     maxRun = tier0Config.Global.InjectMaxRun)
                 else:
@@ -150,6 +151,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                         StorageManagerAPI.injectNewData(self.dbInterfaceStorageManager,
                                                         self.dbInterfaceHltConf,
                                                         self.dbInterfaceSMNotify,
+                                                        streamerPNN = tier0Config.Global.StreamerPNN,
                                                         injectRun = injectRun)
                         self.injectedRuns.add(injectRun)
             except:
