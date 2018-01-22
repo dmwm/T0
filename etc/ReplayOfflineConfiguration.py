@@ -14,6 +14,7 @@ from T0.RunConfig.Tier0Config import setBaseRequestPriority
 from T0.RunConfig.Tier0Config import setBackfill
 from T0.RunConfig.Tier0Config import setBulkDataType
 from T0.RunConfig.Tier0Config import setProcessingSite
+from T0.RunConfig.Tier0Config import setStreamerPNN
 from T0.RunConfig.Tier0Config import setDQMDataTier
 from T0.RunConfig.Tier0Config import setDQMUploadUrl
 from T0.RunConfig.Tier0Config import setPromptCalibrationConfig
@@ -36,6 +37,7 @@ setInjectRuns(tier0Config, [ 999999 ])
 
 # Settings up sites
 processingSite = "T0_CH_CERN"
+streamerPNN = "T0_CH_CERN_Disk"
 
 # Set global parameters:
 #  Acquisition era
@@ -49,6 +51,7 @@ setBaseRequestPriority(tier0Config, 300000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
 setProcessingSite(tier0Config, processingSite)
+setStreamerPNN(tier0Config, streamerPNN)
 
 # Override for DQM data tier
 setDQMDataTier(tier0Config, "DQMIO")

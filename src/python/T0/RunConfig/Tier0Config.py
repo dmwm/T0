@@ -24,6 +24,8 @@ Tier0Configuration - Global configuration object
 | |       |
 | |       |--> ProcessingSite - Main (CERN) site where processing is done.
 | |       |
+| |       |--> StreamerPNN - PNN where streamer file are located
+| |       |
 | |       |--> BulkDataType - The bulk data type for the run
 | |       |
 | |       |--> DQMDataTier - The data tier used for DQM (default is DQMIO).
@@ -241,6 +243,8 @@ def createTier0Config():
     tier0Config.Global.Backfill = None
 
     tier0Config.Global.ProcessingSite = "T0_CH_CERN"
+
+    tier0Config.Global.StreamerPNN = "T0_CH_CERN_Disk"
 
     tier0Config.Global.DQMDataTier = "DQMIO"
 
@@ -546,6 +550,15 @@ def setProcessingSite(config, site):
     Set the (CERN) site used for processing.
     """
     config.Global.ProcessingSite = site
+    return
+
+def setStreamerPNN(config, pnn):
+    """
+    _setStreamerPNN_
+
+    Set the (CERN) location for streamer files.
+    """
+    config.Global.StreamerPNN = pnn
     return
 
 def setBulkDataType(config, type):
