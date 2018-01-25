@@ -903,7 +903,11 @@ class Create(DBCreator):
                            26 : "cosmicsEra_Run2_2017",
                            27 : "hcalnzsEra_Run2_2017",
                            28 : "ppEra_Run2_2017_trackingOnly",
-                           29 : "ppEra_Run2_2017_ppRef" }
+                           29 : "ppEra_Run2_2017_ppRef",
+                           30 : "cosmicsEra_Run2_2018",
+                           31 : "hcalnzsEra_Run2_2018",
+                           32 : "ppEra_Run2_2018",
+                           33 : "trackingOnlyEra_Run2_2018" }
         for id, name in eventScenarios.items():
             sql = """INSERT INTO event_scenario
                      (ID, NAME)

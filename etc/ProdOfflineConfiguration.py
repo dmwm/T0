@@ -33,8 +33,11 @@ tier0Config = createTier0Config()
 # Set the verstion configuration (not used at the moment)
 setConfigVersion(tier0Config, "replace with real version")
 
+# Set the min run number:
+setInjectMinRun(tier0Config, 9999999)
+
 # Set the max run number:
-setInjectMinRun(tier0Config, 306828)
+setInjectMaxRun(tier0Config, 9999999)
 
 # Settings up sites
 processingSite = "T0_CH_CERN"
@@ -46,7 +49,7 @@ processingSite = "T0_CH_CERN"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2017H")
+setAcquisitionEra(tier0Config, "Commissioning2018")
 setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -83,45 +86,45 @@ setPromptCalibrationConfig(tier0Config,
 defaultCMSSWVersion = {
        'acqEra': {'Run2017D': "CMSSW_9_2_10"},
        'maxRun': {303435: "CMSSW_9_2_10"},
-       'default': "CMSSW_9_2_14_patch2"
+       'default': "CMSSW_10_0_0"
      }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "slc6_amd64_gcc530")
+setDefaultScramArch(tier0Config, "slc6_amd64_gcc630")
 
 # Configure scenarios
-ppScenario = "ppEra_Run2_2017_ppRef"
-ppScenarioB0T = "ppEra_Run2_2017"
-cosmicsScenario = "cosmicsEra_Run2_2017"
-hcalnzsScenario = "hcalnzsEra_Run2_2017"
+ppScenario = "ppEra_Run2_2018"
+ppScenarioB0T = "ppEra_Run2_2018"
+cosmicsScenario = "cosmicsEra_Run2_2018"
+hcalnzsScenario = "hcalnzsEra_Run2_2018"
 hiScenario = "ppEra_Run2_2016_pA"
-alcaTrackingOnlyScenario = "ppEra_Run2_2017_trackingOnly"
+alcaTrackingOnlyScenario = "trackingOnlyEra_Run2_2018"
 alcaTestEnableScenario = "AlCaTestEnable"
 
 # Defaults for processing version
 defaultProcVersionRAW = 1
 
 alcarawProcVersion = {
-       'acqEra': {'Run2017A': "3"},
+       'acqEra': {},
        'default': "1"
      }
 
 defaultProcVersionReco = {
-       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3", 'Run2017D': "1", 'Run2017E': "1", 'Run2017F': "1", 'Run2017G': "1"},
+       'acqEra': {},
        'default': "1"
      }
 
 expressProcVersion = {
-       'acqEra': {'Run2017A': "3", 'Run2017B': "2", 'Run2017C': "3", 'Run2017D': "1", 'Run2017E': "1", 'Run2017F': "1", 'Run2017G': "1"},
+       'acqEra': {},
        'default': "1"
      }
 
 
 
 # Defaults for GlobalTag
-expressGlobalTag = "92X_dataRun2_Express_v8"
-promptrecoGlobalTag = "92X_dataRun2_Prompt_v11"
-alcap0GlobalTag = "92X_dataRun2_Prompt_v11"
+expressGlobalTag = "100X_dataRun2_Express_v1"
+promptrecoGlobalTag = "100X_dataRun2_Prompt_v1"
+alcap0GlobalTag = "100X_dataRun2_Prompt_v1"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -141,22 +144,6 @@ repackVersionOverride = {
     }
 
 expressVersionOverride = {
-    "CMSSW_9_0_0" : "CMSSW_9_2_14_patch2",
-    "CMSSW_9_1_0" : "CMSSW_9_2_14_patch2",
-    "CMSSW_9_2_0" : "CMSSW_9_2_14_patch2",
-    "CMSSW_9_2_1" : "CMSSW_9_2_14_patch2",
-    "CMSSW_9_2_2" : "CMSSW_9_2_14_patch2",
-    "CMSSW_9_2_3" : "CMSSW_9_2_14_patch2",
-    "CMSSW_9_2_4" : "CMSSW_9_2_14_patch2",
-    "CMSSW_9_2_5" : "CMSSW_9_2_14_patch2",
-    "CMSSW_9_2_6" : "CMSSW_9_2_14_patch2",
-    "CMSSW_9_2_7" : "CMSSW_9_2_14_patch2",
-    "CMSSW_9_2_8" : "CMSSW_9_2_14_patch2",
-    "CMSSW_9_2_9" : "CMSSW_9_2_14_patch2",
-    "CMSSW_9_2_10" : "CMSSW_9_2_14_patch2",
-    "CMSSW_9_2_11" : "CMSSW_9_2_14_patch2",
-    "CMSSW_9_2_12" : "CMSSW_9_2_14_patch2",
-    "CMSSW_9_2_13" : "CMSSW_9_2_14_patch2"
     }
 
 #set default repack settings for bulk streams
@@ -663,13 +650,37 @@ for dataset in datasets:
            # siteWhitelist = [ "T2_CH_CERN" ],
            scenario = hcalnzsScenario)
 
-datasets = [ "TestEnablesEcalHcal" ]
+datasets = [ "TestEnablesEcalHcal", "TestEnablesEcalHcalDQM" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                raw_to_disk = False,
                alca_producers = [ "HcalCalPedestal", "PromptCalibProdEcalPedestals" ],
+               dqm_sequences = [ "@common" ],
+               scenario = ppScenario)
+
+datasets = [ "OnlineMonitor", "EcalLaser" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = False,
+               raw_to_disk = False,
+               scenario = ppScenario)
+
+datasets = [ "CosmicsForEventDisplay" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = False,
+               raw_to_disk = False,
+               scenario = cosmicsScenario)
+
+datasets = [ "L1Accepts" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = False,
                dqm_sequences = [ "@common" ],
                scenario = ppScenario)
 
@@ -1373,7 +1384,6 @@ addDataset(tier0Config, "PADoubleMuOpen",
            alca_producers = [ "LumiPixelsMinBias" ],
            dqm_sequences = [ "@common", "@muon" ],
            scenario = hiScenario)
-
 
 #######################
 ### ignored streams ###
