@@ -1396,6 +1396,9 @@ ignoreStream(tier0Config, "DQM")
 ignoreStream(tier0Config, "DQMEventDisplay")
 ignoreStream(tier0Config, "LookArea")
 ignoreStream(tier0Config, "DQMOffline")
+ignoreStream(tier0Config, "streamHLTRates")
+ignoreStream(tier0Config, "streamL1Rates")
+ignoreStream(tier0Config, "streamDQMRates")
 
 ###################################
 ### currently inactive settings ###
