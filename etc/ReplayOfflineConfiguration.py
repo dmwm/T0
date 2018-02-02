@@ -101,9 +101,9 @@ expressProcVersion = 1
 alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "100X_dataRun2_Express_v1"
-promptrecoGlobalTag = "100X_dataRun2_Prompt_v1"
-alcap0GlobalTag = "100X_dataRun2_Prompt_v1"
+expressGlobalTag = "100X_dataRun2_Express_forT0Replay_MWGR2"
+promptrecoGlobalTag = "100X_dataRun2_Prompt_forT0Replay_MWGR2"
+alcap0GlobalTag = "100X_dataRun2_Prompt_forT0Replay_MWGR2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -324,6 +324,8 @@ datasets = [ "Cosmics" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
            do_reco = True,
+           write_reco = False,
+           write_miniaod = False,
            write_dqm = True,
            alca_producers = [ "TkAlCosmics0T", "MuAlGlobalCosmics", "DtCalibCosmics" ],
            # physics_skims = [ "CosmicSP", "CosmicTP", "LogError", "LogErrorMonitor" ],
@@ -600,6 +602,7 @@ datasets = [ "CosmicsForEventDisplay" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = False,
+               write_miniaod = False,
                scenario = cosmicsScenario)
 
 datasets = [ "L1Accepts" ]
