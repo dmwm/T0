@@ -110,6 +110,7 @@ class Create(DBCreator):
                  stop_time          int           default 0 not null,
                  close_time         int           default 0 not null,
                  lumicount          int           default 0 not null,
+                 in_datasvc         int           default 0 not null,
                  process            varchar2(255),
                  acq_era            varchar2(255),
                  backfill           varchar2(255),
@@ -451,10 +452,13 @@ class Create(DBCreator):
             """CREATE INDEX idx_run_2 ON run (status)"""
 
         self.indexes[len(self.indexes)] = \
+            """CREATE INDEX idx_run_3 ON run (checkForZeroState(in_datasvc))"""
+
+        self.indexes[len(self.indexes)] = \
             """CREATE INDEX idx_run_primds_stream_1 ON run_primds_stream_assoc (run_id, stream_id)"""
 
         self.indexes[len(self.indexes)] = \
-            """CREATE INDEX idx_run_stream_done_1 ON run_stream_done (checkForZeroOneState(in_datasvc))"""
+            """CREATE INDEX idx_run_stream_done_1 ON run_stream_done (checkForZeroState(in_datasvc))"""
 
         self.indexes[len(self.indexes)] = \
             """CREATE INDEX idx_reco_release_config_2 ON reco_release_config (checkForZeroOneTwoState(in_datasvc))"""

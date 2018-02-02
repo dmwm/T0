@@ -13,9 +13,9 @@ class FindNewExpressRuns(DBFormatter):
 
     def execute(self, conn = None, transaction = False):
 
-        sql = """SELECT run_id
+        sql = """SELECT run.run_id
                  FROM run
-                 WHERE checkForZeroState(express_released) = 0
+                 WHERE checkForZeroState(run.express_released) = 0
                  """
 
         results = self.dbi.processData(sql, {}, conn = conn,
