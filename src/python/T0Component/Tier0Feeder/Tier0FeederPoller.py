@@ -240,6 +240,7 @@ class Tier0FeederPoller(BaseWorkerThread):
         # insert express and reco configs into Tier0 Data Service
         #
         if self.haveT0DataSvc:
+            self.updateRunConfigT0DataSvc()
             self.updateRunStreamDoneT0DataSvc()
             self.updateExpressConfigsT0DataSvc()
             self.updateRecoConfigsT0DataSvc()
@@ -396,6 +397,34 @@ class Tier0FeederPoller(BaseWorkerThread):
         getPromptRecoStatusDAO = self.daoFactoryT0DataSvc(classname = "T0DataSvc.GetPromptRecoStatus")
         status = getPromptRecoStatusDAO.execute(transaction = False)
         return status
+
+    def updateRunConfigT0DataSvc(self):
+        """
+        _updateRunConfigT0DataSvc_
+
+        Check for new runs and push their info into the Tier0 Data Service.
+
+        """
+        getNewRunDAO = self.daoFactory(classname = "T0DataSvc.GetNewRun")
+        newRun = getNewRunDAO.execute(transaction = False)
+
+        if len(newRun) > 0:
+
+            binds = []
+            for runInfo in newRun:
+                binds.append( { 'RUN' : runInfo['run'],
+                                'ACQ_ERA' : runInfo['acq_era'] } )
+
+            insertNewRunDAO = self.daoFactoryT0DataSvc(classname = "T0DataSvc.InsertNewRun")
+            insertNewRunDAO.execute(binds = binds, transaction = False)
+
+            for bind in binds:
+                del bind['ACQ_ERA']
+            
+            updateNewRunDAO = self.daoFactory(classname = "T0DataSvc.UpdateNewRun")
+            updateNewRunDAO.execute(binds = binds, transaction = False)
+
+        return
 
     def updateRunStreamDoneT0DataSvc(self):
         """
