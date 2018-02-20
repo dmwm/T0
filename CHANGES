@@ -1,3 +1,48 @@
+2.1.0 to 2.1.1:
+  - Merge pull request #4412 from cronot99/MWGR2
+  - New Global Tags for MWGR2.
+  - Merge pull request #4411 from hufnagel/t0wmadatasvc-run-config
+  - populate run_config in t0wmadatasvc
+  - Merge pull request #4410 from cronot99/MWGR1_ignored_streams
+  - Added new ignored streams streamHLTRates, streamL1Rates and streamDQMRates. Removed physics_skims.
+  - Merge pull request #4409 from vytjan/MWGR1Config2018
+  - MWGR1 config, also added a new cosmics scenario.
+  - Merge pull request #4408 from hufnagel/streamer-site-configurable
+  - make pnn where streamer files are located configurable
+  - Merge pull request #4402 from amaltaro/file-location-worker
+  - Fix unit tests
+  - Set PNN instead of PSNs for wmbs file locations
+  - Merge pull request #4407 from cronot99/new_raw_limit_24GB
+  - New RAW file size limit increased to 24GB
+  - Merge pull request #4406 from hufnagel/tier0feeder-timefunction
+  - add timefunction to Tier0Feeder
+  - Merge pull request #4405 from hufnagel/new-ppref-scenario
+  - add the ppEra_Run2_2017_ppRef scenario
+  - Merge pull request #4404 from hufnagel/repack-maxsize-config
+  - Merge pull request #4403 from hufnagel/promptreco-red-button
+  - Merge pull request #4400 from vytjan/LowPUConfig2017
+  - Merging together Totem* datasets added to LowPUConfig2017.
+  - Merge pull request #4399 from cronot99/new_Totem_12_34_PDs
+  - Added new ppRef PDs Totem12 and Totem34
+  - Merge pull request #4398 from blallen/ppRefConfig
+  - Turn off prompt reco as a result of discussion at the Joint Meeting.
+  - check big red button for PromptReco
+  - Merge pull request #4397 from blallen/ppRefConfig
+  - version of config in use for ppReference run 2017.
+  - Merge pull request #4395 from blallen/PR@T2
+  - moving more PDs to run at T2 and adding FNAL subscriptions for SingleMuon.
+  - set max RAW file size from Tier0 code
+  - Merge pull request #4394 from cronot99/new_GTs_92X_dataRun2_Express_v8_Prompt_v11
+  - New Global Tags 92X_dataRun2_Express_v8 and 92X_dataRun2_Prompt_v11. Also maxSizeSingleLumi and maxEdmSize increased to 16GB. New AlcaLumiPixels[4-12] PDs. Configured siteWhitelist to T2_CH_CERN for PDs BTagMu, SingleMuon, SingleElectron.
+  - Merge pull request #4393 from vytjan/EraRun2017FConfiguration
+  - A current headnode config with Era 2017F.
+  - Merge pull request #4392 from vytjan/XeXeEraConfiguration
+  - XeXe era config used for Xenon runs on 2017-10-12.
+  - Merge pull request #4391 from hufnagel/raw-subscriptions
+  - make RAW custodial and non-custodial subscriptions in single call
+  - Merge pull request #4390 from hufnagel/diskthresholds-eos
+  - remove EOS mount from disk check
+
 2.0.9 to 2.1.0:
   - Merge pull request #4389 from hufnagel/diskthresholds-config
   - configure disk monitoring
