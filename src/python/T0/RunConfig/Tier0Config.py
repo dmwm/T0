@@ -37,8 +37,11 @@ Tier0Configuration - Global configuration object
 | |       |                         This timeout will configure an additional time trigger
 | |       |                         based on the run stop_time.
 | |       |
-| |       |--> AlcaHarvestDir - Directory to which the AlcaHarvest job copies the
-| |       |                     sqlite file and associated metadata.
+| |       |--> AlcaHarvestCondLFNBase - LFNBase to which the AlcaHarvest job copies the
+| |       |                             sqlite file and associated metadata.
+| |       |
+| |       |--> AlcaHarvestLumiURL - URL to which the AlcaHarvest job copies the
+| |       |                         lumi text file for the LHC.
 | |       |
 | |       |--> ConditionUploadTimeout - ConditionUpload normally only advances to the next run
 | |       |                             if the current run is completely finished (ie. all data
@@ -594,7 +597,8 @@ def setDQMUploadUrl(config, dqmuploadurl):
     config.Global.DQMUploadUrl = dqmuploadurl
     return
 
-def setPromptCalibrationConfig(config, alcaHarvestTimeout, alcaHarvestDir,
+def setPromptCalibrationConfig(config, alcaHarvestTimeout,
+                               alcaHarvestCondLFNBase, alcaHarvestLumiURL,
                                conditionUploadTimeout, dropboxHost,
                                validationMode):
     """
@@ -603,7 +607,8 @@ def setPromptCalibrationConfig(config, alcaHarvestTimeout, alcaHarvestDir,
     Configure needed settings for PromptCalibration
     """
     config.Global.AlcaHarvestTimeout = alcaHarvestTimeout
-    config.Global.AlcaHarvestDir = alcaHarvestDir
+    config.Global.AlcaHarvestCondLFNBase = alcaHarvestCondLFNBase
+    config.Global.AlcaHarvestLumiURL = alcaHarvestLumiURL
     config.Global.ConditionUploadTimeout = conditionUploadTimeout
     config.Global.DropboxHost = dropboxHost
     config.Global.ValidationMode = validationMode

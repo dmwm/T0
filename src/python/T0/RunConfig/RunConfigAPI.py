@@ -10,6 +10,8 @@ import os.path
 import time
 from datetime import datetime
 
+from Utils.Utilities import rootUrlJoin
+
 from WMCore.DAOFactory import DAOFactory
 
 from WMCore.WorkQueue.WMBSHelper import WMBSHelper
@@ -81,7 +83,12 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         insertDatasetTriggerDAO = daoFactory(classname = "RunConfig.InsertDatasetTrigger")
 
         # partition AlcaHarvest upload by year
-        alcaHarvestDir = os.path.join(tier0Config.Global.AlcaHarvestDir, str(datetime.now().year))
+        if tier0Config.Global.AlcaHarvestCondLFNBase:
+            alcaHarvestCondLFNBase = os.path.join(tier0Config.Global.AlcaHarvestCondLFNBase, str(datetime.now().year))
+        if tier0Config.Global.AlcaHarvestLumiURL:
+            alcaHarvestLumiURL = rootUrlJoin(tier0Config.Global.AlcaHarvestLumiURL, str(datetime.now().year))
+            if not alcaHarvestLumiURL:
+                raise RuntimeError("Problem in configureRun() : Invalid AlcaHarvestLumiURL !")
 
         bindsUpdateRun = { 'RUN' : run,
                            'PROCESS' : hltConfig['process'],
@@ -90,7 +97,8 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
                            'BULKDATATYPE' : tier0Config.Global.BulkDataType,
                            'DQMUPLOADURL' : tier0Config.Global.DQMUploadUrl,
                            'AHTIMEOUT' : tier0Config.Global.AlcaHarvestTimeout,
-                           'AHDIR' : alcaHarvestDir,
+                           'AHCONDLFNBASE' : alcaHarvestCondLFNBase,
+                           'AHLUMIURL' : alcaHarvestLumiURL,
                            'CONDTIMEOUT' : tier0Config.Global.ConditionUploadTimeout,
                            'DBHOST' : tier0Config.Global.DropboxHost,
                            'VALIDMODE' : tier0Config.Global.ValidationMode }
@@ -629,7 +637,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['AlcaSkims'] = streamConfig.Express.AlcaSkims
             specArguments['DQMSequences'] = streamConfig.Express.DqmSequences
             specArguments['AlcaHarvestTimeout'] = runInfo['ah_timeout']
-            specArguments['AlcaHarvestDir'] = runInfo['ah_dir']
+            specArguments['AlcaHarvestCondLFNBase'] = runInfo['ah_cond_lfnbase']
+            specArguments['AlcaHarvestLumiURL'] = runInfo['ah_lumi_url']
             specArguments['DQMUploadProxy'] = dqmUploadProxy
             specArguments['DQMUploadUrl'] = runInfo['dqmuploadurl']
             specArguments['StreamName'] = stream
