@@ -24,6 +24,7 @@ from T0.RunConfig.Tier0Config import addExpressConfig
 from T0.RunConfig.Tier0Config import addRegistrationConfig
 from T0.RunConfig.Tier0Config import addConversionConfig
 from T0.RunConfig.Tier0Config import setInjectRuns
+from T0.RunConfig.Tier0Config import setStreamerPNN
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -35,7 +36,8 @@ setConfigVersion(tier0Config, "replace with real version")
 setInjectRuns(tier0Config, [ 999999 ])
 
 # Settings up sites
-processingSite = "T0_CH_CERN"
+processingSite = "T2_CH_CERN"
+streamerPNN = "T2_CH_CERN"
 
 # Set global parameters:
 #  Acquisition era
@@ -49,6 +51,7 @@ setBaseRequestPriority(tier0Config, 300000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
 setProcessingSite(tier0Config, processingSite)
+setStreamerPNN(tier0Config, streamerPNN)
 
 # Override for DQM data tier
 setDQMDataTier(tier0Config, "DQMIO")
@@ -79,7 +82,6 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-       'acqEra': {'Run2017D': "CMSSW_9_2_10"},
        'default': "CMSSW_10_0_0"
      }
 
