@@ -82,7 +82,8 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-       'default': "CMSSW_10_0_0"
+       #'acqEra': {'Run2017D': "CMSSW_9_2_10"},
+       'default': "CMSSW_10_0_3"
      }
 
 # Configure ScramArch
@@ -122,9 +123,15 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
+    "CMSSW_10_0_0" : "CMSSW_10_0_3",
+    "CMSSW_10_0_1" : "CMSSW_10_0_3",
+    "CMSSW_10_0_2" : "CMSSW_10_0_3"
     }
 
 expressVersionOverride = {
+    "CMSSW_10_0_0" : "CMSSW_10_0_3",
+    "CMSSW_10_0_1" : "CMSSW_10_0_3",
+    "CMSSW_10_0_2" : "CMSSW_10_0_3"
     }
 
 #set default repack settings for bulk streams
