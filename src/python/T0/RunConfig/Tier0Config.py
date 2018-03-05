@@ -759,9 +759,14 @@ def addExpressConfig(config, streamName, **options):
     streamConfig.Express.Scenario = scenario
 
     data_tiers = options.get("data_tiers", [])
-    if not isinstance(data_tiers, list) or len(data_tiers) == 0:
-        msg = "Tier0Config.addExpressConfig : data_tiers needs to be list with at least one tier"
+    if not isinstance(data_tiers, list):
+        msg = "Tier0Config.addExpressConfig : data_tiers needs to be list (can be an empty list)"
         raise RuntimeError(msg)
+    # filter out tiers that are handled differently
+    for data_tier in [ "ALCARECO", "DQM", "DQMIO" ]:
+        if data_tier in data_tiers:
+            data_tiers.remove(data_tier)
+
     streamConfig.Express.DataTiers = data_tiers
 
     global_tag = options.get("global_tag", None)

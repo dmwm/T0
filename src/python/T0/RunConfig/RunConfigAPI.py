@@ -389,10 +389,14 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             streamConfig.Express.GlobalTag = extractConfigParameter(streamConfig.Express.GlobalTag, runInfo['acq_era'], run)
             streamConfig.Express.ProcessingVersion = extractConfigParameter(streamConfig.Express.ProcessingVersion, runInfo['acq_era'], run)
 
+            write_tiers = ','.join(streamConfig.Express.DataTiers)
+            if not write_tiers:
+                write_tiers = None
+
             bindsExpressConfig = { 'RUN' : run,
                                    'STREAM' : stream,
                                    'PROC_VER' : streamConfig.Express.ProcessingVersion,
-                                   'WRITE_TIERS' : ",".join(streamConfig.Express.DataTiers),
+                                   'WRITE_TIERS' : write_tiers,
                                    'WRITE_DQM' : streamConfig.Express.WriteDQM,
                                    'GLOBAL_TAG' : streamConfig.Express.GlobalTag,
                                    'MAX_RATE' : streamConfig.Express.MaxInputRate,
@@ -487,12 +491,11 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             elif streamConfig.ProcessingStyle == "Express":
 
                 for dataTier in streamConfig.Express.DataTiers:
-                    if dataTier not in [ "ALCARECO", "DQM", "DQMIO" ]:
 
-                        outputModuleDetails.append( { 'dataTier' : dataTier,
-                                                      'eventContent' : dataTier,
-                                                      'selectEvents' : selectEvents,
-                                                      'primaryDataset' : dataset } )
+                    outputModuleDetails.append( { 'dataTier' : dataTier,
+                                                  'eventContent' : dataTier,
+                                                  'selectEvents' : selectEvents,
+                                                  'primaryDataset' : dataset } )
 
                 if streamConfig.Express.ArchivalNode or streamConfig.Express.TapeNode or streamConfig.Express.DiskNode:
 

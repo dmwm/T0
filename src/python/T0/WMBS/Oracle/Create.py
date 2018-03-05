@@ -269,7 +269,7 @@ class Create(DBCreator):
                  stream_id       int           not null,
                  in_datasvc      int           default 0 not null,
                  proc_version    int           not null,
-                 write_tiers     varchar2(255) not null,
+                 write_tiers     varchar2(255),
                  write_dqm       int           not null,
                  global_tag      varchar2(255) not null,
                  max_rate        int           not null,

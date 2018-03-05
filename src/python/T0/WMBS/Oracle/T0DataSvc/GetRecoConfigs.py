@@ -21,7 +21,12 @@ class GetRecoConfigs(DBFormatter):
                         reco_config.physics_skim AS physics_skim,
                         reco_config.dqm_seq AS dqm_seq,
                         reco_config.global_tag AS global_tag,
-                        event_scenario.name AS scenario
+                        event_scenario.name AS scenario,
+                        reco_config.multicore AS multicore,
+                        reco_config.write_reco AS write_reco,
+                        reco_config.write_dqm AS write_dqm,
+                        reco_config.write_aod AS write_aod,
+                        reco_config.write_miniaod AS write_miniaod
                  FROM reco_config
                  INNER JOIN primary_dataset ON
                    primary_dataset.id = reco_config.primds_id
