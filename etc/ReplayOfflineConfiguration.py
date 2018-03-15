@@ -82,8 +82,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-       #'acqEra': {'Run2017D': "CMSSW_9_2_10"},
-       'default': "CMSSW_10_0_3"
+       'default': "CMSSW_10_0_4"
      }
 
 # Configure ScramArch
@@ -104,9 +103,9 @@ expressProcVersion = 1
 alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "100X_dataRun2_Express_v2"
-promptrecoGlobalTag = "100X_dataRun2_Prompt_v2"
-alcap0GlobalTag = "100X_dataRun2_Prompt_v2"
+expressGlobalTag = "100X_dataRun2_Express_v3"
+promptrecoGlobalTag = "100X_dataRun2_Prompt_v3"
+alcap0GlobalTag = "100X_dataRun2_Prompt_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -123,15 +122,17 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_0_3",
-    "CMSSW_10_0_1" : "CMSSW_10_0_3",
-    "CMSSW_10_0_2" : "CMSSW_10_0_3"
+    "CMSSW_10_0_0" : "CMSSW_10_0_4",
+    "CMSSW_10_0_1" : "CMSSW_10_0_4",
+    "CMSSW_10_0_2" : "CMSSW_10_0_4",
+    "CMSSW_10_0_3" : "CMSSW_10_0_4"
     }
 
 expressVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_0_3",
-    "CMSSW_10_0_1" : "CMSSW_10_0_3",
-    "CMSSW_10_0_2" : "CMSSW_10_0_3"
+    "CMSSW_10_0_0" : "CMSSW_10_0_4",
+    "CMSSW_10_0_1" : "CMSSW_10_0_4",
+    "CMSSW_10_0_2" : "CMSSW_10_0_4",
+    "CMSSW_10_0_3" : "CMSSW_10_0_4"
     }
 
 #set default repack settings for bulk streams
@@ -662,7 +663,6 @@ datasets = [ "AlCaP0", "AlCaPhiSym" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = False,
-               raw_to_disk = True,
                scenario = ppScenario)
 
 ########################################################
@@ -862,7 +862,6 @@ datasets = [ "ParkingScoutingMonitor" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               raw_to_disk = True,
                dqm_sequences = [ "@common" ],
                write_reco = False, write_aod = False, write_miniaod = True, write_dqm = True,
                scenario = ppScenario)
