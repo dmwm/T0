@@ -22,14 +22,21 @@ class InsertRecoConfigs(DBFormatter):
                               physics_skim = :PHYSICS_SKIM,
                               dqm_seq = :DQM_SEQ,
                               global_tag = :GLOBAL_TAG,
-                              scenario = :SCENARIO
+                              scenario = :SCENARIO,
+                              multicore = :MULTICORE,
+                              write_reco = :WRITE_RECO,
+                              write_dqm = :WRITE_DQM,
+                              write_aod = :WRITE_AOD,
+                              write_miniaod = :WRITE_MINIAOD
                  WHEN NOT MATCHED THEN
-                   INSERT (run, primds, cmssw, scram_arch,
-                           alca_skim, physics_skim, dqm_seq,
-                           global_tag, scenario)
-                   VALUES (:RUN, :PRIMDS, :CMSSW, :SCRAM_ARCH,
-                           :ALCA_SKIM, :PHYSICS_SKIM, :DQM_SEQ,
-                           :GLOBAL_TAG, :SCENARIO)
+                   INSERT (run, primds, cmssw, scram_arch, alca_skim,
+                           physics_skim, dqm_seq, global_tag, scenario,
+                           multicore, write_reco, write_dqm,
+                           write_aod, write_miniaod)
+                   VALUES (:RUN, :PRIMDS, :CMSSW, :SCRAM_ARCH, :ALCA_SKIM,
+                           :PHYSICS_SKIM, :DQM_SEQ, :GLOBAL_TAG, :SCENARIO,
+                           :MULTICORE, :WRITE_RECO, :WRITE_DQM,
+                           :WRITE_AOD, :WRITE_MINIAOD)
                  """
 
         self.dbi.processData(sql, binds, conn = conn,

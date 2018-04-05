@@ -478,7 +478,10 @@ class Tier0FeederPoller(BaseWorkerThread):
                                       'ALCA_SKIM' : config['alca_skim'],
                                       'DQM_SEQ' : config['dqm_seq'],
                                       'GLOBAL_TAG' : config['global_tag'][:50],
-                                      'SCENARIO' : config['scenario'] } )
+                                      'SCENARIO' : config['scenario'],
+                                      'MULTICORE' : config['multicore'],
+                                      'WRITE_TIERS' : config['write_tiers'],
+                                      'WRITE_DQM' : config['write_dqm'] } )
                 bindsUpdate.append( { 'RUN' : config['run'],
                                       'STREAM' : config['stream'] } )
 
@@ -515,7 +518,12 @@ class Tier0FeederPoller(BaseWorkerThread):
                                       'PHYSICS_SKIM' : config['physics_skim'],
                                       'DQM_SEQ' : config['dqm_seq'],
                                       'GLOBAL_TAG' : config['global_tag'][:50],
-                                      'SCENARIO' : config['scenario'] } )
+                                      'SCENARIO' : config['scenario'],
+                                      'MULTICORE' : config['multicore'],
+                                      'WRITE_RECO' : config['write_reco'],
+                                      'WRITE_DQM' : config['write_dqm'],
+                                      'WRITE_AOD' : config['write_aod'],
+                                      'WRITE_MINIAOD' : config['write_miniaod'] } )
                 bindsUpdate.append( { 'RUN' : config['run'],
                                       'PRIMDS' : config['primds'] } )
 

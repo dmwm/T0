@@ -22,7 +22,10 @@ class GetExpressConfigs(DBFormatter):
                         express_config.alca_skim AS alca_skim,
                         express_config.dqm_seq AS dqm_seq,
                         express_config.global_tag AS global_tag,
-                        event_scenario.name AS scenario
+                        event_scenario.name AS scenario,
+                        express_config.multicore AS multicore,
+                        express_config.write_tiers AS write_tiers,
+                        express_config.write_dqm AS write_dqm
                  FROM express_config
                  INNER JOIN stream ON
                    stream.id = express_config.stream_id
