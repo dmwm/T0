@@ -87,7 +87,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-       'default': "CMSSW_10_0_5"
+       'default': "CMSSW_10_1_0"
      }
 
 # Configure ScramArch
@@ -123,9 +123,9 @@ expressProcVersion = {
 
 
 # Defaults for GlobalTag
-expressGlobalTag = "100X_dataRun2_Express_v3"
-promptrecoGlobalTag = "100X_dataRun2_Prompt_v5"
-alcap0GlobalTag = "100X_dataRun2_Prompt_v5"
+expressGlobalTag = "101X_dataRun2_Express_v5"
+promptrecoGlobalTag = "101X_dataRun2_Prompt_v6"
+alcap0GlobalTag = "101X_dataRun2_Prompt_v6"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -142,19 +142,21 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_0_5",
-    "CMSSW_10_0_1" : "CMSSW_10_0_5",
-    "CMSSW_10_0_2" : "CMSSW_10_0_5",
-    "CMSSW_10_0_3" : "CMSSW_10_0_5",
-    "CMSSW_10_0_4" : "CMSSW_10_0_5"
+    "CMSSW_10_0_0" : "CMSSW_10_1_0",
+    "CMSSW_10_0_1" : "CMSSW_10_1_0",
+    "CMSSW_10_0_2" : "CMSSW_10_1_0",
+    "CMSSW_10_0_3" : "CMSSW_10_1_0",
+    "CMSSW_10_0_4" : "CMSSW_10_1_0",
+    "CMSSW_10_0_5" : "CMSSW_10_1_0"
     }
 
 expressVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_0_5",
-    "CMSSW_10_0_1" : "CMSSW_10_0_5",
-    "CMSSW_10_0_2" : "CMSSW_10_0_5",
-    "CMSSW_10_0_3" : "CMSSW_10_0_5",
-    "CMSSW_10_0_4" : "CMSSW_10_0_5"
+    "CMSSW_10_0_0" : "CMSSW_10_1_0",
+    "CMSSW_10_0_1" : "CMSSW_10_1_0",
+    "CMSSW_10_0_2" : "CMSSW_10_1_0",
+    "CMSSW_10_0_3" : "CMSSW_10_1_0",
+    "CMSSW_10_0_4" : "CMSSW_10_1_0",
+    "CMSSW_10_0_5" : "CMSSW_10_1_0"
     }
 
 #set default repack settings for bulk streams
@@ -661,7 +663,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                raw_to_disk = True,
-               alca_producers = [ "HcalCalPedestal", "PromptCalibProdEcalPedestals" ],
+               alca_producers = [ "EcalTestPulsesRaw", "PromptCalibProdEcalPedestals" ],
                dqm_sequences = [ "@common" ],
                scenario = ppScenario)
 
@@ -729,12 +731,22 @@ for dataset in datasets:
            sizePerEvent = 38,
            scenario = "AlCaLumiPixels")
 
-datasets = [ "AlCaP0", "AlCaPhiSym" ]
+datasets = [ "AlCaPhiSym" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = False,
                raw_to_disk = True,
+               alca_producers = [ "EcalCalPhiSym" ],
+               scenario = ppScenario)
+
+datasets = [ "AlCaP0" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = False,
+               raw_to_disk = True,
+               alca_producers = [ "EcalCalPi0Calib", "EcalCalEtaCalib" ],
                scenario = ppScenario)
 
 ########################################################
