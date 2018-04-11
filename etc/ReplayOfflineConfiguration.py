@@ -82,7 +82,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-       'default': "CMSSW_10_1_0"
+       'default': "CMSSW_10_1_1"
      }
 
 # Configure ScramArch
@@ -103,9 +103,9 @@ expressProcVersion = 1
 alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "101X_dataRun2_Express_v5"
-promptrecoGlobalTag = "101X_dataRun2_Prompt_v6"
-alcap0GlobalTag = "101X_dataRun2_Prompt_v6"
+expressGlobalTag = "101X_dataRun2_Express_v7"
+promptrecoGlobalTag = "101X_dataRun2_Prompt_v9"
+alcap0GlobalTag = "101X_dataRun2_Prompt_v9"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -122,21 +122,23 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_0",
-    "CMSSW_10_0_1" : "CMSSW_10_1_0",
-    "CMSSW_10_0_2" : "CMSSW_10_1_0",
-    "CMSSW_10_0_3" : "CMSSW_10_1_0",
-    "CMSSW_10_0_4" : "CMSSW_10_1_0",
-    "CMSSW_10_0_5" : "CMSSW_10_1_0"
+    "CMSSW_10_0_0" : "CMSSW_10_1_1",
+    "CMSSW_10_0_1" : "CMSSW_10_1_1",
+    "CMSSW_10_0_2" : "CMSSW_10_1_1",
+    "CMSSW_10_0_3" : "CMSSW_10_1_1",
+    "CMSSW_10_0_4" : "CMSSW_10_1_1",
+    "CMSSW_10_0_5" : "CMSSW_10_1_1",
+    "CMSSW_10_1_0" : "CMSSW_10_1_1"
     }
 
 expressVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_0",
-    "CMSSW_10_0_1" : "CMSSW_10_1_0",
-    "CMSSW_10_0_2" : "CMSSW_10_1_0",
-    "CMSSW_10_0_3" : "CMSSW_10_1_0",
-    "CMSSW_10_0_4" : "CMSSW_10_1_0",
-    "CMSSW_10_0_5" : "CMSSW_10_1_0"
+    "CMSSW_10_0_0" : "CMSSW_10_1_1",
+    "CMSSW_10_0_1" : "CMSSW_10_1_1",
+    "CMSSW_10_0_2" : "CMSSW_10_1_1",
+    "CMSSW_10_0_3" : "CMSSW_10_1_1",
+    "CMSSW_10_0_4" : "CMSSW_10_1_1",
+    "CMSSW_10_0_5" : "CMSSW_10_1_1",
+    "CMSSW_10_1_0" : "CMSSW_10_1_1"
     }
 
 #set default repack settings for bulk streams
