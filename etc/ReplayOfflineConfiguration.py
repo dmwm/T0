@@ -621,7 +621,7 @@ for dataset in datasets:
                write_miniaod = False,
                scenario = cosmicsScenario)
 
-datasets = [ "L1Accepts" ]
+datasets = [ "L1Accept", "L1Accepts" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -1030,6 +1030,14 @@ datasets = [ "TOTEM_minBias", "TOTEM_romanPots", "ToTOTEM", "ToTOTEM_DoubleJet32
              "TOTEM_romanPots2_5", "TOTEM_romanPots2_6", "TOTEM_romanPots2_7", "TOTEM_romanPots3",
              "TOTEM_romanPotsTTBB_0", "TOTEM_romanPotsTTBB_1", "TOTEM_romanPotsTTBB_2", "TOTEM_romanPotsTTBB_3",
              "TOTEM_romanPotsTTBB_4", "TOTEM_romanPotsTTBB_5", "TOTEM_romanPotsTTBB_6", "TOTEM_romanPotsTTBB_7" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               dqm_sequences = [ "@common" ],
+               scenario = ppScenario)
+
+datasets = [ "Totem1", "Totem2", "Totem3" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
