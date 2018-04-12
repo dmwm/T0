@@ -18,7 +18,8 @@ class UpdateRun(DBFormatter):
                      bulk_data_type = :BULKDATATYPE,
                      dqmuploadurl = :DQMUPLOADURL,
                      ah_timeout = :AHTIMEOUT,
-                     ah_dir = :AHDIR,
+                     ah_cond_lfnbase = :AHCONDLFNBASE,
+                     ah_lumi_url = :AHLUMIURL,
                      cond_timeout = :CONDTIMEOUT,
                      db_host = :DBHOST,
                      valid_mode = :VALIDMODE

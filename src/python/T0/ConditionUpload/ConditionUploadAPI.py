@@ -212,7 +212,7 @@ def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationM
     filenameTXT = filenamePrefix + ".txt"
     filenameTAR = filenamePrefix + ".tar.bz2"
 
-    eosPrefix = "root://eoscms//eos/cms"
+    eosPrefix = "root://eoscms.cern.ch//eos/cms"
     sqliteFile['pfn'] = eosPrefix + sqliteFile['lfn']
     metaFile['pfn'] = eosPrefix + metaFile['lfn']
 

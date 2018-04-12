@@ -21,7 +21,8 @@ class GetRunInfo(DBFormatter):
                         run.bulk_data_type AS bulk_data_type,
                         run.dqmuploadurl AS dqmuploadurl,
                         run.ah_timeout AS ah_timeout,
-                        run.ah_dir AS ah_dir,
+                        run.ah_cond_lfnbase AS ah_cond_lfnbase,
+                        run.ah_lumi_url AS ah_lumi_url,
                         run.cond_timeout AS cond_timeout,
                         run.db_host AS db_host,
                         run.valid_mode AS valid_mode
