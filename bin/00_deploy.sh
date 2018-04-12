@@ -132,12 +132,6 @@ echo 'config.AgentStatusWatcher.enabled = False' >> ./config/tier0/config.py
 echo "config.Tier0Feeder.serviceProxy = '/data/certs/serviceproxy-vocms15.pem'" >> ./config/tier0/config.py
 
 #
-# avoid too many alert emails
-#
-echo 'config.AlertGenerator.cpuPoller.soft = 75' >> ./config/tier0/config.py
-echo 'config.AlertGenerator.cpuPoller.critical = 99' >> ./config/tier0/config.py
-
-#
 # password for dropbox upload
 #
 #echo 'config.Tier0Feeder.dropboxuser = "cmsprod"' >> ./config/tier0/config.py
