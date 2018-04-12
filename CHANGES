@@ -1,3 +1,25 @@
+2.1.1 to 2.1.2:
+  - Merge pull request #4422 from hufnagel/removed-alerts
+  - adjust deployment to removed alerts
+  - Merge pull request #4421 from hufnagel/alcaharvest-lumi-info
+  - Merge pull request #4420 from vytjan/CMSSW_10_1_1_Configuration
+  - CMSSW_10_1_1 with 101X_dataRun2_Express_v7 and 101X_dataRun2_Prompt_v9 GTs configuration.
+  - Merge pull request #4419 from vytjan/NonStableBeams2018
+  - CMSSW_10_1_0 release, Express v5 and Prompt v6 GTs and AlCaRecos for AlCaP0, AlCaPhiSym and TestEnablesEcalHcal PDs.
+  - Merge pull request #4418 from hufnagel/extend-reco-config
+  - Merge pull request #4417 from cronot99/cmssw_10_0_5
+  - Updated configuration to use CMSSW_10_0_5 and new Prompt v5 GTs. Also, reenabled physics_skims.
+  - Merge pull request #4416 from cronot99/cmssw_10_0_4
+  - New CMSSW_10_0_4 and new Global Tags with GEM electronics map. Also reenabled raw_to_disk for PDs enabled on 2017.
+  - Merge pull request #4415 from vytjan/100X_dataRun2_Express_v2_Global_Tags
+  - Switched to new GTs.
+  - add data tiers and number of threads to reco config
+  - Merge pull request #4414 from cronot99/cmssw_10_0_3
+  - Configuration files for cruzet 2018 - CMSSW 10.0.3
+  - upload lumi text file from AlcaHarvest
+  - Merge pull request #4413 from vytjan/Processing-at-T2_CERN-site
+  - Set processing at T2 site as a default in both Replay and Prod config files.
+
 2.1.0 to 2.1.1:
   - Merge pull request #4412 from cronot99/MWGR2
   - New Global Tags for MWGR2.
