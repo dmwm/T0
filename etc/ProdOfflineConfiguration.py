@@ -87,7 +87,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-       'default': "CMSSW_10_1_1"
+       'default': "CMSSW_10_1_1_patch1"
      }
 
 # Configure ScramArch
@@ -142,23 +142,25 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_1",
-    "CMSSW_10_0_1" : "CMSSW_10_1_1",
-    "CMSSW_10_0_2" : "CMSSW_10_1_1",
-    "CMSSW_10_0_3" : "CMSSW_10_1_1",
-    "CMSSW_10_0_4" : "CMSSW_10_1_1",
-    "CMSSW_10_0_5" : "CMSSW_10_1_1",
-    "CMSSW_10_1_0" : "CMSSW_10_1_1"
+    "CMSSW_10_0_0" : "CMSSW_10_1_1_patch1",
+    "CMSSW_10_0_1" : "CMSSW_10_1_1_patch1",
+    "CMSSW_10_0_2" : "CMSSW_10_1_1_patch1",
+    "CMSSW_10_0_3" : "CMSSW_10_1_1_patch1",
+    "CMSSW_10_0_4" : "CMSSW_10_1_1_patch1",
+    "CMSSW_10_0_5" : "CMSSW_10_1_1_patch1",
+    "CMSSW_10_1_0" : "CMSSW_10_1_1_patch1",
+    "CMSSW_10_1_1" : "CMSSW_10_1_1_patch1"
     }
 
 expressVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_1",
-    "CMSSW_10_0_1" : "CMSSW_10_1_1",
-    "CMSSW_10_0_2" : "CMSSW_10_1_1",
-    "CMSSW_10_0_3" : "CMSSW_10_1_1",
-    "CMSSW_10_0_4" : "CMSSW_10_1_1",
-    "CMSSW_10_0_5" : "CMSSW_10_1_1",
-    "CMSSW_10_1_0" : "CMSSW_10_1_1"
+    "CMSSW_10_0_0" : "CMSSW_10_1_1_patch1",
+    "CMSSW_10_0_1" : "CMSSW_10_1_1_patch1",
+    "CMSSW_10_0_2" : "CMSSW_10_1_1_patch1",
+    "CMSSW_10_0_3" : "CMSSW_10_1_1_patch1",
+    "CMSSW_10_0_4" : "CMSSW_10_1_1_patch1",
+    "CMSSW_10_0_5" : "CMSSW_10_1_1_patch1",
+    "CMSSW_10_1_0" : "CMSSW_10_1_1_patch1",
+    "CMSSW_10_1_1" : "CMSSW_10_1_1_patch1"
     }
 
 #set default repack settings for bulk streams
