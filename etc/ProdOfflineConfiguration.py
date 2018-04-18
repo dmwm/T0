@@ -87,7 +87,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-       'default': "CMSSW_10_1_1_patch1"
+       'default': "CMSSW_10_1_2_patch1"
      }
 
 # Configure ScramArch
@@ -142,25 +142,27 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_1_patch1",
-    "CMSSW_10_0_1" : "CMSSW_10_1_1_patch1",
-    "CMSSW_10_0_2" : "CMSSW_10_1_1_patch1",
-    "CMSSW_10_0_3" : "CMSSW_10_1_1_patch1",
-    "CMSSW_10_0_4" : "CMSSW_10_1_1_patch1",
-    "CMSSW_10_0_5" : "CMSSW_10_1_1_patch1",
-    "CMSSW_10_1_0" : "CMSSW_10_1_1_patch1",
-    "CMSSW_10_1_1" : "CMSSW_10_1_1_patch1"
+    "CMSSW_10_0_0" : "CMSSW_10_1_2_patch1",
+    "CMSSW_10_0_1" : "CMSSW_10_1_2_patch1",
+    "CMSSW_10_0_2" : "CMSSW_10_1_2_patch1",
+    "CMSSW_10_0_3" : "CMSSW_10_1_2_patch1",
+    "CMSSW_10_0_4" : "CMSSW_10_1_2_patch1",
+    "CMSSW_10_0_5" : "CMSSW_10_1_2_patch1",
+    "CMSSW_10_1_0" : "CMSSW_10_1_2_patch1",
+    "CMSSW_10_1_1" : "CMSSW_10_1_2_patch1",
+    "CMSSW_10_1_2" : "CMSSW_10_1_2_patch1"
     }
 
 expressVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_1_patch1",
-    "CMSSW_10_0_1" : "CMSSW_10_1_1_patch1",
-    "CMSSW_10_0_2" : "CMSSW_10_1_1_patch1",
-    "CMSSW_10_0_3" : "CMSSW_10_1_1_patch1",
-    "CMSSW_10_0_4" : "CMSSW_10_1_1_patch1",
-    "CMSSW_10_0_5" : "CMSSW_10_1_1_patch1",
-    "CMSSW_10_1_0" : "CMSSW_10_1_1_patch1",
-    "CMSSW_10_1_1" : "CMSSW_10_1_1_patch1"
+    "CMSSW_10_0_0" : "CMSSW_10_1_2_patch1",
+    "CMSSW_10_0_1" : "CMSSW_10_1_2_patch1",
+    "CMSSW_10_0_2" : "CMSSW_10_1_2_patch1",
+    "CMSSW_10_0_3" : "CMSSW_10_1_2_patch1",
+    "CMSSW_10_0_4" : "CMSSW_10_1_2_patch1",
+    "CMSSW_10_0_5" : "CMSSW_10_1_2_patch1",
+    "CMSSW_10_1_0" : "CMSSW_10_1_2_patch1",
+    "CMSSW_10_1_1" : "CMSSW_10_1_2_patch1",
+    "CMSSW_10_1_2" : "CMSSW_10_1_2_patch1"
     }
 
 #set default repack settings for bulk streams
@@ -361,7 +363,7 @@ for dataset in datasets:
                tape_node = "T1_RU_JINR_MSS",
                disk_node = "T1_RU_JINR_Disk",
                alca_producers = [ "TkAlJpsiMuMu" ],
-               physics_skims = [ "LogError", "LogErrorMonitor", "BPHSkim" ],
+               physics_skims = [ "BPHSkim", "MuonPOGJPsiSkim", "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
 
 datasets = [ "Cosmics" ]
@@ -388,7 +390,7 @@ for dataset in datasets:
                dqm_sequences = [ "@common" ],
                tape_node = "T1_FR_CCIN2P3_MSS",
                disk_node = "T1_FR_CCIN2P3_Disk",
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               physics_skims = [ "EXODisplacedJet", "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
 
 datasets = [ "DoubleEG" ]
@@ -516,7 +518,7 @@ for dataset in datasets:
                disk_node = "T1_DE_KIT_Disk",
                alca_producers = [ "HcalCalIsoTrkFilter", "HcalCalIsolatedBunchFilter" ],
                dqm_sequences = [ "@common", "@jetmet", "@hcal" ],
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               physics_skims = [ "JetHTJetPlusHOFilter", "LogError", "LogErrorMonitor" ],
                timePerEvent = 5.7,
                sizePerEvent = 2250,
                scenario = ppScenario)
@@ -532,7 +534,7 @@ for dataset in datasets:
                disk_node = "T1_DE_KIT_Disk",
                alca_producers = [ "HcalCalNoise" ],
                dqm_sequences = [ "@common", "@jetmet", "@hcal" ],
-               physics_skims = [ "HighMET", "LogError", "LogErrorMonitor" ],
+               physics_skims = [ "EXOMONOPOLE", "HighMET", "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
 
 datasets = [ "MuOnia" ]
@@ -569,7 +571,7 @@ for dataset in datasets:
                write_dqm = True,
                alca_producers = [ "TkAlCosmicsInCollisions" ],
                dqm_sequences = [ "@common" ],
-               physics_skims = [ "LogError", "LogErrorMonitor", "EXONoBPTXSkim" ],
+               physics_skims = [ "EXONoBPTXSkim", "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
 
 datasets = [ "SingleElectron" ]
@@ -582,7 +584,7 @@ for dataset in datasets:
                tape_node = "T1_US_FNAL_MSS",
                disk_node = "T1_US_FNAL_Disk",
                alca_producers = [ "EcalUncalWElectron", "EcalUncalZElectron", "HcalCalIterativePhiSym", "EcalESAlign" ],
-               dqm_sequences = [ "@common", "@ecal", "@egamma" ],
+               dqm_sequences = [ "@common", "@ecal", "@egamma", "@L1TEgamma" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
 
@@ -596,8 +598,8 @@ for dataset in datasets:
                tape_node = "T1_US_FNAL_MSS", # "T1_IT_CNAF_MSS", CNAF is underwater
                disk_node = "T1_US_FNAL_Disk", # "T1_IT_CNAF_Disk", CNAF is underwater
                alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HcalCalHBHEMuonFilter" ],
-               dqm_sequences = [ "@common", "@muon", "@lumi" ],
-               physics_skims = [ "ZMu", "MuTau", "LogError", "LogErrorMonitor" ],
+               dqm_sequences = [ "@common", "@muon", "@lumi", "@L1TMuon" ],
+               physics_skims = [ "MuonPOGSkim", "MuTau", "ZMu", "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
 
 datasets = [ "SinglePhoton" ]
@@ -611,7 +613,7 @@ for dataset in datasets:
                disk_node = "T1_FR_CCIN2P3_Disk",
                alca_producers = [ "HcalCalGammaJet" ],
                dqm_sequences = [ "@common", "@ecal", "@egamma" ],
-               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               physics_skims = [ "EXOMONOPOLE", "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
 
 datasets = [ "Tau" ]
