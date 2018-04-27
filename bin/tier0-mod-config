@@ -71,6 +71,10 @@ def modifyConfiguration(config, **args):
         delattr(config, "ArchiveDataReporter")
     
     config.TaskArchiver.useWorkQueue = False
+
+    # tier0 specific accounting group
+    config.BossAir.acctGroup = 'tier0'
+    config.BossAir.acctGroupUser = 'cmsdataops'
     
     # t0 wmstats specific configuration
     config.AnalyticsDataCollector.localT0RequestDBURL = "%s/%s" % (config.JobStateMachine.couchurl, 
