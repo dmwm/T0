@@ -19,6 +19,7 @@ class GetNewRun(DBFormatter):
                         run.acq_era AS acq_era
                  FROM run
                  WHERE checkForZeroState(run.in_datasvc) = 0
+                 AND run.acq_era IS NOT NULL
                  """
 
         results = self.dbi.processData(sql, binds = {}, conn = conn,
