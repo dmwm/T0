@@ -549,7 +549,10 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             specArguments = {}
 
-            specArguments['Memory'] = 1000
+            if stream == 'ScoutingPF':
+                specArguments['Memory'] = 2000
+            else:
+                specArguments['Memory'] = 1000
 
             specArguments['Requestor'] = "Tier0"
             specArguments['RequestName'] = workflowName
