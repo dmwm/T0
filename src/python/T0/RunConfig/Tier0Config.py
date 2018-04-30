@@ -297,10 +297,9 @@ def retrieveDatasetConfig(config, datasetName):
     particular dataset is not defined return the default configuration.
     """
     datasetConfig = getattr(config.Datasets, datasetName, None)
+
     if datasetConfig == None:
-
         defaultInstance = getattr(config.Datasets, "Default", None)
-
         if defaultInstance == None:
             datasetConfig = config.Datasets.section_(datasetName)
         else:
@@ -308,6 +307,10 @@ def retrieveDatasetConfig(config, datasetName):
             datasetConfig._internal_name = datasetName
             datasetConfig.Name = datasetName
             setattr(config.Datasets, datasetName, datasetConfig)
+    else:
+        # don't allow multiple addDataset calls for the same dataset
+        msg = "Tier0Config.addDataset : multiple addDataset calls for dataset %s not allowed" % datasetName
+        raise RuntimeError(msg)
 
     return datasetConfig
 
