@@ -289,7 +289,7 @@ def deleteStreamConfig(config, streamName):
 
     return
 
-def retrieveDatasetConfig(config, datasetName):
+def retrieveDatasetConfig(config, datasetName, fromAddDataset = False):
     """
     _retrieveDatasetConfig_
     
@@ -307,7 +307,7 @@ def retrieveDatasetConfig(config, datasetName):
             datasetConfig._internal_name = datasetName
             datasetConfig.Name = datasetName
             setattr(config.Datasets, datasetName, datasetConfig)
-    else:
+    elif fromAddDataset:
         # don't allow multiple addDataset calls for the same dataset
         msg = "Tier0Config.addDataset : multiple addDataset calls for dataset %s not allowed" % datasetName
         raise RuntimeError(msg)
@@ -352,7 +352,7 @@ def addDataset(config, datasetName, **settings):
                                (defaults to False)
       blockCloseDelay - block closing timeout in hours
     """
-    datasetConfig = retrieveDatasetConfig(config, datasetName)
+    datasetConfig = retrieveDatasetConfig(config, datasetName, True)
 
     #
     # first the mandatory paramters
