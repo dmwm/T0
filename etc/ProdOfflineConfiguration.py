@@ -89,7 +89,7 @@ setPromptCalibrationConfig(tier0Config,
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
        'acqEra': {'Commissioning2018': 'CMSSW_10_1_2_patch2'},
-       'default': "CMSSW_10_1_2_patch2"
+       'default': "CMSSW_10_1_3"
      }
 
 # Configure ScramArch
@@ -142,27 +142,27 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_2_patch2",
-    "CMSSW_10_0_1" : "CMSSW_10_1_2_patch2",
-    "CMSSW_10_0_2" : "CMSSW_10_1_2_patch2",
-    "CMSSW_10_0_3" : "CMSSW_10_1_2_patch2",
-    "CMSSW_10_0_4" : "CMSSW_10_1_2_patch2",
-    "CMSSW_10_0_5" : "CMSSW_10_1_2_patch2",
-    "CMSSW_10_1_0" : "CMSSW_10_1_2_patch2",
-    "CMSSW_10_1_1" : "CMSSW_10_1_2_patch2",
-    "CMSSW_10_1_2" : "CMSSW_10_1_2_patch2"
+    "CMSSW_10_0_0" : "CMSSW_10_1_3",
+    "CMSSW_10_0_1" : "CMSSW_10_1_3",
+    "CMSSW_10_0_2" : "CMSSW_10_1_3",
+    "CMSSW_10_0_3" : "CMSSW_10_1_3",
+    "CMSSW_10_0_4" : "CMSSW_10_1_3",
+    "CMSSW_10_0_5" : "CMSSW_10_1_3",
+    "CMSSW_10_1_0" : "CMSSW_10_1_3",
+    "CMSSW_10_1_1" : "CMSSW_10_1_3",
+    "CMSSW_10_1_2" : "CMSSW_10_1_3"
     }
 
 expressVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_2_patch2",
-    "CMSSW_10_0_1" : "CMSSW_10_1_2_patch2",
-    "CMSSW_10_0_2" : "CMSSW_10_1_2_patch2",
-    "CMSSW_10_0_3" : "CMSSW_10_1_2_patch2",
-    "CMSSW_10_0_4" : "CMSSW_10_1_2_patch2",
-    "CMSSW_10_0_5" : "CMSSW_10_1_2_patch2",
-    "CMSSW_10_1_0" : "CMSSW_10_1_2_patch2",
-    "CMSSW_10_1_1" : "CMSSW_10_1_2_patch2",
-    "CMSSW_10_1_2" : "CMSSW_10_1_2_patch2"
+    "CMSSW_10_0_0" : "CMSSW_10_1_3",
+    "CMSSW_10_0_1" : "CMSSW_10_1_3",
+    "CMSSW_10_0_2" : "CMSSW_10_1_3",
+    "CMSSW_10_0_3" : "CMSSW_10_1_3",
+    "CMSSW_10_0_4" : "CMSSW_10_1_3",
+    "CMSSW_10_0_5" : "CMSSW_10_1_3",
+    "CMSSW_10_1_0" : "CMSSW_10_1_3",
+    "CMSSW_10_1_1" : "CMSSW_10_1_3",
+    "CMSSW_10_1_2" : "CMSSW_10_1_3"
     }
 
 #set default repack settings for bulk streams
@@ -212,7 +212,7 @@ addExpressConfig(tier0Config, "Express",
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
                                     "TkAlMinBias", "LumiPixelsMinBias", "SiPixelCalZeroBias",
                                     "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
-                                    "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel"
+                                    "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG"
                                     ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
@@ -237,7 +237,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  write_dqm = True,
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T",
                                     "DtCalibCosmics", "SiPixelCalZeroBias",
-                                    "PromptCalibProdSiStrip", "PromptCalibProdSiPixel"
+                                    "PromptCalibProdSiStrip"
                                     ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
@@ -613,7 +613,6 @@ for dataset in datasets:
                write_dqm = True,
                tape_node = "T1_FR_CCIN2P3_MSS",
                disk_node = "T1_FR_CCIN2P3_Disk",
-               alca_producers = [ "HcalCalGammaJet" ],
                dqm_sequences = [ "@common", "@ecal", "@egamma" ],
                physics_skims = [ "EXOMONOPOLE", "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
@@ -627,7 +626,7 @@ for dataset in datasets:
                write_dqm = True,
                tape_node = "T1_FR_CCIN2P3_MSS",
                disk_node = "T1_FR_CCIN2P3_Disk",
-               alca_producers = [ "EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym", "HcalCalIsoTrkFilter", "EcalESAlign","HcalCalGammaJet" ],
+               alca_producers = [ "EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym", "HcalCalIsoTrkFilter", "EcalESAlign" ],
                dqm_sequences = [ "@common", "@ecal", "@egamma", "@L1TEgamma" ],
                physics_skims = [ "EXOMONOPOLE", "ZElectron", "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
