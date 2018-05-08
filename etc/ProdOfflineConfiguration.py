@@ -89,7 +89,7 @@ setPromptCalibrationConfig(tier0Config,
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
        'acqEra': {'Commissioning2018': 'CMSSW_10_1_2_patch2'},
-       'default': "CMSSW_10_1_3"
+       'default': "CMSSW_10_1_4"
      }
 
 # Configure ScramArch
@@ -142,27 +142,29 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_3",
-    "CMSSW_10_0_1" : "CMSSW_10_1_3",
-    "CMSSW_10_0_2" : "CMSSW_10_1_3",
-    "CMSSW_10_0_3" : "CMSSW_10_1_3",
-    "CMSSW_10_0_4" : "CMSSW_10_1_3",
-    "CMSSW_10_0_5" : "CMSSW_10_1_3",
-    "CMSSW_10_1_0" : "CMSSW_10_1_3",
-    "CMSSW_10_1_1" : "CMSSW_10_1_3",
-    "CMSSW_10_1_2" : "CMSSW_10_1_3"
+    "CMSSW_10_0_0" : "CMSSW_10_1_4",
+    "CMSSW_10_0_1" : "CMSSW_10_1_4",
+    "CMSSW_10_0_2" : "CMSSW_10_1_4",
+    "CMSSW_10_0_3" : "CMSSW_10_1_4",
+    "CMSSW_10_0_4" : "CMSSW_10_1_4",
+    "CMSSW_10_0_5" : "CMSSW_10_1_4",
+    "CMSSW_10_1_0" : "CMSSW_10_1_4",
+    "CMSSW_10_1_1" : "CMSSW_10_1_4",
+    "CMSSW_10_1_2" : "CMSSW_10_1_4",
+    "CMSSW_10_1_3" : "CMSSW_10_1_4"
     }
 
 expressVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_3",
-    "CMSSW_10_0_1" : "CMSSW_10_1_3",
-    "CMSSW_10_0_2" : "CMSSW_10_1_3",
-    "CMSSW_10_0_3" : "CMSSW_10_1_3",
-    "CMSSW_10_0_4" : "CMSSW_10_1_3",
-    "CMSSW_10_0_5" : "CMSSW_10_1_3",
-    "CMSSW_10_1_0" : "CMSSW_10_1_3",
-    "CMSSW_10_1_1" : "CMSSW_10_1_3",
-    "CMSSW_10_1_2" : "CMSSW_10_1_3"
+    "CMSSW_10_0_0" : "CMSSW_10_1_4",
+    "CMSSW_10_0_1" : "CMSSW_10_1_4",
+    "CMSSW_10_0_2" : "CMSSW_10_1_4",
+    "CMSSW_10_0_3" : "CMSSW_10_1_4",
+    "CMSSW_10_0_4" : "CMSSW_10_1_4",
+    "CMSSW_10_0_5" : "CMSSW_10_1_4",
+    "CMSSW_10_1_0" : "CMSSW_10_1_4",
+    "CMSSW_10_1_1" : "CMSSW_10_1_4",
+    "CMSSW_10_1_2" : "CMSSW_10_1_4",
+    "CMSSW_10_1_3" : "CMSSW_10_1_4"
     }
 
 #set default repack settings for bulk streams
@@ -210,9 +212,9 @@ addExpressConfig(tier0Config, "Express",
                  data_tiers = [ "FEVT" ],
                  write_dqm = True,
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
-                                    "TkAlMinBias", "LumiPixelsMinBias", "SiPixelCalZeroBias",
+                                    "TkAlMinBias", "DtCalib", "LumiPixelsMinBias", "SiPixelCalZeroBias",
                                     "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
-                                    "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG"
+                                    "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel"
                                     ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
@@ -237,7 +239,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  write_dqm = True,
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T",
                                     "DtCalibCosmics", "SiPixelCalZeroBias",
-                                    "PromptCalibProdSiStrip"
+                                    "PromptCalibProdSiStrip", "PromptCalibProdSiPixel"
                                     ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
@@ -419,7 +421,7 @@ for dataset in datasets:
                write_dqm = True,
                tape_node = "T1_DE_KIT_MSS",
                disk_node = "T1_DE_KIT_Disk",
-               alca_producers = [ "TkAlZMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
+               alca_producers = [ "TkAlZMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "DtCalib" ],
                dqm_sequences = [ "@common", "@muon" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
@@ -599,7 +601,7 @@ for dataset in datasets:
                write_dqm = True,
                tape_node = "T1_US_FNAL_MSS", # "T1_IT_CNAF_MSS", CNAF is underwater
                disk_node = "T1_US_FNAL_Disk", # "T1_IT_CNAF_Disk", CNAF is underwater
-               alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HcalCalHBHEMuonFilter" ],
+               alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HcalCalHBHEMuonFilter" ],
                dqm_sequences = [ "@common", "@muon", "@lumi", "@L1TMuon" ],
                physics_skims = [ "MuonPOGSkim", "MuTau", "ZMu", "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
@@ -1001,6 +1003,16 @@ for dataset in datasets:
                disk_node = None,
                scenario = ppScenario)
 
+datasets = [ "ParkingBPH1", "ParkingBPH2", "ParkingBPH3", "ParkingBPH4", "ParkingBPH5", "ParkingBPH6" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = False,
+               archival_node = "T0_CH_CERN_MSS",
+               tape_node = None,
+               disk_node = None,
+               scenario = ppScenario)
+
 datasets = [ "RPCMonitor" ]
 
 for dataset in datasets:
@@ -1201,7 +1213,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                dqm_sequences = [ "@common" ],
-               alca_producers = [ "TkAlZMuMu", "TkAlJpsiMuMu", "TkAlUpsilonMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalIsoTrkFilter" ],
+               alca_producers = [ "TkAlZMuMu", "TkAlJpsiMuMu", "TkAlUpsilonMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "DtCalib", "HcalCalIsoTrkFilter" ],
                physics_skims = [ "Onia" ],
                scenario = ppScenario)
 
@@ -1238,7 +1250,7 @@ addDataset(tier0Config, "HighPtJet80",
 addDataset(tier0Config, "SingleMuHighPt",
            do_reco = True,
            write_dqm = True,
-           alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
+           alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
            dqm_sequences = [ "@common" ],
            physics_skims = [ "ZMM" ],
            scenario = ppScenario)
@@ -1246,7 +1258,7 @@ addDataset(tier0Config, "SingleMuHighPt",
 addDataset(tier0Config, "SingleMuLowPt",
            do_reco = True,
            write_dqm = True,
-           alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
+           alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
            dqm_sequences = [ "@common" ],
            scenario = ppScenario)
 
@@ -1258,7 +1270,7 @@ addExpressConfig(tier0Config, "ExpressPA",
                  scenario = hiScenario,
                  data_tiers = [ "FEVT" ],
                  write_dqm = True,
-                 alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias",
+                 alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "DtCalib", "SiStripCalMinBias",
                                     "SiStripCalMinBiasAfterAbortGap", "LumiPixelsMinBias", "PromptCalibProd",
                                     "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli", "PromptCalibProdSiStripGains",
                                     "PromptCalibProdSiStripGainsAfterAbortGap", "SiStripPCLHistos" ],
@@ -1332,14 +1344,14 @@ addDataset(tier0Config, "PADoubleMuon",
            do_reco = True,
            write_dqm = True,
            dqm_sequences = [ "@common", "@muon" ],
-           alca_producers = [ "TkAlMuonIsolatedPA", "TkAlZMuMuPA", "TkAlUpsilonMuMuPA" ],
+           alca_producers = [ "TkAlMuonIsolatedPA", "TkAlZMuMuPA", "TkAlUpsilonMuMuPA", "DtCalib" ],
            scenario = hiScenario)
 
 addDataset(tier0Config, "PASingleMuon",
            do_reco = True,
            write_dqm = True,
            dqm_sequences = [ "@common", "@muon" ],
-           alca_producers = [ "TkAlMuonIsolatedPA" ],
+           alca_producers = [ "TkAlMuonIsolatedPA", "DtCalib" ],
            physics_skims = [ "PAZMM" ],
            scenario = hiScenario)
 
