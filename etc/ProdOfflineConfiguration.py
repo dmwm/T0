@@ -1001,6 +1001,16 @@ for dataset in datasets:
                disk_node = None,
                scenario = ppScenario)
 
+datasets = [ "ParkingBPH1", "ParkingBPH2", "ParkingBPH3", "ParkingBPH4", "ParkingBPH5", "ParkingBPH6" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = False,
+               archival_node = "T0_CH_CERN_MSS",
+               tape_node = None,
+               disk_node = None,
+               scenario = ppScenario)
+
 datasets = [ "RPCMonitor" ]
 
 for dataset in datasets:
