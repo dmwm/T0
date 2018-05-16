@@ -89,7 +89,7 @@ setPromptCalibrationConfig(tier0Config,
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
        'acqEra': {'Commissioning2018': 'CMSSW_10_1_2_patch2'},
-       'default': "CMSSW_10_1_4_patch1"
+       'default': "CMSSW_10_1_5"
      }
 
 # Configure ScramArch
@@ -103,18 +103,19 @@ hcalnzsScenario = "hcalnzsEra_Run2_2018"
 hiScenario = "ppEra_Run2_2016_pA"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run2_2018"
 alcaTestEnableScenario = "AlCaTestEnable"
+alcaLumiPixelsScenario = "AlCaLumiPixels"
 
 # Defaults for processing version
 defaultProcVersionRAW = 1
 
 alcarawProcVersion = {
        'acqEra': {'Commissioning2018': '1'},
-       'default': "1"
+       'default': "2"
      }
 
 defaultProcVersionReco = {
        'acqEra': {'Commissioning2018': '1'},
-       'default': "1"
+       'default': "2"
      }
 
 expressProcVersion = {
@@ -142,31 +143,31 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_4_patch1",
-    "CMSSW_10_0_1" : "CMSSW_10_1_4_patch1",
-    "CMSSW_10_0_2" : "CMSSW_10_1_4_patch1",
-    "CMSSW_10_0_3" : "CMSSW_10_1_4_patch1",
-    "CMSSW_10_0_4" : "CMSSW_10_1_4_patch1",
-    "CMSSW_10_0_5" : "CMSSW_10_1_4_patch1",
-    "CMSSW_10_1_0" : "CMSSW_10_1_4_patch1",
-    "CMSSW_10_1_1" : "CMSSW_10_1_4_patch1",
-    "CMSSW_10_1_2" : "CMSSW_10_1_4_patch1",
-    "CMSSW_10_1_3" : "CMSSW_10_1_4_patch1",
-    "CMSSW_10_1_4" : "CMSSW_10_1_4_patch1"
+    "CMSSW_10_0_0" : "CMSSW_10_1_5",
+    "CMSSW_10_0_1" : "CMSSW_10_1_5",
+    "CMSSW_10_0_2" : "CMSSW_10_1_5",
+    "CMSSW_10_0_3" : "CMSSW_10_1_5",
+    "CMSSW_10_0_4" : "CMSSW_10_1_5",
+    "CMSSW_10_0_5" : "CMSSW_10_1_5",
+    "CMSSW_10_1_0" : "CMSSW_10_1_5",
+    "CMSSW_10_1_1" : "CMSSW_10_1_5",
+    "CMSSW_10_1_2" : "CMSSW_10_1_5",
+    "CMSSW_10_1_3" : "CMSSW_10_1_5",
+    "CMSSW_10_1_4" : "CMSSW_10_1_5"
     }
 
 expressVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_4_patch1",
-    "CMSSW_10_0_1" : "CMSSW_10_1_4_patch1",
-    "CMSSW_10_0_2" : "CMSSW_10_1_4_patch1",
-    "CMSSW_10_0_3" : "CMSSW_10_1_4_patch1",
-    "CMSSW_10_0_4" : "CMSSW_10_1_4_patch1",
-    "CMSSW_10_0_5" : "CMSSW_10_1_4_patch1",
-    "CMSSW_10_1_0" : "CMSSW_10_1_4_patch1",
-    "CMSSW_10_1_1" : "CMSSW_10_1_4_patch1",
-    "CMSSW_10_1_2" : "CMSSW_10_1_4_patch1",
-    "CMSSW_10_1_3" : "CMSSW_10_1_4_patch1",
-    "CMSSW_10_1_4" : "CMSSW_10_1_4_patch1"
+    "CMSSW_10_0_0" : "CMSSW_10_1_5",
+    "CMSSW_10_0_1" : "CMSSW_10_1_5",
+    "CMSSW_10_0_2" : "CMSSW_10_1_5",
+    "CMSSW_10_0_3" : "CMSSW_10_1_5",
+    "CMSSW_10_0_4" : "CMSSW_10_1_5",
+    "CMSSW_10_0_5" : "CMSSW_10_1_5",
+    "CMSSW_10_1_0" : "CMSSW_10_1_5",
+    "CMSSW_10_1_1" : "CMSSW_10_1_5",
+    "CMSSW_10_1_2" : "CMSSW_10_1_5",
+    "CMSSW_10_1_3" : "CMSSW_10_1_5",
+    "CMSSW_10_1_4" : "CMSSW_10_1_5"
     }
 
 #set default repack settings for bulk streams
@@ -328,6 +329,31 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  sizePerEvent = 1700,
                  versionOverride = expressVersionOverride,
                  diskNode = "T2_CH_CERN")
+
+addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
+                 scenario = alcaLumiPixelsScenario,
+                 data_tiers = [ "ALCARECO" ],
+                 write_dqm = True,
+                 alca_producers = [ "AlCaPCCRandom", "PromptCalibProdLumiPCC" ],
+                 dqm_sequences = [],
+                 reco_version = defaultCMSSWVersion,
+                 multicore = 1,
+                 global_tag_connect = globalTagConnect,
+                 global_tag = expressGlobalTag,
+                 proc_ver = expressProcVersion,
+                 maxInputRate = 23 * 1000,
+                 maxInputEvents = 100 * 1000 * 1000,
+                 maxInputSize = 4 * 1024 * 1024 * 1024,
+                 maxInputFiles = 10000,
+                 maxLatency = 1 * 3600,
+                 periodicHarvestInterval = 24 * 3600,
+                 blockCloseDelay = 2 * 3600,
+                 timePerEvent = 4,
+                 sizePerEvent = 1700,
+                 versionOverride = expressVersionOverride,
+                 archivalNode = None,
+                 tapeNode = None,
+                 diskNode = None)
 
 ###################################
 ### Standard Physics PDs (2017) ###
@@ -735,7 +761,7 @@ for dataset in datasets:
            dqm_sequences = [ "@common" ],
            timePerEvent = 0.02,
            sizePerEvent = 38,
-           scenario = "AlCaLumiPixels")
+           scenario = alcaLumiPixelsScenario)
 
 datasets = [ "AlCaLumiPixels0", "AlCaLumiPixels1", "AlCaLumiPixels2", "AlCaLumiPixels3",
              "AlCaLumiPixels4", "AlCaLumiPixels5", "AlCaLumiPixels6", "AlCaLumiPixels7",
@@ -754,7 +780,7 @@ for dataset in datasets:
            dqm_sequences = [ "@common" ],
            timePerEvent = 0.02,
            sizePerEvent = 38,
-           scenario = "AlCaLumiPixels")
+           scenario = alcaLumiPixelsScenario)
 
 datasets = [ "AlCaPhiSym" ]
 
