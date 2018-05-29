@@ -35,7 +35,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 315252)
+setInjectMinRun(tier0Config, 316998)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
@@ -51,7 +51,7 @@ streamerPNN = "T2_CH_CERN"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2018A")
+setAcquisitionEra(tier0Config, "Run2018B")
 setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -109,13 +109,13 @@ alcaLumiPixelsScenario = "AlCaLumiPixels"
 defaultProcVersionRAW = 1
 
 alcarawProcVersion = {
-       'acqEra': {'Commissioning2018': '1'},
-       'default': "2"
+       'acqEra': {'Commissioning2018': '1', 'Run2018A': '2'},
+       'default': "1"
      }
 
 defaultProcVersionReco = {
-       'acqEra': {'Commissioning2018': '1'},
-       'default': "2"
+       'acqEra': {'Commissioning2018': '1', 'Run2018A': '2'},
+       'default': "1"
      }
 
 expressProcVersion = {
@@ -125,8 +125,8 @@ expressProcVersion = {
 
 # Defaults for GlobalTag
 expressGlobalTag = "101X_dataRun2_Express_v7"
-promptrecoGlobalTag = "101X_dataRun2_Prompt_v9"
-alcap0GlobalTag = "101X_dataRun2_Prompt_v9"
+promptrecoGlobalTag = "101X_dataRun2_Prompt_v10"
+alcap0GlobalTag = "101X_dataRun2_Prompt_v10"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -546,8 +546,8 @@ for dataset in datasets:
                do_reco = True,
                raw_to_disk = True,
                write_dqm = True,
-               tape_node = "T1_DE_KIT_MSS",
-               disk_node = "T1_DE_KIT_Disk",
+               tape_node = "T1_UK_RAL_MSS",
+               disk_node = "T1_UK_RAL_ECHO_Disk",
                alca_producers = [ "HcalCalIsoTrkFilter", "HcalCalIsolatedBunchFilter" ],
                dqm_sequences = [ "@common", "@jetmet", "@hcal" ],
                physics_skims = [ "JetHTJetPlusHOFilter", "LogError", "LogErrorMonitor" ],
@@ -654,8 +654,8 @@ for dataset in datasets:
                do_reco = True,
                raw_to_disk = True,
                write_dqm = True,
-               tape_node = "T1_FR_CCIN2P3_MSS",
-               disk_node = "T1_FR_CCIN2P3_Disk",
+               tape_node = "T1_IT_CNAF_MSS",
+               disk_node = "T1_IT_CNAF_Disk",
                alca_producers = [ "EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym", "HcalCalIsoTrkFilter", "EcalESAlign" ],
                dqm_sequences = [ "@common", "@ecal", "@egamma", "@L1TEgamma" ],
                physics_skims = [ "EXOMONOPOLE", "ZElectron", "LogError", "LogErrorMonitor" ],
