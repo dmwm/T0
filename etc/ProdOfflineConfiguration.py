@@ -89,7 +89,7 @@ setPromptCalibrationConfig(tier0Config,
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
        'acqEra': {'Commissioning2018': 'CMSSW_10_1_2_patch2'},
-       'default': "CMSSW_10_1_5"
+       'default': "CMSSW_10_1_6"
      }
 
 # Configure ScramArch
@@ -143,31 +143,33 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_5",
-    "CMSSW_10_0_1" : "CMSSW_10_1_5",
-    "CMSSW_10_0_2" : "CMSSW_10_1_5",
-    "CMSSW_10_0_3" : "CMSSW_10_1_5",
-    "CMSSW_10_0_4" : "CMSSW_10_1_5",
-    "CMSSW_10_0_5" : "CMSSW_10_1_5",
-    "CMSSW_10_1_0" : "CMSSW_10_1_5",
-    "CMSSW_10_1_1" : "CMSSW_10_1_5",
-    "CMSSW_10_1_2" : "CMSSW_10_1_5",
-    "CMSSW_10_1_3" : "CMSSW_10_1_5",
-    "CMSSW_10_1_4" : "CMSSW_10_1_5"
+    "CMSSW_10_0_0" : "CMSSW_10_1_6",
+    "CMSSW_10_0_1" : "CMSSW_10_1_6",
+    "CMSSW_10_0_2" : "CMSSW_10_1_6",
+    "CMSSW_10_0_3" : "CMSSW_10_1_6",
+    "CMSSW_10_0_4" : "CMSSW_10_1_6",
+    "CMSSW_10_0_5" : "CMSSW_10_1_6",
+    "CMSSW_10_1_0" : "CMSSW_10_1_6",
+    "CMSSW_10_1_1" : "CMSSW_10_1_6",
+    "CMSSW_10_1_2" : "CMSSW_10_1_6",
+    "CMSSW_10_1_3" : "CMSSW_10_1_6",
+    "CMSSW_10_1_4" : "CMSSW_10_1_6",
+    "CMSSW_10_1_5" : "CMSSW_10_1_6"
     }
 
 expressVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_5",
-    "CMSSW_10_0_1" : "CMSSW_10_1_5",
-    "CMSSW_10_0_2" : "CMSSW_10_1_5",
-    "CMSSW_10_0_3" : "CMSSW_10_1_5",
-    "CMSSW_10_0_4" : "CMSSW_10_1_5",
-    "CMSSW_10_0_5" : "CMSSW_10_1_5",
-    "CMSSW_10_1_0" : "CMSSW_10_1_5",
-    "CMSSW_10_1_1" : "CMSSW_10_1_5",
-    "CMSSW_10_1_2" : "CMSSW_10_1_5",
-    "CMSSW_10_1_3" : "CMSSW_10_1_5",
-    "CMSSW_10_1_4" : "CMSSW_10_1_5"
+    "CMSSW_10_0_0" : "CMSSW_10_1_6",
+    "CMSSW_10_0_1" : "CMSSW_10_1_6",
+    "CMSSW_10_0_2" : "CMSSW_10_1_6",
+    "CMSSW_10_0_3" : "CMSSW_10_1_6",
+    "CMSSW_10_0_4" : "CMSSW_10_1_6",
+    "CMSSW_10_0_5" : "CMSSW_10_1_6",
+    "CMSSW_10_1_0" : "CMSSW_10_1_6",
+    "CMSSW_10_1_1" : "CMSSW_10_1_6",
+    "CMSSW_10_1_2" : "CMSSW_10_1_6",
+    "CMSSW_10_1_3" : "CMSSW_10_1_6",
+    "CMSSW_10_1_4" : "CMSSW_10_1_6",
+    "CMSSW_10_1_5" : "CMSSW_10_1_6"
     }
 
 #set default repack settings for bulk streams
