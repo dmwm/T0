@@ -33,7 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [ 999999 ])
+setInjectRuns(tier0Config, [ 316993 ])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -46,7 +46,7 @@ streamerPNN = "T2_CH_CERN"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Tier0_REPLAY_vocms015")
+setAcquisitionEra(tier0Config, "Tier0_REPLAY_vocms047")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
@@ -83,7 +83,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-       'default': "CMSSW_10_1_5"
+       'default': "CMSSW_10_1_6"
      }
 
 # Configure ScramArch
@@ -100,9 +100,9 @@ alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels"
 
 # Defaults for processing version
-defaultProcVersion = 1
-expressProcVersion = 1
-alcarawProcVersion = 1
+defaultProcVersion = 248
+expressProcVersion = 248
+alcarawProcVersion = 248
 
 # Defaults for GlobalTag
 expressGlobalTag = "101X_dataRun2_Express_v7"
@@ -124,31 +124,33 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_5",
-    "CMSSW_10_0_1" : "CMSSW_10_1_5",
-    "CMSSW_10_0_2" : "CMSSW_10_1_5",
-    "CMSSW_10_0_3" : "CMSSW_10_1_5",
-    "CMSSW_10_0_4" : "CMSSW_10_1_5",
-    "CMSSW_10_0_5" : "CMSSW_10_1_5",
-    "CMSSW_10_1_0" : "CMSSW_10_1_5",
-    "CMSSW_10_1_1" : "CMSSW_10_1_5",
-    "CMSSW_10_1_2" : "CMSSW_10_1_5",
-    "CMSSW_10_1_3" : "CMSSW_10_1_5",
-    "CMSSW_10_1_4" : "CMSSW_10_1_5"
+    "CMSSW_10_0_0" : "CMSSW_10_1_6",
+    "CMSSW_10_0_1" : "CMSSW_10_1_6",
+    "CMSSW_10_0_2" : "CMSSW_10_1_6",
+    "CMSSW_10_0_3" : "CMSSW_10_1_6",
+    "CMSSW_10_0_4" : "CMSSW_10_1_6",
+    "CMSSW_10_0_5" : "CMSSW_10_1_6",
+    "CMSSW_10_1_0" : "CMSSW_10_1_6",
+    "CMSSW_10_1_1" : "CMSSW_10_1_6",
+    "CMSSW_10_1_2" : "CMSSW_10_1_6",
+    "CMSSW_10_1_3" : "CMSSW_10_1_6",
+    "CMSSW_10_1_4" : "CMSSW_10_1_6",
+    "CMSSW_10_1_5" : "CMSSW_10_1_6",
     }
 
 expressVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_5",
-    "CMSSW_10_0_1" : "CMSSW_10_1_5",
-    "CMSSW_10_0_2" : "CMSSW_10_1_5",
-    "CMSSW_10_0_3" : "CMSSW_10_1_5",
-    "CMSSW_10_0_4" : "CMSSW_10_1_5",
-    "CMSSW_10_0_5" : "CMSSW_10_1_5",
-    "CMSSW_10_1_0" : "CMSSW_10_1_5",
-    "CMSSW_10_1_1" : "CMSSW_10_1_5",
-    "CMSSW_10_1_2" : "CMSSW_10_1_5",
-    "CMSSW_10_1_3" : "CMSSW_10_1_5",
-    "CMSSW_10_1_4" : "CMSSW_10_1_5"
+    "CMSSW_10_0_0" : "CMSSW_10_1_6",
+    "CMSSW_10_0_1" : "CMSSW_10_1_6",
+    "CMSSW_10_0_2" : "CMSSW_10_1_6",
+    "CMSSW_10_0_3" : "CMSSW_10_1_6",
+    "CMSSW_10_0_4" : "CMSSW_10_1_6",
+    "CMSSW_10_0_5" : "CMSSW_10_1_6",
+    "CMSSW_10_1_0" : "CMSSW_10_1_6",
+    "CMSSW_10_1_1" : "CMSSW_10_1_6",
+    "CMSSW_10_1_2" : "CMSSW_10_1_6",
+    "CMSSW_10_1_3" : "CMSSW_10_1_6",
+    "CMSSW_10_1_4" : "CMSSW_10_1_6",
+    "CMSSW_10_1_5" : "CMSSW_10_1_6",
     }
 
 #set default repack settings for bulk streams
