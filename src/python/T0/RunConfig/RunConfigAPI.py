@@ -115,7 +115,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
 
                 if dataset == "Unassigned path":
 
-                    if run < 240000:
+                    if run < 317512:
                         pass
                     else:
                         raise RuntimeError("Problem in configureRun() : Unassigned path in HLT menu !")
