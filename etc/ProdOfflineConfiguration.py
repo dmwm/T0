@@ -89,7 +89,7 @@ setPromptCalibrationConfig(tier0Config,
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
        'acqEra': {'Commissioning2018': 'CMSSW_10_1_2_patch2'},
-       'default': "CMSSW_10_1_6"
+       'default': "CMSSW_10_1_7"
      }
 
 # Configure ScramArch
@@ -110,12 +110,12 @@ defaultProcVersionRAW = 1
 
 alcarawProcVersion = {
        'acqEra': {'Commissioning2018': '1', 'Run2018A': '2'},
-       'default': "1"
+       'default': "2"
      }
 
 defaultProcVersionReco = {
        'acqEra': {'Commissioning2018': '1', 'Run2018A': '2'},
-       'default': "1"
+       'default': "2"
      }
 
 expressProcVersion = {
@@ -124,9 +124,9 @@ expressProcVersion = {
      }
 
 # Defaults for GlobalTag
-expressGlobalTag = "101X_dataRun2_Express_v7"
-promptrecoGlobalTag = "101X_dataRun2_Prompt_v10"
-alcap0GlobalTag = "101X_dataRun2_Prompt_v10"
+expressGlobalTag = "101X_dataRun2_Express_v8"
+promptrecoGlobalTag = "101X_dataRun2_Prompt_v11"
+alcap0GlobalTag = "101X_dataRun2_Prompt_v11"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -143,33 +143,35 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_6",
-    "CMSSW_10_0_1" : "CMSSW_10_1_6",
-    "CMSSW_10_0_2" : "CMSSW_10_1_6",
-    "CMSSW_10_0_3" : "CMSSW_10_1_6",
-    "CMSSW_10_0_4" : "CMSSW_10_1_6",
-    "CMSSW_10_0_5" : "CMSSW_10_1_6",
-    "CMSSW_10_1_0" : "CMSSW_10_1_6",
-    "CMSSW_10_1_1" : "CMSSW_10_1_6",
-    "CMSSW_10_1_2" : "CMSSW_10_1_6",
-    "CMSSW_10_1_3" : "CMSSW_10_1_6",
-    "CMSSW_10_1_4" : "CMSSW_10_1_6",
-    "CMSSW_10_1_5" : "CMSSW_10_1_6"
+    "CMSSW_10_0_0" : "CMSSW_10_1_7",
+    "CMSSW_10_0_1" : "CMSSW_10_1_7",
+    "CMSSW_10_0_2" : "CMSSW_10_1_7",
+    "CMSSW_10_0_3" : "CMSSW_10_1_7",
+    "CMSSW_10_0_4" : "CMSSW_10_1_7",
+    "CMSSW_10_0_5" : "CMSSW_10_1_7",
+    "CMSSW_10_1_0" : "CMSSW_10_1_7",
+    "CMSSW_10_1_1" : "CMSSW_10_1_7",
+    "CMSSW_10_1_2" : "CMSSW_10_1_7",
+    "CMSSW_10_1_3" : "CMSSW_10_1_7",
+    "CMSSW_10_1_4" : "CMSSW_10_1_7",
+    "CMSSW_10_1_5" : "CMSSW_10_1_7",
+    "CMSSW_10_1_6" : "CMSSW_10_1_7"
     }
 
 expressVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_6",
-    "CMSSW_10_0_1" : "CMSSW_10_1_6",
-    "CMSSW_10_0_2" : "CMSSW_10_1_6",
-    "CMSSW_10_0_3" : "CMSSW_10_1_6",
-    "CMSSW_10_0_4" : "CMSSW_10_1_6",
-    "CMSSW_10_0_5" : "CMSSW_10_1_6",
-    "CMSSW_10_1_0" : "CMSSW_10_1_6",
-    "CMSSW_10_1_1" : "CMSSW_10_1_6",
-    "CMSSW_10_1_2" : "CMSSW_10_1_6",
-    "CMSSW_10_1_3" : "CMSSW_10_1_6",
-    "CMSSW_10_1_4" : "CMSSW_10_1_6",
-    "CMSSW_10_1_5" : "CMSSW_10_1_6"
+    "CMSSW_10_0_0" : "CMSSW_10_1_7",
+    "CMSSW_10_0_1" : "CMSSW_10_1_7",
+    "CMSSW_10_0_2" : "CMSSW_10_1_7",
+    "CMSSW_10_0_3" : "CMSSW_10_1_7",
+    "CMSSW_10_0_4" : "CMSSW_10_1_7",
+    "CMSSW_10_0_5" : "CMSSW_10_1_7",
+    "CMSSW_10_1_0" : "CMSSW_10_1_7",
+    "CMSSW_10_1_1" : "CMSSW_10_1_7",
+    "CMSSW_10_1_2" : "CMSSW_10_1_7",
+    "CMSSW_10_1_3" : "CMSSW_10_1_7",
+    "CMSSW_10_1_4" : "CMSSW_10_1_7",
+    "CMSSW_10_1_5" : "CMSSW_10_1_7",
+    "CMSSW_10_1_6" : "CMSSW_10_1_7"
     }
 
 #set default repack settings for bulk streams
