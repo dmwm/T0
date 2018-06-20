@@ -83,7 +83,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-       'default': "CMSSW_10_1_6"
+       'default': "CMSSW_10_1_7"
      }
 
 # Configure ScramArch
@@ -105,9 +105,9 @@ expressProcVersion = 248
 alcarawProcVersion = 248
 
 # Defaults for GlobalTag
-expressGlobalTag = "101X_dataRun2_Express_v7"
-promptrecoGlobalTag = "101X_dataRun2_Prompt_v10"
-alcap0GlobalTag = "101X_dataRun2_Prompt_v10"
+expressGlobalTag = "101X_dataRun2_Express_v8"
+promptrecoGlobalTag = "101X_dataRun2_Prompt_v11"
+alcap0GlobalTag = "101X_dataRun2_Prompt_v11"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -124,33 +124,35 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_6",
-    "CMSSW_10_0_1" : "CMSSW_10_1_6",
-    "CMSSW_10_0_2" : "CMSSW_10_1_6",
-    "CMSSW_10_0_3" : "CMSSW_10_1_6",
-    "CMSSW_10_0_4" : "CMSSW_10_1_6",
-    "CMSSW_10_0_5" : "CMSSW_10_1_6",
-    "CMSSW_10_1_0" : "CMSSW_10_1_6",
-    "CMSSW_10_1_1" : "CMSSW_10_1_6",
-    "CMSSW_10_1_2" : "CMSSW_10_1_6",
-    "CMSSW_10_1_3" : "CMSSW_10_1_6",
-    "CMSSW_10_1_4" : "CMSSW_10_1_6",
-    "CMSSW_10_1_5" : "CMSSW_10_1_6",
+    "CMSSW_10_0_0" : "CMSSW_10_1_7",
+    "CMSSW_10_0_1" : "CMSSW_10_1_7",
+    "CMSSW_10_0_2" : "CMSSW_10_1_7",
+    "CMSSW_10_0_3" : "CMSSW_10_1_7",
+    "CMSSW_10_0_4" : "CMSSW_10_1_7",
+    "CMSSW_10_0_5" : "CMSSW_10_1_7",
+    "CMSSW_10_1_0" : "CMSSW_10_1_7",
+    "CMSSW_10_1_1" : "CMSSW_10_1_7",
+    "CMSSW_10_1_2" : "CMSSW_10_1_7",
+    "CMSSW_10_1_3" : "CMSSW_10_1_7",
+    "CMSSW_10_1_4" : "CMSSW_10_1_7",
+    "CMSSW_10_1_5" : "CMSSW_10_1_7",
+    "CMSSW_10_1_6" : "CMSSW_10_1_7"
     }
 
 expressVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_6",
-    "CMSSW_10_0_1" : "CMSSW_10_1_6",
-    "CMSSW_10_0_2" : "CMSSW_10_1_6",
-    "CMSSW_10_0_3" : "CMSSW_10_1_6",
-    "CMSSW_10_0_4" : "CMSSW_10_1_6",
-    "CMSSW_10_0_5" : "CMSSW_10_1_6",
-    "CMSSW_10_1_0" : "CMSSW_10_1_6",
-    "CMSSW_10_1_1" : "CMSSW_10_1_6",
-    "CMSSW_10_1_2" : "CMSSW_10_1_6",
-    "CMSSW_10_1_3" : "CMSSW_10_1_6",
-    "CMSSW_10_1_4" : "CMSSW_10_1_6",
-    "CMSSW_10_1_5" : "CMSSW_10_1_6",
+    "CMSSW_10_0_0" : "CMSSW_10_1_7",
+    "CMSSW_10_0_1" : "CMSSW_10_1_7",
+    "CMSSW_10_0_2" : "CMSSW_10_1_7",
+    "CMSSW_10_0_3" : "CMSSW_10_1_7",
+    "CMSSW_10_0_4" : "CMSSW_10_1_7",
+    "CMSSW_10_0_5" : "CMSSW_10_1_7",
+    "CMSSW_10_1_0" : "CMSSW_10_1_7",
+    "CMSSW_10_1_1" : "CMSSW_10_1_7",
+    "CMSSW_10_1_2" : "CMSSW_10_1_7",
+    "CMSSW_10_1_3" : "CMSSW_10_1_7",
+    "CMSSW_10_1_4" : "CMSSW_10_1_7",
+    "CMSSW_10_1_5" : "CMSSW_10_1_7",
+    "CMSSW_10_1_6" : "CMSSW_10_1_7"
     }
 
 #set default repack settings for bulk streams
