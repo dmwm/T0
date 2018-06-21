@@ -1106,7 +1106,7 @@ for dataset in datasets:
                dqm_sequences = [ "@common" ],
                scenario = ppScenario)
 
-datasets = [ "Totem1", "Totem2", "Totem3" ]
+datasets = [ "Totem1", "Totem2", "Totem3", "Totem4" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
