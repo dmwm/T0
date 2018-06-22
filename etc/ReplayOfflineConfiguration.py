@@ -815,11 +815,12 @@ for dataset in datasets:
                alca_producers = [ "SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias" ],
                scenario = ppScenario)
 
-datasets = [ "MinimumBias1", "MinimumBias2", "MinimumBias3", "MinimumBias4",
-             "MinimumBias5", "MinimumBias6", "MinimumBias7", "MinimumBias8",
-             "MinimumBias9", "MinimumBias10", "MinimumBias11", "MinimumBias12",
-             "MinimumBias13", "MinimumBias14", "MinimumBias15", "MinimumBias16",
-             "MinimumBias17", "MinimumBias18", "MinimumBias19", "MinimumBias20"
+datasets = [ "MinimumBias0", "MinimumBias1", "MinimumBias2", "MinimumBias3",
+             "MinimumBias4", "MinimumBias5", "MinimumBias6", "MinimumBias7",
+             "MinimumBias8", "MinimumBias9", "MinimumBias10", "MinimumBias11",
+             "MinimumBias12", "MinimumBias13", "MinimumBias14", "MinimumBias15",
+             "MinimumBias16", "MinimumBias17", "MinimumBias18", "MinimumBias19",
+             "MinimumBias20"
              ]
 
 for dataset in datasets:
@@ -1100,13 +1101,18 @@ datasets = [ "TOTEM_minBias", "TOTEM_romanPots", "ToTOTEM", "ToTOTEM_DoubleJet32
              "TOTEM_romanPotsTTBB_0", "TOTEM_romanPotsTTBB_1", "TOTEM_romanPotsTTBB_2", "TOTEM_romanPotsTTBB_3",
              "TOTEM_romanPotsTTBB_4", "TOTEM_romanPotsTTBB_5", "TOTEM_romanPotsTTBB_6", "TOTEM_romanPotsTTBB_7" ]
 
-for dataset in datasets:
-    addDataset(tier0Config, dataset,
-               do_reco = True,
-               dqm_sequences = [ "@common" ],
-               scenario = ppScenario)
+datasets += [ "Totem1", "Totem2", "Totem3", "Totem4" ]
 
-datasets = [ "Totem1", "Totem2", "Totem3", "Totem4" ]
+### TOTEM datasets for 90m and LowPileUp menu - 2018/06/22
+datasets += [ "HFvetoTOTEM", "JetsTOTEM", "MuonEGammaTOTEM" ]
+
+datasets += [ "RandomTOTEM1", "RandomTOTEM2", "RandomTOTEM3", "RandomTOTEM4" ]
+
+datasets += [ "TOTEM10", "TOTEM11", "TOTEM12", "TOTEM13", "TOTEM20", "TOTEM21", "TOTEM22",
+              "TOTEM23", "TOTEM3", "TOTEM40", "TOTEM41", "TOTEM42", "TOTEM43" ]
+
+datasets += [ "ZeroBiasTOTEM1", "ZeroBiasTOTEM2", "ZeroBiasTOTEM3", "ZeroBiasTOTEM4" ]
+### TOTEM datasets for 90m and LowPileUp menu - 2018/06/22
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
