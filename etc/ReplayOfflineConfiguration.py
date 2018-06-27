@@ -1117,6 +1117,7 @@ datasets += [ "ZeroBiasTOTEM1", "ZeroBiasTOTEM2", "ZeroBiasTOTEM3", "ZeroBiasTOT
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
+               write_reco = True,
                dqm_sequences = [ "@common" ],
                scenario = ppScenario)
 
