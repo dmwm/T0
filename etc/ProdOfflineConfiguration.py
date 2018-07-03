@@ -80,7 +80,8 @@ setPromptCalibrationConfig(tier0Config,
                            dropboxHost = "webcondvm.cern.ch",
                            validationMode = False)
 
-# Special syntax supported for cmssw version, processing version and global tag
+# Special syntax supported for cmssw version, processing version, global tag and processing scenario
+# https://github.com/dmwm/T0/blob/master/src/python/T0/RunConfig/RunConfigAPI.py#L828
 #
 # { 'acqEra': {'Era1': Value1, 'Era2': Value2},
 #   'maxRun': {100000: Value3, 200000: Value4},
@@ -96,12 +97,18 @@ defaultCMSSWVersion = {
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc630")
 
 # Configure scenarios
-ppScenario = "ppEra_Run2_2018"
+ppScenario = {
+       'maxRun': {319077: 'ppEra_Run2_2018'},
+       'default': 'ppEra_Run2_2018_highBetaStar'
+     }
 ppScenarioB0T = "ppEra_Run2_2018"
 cosmicsScenario = "cosmicsEra_Run2_2018"
 hcalnzsScenario = "hcalnzsEra_Run2_2018"
 hiScenario = "ppEra_Run2_2016_pA"
-alcaTrackingOnlyScenario = "trackingOnlyEra_Run2_2018"
+alcaTrackingOnlyScenario = {
+       'maxRun': {319077: 'trackingOnlyEra_Run2_2018'},
+       'default': 'trackingOnlyEra_Run2_2018_highBetaStar'
+     }
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels"
 
@@ -119,7 +126,7 @@ defaultProcVersionReco = {
      }
 
 expressProcVersion = {
-       'acqEra': {'Commissioning2018': '1'},
+       'acqEra': {'Commissioning2018': '1', 'Run2018A': '1'},
        'default': "1"
      }
 
@@ -205,7 +212,7 @@ addDataset(tier0Config, "Default",
            disk_node = "T1_US_FNAL_Disk",
            raw_to_disk = False,
            blockCloseDelay = 24 * 3600,
-           timePerEvent = 5,
+           timePerEvent = 1,
            sizePerEvent = 1500,
            scenario = ppScenario)
 
@@ -315,7 +322,7 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  scenario = alcaTrackingOnlyScenario,
                  data_tiers = [ "ALCARECO" ],
                  write_dqm = True,
-                 alca_producers = [ "TkAlMinBias", "PromptCalibProdBeamSpotHP" ],
+                 alca_producers = [ "TkAlMinBias", "PromptCalibProdBeamSpotHPLowPU" ],
                  dqm_sequences = [ "DQMOfflineTracking" ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
