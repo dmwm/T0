@@ -294,7 +294,7 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  scenario = alcaTrackingOnlyScenario,
                  data_tiers = [ "ALCARECO" ],
                  write_dqm = True,
-                 alca_producers = [ "TkAlMinBias", "PromptCalibProdBeamSpotHP" ],
+                 alca_producers = [ "TkAlMinBias", "PromptCalibProdBeamSpotHPLowPU" ],
                  dqm_sequences = [ "DQMOfflineTracking" ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
@@ -390,7 +390,6 @@ for dataset in datasets:
            sizePerEvent = 155,
            scenario = cosmicsScenario)
 
-
 datasets = [ "DisplacedJet" ]
 
 for dataset in datasets:
@@ -421,8 +420,22 @@ for dataset in datasets:
                write_reco = True,
                write_dqm = True,
                alca_producers = [ "TkAlZMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "DtCalib" ],
-               dqm_sequences = [ "@common", "@muon" ],
+               dqm_sequences = [ "@common", "@muon", "@lumi", "@L1TMuon" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
+               scenario = ppScenario)
+
+datasets = [ "DoubleMuonLowPU" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_reco = False,
+               raw_to_disk = True,
+               write_dqm = True,
+               alca_producers = [ "TkAlZMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "DtCalib" ],
+               dqm_sequences = [ "@common", "@muon", "@lumi", "@L1TMuon" ],
+               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               timePerEvent = 1,
                scenario = ppScenario)
 
 datasets = [ "DoubleMuonLowMass" ]
@@ -452,7 +465,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                write_dqm = True,
-               dqm_sequences = [ "@common" ],
+               dqm_sequences = [ "@common", "@jetmet" ],
                scenario = ppScenario)
 
 datasets = [ "HINCaloJets", "HINPFJets" ]
@@ -480,10 +493,10 @@ for dataset in datasets:
                sizePerEvent = 2000,
                scenario = ppScenario)
 
-datasets = [ "HighMultiplicity", "HighMultiplicityEOF" ]
+datasets = [ "HighMultiplicity" ]
 
-datasets += [ "HighMultiplicityEOF1", "HighMultiplicityEOF2", "HighMultiplicityEOF3",
-              "HighMultiplicityEOF4", "HighMultiplicityEOF5" ]
+datasets += [ "HighMultiplicityEOF0", "HighMultiplicityEOF1", "HighMultiplicityEOF2",
+              "HighMultiplicityEOF3", "HighMultiplicityEOF4", "HighMultiplicityEOF5" ]
 
 datasets += [ "HighMultiplicity85", "HighMultiplicity85EOF" ]
 
@@ -491,7 +504,20 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                write_reco = True,
+               write_dqm = True,
                dqm_sequences = [ "@common" ],
+               scenario = ppScenario)
+
+# 05/07/2018 HighMultiplicityEOF needs to have 1sec per event
+datasets = [ "HighMultiplicityEOF" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_reco = False,
+               write_dqm = True,
+               dqm_sequences = [ "@common" ],
+               timePerEvent = 1,
                scenario = ppScenario)
 
 datasets = [ "HighPtLowerPhotons", "HighPtPhoton30AndZ" ]
@@ -744,6 +770,7 @@ for dataset in datasets:
                do_reco = True,
                write_reco = True,
                write_dqm = True,
+               dqm_sequences = [ "@common", "@ecal", "@jetmet", "@hcal", "@L1TEgamma" ],
                alca_producers = [ "TkAlMinBias" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
@@ -758,6 +785,7 @@ for dataset in datasets:
                do_reco = True,
                write_reco = True,
                write_dqm = True,
+               dqm_sequences = [ "@common", "@ecal", "@jetmet", "@hcal", "@L1TEgamma" ],
                alca_producers = [ "TkAlMinBias" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
@@ -811,7 +839,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                write_dqm = True,
-               dqm_sequences = [ "@common" ],
+               dqm_sequences = [ "@common", "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet" ],
                alca_producers = [ "SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias" ],
                scenario = ppScenario)
 
@@ -827,7 +855,8 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                write_dqm = True,
-               dqm_sequences = [ "@common" ],
+               dqm_sequences = [ "@common", "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet" ],
+               timePerEvent = 1,
                alca_producers = [ "SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias" ],
                scenario = ppScenario)
 
@@ -897,7 +926,7 @@ for dataset in datasets:
                do_reco = True,
                write_reco = True,
                write_dqm = True,
-               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
+               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet" ],
                alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias", "AlCaPCCZeroBiasFromRECO" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                timePerEvent = 3.5,
@@ -1104,7 +1133,7 @@ datasets = [ "TOTEM_minBias", "TOTEM_romanPots", "ToTOTEM", "ToTOTEM_DoubleJet32
 datasets += [ "Totem1", "Totem2", "Totem3", "Totem4" ]
 
 ### TOTEM datasets for 90m and LowPileUp menu - 2018/06/22
-datasets += [ "HFvetoTOTEM", "JetsTOTEM", "MuonEGammaTOTEM" ]
+datasets += [ "HFvetoTOTEM", "JetsTOTEM" ]
 
 datasets += [ "RandomTOTEM1", "RandomTOTEM2", "RandomTOTEM3", "RandomTOTEM4" ]
 
@@ -1119,6 +1148,17 @@ for dataset in datasets:
                do_reco = True,
                write_reco = True,
                dqm_sequences = [ "@common" ],
+               scenario = ppScenario)
+
+### TOTEM EGamma dataset for 90m and LowPileUp with egamma dqm sequence
+datasets = [ "MuonEGammaTOTEM" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_reco = False,
+               write_dqm = True,
+               dqm_sequences = [ "@common", "egamma" ],
                scenario = ppScenario)
 
 ################################
@@ -1375,7 +1415,6 @@ addDataset(tier0Config, "PADoubleMuOpen",
            alca_producers = [ "LumiPixelsMinBias" ],
            dqm_sequences = [ "@common", "@muon" ],
            scenario = hiScenario)
-
 
 #######################
 ### ignored streams ###
