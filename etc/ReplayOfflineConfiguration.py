@@ -3,6 +3,9 @@ _OfflineConfiguration_
 
 Processing configuration for the Tier0 - Replay version
 """
+
+print("@@-------github.com/gkfthddk/T0--------@@")
+
 from __future__ import print_function
 
 from T0.RunConfig.Tier0Config import addDataset
