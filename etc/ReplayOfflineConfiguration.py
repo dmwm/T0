@@ -296,7 +296,7 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  scenario = alcaTrackingOnlyScenario,
                  data_tiers = [ "ALCARECO" ],
                  write_dqm = True,
-                 alca_producers = [ "TkAlMinBias", "PromptCalibProdBeamSpotHPLowPU" ],
+                 alca_producers = [ "TkAlMinBias", "PromptCalibProdBeamSpotHP" ],
                  dqm_sequences = [ "DQMOfflineTracking" ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
@@ -1160,7 +1160,7 @@ for dataset in datasets:
                do_reco = True,
                write_reco = False,
                write_dqm = True,
-               dqm_sequences = [ "@common", "egamma" ],
+               dqm_sequences = [ "@common", "@egamma" ],
                scenario = ppScenario)
 
 ################################

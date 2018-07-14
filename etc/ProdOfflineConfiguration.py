@@ -318,7 +318,7 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  scenario = alcaTrackingOnlyScenario,
                  data_tiers = [ "ALCARECO" ],
                  write_dqm = True,
-                 alca_producers = [ "TkAlMinBias", "PromptCalibProdBeamSpotHPLowPU" ],
+                 alca_producers = [ "TkAlMinBias", "PromptCalibProdBeamSpotHP" ],
                  dqm_sequences = [ "DQMOfflineTracking" ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
@@ -374,7 +374,7 @@ for dataset in datasets:
                write_dqm = True,
                dqm_sequences = [ "@common" ],
                tape_node = "T1_UK_RAL_MSS",
-               disk_node = "T1_UK_RAL_ECHO_Disk",
+               disk_node = "T1_UK_RAL_Disk",
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
 
@@ -440,7 +440,7 @@ for dataset in datasets:
                write_reco = False,
                write_dqm = True,
                tape_node = "T1_UK_RAL_MSS",
-               disk_node = "T1_UK_RAL_ECHO_Disk",
+               disk_node = "T1_UK_RAL_Disk",
                alca_producers = [ "EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym", "HcalCalIsoTrkFilter" ],
                dqm_sequences = [ "@common", "@ecal", "@egamma" ],
                physics_skims = [ "ZElectron", "LogError", "LogErrorMonitor" ],
@@ -531,7 +531,7 @@ for dataset in datasets:
                write_dqm = True,
                dqm_sequences = [ "@common" ],
                tape_node = "T1_UK_RAL_MSS",
-               disk_node = "T1_UK_RAL_ECHO_Disk",
+               disk_node = "T1_UK_RAL_Disk",
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                timePerEvent = 9.4,
                sizePerEvent = 2000,
@@ -583,7 +583,7 @@ for dataset in datasets:
                raw_to_disk = True,
                write_dqm = True,
                tape_node = "T1_UK_RAL_MSS",
-               disk_node = "T1_UK_RAL_ECHO_Disk",
+               disk_node = "T1_UK_RAL_Disk",
                alca_producers = [ "HcalCalIsoTrkFilter", "HcalCalIsolatedBunchFilter" ],
                dqm_sequences = [ "@common", "@jetmet", "@hcal" ],
                physics_skims = [ "JetHTJetPlusHOFilter", "LogError", "LogErrorMonitor" ],
@@ -1269,7 +1269,7 @@ for dataset in datasets:
                do_reco = True,
                write_reco = False,
                write_dqm = True,
-               dqm_sequences = [ "@common", "egamma" ],
+               dqm_sequences = [ "@common", "@egamma" ],
                scenario = ppScenario)
 
 ################################
