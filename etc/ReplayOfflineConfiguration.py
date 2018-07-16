@@ -4,10 +4,8 @@ _OfflineConfiguration_
 Processing configuration for the Tier0 - Replay version
 """
 
-print("@@-------github.com/gkfthddk/T0--------@@")
-
 from __future__ import print_function
-
+print("@@-------github.com/gkfthddk/T0--------@@")
 from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
@@ -49,7 +47,7 @@ streamerPNN = "T2_CH_CERN"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Tier0_REPLAY_vocms550")
+setAcquisitionEra(tier0Config, "Tier0_REPLAY_vocms0550")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
