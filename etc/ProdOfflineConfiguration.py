@@ -111,12 +111,14 @@ defaultProcVersionRAW = 1
 
 alcarawProcVersion = {
        'acqEra': {'Commissioning2018': '1', 'Run2018A': '2', 'Run2018B': '2'},
-       'default': "2"
+       'maxRun': {319823: '2'},
+       'default': "3"
      }
 
 defaultProcVersionReco = {
        'acqEra': {'Commissioning2018': '1', 'Run2018A': '2', 'Run2018B': '2'},
-       'default': "2"
+       'maxRun': {319823: '2'},
+       'default': "3"
      }
 
 expressProcVersion = {
