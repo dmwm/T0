@@ -1,3 +1,63 @@
+2.1.2 to 2.1.3:
+  - Merge pull request #4452 from vytjan/CMSSW_10_1_9
+  - CMSSW_10_1_9 configuration
+  - Merge pull request #4451 from vytjan/PRProcessingVersionV3
+  - Increased PR processing version from run 319826.
+  - Merge pull request #4450 from vytjan/AdjustmentsAfter10_1_8Deployment
+  - Back to PromptCalibProdBeamSpotHP, RAL Disk name fix, egamma DQM seq name fix.
+  - Merge pull request #4449 from vytjan/CMSSW_10_1_8
+  - 10_1_8 release and increment of RECO processing version.
+  - Merge pull request #4448 from cronot99/run2018c_era
+  - Updated configuration for Run2018C era
+  - Merge pull request #4447 from vytjan/highBetaStarScenario
+  - Added a config to properly configure processing scenarios for the PromptReco release.
+  - Merge pull request #4446 from cronot99/totem_write_reco
+  - Enabled write_reco for TOTEM* datasets
+  - Merge pull request #4445 from cronot99/90m_lowpileup_totem_datasets
+  - Added special TOTEM and MinimumBias0 datasets for 90m and LowPileUp menu
+  - Merge pull request #4444 from cronot99/totem4_dataset
+  - Added missing Totem4 dataset for the Roman Pots alignment.
+  - Merge pull request #4443 from vytjan/10_1_7_config
+  - 10_1_7 configuration with new GTs and incremented PR processing version.
+  - Merge pull request #4442 from cronot99/hlt_unassigned_path_exceptions
+  - Increased unassigned HLT menu exception number (317512)
+  - Merge pull request #4441 from vytjan/10_1_6_replay_Config
+  - CMSSW 10_1_6 config.
+  - Merge pull request #4440 from vytjan/EraRun2018B
+  - Switch to the era Run2018B. A new 101X_dataRun2_Prompt_v10 GT added.
+  - Merge pull request #4439 from vytjan/10_1_5
+  - 10_1_5 replay configuration
+  - Merge pull request #4438 from watson-ij/10_4_1_p1
+  - Update to CMSSW 10.4.1.patch1
+  - Merge pull request #4437 from vytjan/10_1_4_Replay
+  - Replay configuration for the 10.1.4 release test. DtCalib and PromptCalibProdSiPixel alcarecos re-enabled.
+  - Merge pull request #4436 from vytjan/ParkingBPH1-6_PDs_added
+  - Added ParkingBPH[1-6] PDs to be stored only on CERN tape.
+  - Merge pull request #4435 from cronot99/cmssw_10_1_3
+  - Updated configuration to use CMSSW_10_1_3.
+  - Merge pull request #4434 from cronot99/sipixel_quality_pcl
+  - Updated AlCaRecoMatrix for SiPixel Quality PCL workflow.
+  - Merge pull request #4433 from hufnagel/config-duplicate-dataset-fix
+  - fix a problem with the duplicate dataset in config patch
+  - Merge pull request #4432 from hufnagel/config-duplicate-dataset
+  - protect against configuring the same dataset twice
+  - Merge pull request #4431 from hufnagel/unconfigured-run-t0datasvc
+  - don't forward unconfigured runs to Tier0 Data Service
+  - Merge pull request #4428 from cronot99/new_era_2018a
+  - Merge pull request #4429 from hufnagel/tier0-accounting-group
+  - change from production to tier0 accounting group
+  - Configured new era 2018A.
+  - Merge pull request #4427 from cronot99/promptreco_revert
+  - Reenabled PromptReco for multiple datasets.
+  - Merge pull request #4426 from cronot99/cmssw_10_1_2_patch2
+  - Updated configuration to use CMSSW_10_1_2_patch2.
+  - Merge pull request #4425 from cronot99/cmssw_10_1_2_patch1
+  - Updated configuration to use CMSSW_10_1_2_patch1, non-express DQM sequences and new physics_skims.
+  - Merge pull request #4424 from cronot99/cmssw_10_1_1_patch1
+  - Updated configuration to use CMSSW_10_1_1_patch1
+  - Merge pull request #4423 from cronot99/totem_romanpot_alignment_pds
+  - New Totem RomanPot Alignment Test PDs.
+
 2.1.1 to 2.1.2:
   - Merge pull request #4422 from hufnagel/removed-alerts
   - adjust deployment to removed alerts
