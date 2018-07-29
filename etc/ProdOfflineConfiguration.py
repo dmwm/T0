@@ -35,7 +35,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 319313)
+setInjectMinRun(tier0Config, 320394)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
@@ -51,7 +51,7 @@ streamerPNN = "T2_CH_CERN"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2018C")
+setAcquisitionEra(tier0Config, "Run2018D")
 setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -90,11 +90,11 @@ setPromptCalibrationConfig(tier0Config,
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
        'acqEra': {'Commissioning2018': 'CMSSW_10_1_2_patch2'},
-       'default': "CMSSW_10_1_9"
+       'default': "CMSSW_10_2_0"
      }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "slc6_amd64_gcc630")
+setDefaultScramArch(tier0Config, "slc6_amd64_gcc700")
 
 # Configure scenarios
 ppScenario = "ppEra_Run2_2018"
@@ -110,26 +110,24 @@ alcaLumiPixelsScenario = "AlCaLumiPixels"
 defaultProcVersionRAW = 1
 
 alcarawProcVersion = {
-       'acqEra': {'Commissioning2018': '1', 'Run2018A': '2', 'Run2018B': '2'},
-       'maxRun': {319823: '2'},
-       'default': "3"
+       'acqEra': {'Commissioning2018': '1', 'Run2018A': '2', 'Run2018B': '2', 'Run2018C': '3'},
+       'default': "1"
      }
 
 defaultProcVersionReco = {
-       'acqEra': {'Commissioning2018': '1', 'Run2018A': '2', 'Run2018B': '2'},
-       'maxRun': {319823: '2'},
-       'default': "3"
+       'acqEra': {'Commissioning2018': '1', 'Run2018A': '2', 'Run2018B': '2', 'Run2018C': '3'},
+       'default': "1"
      }
 
 expressProcVersion = {
-       'acqEra': {'Commissioning2018': '1', 'Run2018A': '1', 'Run2018B': '1'},
+       'acqEra': {'Commissioning2018': '1', 'Run2018A': '1', 'Run2018B': '1', 'Run2018C': '1'},
        'default': "1"
      }
 
 # Defaults for GlobalTag
-expressGlobalTag = "101X_dataRun2_Express_v8"
-promptrecoGlobalTag = "101X_dataRun2_Prompt_v11"
-alcap0GlobalTag = "101X_dataRun2_Prompt_v11"
+expressGlobalTag = "102X_dataRun2_Express_v1"
+promptrecoGlobalTag = "102X_dataRun2_Prompt_v1"
+alcap0GlobalTag = "102X_dataRun2_Prompt_v1"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -146,39 +144,41 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_9",
-    "CMSSW_10_0_1" : "CMSSW_10_1_9",
-    "CMSSW_10_0_2" : "CMSSW_10_1_9",
-    "CMSSW_10_0_3" : "CMSSW_10_1_9",
-    "CMSSW_10_0_4" : "CMSSW_10_1_9",
-    "CMSSW_10_0_5" : "CMSSW_10_1_9",
-    "CMSSW_10_1_0" : "CMSSW_10_1_9",
-    "CMSSW_10_1_1" : "CMSSW_10_1_9",
-    "CMSSW_10_1_2" : "CMSSW_10_1_9",
-    "CMSSW_10_1_3" : "CMSSW_10_1_9",
-    "CMSSW_10_1_4" : "CMSSW_10_1_9",
-    "CMSSW_10_1_5" : "CMSSW_10_1_9",
-    "CMSSW_10_1_6" : "CMSSW_10_1_9",
-    "CMSSW_10_1_7" : "CMSSW_10_1_9",
-    "CMSSW_10_1_8" : "CMSSW_10_1_9"
+    "CMSSW_10_0_0" : "CMSSW_10_2_0",
+    "CMSSW_10_0_1" : "CMSSW_10_2_0",
+    "CMSSW_10_0_2" : "CMSSW_10_2_0",
+    "CMSSW_10_0_3" : "CMSSW_10_2_0",
+    "CMSSW_10_0_4" : "CMSSW_10_2_0",
+    "CMSSW_10_0_5" : "CMSSW_10_2_0",
+    "CMSSW_10_1_0" : "CMSSW_10_2_0",
+    "CMSSW_10_1_1" : "CMSSW_10_2_0",
+    "CMSSW_10_1_2" : "CMSSW_10_2_0",
+    "CMSSW_10_1_3" : "CMSSW_10_2_0",
+    "CMSSW_10_1_4" : "CMSSW_10_2_0",
+    "CMSSW_10_1_5" : "CMSSW_10_2_0",
+    "CMSSW_10_1_6" : "CMSSW_10_2_0",
+    "CMSSW_10_1_7" : "CMSSW_10_2_0",
+    "CMSSW_10_1_8" : "CMSSW_10_2_0",
+    "CMSSW_10_1_9" : "CMSSW_10_2_0"
     }
 
 expressVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_9",
-    "CMSSW_10_0_1" : "CMSSW_10_1_9",
-    "CMSSW_10_0_2" : "CMSSW_10_1_9",
-    "CMSSW_10_0_3" : "CMSSW_10_1_9",
-    "CMSSW_10_0_4" : "CMSSW_10_1_9",
-    "CMSSW_10_0_5" : "CMSSW_10_1_9",
-    "CMSSW_10_1_0" : "CMSSW_10_1_9",
-    "CMSSW_10_1_1" : "CMSSW_10_1_9",
-    "CMSSW_10_1_2" : "CMSSW_10_1_9",
-    "CMSSW_10_1_3" : "CMSSW_10_1_9",
-    "CMSSW_10_1_4" : "CMSSW_10_1_9",
-    "CMSSW_10_1_5" : "CMSSW_10_1_9",
-    "CMSSW_10_1_6" : "CMSSW_10_1_9",
-    "CMSSW_10_1_7" : "CMSSW_10_1_9",
-    "CMSSW_10_1_8" : "CMSSW_10_1_9"
+    "CMSSW_10_0_0" : "CMSSW_10_2_0",
+    "CMSSW_10_0_1" : "CMSSW_10_2_0",
+    "CMSSW_10_0_2" : "CMSSW_10_2_0",
+    "CMSSW_10_0_3" : "CMSSW_10_2_0",
+    "CMSSW_10_0_4" : "CMSSW_10_2_0",
+    "CMSSW_10_0_5" : "CMSSW_10_2_0",
+    "CMSSW_10_1_0" : "CMSSW_10_2_0",
+    "CMSSW_10_1_1" : "CMSSW_10_2_0",
+    "CMSSW_10_1_2" : "CMSSW_10_2_0",
+    "CMSSW_10_1_3" : "CMSSW_10_2_0",
+    "CMSSW_10_1_4" : "CMSSW_10_2_0",
+    "CMSSW_10_1_5" : "CMSSW_10_2_0",
+    "CMSSW_10_1_6" : "CMSSW_10_2_0",
+    "CMSSW_10_1_7" : "CMSSW_10_2_0",
+    "CMSSW_10_1_8" : "CMSSW_10_2_0",
+    "CMSSW_10_1_9" : "CMSSW_10_2_0"
     }
 
 #set default repack settings for bulk streams
@@ -1085,6 +1085,18 @@ for dataset in datasets:
                disk_node = None,
                scenario = ppScenario)
 
+# Parking PD to be PR'ed at CSCS
+datasets = [ "ParkingBPHPromptCSCS" ]
+ 
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = False,
+               siteWhitelist = [ "T0_CH_CSCS_HPC" ],
+               archival_node = "T0_CH_CERN_MSS",
+               tape_node = None,
+               disk_node = None,
+               scenario = ppScenario)
+ 
 datasets = [ "RPCMonitor" ]
 
 for dataset in datasets:
