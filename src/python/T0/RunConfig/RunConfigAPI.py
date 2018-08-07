@@ -552,6 +552,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['RequestTransition'] = []
             specArguments['RequestStatus'] = REQUEST_START_STATE
             specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority + 5000
+            specArguments['PriorityTransition'] = []
 
             specArguments['CMSSWVersion'] = streamConfig.Repack.CMSSWVersion
             specArguments['ScramArch'] = streamConfig.Repack.ScramArch
@@ -611,6 +612,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['RequestTransition'] = []
             specArguments['RequestStatus'] = REQUEST_START_STATE
             specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority + 10000
+            specArguments['PriorityTransition'] = []
 
             specArguments['ProcessingString'] = "Express"
             specArguments['ProcessingVersion'] = streamConfig.Express.ProcessingVersion
@@ -1022,6 +1024,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 specArguments['RequestTransition'] = []
                 specArguments['RequestStatus'] = REQUEST_START_STATE
                 specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority
+                specArguments['PriorityTransition'] = []
 
                 specArguments['AcquisitionEra'] = runInfo['acq_era']
                 specArguments['CMSSWVersion'] = datasetConfig.CMSSWVersion
