@@ -689,8 +689,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             wmSpec.updateArguments( { 'SiteWhitelist': [ tier0Config.Global.ProcessingSite ],
                                       'SiteBlacklist': [],
                                       'BlockCloseMaxWaitTime': blockCloseDelay,
-                                      'MaxRSS': 1024 * specArguments['Memory'] + 10,
-                                      'MaxVSize': 104857600, #100GB, effectively disabled
                                       'SoftTimeout': 604800, #7 days, effectively disabled
                                       'GracePeriod': 3600,
                                       'Dashboard': "t0" } )
@@ -1099,8 +1097,6 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                           'SiteBlacklist': [],
                                           'TrustSitelists': "True",
                                           'BlockCloseMaxWaitTime': datasetConfig.BlockCloseDelay,
-                                          'MaxRSS': 1024 * specArguments['Memory'] + 10,
-                                          'MaxVSize': 104857600, #100GB, effectively disabled
                                           'SoftTimeout': 604800, #7 days, effectively disabled
                                           'GracePeriod': 3600,
                                           'Dashboard': "t0" } )
