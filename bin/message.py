@@ -4,7 +4,7 @@ filename1=sys.argv[1]
 filename2=sys.argv[2]
 print("python {} {}".format(filename1,filename2))
 string=''
-p=Popen([sys.executable,'-u','compi.py', filename2],stdout=PIPE,stderr=STDOUT,close_fds=True,bufsize=0)
+p=Popen([sys.executable,'-u',filename1, filename2],stdout=PIPE,stderr=STDOUT,close_fds=True,bufsize=0)
 for c in iter(lambda: p.stdout.read(1), ''):
   string+=c
 p.stdout.close()
