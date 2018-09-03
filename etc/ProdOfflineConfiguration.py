@@ -125,9 +125,9 @@ expressProcVersion = {
      }
 
 # Defaults for GlobalTag
-expressGlobalTag = "102X_dataRun2_Express_v1"
-promptrecoGlobalTag = "102X_dataRun2_Prompt_v1"
-alcap0GlobalTag = "102X_dataRun2_Prompt_v1"
+expressGlobalTag = "102X_dataRun2_Express_v2"
+promptrecoGlobalTag = "102X_dataRun2_Prompt_v6"
+alcap0GlobalTag = "102X_dataRun2_Prompt_v6"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -160,6 +160,7 @@ repackVersionOverride = {
     "CMSSW_10_1_7" : "CMSSW_10_2_1",
     "CMSSW_10_1_8" : "CMSSW_10_2_1",
     "CMSSW_10_1_9" : "CMSSW_10_2_1",
+    "CMSSW_10_1_10" : "CMSSW_10_2_1",
     "CMSSW_10_2_0" : "CMSSW_10_2_1"
     }
 
@@ -180,6 +181,7 @@ expressVersionOverride = {
     "CMSSW_10_1_7" : "CMSSW_10_2_1",
     "CMSSW_10_1_8" : "CMSSW_10_2_1",
     "CMSSW_10_1_9" : "CMSSW_10_2_1",
+    "CMSSW_10_1_10" : "CMSSW_10_2_1",
     "CMSSW_10_2_0" : "CMSSW_10_2_1"
     }
 
