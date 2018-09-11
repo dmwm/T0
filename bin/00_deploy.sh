@@ -214,4 +214,5 @@ echo 'config.TaskArchiver.archiveDelayHours = 1' >> ./config/tier0/config.py
 #echo "config.AgentStatusWatcher.runningExpressPercent = 30" >> ./config/tier0/config.py
 #echo "config.AgentStatusWatcher.runningRepackPercent = 10" >> ./config/tier0/config.py
 
+cat ./config/tier0/config.py
 
