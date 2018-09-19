@@ -42,6 +42,7 @@ def extractConfigParameter(configParameter, era, run):
             for maxRun in sorted(configParameter['maxRun'].keys()):
                 if run <= maxRun:
                     newConfigParameter = configParameter['maxRun'][maxRun]
+                    break
             if newConfigParameter:
                 return newConfigParameter
         return configParameter['default']
