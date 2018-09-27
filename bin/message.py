@@ -9,6 +9,5 @@ for c in iter(lambda: p.stdout.read(1), ''):
   string+=c
 p.stdout.close()
 rc=p.wait()
-print("...")
-if(string==''):print("compiling done without syntax error")
+if(string==''):print("##compiling done without syntax error : "+filename2)
 else:print(string)
