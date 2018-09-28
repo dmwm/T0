@@ -14,6 +14,7 @@ rc=p.wait()
 if(string==''):print("##compiling done without syntax error : "+filename2)
 else:
   if(button!=0):
+    print("exit%%")
     sys.exit(button)
   else:
     print(string)
