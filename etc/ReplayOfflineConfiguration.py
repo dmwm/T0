@@ -26,6 +26,7 @@ from T0.RunConfig.Tier0Config import addConversionConfig
 from T0.RunConfig.Tier0Config import setInjectRuns
 from T0.RunConfig.Tier0Config import setStreamerPNN
 assert 0, "assert 0 making an error" #assert error checking
+print(undefinedvariable)
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
  
