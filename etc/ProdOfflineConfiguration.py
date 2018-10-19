@@ -35,7 +35,8 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 322801)
+# setInjectMinRun(tier0Config, 322801)
+setInjectMinRun(tier0Config, 324403)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
@@ -126,9 +127,9 @@ expressProcVersion = {
      }
 
 # Defaults for GlobalTag
-expressGlobalTag = "102X_dataRun2_Express_v3"
-promptrecoGlobalTag = "102X_dataRun2_Prompt_v7"
-alcap0GlobalTag = "102X_dataRun2_Prompt_v7"
+expressGlobalTag = "102X_dataRun2_Express_v4"
+promptrecoGlobalTag = "102X_dataRun2_Prompt_v11"
+alcap0GlobalTag = "102X_dataRun2_Prompt_v11"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
