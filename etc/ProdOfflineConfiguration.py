@@ -35,8 +35,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-# setInjectMinRun(tier0Config, 322801)
-setInjectMinRun(tier0Config, 324403)
+setInjectMinRun(tier0Config, 325277)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
@@ -52,7 +51,7 @@ streamerPNN = "T2_CH_CERN"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2018D")
+setAcquisitionEra(tier0Config, "Run2018E")
 setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -112,17 +111,17 @@ hiTestppScenario = "ppEra_Run2_2018_pp_on_AA"
 defaultProcVersionRAW = 1
 
 alcarawProcVersion = {
-       'acqEra': {'Commissioning2018': '1', 'Run2018A': '2', 'Run2018B': '2', 'Run2018C': '3'},
-       'default': "2"
+       'acqEra': {'Commissioning2018': '1', 'Run2018A': '2', 'Run2018B': '2', 'Run2018C': '3', 'Run2018D': '2'},
+       'default': "1"
      }
 
 defaultProcVersionReco = {
-       'acqEra': {'Commissioning2018': '1', 'Run2018A': '2', 'Run2018B': '2', 'Run2018C': '3'},
-       'default': "2"
+       'acqEra': {'Commissioning2018': '1', 'Run2018A': '2', 'Run2018B': '2', 'Run2018C': '3', 'Run2018D': '2'},
+       'default': "1"
      }
 
 expressProcVersion = {
-       'acqEra': {'Commissioning2018': '1', 'Run2018A': '1', 'Run2018B': '1', 'Run2018C': '1'},
+       'acqEra': {'Commissioning2018': '1', 'Run2018A': '1', 'Run2018B': '1', 'Run2018C': '1', 'Run2018D': '1'},
        'default': "1"
      }
 
@@ -236,7 +235,8 @@ addExpressConfig(tier0Config, "Express",
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
                                     "TkAlMinBias", "DtCalib", "LumiPixelsMinBias", "SiPixelCalZeroBias",
                                     "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
-                                    "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel"
+                                    "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel",
+                                    "PromptCalibProdBeamSpotHPLowPU"
                                     ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
