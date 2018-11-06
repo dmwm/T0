@@ -145,9 +145,13 @@ Tier0Configuration - Global configuration object
 |             |     |
 |             |     |--> TapeNode - The tape PhEDEx node (default None)
 |             |     |
+|             |     |--> RAWTapeNode - The tape PhEDEx node for RAW (default None)
+|             |     |
 |             |     |--> DiskNode - The disk PhEDEx node (default None)
 |             |     |
 |             |     |--> DiskNodeReco - The disk PhEDEx node for bulk RECO data (default None)
+|             |     |
+|             |     |--> RAWToDisk - Do we subscribe RAW to disk?
 |             |     |
 |             |     |--> PhEDExGroup - The PhEDEx group for the subscriptions.
 |             |     |
@@ -457,6 +461,11 @@ def addDataset(config, datasetName, **settings):
         datasetConfig.TapeNode = settings.get('tape_node', datasetConfig.TapeNode)
     else:
         datasetConfig.TapeNode = settings.get('tape_node', None)
+
+    if hasattr(datasetConfig, "RAWTapeNode"):
+        datasetConfig.RAWTapeNode = settings.get('raw_tape_node', datasetConfig.RAWTapeNode)
+    else:
+        datasetConfig.RAWTapeNode = settings.get('raw_tape_node', None)
 
     if hasattr(datasetConfig, "DiskNode"):
         datasetConfig.DiskNode = settings.get('disk_node', datasetConfig.DiskNode)
