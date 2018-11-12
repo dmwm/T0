@@ -467,10 +467,11 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                         custodialSites.append(datasetConfig.RAWTapeNode)
                     else:
                         custodialSites.append(datasetConfig.TapeNode)
-                if datasetConfig.DiskNode and datasetConfig.RAWtoDisk:
+                if datasetConfig.DiskNode:
                     bindsStorageNode.append( { 'NODE' : datasetConfig.DiskNode } )
-                    nonCustodialSites.append(datasetConfig.DiskNode)
-                    autoApproveSites.append(datasetConfig.DiskNode)
+                    if datasetConfig.RAWtoDisk:
+                        nonCustodialSites.append(datasetConfig.DiskNode)
+                        autoApproveSites.append(datasetConfig.DiskNode)
                 if datasetConfig.DiskNodeReco:
                     bindsStorageNode.append( { 'NODE' : datasetConfig.DiskNodeReco } )
 
