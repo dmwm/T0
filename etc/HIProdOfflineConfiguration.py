@@ -1673,6 +1673,20 @@ for dataset in datasets:
                dqm_sequences = [ "@common" ],
                scenario = hiTestppScenario)
 
+# CMS VdM scan PDs
+datasets = [ "HICentralityVetoReducedFormat0", "HICentralityVetoReducedFormat1", "HICentralityVetoReducedFormat2",
+             "HICentralityVetoReducedFormat3", "HICentralityVetoReducedFormat4", "HICentralityVetoReducedFormat5",
+             "HICentralityVetoReducedFormat6", "HICentralityVetoReducedFormat7", "HICentralityVetoReducedFormat8",
+             "HICentralityVetoReducedFormat9", "HICentralityVetoReducedFormat10", "HICentralityVetoReducedFormat11" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               write_miniaod = False,
+               do_reco = True,
+               write_dqm = True,
+               dqm_sequences = [ "@common" ],
+               scenario = hiTestppScenario)
+
 datasets = [ "HIMinimumBiasReducedFormat1", "HIMinimumBiasReducedFormat10", "HIMinimumBiasReducedFormat11", 
              "HIMinimumBiasReducedFormat2", "HIMinimumBiasReducedFormat3", "HIMinimumBiasReducedFormat4", 
              "HIMinimumBiasReducedFormat5", "HIMinimumBiasReducedFormat6", "HIMinimumBiasReducedFormat7", 
@@ -1698,7 +1712,10 @@ for dataset in datasets:
 datasets = [ "HIMinimumBias0", "HIMinimumBias1", "HIMinimumBias2",
              "HIMinimumBias3", "HIMinimumBias4", "HIMinimumBias5",
              "HIMinimumBias6", "HIMinimumBias7", "HIMinimumBias8",
-             "HIMinimumBias9" ]
+             "HIMinimumBias9", "HIMinimumBias10", "HIMinimumBias11",
+             "HIMinimumBias12", "HIMinimumBias13", "HIMinimumBias14",
+             "HIMinimumBias15", "HIMinimumBias16", "HIMinimumBias17",
+             "HIMinimumBias18","HIMinimumBias19" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
