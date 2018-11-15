@@ -1690,13 +1690,15 @@ for dataset in datasets:
 datasets = [ "HIMinimumBiasReducedFormat1", "HIMinimumBiasReducedFormat10", "HIMinimumBiasReducedFormat11", 
              "HIMinimumBiasReducedFormat2", "HIMinimumBiasReducedFormat3", "HIMinimumBiasReducedFormat4", 
              "HIMinimumBiasReducedFormat5", "HIMinimumBiasReducedFormat6", "HIMinimumBiasReducedFormat7", 
-             "HIMinimumBiasReducedFormat8", "HIMinimumBiasReducedFormat9", "HILowMultiplicityReducedFormat" ]
+             "HIMinimumBiasReducedFormat8", "HIMinimumBiasReducedFormat9", "HILowMultiplicityReducedFormat",
+             "HILowMultiplicity" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                write_miniaod = False,
                do_reco = True,
                write_dqm = False,
+               dqm_sequences = [ "@none" ],
                scenario = hiTestppScenario)
 
 datasets = [ "HIForward" ]
@@ -1709,7 +1711,17 @@ for dataset in datasets:
                dqm_sequences = [ "@commonSiStripZeroBias" ],
                scenario = hiTestppScenario)
 
-datasets = [ "HIMinimumBias0", "HIMinimumBias1", "HIMinimumBias2",
+ datasets = [ "HIMinimumBias0", "HIMinimumBias1" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               write_miniaod = False,
+               do_reco = True,
+               write_dqm = True,
+               dqm_sequences = [ "@commonSiStripZeroBias", "@hcal" ],
+               scenario = hiTestppScenario)
+
+datasets = [ "HIMinimumBias2",
              "HIMinimumBias3", "HIMinimumBias4", "HIMinimumBias5",
              "HIMinimumBias6", "HIMinimumBias7", "HIMinimumBias8",
              "HIMinimumBias9", "HIMinimumBias10", "HIMinimumBias11",
@@ -1722,7 +1734,7 @@ for dataset in datasets:
                write_miniaod = False,
                do_reco = True,
                write_dqm = True,
-               dqm_sequences = [ "@commonSiStripZeroBias", "@hcal" ],
+               dqm_sequences = [ "@none" ],
                scenario = hiTestppScenario)
 
 datasets = [ "HIHcalNZS" ]
