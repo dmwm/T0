@@ -1711,7 +1711,7 @@ for dataset in datasets:
                dqm_sequences = [ "@commonSiStripZeroBias" ],
                scenario = hiTestppScenario)
 
- datasets = [ "HIMinimumBias0", "HIMinimumBias1" ]
+datasets = [ "HIMinimumBias0", "HIMinimumBias1" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -1727,13 +1727,13 @@ datasets = [ "HIMinimumBias2",
              "HIMinimumBias9", "HIMinimumBias10", "HIMinimumBias11",
              "HIMinimumBias12", "HIMinimumBias13", "HIMinimumBias14",
              "HIMinimumBias15", "HIMinimumBias16", "HIMinimumBias17",
-             "HIMinimumBias18","HIMinimumBias19" ]
+             "HIMinimumBias18", "HIMinimumBias19" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                write_miniaod = False,
                do_reco = True,
-               write_dqm = True,
+               write_dqm = False,
                dqm_sequences = [ "@none" ],
                scenario = hiTestppScenario)
 
