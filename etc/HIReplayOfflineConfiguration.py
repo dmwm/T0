@@ -33,7 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [ 325112 ])
+setInjectRuns(tier0Config, [ 326607 ])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -83,7 +83,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-       'default': "CMSSW_10_3_1_patch1"
+       'default': "CMSSW_10_3_1_patch2"
      }
 
 # Configure ScramArch
@@ -102,9 +102,9 @@ alcaLumiPixelsScenario = "AlCaLumiPixels"
 hiTestppScenario = "ppEra_Run2_2018_pp_on_AA"
 
 # Defaults for processing version
-defaultProcVersion = 220
-expressProcVersion = 220
-alcarawProcVersion = 220
+defaultProcVersion = 221
+expressProcVersion = 221
+alcarawProcVersion = 221
 
 # Defaults for GlobalTag
 expressGlobalTag = "103X_dataRun2_Express_v2"
@@ -126,51 +126,51 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_0_1" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_0_2" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_0_3" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_0_4" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_0_5" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_1_0" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_1_1" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_1_2" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_1_3" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_1_4" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_1_5" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_1_6" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_1_7" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_1_8" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_1_9" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_1_10" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_2_0" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_2_1" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_2_5" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_3_0" : "CMSSW_10_3_1_patch1"
+    "CMSSW_10_0_0" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_0_1" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_0_2" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_0_3" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_0_4" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_0_5" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_1_0" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_1_1" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_1_2" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_1_3" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_1_4" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_1_5" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_1_6" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_1_7" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_1_8" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_1_9" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_1_10" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_2_0" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_2_1" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_2_5" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_3_0" : "CMSSW_10_3_1_patch2"
     }
 
 expressVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_0_1" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_0_2" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_0_3" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_0_4" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_0_5" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_1_0" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_1_1" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_1_2" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_1_3" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_1_4" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_1_5" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_1_6" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_1_7" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_1_8" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_1_9" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_1_10" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_2_0" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_2_1" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_2_5" : "CMSSW_10_3_1_patch1",
-    "CMSSW_10_3_0" : "CMSSW_10_3_1_patch1"
+    "CMSSW_10_0_0" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_0_1" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_0_2" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_0_3" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_0_4" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_0_5" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_1_0" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_1_1" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_1_2" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_1_3" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_1_4" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_1_5" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_1_6" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_1_7" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_1_8" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_1_9" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_1_10" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_2_0" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_2_1" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_2_5" : "CMSSW_10_3_1_patch2",
+    "CMSSW_10_3_0" : "CMSSW_10_3_1_patch2"
     }
 
 #set default repack settings for bulk streams
@@ -1534,7 +1534,8 @@ for dataset in datasets:
                dqm_sequences = [ "@common" ],
                scenario = hiTestppScenario)
 
-datasets = [ "HIHardProbesPrescaled", "HIHardProbesPeripheral", "HICommissioning" ]
+datasets = [ "HIHardProbesPrescaled", "HIHardProbesPeripheral", "HICommissioning",
+             "HICastor" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -1545,7 +1546,18 @@ for dataset in datasets:
                dqm_sequences = [ "@common" ],
                scenario = hiTestppScenario)
 
-datasets = [ "HIMinimumBiasReducedFormat0" ]
+datasets = [ "HIHeavyFlavor", "HIHighMultiplicityETTAsym" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               write_miniaod = False,
+               do_reco = True,
+               write_dqm = True,
+               reco_split = hiRecoSplitting,
+               dqm_sequences = [ "@common" ],
+               scenario = hiTestppScenario)
+
+datasets = [ "HIMinimumBiasReducedFormat0", "HILowMultiplicityReducedFormat", "HILowMultiplicity" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
@@ -1581,6 +1593,7 @@ for dataset in datasets:
                do_reco = True,
                raw_to_disk = True,
                write_dqm = False,
+               dqm_sequences = [ "@none" ],
                scenario = hiTestppScenario)
 
 datasets = [ "HIForward" ]
@@ -1594,7 +1607,17 @@ for dataset in datasets:
                dqm_sequences = [ "@commonSiStripZeroBias" ],
                scenario = hiTestppScenario)
 
-datasets = [ "HIMinimumBias0", "HIMinimumBias1", "HIMinimumBias2",
+datasets = [ "HIMinimumBias0", "HIMinimumBias1" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               write_miniaod = False,
+               do_reco = True,
+               write_dqm = True,
+               dqm_sequences = [ "@commonSiStripZeroBias", "@hcal" ],
+               scenario = hiTestppScenario)
+
+datasets = [ "HIMinimumBias2",
              "HIMinimumBias3", "HIMinimumBias4", "HIMinimumBias5",
              "HIMinimumBias6", "HIMinimumBias7", "HIMinimumBias8",
              "HIMinimumBias9", "HIMinimumBias10", "HIMinimumBias11",
@@ -1607,8 +1630,8 @@ for dataset in datasets:
                write_miniaod = False,
                do_reco = True,
                raw_to_disk = True,
-               write_dqm = True,
-               dqm_sequences = [ "@commonSiStripZeroBias", "@hcal" ],
+               write_dqm = False,
+               dqm_sequences = [ "@none" ],
                scenario = hiTestppScenario)
 
 datasets = [ "HIHcalNZS" ]
@@ -1643,6 +1666,7 @@ for dataset in datasets:
                do_reco = True,
                raw_to_disk = True,
                write_dqm = True,
+               reco_split = hiRecoSplitting,
                dqm_sequences = [ "@common", "@ecal", "@egamma" ],
                scenario = hiTestppScenario)
 
@@ -1654,6 +1678,7 @@ for dataset in datasets:
                do_reco = True,
                raw_to_disk = True,
                write_dqm = True,
+               reco_split = hiRecoSplitting,
                alca_producers = [ "TkAlMinBias", "HcalCalIterativePhiSym", "SiStripCalSmallBiasScan" ],
                dqm_sequences = [ "@common", "@ecal", "@hcal", "@jetmet", "@egamma" ],
                physics_skims = [ "PbPbEMu", "PbPbZEE" ],
@@ -1667,8 +1692,10 @@ for dataset in datasets:
                write_dqm = True,
                raw_to_disk = True,
                write_miniaod = False,
+               reco_split = hiRecoSplitting,
                alca_producers = [ "TkAlZMuMu", "TkAlMuonIsolated", "DtCalib", "HcalCalIterativePhiSym" ],
                dqm_sequences = [ "@common", "@muon", "@lumi" ],
+               physics_skims = [ "PbPbZMu" ],
                scenario = hiTestppScenario)
 
 datasets = [ "HIDoubleMuon" ]
@@ -1680,6 +1707,7 @@ for dataset in datasets:
                raw_to_disk = True,
                write_miniaod = False,
                write_dqm = True,
+               reco_split = hiRecoSplitting,
                alca_producers = [ "TkAlJpsiMuMu", "TkAlUpsilonMuMu" ],
                dqm_sequences = [ "@common", "@muon", "@lumi" ],
                physics_skims = [ "PbPbZMM" ],
