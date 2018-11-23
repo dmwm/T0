@@ -1807,7 +1807,7 @@ for dataset in datasets:
                physics_skims = [ "PbPbZMM" ],
                scenario = hiTestppScenario)
 
-datasets = [ "HIDoubleMuon" ]
+datasets = [ "HIDoubleMuon", "HIDoubleMuonPsiPeri" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
