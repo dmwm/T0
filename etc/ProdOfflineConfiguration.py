@@ -35,7 +35,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 325277)
+setInjectMinRun(tier0Config, 327825)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
@@ -51,7 +51,7 @@ streamerPNN = "T2_CH_CERN"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2018E")
+setAcquisitionEra(tier0Config, "Commissioning2019")
 setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -90,7 +90,7 @@ setPromptCalibrationConfig(tier0Config,
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
        'acqEra': {'Commissioning2018': 'CMSSW_10_1_2_patch2'},
-       'default': "CMSSW_10_2_5_patch1"
+       'default': "CMSSW_10_3_1_patch3"
      }
 
 # Configure ScramArch
@@ -111,24 +111,21 @@ hiTestppScenario = "ppEra_Run2_2018_pp_on_AA"
 defaultProcVersionRAW = 1
 
 alcarawProcVersion = {
-       'acqEra': {'Commissioning2018': '1', 'Run2018A': '2', 'Run2018B': '2', 'Run2018C': '3', 'Run2018D': '2'},
        'default': "1"
      }
 
 defaultProcVersionReco = {
-       'acqEra': {'Commissioning2018': '1', 'Run2018A': '2', 'Run2018B': '2', 'Run2018C': '3', 'Run2018D': '2'},
        'default': "1"
      }
 
 expressProcVersion = {
-       'acqEra': {'Commissioning2018': '1', 'Run2018A': '1', 'Run2018B': '1', 'Run2018C': '1', 'Run2018D': '1'},
        'default': "1"
      }
 
 # Defaults for GlobalTag
-expressGlobalTag = "102X_dataRun2_Express_v4"
-promptrecoGlobalTag = "102X_dataRun2_Prompt_v11"
-alcap0GlobalTag = "102X_dataRun2_Prompt_v11"
+expressGlobalTag = "103X_dataRun2_Express_v2"
+promptrecoGlobalTag = "103X_dataRun2_Prompt_v3"
+alcap0GlobalTag = "103X_dataRun2_Prompt_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -145,47 +142,51 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_0_1" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_0_2" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_0_3" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_0_4" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_0_5" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_1_0" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_1_1" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_1_2" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_1_3" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_1_4" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_1_5" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_1_6" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_1_7" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_1_8" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_1_9" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_1_10" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_2_0" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_2_1" : "CMSSW_10_2_5_patch1"
+    "CMSSW_10_0_0" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_0_1" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_0_2" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_0_3" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_0_4" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_0_5" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_0" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_1" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_2" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_3" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_4" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_5" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_6" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_7" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_8" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_9" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_10" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_2_0" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_2_1" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_2_5" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_3_0" : "CMSSW_10_3_1_patch3"
     }
 
 expressVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_0_1" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_0_2" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_0_3" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_0_4" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_0_5" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_1_0" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_1_1" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_1_2" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_1_3" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_1_4" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_1_5" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_1_6" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_1_7" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_1_8" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_1_9" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_1_10" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_2_0" : "CMSSW_10_2_5_patch1",
-    "CMSSW_10_2_1" : "CMSSW_10_2_5_patch1"
+    "CMSSW_10_0_0" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_0_1" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_0_2" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_0_3" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_0_4" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_0_5" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_0" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_1" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_2" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_3" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_4" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_5" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_6" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_7" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_8" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_9" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_10" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_2_0" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_2_1" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_2_5" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_3_0" : "CMSSW_10_3_1_patch3"
     }
 
 #set default repack settings for bulk streams
