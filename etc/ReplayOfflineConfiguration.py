@@ -25,6 +25,7 @@ from T0.RunConfig.Tier0Config import addRegistrationConfig
 from T0.RunConfig.Tier0Config import addConversionConfig
 from T0.RunConfig.Tier0Config import setInjectRuns
 from T0.RunConfig.Tier0Config import setStreamerPNN
+from T0.RunConfig.Tier0Config import setEnableUniqueWorkflowName
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -33,7 +34,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [ 322602 ])
+setInjectRuns(tier0Config, [ 322057 ])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -55,6 +56,11 @@ setStreamerPNN(tier0Config, streamerPNN)
 
 # Override for DQM data tier
 setDQMDataTier(tier0Config, "DQMIO")
+
+# Set unique replay workflow names
+# Uses era name, Repack, Express, PromptReco processing versions, date/time, e.g.:
+# PromptReco_Run322057_Charmonium_Tier0_REPLAY_vocms047_v274_190221_121
+setEnableUniqueWorkflowName(tier0Config)
 
 # Define the two default timeouts for reco release
 # First timeout is used directly for reco release
@@ -101,9 +107,9 @@ alcaLumiPixelsScenario = "AlCaLumiPixels"
 hiTestppScenario = "ppEra_Run2_2018_pp_on_AA"
 
 # Defaults for processing version
-defaultProcVersion = 258
-expressProcVersion = 258
-alcarawProcVersion = 258
+defaultProcVersion = 274
+expressProcVersion = 274
+alcarawProcVersion = 274
 
 # Defaults for GlobalTag
 expressGlobalTag = "102X_dataRun2_Express_v4"
@@ -693,7 +699,8 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                write_dqm = True,
-               alca_producers = [ "EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym", "HcalCalIsoTrkFilter", "EcalESAlign" ],
+               alca_producers = [ "EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym",
+                "HcalCalIsoTrkFilter", "EcalESAlign" ],
                dqm_sequences = [ "@common", "@ecal", "@egamma", "@L1TEgamma" ],
                physics_skims = [ "EXOMONOPOLE", "ZElectron", "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)

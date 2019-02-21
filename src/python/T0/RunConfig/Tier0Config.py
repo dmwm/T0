@@ -257,6 +257,8 @@ def createTier0Config():
 
     tier0Config.Global.BaseRequestPriority = 150000
 
+    tier0Config.Global.EnableUniqueWorkflowName = False
+
     return tier0Config
 
 def retrieveStreamConfig(config, streamName):
@@ -661,6 +663,17 @@ def setInjectMaxRun(config, injectMaxRun):
     Set the highest run to be injected into the Tier0.
     """
     config.Global.InjectMaxRun = injectMaxRun
+    return
+
+def setEnableUniqueWorkflowName(config):
+    """
+    _setEnableUniqueWorkflowName_
+
+    Enables using unique workflow names in Tier0 replays.
+    Uses era name, Repack, Express, PromptReco processing versions, date/time, e.g.:
+    PromptReco_Run322057_Charmonium_Tier0_REPLAY_vocms047_v274_190221_121
+    """
+    config.Global.EnableUniqueWorkflowName = True
     return
 
 def ignoreStream(config, streamName):

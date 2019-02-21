@@ -551,7 +551,13 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         if streamConfig.ProcessingStyle == "Bulk":
 
             taskName = "Repack"
-            workflowName = "Repack_Run%d_Stream%s" % (run, stream)
+
+            if tier0Config.Global.EnableUniqueWorkflowName:
+                workflowName = "Repack_Run%d_Stream%s_%s_v%s_%s" % (run, stream, 
+                    tier0Config.Global.AcquisitionEra, streamConfig.Repack.ProcessingVersion, 
+                    time.strftime('%y%m%d_%H%M', time.localtime(time.time())))
+            else:
+                workflowName = "Repack_Run%d_Stream%s" % (run, stream)
 
             specArguments = {}
 
@@ -600,7 +606,13 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         elif streamConfig.ProcessingStyle == "Express":
 
             taskName = "Express"
-            workflowName = "Express_Run%d_Stream%s" % (run, stream)
+
+            if tier0Config.Global.EnableUniqueWorkflowName:
+                workflowName = "Express_Run%d_Stream%s_%s_v%s_%s" % (run, stream, 
+                    tier0Config.Global.AcquisitionEra, streamConfig.Express.ProcessingVersion,
+                    time.strftime('%y%m%d_%H%M', time.localtime(time.time())))
+            else:
+                workflowName = "Express_Run%d_Stream%s" % (run, stream)
 
             specArguments = {}
 
@@ -1020,7 +1032,13 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 # create WMSpec
                 #
                 taskName = "Reco"
-                workflowName = "PromptReco_Run%d_%s" % (run, dataset)
+
+                if tier0Config.Global.EnableUniqueWorkflowName:
+                    workflowName = "PromptReco_Run%d_%s_%s_v%s_%s" % (run, dataset,
+                        tier0Config.Global.AcquisitionEra, datasetConfig.ProcessingVersion,
+                        time.strftime('%y%m%d_%H%M', time.localtime(time.time())))
+                else:
+                    workflowName = "PromptReco_Run%d_%s" % (run, dataset)
 
                 specArguments = {}
 
