@@ -1,3 +1,43 @@
+2.1.3 to 2.1.4:
+  - Merge pull request #4476 from vytjan/versioning-workflows
+  - Adding a global EnableUniqueWorkflowName configuration parameter to be used in replays.
+  - Merge pull request #4473 from vytjan/Commissioning19-era
+  - Commissioning2019 era.
+  - Merge pull request #4472 from vytjan/HIDoubleMuonPsiPeri
+  - HIDoubleMuonPsiPeri PD added.
+  - Merge pull request #4471 from vytjan/10_3_1_patch2
+  - 10_3_1_patch2 configuration. Reco version incremented. PbPbZMM skim.
+  - Merge pull request #4468 from andresfelquintero/HIConfigDQM
+  - ChangesonDQMforMinimumBiasPDs
+  - Merge pull request #4467 from vytjan/VdMScanPDs
+  - Added HICentralityVetoReducedFormat[0-11], HIMinimumBias[10-19] PDs.
+  - Merge pull request #4466 from hufnagel/fix-disk-node-bug
+  - fix bug in disk node configuration
+  - Merge pull request #4464 from hufnagel/raw-tape-node
+  - Merge pull request #4465 from vytjan/HI2018Configuration
+  - HI2018 run configuration
+  - add ability to configure separate tape node for RAW
+  - Merge pull request #4463 from vytjan/Run2018EConfig
+  - 2018E era config and HI scenarios added.
+  - Merge pull request #4462 from vytjan/Pre_HI_Configuration
+  - Updated from production headnode configuration.
+  - Merge pull request #4461 from vytjan/AFTER_TS2
+  - Updated GTs, ALCARECO matrix, added PDs used in HI tests, added the HI test scenario.
+  - Merge pull request #4460 from hufnagel/maxrun-fix
+  - fix a problem with evaluating multiple maxRun statements
+  - Merge pull request #4459 from vytjan/CMSSW_10_2_4
+  - Updated Prod GTs to 102X_dataRun2_Prompt_v6  and the replay configuration for the 10_2_5_patch1 release.
+  - Merge pull request #4457 from hufnagel/memory-limits
+  - remove maxRSS and maxVSize overrides
+  - Merge pull request #4455 from ticoann/add_priority_transition
+  - Merge pull request #4456 from hufnagel/scouting-repack-memory
+  - add priority transiton needed for WMAgent 1.1.15 and up
+  - Merge pull request #4454 from andresfelquintero/CMSSW_10_2_1
+  - CMSSW_10_2_1 update
+  - Merge pull request #4453 from andresfelquintero/newera2018d
+  - New era Run2018D with CMSSW_10_2_0 and new GTs. New dataset ParkingBPHPromptCSCS
+  - request more memory for the ScoutingPF repacking
+
 2.1.2 to 2.1.3:
   - Merge pull request #4452 from vytjan/CMSSW_10_1_9
   - CMSSW_10_1_9 configuration
