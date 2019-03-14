@@ -38,7 +38,7 @@ class ConditionTest(unittest.TestCase):
         self.testInit.setLogging()
         self.testInit.setDatabaseConnection()
 
-        self.testInit.setSchema(customModules = ["T0.WMBS"])
+        self.testInit.setSchema(customModules = ["WMComponent.DBS3Buffer", "T0.WMBS"])
 
         self.splitterFactory = SplitterFactory(package = "T0.JobSplitting")
 
@@ -52,9 +52,15 @@ class ConditionTest(unittest.TestCase):
                                     dbinterface = myThread.dbi)
 
         myThread.dbi.processData("""INSERT INTO wmbs_location
-                                    (id, site_name, state)
-                                    VALUES (1, 'SomeSite', 1)
+                                    (id, site_name, state, state_time)
+                                    VALUES (1, 'SomeSite', 1, 1)
                                     """, transaction = False)
+        
+        myThread.dbi.processData("""INSERT INTO wmbs_pnns
+                                    (id, pnn) 
+                                    VALUES (2, 'SomePNN')
+                                    """, transaction = False)
+
         myThread.dbi.processData("""INSERT INTO wmbs_location_pnn
                                     (location, pnn)
                                     VALUES (1, 'SomePNN')
@@ -78,7 +84,9 @@ class ConditionTest(unittest.TestCase):
         insertStreamFilesetDAO.execute(1, "Express", "TestFileset1")
 
         insertStreamerDAO = daoFactory(classname = "RunConfig.InsertStreamer")
-        insertStreamerDAO.execute(binds = { 'RUN' : 1,
+        insertStreamerDAO.execute(streamerPNN = "SomePNN",
+                                  binds = { 'RUN' : 1,
+                                            'P5_ID' : 1,
                                             'LUMI' : 1,
                                             'STREAM' : "Express",
                                             'TIME' : int(time.time()),
@@ -89,9 +97,12 @@ class ConditionTest(unittest.TestCase):
 
         insertPromptCalibrationDAO = daoFactory(classname = "RunConfig.InsertPromptCalibration")
         insertPromptCalibrationDAO.execute( { 'RUN' : 1,
-                                              'STREAM' : "Express" },
+                                              'STREAM' : "Express",
+                                              'NUM_PRODUCER' : 1},
                                             transaction = False)
 
+        self.markPromptCalibrationFinishedDAO = daoFactory(classname = "ConditionUpload.MarkPromptCalibrationFinished")
+        
         self.fileset1 = Fileset(name = "TestFileset1")
         self.fileset1.create()
 
@@ -207,9 +218,12 @@ class ConditionTest(unittest.TestCase):
         self.assertEqual(self.countPromptCalibFiles(), 1,
                          "ERROR: there should be one prompt_calib_file")
 
-        self.fileset1.markOpen(False)
+        
+        self.markPromptCalibrationFinishedDAO.execute(1, 1, transaction = False)
+        
+        #self.fileset1.markOpen(False)
 
-        jobGroups = jobFactory(**mySplitArgs)
+        #jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
                          "ERROR: JobFactory should have returned no JobGroup")
