@@ -394,7 +394,8 @@ class ExpressMergeTest(unittest.TestCase):
                                           subscription = self.subscription2)
 
         self.insertSplitLumisDAO.execute( binds = { 'SUB' : self.subscription1['id'],
-                                                    'LUMI' : 1 } )
+                                                    'LUMI' : 1 ,
+                                                    'NFILES' : 5 } )
 
         mySplitArgs['maxLatency'] = 0
         jobGroups = jobFactory(**mySplitArgs)
