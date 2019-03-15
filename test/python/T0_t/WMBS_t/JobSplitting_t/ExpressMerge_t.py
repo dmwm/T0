@@ -39,7 +39,7 @@ class ExpressMergeTest(unittest.TestCase):
         self.testInit.setLogging()
         self.testInit.setDatabaseConnection()
 
-        self.testInit.setSchema(customModules = ["T0.WMBS"])
+        self.testInit.setSchema(customModules = ["WMComponent.DBS3Buffer", "T0.WMBS"])
 
         self.splitterFactory = SplitterFactory(package = "T0.JobSplitting")
 
@@ -49,8 +49,8 @@ class ExpressMergeTest(unittest.TestCase):
                                 dbinterface = myThread.dbi)
 
         myThread.dbi.processData("""INSERT INTO wmbs_location
-                                    (id, site_name, state)
-                                    VALUES (1, 'SomeSite', 1)
+                                    (id, site_name, state, state_time)
+                                    VALUES (1, 'SomeSite', 1, 1)
                                     """, transaction = False)
         myThread.dbi.processData("""INSERT INTO wmbs_pnns
                                     (id, pnn)
