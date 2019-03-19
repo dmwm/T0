@@ -5,6 +5,7 @@ Processing configuration for the Tier0 - Replay version
 """
 from __future__ import print_function
 
+import os
 from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
@@ -34,7 +35,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [ 322057 ])
+setInjectRuns(tier0Config, [ 310364 ])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -47,7 +48,7 @@ streamerPNN = "T2_CH_CERN"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Tier0_REPLAY_vocms047")
+setAcquisitionEra(tier0Config, "Tier0_REPLAY")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
@@ -107,10 +108,18 @@ alcaLumiPixelsScenario = "AlCaLumiPixels"
 hiTestppScenario = "ppEra_Run2_2018_pp_on_AA"
 
 # Defaults for processing version
-defaultProcVersion = 274
-expressProcVersion = 274
-alcarawProcVersion = 274
-
+# Procesing version nunmber for replays is Jenkins build number
+if os.environ.get('T0_PROCESSING_VERSION'):
+    print("Processing version is:")
+    print(int(os.environ.get('T0_PROCESSING_VERSION')))
+    defaultProcVersion = int(os.environ.get('T0_PROCESSING_VERSION'))
+    expressProcVersion = int(os.environ.get('T0_PROCESSING_VERSION'))
+    alcarawProcVersion = int(os.environ.get('T0_PROCESSING_VERSION'))
+else:
+#In case something is wrong with it, fallback to defaults
+    defaultProcVersion = 1
+    expressProcVersion = 1
+    alcarawProcVersion = 1
 # Defaults for GlobalTag
 expressGlobalTag = "102X_dataRun2_Express_v4"
 promptrecoGlobalTag = "102X_dataRun2_Prompt_v11"
