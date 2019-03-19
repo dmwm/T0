@@ -42,6 +42,7 @@ def extractConfigParameter(configParameter, era, run):
             for maxRun in sorted(configParameter['maxRun'].keys()):
                 if run <= maxRun:
                     newConfigParameter = configParameter['maxRun'][maxRun]
+                    break
             if newConfigParameter:
                 return newConfigParameter
         return configParameter['default']
@@ -461,11 +462,16 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                     autoApproveSites.append(datasetConfig.ArchivalNode)
                 if datasetConfig.TapeNode:
                     bindsStorageNode.append( { 'NODE' : datasetConfig.TapeNode } )
-                    custodialSites.append(datasetConfig.TapeNode)
-                if datasetConfig.DiskNode and datasetConfig.RAWtoDisk:
+                    if datasetConfig.RAWTapeNode:
+                        bindsStorageNode.append( { 'NODE' : datasetConfig.RAWTapeNode } )
+                        custodialSites.append(datasetConfig.RAWTapeNode)
+                    else:
+                        custodialSites.append(datasetConfig.TapeNode)
+                if datasetConfig.DiskNode:
                     bindsStorageNode.append( { 'NODE' : datasetConfig.DiskNode } )
-                    nonCustodialSites.append(datasetConfig.DiskNode)
-                    autoApproveSites.append(datasetConfig.DiskNode)
+                    if datasetConfig.RAWtoDisk:
+                        nonCustodialSites.append(datasetConfig.DiskNode)
+                        autoApproveSites.append(datasetConfig.DiskNode)
                 if datasetConfig.DiskNodeReco:
                     bindsStorageNode.append( { 'NODE' : datasetConfig.DiskNodeReco } )
 
@@ -545,11 +551,20 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         if streamConfig.ProcessingStyle == "Bulk":
 
             taskName = "Repack"
-            workflowName = "Repack_Run%d_Stream%s" % (run, stream)
+
+            if tier0Config.Global.EnableUniqueWorkflowName:
+                workflowName = "Repack_Run%d_Stream%s_%s_v%s_%s" % (run, stream, 
+                    tier0Config.Global.AcquisitionEra, streamConfig.Repack.ProcessingVersion, 
+                    time.strftime('%y%m%d_%H%M', time.localtime(time.time())))
+            else:
+                workflowName = "Repack_Run%d_Stream%s" % (run, stream)
 
             specArguments = {}
 
-            specArguments['Memory'] = 1000
+            if stream == 'ScoutingPF':
+                specArguments['Memory'] = 2000
+            else:
+                specArguments['Memory'] = 1000
 
             specArguments['Requestor'] = "Tier0"
             specArguments['RequestName'] = workflowName
@@ -559,6 +574,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['RequestTransition'] = []
             specArguments['RequestStatus'] = REQUEST_START_STATE
             specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority + 5000
+            specArguments['PriorityTransition'] = []
 
             specArguments['CMSSWVersion'] = streamConfig.Repack.CMSSWVersion
             specArguments['ScramArch'] = streamConfig.Repack.ScramArch
@@ -590,7 +606,13 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         elif streamConfig.ProcessingStyle == "Express":
 
             taskName = "Express"
-            workflowName = "Express_Run%d_Stream%s" % (run, stream)
+
+            if tier0Config.Global.EnableUniqueWorkflowName:
+                workflowName = "Express_Run%d_Stream%s_%s_v%s_%s" % (run, stream, 
+                    tier0Config.Global.AcquisitionEra, streamConfig.Express.ProcessingVersion,
+                    time.strftime('%y%m%d_%H%M', time.localtime(time.time())))
+            else:
+                workflowName = "Express_Run%d_Stream%s" % (run, stream)
 
             specArguments = {}
 
@@ -618,6 +640,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['RequestTransition'] = []
             specArguments['RequestStatus'] = REQUEST_START_STATE
             specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority + 10000
+            specArguments['PriorityTransition'] = []
 
             specArguments['ProcessingString'] = "Express"
             specArguments['ProcessingVersion'] = streamConfig.Express.ProcessingVersion
@@ -684,8 +707,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             wmSpec.updateArguments( { 'SiteWhitelist': [ tier0Config.Global.ProcessingSite ],
                                       'SiteBlacklist': [],
                                       'BlockCloseMaxWaitTime': blockCloseDelay,
-                                      'MaxRSS': 1024 * specArguments['Memory'] + 10,
-                                      'MaxVSize': 104857600, #100GB, effectively disabled
                                       'SoftTimeout': 604800, #7 days, effectively disabled
                                       'GracePeriod': 3600,
                                       'Dashboard': "t0" } )
@@ -1011,7 +1032,13 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 # create WMSpec
                 #
                 taskName = "Reco"
-                workflowName = "PromptReco_Run%d_%s" % (run, dataset)
+
+                if tier0Config.Global.EnableUniqueWorkflowName:
+                    workflowName = "PromptReco_Run%d_%s_%s_v%s_%s" % (run, dataset,
+                        tier0Config.Global.AcquisitionEra, datasetConfig.ProcessingVersion,
+                        time.strftime('%y%m%d_%H%M', time.localtime(time.time())))
+                else:
+                    workflowName = "PromptReco_Run%d_%s" % (run, dataset)
 
                 specArguments = {}
 
@@ -1041,6 +1068,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 specArguments['RequestTransition'] = []
                 specArguments['RequestStatus'] = REQUEST_START_STATE
                 specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority
+                specArguments['PriorityTransition'] = []
 
                 specArguments['AcquisitionEra'] = runInfo['acq_era']
                 specArguments['CMSSWVersion'] = datasetConfig.CMSSWVersion
@@ -1093,8 +1121,6 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                           'SiteBlacklist': [],
                                           'TrustSitelists': "True",
                                           'BlockCloseMaxWaitTime': datasetConfig.BlockCloseDelay,
-                                          'MaxRSS': 1024 * specArguments['Memory'] + 10,
-                                          'MaxVSize': 104857600, #100GB, effectively disabled
                                           'SoftTimeout': 604800, #7 days, effectively disabled
                                           'GracePeriod': 3600,
                                           'Dashboard': "t0" } )

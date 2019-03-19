@@ -35,7 +35,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 316998)
+setInjectMinRun(tier0Config, 327825)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
@@ -51,7 +51,7 @@ streamerPNN = "T2_CH_CERN"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2018B")
+setAcquisitionEra(tier0Config, "Commissioning2019")
 setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -65,7 +65,7 @@ setDQMDataTier(tier0Config, "DQMIO")
 # First timeout is used directly for reco release
 # Second timeout is used for the data service PromptReco start check
 # (to basically say we started PromptReco even though we haven't)
-defaultRecoTimeout =  48 * 3600
+defaultRecoTimeout = 48 * 3600
 defaultRecoLockTimeout = 1800
 
 # DQM Server
@@ -80,7 +80,8 @@ setPromptCalibrationConfig(tier0Config,
                            dropboxHost = "webcondvm.cern.ch",
                            validationMode = False)
 
-# Special syntax supported for cmssw version, processing version and global tag
+# Special syntax supported for cmssw version, processing version, global tag and processing scenario
+# https://github.com/dmwm/T0/blob/master/src/python/T0/RunConfig/RunConfigAPI.py#L828
 #
 # { 'acqEra': {'Era1': Value1, 'Era2': Value2},
 #   'maxRun': {100000: Value3, 200000: Value4},
@@ -89,11 +90,11 @@ setPromptCalibrationConfig(tier0Config,
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
        'acqEra': {'Commissioning2018': 'CMSSW_10_1_2_patch2'},
-       'default': "CMSSW_10_1_7"
+       'default': "CMSSW_10_3_1_patch3"
      }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "slc6_amd64_gcc630")
+setDefaultScramArch(tier0Config, "slc6_amd64_gcc700")
 
 # Configure scenarios
 ppScenario = "ppEra_Run2_2018"
@@ -104,29 +105,27 @@ hiScenario = "ppEra_Run2_2016_pA"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run2_2018"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels"
+hiTestppScenario = "ppEra_Run2_2018_pp_on_AA"
 
 # Defaults for processing version
 defaultProcVersionRAW = 1
 
 alcarawProcVersion = {
-       'acqEra': {'Commissioning2018': '1', 'Run2018A': '2'},
-       'default': "2"
+       'default': "1"
      }
 
 defaultProcVersionReco = {
-       'acqEra': {'Commissioning2018': '1', 'Run2018A': '2'},
-       'default': "2"
+       'default': "1"
      }
 
 expressProcVersion = {
-       'acqEra': {'Commissioning2018': '1'},
        'default': "1"
      }
 
 # Defaults for GlobalTag
-expressGlobalTag = "101X_dataRun2_Express_v8"
-promptrecoGlobalTag = "101X_dataRun2_Prompt_v11"
-alcap0GlobalTag = "101X_dataRun2_Prompt_v11"
+expressGlobalTag = "103X_dataRun2_Express_v2"
+promptrecoGlobalTag = "103X_dataRun2_Prompt_v3"
+alcap0GlobalTag = "103X_dataRun2_Prompt_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -143,35 +142,51 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_7",
-    "CMSSW_10_0_1" : "CMSSW_10_1_7",
-    "CMSSW_10_0_2" : "CMSSW_10_1_7",
-    "CMSSW_10_0_3" : "CMSSW_10_1_7",
-    "CMSSW_10_0_4" : "CMSSW_10_1_7",
-    "CMSSW_10_0_5" : "CMSSW_10_1_7",
-    "CMSSW_10_1_0" : "CMSSW_10_1_7",
-    "CMSSW_10_1_1" : "CMSSW_10_1_7",
-    "CMSSW_10_1_2" : "CMSSW_10_1_7",
-    "CMSSW_10_1_3" : "CMSSW_10_1_7",
-    "CMSSW_10_1_4" : "CMSSW_10_1_7",
-    "CMSSW_10_1_5" : "CMSSW_10_1_7",
-    "CMSSW_10_1_6" : "CMSSW_10_1_7"
+    "CMSSW_10_0_0" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_0_1" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_0_2" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_0_3" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_0_4" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_0_5" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_0" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_1" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_2" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_3" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_4" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_5" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_6" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_7" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_8" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_9" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_10" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_2_0" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_2_1" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_2_5" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_3_0" : "CMSSW_10_3_1_patch3"
     }
 
 expressVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_10_1_7",
-    "CMSSW_10_0_1" : "CMSSW_10_1_7",
-    "CMSSW_10_0_2" : "CMSSW_10_1_7",
-    "CMSSW_10_0_3" : "CMSSW_10_1_7",
-    "CMSSW_10_0_4" : "CMSSW_10_1_7",
-    "CMSSW_10_0_5" : "CMSSW_10_1_7",
-    "CMSSW_10_1_0" : "CMSSW_10_1_7",
-    "CMSSW_10_1_1" : "CMSSW_10_1_7",
-    "CMSSW_10_1_2" : "CMSSW_10_1_7",
-    "CMSSW_10_1_3" : "CMSSW_10_1_7",
-    "CMSSW_10_1_4" : "CMSSW_10_1_7",
-    "CMSSW_10_1_5" : "CMSSW_10_1_7",
-    "CMSSW_10_1_6" : "CMSSW_10_1_7"
+    "CMSSW_10_0_0" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_0_1" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_0_2" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_0_3" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_0_4" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_0_5" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_0" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_1" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_2" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_3" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_4" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_5" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_6" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_7" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_8" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_9" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_1_10" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_2_0" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_2_1" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_2_5" : "CMSSW_10_3_1_patch3",
+    "CMSSW_10_3_0" : "CMSSW_10_3_1_patch3"
     }
 
 #set default repack settings for bulk streams
@@ -221,7 +236,8 @@ addExpressConfig(tier0Config, "Express",
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
                                     "TkAlMinBias", "DtCalib", "LumiPixelsMinBias", "SiPixelCalZeroBias",
                                     "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
-                                    "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel"
+                                    "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel",
+                                    "PromptCalibProdBeamSpotHPLowPU"
                                     ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
@@ -359,6 +375,60 @@ addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
                  tapeNode = None,
                  diskNode = None)
 
+#####################
+### HI Tests 2018 ###
+#####################
+
+addExpressConfig(tier0Config, "HIExpress",
+                 scenario = hiTestppScenario,
+                 diskNode = "T2_CH_CERN",
+                 data_tiers = [ "FEVT" ],
+                 write_dqm = True,
+                 alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
+                                    "TkAlMinBias", "DtCalib", "LumiPixelsMinBias", "SiPixelCalZeroBias",
+                                    "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
+                                    "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel"
+                                    ],
+                 reco_version = defaultCMSSWVersion,
+                 multicore = numberOfCores,
+                 global_tag_connect = globalTagConnect,
+                 global_tag = expressGlobalTag,
+                 proc_ver = expressProcVersion,
+                 maxInputRate = 23 * 1000,
+                 maxInputEvents = 400,
+                 maxInputSize = 2 * 1024 * 1024 * 1024,
+                 maxInputFiles = 15,
+                 maxLatency = 15 * 23,
+                 periodicHarvestInterval = 20 * 60,
+                 blockCloseDelay = 1200,
+                 timePerEvent = 4,
+                 sizePerEvent = 1700,
+                 versionOverride = expressVersionOverride)
+
+addExpressConfig(tier0Config, "HIExpressAlignment",
+                 scenario = hiTestppScenario,
+                 data_tiers = [ "ALCARECO", "RAW" ],
+                 write_dqm = True,
+                 alca_producers = [ "TkAlMinBias" ],
+                 dqm_sequences = [ "DQMOfflineTracking" ],
+                 reco_version = defaultCMSSWVersion,
+                 raw_to_disk = True,
+                 multicore = numberOfCores,
+                 global_tag_connect = globalTagConnect,
+                 global_tag = expressGlobalTag,
+                 proc_ver = expressProcVersion,
+                 maxInputRate = 23 * 1000,
+                 maxInputEvents = 100 * 1000 * 1000,
+                 maxInputSize = 4 * 1024 * 1024 * 1024,
+                 maxInputFiles = 10000,
+                 maxLatency = 1 * 3600,
+                 periodicHarvestInterval = 24 * 3600,
+                 blockCloseDelay = 2 * 3600,
+                 timePerEvent = 4,
+                 sizePerEvent = 1700,
+                 versionOverride = expressVersionOverride,
+                 diskNode = "T2_CH_CERN")
+
 ###################################
 ### Standard Physics PDs (2017) ###
 ###################################
@@ -371,7 +441,7 @@ for dataset in datasets:
                write_dqm = True,
                dqm_sequences = [ "@common" ],
                tape_node = "T1_UK_RAL_MSS",
-               disk_node = "T1_UK_RAL_ECHO_Disk",
+               disk_node = "T1_UK_RAL_Disk",
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
 
@@ -437,7 +507,7 @@ for dataset in datasets:
                write_reco = False,
                write_dqm = True,
                tape_node = "T1_UK_RAL_MSS",
-               disk_node = "T1_UK_RAL_ECHO_Disk",
+               disk_node = "T1_UK_RAL_Disk",
                alca_producers = [ "EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym", "HcalCalIsoTrkFilter" ],
                dqm_sequences = [ "@common", "@ecal", "@egamma" ],
                physics_skims = [ "ZElectron", "LogError", "LogErrorMonitor" ],
@@ -454,8 +524,24 @@ for dataset in datasets:
                tape_node = "T1_DE_KIT_MSS",
                disk_node = "T1_DE_KIT_Disk",
                alca_producers = [ "TkAlZMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "DtCalib" ],
-               dqm_sequences = [ "@common", "@muon" ],
+               dqm_sequences = [ "@common", "@muon", "@lumi", "@L1TMuon" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
+               scenario = ppScenario)
+
+datasets = [ "DoubleMuonLowPU" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_reco = False,
+               raw_to_disk = True,
+               write_dqm = True,
+               tape_node = "T1_DE_KIT_MSS",
+               disk_node = "T1_DE_KIT_Disk",
+               alca_producers = [ "TkAlZMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "DtCalib" ],
+               dqm_sequences = [ "@common", "@muon", "@lumi", "@L1TMuon" ],
+               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               timePerEvent = 1,
                scenario = ppScenario)
 
 datasets = [ "DoubleMuonLowMass" ]
@@ -487,7 +573,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                write_dqm = True,
-               dqm_sequences = [ "@common" ],
+               dqm_sequences = [ "@common", "@jetmet" ],
                scenario = ppScenario)
 
 datasets = [ "HINCaloJets", "HINPFJets" ]
@@ -512,16 +598,16 @@ for dataset in datasets:
                write_dqm = True,
                dqm_sequences = [ "@common" ],
                tape_node = "T1_UK_RAL_MSS",
-               disk_node = "T1_UK_RAL_ECHO_Disk",
+               disk_node = "T1_UK_RAL_Disk",
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                timePerEvent = 9.4,
                sizePerEvent = 2000,
                scenario = ppScenario)
 
-datasets = [ "HighMultiplicity", "HighMultiplicityEOF" ]
+datasets = [ "HighMultiplicity" ]
 
-datasets += [ "HighMultiplicityEOF1", "HighMultiplicityEOF2", "HighMultiplicityEOF3",
-              "HighMultiplicityEOF4", "HighMultiplicityEOF5" ]
+datasets += [ "HighMultiplicityEOF0", "HighMultiplicityEOF1", "HighMultiplicityEOF2",
+              "HighMultiplicityEOF3", "HighMultiplicityEOF4", "HighMultiplicityEOF5" ]
 
 datasets += [ "HighMultiplicity85", "HighMultiplicity85EOF" ]
 
@@ -529,7 +615,20 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                write_reco = False,
+               write_dqm = True,
                dqm_sequences = [ "@common" ],
+               scenario = ppScenario)
+
+# 05/07/2018 HighMultiplicityEOF needs to have 1sec per event
+datasets = [ "HighMultiplicityEOF" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_reco = False,
+               write_dqm = True,
+               dqm_sequences = [ "@common" ],
+               timePerEvent = 1,
                scenario = ppScenario)
 
 datasets = [ "HighPtLowerPhotons", "HighPtPhoton30AndZ" ]
@@ -551,7 +650,7 @@ for dataset in datasets:
                raw_to_disk = True,
                write_dqm = True,
                tape_node = "T1_UK_RAL_MSS",
-               disk_node = "T1_UK_RAL_ECHO_Disk",
+               disk_node = "T1_UK_RAL_Disk",
                alca_producers = [ "HcalCalIsoTrkFilter", "HcalCalIsolatedBunchFilter" ],
                dqm_sequences = [ "@common", "@jetmet", "@hcal" ],
                physics_skims = [ "JetHTJetPlusHOFilter", "LogError", "LogErrorMonitor" ],
@@ -761,7 +860,7 @@ for dataset in datasets:
            tape_node = None,
            reco_split = alcarawSplitting,
            proc_version = alcarawProcVersion,
-           alca_producers = [ "AlCaPCCZeroBias", "AlCaPCCRandom" ],
+           alca_producers = [ "AlCaPCCZeroBias" ],
            dqm_sequences = [ "@common" ],
            timePerEvent = 0.02,
            sizePerEvent = 38,
@@ -780,7 +879,7 @@ for dataset in datasets:
            tape_node = None,
            reco_split = alcarawSplitting,
            proc_version = alcarawProcVersion,
-           alca_producers = [ "AlCaPCCZeroBias", "AlCaPCCRandom" ],
+           alca_producers = [ "AlCaPCCZeroBias" ],
            dqm_sequences = [ "@common" ],
            timePerEvent = 0.02,
            sizePerEvent = 38,
@@ -816,6 +915,7 @@ for dataset in datasets:
                raw_to_disk = True,
                write_reco = False,
                write_dqm = True,
+               dqm_sequences = [ "@common", "@ecal", "@jetmet", "@hcal", "@L1TEgamma" ],
                alca_producers = [ "TkAlMinBias" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
@@ -831,6 +931,7 @@ for dataset in datasets:
                raw_to_disk = True,
                write_reco = False,
                write_dqm = True,
+               dqm_sequences = [ "@common", "@ecal", "@jetmet", "@hcal", "@L1TEgamma" ],
                alca_producers = [ "TkAlMinBias" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
@@ -891,7 +992,7 @@ for dataset in datasets:
                write_dqm = True,
                tape_node = "T1_RU_JINR_MSS",
                disk_node = "T1_RU_JINR_Disk",
-               dqm_sequences = [ "@common" ],
+               dqm_sequences = [ "@common", "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet" ],
                alca_producers = [ "SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias" ],
                scenario = ppScenario)
 
@@ -909,7 +1010,8 @@ for dataset in datasets:
                write_dqm = True,
                tape_node = "T1_RU_JINR_MSS",
                disk_node = "T1_RU_JINR_Disk",
-               dqm_sequences = [ "@common" ],
+               dqm_sequences = [ "@common", "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet" ],
+               timePerEvent = 1,
                alca_producers = [ "SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias" ],
                scenario = ppScenario)
 
@@ -980,7 +1082,7 @@ for dataset in datasets:
                raw_to_disk = True,
                write_reco = False,
                write_dqm = True,
-               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon" ],
+               dqm_sequences = [ "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet" ],
                alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias", "AlCaPCCZeroBiasFromRECO" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                timePerEvent = 3.5,
@@ -1046,6 +1148,18 @@ for dataset in datasets:
                disk_node = None,
                scenario = ppScenario)
 
+# Parking PD to be PR'ed at CSCS
+datasets = [ "ParkingBPHPromptCSCS" ]
+ 
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = False,
+               siteWhitelist = [ "T0_CH_CSCS_HPC" ],
+               archival_node = "T0_CH_CERN_MSS",
+               tape_node = None,
+               disk_node = None,
+               scenario = ppScenario)
+ 
 datasets = [ "RPCMonitor" ]
 
 for dataset in datasets:
@@ -1209,7 +1323,7 @@ datasets = [ "TOTEM_minBias", "TOTEM_romanPots", "ToTOTEM", "ToTOTEM_DoubleJet32
 datasets += [ "Totem1", "Totem2", "Totem3", "Totem4" ]
 
 ### TOTEM datasets for 90m and LowPileUp menu - 2018/06/22
-datasets += [ "HFvetoTOTEM", "JetsTOTEM", "MuonEGammaTOTEM" ]
+datasets += [ "HFvetoTOTEM", "JetsTOTEM" ]
 
 datasets += [ "RandomTOTEM1", "RandomTOTEM2", "RandomTOTEM3", "RandomTOTEM4" ]
 
@@ -1222,8 +1336,19 @@ datasets += [ "ZeroBiasTOTEM1", "ZeroBiasTOTEM2", "ZeroBiasTOTEM3", "ZeroBiasTOT
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = True,
+               write_reco = False,
                dqm_sequences = [ "@common" ],
+               scenario = ppScenario)
+
+### TOTEM EGamma dataset for 90m and LowPileUp with egamma dqm sequence
+datasets = [ "MuonEGammaTOTEM" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_reco = False,
+               write_dqm = True,
+               dqm_sequences = [ "@common", "@egamma" ],
                scenario = ppScenario)
 
 ################################
@@ -1482,6 +1607,20 @@ addDataset(tier0Config, "PADoubleMuOpen",
            alca_producers = [ "LumiPixelsMinBias" ],
            dqm_sequences = [ "@common", "@muon" ],
            scenario = hiScenario)
+
+#####################
+### HI TESTS 2018 ###
+#####################
+
+datasets = [ "HITestFull", "HITestReduced" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               raw_to_disk = True,
+               write_dqm = True,
+               dqm_sequences = [ "@common" ],
+               scenario = hiTestppScenario)
 
 #######################
 ### ignored streams ###

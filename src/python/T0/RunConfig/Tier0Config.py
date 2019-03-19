@@ -145,9 +145,13 @@ Tier0Configuration - Global configuration object
 |             |     |
 |             |     |--> TapeNode - The tape PhEDEx node (default None)
 |             |     |
+|             |     |--> RAWTapeNode - The tape PhEDEx node for RAW (default None)
+|             |     |
 |             |     |--> DiskNode - The disk PhEDEx node (default None)
 |             |     |
 |             |     |--> DiskNodeReco - The disk PhEDEx node for bulk RECO data (default None)
+|             |     |
+|             |     |--> RAWToDisk - Do we subscribe RAW to disk?
 |             |     |
 |             |     |--> PhEDExGroup - The PhEDEx group for the subscriptions.
 |             |     |
@@ -252,6 +256,8 @@ def createTier0Config():
     tier0Config.Global.DQMDataTier = "DQMIO"
 
     tier0Config.Global.BaseRequestPriority = 150000
+
+    tier0Config.Global.EnableUniqueWorkflowName = False
 
     return tier0Config
 
@@ -458,6 +464,11 @@ def addDataset(config, datasetName, **settings):
     else:
         datasetConfig.TapeNode = settings.get('tape_node', None)
 
+    if hasattr(datasetConfig, "RAWTapeNode"):
+        datasetConfig.RAWTapeNode = settings.get('raw_tape_node', datasetConfig.RAWTapeNode)
+    else:
+        datasetConfig.RAWTapeNode = settings.get('raw_tape_node', None)
+
     if hasattr(datasetConfig, "DiskNode"):
         datasetConfig.DiskNode = settings.get('disk_node', datasetConfig.DiskNode)
     else:
@@ -652,6 +663,17 @@ def setInjectMaxRun(config, injectMaxRun):
     Set the highest run to be injected into the Tier0.
     """
     config.Global.InjectMaxRun = injectMaxRun
+    return
+
+def setEnableUniqueWorkflowName(config):
+    """
+    _setEnableUniqueWorkflowName_
+
+    Enables using unique workflow names in Tier0 replays.
+    Uses era name, Repack, Express, PromptReco processing versions, date/time, e.g.:
+    PromptReco_Run322057_Charmonium_Tier0_REPLAY_vocms047_v274_190221_121
+    """
+    config.Global.EnableUniqueWorkflowName = True
     return
 
 def ignoreStream(config, streamName):
