@@ -667,7 +667,7 @@ class RepackMergeTest(unittest.TestCase):
         one small lumi, one large lumi (small below min size,
         large below max size, but both together above max size)
         
-        It was changed gue to maxinputevents not being used anymore.
+        It was changed due to maxinputevents not being used anymore.
 
         """
         mySplitArgs = self.splitArgs.copy()
@@ -726,7 +726,8 @@ class RepackMergeTest(unittest.TestCase):
         Multi lumi input
         
         It only works with a single hole, as it creates a merged file even with it being of a smaller size than the mininputsize.
-        It was changed gue to the maxinputevents not being used anymore
+        
+        It was changed due to the maxinputevents not being used anymore
 
         """
         mySplitArgs = self.splitArgs.copy()
