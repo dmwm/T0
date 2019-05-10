@@ -39,7 +39,7 @@ class RepackTest(unittest.TestCase):
         self.testInit.setLogging()
         self.testInit.setDatabaseConnection()
 
-        self.testInit.setSchema(customModules = ["T0.WMBS"])
+        self.testInit.setSchema(customModules = ["WMComponent.DBS3Buffer", "T0.WMBS"])
 
         self.splitterFactory = SplitterFactory(package = "T0.JobSplitting")
 
@@ -49,8 +49,8 @@ class RepackTest(unittest.TestCase):
                                 dbinterface = myThread.dbi)
 
         myThread.dbi.processData("""INSERT INTO wmbs_location
-                                    (id, site_name, state)
-                                    VALUES (1, 'SomeSite', 1)
+                                    (id, site_name, state, state_time)
+                                    VALUES (1, 'SomeSite', 1, 1)
                                     """, transaction = False)
         myThread.dbi.processData("""INSERT INTO wmbs_pnns
                                     (id, pnn)
@@ -154,6 +154,7 @@ class RepackTest(unittest.TestCase):
                                           subscription = self.subscription1)
 
         mySplitArgs['maxSizeMultiLumi'] = self.splitArgs['maxSizeMultiLumi']
+	mySplitArgs['maxLatency'] = 50000
         jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
@@ -235,7 +236,8 @@ class RepackTest(unittest.TestCase):
         self.assertEqual(len(jobGroups), 0,
                          "ERROR: JobFactory should have returned no JobGroup")
 
-        mySplitArgs['maxInputEvents'] = 500
+        mySplitArgs['maxLatency'] = 50000
+	mySplitArgs['maxInputEvents'] = 500
         jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
@@ -299,7 +301,8 @@ class RepackTest(unittest.TestCase):
 
         self.insertClosedLumiDAO.execute(binds = insertClosedLumiBinds,
                                          transaction = False)
-
+        
+	mySplitArgs['maxLatency'] = 50000
         jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
@@ -360,7 +363,8 @@ class RepackTest(unittest.TestCase):
         self.insertClosedLumiDAO.execute(binds = insertClosedLumiBinds,
                                          transaction = False)
 
-        jobGroups = jobFactory(**mySplitArgs)
+        mySplitArgs['maxLatency'] = 50000
+	jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
                          "ERROR: JobFactory should have returned no JobGroup")
@@ -420,7 +424,8 @@ class RepackTest(unittest.TestCase):
         self.insertClosedLumiDAO.execute(binds = insertClosedLumiBinds,
                                          transaction = False)
 
-        jobGroups = jobFactory(**mySplitArgs)
+        mySplitArgs['maxLatency'] = 50000
+	jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
                          "ERROR: JobFactory should have returned no JobGroup")
@@ -490,7 +495,8 @@ class RepackTest(unittest.TestCase):
         self.insertClosedLumiDAO.execute(binds = insertClosedLumiBinds,
                                          transaction = False)
 
-        mySplitArgs['maxInputFiles'] = 5
+        mySplitArgs['maxLatency'] = 50000
+	mySplitArgs['maxInputFiles'] = 5
         jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
@@ -558,7 +564,8 @@ class RepackTest(unittest.TestCase):
         self.insertClosedLumiDAO.execute(binds = insertClosedLumiBinds,
                                          transaction = False)
 
-        mySplitArgs['maxInputEvents'] = 900
+        mySplitArgs['maxLatency'] = 50000
+	mySplitArgs['maxInputEvents'] = 900
         jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 1,
