@@ -39,7 +39,7 @@ class ExpressTest(unittest.TestCase):
         self.testInit.setLogging()
         self.testInit.setDatabaseConnection()
 
-        self.testInit.setSchema(customModules = ["T0.WMBS"])
+        self.testInit.setSchema(customModules = ["WMComponent.DBS3Buffer", "T0.WMBS"])
 
         self.splitterFactory = SplitterFactory(package = "T0.JobSplitting")
 
@@ -49,8 +49,8 @@ class ExpressTest(unittest.TestCase):
                                 dbinterface = myThread.dbi)
 
         myThread.dbi.processData("""INSERT INTO wmbs_location
-                                    (id, site_name, state)
-                                    VALUES (1, 'SomeSite', 1)
+                                    (id, site_name, state, state_time)
+                                    VALUES (1, 'SomeSite', 1, 1)
                                     """, transaction = False)
         myThread.dbi.processData("""INSERT INTO wmbs_pnns
                                     (id, pnn)
@@ -168,7 +168,7 @@ class ExpressTest(unittest.TestCase):
         jobFactory = self.splitterFactory(package = "WMCore.WMBS",
                                           subscription = self.subscription1)
 
-        jobGroups = jobFactory(maxInputEvents = 200)
+        jobGroups = jobFactory(maxInputEvents = 200, maxInputRate = 23000)
 
         self.assertEqual(len(jobGroups), 0,
                          "ERROR: JobFactory should have returned no JobGroup")
@@ -176,21 +176,21 @@ class ExpressTest(unittest.TestCase):
         self.insertClosedLumiDAO.execute(binds = insertClosedLumiBinds,
                                          transaction = False)
 
-        jobGroups = jobFactory(maxInputEvents = 200)
+        jobGroups = jobFactory(maxInputEvents = 200, maxInputRate = 23000)
 
         self.assertEqual(len(jobGroups), 0,
                          "ERROR: JobFactory should have returned no JobGroup")
 
         self.finalCloseLumis()
 
-        jobGroups = jobFactory(maxInputEvents = 200)
+        jobGroups = jobFactory(maxInputEvents = 200, maxInputRate = 23000)
 
         self.assertEqual(len(jobGroups), 0,
                          "ERROR: JobFactory should have returned no JobGroup")
 
         self.releaseExpressDAO.execute(binds = { 'RUN' : 1 }, transaction = False)
 
-        jobGroups = jobFactory(maxInputEvents = 200)
+        jobGroups = jobFactory(maxInputEvents = 200, maxInputRate = 23000)
 
         self.assertEqual(len(jobGroups), 1,
                          "ERROR: JobFactory didn't return one JobGroup")
@@ -239,7 +239,7 @@ class ExpressTest(unittest.TestCase):
 
         self.releaseExpressDAO.execute(binds = { 'RUN' : 1 }, transaction = False)
 
-        jobGroups = jobFactory(maxInputEvents = 199)
+        jobGroups = jobFactory(maxInputEvents = 199, maxInputRate = 23000)
 
         self.assertEqual(len(jobGroups[0].jobs), 2,
                          "ERROR: JobFactory didn't create two jobs")
@@ -281,7 +281,7 @@ class ExpressTest(unittest.TestCase):
 
         self.releaseExpressDAO.execute(binds = { 'RUN' : 1 }, transaction = False)
 
-        jobGroups = jobFactory(maxInputEvents = 100)
+        jobGroups = jobFactory(maxInputEvents = 100, maxInputRate = 23000)
 
         self.assertEqual(len(jobGroups[0].jobs), 2,
                          "ERROR: JobFactory didn't create two jobs")
