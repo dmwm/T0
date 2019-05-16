@@ -1081,6 +1081,7 @@ class Tier0FeederTest(unittest.TestCase):
                                              'LUMI' : lumi },
                                    transaction = False)
 
+        self.insertStreamerDAO.execute(streamerPNN =self.tier0Config.Global.StreamerPNN,
                                        binds = { 'RUN' : run,
                                                  'P5_ID': self.p5id, 
                                                  'LUMI' : lumi,
