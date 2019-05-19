@@ -113,10 +113,10 @@ node('t0ReplayNode') {
                         addJiraComment(SHELL_OUTPUT)
                         SHELL_OUTPUT = sh(returnStdout: true, script: 'python /data/tier0/jenkins/compile.py /data/tier0/jenkins/replayWorkflowStatus.py 1')
                         SHELL_OUTPUT = sh(returnStdout: true, script: 'python /data/tier0/jenkins/message.py /data/tier0/jenkins/replayWorkflowStatus.py Paused')
-                        echo 'passing Checking the Pause status.'
-                        echo SHELL_OUTPUT
-                        addJiraComment(SHELL_OUTPUT)
-                        addJiraComment('PauseProgress done')
+                        //echo 'passing Checking the Pause status.'
+                        //echo SHELL_OUTPUT
+                        //addJiraComment(SHELL_OUTPUT)
+                        //addJiraComment('PauseProgress done')
        
                     }
                 }},
@@ -127,9 +127,9 @@ node('t0ReplayNode') {
                         SHELL_OUTPUT = sh(returnStdout: true, script: 'python /data/tier0/jenkins/replayWorkflowStatus.py Repack')
                         SHELL_OUTPUT = sh(returnStdout: true, script: 'python /data/tier0/jenkins/message.py /data/tier0/jenkins/replayWorkflowStatus.py Repack')
                         echo 'passing Checking the Repack status.'
-                        echo SHELL_OUTPUT
-                        addJiraComment(SHELL_OUTPUT)
-                        addJiraComment('RepackProgress done')
+                        //echo SHELL_OUTPUT
+                        //addJiraComment(SHELL_OUTPUT)
+                        //addJiraComment('RepackProgress done')
        
                     }
                 }},
@@ -140,9 +140,9 @@ node('t0ReplayNode') {
                         SHELL_OUTPUT = sh(returnStdout: true, script: 'python /data/tier0/jenkins/replayWorkflowStatus.py Express')
                         SHELL_OUTPUT = sh(returnStdout: true, script: 'python /data/tier0/jenkins/message.py /data/tier0/jenkins/replayWorkflowStatus.py Express')
                         echo 'passing Checking the Express status.'
-                        echo SHELL_OUTPUT
-                        addJiraComment(SHELL_OUTPUT)
-                        addJiraComment('ExpressProgress done')
+                        //echo SHELL_OUTPUT
+                        //addJiraComment(SHELL_OUTPUT)
+                        ///addJiraComment('ExpressProgress done')
                     }
                 }
             },
@@ -153,9 +153,9 @@ node('t0ReplayNode') {
                         SHELL_OUTPUT = sh(returnStdout: true, script: 'python /data/tier0/jenkins/replayWorkflowStatus.py Fileset')
                         SHELL_OUTPUT = sh(returnStdout: true, script: 'python /data/tier0/jenkins/message.py /data/tier0/jenkins/replayWorkflowStatus.py Fileset')
                         echo 'passing Checking the Filesets status.'
-                        echo SHELL_OUTPUT
-                        addJiraComment(SHELL_OUTPUT)
-                        addJiraComment('FilesetProgress done')
+                        //echo SHELL_OUTPUT
+                        //addJiraComment(SHELL_OUTPUT)
+                        //addJiraComment('FilesetProgress done')
                     
                     }
                 }                    
