@@ -28,7 +28,7 @@ node('t0ReplayNode') {
         }
         //addJiraComment(SHELL_OUTPUT)
         sh '''
-            echo 'Starting a cleanup before the replay.'
+            echo 'Starting a cleanup before the replay. test this'
             pwd
             pylint test.py test this 0
             #switch to working dir
