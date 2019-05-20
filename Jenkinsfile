@@ -30,6 +30,7 @@ node('t0ReplayNode') {
         sh '''
             echo 'Starting a cleanup before the replay.'
             pwd
+            pylint test.py test this 0
             #switch to working dir
             cd /data/tier0/
 
