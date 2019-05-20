@@ -22,7 +22,7 @@ node('t0ReplayNode') {
     stage('CleanupBefore') {
         checkout scm
         script{
-        SHELL_OUTPUT = sh(returnStdout: true, script: 'pylint test.py')
+        SHELL_OUTPUT = sh(returnStdout: true, script: 'pylint test.py test this 0')
         echo "pylint testing..."
         echo SHELL_OUTPUT
         }
