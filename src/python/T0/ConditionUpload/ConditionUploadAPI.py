@@ -246,7 +246,7 @@ def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationM
     # on whether we are in validation mode
     if inputCopied:
         with open(filenameTXT) as fin:
-            lines = int(fin.readline())
+            lines = fin.readlines()
         with open(filenameTXT, 'w') as fout:
             if validationMode:
                 fout.writelines( [ line.replace('prepMetaData ', '', 1) for line in lines if 'prodMetaData ' not in line] )
