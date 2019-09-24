@@ -4,7 +4,7 @@ BASE_DIR=/data/tier0
 DEPLOY_DIR=$BASE_DIR/srv/wmagent
 SPEC_DIR=$BASE_DIR/admin/Specs
 
-TIER0_VERSION=2.1.4
+TIER0_VERSION=2.1.5
 TIER0_ARCH=slc7_amd64_gcc630
 
 function echo_header {
@@ -256,3 +256,10 @@ echo "config.AgentStatusWatcher.pendingSlotsSitePercent = 40" >> ./config/tier0/
 echo "config.AgentStatusWatcher.runningExpressPercent = 25" >> ./config/tier0/config.py
 echo "config.AgentStatusWatcher.runningRepackPercent = 10" >> ./config/tier0/config.py
 
+#Configurable retry number for failing jobs before they go to paused
+echo "config.RetryManager.PauseAlgo.section_('Express')" >> ./config/tier0/config.py
+echo "config.RetryManager.PauseAlgo.Express.retryErrorCodes = { 8001: 0, 70: 0, 50513: 0, 50660: 0, 50661: 0, 71304: 0, 99109: 0, 99303: 0, 99400: 0, 8001: 0, 50115: 0 }" >> ./config/tier0/config.py
+echo "config.RetryManager.PauseAlgo.section_('Processing')" >> ./config/tier0/config.py
+echo "config.RetryManager.PauseAlgo.Processing.retryErrorCodes = { 8001: 0, 70: 0, 50513: 0, 50660: 0, 50661: 0, 71304: 0, 99109: 0, 99303: 0, 99400: 0, 8001: 0, 50115: 0 }" >> ./config/tier0/config.py
+echo "config.RetryManager.PauseAlgo.section_('Repack')" >> ./config/tier0/config.py
+echo "config.RetryManager.PauseAlgo.Repack.retryErrorCodes = { 8001: 0, 70: 0, 50513: 0, 50660: 0, 50661: 0, 71304: 0, 99109: 0, 99303: 0, 99400: 0, 8001: 0, 50115: 0 }" >> ./config/tier0/config.py

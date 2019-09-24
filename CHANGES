@@ -1,3 +1,41 @@
+2.1.4 to 2.1.5:
+  - Merge pull request #4506 from vytjan/refactoring-patches
+  - Refactoring patching script. 2.1.5. release in the deploy scripts.
+  - Merge pull request #4505 from vytjan/mwgr3-final-replay
+  - Production and replay configuration used for MWGR#3.
+  - Merge pull request #4502 from vytjan/configurable-retries
+  - Merge pull request #4503 from vytjan/deployment-updates
+  - Adding a configurable number of retries default configuration. More information on T0 twiki cookbook.
+  - Merge pull request #4501 from andresfelquintero/openfilechange
+  - Updated conditionuploadapi.py
+  - Merge pull request #4499 from andresfelquintero/UnitTest_Tier0Feeder_t
+  - CMSSW repackProcess does not accept unicode strings. Meantime, after upgrading sqlalchemy release, all queries return unicode strings.
+  - Updated Tier0Feeder_t
+  - Merge pull request #4495 from andresfelquintero/Unit_test_Run_Config_t
+  - Merge pull request #4494 from andresfelquintero/Unit_test_Repack_Merge_t2
+  - Merge pull request #4492 from andresfelquintero/Unit_test_Express_Merge_t
+  - Merge pull request #4491 from andresfelquintero/Unit_test_Tier0Feeder_t
+  - Merge pull request #4483 from andresfelquintero/Unit_test_Repack_t
+  - Merge pull request #4482 from andresfelquintero/Unit_test_Express_t
+  - Merge pull request #4481 from andresfelquintero/Unit_test_Condition_t
+  - Updated RunConfig_t and ExampleConfig
+  - Updated RepackMerge_t.py
+  - Merge pull request #4490 from vytjan/deployment-scripts-update
+  - Update ExpressMerge_t.py
+  - Tier0Feeder_t and ExampleConfig.py update
+  - Adding the up-to-date versions of deploy and software scripts
+  - Merge pull request #4488 from vytjan/MWGR1-2019
+  - CMSSW_10_3_3 and turned off PromptReco for MWGR1 PDs.
+  - Updated Repack_t
+  - Express_t updated
+  - Unit test Condition_t updated
+  - Merge pull request #4480 from vytjan/smnotifydb-to-secrets
+  - Moving SMNOTIFYDB_URL to secrets file
+  - Merge pull request #4478 from andresfelquintero/master
+  - Merge pull request #4479 from hufnagel/unittest-schema-init
+  - fix schema init order for unittests
+  - Add Apache 2 License and Notice
+
 2.1.3 to 2.1.4:
   - Merge pull request #4476 from vytjan/versioning-workflows
   - Adding a global EnableUniqueWorkflowName configuration parameter to be used in replays.
