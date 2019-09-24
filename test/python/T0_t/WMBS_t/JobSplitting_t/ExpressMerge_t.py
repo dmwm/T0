@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 """
 _ExpressMerge_t_
-
 ExpressMerge job splitting test
-
 """
 
 import unittest
@@ -26,20 +24,18 @@ from WMQuality.TestInit import TestInit
 class ExpressMergeTest(unittest.TestCase):
     """
     _ExpressMergeTest_
-
     Test for ExpressMerge job splitter
     """
 
     def setUp(self):
         """
         _setUp_
-
         """
         self.testInit = TestInit(__file__)
         self.testInit.setLogging()
         self.testInit.setDatabaseConnection()
 
-        self.testInit.setSchema(customModules = ["T0.WMBS"])
+        self.testInit.setSchema(customModules = ["WMComponent.DBS3Buffer", "T0.WMBS"])
 
         self.splitterFactory = SplitterFactory(package = "T0.JobSplitting")
 
@@ -49,8 +45,8 @@ class ExpressMergeTest(unittest.TestCase):
                                 dbinterface = myThread.dbi)
 
         myThread.dbi.processData("""INSERT INTO wmbs_location
-                                    (id, site_name, state)
-                                    VALUES (1, 'SomeSite', 1)
+                                    (id, site_name, state, state_time)
+                                    VALUES (1, 'SomeSite', 1, 1)
                                     """, transaction = False)
         myThread.dbi.processData("""INSERT INTO wmbs_pnns
                                     (id, pnn)
@@ -121,7 +117,6 @@ class ExpressMergeTest(unittest.TestCase):
     def tearDown(self):
         """
         _tearDown_
-
         """
         self.testInit.clearDatabase()
 
@@ -130,7 +125,6 @@ class ExpressMergeTest(unittest.TestCase):
     def deleteSplitLumis(self):
         """
         _deleteSplitLumis_
-
         """
         myThread = threading.currentThread()
 
@@ -143,10 +137,8 @@ class ExpressMergeTest(unittest.TestCase):
     def test00(self):
         """
         _test00_
-
         Test that the job name prefix feature works
         Test latency trigger (wait and 0)
-
         """
         mySplitArgs = self.splitArgs.copy()
 
@@ -185,10 +177,8 @@ class ExpressMergeTest(unittest.TestCase):
     def test01(self):
         """
         _test01_
-
         Test size and event triggers for single lumis (they are ignored)
         Test latency trigger (timed out)
-
         """
         mySplitArgs = self.splitArgs.copy()
 
@@ -227,9 +217,7 @@ class ExpressMergeTest(unittest.TestCase):
     def test02(self):
         """
         _test02_
-
         Test input files threshold on multi lumis
-
         """
         mySplitArgs = self.splitArgs.copy()
 
@@ -267,9 +255,7 @@ class ExpressMergeTest(unittest.TestCase):
     def test03(self):
         """
         _test03_
-
         Test input size threshold on multi lumis
-
         """
         mySplitArgs = self.splitArgs.copy()
 
@@ -307,9 +293,7 @@ class ExpressMergeTest(unittest.TestCase):
     def test04(self):
         """
         _test04_
-
         Test multi lumis express merges
-
         """
         mySplitArgs = self.splitArgs.copy()
 
@@ -341,9 +325,7 @@ class ExpressMergeTest(unittest.TestCase):
     def test05(self):
         """
         _test05_
-
         Test multi lumis express merges with holes
-
         """
         mySplitArgs = self.splitArgs.copy()
 
@@ -375,9 +357,7 @@ class ExpressMergeTest(unittest.TestCase):
     def test06(self):
         """
         _test06_
-
         Test active split lumis
-
         """
         mySplitArgs = self.splitArgs.copy()
 
@@ -394,7 +374,8 @@ class ExpressMergeTest(unittest.TestCase):
                                           subscription = self.subscription2)
 
         self.insertSplitLumisDAO.execute( binds = { 'SUB' : self.subscription1['id'],
-                                                    'LUMI' : 1 } )
+                                                    'LUMI' : 1 ,
+                                                    'NFILES' : 5 } )
 
         mySplitArgs['maxLatency'] = 0
         jobGroups = jobFactory(**mySplitArgs)

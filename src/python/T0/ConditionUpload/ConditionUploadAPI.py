@@ -245,15 +245,13 @@ def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationM
     # select the right destination db depending
     # on whether we are in validation mode
     if inputCopied:
-        fin = open(filenameTXT)
-        lines = fin.readlines()
-        fin.close()
-        fout = open(filenameTXT, 'w')
-        if validationMode:
-            fout.writelines( [ line.replace('prepMetaData ', '', 1) for line in lines if 'prodMetaData ' not in line] )
-        else:
-            fout.writelines( [ line.replace('prodMetaData ', '', 1) for line in lines if 'prepMetaData ' not in line] )
-        fout.close()
+        with open(filenameTXT) as fin:
+            lines = fin.readlines()
+        with open(filenameTXT, 'w') as fout:
+            if validationMode:
+                fout.writelines( [ line.replace('prepMetaData ', '', 1) for line in lines if 'prodMetaData ' not in line] )
+            else:
+                fout.writelines( [ line.replace('prodMetaData ', '', 1) for line in lines if 'prepMetaData ' not in line] )
 
         os.chmod(filenameDB, stat.S_IREAD | stat.S_IWRITE | stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH)
         os.chmod(filenameTXT, stat.S_IREAD | stat.S_IWRITE | stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH)

@@ -104,6 +104,10 @@ def modifyConfiguration(config, **args):
         config.section_("T0DataSvcDatabase")
         config.T0DataSvcDatabase.connectUrl = args['t0datasvcdb_url']
 
+    if 'smnotifydb_url' in args:
+        config.section_("SMNotifyDatabase")
+        config.SMNotifyDatabase.connectUrl = args['smnotifydb_url']
+
     return config
 
 
@@ -118,7 +122,7 @@ def main(argv=None):
     try:
         try:
             opts, args = getopt.getopt(argv[1:], "h", 
-            ["help", "input=", "output=", "confdb_url=", "smdb_url=", "popconlogdb_url=", "t0datasvcdb_url="])
+            ["help", "input=", "output=", "confdb_url=", "smdb_url=", "popconlogdb_url=", "t0datasvcdb_url=", "smnotifydb_url="])
 
         except getopt.error, msg:
             raise Usage(msg)
@@ -131,7 +135,7 @@ def main(argv=None):
                 outputFile = value
             if option == "--input":
                 inputFile = value
-            if option in ('--confdb_url', '--smdb_url', '--popconlogdb_url', '--t0datasvcdb_url'):
+            if option in ('--confdb_url', '--smdb_url', '--popconlogdb_url', '--t0datasvcdb_url', '--smnotifydb_url'):
                 parameters[option[2:]] = value
 
     except Usage, err:

@@ -35,7 +35,11 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
+<<<<<<< HEAD
 setInjectMinRun(tier0Config, 327825)
+=======
+setInjectMinRun(tier0Config, 328056)
+>>>>>>> dd7aad99dc713e2d30d71a75bf27cb98710f506a
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
@@ -89,20 +93,28 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
+<<<<<<< HEAD
        'acqEra': {'Commissioning2018': 'CMSSW_10_1_2_patch2'},
        'default': "CMSSW_10_3_1_patch3"
      }
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc6_amd64_gcc700")
+=======
+       'default': "CMSSW_10_6_1_patch3"
+     }
+
+# Configure ScramArch
+setDefaultScramArch(tier0Config, "slc7_amd64_gcc700")
+>>>>>>> dd7aad99dc713e2d30d71a75bf27cb98710f506a
 
 # Configure scenarios
-ppScenario = "ppEra_Run2_2018"
-ppScenarioB0T = "ppEra_Run2_2018"
-cosmicsScenario = "cosmicsEra_Run2_2018"
-hcalnzsScenario = "hcalnzsEra_Run2_2018"
+ppScenario = "ppEra_Run3"
+ppScenarioB0T = "ppEra_Run3"
+cosmicsScenario = "cosmicsEra_Run3"
+hcalnzsScenario = "hcalnzsEra_Run3"
 hiScenario = "ppEra_Run2_2016_pA"
-alcaTrackingOnlyScenario = "trackingOnlyEra_Run2_2018"
+alcaTrackingOnlyScenario = "trackingOnlyEra_Run3"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels"
 hiTestppScenario = "ppEra_Run2_2018_pp_on_AA"
@@ -123,9 +135,15 @@ expressProcVersion = {
      }
 
 # Defaults for GlobalTag
+<<<<<<< HEAD
 expressGlobalTag = "103X_dataRun2_Express_v2"
 promptrecoGlobalTag = "103X_dataRun2_Prompt_v3"
 alcap0GlobalTag = "103X_dataRun2_Prompt_v3"
+=======
+expressGlobalTag = "106X_dataRun3_Express_v2"
+promptrecoGlobalTag = "106X_dataRun3_Prompt_v2"
+alcap0GlobalTag = "106X_dataRun3_Prompt_v2"
+>>>>>>> dd7aad99dc713e2d30d71a75bf27cb98710f506a
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -142,6 +160,7 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
+<<<<<<< HEAD
     "CMSSW_10_0_0" : "CMSSW_10_3_1_patch3",
     "CMSSW_10_0_1" : "CMSSW_10_3_1_patch3",
     "CMSSW_10_0_2" : "CMSSW_10_3_1_patch3",
@@ -187,6 +206,57 @@ expressVersionOverride = {
     "CMSSW_10_2_1" : "CMSSW_10_3_1_patch3",
     "CMSSW_10_2_5" : "CMSSW_10_3_1_patch3",
     "CMSSW_10_3_0" : "CMSSW_10_3_1_patch3"
+=======
+    "CMSSW_10_0_0" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_0_1" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_0_2" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_0_3" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_0_4" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_0_5" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_1_0" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_1_1" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_1_2" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_1_3" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_1_4" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_1_5" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_1_6" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_1_7" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_1_8" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_1_9" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_1_10" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_2_0" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_2_1" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_2_5" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_3_0" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_3_1" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_3_3" : "CMSSW_10_6_1_patch3"
+    }
+
+expressVersionOverride = {
+    "CMSSW_10_0_0" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_0_1" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_0_2" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_0_3" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_0_4" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_0_5" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_1_0" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_1_1" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_1_2" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_1_3" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_1_4" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_1_5" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_1_6" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_1_7" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_1_8" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_1_9" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_1_10" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_2_0" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_2_1" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_2_5" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_3_0" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_3_1" : "CMSSW_10_6_1_patch3",
+    "CMSSW_10_3_3" : "CMSSW_10_6_1_patch3"
+>>>>>>> dd7aad99dc713e2d30d71a75bf27cb98710f506a
     }
 
 #set default repack settings for bulk streams
@@ -262,7 +332,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  write_dqm = True,
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T",
                                     "DtCalibCosmics", "SiPixelCalZeroBias",
-                                    "PromptCalibProdSiStrip", "PromptCalibProdSiPixel"
+                                    "PromptCalibProdSiStrip", "PromptCalibProdSiPixel", "SiStripCalCosmics"
                                     ],
                  reco_version = defaultCMSSWVersion,
                  multicore = numberOfCores,
@@ -476,7 +546,7 @@ datasets = [ "Cosmics" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
-           do_reco = True,
+           do_reco = False,
            write_reco = False,
            write_miniaod = False,
            write_dqm = True,
@@ -616,7 +686,22 @@ for dataset in datasets:
                do_reco = True,
                write_reco = False,
                write_dqm = True,
+<<<<<<< HEAD
+=======
                dqm_sequences = [ "@common" ],
+               scenario = ppScenario)
+
+# 05/07/2018 HighMultiplicityEOF needs to have 1sec per event
+datasets = [ "HighMultiplicityEOF" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_reco = False,
+               write_dqm = True,
+>>>>>>> dd7aad99dc713e2d30d71a75bf27cb98710f506a
+               dqm_sequences = [ "@common" ],
+               timePerEvent = 1,
                scenario = ppScenario)
 
 # 05/07/2018 HighMultiplicityEOF needs to have 1sec per event
@@ -802,7 +887,7 @@ datasets = [ "HcalNZS" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
-           do_reco = True,
+           do_reco = False,
            write_dqm = True,
            dqm_sequences = [ "@common", "@hcal" ],
            alca_producers = [ "HcalCalMinBias" ],
@@ -815,7 +900,7 @@ datasets = [ "TestEnablesEcalHcal", "TestEnablesEcalHcalDQM" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
-               do_reco = True,
+               do_reco = False,
                raw_to_disk = True,
                alca_producers = [ "EcalTestPulsesRaw", "PromptCalibProdEcalPedestals" ],
                dqm_sequences = [ "@common" ],
@@ -911,7 +996,7 @@ datasets = [ "HLTPhysics" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
-               do_reco = True,
+               do_reco = False,
                raw_to_disk = True,
                write_reco = False,
                write_dqm = True,
@@ -988,7 +1073,7 @@ datasets = [ "MinimumBias" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
-               do_reco = True,
+               do_reco = False,
                write_dqm = True,
                tape_node = "T1_RU_JINR_MSS",
                disk_node = "T1_RU_JINR_Disk",

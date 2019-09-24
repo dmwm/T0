@@ -13,7 +13,7 @@ class GetStreamDatasetTriggers(DBFormatter):
 
     def execute(self, run, stream, conn = None, transaction = False):
 
-        sql = """SELECT primary_dataset.name, trigger_label.name
+        sql = """SELECT primary_dataset.name as primd_name, trigger_label.name as trigl_name
                  FROM run_primds_stream_assoc
                  INNER JOIN run_trig_primds_assoc ON
                    run_trig_primds_assoc.run_id = run_primds_stream_assoc.run_id AND
@@ -33,13 +33,14 @@ class GetStreamDatasetTriggers(DBFormatter):
                   'STREAM' : stream }
         
         results = self.dbi.processData(sql, binds, conn = conn,
-                                       transaction = transaction)[0].fetchall()
+                                       transaction = transaction)
 
         resultDict = {}
-        for result in results:
+        resultsAfter = self.formatDict(results)
+        for single in resultsAfter:
 
-            primds = result[0]
-            trig = result[1]
+            primds = single["primd_name"]
+            trig = single["trigl_name"]
 
             if primds not in resultDict:
                 resultDict[primds] = []
