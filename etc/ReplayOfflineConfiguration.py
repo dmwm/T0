@@ -1,6 +1,7 @@
 """
 _OfflineConfiguration_
 
+
 Processing configuration for the Tier0 - Replay version
 """
 from __future__ import print_function
@@ -35,6 +36,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
+
 setInjectRuns(tier0Config, [ 330075 ])
 
 # Settings up sites
@@ -107,6 +109,7 @@ alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels"
 hiTestppScenario = "ppEra_Run2_2018_pp_on_AA"
 
+
 # Procesing version nunmber for replays is Jenkins build number
 if os.environ.get('T0_PROCESSING_VERSION'):
     defaultProcVersion = int(os.environ.get('T0_PROCESSING_VERSION'))
@@ -117,11 +120,12 @@ else:
     defaultProcVersion = 1
     expressProcVersion = 1
     alcarawProcVersion = 1
-
+    
 # Defaults for GlobalTag
 expressGlobalTag = "106X_dataRun3_Express_v2"
 promptrecoGlobalTag = "106X_dataRun3_Prompt_v2"
 alcap0GlobalTag = "106X_dataRun3_Prompt_v2"
+
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -526,6 +530,20 @@ for dataset in datasets:
                timePerEvent = 1,
                scenario = ppScenario)
 
+datasets = [ "DoubleMuonLowPU" ]
+
+for dataset in datasets:
+    addDataset(tier0Config, dataset,
+               do_reco = True,
+               write_reco = False,
+               raw_to_disk = True,
+               write_dqm = True,
+               alca_producers = [ "TkAlZMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "DtCalib" ],
+               dqm_sequences = [ "@common", "@muon", "@lumi", "@L1TMuon" ],
+               physics_skims = [ "LogError", "LogErrorMonitor" ],
+               timePerEvent = 1,
+               scenario = ppScenario)
+
 datasets = [ "DoubleMuonLowMass" ]
 
 for dataset in datasets:
@@ -594,6 +612,7 @@ for dataset in datasets:
                write_reco = True,
                write_dqm = True,
                dqm_sequences = [ "@common" ],
+               timePerEvent = 1,
                scenario = ppScenario)
 
 # 05/07/2018 HighMultiplicityEOF needs to have 1sec per event

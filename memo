@@ -1,0 +1,19 @@
+pipeline {
+    agent {label 'vocms0500'}
+    stages {
+        stage('Build'){a
+            steps {
+                sh 'echo Hello World'
+                sh '''
+                echo "blah"
+                ls -lah
+                '''
+                sh 'whoami'
+                sh 'hostname'
+                sh "ls /"
+                //sh 'source /data/tier0/admin/env.sh'
+                sh "ps aux | egrep '\''couch|wmcore|mysql|beam'\''''"
+            }
+        }
+    }
+}

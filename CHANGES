@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+=======
 2.1.4 to 2.1.5:
   - Merge pull request #4506 from vytjan/refactoring-patches
   - Refactoring patching script. 2.1.5. release in the deploy scripts.
@@ -36,6 +38,7 @@
   - fix schema init order for unittests
   - Add Apache 2 License and Notice
 
+>>>>>>> dd7aad99dc713e2d30d71a75bf27cb98710f506a
 2.1.3 to 2.1.4:
   - Merge pull request #4476 from vytjan/versioning-workflows
   - Adding a global EnableUniqueWorkflowName configuration parameter to be used in replays.

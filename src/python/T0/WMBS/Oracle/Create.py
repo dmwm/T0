@@ -915,11 +915,15 @@ class Create(DBCreator):
                            33 : "trackingOnlyEra_Run2_2018",
                            34 : "ppEra_Run2_2018_pp_on_AA",
                            35 : "hcalnzsEra_Run2_2018_pp_on_AA",
+<<<<<<< HEAD
+                           36 : "trackingOnlyEra_Run2_2018_pp_on_AA" }
+=======
                            36 : "trackingOnlyEra_Run2_2018_pp_on_AA",
                            37 : "ppEra_Run3",
                            38 : "cosmicsEra_Run3",
                            39 : "hcalnzsEra_Run3",
                            40 : "trackingOnlyEra_Run3" }
+>>>>>>> dd7aad99dc713e2d30d71a75bf27cb98710f506a
         for id, name in eventScenarios.items():
             sql = """INSERT INTO event_scenario
                      (ID, NAME)
