@@ -1,3 +1,10 @@
+2.1.6 to 2.1.7:
+  - T0 2.1.7 (#4517)
+  - Merge pull request #4516 from andresfelquintero/updated_deploy_prod
+  - Updated 00_deploy_prod.sh
+  - Updated 00_deploy_replay
+  - Changed wmcore version to 1.2.8
+
 2.1.5 to 2.1.6:
   - Merge pull request #4515 from andresfelquintero/MWGR#4config
   - Mwgr#4 config (#6)
