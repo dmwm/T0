@@ -162,6 +162,7 @@ def main():
                 print("There were errors when the replay has already finished.")
                 print("Unable to comment JIRA issue 2.")
         if repackProcessing:
+            print("Checking Repack workflows...")
             if repackWorkflowCount > 0:
                 repackWorkflowCount = getWorkflowCount(creds, "Repack")
             else:
@@ -173,6 +174,7 @@ def main():
                     print("Unable to comment JIRA issue 3.")
                 repackProcessing = False
         if expressProcessing:
+            print("Checking Express workflows...")
             if expressWorkflowCount > 0:
                 expressWorkflowCount = getWorkflowCount(creds, "Express")
             else:
