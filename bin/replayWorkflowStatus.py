@@ -28,7 +28,7 @@ mail_address = "cms-tier0-monitoring-alerts@cern.ch"
 mail_subject = "Jenkins automatic replay"
 
 #Jira watchers list. Should be updated with present T0 team
-watchers = ['anquinte', 'vjankaus']
+watchers = ['anquinte', 'vjankaus', 'yulee']
 labels = ['Tier0_Replays']
 
 def getT0astCreds():
