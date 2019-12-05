@@ -105,20 +105,21 @@ def main():
     jira._session.cookies = cj
 
     print(sys.argv)
-    if len(sys.argv) == 5:
+    if len(sys.argv) == 6:
         buildNumber = sys.argv[1]
         hostName = os.popen('hostname').read().rstrip()
         print(hostName)
-        prTitle = sys.argv[2]
-        prMessage = sys.argv[3]
-        prLink = sys.argv[4]
+        jobname = sys.argv[2]
+        prTitle = sys.argv[3]
+        prMessage = sys.argv[4]
+        prLink = sys.argv[5]
 
         print(buildNumber)
         print(prTitle)
         print(prMessage)
         print(prLink)
         ticketDescription = "Configuration for the replay is available at: " + prLink
-        subject = "Tier0_REPLAY v" + str(buildNumber) + " on " + hostName + ". " + prTitle
+        subject = "Tier0_REPLAY v {} {} on {}. {}".format(str(buildNumber),jobname,hostName,prTitle)
         #create a new JIRA issue
         newIssue = jiraReporting.createJiraTicket(jira, jira_instance, subject, ticketDescription, labels, watchers)
 
