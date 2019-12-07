@@ -180,6 +180,8 @@ def main():
                 expressWorkflowCount = getWorkflowCount(creds, "Express")
             else:
                 try:
+                    ##just test
+                    sys.exit(0)
                     jiraReporting.addJiraComment(jira, jira_instance, newIssue, "All Express workflows were processed.")
                     print("All Express workflows were processed.")
                 except Exception as e:
