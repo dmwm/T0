@@ -2,7 +2,7 @@
 """
 Hopefully someone is going to refactor these scripts at some point.
 """
-
+print("Checking replayWorkflowStatus")
 import cx_Oracle
 import time
 import sys
@@ -119,7 +119,7 @@ def main():
         print(prMessage)
         print(prLink)
         ticketDescription = "Configuration for the replay is available at: " + prLink
-        subject = "Tier0_REPLAY v {} {} on {}. {}".format(str(buildNumber),jobname,hostName,prTitle)
+        subject = "Tier0_REPLAY v{} {} on {}. {}".format(str(buildNumber),jobname,hostName,prTitle)
         #create a new JIRA issue
         newIssue = jiraReporting.createJiraTicket(jira, jira_instance, subject, ticketDescription, labels, watchers)
 
