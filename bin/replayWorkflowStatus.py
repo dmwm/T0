@@ -30,7 +30,9 @@ mail_subject = "Jenkins automatic replay"
 #Jira watchers list. Should be updated with present T0 team
 watchers = ['anquinte', 'vjankaus', 'yulee']
 labels = ['Tier0_Replays']
-
+##just test
+print("test comment")
+sys.exit(0)
 def getT0astCreds():
 
     home="/data/tier0/admin/"
@@ -180,8 +182,6 @@ def main():
                 expressWorkflowCount = getWorkflowCount(creds, "Express")
             else:
                 try:
-                    ##just test
-                    sys.exit(0)
                     jiraReporting.addJiraComment(jira, jira_instance, newIssue, "All Express workflows were processed.")
                     print("All Express workflows were processed.")
                 except Exception as e:
