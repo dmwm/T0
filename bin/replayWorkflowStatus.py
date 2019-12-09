@@ -61,7 +61,7 @@ def getWorkflowCount(creds, workflowName):
     query = "SELECT DISTINCT name FROM dbsbuffer_workflow WHERE completed = 0 AND name like '%" + workflowName +"%'"
     cursor.execute(query)
     result = cursor.fetchall()
-    print("work flow list "result)
+    print("work flow list ",result)
     return len(result)
 
 #check the number of filesets on DB
