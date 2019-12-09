@@ -151,6 +151,7 @@ def main():
                 print("Unable to comment JIRA issue 0.")
         pausedCount = getPaused(creds)
         if pausedCount != 0:
+            print("There are {} paused jobs in the replay.".format(pausedCount))
             try:
                 jiraReporting.addJiraComment(jira, jira_instance, newIssue, "*There are {} paused jobs in the replay.*".format(pausedCount))
                 print("*There are {} paused jobs in the replay.*".format(pausedCount))
