@@ -138,7 +138,6 @@ def main():
     expressProcessing = True
     repackProcessing = True
     while processing:
-        print("test comment")
         filesetCount = getFilesets(creds)
         if filesetCount == 0:
             try:
@@ -166,7 +165,7 @@ def main():
                 print("There were errors when the replay has already finished.")
                 print("Unable to comment JIRA issue 2.")
         if repackProcessing:
-            print("Checking Repack workflows...")
+            print("Checking Repack workflows... repackworkflowcount {}".format(repackWorkflowCount))
             if repackWorkflowCount > 0:
                 repackWorkflowCount = getWorkflowCount(creds, "Repack")
             else:
