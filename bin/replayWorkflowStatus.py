@@ -144,6 +144,7 @@ The information of this build can be found at {}.
     repackProcessing = True
     while processing:
         filesetCount = getFilesets(creds)
+        print("fileset count {}".format(filesetCount))
         if filesetCount == 0:
             try:
                 jiraReporting.addJiraComment(jira, jira_instance, newIssue, "All filesets were closed.")
