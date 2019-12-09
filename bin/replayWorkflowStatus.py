@@ -54,19 +54,19 @@ def getT0astCreds():
 
 #check the number of workflows by type Repack/Express
 def getWorkflowCount(creds, workflowName):
-    print("getWorkflowCount",)
+    #print("getWorkflowCount",)
     dbconn = cx_Oracle.connect(creds[0], creds[1], creds[2])
     cursor = dbconn.cursor() 
     #Get a number of workflows in progress 
     query = "SELECT DISTINCT name FROM dbsbuffer_workflow WHERE completed = 0 AND name like '%" + workflowName +"%'"
     cursor.execute(query)
     result = cursor.fetchall() #[(name),(name),]
-    print("work flow list ",result)
+    print("work flow list ",workflowName,result)
     return result
 
 #check the number of filesets on DB
 def getFilesets(creds):
-    print("getFilesets")
+    #print("getFilesets")
     dbconn = cx_Oracle.connect(creds[0], creds[1], creds[2])
     cursor = dbconn.cursor()
     #Get a number of filesets
@@ -74,11 +74,11 @@ def getFilesets(creds):
     query = "SELECT id, name FROM wmbs_fileset"
     cursor.execute(query)
     result = cursor.fetchall() #[(id,name),(id,name),]
-    print("fileset list ",result)
+    #print("fileset list ",result)
     return result
 
 def getPaused(creds):
-    print("getPaused")
+    #print("getPaused")
     dbconn = cx_Oracle.connect(creds[0], creds[1], creds[2])
     cursor = dbconn.cursor() 
     #Get a number of paused jobs
@@ -143,10 +143,11 @@ The information of this build can be found at {}.
     processing = True
     expressProcessing = True
     repackProcessing = True
+    print("Fileset list ",getFilesets(creds))
     while processing:
         filesetList = getFilesets(creds)
         filesetCount = len(filesetList)
-        print("fileset count {}".format(filesetCount))
+        #print("fileset count {}".format(filesetCount))
         if filesetCount == 0:
             try:
                 #jiraReporting.addJiraComment(jira, jira_instance, newIssue, "All filesets were closed.")
@@ -157,6 +158,8 @@ The information of this build can be found at {}.
         pausedList = getPaused(creds)
         pausedList = getFilesets(creds)
         pausedCount = len(pausedList)
+        else:
+            print("Fileset isn't 0")
         if pausedCount != 0:
             print("There are {} paused jobs in the replay.".format(pausedCount))
             try:
@@ -191,6 +194,8 @@ The information of this build can be found at {}.
                     print(e)
                     print("Unable to comment JIRA issue 3.")
                 repackProcessing = False
+        else:
+            print("Repack processing is not done")
         if expressProcessing:
             print("Checking Express workflows...")
             if expressWorkflowCount > 0:
@@ -204,6 +209,8 @@ The information of this build can be found at {}.
                     print(e)
                     print("Unable to comment JIRA issue 4.")
                 expressProcessing = False
+        else:
+            print("Express processing is not done")
         time.sleep(60)
 
 if __name__ == "__main__":
