@@ -74,6 +74,9 @@ def getFilesets(creds):
     query = "SELECT id, name FROM wmbs_fileset"
     cursor.execute(query)
     result = cursor.fetchall() #[(id,name),(id,name),]
+    query = "SELECT wmbs_job.* from wmbs_fileset"
+    cursor.execute(query)
+    print("fileset select",cursor.fetchall())
     #print("fileset list ",result)
     return result
 
@@ -171,7 +174,7 @@ The information of this build can be found at {}.
                 sys.exit(1)
             except Exception as e:
                 print(e)
-                print("Unable to comment JIRA issue 1.")
+                print("Unable to comment JIRA issue 1. check paused message")
         if filesetCount == 0 and pausedCount == 0:
             try:
                 #jiraReporting.addJiraComment(jira, jira_instance, newIssue, "*There were NO paused jobs in the replay.*")
@@ -180,7 +183,7 @@ The information of this build can be found at {}.
             except Exception as e:
                 print(e.message, e.args)
                 print("There were errors when the replay has already finished.")
-                print("Unable to comment JIRA issue 2.")
+                print("Unable to comment JIRA issue 2. check success message")
         if repackProcessing:
             print("Checking Repack workflows... repackworkflowcount {}".format(repackWorkflowCount))
             if repackWorkflowCount > 0:
@@ -192,7 +195,7 @@ The information of this build can be found at {}.
                     print("All Repack workflows were processed.")
                 except Exception as e:
                     print(e)
-                    print("Unable to comment JIRA issue 3.")
+                    print("Unable to comment JIRA issue 3. check repack message")
                 repackProcessing = False
         else:
             print("Repack processing is not done")
@@ -207,7 +210,7 @@ The information of this build can be found at {}.
                     print("All Express workflows were processed.")
                 except Exception as e:
                     print(e)
-                    print("Unable to comment JIRA issue 4.")
+                    print("Unable to comment JIRA issue 4. check express message")
                 expressProcessing = False
         else:
             print("Express processing is not done")
