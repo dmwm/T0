@@ -159,7 +159,6 @@ The information of this build can be found at {}.
         else:
             print("Fileset isn't 0")
         pausedList = getPaused(creds)
-        pausedList = getFilesets(creds)
         pausedCount = len(pausedList)
         
         if pausedCount != 0:
