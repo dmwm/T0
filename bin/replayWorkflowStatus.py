@@ -61,7 +61,7 @@ def getWorkflowCount(creds, workflowName):
     query = "SELECT DISTINCT name FROM dbsbuffer_workflow WHERE completed = 0 AND name like '%" + workflowName +"%'"
     cursor.execute(query)
     result = cursor.fetchall()
-    print(result)
+    print("work flow list "result)
     return len(result)
 
 #check the number of filesets on DB
@@ -74,7 +74,7 @@ def getFilesets(creds):
     query = "SELECT id, name, cache_dir FROM wmbs_fileset"
     cursor.execute(query)
     result = cursor.fetchall()
-    print(result)
+    print("fileset list ",result)
     return len(result)
 
 def getPaused(creds):
@@ -86,7 +86,7 @@ def getPaused(creds):
     #print(query)
     cursor.execute(query)
     result = cursor.fetchall()
-    print(result)
+    print("paused list ",result)
     return result
 
 def main():
