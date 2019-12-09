@@ -63,8 +63,8 @@ def getWorkflowCount(creds, workflowName):
     query = "SELECT DISTINCT name FROM dbsbuffer_workflow WHERE completed = 0 AND name like '%" + workflowName +"%'"
     cursor.execute(query)
     result = cursor.fetchall() #[(name),(name),]
-    Print("During {} process...".format(workflowName))
-    print("Current Workflow list : ",result)
+    #print("During {} process...".format(workflowName))
+    #print("Current Workflow list : ",result)
     return result
 
 #check the number of filesets on DB
@@ -90,7 +90,7 @@ def getPaused(creds):
     #print(query)
     cursor.execute(query)
     result = cursor.fetchall() #[(id,name,cache_dir),(id,name,cache_dir),]
-    print("Paused list : ",result)
+    #print("Paused list : ",result)
     return result
 
 def main():
@@ -172,6 +172,7 @@ The status of this build can be found at {}.
             try:
                 jiraReporting.addJiraComment(jira, jira_instance, newIssue, pausedMessage)
                 jiraReporting.addJiraComment(jira, jira_instance, newIssue, "Replay was closed by paused job")
+                print("Replay was closed by paused job")
                 sys.exit(1)
             except Exception as e:
                 print(e)
@@ -180,6 +181,7 @@ The status of this build can be found at {}.
             try:
                 jiraReporting.addJiraComment(jira, jira_instance, newIssue, "*There were NO paused jobs in the replay.*")
                 jiraReporting.addJiraComment(jira, jira_instance, newIssue, "*Replay was successful.*")
+                print("*Replay was successful.*")
                 sys.exit(0)
             except Exception as e:
                 print(e.message, e.args)
@@ -189,6 +191,7 @@ The status of this build can be found at {}.
             print("Checking Repack workflows... repackworkflowcount {}".format(repackWorkflowCount))
             if repackWorkflowCount > 0:
                 repackworkflowList = getWorkflowCount(creds, "Repack")
+                print("Repack Workflow list : ",repackworkflowList)
                 repackWorkflowCount = len(repackworkflowList)
             else:
                 try:
@@ -202,6 +205,7 @@ The status of this build can be found at {}.
             print("Checking Express workflows...")
             if expressWorkflowCount > 0:
                 expressWorkflowList = getWorkflowCount(creds, "Express")
+                print("Express Workflow list : ",expressWorkflowList)
                 expressWorkflowCount = len(expressWorkflowList)
             else:
                 try:
