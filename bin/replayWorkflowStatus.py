@@ -158,11 +158,12 @@ The information of this build can be found at {}.
             except Exception as e:
                 print(e)
                 print("Unable to comment JIRA issue 0.")
+        else:
+            print("Fileset isn't 0")
         pausedList = getPaused(creds)
         pausedList = getFilesets(creds)
         pausedCount = len(pausedList)
-        else:
-            print("Fileset isn't 0")
+        
         if pausedCount != 0:
             print("There are {} paused jobs in the replay.".format(pausedCount))
             try:
