@@ -179,7 +179,7 @@ The status of this build can be found at : {}.
                 print("Unable to comment JIRA issue 1. Check Paused jobs message")
         if filesetCount == 0 and pausedCount == 0:
             try:
-                jiraReporting.addJiraComment(jira, jira_instance, newIssue, "*There were NO paused jobs in the replay.*")
+                jiraReporting.addJiraComment(jira, jira_instance, newIssue, "*There was NO paused job in the replay.*")
                 jiraReporting.addJiraComment(jira, jira_instance, newIssue, "*Replay was successful.*")
                 print("*Replay was successful.*")
                 sys.exit(0)
