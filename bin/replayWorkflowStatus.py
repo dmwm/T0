@@ -2,7 +2,7 @@
 """
 Hopefully someone is going to refactor these scripts at some point.
 """
-print("Checking replayWorkflowStatus")
+print("replayWorkflowStatus.py")
 import cx_Oracle
 import time
 import sys
@@ -30,7 +30,7 @@ mail_subject = "Jenkins automatic replay"
 #Jira watchers list. Should be updated with present T0 team
 watchers = ['anquinte', 'vjankaus', 'yulee']
 labels = ['Tier0_Replays']
-print("run t0 workflow replay")
+print("Running t0 workflow replay with python3")
 
 def getT0astCreds():
     print("getT0astCreds")
@@ -49,7 +49,9 @@ def getT0astCreds():
                 elif line.startswith("ORACLE_TNS"):
                     ORACLE_TNS=line.strip().split("=")[-1]
     except IOError:
+        print("Attempted to get Oracle pass")
         print("Could not read file:", home+fileName)
+
     return [ORACLE_USER,ORACLE_PASS,ORACLE_TNS]
 
 #check the number of workflows by type Repack/Express
@@ -61,7 +63,8 @@ def getWorkflowCount(creds, workflowName):
     query = "SELECT DISTINCT name FROM dbsbuffer_workflow WHERE completed = 0 AND name like '%" + workflowName +"%'"
     cursor.execute(query)
     result = cursor.fetchall() #[(name),(name),]
-    print("work flow list ",workflowName,result)
+    Print("During {} process...".format(workflowName))
+    print("Current Workflow list : ",result)
     return result
 
 #check the number of filesets on DB
@@ -75,7 +78,7 @@ def getFilesets(creds):
     cursor.execute(query)
     result = cursor.fetchall() #[(id,name),(id,name),]
     
-    #print("fileset list ",result)
+    #print("Fileset list : ",result)
     return result
 
 def getPaused(creds):
@@ -87,7 +90,7 @@ def getPaused(creds):
     #print(query)
     cursor.execute(query)
     result = cursor.fetchall() #[(id,name,cache_dir),(id,name,cache_dir),]
-    print("paused list ",result)
+    print("Paused list : ",result)
     return result
 
 def main():
@@ -111,23 +114,23 @@ def main():
 
     print(sys.argv)
     if len(sys.argv) == 7:
-        print("set jira environment")
+        print("Setting jira environment")
         buildNumber = sys.argv[1]
         hostName = os.popen('hostname').read().rstrip()
-        print(hostName)
+        print("hostname : ", hostName)
         jobname = sys.argv[2]
         prTitle = sys.argv[3]
         prMessage = sys.argv[4]
         prLink = sys.argv[5]
         buildurl = sys.argv[6]
 
-        print("buildNumber ",buildNumber)
-        print("Pull request title ",prTitle)
-        print("Pull request message ",prMessage)
-        print("Pull request link ",prLink)
-        print("build url ",buildurl)
+        print("buildNumber : ",buildNumber)
+        print("Pull request title : ",prTitle)
+        print("Pull request message : ",prMessage)
+        print("Pull request link : ",prLink)
+        print("build url : ",buildurl)
         ticketDescription = """Configuration for the replay is available at: {}
-The information of this build can be found at {}.
+The status of this build can be found at {}.
 """.format(prLink,buildurl)
         subject = "Tier0_REPLAY v{} {} on {}. {}".format(str(buildNumber),jobname,hostName,prTitle)
         #create a new JIRA issue
@@ -144,7 +147,7 @@ The information of this build can be found at {}.
     processing = True
     expressProcessing = True
     repackProcessing = True
-    print("Fileset list ",getFilesets(creds))
+    print("Befor processing, Fileset list : ",getFilesets(creds))
     while processing:
         filesetList = getFilesets(creds)
         filesetCount = len(filesetList)
@@ -155,24 +158,24 @@ The information of this build can be found at {}.
                 print("All filesets were closed.")
             except Exception as e:
                 print(e)
-                print("Unable to comment JIRA issue 0.")
+                print("Unable to comment JIRA issue 0. Check fileset closed message")
         else:
             print("Fileset isn't 0")
         pausedList = getPaused(creds)
         pausedCount = len(pausedList)
         
         if pausedCount != 0:
-            print("There are {} paused jobs in the replay.".format(pausedCount))
+            pausedMessage="*There are {} paused jobs in the replay.*".format(pausedCount)
+            pausedMessage=("\{} : {}"*pausedCount).format(*[":".join([str(pausedName[0]),pausedName[1]]) for pausedName in pausedList])
+            pausedMessage="*There are {} paused jobs in the replay.* List of Paused job below.".format(pausedCount)+pausedMessage
+            print(pausedMessage)
             try:
-                pausedMessage="*There are {} paused jobs in the replay.*".format(pausedCount)
-                pausedMessage=("\{} : {}"*pausedCount).format(*[":".join([str(pausedName[0]),pausedName[1]]) for pausedName in pausedList])
-                pausedMessage="*There are {} paused jobs in the replay.*".format(pausedCount)+pausedMessage
                 jiraReporting.addJiraComment(jira, jira_instance, newIssue, pausedMessage)
-                print(pausedMessage)
+                jiraReporting.addJiraComment(jira, jira_instance, newIssue, "Replay was closed by paused job")
                 sys.exit(1)
             except Exception as e:
                 print(e)
-                print("Unable to comment JIRA issue 1. check paused message")
+                print("Unable to comment JIRA issue 1. Check Paused jobs message")
         if filesetCount == 0 and pausedCount == 0:
             try:
                 jiraReporting.addJiraComment(jira, jira_instance, newIssue, "*There were NO paused jobs in the replay.*")
@@ -181,7 +184,7 @@ The information of this build can be found at {}.
             except Exception as e:
                 print(e.message, e.args)
                 print("There were errors when the replay has already finished.")
-                print("Unable to comment JIRA issue 2. check success message")
+                print("Unable to comment JIRA issue 2. Check success message")
         if repackProcessing:
             print("Checking Repack workflows... repackworkflowcount {}".format(repackWorkflowCount))
             if repackWorkflowCount > 0:
@@ -193,7 +196,7 @@ The information of this build can be found at {}.
                     print("All Repack workflows were processed.")
                 except Exception as e:
                     print(e)
-                    print("Unable to comment JIRA issue 3. check repack message")
+                    print("Unable to comment JIRA issue 3. Check repack processed message")
                 repackProcessing = False
         if expressProcessing:
             print("Checking Express workflows...")
@@ -206,7 +209,7 @@ The information of this build can be found at {}.
                     print("All Express workflows were processed.")
                 except Exception as e:
                     print(e)
-                    print("Unable to comment JIRA issue 4. check express message")
+                    print("Unable to comment JIRA issue 4. Check express processed message")
                 expressProcessing = False
         time.sleep(60)
 
