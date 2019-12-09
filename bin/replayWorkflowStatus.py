@@ -119,11 +119,11 @@ def main():
         prLink = sys.argv[5]
         buildurl = sys.argv[6]
 
-        print(buildNumber)
-        print(prTitle)
-        print(prMessage)
-        print(prLink)
-        print(buildurl)
+        print("buildNumber ",buildNumber)
+        print("Pull request title ",prTitle)
+        print("Pull request message ",prMessage)
+        print("Pull request link ",prLink)
+        print("build url ",buildurl)
         ticketDescription = """Configuration for the replay is available at: {}
 The information of this build can be found at {}.
 """.format(prLink,buildurl)
