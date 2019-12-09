@@ -74,9 +74,7 @@ def getFilesets(creds):
     query = "SELECT id, name FROM wmbs_fileset"
     cursor.execute(query)
     result = cursor.fetchall() #[(id,name),(id,name),]
-    query = "SELECT wmbs_job.* from wmbs_fileset"
-    cursor.execute(query)
-    print("fileset select",cursor.fetchall())
+    
     #print("fileset list ",result)
     return result
 
