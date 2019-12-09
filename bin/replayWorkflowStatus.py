@@ -164,7 +164,7 @@ The information of this build can be found at {}.
             print("There are {} paused jobs in the replay.".format(pausedCount))
             try:
                 pausedMessage="*There are {} paused jobs in the replay.*".format(pausedCount)
-                pausedMessage=("\n{}"*pausedCount).format(*[pausedName[1] for pausedName in pausedList])
+                pausedMessage=("\{} : {}"*pausedCount).format(":".join([pausedName[0],pausedName[1]]) for pausedName in pausedList])
                 pausedMessage="*There are {} paused jobs in the replay.*".format(pausedCount)+pausedMessage
                 #jiraReporting.addJiraComment(jira, jira_instance, newIssue, pausedMessage)
                 print(pausedMessage)
