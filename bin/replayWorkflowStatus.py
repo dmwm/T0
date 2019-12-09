@@ -106,7 +106,7 @@ def main():
     jira._session.cookies = cj
 
     print(sys.argv)
-    if len(sys.argv) == 6:
+    if len(sys.argv) == 7:
         print("set jira environment")
         buildNumber = sys.argv[1]
         hostName = os.popen('hostname').read().rstrip()
@@ -115,6 +115,7 @@ def main():
         prTitle = sys.argv[3]
         prMessage = sys.argv[4]
         prLink = sys.argv[5]
+        buildurl = sys.argv[6]
 
         print(buildNumber)
         print(prTitle)
@@ -124,8 +125,9 @@ def main():
         subject = "Tier0_REPLAY v{} {} on {}. {}".format(str(buildNumber),jobname,hostName,prTitle)
         #create a new JIRA issue
         newIssue = jiraReporting.createJiraTicket(jira, jira_instance, subject, ticketDescription, labels, watchers)
-
-        firstComment = jiraReporting.addJiraComment(jira, jira_instance, newIssue, "The replay has started. Its progress will be reported here.")
+        jiradescription = """The replay has started. Its progress will be reported here.
+                           The information of this build can be found at {}.".format(buildurl)"""
+        firstComment = jiraReporting.addJiraComment(jira, jira_instance, newIssue, jiradescription)
 
     # To stop sending emails, comment out the line below
     # send an email with the summary of Jira issues
