@@ -31,8 +31,6 @@ mail_subject = "Jenkins automatic replay"
 watchers = ['anquinte', 'vjankaus', 'yulee']
 labels = ['Tier0_Replays']
 ##just test
-print("test comment")
-sys.exit(0)
 def getT0astCreds():
 
     home="/data/tier0/admin/"
@@ -138,6 +136,7 @@ def main():
     expressProcessing = True
     repackProcessing = True
     while processing:
+        print("test comment")
         filesetCount = getFilesets(creds)
         if filesetCount == 0:
             try:
