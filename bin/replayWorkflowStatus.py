@@ -136,7 +136,7 @@ The status of this build can be found at : {}.
         #create a new JIRA issue
         newIssue = jiraReporting.createJiraTicket(jira, jira_instance, subject, ticketDescription, labels, watchers)
         firstComment = jiraReporting.addJiraComment(jira, jira_instance, newIssue, "The replay has started. Its progress will be reported here.")
-
+        print(ticketDescription)
     # To stop sending emails, comment out the line below
     # send an email with the summary of Jira issues
     #sendEmailAlert(tickets, sources, extraComment)
