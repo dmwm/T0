@@ -148,8 +148,8 @@ def main():
         pausedCount = getPaused(creds)
         if pausedCount != 0:
             try:
-                jiraReporting.addJiraComment(jira, jira_instance, newIssue, "*There are some paused jobs in the replay.*")
-                print("*There are some paused jobs in the replay.*")
+                jiraReporting.addJiraComment(jira, jira_instance, newIssue, "*There are {} paused jobs in the replay.*".format(pausedCount))
+                print("*There are {} paused jobs in the replay.*".format(pausedCount))
                 sys.exit(1)
             except Exception as e:
                 print(e)
