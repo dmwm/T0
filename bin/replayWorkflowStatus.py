@@ -60,9 +60,9 @@ def getWorkflowCount(creds, workflowName):
     #Get a number of workflows in progress 
     query = "SELECT DISTINCT name FROM dbsbuffer_workflow WHERE completed = 0 AND name like '%" + workflowName +"%'"
     cursor.execute(query)
-    result = cursor.fetchall()
+    result = cursor.fetchall() #[(name),(name),]
     print("work flow list ",result)
-    return len(result)
+    return result
 
 #check the number of filesets on DB
 def getFilesets(creds):
@@ -73,9 +73,9 @@ def getFilesets(creds):
     #query = "SELECT COUNT(*) FROM wmbs_fileset"
     query = "SELECT id, name FROM wmbs_fileset"
     cursor.execute(query)
-    result = cursor.fetchall()
+    result = cursor.fetchall() #[(id,name),(id,name),]
     print("fileset list ",result)
-    return len(result)
+    return result
 
 def getPaused(creds):
     print("getPaused")
@@ -85,7 +85,7 @@ def getPaused(creds):
     query =  "SELECT id, name, cache_dir FROM wmbs_job WHERE state = (SELECT id FROM wmbs_job_state WHERE name = 'jobpaused')"
     #print(query)
     cursor.execute(query)
-    result = cursor.fetchall()
+    result = cursor.fetchall() #[(id,name,cache_dir),(id,name,cache_dir),]
     print("paused list ",result)
     return result
 
@@ -144,7 +144,8 @@ The information of this build can be found at {}.
     expressProcessing = True
     repackProcessing = True
     while processing:
-        filesetCount = getFilesets(creds)
+        filesetList = getFilesets(creds)
+        filesetCount = len(filesetList)
         print("fileset count {}".format(filesetCount))
         if filesetCount == 0:
             try:
@@ -154,12 +155,13 @@ The information of this build can be found at {}.
                 print(e)
                 print("Unable to comment JIRA issue 0.")
         pausedList = getPaused(creds)
+        pausedList = getFilesets(creds)
         pausedCount = len(pausedList)
         if pausedCount != 0:
             print("There are {} paused jobs in the replay.".format(pausedCount))
             try:
                 pausedMessage="*There are {} paused jobs in the replay.*".format(pausedCount)
-                pausedMessage=("\n{}"*pausedCount).format(*pausedList)
+                pausedMessage=("\n{}"*pausedCount).format(*[pausedName[1] for pausedName in pausedList])
                 pausedMessage="*There are {} paused jobs in the replay.*".format(pausedCount)+pausedMessage
                 #jiraReporting.addJiraComment(jira, jira_instance, newIssue, pausedMessage)
                 print(pausedMessage)
@@ -179,7 +181,8 @@ The information of this build can be found at {}.
         if repackProcessing:
             print("Checking Repack workflows... repackworkflowcount {}".format(repackWorkflowCount))
             if repackWorkflowCount > 0:
-                repackWorkflowCount = getWorkflowCount(creds, "Repack")
+                repackworkflowList = getWorkflowCount(creds, "Repack")
+                repackWorkflowCount = len(repackworkflowList)
             else:
                 try:
                     #jiraReporting.addJiraComment(jira, jira_instance, newIssue, "All Repack workflows were processed.")
@@ -191,7 +194,8 @@ The information of this build can be found at {}.
         if expressProcessing:
             print("Checking Express workflows...")
             if expressWorkflowCount > 0:
-                expressWorkflowCount = getWorkflowCount(creds, "Express")
+                expressWorkflowList = getWorkflowCount(creds, "Express")
+                expressWorkflowCount = len(expressWorkflowList)
             else:
                 try:
                     #jiraReporting.addJiraComment(jira, jira_instance, newIssue, "All Express workflows were processed.")
