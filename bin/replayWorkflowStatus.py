@@ -30,9 +30,10 @@ mail_subject = "Jenkins automatic replay"
 #Jira watchers list. Should be updated with present T0 team
 watchers = ['anquinte', 'vjankaus', 'yulee']
 labels = ['Tier0_Replays']
-##just test
-def getT0astCreds():
+print("run t0 workflow replay")
 
+def getT0astCreds():
+    print("getT0astCreds")
     home="/data/tier0/admin/"
     fileName="WMAgent.secrets"
     ORACLE_USER=""
@@ -53,7 +54,7 @@ def getT0astCreds():
 
 #check the number of workflows by type Repack/Express
 def getWorkflowCount(creds, workflowName):
-    
+    print("getWorkflowCount")
     dbconn = cx_Oracle.connect(creds[0], creds[1], creds[2])
     cursor = dbconn.cursor() 
     #Get a number of workflows in progress 
@@ -64,7 +65,7 @@ def getWorkflowCount(creds, workflowName):
 
 #check the number of filesets on DB
 def getFilesets(creds):
-
+    print("getFilesets")
     dbconn = cx_Oracle.connect(creds[0], creds[1], creds[2])
     cursor = dbconn.cursor()
     #Get a number of filesets
@@ -74,7 +75,7 @@ def getFilesets(creds):
     return result[0]
 
 def getPaused(creds):
-    
+    print("getPaused")
     dbconn = cx_Oracle.connect(creds[0], creds[1], creds[2])
     cursor = dbconn.cursor() 
     #Get a number of paused jobs
@@ -106,6 +107,7 @@ def main():
 
     print(sys.argv)
     if len(sys.argv) == 6:
+        print("set jira environment")
         buildNumber = sys.argv[1]
         hostName = os.popen('hostname').read().rstrip()
         print(hostName)
