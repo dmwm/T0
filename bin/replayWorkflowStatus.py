@@ -129,8 +129,8 @@ def main():
         print("Pull request message : ",prMessage)
         print("Pull request link : ",prLink)
         print("build url : ",buildurl)
-        ticketDescription = """Configuration for the replay is available at: {}
-The status of this build can be found at {}.
+        ticketDescription = """Configuration for the replay is available at : {}
+The status of this build can be found at : {}.
 """.format(prLink,buildurl)
         subject = "Tier0_REPLAY v{} {} on {}. {}".format(str(buildNumber),jobname,hostName,prTitle)
         #create a new JIRA issue
@@ -219,3 +219,5 @@ The status of this build can be found at {}.
 
 if __name__ == "__main__":
     main()
+
+    
