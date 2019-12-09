@@ -122,9 +122,10 @@ def main():
         print(prTitle)
         print(prMessage)
         print(prLink)
+        print(buildurl)
         ticketDescription = """Configuration for the replay is available at: {}
-                           The information of this build can be found at {}.
-                           """.format(prLink,buildurl)
+The information of this build can be found at {}.
+""".format(prLink,buildurl)
         subject = "Tier0_REPLAY v{} {} on {}. {}".format(str(buildNumber),jobname,hostName,prTitle)
         #create a new JIRA issue
         newIssue = jiraReporting.createJiraTicket(jira, jira_instance, subject, ticketDescription, labels, watchers)
