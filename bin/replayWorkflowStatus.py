@@ -195,8 +195,6 @@ The information of this build can be found at {}.
                     print(e)
                     print("Unable to comment JIRA issue 3. check repack message")
                 repackProcessing = False
-        else:
-            print("Repack processing is not done")
         if expressProcessing:
             print("Checking Express workflows...")
             if expressWorkflowCount > 0:
@@ -210,8 +208,6 @@ The information of this build can be found at {}.
                     print(e)
                     print("Unable to comment JIRA issue 4. check express message")
                 expressProcessing = False
-        else:
-            print("Express processing is not done")
         time.sleep(60)
 
 if __name__ == "__main__":
