@@ -148,6 +148,7 @@ The status of this build can be found at : {}.
     expressProcessing = True
     repackProcessing = True
     print("Befor processing, Fileset list : ",getFilesets(creds))
+    timing=0
     while processing:
         filesetList = getFilesets(creds)
         filesetCount = len(filesetList)
@@ -160,7 +161,10 @@ The status of this build can be found at : {}.
                 print(e)
                 print("Unable to comment JIRA issue 0. Check fileset closed message")
         else:
-            print("Fileset isn't 0")
+            print("Fileset left {}".format(filesetCount))
+            if(timing>30 and timing%60==0):
+                print("Fileset list : ",filesetList)
+        timing+=1
         pausedList = getPaused(creds)
         pausedCount = len(pausedList)
         
