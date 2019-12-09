@@ -72,9 +72,9 @@ def getFilesets(creds):
     #Get a number of filesets
     query = "SELECT COUNT(*) FROM wmbs_fileset"
     cursor.execute(query)
-    result = cursor.fetchall()[0]
-    print(cursor.fetchall())
-    return result[0]
+    result = cursor.fetchall()
+    print(result)
+    return result[0][0]
 
 def getPaused(creds):
     print("getPaused")
