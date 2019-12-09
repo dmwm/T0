@@ -54,13 +54,14 @@ def getT0astCreds():
 
 #check the number of workflows by type Repack/Express
 def getWorkflowCount(creds, workflowName):
-    print("getWorkflowCount")
+    print("getWorkflowCount",)
     dbconn = cx_Oracle.connect(creds[0], creds[1], creds[2])
     cursor = dbconn.cursor() 
     #Get a number of workflows in progress 
     query = "SELECT DISTINCT name FROM dbsbuffer_workflow WHERE completed = 0 AND name like '%" + workflowName +"%'"
     cursor.execute(query)
     result = cursor.fetchall()
+    print(result)
     return len(result)
 
 #check the number of filesets on DB
