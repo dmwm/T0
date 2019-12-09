@@ -70,11 +70,12 @@ def getFilesets(creds):
     dbconn = cx_Oracle.connect(creds[0], creds[1], creds[2])
     cursor = dbconn.cursor()
     #Get a number of filesets
-    query = "SELECT COUNT(*) FROM wmbs_fileset"
+    #query = "SELECT COUNT(*) FROM wmbs_fileset"
+    query = "SELECT id, name, cache_dir FROM wmbs_fileset"
     cursor.execute(query)
     result = cursor.fetchall()
     print(result)
-    return result[0][0]
+    return len(result)
 
 def getPaused(creds):
     print("getPaused")
