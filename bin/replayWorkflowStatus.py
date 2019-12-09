@@ -84,7 +84,7 @@ def getPaused(creds):
     #print(query)
     cursor.execute(query)
     result = cursor.fetchall()
-    #print(len(result))
+    print(result)
     return len(result)
 
 def main():
