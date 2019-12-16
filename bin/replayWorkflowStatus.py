@@ -123,6 +123,7 @@ def main():
         prMessage = sys.argv[4]
         prLink = sys.argv[5]
         buildurl = sys.argv[6]
+        calljira = int(sys.argv[7])
 
         print("buildNumber : ",buildNumber)
         print("Pull request title : ",prTitle)
@@ -134,8 +135,8 @@ The status of this build can be found at : {}.
 """.format(prLink,buildurl)
         subject = "Tier0_REPLAY v{} {} on {}. {}".format(str(buildNumber),jobname,hostName,prTitle)
         #create a new JIRA issue
-        newIssue = jiraReporting.createJiraTicket(jira, jira_instance, subject, ticketDescription, labels, watchers)
-        firstComment = jiraReporting.addJiraComment(jira, jira_instance, newIssue, "The replay has started. Its progress will be reported here.")
+        if(calljira):newIssue = jiraReporting.createJiraTicket(jira, jira_instance, subject, ticketDescription, labels, watchers)
+        if(calljira):firstComment = jiraReporting.addJiraComment(jira, jira_instance, newIssue, "The replay has started. Its progress will be reported here.")
         print(ticketDescription)
     # To stop sending emails, comment out the line below
     # send an email with the summary of Jira issues
@@ -155,7 +156,7 @@ The status of this build can be found at : {}.
         #print("fileset count {}".format(filesetCount))
         if filesetCount == 0:
             try:
-                jiraReporting.addJiraComment(jira, jira_instance, newIssue, "All filesets were closed.")
+                if(calljira):jiraReporting.addJiraComment(jira, jira_instance, newIssue, "All filesets were closed.")
                 print("All filesets were closed.")
             except Exception as e:
                 print(e)
@@ -174,8 +175,8 @@ The status of this build can be found at : {}.
             pausedMessage="*There are {} paused jobs in the replay.* List of Paused job below.".format(pausedCount)+pausedMessage
             print(pausedMessage)
             try:
-                jiraReporting.addJiraComment(jira, jira_instance, newIssue, pausedMessage)
-                jiraReporting.addJiraComment(jira, jira_instance, newIssue, "Replay was closed by paused job")
+                if(calljira):jiraReporting.addJiraComment(jira, jira_instance, newIssue, pausedMessage)
+                if(calljira):jiraReporting.addJiraComment(jira, jira_instance, newIssue, "Replay was closed by paused job")
                 print("Replay was closed by paused job")
                 sys.exit(1)
             except Exception as e:
@@ -183,8 +184,8 @@ The status of this build can be found at : {}.
                 print("Unable to comment JIRA issue 1. Check Paused jobs message")
         if filesetCount == 0 and pausedCount == 0:
             try:
-                jiraReporting.addJiraComment(jira, jira_instance, newIssue, "*There was NO paused job in the replay.*")
-                jiraReporting.addJiraComment(jira, jira_instance, newIssue, "*Replay was successful.*")
+                if(calljira):jiraReporting.addJiraComment(jira, jira_instance, newIssue, "*There was NO paused job in the replay.*")
+                if(calljira):jiraReporting.addJiraComment(jira, jira_instance, newIssue, "*Replay was successful.*")
                 print("*Replay was successful.*")
                 sys.exit(0)
             except Exception as e:
@@ -199,7 +200,7 @@ The status of this build can be found at : {}.
                 repackWorkflowCount = len(repackworkflowList)
             else:
                 try:
-                    jiraReporting.addJiraComment(jira, jira_instance, newIssue, "All Repack workflows were processed.")
+                    if(calljira):jiraReporting.addJiraComment(jira, jira_instance, newIssue, "All Repack workflows were processed.")
                     print("All Repack workflows were processed.")
                 except Exception as e:
                     print(e)
@@ -213,7 +214,7 @@ The status of this build can be found at : {}.
                 expressWorkflowCount = len(expressWorkflowList)
             else:
                 try:
-                    jiraReporting.addJiraComment(jira, jira_instance, newIssue, "All Express workflows were processed.")
+                    if(calljira):jiraReporting.addJiraComment(jira, jira_instance, newIssue, "All Express workflows were processed.")
                     print("All Express workflows were processed.")
                 except Exception as e:
                     print(e)
