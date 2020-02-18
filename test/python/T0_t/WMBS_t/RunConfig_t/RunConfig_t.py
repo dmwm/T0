@@ -16,11 +16,12 @@ from WMQuality.TestInit import TestInit
 from WMCore.DAOFactory import DAOFactory
 from WMCore.Database.DBFactory import DBFactory
 from WMCore.Configuration import loadConfigurationFile
-
+from WMCore.Services.UUIDLib import makeUUID
 from T0.RunConfig import RunConfigAPI
 
 from T0.RunConfig.Tier0Config import setBackfill
-
+from T0.ConditionUpload import ConditionUploadAPI
+from T0.StorageManager import StorageManagerAPI
 
 class RunConfigTest(unittest.TestCase):
     """
@@ -37,8 +38,8 @@ class RunConfigTest(unittest.TestCase):
         self.testInit = TestInit(__file__)
         self.testInit.setLogging()
         self.testInit.setDatabaseConnection()
-
-        self.testInit.setSchema(customModules=["WMComponent.DBS3Buffer", "T0.WMBS"])
+        self.p5id=1
+        self.testInit.setSchema(customModules = ["WMComponent.DBS3Buffer","T0.WMBS"])
 
         self.testDir  = self.testInit.generateWorkDir()
 
@@ -50,7 +51,7 @@ class RunConfigTest(unittest.TestCase):
 
             wmAgentConfig = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
 
-            self.dqmUploadProxy = getattr(wmAgentConfig.WMBSService, "proxy", None)
+            self.dqmUploadProxy = getattr(wmAgentConfig.Tier0Feeder, "proxy", None)
 
             if hasattr(wmAgentConfig, "HLTConfDatabase"):
 
@@ -63,6 +64,8 @@ class RunConfigTest(unittest.TestCase):
                                         logger = logging,
                                         dbinterface = dbInterface)
 
+                self.dbInterface = dbInterface
+
                 getHLTConfigDAO = daoFactory(classname = "RunConfig.GetHLTConfig")
                 self.hltConfig = getHLTConfigDAO.execute(self.hltkey, transaction = False)
 
@@ -72,10 +75,22 @@ class RunConfigTest(unittest.TestCase):
             else:
                 print("Your config is missing the HLTConfDatabase section")
                 print("Using reference HLT config instead")
+           
+            if hasattr(wmAgentConfig, "StorageManagerDatabase"):
+
+                connectUrl = getattr(wmAgentConfig.StorageManagerDatabase, "connectUrl", None)
+
+                dbFactory = DBFactory(logging, dburl = connectUrl, options = {})
+                self.dbInterfaceStorageManager = dbFactory.connect()
+
+            else:
+                print("Did not connect to Storagemanagerdatabase")
 
         else:
             print("You do not have WMAGENT_CONFIG in your environment")
             print("Using reference HLT config instead")
+        
+        self.dbInterfaceSMNotify = None
 
         myThread = threading.currentThread()
         daoFactory = DAOFactory(package = "T0.WMBS",
@@ -118,46 +133,62 @@ class RunConfigTest(unittest.TestCase):
                                                       'VERSION' : "CMSSW_5_2_7" },
                                             transaction = False)
 
+        self.tier0Config = loadConfigurationFile("ExampleConfig.py")
+  
+        self.delay = 60
+
+        self.insertLocation(self.tier0Config.Global.StreamerPNN)
+#        StorageManagerAPI.injectNewData(self.dbInterfaceStorageManager,
+#                                        self.dbInterface,
+#                                        self.dbInterfaceSMNotify,
+#                                        streamerPNN = self.tier0Config.Global.StreamerPNN,
+#                                        injectRun = 176161)
+
         insertStreamerDAO = daoFactory(classname = "RunConfig.InsertStreamer")
-        insertStreamerDAO.execute(binds = { 'RUN' : 176161,
+        insertStreamerDAO.execute(streamerPNN = self.tier0Config.Global.StreamerPNN,
+                                  binds = { 'RUN' : 176161,
+                                            'P5_ID': self.p5id,
                                             'LUMI' : 1,
                                             'STREAM' : "A",
-                                            'LFN' : "/testLFN/A",
+                                            'LFN' : makeUUID(),
                                             'FILESIZE' : 100,
                                             'EVENTS' : 100,
                                             'TIME' : int(time.time()) },
                                   transaction = False)
-        insertStreamerDAO.execute(binds = { 'RUN' : 176161,
+        insertStreamerDAO.execute(streamerPNN = self.tier0Config.Global.StreamerPNN,
+                                  binds = { 'RUN' : 176161,
+                                            'P5_ID': self.p5id,
                                             'LUMI' : 1,
                                             'STREAM' : "Express",
-                                            'LFN' : "/testLFN/Express",
+                                            'LFN' : makeUUID(),
                                             'FILESIZE' : 100,
                                             'EVENTS' : 100,
                                             'TIME' : int(time.time()) },
                                   transaction = False)
-        insertStreamerDAO.execute(binds = { 'RUN' : 176161,
+        insertStreamerDAO.execute(streamerPNN = self.tier0Config.Global.StreamerPNN,
+                                  binds = { 'RUN' : 176161,
+                                            'P5_ID': self.p5id,
                                             'LUMI' : 1,
                                             'STREAM' : "HLTMON",
-                                            'LFN' : "/testLFN/HLTMON",
+                                            'LFN' : makeUUID(),
                                             'FILESIZE' : 100,
                                             'EVENTS' : 100,
                                             'TIME' : int(time.time()) },
                                   transaction = False)
 
-        self.tier0Config = loadConfigurationFile("ExampleConfig.py")
-
         self.referenceRunInfo = [ { 'status': 1,
-                                    'backfill' : None,
-                                    'bulk_data_type' : "data",
                                     'dqmuploadurl' : "https://cmsweb.cern.ch/dqm/dev",
+                                    'ah_lumi_url': 'root://eoscms.cern.ch//eos/cms/store/unmerged/tier0_harvest/2019',
+                                    'ah_timeout' : 12*3600,
+                                    'backfill' : None,
+                                    'ah_cond_lfnbase': '/store/unmerged/tier0_harvest/2019',
                                     'process': 'HLT',
                                     'hltkey': self.hltkey,
-                                    'ah_timeout' : 12*3600,
-                                    'ah_dir' : "/some/afs/dir",
                                     'cond_timeout' : 18*3600,
                                     'db_host' : "webcondvm.cern.ch",
-                                    'valid_mode' : int(True),
-                                    'acq_era': "ExampleConfig_UnitTest" } ]
+                                    'acq_era': "ExampleConfig_UnitTest",
+                                    'bulk_data_type' : "data",
+                                    'valid_mode' : int(True), } ]
 
         self.referenceMapping = {}
         self.referenceMapping['A'] = {}
@@ -603,7 +634,7 @@ class RunConfigTest(unittest.TestCase):
         self.referenceMapping['Express']['ExpressPhysics'].append("HLT_Mu100_eta2p1_v1")
         self.referenceMapping['Express']['ExpressPhysics'].append("HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v4")
         self.referenceMapping['Express']['ExpressPhysics'].append("HLT_Mu17_Mu8_v7")
-        self.referenceMapping['Express']['ExpressPhysics'].append("HLT_Photon200_NoHE_v4")
+        #self.referenceMapping['Express']['ExpressPhysics'].append("HLT_Photon200_NoHE_v4")
         self.referenceMapping['Express']['ExpressPhysics'].append("HLT_Photon36_CaloIdL_IsoVL_Photon22_CaloIdL_IsoVL_v4")
         self.referenceMapping['Express']['ExpressPhysics'].append("HLT_Photon400_v2")
         self.referenceMapping['Express']['ExpressPhysics'].append("HLT_Photon75_CaloIdVL_IsoL_v8")
@@ -1022,8 +1053,9 @@ class RunConfigTest(unittest.TestCase):
         self.getExpressConfigDAO = daoFactory(classname = "RunConfig.GetExpressConfig")
         self.getRecoConfigDAO = daoFactory(classname = "RunConfig.GetRecoConfig")
         self.getPhEDExConfigDAO = daoFactory(classname = "RunConfig.GetPhEDExConfig")
-        self.endRunsDAO = daoFactory(classname = "RunLumiCloseout.EndRuns")
-        self.markRepackInjectedDAO = daoFactory(classname = "Tier0Feeder.MarkRepackInjected")
+        self.closeRunsDAO = daoFactory(classname = "RunLumiCloseout.CloseRuns")
+        self.stopRunsDAO = daoFactory(classname = "RunLumiCloseout.StopRuns")
+        self.markRepackInjectedDAO = daoFactory(classname = "Tier0Feeder.MarkWorkflowsInjected")
 
         return
 
@@ -1033,6 +1065,20 @@ class RunConfigTest(unittest.TestCase):
 
         """
         self.testInit.clearDatabase()
+
+        return
+
+    def insertLocation(self, pnn):
+        """
+        __
+
+        it is inserting a pnn location
+        """
+        myThread = threading.currentThread()
+
+        myThread.dbi.processData("""INSERT INTO wmbs_pnns (id, pnn)
+                                    VALUES (wmbs_pnns_SEQ.nextval, '%s')
+                                    """ % pnn, transaction = False)
 
         return
 
@@ -1286,13 +1332,13 @@ class RunConfigTest(unittest.TestCase):
         self.assertEqual(expressConfig['scram_arch'], "slc5_amd64_gcc462",
                          "ERROR: wrong ScramArch for stream Express")
 
-        self.assertEqual(expressConfig['reco_cmssw'], None,
+        self.assertEqual(expressConfig['reco_cmssw'], "CMSSW_6_2_4",
                          "ERROR: wrong reco CMSSW version for stream HLTMON")
 
-        self.assertEqual(expressConfig['reco_scram_arch'], None,
+        self.assertEqual(expressConfig['reco_scram_arch'], "slc5_amd64_gcc472",
                          "ERROR: wrong reco ScramArch for stream Express")
 
-        self.assertEqual(expressConfig['data_type'], "test",
+        self.assertEqual(expressConfig['data_type'], "express",
                          "ERROR: wrong data type for stream Express")
 
         writeTiers = expressConfig['write_tiers'].split(',')
@@ -1341,9 +1387,11 @@ class RunConfigTest(unittest.TestCase):
         self.assertEqual(len(recoConfigs.keys()), 0,
                          "ERROR: there are reco configs present")
 
-        self.endRunsDAO.execute(binds = { 'RUN' : 176161,
-                                          'LUMICOUNT' : 1,
-                                          'END_TIME' : int(time.time()) + 10 },
+        delay = self.delay
+
+        self.closeRunsDAO.execute(binds = { 'LUMICOUNT' : 1,
+                                          'RUN' : 176161,
+                                          'CLOSE_TIME' : int(time.time()) - int(delay)*2 + 10 },
                                 transaction = False)
 
         RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, self.dqmUploadProxy)
@@ -1353,18 +1401,22 @@ class RunConfigTest(unittest.TestCase):
 
         self.assertEqual(len(recoConfigs.keys()), 0,
                          "ERROR: there are reco configs present")
-
-        self.endRunsDAO.execute(binds = { 'RUN' : 176161,
+      
+        self.closeRunsDAO.execute(binds = { 'RUN' : 176161,
                                           'LUMICOUNT' : 1,
-                                          'END_TIME' : int(time.time()) - 10  },
+                                          'CLOSE_TIME' : int(time.time()) - int(delay)*2 - 10  },
+                                transaction = False)
+        
+        self.stopRunsDAO.execute(binds = { 'RUN' : 176161,
+                                          'START_TIME' : 1,
+                                          'STOP_TIME' : int(time.time()) - int(delay)*2 },
                                 transaction = False)
 
         RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, self.dqmUploadProxy)
-
-        recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
+        recoConfigs = self.getRecoConfigDAO.execute(176161, 'A', conn=None,
                                                    transaction = False)
-
-        self.assertEqual(set(recoConfigs.keys()), set(["Cosmics"]),
+        
+        self.assertEqual(set(recoConfigs.keys()), set(['HcalHPDNoise', 'Jet', 'FEDMonitor', 'SingleMu', 'SingleElectron', 'MuOnia', 'MuEG', 'BTag', 'DoubleElectron', 'HcalNZS', 'Cosmics', 'Photon', 'MuHad', 'MinimumBias', 'MultiJet', 'HT', 'ElectronHad', 'TauPlusX', 'DoubleMu', 'Tau', 'PhotonHad', 'LogMonitor', 'HighPileUp', 'Commissioning', 'MET']),
                          "ERROR: problems retrieving reco configs for stream A")
 
         self.removeRecoDelay()
@@ -1387,13 +1439,13 @@ class RunConfigTest(unittest.TestCase):
                 self.assertEqual(recoConfig['do_reco'], 1,
                                  "ERROR: problem in reco configuration")
 
-                self.assertEqual(recoConfig['cmssw'], "CMSSW_5_3_14",
+                self.assertEqual(recoConfig['cmssw'], "CMSSW_6_2_4",
                                  "ERROR: problem in reco configuration")
 
                 self.assertEqual(recoConfig['multicore'], 4,
                                  "ERROR: problem in reco configuration")
 
-                self.assertEqual(recoConfig['scram_arch'], "slc5_amd64_gcc462",
+                self.assertEqual(recoConfig['scram_arch'], "slc5_amd64_gcc472",
                                  "ERROR: problem in reco configuration")
 
                 self.assertEqual(recoConfig['reco_split'], 100,
@@ -1475,13 +1527,13 @@ class RunConfigTest(unittest.TestCase):
                 self.assertEqual(recoConfig['do_reco'], 0,
                                  "ERROR: problem in reco configuration")
 
-                self.assertEqual(recoConfig['cmssw'], "CMSSW_5_3_8",
+                self.assertEqual(recoConfig['cmssw'], "CMSSW_6_2_4",
                                  "ERROR: problem in reco configuration")
 
                 self.assertEqual(recoConfig['multicore'], 8,
                                  "ERROR: problem in reco configuration")
 
-                self.assertEqual(recoConfig['scram_arch'], "slc5_amd64_gcc462",
+                self.assertEqual(recoConfig['scram_arch'], "slc5_amd64_gcc472",
                                  "ERROR: problem in reco configuration")
 
                 self.assertEqual(recoConfig['reco_split'], 2000,
@@ -1514,19 +1566,11 @@ class RunConfigTest(unittest.TestCase):
                 self.assertEqual(recoConfig['scenario'], "pp",
                                  "ERROR: problem in reco configuration")
 
-        datasetsStreamA = self.getStreamDatasetsDAO.execute(176161, "A",
-                                                            transaction = False)
-
-        datasetsStreamExpress = self.getStreamDatasetsDAO.execute(176161, "Express",
-                                                                  transaction = False)
-
-        datasetsStreamHLTMON = self.getStreamDatasetsDAO.execute(176161, "HLTMON",
-                                                                 transaction = False)
-
-        datasets = datasetsStreamA.union(datasetsStreamExpress).union(datasetsStreamHLTMON)
-
         phedexConfigs = self.getPhEDExConfigDAO.execute(176161, transaction = False)
-        self.assertEqual(set(phedexConfigs.keys()), datasets,
+
+        print(set(phedexConfigs.keys()), "phedexconfig")
+       # print(datasets,"datasetsphedex")
+        self.assertEqual(set(phedexConfigs.keys()),set(['MinimumBias','Cosmics']),
                          "ERROR: problems retrieving PhEDEx configs")
 
         for primds, phedexConfig in phedexConfigs.items():
@@ -1603,10 +1647,6 @@ class RunConfigTest(unittest.TestCase):
                          "ERROR: problem in setting up run/stream fileset/subscription")
         self.assertEqual(results[1][1], "Express",
                          "ERROR: problem in setting up run/stream fileset/subscription")
-        self.assertEqual(results[2][1], "HLTMON",
-                         "ERROR: problem in setting up run/stream fileset/subscription")
-        self.assertEqual(results[0][2], "Run176161_StreamA",
-                         "ERROR: problem in setting up run/stream fileset/subscription")
         self.assertEqual(results[1][2], "Run176161_StreamExpress",
                          "ERROR: problem in setting up run/stream fileset/subscription")
         self.assertEqual(results[2][2], "Run176161_StreamHLTMON",
@@ -1623,7 +1663,7 @@ class RunConfigTest(unittest.TestCase):
         self.assertEqual(results[0][1], 0,
                          "ERROR: all created workflows marked as injected")
 
-        self.markRepackInjectedDAO.execute(transaction = False)
+        self.markRepackInjectedDAO.execute(streamerNotification = None, conn= None, transaction = False)
 
         results = myThread.dbi.processData("""SELECT COUNT(*), MIN(wmbs_workflow.injected)
                                               FROM wmbs_workflow

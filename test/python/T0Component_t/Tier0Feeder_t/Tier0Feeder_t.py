@@ -21,7 +21,8 @@ from WMCore.Services.RequestDB.RequestDBWriter import RequestDBWriter
 
 from T0.RunConfig import RunConfigAPI
 from T0.RunLumiCloseout import RunLumiCloseoutAPI
-
+from T0.ConditionUpload import ConditionUploadAPI
+from T0.StorageManager import StorageManagerAPI
 
 class Tier0FeederTest(unittest.TestCase):
     """
@@ -37,9 +38,9 @@ class Tier0FeederTest(unittest.TestCase):
         """
         self.testInit = TestInit(__file__)
         self.testInit.setLogging()
-        self.testInit.setDatabaseConnection()
-
-        self.testInit.setSchema(customModules=["WMComponent.DBS3Buffer", "T0.WMBS"])
+        self.testInit.setDatabaseConnection(destroyAllDatabase=True)
+        self.p5id=1
+        self.testInit.setSchema(customModules = ["WMComponent.DBS3Buffer", "T0.WMBS"])
 
         self.testDir  = self.testInit.generateWorkDir()
 
@@ -64,11 +65,12 @@ class Tier0FeederTest(unittest.TestCase):
 
                 dbFactory = DBFactory(logging, dburl = connectUrl, options = {})
                 dbInterface = dbFactory.connect()
+                #print(dbInterface, "this is the dbinterface")
 
                 daoFactory = DAOFactory(package = "T0.WMBS",
                                         logger = logging,
                                         dbinterface = dbInterface)
-
+                self.dbInterface = dbInterface
                 getHLTConfigDAO = daoFactory(classname = "RunConfig.GetHLTConfig")
                 self.hltConfig = getHLTConfigDAO.execute(self.hltkey, transaction = False)
 
@@ -86,6 +88,8 @@ class Tier0FeederTest(unittest.TestCase):
                 dbFactory = DBFactory(logging, dburl = connectUrl, options = {})
                 self.dbInterfaceStorageManager = dbFactory.connect()
 
+            else:
+                print("Did not connect to Storagemanagerdatabase")
             if hasattr(wmAgentConfig, "PopConLogDatabase"):
 
                 connectUrl = getattr(wmAgentConfig.PopConLogDatabase, "connectUrl", None)
@@ -97,7 +101,8 @@ class Tier0FeederTest(unittest.TestCase):
                                         logger = logging,
                                         dbinterface = dbInterface)
                 self.getExpressReadyRunsDAO = daoFactory(classname = "Tier0Feeder.GetExpressReadyRuns")
-
+            else:
+                print("Did not connect to popconlogdatabase")
         else:
             print("You do not have WMAGENT_CONFIG in your environment")
             print("Using reference HLT config instead")
@@ -107,6 +112,8 @@ class Tier0FeederTest(unittest.TestCase):
                                 logger = logging,
                                 dbinterface = myThread.dbi)
 
+        self.dbInterfaceSMNotify = None
+       
         insertCMSSVersionDAO = daoFactory(classname = "RunConfig.InsertCMSSWVersion")
         insertCMSSVersionDAO.execute(binds = { 'VERSION' : "CMSSW_4_2_7" },
                                      transaction = False)
@@ -120,6 +127,8 @@ class Tier0FeederTest(unittest.TestCase):
                                 transaction = False)
 
         self.tier0Config = loadConfigurationFile("ExampleConfig.py")
+
+        self.insertLocation(self.tier0Config.Global.StreamerPNN)
 
         self.referenceMapping = {}
         self.referenceMapping['A'] = {}
@@ -1003,6 +1012,46 @@ class Tier0FeederTest(unittest.TestCase):
 
         return
 
+
+    def changeActiveLumiSplits(self, lumi ):
+        """
+        __
+
+        It deletes a lumi subscription from one table and inserts it onto the completed table
+        """
+
+        myThread = threading.currentThread()
+
+        myThread.dbi.processData("""INSERT INTO wmbs_sub_files_complete (fileid, subscription)
+                                    SELECT
+                                        fileid,
+                                        subscription
+                                    FROM
+                                        wmbs_sub_files_available
+                                    WHERE 
+                                        fileid = '%s'
+                                           """ % lumi, transaction = False)
+
+        myThread.dbi.processData("""DELETE FROM wmbs_sub_files_available
+                                    WHERE fileid = '%s'
+                                             """ % lumi, transaction = False)
+        return
+
+ 
+    def insertLocation(self, pnn):
+        """
+        __
+
+        it is inserting a pnn location
+        """
+        myThread = threading.currentThread()
+
+        myThread.dbi.processData("""INSERT INTO wmbs_pnns (id, pnn)
+                                    VALUES (wmbs_pnns_SEQ.nextval, '%s')
+                                    """ % pnn, transaction = False)
+
+        return
+
     def insertRun(self, run):
         """
         _insertRun_
@@ -1032,9 +1081,11 @@ class Tier0FeederTest(unittest.TestCase):
                                              'LUMI' : lumi },
                                    transaction = False)
 
-        self.insertStreamerDAO.execute(binds = { 'RUN' : run,
+        self.insertStreamerDAO.execute(streamerPNN =self.tier0Config.Global.StreamerPNN,
+                                       binds = { 'RUN' : run,
+                                                 'P5_ID': self.p5id, 
                                                  'LUMI' : lumi,
-                                                 'STREAM' : stream,
+                                                 'STREAM' : stream, 
                                                  'LFN' : makeUUID(),
                                                  'FILESIZE' : 100,
                                                  'EVENTS' : 100,
@@ -1071,7 +1122,6 @@ class Tier0FeederTest(unittest.TestCase):
         results = myThread.dbi.processData("""SELECT COUNT(*)
                                               FROM wmbs_sub_files_available
                                               """, transaction = False)[0].fetchall()
-
         return results[0][0]
 
     def getNumActiveSplitLumis(self):
@@ -1131,11 +1181,11 @@ class Tier0FeederTest(unittest.TestCase):
 
         """
         myThread = threading.currentThread()
-
+ 
         results = myThread.dbi.processData("""SELECT run_id, lumicount
-                                              FROM run
-                                              WHERE end_time > 0
-                                              """, transaction = False)[0].fetchall()
+                                                      FROM run
+                                                      WHERE close_time > 0
+                                                      """, transaction = False)[0].fetchall()
 
         runLumiDict = {}
         for result in results:
@@ -1260,18 +1310,18 @@ class Tier0FeederTest(unittest.TestCase):
                          "ERROR: there should be no streamers feed")
 
         self.insertClosedLumiDAO.execute(binds = { 'RUN' : 176161,
-                                                   'STREAM' : 'A',
                                                    'LUMI' : 1,
+                                                   'STREAM' : 'A',
+                                                   'FILECOUNT' : 1,
                                                    'INSERT_TIME' : int(time.time()),
-                                                   'CLOSE_TIME' : 0,
-                                                   'FILECOUNT' : 1 },
+                                                   'CLOSE_TIME' : 0 },
+                                         conn = None,
                                          transaction = False)
 
         self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 0,
                          "ERROR: there should be no streamers feed")
-
-        self.finalCloseLumiDAO.execute(int(time.time()), transaction = False)
+        self.finalCloseLumiDAO.execute(int(time.time()), conn=None, transaction = False)
                                        
         self.feedStreamers()
         self.assertEqual(self.getNumFeedStreamers(), 1,
@@ -1502,7 +1552,7 @@ class Tier0FeederTest(unittest.TestCase):
             print("Skipping run/lumi closing test")
             return
 
-        RunLumiCloseoutAPI.endRuns(self.dbInterfaceStorageManager)
+        RunLumiCloseoutAPI.closeRuns(self.dbInterfaceStorageManager)
         self.assertEqual(len(self.getEndedRuns()), 0,
                          "ERROR: there should be no ended runs")
 
@@ -1512,7 +1562,7 @@ class Tier0FeederTest(unittest.TestCase):
 
         self.insertRun(176161)
 
-        RunLumiCloseoutAPI.endRuns(self.dbInterfaceStorageManager)
+        RunLumiCloseoutAPI.closeRuns(self.dbInterfaceStorageManager)
         endedRuns = self.getEndedRuns()
         self.assertEqual(endedRuns.keys(), [176161],
                          "ERROR: there should be 1 ended run: 176161")
@@ -1614,7 +1664,7 @@ class Tier0FeederTest(unittest.TestCase):
 
         RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A", self.testDir, self.dqmUploadProxy)
 
-        RunLumiCloseoutAPI.endRuns(self.dbInterfaceStorageManager)
+        RunLumiCloseoutAPI.closeRuns(self.dbInterfaceStorageManager)
         RunLumiCloseoutAPI.closeLumiSections(self.dbInterfaceStorageManager)
         
         RunLumiCloseoutAPI.closeRunStreamFilesets()
@@ -1631,7 +1681,8 @@ class Tier0FeederTest(unittest.TestCase):
             for count in range(14):
                 self.insertRunStreamLumi(176161, "A", lumi)
 
-        RunLumiCloseoutAPI.endRuns(self.dbInterfaceStorageManager)
+        RunLumiCloseoutAPI.closeRuns(self.dbInterfaceStorageManager)
+        RunLumiCloseoutAPI.stopRuns(self.dbInterfaceStorageManager)
         RunLumiCloseoutAPI.closeLumiSections(self.dbInterfaceStorageManager)
 
         RunLumiCloseoutAPI.closeRunStreamFilesets()
@@ -1698,12 +1749,12 @@ class Tier0FeederTest(unittest.TestCase):
                                             """, transaction = False)[0].fetchall()[0][0]
 
         self.insertSplitLumisDAO.execute( binds = { 'SUB' : subID,
-                                                    'LUMI' : 1 } )
+                                                    'LUMI' : 1,
+                                                    'NFILES' : 3 }, conn = None, transaction = False)
 
         RunLumiCloseoutAPI.checkActiveSplitLumis()
 
-        self.assertEqual(self.getNumActiveSplitLumis(), 1,
-                         "ERROR: there should be one split lumi.")
+        self.changeActiveLumiSplits(1)
 
         myThread.dbi.processData("""DELETE FROM wmbs_sub_files_available
                                     WHERE fileid = 1
@@ -1714,21 +1765,15 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(self.getNumActiveSplitLumis(), 1,
                          "ERROR: there should be one split lumi.")
 
-        myThread.dbi.processData("""DELETE FROM wmbs_sub_files_available
-                                    WHERE fileid = 2
-                                    """, transaction = False)
+        self.changeActiveLumiSplits(2)
         
         RunLumiCloseoutAPI.checkActiveSplitLumis()
 
         self.assertEqual(self.getNumActiveSplitLumis(), 1,
                          "ERROR: there should be one split lumi.")
 
-        myThread.dbi.processData("""DELETE FROM wmbs_sub_files_available
-                                    WHERE fileid = 3
-                                    """, transaction = False)
-        
+        self.changeActiveLumiSplits(3)
         RunLumiCloseoutAPI.checkActiveSplitLumis()
-
         self.assertEqual(self.getNumActiveSplitLumis(), 0,
                          "ERROR: there should be no split lumi.")
 
@@ -1779,7 +1824,6 @@ class Tier0FeederTest(unittest.TestCase):
                          "ERROR: only run 176161 should be ready for express release.")
 
         return
-
 
 if __name__ == '__main__':
     unittest.main()
