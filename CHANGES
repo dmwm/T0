@@ -1,3 +1,7 @@
+X2.1.7 to 2.1.8:
+  - Merge pull request #1 from germanfgv/MWGR2020#1_test_cmssw11_0_1
+  - Change release to cmssw11_0_1
+
 2.1.6 to 2.1.7:
   - T0 2.1.7 (#4517)
   - Merge pull request #4516 from andresfelquintero/updated_deploy_prod
