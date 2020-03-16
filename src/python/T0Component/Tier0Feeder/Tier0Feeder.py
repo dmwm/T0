@@ -44,7 +44,7 @@ class Tier0Feeder(Harness):
         myThread = threading.currentThread()
         
         pollInterval = self.config.Tier0Feeder.pollInterval
-        logging.info("Setting poll interval to %s seconds" % pollInterval)
+        logging.info("Setting poll interval to %s seconds." % pollInterval)
         myThread.workerThreadManager.addWorker(Tier0FeederPoller(self.config), \
                                                pollInterval)
         return
