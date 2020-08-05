@@ -25,6 +25,7 @@ from T0.RunConfig.Tier0Config import addRegistrationConfig
 from T0.RunConfig.Tier0Config import addConversionConfig
 from T0.RunConfig.Tier0Config import setInjectRuns
 from T0.RunConfig.Tier0Config import setStreamerPNN
+from T0.RunConfig.Tier0Config import setEnableUniqueWorkflowName
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -55,6 +56,11 @@ setStreamerPNN(tier0Config, streamerPNN)
 
 # Override for DQM data tier
 setDQMDataTier(tier0Config, "DQMIO")
+
+# Set unique replay workflow names
+# Uses era name, Repack, Express, PromptReco processing versions, date/time, e.g.:
+# PromptReco_Run322057_Charmonium_Tier0_REPLAY_vocms047_v274_190221_121
+setEnableUniqueWorkflowName(tier0Config)
 
 # Define the two default timeouts for reco release
 # First timeout is used directly for reco release
