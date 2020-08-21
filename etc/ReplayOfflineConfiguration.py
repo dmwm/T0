@@ -34,7 +34,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [ 334393 ])
+setInjectRuns(tier0Config, [ 335508,336349,336436 ])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -89,7 +89,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-       'default': "CMSSW_11_0_2"
+       'default': "CMSSW_11_1_3"
      }
 
 # Configure ScramArch
@@ -118,9 +118,9 @@ else:
     alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "110X_dataRun3_Express_HcalForMWGR1_v1"
-promptrecoGlobalTag = "110X_dataRun3_Prompt_HcalForMWGR1_v2"
-alcap0GlobalTag = "110X_dataRun3_Prompt_HcalForMWGR1_v2"
+expressGlobalTag = "111X_dataRun3_Express_Candidate_2020_08_21_13_28_00"
+promptrecoGlobalTag = "111X_dataRun3_Prompt_Candidate_2020_08_21_13_28_39"
+alcap0GlobalTag = "111X_dataRun3_Prompt_Candidate_2020_08_21_13_28_39"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -137,61 +137,66 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_11_0_1",
-    "CMSSW_10_0_1" : "CMSSW_11_0_1",
-    "CMSSW_10_0_2" : "CMSSW_11_0_1",
-    "CMSSW_10_0_3" : "CMSSW_11_0_1",
-    "CMSSW_10_0_4" : "CMSSW_11_0_1",
-    "CMSSW_10_0_5" : "CMSSW_11_0_1",
-    "CMSSW_10_1_0" : "CMSSW_11_0_1",
-    "CMSSW_10_1_1" : "CMSSW_11_0_1",
-    "CMSSW_10_1_2" : "CMSSW_11_0_1",
-    "CMSSW_10_1_3" : "CMSSW_11_0_1",
-    "CMSSW_10_1_4" : "CMSSW_11_0_1",
-    "CMSSW_10_1_5" : "CMSSW_11_0_1",
-    "CMSSW_10_1_6" : "CMSSW_11_0_1",
-    "CMSSW_10_1_7" : "CMSSW_11_0_1",
-    "CMSSW_10_1_8" : "CMSSW_11_0_1",
-    "CMSSW_10_1_9" : "CMSSW_11_0_1",
-    "CMSSW_10_1_10" : "CMSSW_11_0_1",
-    "CMSSW_10_2_0" : "CMSSW_11_0_1",
-    "CMSSW_10_2_1" : "CMSSW_11_0_1",
-    "CMSSW_10_2_5" : "CMSSW_11_0_1",
-    "CMSSW_10_3_0" : "CMSSW_11_0_1",
-    "CMSSW_10_3_1" : "CMSSW_11_0_1",
-    "CMSSW_10_3_3" : "CMSSW_11_0_1",
-    "CMSSW_10_6_1" : "CMSSW_11_0_1",
-    "CMSSW_10_6_3" : "CMSSW_11_0_1",
-    "CMSSW_10_6_8" : "CMSSW_11_0_1"
+    "CMSSW_10_0_0" : "CMSSW_11_1_3",
+    "CMSSW_10_0_1" : "CMSSW_11_1_3",
+    "CMSSW_10_0_2" : "CMSSW_11_1_3",
+    "CMSSW_10_0_3" : "CMSSW_11_1_3",
+    "CMSSW_10_0_4" : "CMSSW_11_1_3",
+    "CMSSW_10_0_5" : "CMSSW_11_1_3",
+    "CMSSW_10_1_0" : "CMSSW_11_1_3",
+    "CMSSW_10_1_1" : "CMSSW_11_1_3",
+    "CMSSW_10_1_2" : "CMSSW_11_1_3",
+    "CMSSW_10_1_3" : "CMSSW_11_1_3",
+    "CMSSW_10_1_4" : "CMSSW_11_1_3",
+    "CMSSW_10_1_5" : "CMSSW_11_1_3",
+    "CMSSW_10_1_6" : "CMSSW_11_1_3",
+    "CMSSW_10_1_7" : "CMSSW_11_1_3",
+    "CMSSW_10_1_8" : "CMSSW_11_1_3",
+    "CMSSW_10_1_9" : "CMSSW_11_1_3",
+    "CMSSW_10_1_10" : "CMSSW_11_1_3",
+    "CMSSW_10_2_0" : "CMSSW_11_1_3",
+    "CMSSW_10_2_1" : "CMSSW_11_1_3",
+    "CMSSW_10_2_5" : "CMSSW_11_1_3",
+    "CMSSW_10_3_0" : "CMSSW_11_1_3",
+    "CMSSW_10_3_1" : "CMSSW_11_1_3",
+    "CMSSW_10_3_3" : "CMSSW_11_1_3",
+    "CMSSW_10_6_1" : "CMSSW_11_1_3",
+    "CMSSW_10_6_3" : "CMSSW_11_1_3",
+    "CMSSW_10_6_8" : "CMSSW_11_1_3",
+    "CMSSW_11_0_1" : "CMSSW_11_1_3",
+    "CMSSW_11_0_2" : "CMSSW_11_1_3"
     }
 
 expressVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_11_0_1",
-    "CMSSW_10_0_1" : "CMSSW_11_0_1",
-    "CMSSW_10_0_2" : "CMSSW_11_0_1",
-    "CMSSW_10_0_3" : "CMSSW_11_0_1",
-    "CMSSW_10_0_4" : "CMSSW_11_0_1",
-    "CMSSW_10_0_5" : "CMSSW_11_0_1",
-    "CMSSW_10_1_0" : "CMSSW_11_0_1",
-    "CMSSW_10_1_1" : "CMSSW_11_0_1",
-    "CMSSW_10_1_2" : "CMSSW_11_0_1",
-    "CMSSW_10_1_3" : "CMSSW_11_0_1",
-    "CMSSW_10_1_4" : "CMSSW_11_0_1",
-    "CMSSW_10_1_5" : "CMSSW_11_0_1",
-    "CMSSW_10_1_6" : "CMSSW_11_0_1",
-    "CMSSW_10_1_7" : "CMSSW_11_0_1",
-    "CMSSW_10_1_8" : "CMSSW_11_0_1",
-    "CMSSW_10_1_9" : "CMSSW_11_0_1",
-    "CMSSW_10_1_10" : "CMSSW_11_0_1",
-    "CMSSW_10_2_0" : "CMSSW_11_0_1",
-    "CMSSW_10_2_1" : "CMSSW_11_0_1",
-    "CMSSW_10_2_5" : "CMSSW_11_0_1",
-    "CMSSW_10_3_0" : "CMSSW_11_0_1",
-    "CMSSW_10_3_1" : "CMSSW_11_0_1",
-    "CMSSW_10_3_3" : "CMSSW_11_0_1",
-    "CMSSW_10_6_1" : "CMSSW_11_0_1",
-    "CMSSW_10_6_3" : "CMSSW_11_0_1",
-    "CMSSW_10_6_8" : "CMSSW_11_0_1"
+    "CMSSW_10_0_0" : "CMSSW_11_1_3",
+    "CMSSW_10_0_1" : "CMSSW_11_1_3",
+    "CMSSW_10_0_2" : "CMSSW_11_1_3",
+    "CMSSW_10_0_3" : "CMSSW_11_1_3",
+    "CMSSW_10_0_4" : "CMSSW_11_1_3",
+    "CMSSW_10_0_5" : "CMSSW_11_1_3",
+    "CMSSW_10_1_0" : "CMSSW_11_1_3",
+    "CMSSW_10_1_1" : "CMSSW_11_1_3",
+    "CMSSW_10_1_2" : "CMSSW_11_1_3",
+    "CMSSW_10_1_3" : "CMSSW_11_1_3",
+    "CMSSW_10_1_4" : "CMSSW_11_1_3",
+    "CMSSW_10_1_5" : "CMSSW_11_1_3",
+    "CMSSW_10_1_6" : "CMSSW_11_1_3",
+    "CMSSW_10_1_7" : "CMSSW_11_1_3",
+    "CMSSW_10_1_8" : "CMSSW_11_1_3",
+    "CMSSW_10_1_9" : "CMSSW_11_1_3",
+    "CMSSW_10_1_10" : "CMSSW_11_1_3",
+    "CMSSW_10_2_0" : "CMSSW_11_1_3",
+    "CMSSW_10_2_1" : "CMSSW_11_1_3",
+    "CMSSW_10_2_5" : "CMSSW_11_1_3",
+    "CMSSW_10_3_0" : "CMSSW_11_1_3",
+    "CMSSW_10_3_1" : "CMSSW_11_1_3",
+    "CMSSW_10_3_3" : "CMSSW_11_1_3",
+    "CMSSW_10_6_1" : "CMSSW_11_1_3",
+    "CMSSW_10_6_3" : "CMSSW_11_1_3",
+    "CMSSW_10_6_8" : "CMSSW_11_1_3",
+    "CMSSW_11_0_1" : "CMSSW_11_1_3",
+    "CMSSW_11_0_2" : "CMSSW_11_1_3"
+
     }
 
 #set default repack settings for bulk streams
@@ -306,7 +311,7 @@ addExpressConfig(tier0Config, "HLTMonitor",
 
 addExpressConfig(tier0Config, "Calibration",
                  scenario = alcaTestEnableScenario,
-                 data_tiers = [ "RAW", "ALCARECO" ],
+                 data_tiers = [ "RAW" ],
                  write_dqm = True,
                  alca_producers = [ "EcalTestPulsesRaw", "PromptCalibProdEcalPedestals" ],
                  reco_version = defaultCMSSWVersion,
@@ -475,6 +480,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
            do_reco = True,
            write_reco = False,
+           write_aod = True,
            write_miniaod = False,
            write_dqm = True,
            alca_producers = [ "TkAlCosmics0T", "MuAlGlobalCosmics", "DtCalibCosmics" ],
@@ -761,6 +767,9 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
            do_reco = True,
            write_dqm = True,
+           write_aod = True,
+           write_miniaod = True,
+           write_reco = False,
            dqm_sequences = [ "@common", "@hcal" ],
            alca_producers = [ "HcalCalMinBias" ],
            physics_skims = [ "LogError", "LogErrorMonitor" ],
@@ -797,6 +806,10 @@ datasets = [ "L1Accept", "L1Accepts" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = False,
+               write_dqm = False,
+               write_aod = True,
+               write_miniaod = True,
+               write_reco = False,
                dqm_sequences = [ "@common" ],
                scenario = ppScenario)
 
@@ -862,8 +875,10 @@ datasets = [ "HLTPhysics" ]
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
-               write_reco = True,
+               write_reco = False,
                write_dqm = True,
+               write_miniaod = True,
+               write_aod = True,
                dqm_sequences = [ "@common", "@ecal", "@jetmet", "@hcal", "@L1TEgamma" ],
                alca_producers = [ "TkAlMinBias" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
