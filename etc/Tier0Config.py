@@ -1,4 +1,4 @@
-
+# pylint: skip-file
 config.component_('Tier0Feeder')
 config.Tier0Feeder.namespace = "T0Component.Tier0Feeder.Tier0Feeder"
 config.Tier0Feeder.componentDir = config.General.workDir + "/Tier0Feeder"
