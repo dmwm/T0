@@ -89,7 +89,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-       'default': "CMSSW_11_1_0_patch2"
+       'default': "CMSSW_11_1_3"
      }
 
 # Configure ScramArch
@@ -122,9 +122,9 @@ expressProcVersion = {
      }
 
 # Defaults for GlobalTag
-expressGlobalTag = "111X_dataRun3_Express_v1"
-promptrecoGlobalTag = "111X_dataRun3_Prompt_v1"
-alcap0GlobalTag = "111X_dataRun3_Prompt_v1"
+expressGlobalTag = "111X_dataRun3_Express_v2"
+promptrecoGlobalTag = "111X_dataRun3_Prompt_v2"
+alcap0GlobalTag = "111X_dataRun3_Prompt_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -141,65 +141,69 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_0_1" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_0_2" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_0_3" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_0_4" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_0_5" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_1_0" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_1_1" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_1_2" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_1_3" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_1_4" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_1_5" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_1_6" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_1_7" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_1_8" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_1_9" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_1_10" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_2_0" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_2_1" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_2_5" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_3_0" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_3_1" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_3_3" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_6_1" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_6_3" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_6_8" : "CMSSW_11_1_0_patch2",
-    "CMSSW_11_0_1" : "CMSSW_11_1_0_patch2",
-    "CMSSW_11_0_2" : "CMSSW_11_1_0_patch2"
+    "CMSSW_10_0_0" : "CMSSW_11_1_3",
+    "CMSSW_10_0_1" : "CMSSW_11_1_3",
+    "CMSSW_10_0_2" : "CMSSW_11_1_3",
+    "CMSSW_10_0_3" : "CMSSW_11_1_3",
+    "CMSSW_10_0_4" : "CMSSW_11_1_3",
+    "CMSSW_10_0_5" : "CMSSW_11_1_3",
+    "CMSSW_10_1_0" : "CMSSW_11_1_3",
+    "CMSSW_10_1_1" : "CMSSW_11_1_3",
+    "CMSSW_10_1_2" : "CMSSW_11_1_3",
+    "CMSSW_10_1_3" : "CMSSW_11_1_3",
+    "CMSSW_10_1_4" : "CMSSW_11_1_3",
+    "CMSSW_10_1_5" : "CMSSW_11_1_3",
+    "CMSSW_10_1_6" : "CMSSW_11_1_3",
+    "CMSSW_10_1_7" : "CMSSW_11_1_3",
+    "CMSSW_10_1_8" : "CMSSW_11_1_3",
+    "CMSSW_10_1_9" : "CMSSW_11_1_3",
+    "CMSSW_10_1_10" : "CMSSW_11_1_3",
+    "CMSSW_10_2_0" : "CMSSW_11_1_3",
+    "CMSSW_10_2_1" : "CMSSW_11_1_3",
+    "CMSSW_10_2_5" : "CMSSW_11_1_3",
+    "CMSSW_10_3_0" : "CMSSW_11_1_3",
+    "CMSSW_10_3_1" : "CMSSW_11_1_3",
+    "CMSSW_10_3_3" : "CMSSW_11_1_3",
+    "CMSSW_10_6_1" : "CMSSW_11_1_3",
+    "CMSSW_10_6_3" : "CMSSW_11_1_3",
+    "CMSSW_10_6_8" : "CMSSW_11_1_3",
+    "CMSSW_11_0_1" : "CMSSW_11_1_3",
+    "CMSSW_11_0_2" : "CMSSW_11_1_3",
+    "CMSSW_11_1_0" : "CMSSW_11_1_3",
+    "CMSSW_11_1_3_Patatrack" : "CMSSW_11_1_3"
     }
 
 expressVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_0_1" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_0_2" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_0_3" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_0_4" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_0_5" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_1_0" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_1_1" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_1_2" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_1_3" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_1_4" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_1_5" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_1_6" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_1_7" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_1_8" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_1_9" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_1_10" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_2_0" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_2_1" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_2_5" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_3_0" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_3_1" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_3_3" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_6_1" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_6_3" : "CMSSW_11_1_0_patch2",
-    "CMSSW_10_6_8" : "CMSSW_11_1_0_patch2",
-    "CMSSW_11_0_1" : "CMSSW_11_1_0_patch2",
-    "CMSSW_11_0_2" : "CMSSW_11_1_0_patch2"
+    "CMSSW_10_0_0" : "CMSSW_11_1_3",
+    "CMSSW_10_0_1" : "CMSSW_11_1_3",
+    "CMSSW_10_0_2" : "CMSSW_11_1_3",
+    "CMSSW_10_0_3" : "CMSSW_11_1_3",
+    "CMSSW_10_0_4" : "CMSSW_11_1_3",
+    "CMSSW_10_0_5" : "CMSSW_11_1_3",
+    "CMSSW_10_1_0" : "CMSSW_11_1_3",
+    "CMSSW_10_1_1" : "CMSSW_11_1_3",
+    "CMSSW_10_1_2" : "CMSSW_11_1_3",
+    "CMSSW_10_1_3" : "CMSSW_11_1_3",
+    "CMSSW_10_1_4" : "CMSSW_11_1_3",
+    "CMSSW_10_1_5" : "CMSSW_11_1_3",
+    "CMSSW_10_1_6" : "CMSSW_11_1_3",
+    "CMSSW_10_1_7" : "CMSSW_11_1_3",
+    "CMSSW_10_1_8" : "CMSSW_11_1_3",
+    "CMSSW_10_1_9" : "CMSSW_11_1_3",
+    "CMSSW_10_1_10" : "CMSSW_11_1_3",
+    "CMSSW_10_2_0" : "CMSSW_11_1_3",
+    "CMSSW_10_2_1" : "CMSSW_11_1_3",
+    "CMSSW_10_2_5" : "CMSSW_11_1_3",
+    "CMSSW_10_3_0" : "CMSSW_11_1_3",
+    "CMSSW_10_3_1" : "CMSSW_11_1_3",
+    "CMSSW_10_3_3" : "CMSSW_11_1_3",
+    "CMSSW_10_6_1" : "CMSSW_11_1_3",
+    "CMSSW_10_6_3" : "CMSSW_11_1_3",
+    "CMSSW_10_6_8" : "CMSSW_11_1_3",
+    "CMSSW_11_0_1" : "CMSSW_11_1_3",
+    "CMSSW_11_0_2" : "CMSSW_11_1_3",
+    "CMSSW_11_1_0" : "CMSSW_11_1_3",
+    "CMSSW_11_1_3_Patatrack" : "CMSSW_11_1_3"
     }
 
 #set default repack settings for bulk streams
@@ -815,7 +819,7 @@ datasets = [ "HcalNZS" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
-           do_reco = False,
+           do_reco = True,
            write_dqm = True,
            write_aod = True,
            write_miniaod = True,
@@ -931,7 +935,7 @@ datasets = [ "HLTPhysics" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
-               do_reco = False,
+               do_reco = True,
                raw_to_disk = True,
                write_reco = False,
                write_dqm = True,
@@ -1010,7 +1014,7 @@ datasets = [ "MinimumBias" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
-               do_reco = False,
+               do_reco = True,
                write_dqm = True,
                tape_node = "T1_RU_JINR_MSS",
                disk_node = "T1_RU_JINR_Disk",
@@ -1247,7 +1251,9 @@ datasets += [ "ParkingZeroBias", "ParkingZeroBias0",
              "ParkingZeroBias19", "ParkingZeroBias20" ]
 
 datasets += [ "AlCaElectron", "VRRandom", "VRRandom0", "VRRandom1", "VRRandom2", "VRRandom3",
-             "VRRandom4", "VRRandom5", "VRRandom6", "VRRandom7", "VRZeroBias", "VirginRaw" ]
+             "VRRandom4", "VRRandom5", "VRRandom6", "VRRandom7", "VRRandom8", "VRRandom9",
+             "VRRandom10", "VRRandom11", "VRRandom12", "VRRandom13", "VRRandom14", "VRRandom15",
+             "VRZeroBias", "VirginRaw" ]
 
 for dataset in datasets:
     addDataset(tier0Config, dataset,
