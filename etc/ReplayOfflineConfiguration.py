@@ -47,7 +47,7 @@ streamerPNN = "T2_CH_CERN"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Tier0_REPLAY")
+setAcquisitionEra(tier0Config, "Tier0_REPLAY_2020")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
@@ -118,9 +118,9 @@ else:
     alcarawProcVersion = 1
 
 # Defaults for GlobalTag
-expressGlobalTag = "111X_dataRun3_Express_Candidate_2020_08_21_13_28_00"
-promptrecoGlobalTag = "111X_dataRun3_Prompt_Candidate_2020_08_21_13_28_39"
-alcap0GlobalTag = "111X_dataRun3_Prompt_Candidate_2020_08_21_13_28_39"
+expressGlobalTag = "111X_dataRun3_Express_v2"
+promptrecoGlobalTag = "111X_dataRun3_Prompt_v2"
+alcap0GlobalTag = "111X_dataRun3_Prompt_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -1091,13 +1091,13 @@ for dataset in datasets:
 
 # Parking PD to be PR'ed at CSCS
 datasets = [ "ParkingBPHPromptCSCS" ]
- 
+
 for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = False,
                siteWhitelist = [ "T0_CH_CSCS_HPC" ],
                scenario = ppScenario)
- 
+
 datasets = [ "RPCMonitor" ]
 
 for dataset in datasets:
