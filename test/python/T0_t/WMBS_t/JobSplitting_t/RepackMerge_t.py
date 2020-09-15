@@ -31,6 +31,8 @@ class RepackMergeTest(unittest.TestCase):
         """
         _setUp_
         """
+        import WMQuality.TestInit
+        WMQuality.TestInit.deleteDatabaseAfterEveryTest("I'm Serious")
         self.testInit = TestInit(__file__)
         self.testInit.setLogging()
         self.testInit.setDatabaseConnection()
@@ -158,7 +160,7 @@ class RepackMergeTest(unittest.TestCase):
         self.splitArgs['maxInputFiles'] = 1000
         self.splitArgs['maxEdmSize'] = 20 * 1024 * 1024 * 1024
         self.splitArgs['maxOverSize'] = 10 * 1024 * 1024 * 1024
-        self.SplitArgs['maxLatency'] = 50000
+        self.splitArgs['maxLatency'] = 50000
 
         return
 
