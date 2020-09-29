@@ -5,6 +5,7 @@ Processing configuration for the Tier0 - Replay version
 from __future__ import print_function
 
 import os
+import datetime
 from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
@@ -106,16 +107,11 @@ alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels"
 hiTestppScenario = "ppEra_Run3"
 
-# Procesing version nunmber for replays is Jenkins build number
-if os.environ.get('T0_PROCESSING_VERSION'):
-    defaultProcVersion = int(os.environ.get('T0_PROCESSING_VERSION'))
-    expressProcVersion = int(os.environ.get('T0_PROCESSING_VERSION'))
-    alcarawProcVersion = int(os.environ.get('T0_PROCESSING_VERSION'))
-else:
-#In case something is wrong with it, fallback to defaults
-    defaultProcVersion = 1
-    expressProcVersion = 1
-    alcarawProcVersion = 1
+# Procesing version number replays
+dt = int(datetime.datetime.now().strftime("%y%m%d%H%M"))
+defaultProcVersion = dt
+expressProcVersion = dt
+alcarawProcVersion = dt
 
 # Defaults for GlobalTag
 expressGlobalTag = "111X_dataRun3_Express_v2"

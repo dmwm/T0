@@ -35,7 +35,7 @@ class ConditionTest(unittest.TestCase):
 
         """
         import WMQuality.TestInit
-        WMQuality.TestInit.deleteDatabaseAfterEveryTest("I'm not Serious")
+        WMQuality.TestInit.deleteDatabaseAfterEveryTest("I'm Serious")
 
         self.testInit = TestInit(__file__)
         self.testInit.setLogging()
