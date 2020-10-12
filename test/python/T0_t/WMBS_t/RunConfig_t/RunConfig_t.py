@@ -181,10 +181,10 @@ class RunConfigTest(unittest.TestCase):
 
         self.referenceRunInfo = [ { 'status': 1,
                                     'dqmuploadurl' : "https://cmsweb.cern.ch/dqm/dev",
-                                    'ah_lumi_url': 'root://eoscms.cern.ch//eos/cms/store/unmerged/tier0_harvest/2019',
+                                    'ah_lumi_url': 'root://eoscms.cern.ch//eos/cms/store/unmerged/tier0_harvest/2020',
                                     'ah_timeout' : 12*3600,
                                     'backfill' : None,
-                                    'ah_cond_lfnbase': '/store/unmerged/tier0_harvest/2019',
+                                    'ah_cond_lfnbase': '/store/unmerged/tier0_harvest/2020',
                                     'process': 'HLT',
                                     'hltkey': self.hltkey,
                                     'cond_timeout' : 18*3600,
