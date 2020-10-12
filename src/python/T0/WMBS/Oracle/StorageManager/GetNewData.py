@@ -11,7 +11,7 @@ from WMCore.Database.DBFormatter import DBFormatter
 
 class GetNewData(DBFormatter):
 
-    def execute(self, minRun = None, maxRun = None, injectRun = None, conn = None, transaction = False):
+    def execute(self, minRun = None, maxRun = None, injectRun = None, lumi = None, conn = None, transaction = False):
 
         if injectRun:
             binds = { 'RUN': injectRun }
@@ -20,6 +20,10 @@ class GetNewData(DBFormatter):
                           AND CMS_STOMGR.FILE_TRANSFER_STATUS.BAD_CHECKSUM = 0
                           AND CMS_STOMGR.FILE_TRANSFER_STATUS.RUNNUMBER = :RUN
                           """
+            if lumi:
+                binds['LUMI'] = lumi
+                whereSql += """AND CMS_STOMGR.FILE_TRANSFER_STATUS.LS = :LUMI
+                            """
         else:
             binds = {}
             whereSql = """WHERE CMS_STOMGR.T0_NEEDS_TO_INJECT(CMS_STOMGR.FILE_TRANSFER_STATUS.STATUS_FLAG,

@@ -18,7 +18,8 @@ def injectNewData(dbInterfaceStorageManager,
                   streamerPNN,
                   minRun = None,
                   maxRun = None,
-                  injectRun = None):
+                  injectRun = None,
+                  lumi = None):
     """
     _injectNewData_
 
@@ -64,7 +65,8 @@ def injectNewData(dbInterfaceStorageManager,
 
     newData = getNewDataDAO.execute(minRun = minRun,
                                     maxRun = maxRun,
-                                    injectRun = injectRun, 
+                                    injectRun = injectRun,
+                                    lumi = lumi,
                                     transaction = False)
 
     # remove already processed files

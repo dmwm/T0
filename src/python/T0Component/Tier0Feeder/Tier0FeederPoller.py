@@ -57,6 +57,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                    couchapp = config.AnalyticsDataCollector.RequestCouchApp)
 
         self.injectedRuns = set()
+        self.lumis = set()
 
         hltConfConnectUrl = config.HLTConfDatabase.connectUrl
         dbFactoryHltConf = DBFactory(logging, dburl = hltConfConnectUrl, options = {})
@@ -144,6 +145,9 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                     maxRun = tier0Config.Global.InjectMaxRun)
                 else:
                     injectRuns = set()
+                    lumi = None
+                    if tier0Config.Global.Lumi:
+                        lumi = tier0Config.Global.Lumi
                     for injectRun in tier0Config.Global.InjectRuns:
                         if injectRun not in self.injectedRuns:
                             injectRuns.add(injectRun)
@@ -152,7 +156,8 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                         self.dbInterfaceHltConf,
                                                         self.dbInterfaceSMNotify,
                                                         streamerPNN = tier0Config.Global.StreamerPNN,
-                                                        injectRun = injectRun)
+                                                        injectRun = injectRun,
+                                                        lumi = lumi)
                         self.injectedRuns.add(injectRun)
             except:
                 # shouldn't happen, just a catch all insurance
