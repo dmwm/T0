@@ -245,7 +245,7 @@ def createTier0Config():
     tier0Config.Global.InjectRuns = None
     tier0Config.Global.InjectMinRun = None
     tier0Config.Global.InjectMaxRun = None
-    tier0Config.Global.Lumis = None
+    tier0Config.Global.Lumi = None
 
     tier0Config.Global.ScramArches = {}
     tier0Config.Global.Backfill = None
@@ -668,9 +668,9 @@ def setInjectMaxRun(config, injectMaxRun):
 
 def setLumi(config, lumi = 1 ):
     """
-    _setLumis_
+    _setLumi_
 
-    Set the lumis to be injected into the Tier0.
+    Set the lumi to be injected into the Tier0.
     """
     config.Global.Lumi = lumi
     return

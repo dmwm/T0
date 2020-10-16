@@ -38,9 +38,6 @@ setConfigVersion(tier0Config, "replace with real version")
 # Set run number to replay
 setInjectRuns(tier0Config, [ 335508 ])
 
-# Set lumi number to replay. 
-setLumi(tier0Config, 1)
-
 # Settings up sites
 processingSite = "T2_CH_CERN"
 streamerPNN = "T2_CH_CERN"
@@ -226,8 +223,8 @@ addDataset(tier0Config, "Default",
            global_tag = promptrecoGlobalTag,
            global_tag_connect = globalTagConnect,
 #           archival_node = "T0_CH_CERN_MSS",
-#           tape_node = "T1_US_FNAL_MSS",
-#           disk_node = "T1_US_FNAL_Disk",
+           tape_node = "T1_US_FNAL_Tape_Test",
+           disk_node = "T2_CH_CERN",
 #           raw_to_disk = False,
            blockCloseDelay = 1200,
            timePerEvent = 5,
@@ -285,7 +282,9 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  blockCloseDelay = 1200,
                  timePerEvent = 4, #I have to get some stats to set this properly
                  sizePerEvent = 1700, #I have to get some stats to set this properly
-                 versionOverride = expressVersionOverride)
+                 versionOverride = expressVersionOverride,
+                 tape_node = "T1_US_FNAL_Tape_Test",
+                 disk_node = "T2_CH_CERN")
 
 addExpressConfig(tier0Config, "HLTMonitor",
                  scenario = ppScenario,
@@ -331,8 +330,8 @@ addExpressConfig(tier0Config, "Calibration",
                  versionOverride = expressVersionOverride,
                  dataType = "data",
                  archivalNode = None,
-                 tapeNode = None,
-                 diskNode = None)
+                 tape_node = "T1_US_FNAL_Tape_Test",
+                 disk_node = "T2_CH_CERN")
 
 addExpressConfig(tier0Config, "ExpressAlignment",
                  scenario = alcaTrackingOnlyScenario,
@@ -483,6 +482,8 @@ for dataset in datasets:
            write_aod = True,
            write_miniaod = False,
            write_dqm = True,
+           tape_node = "T1_US_FNAL_Tape_Test",
+           disk_node = "T2_CH_CERN",
            alca_producers = [ "TkAlCosmics0T", "MuAlGlobalCosmics", "DtCalibCosmics" ],
            physics_skims = [ "CosmicSP", "CosmicTP", "LogError", "LogErrorMonitor" ],
            timePerEvent = 0.5,
