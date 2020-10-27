@@ -222,8 +222,8 @@ addDataset(tier0Config, "Default",
            multicore = numberOfCores,
            global_tag = promptrecoGlobalTag,
            global_tag_connect = globalTagConnect,
-#           archival_node = "T0_CH_CERN_MSS",
-           tape_node = "T1_US_FNAL_Tape_Test",
+           archival_node = "T0_CH_CERN_MSS",
+#           tape_node = "T1_US_FNAL_Tape_Test",
            disk_node = "T2_CH_CERN",
 #           raw_to_disk = False,
            blockCloseDelay = 1200,
@@ -355,8 +355,8 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  sizePerEvent = 1700,
                  versionOverride = expressVersionOverride,
                  archivalNode = None,
-                 tapeNode = None,
-                 diskNode = None)
+                 tape_node = "T1_US_FNAL_Tape_Test",
+                 disk_node = "T2_CH_CERN")
 
 addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
                  scenario = alcaLumiPixelsScenario,
@@ -380,8 +380,8 @@ addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
                  sizePerEvent = 1700,
                  versionOverride = expressVersionOverride,
                  archivalNode = None,
-                 tapeNode = None,
-                 diskNode = None)
+                 tape_node = "T1_US_FNAL_Tape_Test",
+                 disk_node = "T2_CH_CERN")
 
 #####################
 ### HI Tests 2018 ###

@@ -7,7 +7,7 @@ T0_VERSION=2.2.0_rucio
 
 #WMC_PR specifies a list of WMCore Pull Request to be tested
 #WMC_PR=""
-WMC_PR="9959 9963 9999 10006"
+WMC_PR="10025"
 
 #Specify which tests you want to run, by assigning a value of 1 to the corresponding variable
 UNIT_TEST=0
