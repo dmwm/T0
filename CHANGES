@@ -1,3 +1,27 @@
+2.2.0 to 2.2.1:
+  - Merge pull request #4549 from mapellidario/master
+  - [build] Add requirements.txt
+  - Merge pull request #4546 from dmwm/fix-RunConfig-unittest
+  - Update RunConfig_t.py
+  - Merge pull request #4544 from jhonatanamado/MWGR4_ProdConfig
+  - Change the configuration node for MWGR#4
+  - Clear DB after unit tests and new processing version for replays
+  - Fix Repack tests usage of MaxLatency
+  - Merge pull request #4536 from dmwm/2020MWGR3_Replay_335508_336349_336436
+  - Merge pull request #4535 from dmwm/ConfigMWGR3
+  - Update GTs to production version. Update ContainerConfig.sh
+  - Production configuration for MWGR3
+  - Add skip-file directive for Tier0Config.py
+  - ContainerConfig.sh now allows to specify replay type
+  - Update Tier0 version of deploy scripts
+  - Initial replay configuration for MWGR3 2020
+  - Remove bad pylint code
+  - Merge pull request #4531 from dmwm/container_config
+  - Base container configuration
+  - Add ContainterConfig.sh to configure PRs to test
+  - Replay configuration for run 334393 (MWGR0 2020)
+  - Replay configuration for run 32689 (collisionsHI2018)
+
 2.1.9 to 2.2.0:
   - Update ProdOfflineConfiguration.py for 2020MWGR2. Fix HIReplay workfloy issue
   - Changed wmcore version to 1.3.6.patch4
