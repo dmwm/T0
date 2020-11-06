@@ -225,7 +225,7 @@ addDataset(tier0Config, "Default",
            global_tag_connect = globalTagConnect,
 #           archival_node = "T0_CH_CERN_MSS",
 #           tape_node = "T1_US_FNAL_MSS",
-#           disk_node = "T1_US_FNAL_Disk",
+           disk_node = "T2_CH_CERN",
 #           raw_to_disk = False,
            blockCloseDelay = 1200,
            timePerEvent = 5,
@@ -263,6 +263,7 @@ addExpressConfig(tier0Config, "Express",
 
 addExpressConfig(tier0Config, "ExpressCosmics",
                  scenario = cosmicsScenario,
+                 diskNode = "T2_CH_CERN",
                  data_tiers = [ "FEVT" ],
                  write_dqm = True,
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T",
@@ -287,6 +288,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
 
 addExpressConfig(tier0Config, "HLTMonitor",
                  scenario = ppScenario,
+                 diskNode = "T2_CH_CERN",
                  data_tiers = [ "FEVTHLTALL" ],
                  write_dqm = True,
                  alca_producers = [],
@@ -328,9 +330,7 @@ addExpressConfig(tier0Config, "Calibration",
                  sizePerEvent = 1700,
                  versionOverride = expressVersionOverride,
                  dataType = "data",
-                 archivalNode = None,
-                 tapeNode = None,
-                 diskNode = None)
+                 diskNode = "T2_CH_CERN")
 
 addExpressConfig(tier0Config, "ExpressAlignment",
                  scenario = alcaTrackingOnlyScenario,
@@ -353,9 +353,7 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  timePerEvent = 4,
                  sizePerEvent = 1700,
                  versionOverride = expressVersionOverride,
-                 archivalNode = None,
-                 tapeNode = None,
-                 diskNode = None)
+                 diskNode = "T2_CH_CERN")
 
 addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
                  scenario = alcaLumiPixelsScenario,
@@ -378,9 +376,7 @@ addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
                  timePerEvent = 4,
                  sizePerEvent = 1700,
                  versionOverride = expressVersionOverride,
-                 archivalNode = None,
-                 tapeNode = None,
-                 diskNode = None)
+                 diskNode = "T2_CH_CERN")
 
 #####################
 ### HI Tests 2018 ###
@@ -1084,7 +1080,6 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = False,
                tape_node = None,
-               disk_node = None,
                scenario = ppScenario)
 
 # Parking PD to be PR'ed at CSCS
@@ -1378,6 +1373,7 @@ addExpressConfig(tier0Config, "ExpressPA",
                  blockCloseDelay = 1200,
                  timePerEvent = 4,
                  sizePerEvent = 1700,
+                 diskNode = "T2_CH_CERN",
                  versionOverride = expressVersionOverride)
 
 addExpressConfig(tier0Config, "HLTMonitorPA",
@@ -1400,6 +1396,7 @@ addExpressConfig(tier0Config, "HLTMonitorPA",
                  blockCloseDelay = 1200,
                  timePerEvent = 4, #I have to get some stats to set this properly
                  sizePerEvent = 1700, #I have to get some stats to set this properly
+                 diskNode = "T2_CH_CERN",
                  versionOverride = expressVersionOverride)
 
 #########################################
