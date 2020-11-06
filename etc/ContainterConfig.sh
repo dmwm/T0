@@ -19,4 +19,4 @@ REPLAY_TEST=1
 #	ppColissions2018	Proton-Proton run from 2018
 #	ThisPR				Use the replay configuration specified in this PR
 #
-RUN_TYPE=MWGR
+RUN_TYPE=ThisPR
