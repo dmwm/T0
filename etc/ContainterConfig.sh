@@ -3,11 +3,11 @@
 ###
 
 #T0_VERSION specifies which image tag to use
-T0_VERSION=2.2.0
+T0_VERSION=2.2.1
 
 #WMC_PR specifies a list of WMCore Pull Request to be tested
 #WMC_PR=""
-WMC_PR=""
+WMC_PR="10044 10067"
 
 #Specify which tests you want to run, by assigning a value of 1 to the corresponding variable
 UNIT_TEST=0
