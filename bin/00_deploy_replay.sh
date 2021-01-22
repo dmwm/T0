@@ -114,7 +114,7 @@ echo "config.RetryManager.PauseAlgo.default.coolOffTime = {'create': 10, 'job': 
 #
 # Twiking Rucio configuration
 sed -i "s+config.RucioInjector.listTiersToInject.*+config.RucioInjector.listTiersToInject = ['AOD', 'MINIAOD', 'NANOAOD', 'NANOAODSIM', 'RAW', 'FEVT', 'USER', 'ALCARECO', 'ALCAPROMPT', 'DQMIO','RAW-RECO']+" ./config/tier0/config.py
-sed -i "s+config.RucioInjector.containerDiskRuleParams.*+config.RucioInjector.containerDiskRuleParams = {'lifetime': 7 * 24 * 60 * 60}+" ./config/tier0/config.py
+sed -i "s+config.RucioInjector.containerDiskRuleParams.*+config.RucioInjector.containerDiskRuleParams = {'lifetime': 15 * 24 * 60 * 60}+" ./config/tier0/config.py
 
 #
 # Set output datasets status to VALID in DBS
