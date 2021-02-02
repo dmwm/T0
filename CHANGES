@@ -1,3 +1,9 @@
+2.2.1 to 2.2.2:
+  - Replay rules lifetime updated to 15 days
+  - Base Replay config to use with RucioInjector
+  - Merge pull request #4542 from dmwm/2020MWGR4_Replay_337240_337234
+  - Initial replay configuration for MWGR4 2020
+
 2.2.0 to 2.2.1:
   - Merge pull request #4549 from mapellidario/master
   - [build] Add requirements.txt
