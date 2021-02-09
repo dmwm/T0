@@ -51,7 +51,7 @@ streamerPNN = "T2_CH_CERN"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Commissioning2020")
+setAcquisitionEra(tier0Config, "Commissioning2021")
 setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -89,11 +89,11 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-       'default': "CMSSW_11_1_5"
-     }
+'default': "CMSSW_11_2_1_patch2"
+}
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "slc7_amd64_gcc820")
+setDefaultScramArch(tier0Config, "slc7_amd64_gcc900")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3"
@@ -110,21 +110,21 @@ hiTestppScenario = "ppEra_Run3"
 defaultProcVersionRAW = 1
 
 alcarawProcVersion = {
-       'default': "1"
-     }
+'default': "1"
+}
 
 defaultProcVersionReco = {
-       'default': "1"
-     }
+'default': "1"
+}
 
 expressProcVersion = {
-       'default': "1"
-     }
+'default': "1"
+}
 
 # Defaults for GlobalTag
-expressGlobalTag = "111X_dataRun3_Express_v4"
-promptrecoGlobalTag = "111X_dataRun3_Prompt_v4"
-alcap0GlobalTag = "111X_dataRun3_Prompt_v4"
+expressGlobalTag = "112X_dataRun3_Express_v2"
+promptrecoGlobalTag = "112X_dataRun3_Prompt_v2"
+alcap0GlobalTag = "112X_dataRun3_Prompt_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -141,71 +141,75 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_11_1_4",
-    "CMSSW_10_0_1" : "CMSSW_11_1_4",
-    "CMSSW_10_0_2" : "CMSSW_11_1_4",
-    "CMSSW_10_0_3" : "CMSSW_11_1_4",
-    "CMSSW_10_0_4" : "CMSSW_11_1_4",
-    "CMSSW_10_0_5" : "CMSSW_11_1_4",
-    "CMSSW_10_1_0" : "CMSSW_11_1_4",
-    "CMSSW_10_1_1" : "CMSSW_11_1_4",
-    "CMSSW_10_1_2" : "CMSSW_11_1_4",
-    "CMSSW_10_1_3" : "CMSSW_11_1_4",
-    "CMSSW_10_1_4" : "CMSSW_11_1_4",
-    "CMSSW_10_1_5" : "CMSSW_11_1_4",
-    "CMSSW_10_1_6" : "CMSSW_11_1_4",
-    "CMSSW_10_1_7" : "CMSSW_11_1_4",
-    "CMSSW_10_1_8" : "CMSSW_11_1_4",
-    "CMSSW_10_1_9" : "CMSSW_11_1_4",
-    "CMSSW_10_1_10" : "CMSSW_11_1_4",
-    "CMSSW_10_2_0" : "CMSSW_11_1_4",
-    "CMSSW_10_2_1" : "CMSSW_11_1_4",
-    "CMSSW_10_2_5" : "CMSSW_11_1_4",
-    "CMSSW_10_3_0" : "CMSSW_11_1_4",
-    "CMSSW_10_3_1" : "CMSSW_11_1_4",
-    "CMSSW_10_3_3" : "CMSSW_11_1_4",
-    "CMSSW_10_6_1" : "CMSSW_11_1_4",
-    "CMSSW_10_6_3" : "CMSSW_11_1_4",
-    "CMSSW_10_6_8" : "CMSSW_11_1_4",
-    "CMSSW_11_0_1" : "CMSSW_11_1_4",
-    "CMSSW_11_0_2" : "CMSSW_11_1_4",
-    "CMSSW_11_1_0" : "CMSSW_11_1_4",
-    "CMSSW_11_1_3_Patatrack" : "CMSSW_11_1_4",
-    "CMSSW_11_1_3" : "CMSSW_11_1_4"
+    "CMSSW_10_0_0" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_0_1" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_0_2" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_0_3" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_0_4" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_0_5" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_1_0" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_1_1" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_1_2" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_1_3" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_1_4" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_1_5" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_1_6" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_1_7" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_1_8" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_1_9" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_1_10" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_2_0" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_2_1" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_2_5" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_3_0" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_3_1" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_3_3" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_6_1" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_6_3" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_6_8" : "CMSSW_11_2_1_patch2",
+    "CMSSW_11_0_1" : "CMSSW_11_2_1_patch2",
+    "CMSSW_11_0_2" : "CMSSW_11_2_1_patch2",
+    "CMSSW_11_1_0" : "CMSSW_11_2_1_patch2",
+    "CMSSW_11_1_3_Patatrack" : "CMSSW_11_2_1_patch2",
+    "CMSSW_11_1_3" : "CMSSW_11_2_1_patch2",
+    "CMSSW_11_1_4" : "CMSSW_11_2_1_patch2",
+    "CMSSW_11_1_5" : "CMSSW_11_2_1_patch2"
     }
 
 expressVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_11_1_4",
-    "CMSSW_10_0_1" : "CMSSW_11_1_4",
-    "CMSSW_10_0_2" : "CMSSW_11_1_4",
-    "CMSSW_10_0_3" : "CMSSW_11_1_4",
-    "CMSSW_10_0_4" : "CMSSW_11_1_4",
-    "CMSSW_10_0_5" : "CMSSW_11_1_4",
-    "CMSSW_10_1_0" : "CMSSW_11_1_4",
-    "CMSSW_10_1_1" : "CMSSW_11_1_4",
-    "CMSSW_10_1_2" : "CMSSW_11_1_4",
-    "CMSSW_10_1_3" : "CMSSW_11_1_4",
-    "CMSSW_10_1_4" : "CMSSW_11_1_4",
-    "CMSSW_10_1_5" : "CMSSW_11_1_4",
-    "CMSSW_10_1_6" : "CMSSW_11_1_4",
-    "CMSSW_10_1_7" : "CMSSW_11_1_4",
-    "CMSSW_10_1_8" : "CMSSW_11_1_4",
-    "CMSSW_10_1_9" : "CMSSW_11_1_4",
-    "CMSSW_10_1_10" : "CMSSW_11_1_4",
-    "CMSSW_10_2_0" : "CMSSW_11_1_4",
-    "CMSSW_10_2_1" : "CMSSW_11_1_4",
-    "CMSSW_10_2_5" : "CMSSW_11_1_4",
-    "CMSSW_10_3_0" : "CMSSW_11_1_4",
-    "CMSSW_10_3_1" : "CMSSW_11_1_4",
-    "CMSSW_10_3_3" : "CMSSW_11_1_4",
-    "CMSSW_10_6_1" : "CMSSW_11_1_4",
-    "CMSSW_10_6_3" : "CMSSW_11_1_4",
-    "CMSSW_10_6_8" : "CMSSW_11_1_4",
-    "CMSSW_11_0_1" : "CMSSW_11_1_4",
-    "CMSSW_11_0_2" : "CMSSW_11_1_4",
-    "CMSSW_11_1_0" : "CMSSW_11_1_4",
-    "CMSSW_11_1_3_Patatrack" : "CMSSW_11_1_4",
-    "CMSSW_11_1_3" : "CMSSW_11_1_4"
+    "CMSSW_10_0_0" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_0_1" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_0_2" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_0_3" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_0_4" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_0_5" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_1_0" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_1_1" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_1_2" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_1_3" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_1_4" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_1_5" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_1_6" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_1_7" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_1_8" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_1_9" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_1_10" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_2_0" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_2_1" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_2_5" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_3_0" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_3_1" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_3_3" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_6_1" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_6_3" : "CMSSW_11_2_1_patch2",
+    "CMSSW_10_6_8" : "CMSSW_11_2_1_patch2",
+    "CMSSW_11_0_1" : "CMSSW_11_2_1_patch2",
+    "CMSSW_11_0_2" : "CMSSW_11_2_1_patch2",
+    "CMSSW_11_1_0" : "CMSSW_11_2_1_patch2",
+    "CMSSW_11_1_3_Patatrack" : "CMSSW_11_2_1_patch2",
+    "CMSSW_11_1_3" : "CMSSW_11_2_1_patch2",
+    "CMSSW_11_1_4" : "CMSSW_11_2_1_patch2",
+    "CMSSW_11_1_5" : "CMSSW_11_2_1_patch2"
     }
 
 #set default repack settings for bulk streams
@@ -253,7 +257,7 @@ addExpressConfig(tier0Config, "Express",
                  data_tiers = [ "FEVT" ],
                  write_dqm = True,
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
-                                    "TkAlMinBias", "DtCalib", "LumiPixelsMinBias", "SiPixelCalZeroBias",
+                                    "TkAlMinBias", "LumiPixelsMinBias", "SiPixelCalZeroBias",
                                     "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
                                     "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel"
                                     ],
@@ -279,7 +283,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  data_tiers = [ "FEVT" ],
                  write_dqm = True,
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T",
-                                    "DtCalibCosmics", "SiPixelCalZeroBias",
+                                    "SiPixelCalZeroBias",
                                     "PromptCalibProdSiStrip", "PromptCalibProdSiPixel", "SiStripCalCosmics"
                                     ],
                  reco_version = defaultCMSSWVersion,
@@ -403,7 +407,7 @@ addExpressConfig(tier0Config, "HIExpress",
                  data_tiers = [ "FEVT" ],
                  write_dqm = True,
                  alca_producers = [ "SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
-                                    "TkAlMinBias", "DtCalib", "LumiPixelsMinBias", "SiPixelCalZeroBias",
+                                    "TkAlMinBias", "LumiPixelsMinBias", "SiPixelCalZeroBias",
                                     "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
                                     "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel"
                                     ],
@@ -499,7 +503,7 @@ for dataset in datasets:
            write_aod = True,
            write_miniaod = False,
            write_dqm = True,
-           alca_producers = [ "TkAlCosmics0T", "MuAlGlobalCosmics", "DtCalibCosmics" ],
+           alca_producers = [ "TkAlCosmics0T", "MuAlGlobalCosmics" ],
            physics_skims = [ "CosmicSP", "CosmicTP", "LogError", "LogErrorMonitor" ],
            timePerEvent = 0.5,
            sizePerEvent = 155,
@@ -542,7 +546,7 @@ for dataset in datasets:
                write_dqm = True,
                tape_node = "T1_DE_KIT_MSS",
                disk_node = "T1_DE_KIT_Disk",
-               alca_producers = [ "TkAlZMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "DtCalib" ],
+               alca_producers = [ "TkAlZMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
                dqm_sequences = [ "@common", "@muon", "@lumi", "@L1TMuon" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
@@ -557,7 +561,7 @@ for dataset in datasets:
                write_dqm = True,
                tape_node = "T1_DE_KIT_MSS",
                disk_node = "T1_DE_KIT_Disk",
-               alca_producers = [ "TkAlZMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "DtCalib" ],
+               alca_producers = [ "TkAlZMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
                dqm_sequences = [ "@common", "@muon", "@lumi", "@L1TMuon" ],
                physics_skims = [ "LogError", "LogErrorMonitor" ],
                timePerEvent = 1,
@@ -751,7 +755,7 @@ for dataset in datasets:
                write_dqm = True,
                tape_node = "T1_US_FNAL_MSS", # "T1_IT_CNAF_MSS", CNAF is underwater
                disk_node = "T1_US_FNAL_Disk", # "T1_IT_CNAF_Disk", CNAF is underwater
-               alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HcalCalHBHEMuonFilter" ],
+               alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HcalCalHBHEMuonFilter" ],
                dqm_sequences = [ "@common", "@muon", "@lumi", "@L1TMuon" ],
                physics_skims = [ "MuonPOGSkim", "MuTau", "ZMu", "LogError", "LogErrorMonitor" ],
                scenario = ppScenario)
@@ -1407,7 +1411,7 @@ for dataset in datasets:
     addDataset(tier0Config, dataset,
                do_reco = True,
                dqm_sequences = [ "@common" ],
-               alca_producers = [ "TkAlZMuMu", "TkAlJpsiMuMu", "TkAlUpsilonMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "DtCalib", "HcalCalIsoTrkFilter" ],
+               alca_producers = [ "TkAlZMuMu", "TkAlJpsiMuMu", "TkAlUpsilonMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu", "HcalCalIsoTrkFilter" ],
                physics_skims = [ "Onia" ],
                scenario = ppScenario)
 
@@ -1444,7 +1448,7 @@ addDataset(tier0Config, "HighPtJet80",
 addDataset(tier0Config, "SingleMuHighPt",
            do_reco = True,
            write_dqm = True,
-           alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
+           alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
            dqm_sequences = [ "@common" ],
            physics_skims = [ "ZMM" ],
            scenario = ppScenario)
@@ -1452,7 +1456,7 @@ addDataset(tier0Config, "SingleMuHighPt",
 addDataset(tier0Config, "SingleMuLowPt",
            do_reco = True,
            write_dqm = True,
-           alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
+           alca_producers = [ "TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu" ],
            dqm_sequences = [ "@common" ],
            scenario = ppScenario)
 
@@ -1464,7 +1468,7 @@ addExpressConfig(tier0Config, "ExpressPA",
                  scenario = hiScenario,
                  data_tiers = [ "FEVT" ],
                  write_dqm = True,
-                 alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "DtCalib", "SiStripCalMinBias",
+                 alca_producers = [ "SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias",
                                     "SiStripCalMinBiasAfterAbortGap", "LumiPixelsMinBias", "PromptCalibProd",
                                     "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli", "PromptCalibProdSiStripGains",
                                     "PromptCalibProdSiStripGainsAfterAbortGap", "SiStripPCLHistos" ],
@@ -1538,14 +1542,14 @@ addDataset(tier0Config, "PADoubleMuon",
            do_reco = True,
            write_dqm = True,
            dqm_sequences = [ "@common", "@muon" ],
-           alca_producers = [ "TkAlMuonIsolatedPA", "TkAlZMuMuPA", "TkAlUpsilonMuMuPA", "DtCalib" ],
+           alca_producers = [ "TkAlMuonIsolatedPA", "TkAlZMuMuPA", "TkAlUpsilonMuMuPA" ],
            scenario = hiScenario)
 
 addDataset(tier0Config, "PASingleMuon",
            do_reco = True,
            write_dqm = True,
            dqm_sequences = [ "@common", "@muon" ],
-           alca_producers = [ "TkAlMuonIsolatedPA", "DtCalib" ],
+           alca_producers = [ "TkAlMuonIsolatedPA" ],
            physics_skims = [ "PAZMM" ],
            scenario = hiScenario)
 
