@@ -34,7 +34,7 @@ tier0Config = createTier0Config()
 # Set the verstion configuration (not used at the moment)
 setConfigVersion(tier0Config, "replace with real version")
 
-# Set the min run number:
+# Set the minimum run number to process:
 setInjectMinRun(tier0Config, 336132)
 
 # Set the max run number:
