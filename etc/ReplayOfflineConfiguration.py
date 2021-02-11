@@ -41,7 +41,7 @@ setInjectRuns(tier0Config, [337240, 337234])
 processingSite = "T2_CH_CERN"
 streamerPNN = "T2_CH_CERN"
 
-# Set global parameters:
+#  Set global parameters:
 #  Acquisition era
 #  BaseRequestPriority
 #  Backfill mode
