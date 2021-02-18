@@ -11,8 +11,8 @@ WMC_PR=""
 
 #If REPLAY_TEST=1, specify the type of run you want to test picking one of the following options
 #	MWGR				Latest MWGR replay test
-#	HIColissions2018	Heavy Ion run from 2018		
-#	ppColissions2018	Proton-Proton run from 2018
+#	HIColissions2018	    Heavy Ion run from 2018		
+#	ppColissions2018	    Proton-Proton run from 2018
 #	ThisPR				Use the replay configuration specified in this PR
 #
 RUN_TYPE=ThisPR
