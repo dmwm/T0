@@ -6,7 +6,6 @@
 T0_VERSION=2.2.1
 
 #WMC_PR specifies a list of WMCore Pull Request to be tested
-#WMC_PR=""
 WMC_PR=""
 
 #Specify which tests you want to run, by assigning a value of 1 to the corresponding variable
