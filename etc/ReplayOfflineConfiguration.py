@@ -94,7 +94,7 @@ defaultCMSSWVersion = {
      }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "slc7_amd64_gcc820")
+setDefaultScramArch(tier0Config, "slc7_amd64_gcc900")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3"
