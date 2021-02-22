@@ -18,11 +18,10 @@ class GetRunInfo(DBFormatter):
 
         binds = { 'RUN' : run }
 
-        sql = """SELECT CMS_HLT_GDR.U_CONFVERSIONS.NAME AS hltkey
-                 FROM CMS_HLT_GDR.U_CONFVERSIONS
-                 INNER JOIN CMS_WBM.RUNSUMMARY ON
-                   CMS_WBM.RUNSUMMARY.HLTKEY = CMS_HLT_GDR.U_CONFVERSIONS.CONFIGID
-                 WHERE CMS_WBM.RUNSUMMARY.RUNNUMBER = :RUN
+        sql = """SELECT CMS_OMS.TRIGGER_KEYS.VALUE AS hltkey
+                 FROM CMS_OMS.TRIGGER_KEYS
+                 WHERE CMS_OMS.TRIGGER_KEYS.NAME = 'HLT_KEY'
+                 AND CMS_OMS.TRIGGER_KEYS.RUN_NUMBER = :RUN
                  """
         
         results = self.dbi.processData(sql, binds, conn = conn,
