@@ -1,3 +1,24 @@
+2.2.2 to 2.2.3:
+  - Solve pylint warnings 2 (whitespaces, bad indentation, etc)
+  - Merge pull request #4563 from dmwm/2021MWGR2_Replay
+  - Test configuration for 2021MWGR2
+  - Merge branch 'master' of https://github.com/dmwm/T0
+  - Solve pylint warnings (whitespaces, bad indentation, etc)
+  - Merge branch 'master' of https://github.com/dmwm/T0
+  - Updating deployment scripts
+  - Merge pull request #4508 from vytjan/wbm_to_oms_queries
+  - Merge pull request #4550 from dmwm/2020MWGR5_Replay
+  - Update ReplayOfflineConfiguration.py
+  - Merge pull request #4555 from dmwm/Production2021MWGR1
+  - Update ContainterConfig.sh
+  - Production configuration for MWGR1. DtCalib producers removed
+  - Merge pull request #4551 from dmwm/MWGR5_Prod
+  - Merge pull request #4554 from dmwm/dependabot/pip/httplib2-0.19.0
+  - Bump httplib2 from 0.18.0 to 0.19.0
+  - Production configuration for MWGR5 2020
+  - Replay configuration for MWGR5
+  - Migrating WBM to OMS in T0 Oracle queries.
+
 2.2.1 to 2.2.2:
   - Replay rules lifetime updated to 15 days
   - Base Replay config to use with RucioInjector
