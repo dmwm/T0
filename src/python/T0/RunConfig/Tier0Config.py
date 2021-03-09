@@ -253,6 +253,10 @@ def createTier0Config():
 
     tier0Config.Global.StreamerPNN = "T0_CH_CERN_Disk"
 
+    tier0Config.Global.overrideCatalog = "trivialcatalog_file:/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/PhEDEx/storage.xml?protocol=eos"
+
+    tier0Config.Global.siteLocalConfig = "/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/JobConfig/site-local-config.xml"
+
     tier0Config.Global.DQMDataTier = "DQMIO"
 
     tier0Config.Global.BaseRequestPriority = 150000
@@ -576,6 +580,25 @@ def setStreamerPNN(config, pnn):
     Set the (CERN) location for streamer files.
     """
     config.Global.StreamerPNN = pnn
+    return
+
+def setOverrideCatalog(config, overrideCatalog):
+    """
+    _setOverrideCatalog_
+
+    Set the catalog to use in case override is necessary.
+    """
+    config.Global.overrideCatalog = overrideCatalog
+    return
+
+
+def setSiteLocalConfig(config, siteLocalConfig):
+    """
+    _setSiteLocalConfig_
+
+    Set the site local config file to use in case override is necessary.
+    """
+    config.Global.siteLocalConfig = siteLocalConfig
     return
 
 def setBulkDataType(config, type):
