@@ -86,7 +86,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_11_2_2_patch1"
+    'default': "CMSSW_11_2_3"
 }
 
 # Configure ScramArch
@@ -134,7 +134,8 @@ repackVersionOverride = {
     "CMSSW_11_1_3" : defaultCMSSWVersion['default'],
     "CMSSW_11_1_4" : defaultCMSSWVersion['default'],
     "CMSSW_11_1_5" : defaultCMSSWVersion['default'],
-    "CMSSW_11_2_1_patch2" : defaultCMSSWVersion['default']
+    "CMSSW_11_2_1" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_2" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -143,8 +144,8 @@ expressVersionOverride = {
     "CMSSW_11_1_3" : defaultCMSSWVersion['default'],
     "CMSSW_11_1_4" : defaultCMSSWVersion['default'],
     "CMSSW_11_1_5" : defaultCMSSWVersion['default'],
-    "CMSSW_11_2_1_patch2" : defaultCMSSWVersion['default']
-
+    "CMSSW_11_2_1" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_2" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
