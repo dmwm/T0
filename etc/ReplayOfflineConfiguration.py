@@ -31,7 +31,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [338628, 338714])
+setInjectRuns(tier0Config, [340220,338628,338714])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -44,7 +44,7 @@ streamerPNN = "T2_CH_CERN"
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Tier0_REPLAY_2020")
+setAcquisitionEra(tier0Config, "Tier0_REPLAY_2021")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
@@ -86,7 +86,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_11_2_3"
+    'default': "CMSSW_11_2_4"
 }
 
 # Configure ScramArch
@@ -110,9 +110,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "112X_dataRun3_Express_v2"
-promptrecoGlobalTag = "112X_dataRun3_Prompt_v2"
-alcap0GlobalTag = "112X_dataRun3_Prompt_v2"
+expressGlobalTag = "112X_dataRun3_Express_v5"
+promptrecoGlobalTag = "112X_dataRun3_Prompt_v5"
+alcap0GlobalTag = "112X_dataRun3_Prompt_v5"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -135,7 +135,8 @@ repackVersionOverride = {
     "CMSSW_11_1_4" : defaultCMSSWVersion['default'],
     "CMSSW_11_1_5" : defaultCMSSWVersion['default'],
     "CMSSW_11_2_1" : defaultCMSSWVersion['default'],
-    "CMSSW_11_2_2" : defaultCMSSWVersion['default']
+    "CMSSW_11_2_2" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_3" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -145,7 +146,8 @@ expressVersionOverride = {
     "CMSSW_11_1_4" : defaultCMSSWVersion['default'],
     "CMSSW_11_1_5" : defaultCMSSWVersion['default'],
     "CMSSW_11_2_1" : defaultCMSSWVersion['default'],
-    "CMSSW_11_2_2" : defaultCMSSWVersion['default']
+    "CMSSW_11_2_2" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_3" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
