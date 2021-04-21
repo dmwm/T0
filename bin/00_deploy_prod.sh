@@ -4,8 +4,9 @@ BASE_DIR=/data/tier0
 DEPLOY_DIR=$BASE_DIR/srv/wmagent
 SPEC_DIR=$BASE_DIR/admin/Specs
 
-TIER0_VERSION=2.2.1
+TIER0_VERSION=2.2.3
 TIER0_ARCH=slc7_amd64_gcc630
+DEPLOY_TAG=HG2104a
 
 function echo_header {
 	echo ''
@@ -40,7 +41,7 @@ mkdir -p $SPEC_DIR
 cd $BASE_DIR
 echo_header "deleting deployment dir \"deployment\""
 rm -rfv deployment
-git clone https://github.com/dmwm/deployment.git
+git clone https://github.com/dmwm/deployment.git  --branch $DEPLOY_TAG
 
 cd deployment
 
