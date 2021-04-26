@@ -104,6 +104,7 @@ class ConditionTest(unittest.TestCase):
                                               'NUM_PRODUCER' : 1},
                                             transaction = False)
 
+        self.completeFilesDAO = wmbsDaoFactory(classname = "Subscriptions.CompleteFiles")
         self.markPromptCalibrationFinishedDAO = daoFactory(classname = "ConditionUpload.MarkPromptCalibrationFinished")
         
         self.fileset1 = Fileset(name = "TestFileset1")
@@ -221,7 +222,7 @@ class ConditionTest(unittest.TestCase):
         self.assertEqual(self.countPromptCalibFiles(), 1,
                          "ERROR: there should be one prompt_calib_file")
 
-        
+        self.completeFilesDAO.execute(1, 4, transaction = False)
         self.markPromptCalibrationFinishedDAO.execute(1, 1, transaction = False)
         
         self.fileset1.markOpen(False)
