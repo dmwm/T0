@@ -141,11 +141,6 @@ class RunConfigTest(unittest.TestCase):
         self.delay = 60
 
         self.insertLocation(self.tier0Config.Global.StreamerPNN)
-#        StorageManagerAPI.injectNewData(self.dbInterfaceStorageManager,
-#                                        self.dbInterface,
-#                                        self.dbInterfaceSMNotify,
-#                                        streamerPNN = self.tier0Config.Global.StreamerPNN,
-#                                        injectRun = 176161)
 
         insertStreamerDAO = daoFactory(classname = "RunConfig.InsertStreamer")
         insertStreamerDAO.execute(streamerPNN = self.tier0Config.Global.StreamerPNN,
@@ -185,7 +180,7 @@ class RunConfigTest(unittest.TestCase):
                                     'ah_lumi_url': 'root://eoscms.cern.ch//eos/cms/store/unmerged/tier0_harvest/'+year,
                                     'ah_timeout' : 12*3600,
                                     'backfill' : None,
-                                    'ah_cond_lfnbase': '/store/unmerged/tier0_harvest/2020',
+                                    'ah_cond_lfnbase': '/store/unmerged/tier0_harvest/2021',
                                     'process': 'HLT',
                                     'hltkey': self.hltkey,
                                     'cond_timeout' : 18*3600,
@@ -1572,8 +1567,6 @@ class RunConfigTest(unittest.TestCase):
 
         phedexConfigs = self.getPhEDExConfigDAO.execute(176161, transaction = False)
 
-        print(set(phedexConfigs.keys()), "phedexconfig")
-       # print(datasets,"datasetsphedex")
         self.assertEqual(set(phedexConfigs.keys()),set(['MinimumBias','Cosmics']),
                          "ERROR: problems retrieving PhEDEx configs")
 
