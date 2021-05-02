@@ -1,3 +1,20 @@
+2.2.3 to 2.2.4:
+  - Merge pull request #4570 from dmwm/Config_MWGR3_2021
+  - Update ExampleConfig.py
+  - Update ReplayOfflineConfiguration.py
+  - Update RunConfig_t.py
+  - Fix Condition test  adding missing query
+  - Merge pull request #4569 from dmwm/deployTag
+  - Add DEPLOY_TAG to replay deployment script
+  - Add DEPLOY_TAG todeployment scripts
+  - Merge pull request #4568 from jhonatanamado/master
+  - Production file configuration for 2021MWGR3
+  - Replay configuration file for 2121MWGR3
+  - Use containers with T0 2.2.3
+  - Update CMSSW release used in last MWGR (2021MWGR2)
+  - Merge pull request #4565 from jhonatanamado/master
+  - Production file configuration MWGR2
+
 2.2.2 to 2.2.3:
   - Solve pylint warnings 2 (whitespaces, bad indentation, etc)
   - Merge pull request #4563 from dmwm/2021MWGR2_Replay
