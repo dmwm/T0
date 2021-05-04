@@ -136,7 +136,7 @@ repackVersionOverride = {
     "CMSSW_11_1_5" : defaultCMSSWVersion['default'],
     "CMSSW_11_2_1" : defaultCMSSWVersion['default'],
     "CMSSW_11_2_2" : defaultCMSSWVersion['default'],
-    "CMSSW_11_2_3" : defaultCMSSWVersion['default']
+    "CMSSW_11_2_3" : defaultCMSSWVersion['default'],
     "CMSSW_11_2_4" : defaultCMSSWVersion['default']
     }
 
@@ -148,7 +148,7 @@ expressVersionOverride = {
     "CMSSW_11_1_5" : defaultCMSSWVersion['default'],
     "CMSSW_11_2_1" : defaultCMSSWVersion['default'],
     "CMSSW_11_2_2" : defaultCMSSWVersion['default'],
-    "CMSSW_11_2_3" : defaultCMSSWVersion['default']
+    "CMSSW_11_2_3" : defaultCMSSWVersion['default'],
     "CMSSW_11_2_4" : defaultCMSSWVersion['default']
     }
 
