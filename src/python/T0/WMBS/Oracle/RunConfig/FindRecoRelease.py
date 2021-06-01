@@ -33,7 +33,7 @@ class FindRecoRelease(DBFormatter):
         now = int(time.time())
 
         binds = []
-        for dataset, delays in datasetDelays.items():
+        for dataset, delays in list(datasetDelays.items()):
             binds.append( { 'NOW' : now,
                             'DATASET' : dataset,
                             'DELAY' : delays[0],

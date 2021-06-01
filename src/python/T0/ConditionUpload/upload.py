@@ -2,7 +2,7 @@
 '''Script that uploads to the new CMS conditions uploader.
 Adapted to the new infrastructure from v6 of the upload.py script for the DropBox from Miguel Ojeda.
 '''
-from __future__ import print_function
+
 
 __author__ = 'Andreas Pfeiffer'
 __copyright__ = 'Copyright 2015, CERN CMS'
@@ -36,7 +36,7 @@ defaultWorkflow = 'offline'
 # common/http.py start (plus the "# Try to extract..." section bit)
 import time
 import logging
-import cStringIO
+import io
 
 import pycurl
 import copy
@@ -45,7 +45,7 @@ def getInput(default, prompt = ''):
     '''Like raw_input() but with a default and automatic strip().
     '''
 
-    answer = raw_input(prompt)
+    answer = input(prompt)
     if answer:
         return answer.strip()
 
@@ -85,7 +85,7 @@ def getInputRepeat(prompt = ''):
     '''
 
     while True:
-        answer = raw_input(prompt)
+        answer = input(prompt)
         if answer:
             return answer.strip()
 
@@ -120,7 +120,7 @@ I will ask you some questions to fill the metadata file. For some of the questio
             inputTags = dataCursor.fetchall()
             if len(inputTags) == 0:
                 raise Exception()
-            inputTags = zip(*inputTags)[0]
+            inputTags = list(zip(*inputTags))[0]
 
         except Exception:
             inputTags = []
@@ -334,7 +334,7 @@ class HTTP(object):
         # self.curl.setopt( self.curl.POST, {})
         self.curl.setopt(self.curl.HTTPGET, 0)
 
-        response = cStringIO.StringIO()
+        response = io.StringIO()
         self.curl.setopt(pycurl.WRITEFUNCTION, response.write)
         self.curl.setopt(pycurl.USERPWD, '%s:%s' % (username, password) )
 
@@ -380,7 +380,7 @@ class HTTP(object):
         # make sure the logs are safe ... at least somewhat :)
         data4log = copy.copy(data)
         if data4log:
-            if 'password' in data4log.keys():
+            if 'password' in list(data4log.keys()):
                 data4log['password'] = '*'
 
         retries = [0] + list(self.retries)
@@ -407,13 +407,13 @@ class HTTP(object):
                         finalData.update(data)
 
                     if files is not None:
-                        for (key, fileName) in files.items():
+                        for (key, fileName) in list(files.items()):
                             finalData[key] = (self.curl.FORM_FILE, fileName)
-                    self.curl.setopt( self.curl.HTTPPOST, finalData.items() )
+                    self.curl.setopt( self.curl.HTTPPOST, list(finalData.items()) )
 
                 self.curl.setopt(pycurl.VERBOSE, 0)
 
-                response = cStringIO.StringIO()
+                response = io.StringIO()
                 self.curl.setopt(self.curl.WRITEFUNCTION, response.write)
                 self.curl.perform()
 
@@ -603,7 +603,7 @@ class ConditionsUploader(object):
         okTags      = []
         skippedTags = []
         failedTags  = []
-        for tag, info in statusInfo['itemStatus'].items():
+        for tag, info in list(statusInfo['itemStatus'].items()):
             logging.debug('checking tag %s, info %s', tag, str(json.dumps(info, indent=4, sort_keys=True)) )
             if 'ok'   in info['status'].lower() :
                 okTags.append( tag )
@@ -816,7 +816,7 @@ def main():
     results = uploadAllFiles(options, arguments)
 
     print("uploadAllFiles returned:")
-    for hash, res in results.items():
+    for hash, res in list(results.items()):
         print("\t %s : %s " % (hash, str(res)))
 
 def testTier0Upload():

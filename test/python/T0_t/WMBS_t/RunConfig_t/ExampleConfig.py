@@ -4,7 +4,7 @@ _ExampleConfig_
 Example configuration for RunConfig unittest
 
 """
-from __future__ import print_function
+
 from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra

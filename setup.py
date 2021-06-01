@@ -7,7 +7,7 @@ To install  : python setup.py install --prefix=<some dir>
 To clean    : python setup.py clean
 To run tests: python setup.py test
 """
-from __future__ import print_function
+
 __author__ = "Valentin Kuznetsov"
 
 import sys
@@ -185,7 +185,7 @@ def main():
 
     # set default location for "data_files" to
     # platform specific "site-packages" location
-    for scheme in INSTALL_SCHEMES.values():
+    for scheme in list(INSTALL_SCHEMES.values()):
         scheme['data'] = scheme['purelib']
 
     setup(

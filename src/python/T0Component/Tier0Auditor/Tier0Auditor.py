@@ -6,7 +6,7 @@ _Tier0Auditor_
 Component wrapper, for real work look at Tier0AuditorPoller
 
 """
-from __future__ import print_function
+
 import logging
 import threading
 

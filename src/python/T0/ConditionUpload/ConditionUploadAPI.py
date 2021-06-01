@@ -62,7 +62,7 @@ def uploadConditions(username, password, serviceProxy):
         dropboxHost = conditions[run]['dropboxHost']
         validationMode = conditions[run]['validationMode']
 
-        for streamid, uploadableFiles in conditions[run]['streams'].items():
+        for streamid, uploadableFiles in list(conditions[run]['streams'].items()):
 
             if len(uploadableFiles) > 0:
 
@@ -104,7 +104,7 @@ def uploadConditions(username, password, serviceProxy):
         dropboxHost = conditions[run]['dropboxHost']
         validationMode = conditions[run]['validationMode']
 
-        for streamid, uploadableFiles in conditions[run]['streams'].items():
+        for streamid, uploadableFiles in list(conditions[run]['streams'].items()):
 
             if len(uploadableFiles) > 0:
 
@@ -148,7 +148,7 @@ def uploadConditions(username, password, serviceProxy):
                 advanceToNextRun = False
 
         # check for timeout, but only if there is a next run
-        if not advanceToNextRun and index < len(conditions.keys()):
+        if not advanceToNextRun and index < len(list(conditions.keys())):
 
             getRunStopTimeDAO = daoFactory(classname = "ConditionUpload.GetRunStopTime")
             stopTime = getRunStopTimeDAO.execute(run, transaction = False)
@@ -184,7 +184,7 @@ def uploadToDropbox(condFiles, dropboxHost, validationMode,
                 filesDict[filenamePrefix] = {}
             filesDict[filenamePrefix][filenameExt] = condFile
 
-    for filenamePrefix in filesDict.keys():
+    for filenamePrefix in list(filesDict.keys()):
 
         sqliteFile = filesDict[filenamePrefix]['db']
         metaFile = filesDict[filenamePrefix]['txt']
