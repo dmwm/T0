@@ -2,7 +2,7 @@
 _OfflineConfiguration_
 Processing configuration for the Tier0 - Replay version
 """
-from __future__ import print_function
+
 
 import datetime
 from T0.RunConfig.Tier0Config import addDataset
