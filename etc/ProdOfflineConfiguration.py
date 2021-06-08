@@ -31,14 +31,14 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 339930)
+setInjectMinRun(tier0Config, 341801)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
 
 # Settings up sites
-processingSite = "T2_CH_CERN"
-streamerPNN = "T2_CH_CERN"
+processingSite = "T0_CH_CERN"
+streamerPNN = "T0_CH_CERN_Disk"
 
 # Set global parameters:
 #  Acquisition era
@@ -85,7 +85,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_11_2_4"
+    'default': "CMSSW_11_3_1_patch1"
 }
 
 # Configure ScramArch
@@ -118,9 +118,9 @@ expressProcVersion = {
 }
 
 # Defaults for GlobalTag
-expressGlobalTag = "112X_dataRun3_Express_v5"
-promptrecoGlobalTag = "112X_dataRun3_Prompt_v5"
-alcap0GlobalTag = "112X_dataRun3_Prompt_v5"
+expressGlobalTag = "113X_dataRun3_Express_v2"
+promptrecoGlobalTag = "113X_dataRun3_Prompt_v2"
+alcap0GlobalTag = "113X_dataRun3_Prompt_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -137,81 +137,81 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_11_2_4",
-    "CMSSW_10_0_1" : "CMSSW_11_2_4",
-    "CMSSW_10_0_2" : "CMSSW_11_2_4",
-    "CMSSW_10_0_3" : "CMSSW_11_2_4",
-    "CMSSW_10_0_4" : "CMSSW_11_2_4",
-    "CMSSW_10_0_5" : "CMSSW_11_2_4",
-    "CMSSW_10_1_0" : "CMSSW_11_2_4",
-    "CMSSW_10_1_1" : "CMSSW_11_2_4",
-    "CMSSW_10_1_2" : "CMSSW_11_2_4",
-    "CMSSW_10_1_3" : "CMSSW_11_2_4",
-    "CMSSW_10_1_4" : "CMSSW_11_2_4",
-    "CMSSW_10_1_5" : "CMSSW_11_2_4",
-    "CMSSW_10_1_6" : "CMSSW_11_2_4",
-    "CMSSW_10_1_7" : "CMSSW_11_2_4",
-    "CMSSW_10_1_8" : "CMSSW_11_2_4",
-    "CMSSW_10_1_9" : "CMSSW_11_2_4",
-    "CMSSW_10_1_10" : "CMSSW_11_2_4",
-    "CMSSW_10_2_0" : "CMSSW_11_2_4",
-    "CMSSW_10_2_1" : "CMSSW_11_2_4",
-    "CMSSW_10_2_5" : "CMSSW_11_2_4",
-    "CMSSW_10_3_0" : "CMSSW_11_2_4",
-    "CMSSW_10_3_1" : "CMSSW_11_2_4",
-    "CMSSW_10_3_3" : "CMSSW_11_2_4",
-    "CMSSW_10_6_1" : "CMSSW_11_2_4",
-    "CMSSW_10_6_3" : "CMSSW_11_2_4",
-    "CMSSW_10_6_8" : "CMSSW_11_2_4",
-    "CMSSW_11_0_1" : "CMSSW_11_2_4",
-    "CMSSW_11_0_2" : "CMSSW_11_2_4",
-    "CMSSW_11_1_0" : "CMSSW_11_2_4",
-    "CMSSW_11_1_3_Patatrack" : "CMSSW_11_2_4",
-    "CMSSW_11_1_3" : "CMSSW_11_2_4",
-    "CMSSW_11_1_4" : "CMSSW_11_2_4",
-    "CMSSW_11_1_5" : "CMSSW_11_2_4",
-    "CMSSW_11_2_1" : "CMSSW_11_2_4",
-    "CMSSW_11_2_2" : "CMSSW_11_2_4",
-    "CMSSW_11_2_3" : "CMSSW_11_2_4"
+    "CMSSW_10_0_0" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_0_1" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_0_2" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_0_3" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_0_4" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_0_5" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_1_0" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_1_1" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_1_2" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_1_3" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_1_4" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_1_5" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_1_6" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_1_7" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_1_8" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_1_9" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_1_10" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_2_0" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_2_1" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_2_5" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_3_0" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_3_1" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_3_3" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_6_1" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_6_3" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_6_8" : "CMSSW_11_3_1_patch1",
+    "CMSSW_11_0_1" : "CMSSW_11_3_1_patch1",
+    "CMSSW_11_0_2" : "CMSSW_11_3_1_patch1",
+    "CMSSW_11_1_0" : "CMSSW_11_3_1_patch1",
+    "CMSSW_11_1_3_Patatrack" : "CMSSW_11_3_1_patch1",
+    "CMSSW_11_1_3" : "CMSSW_11_3_1_patch1",
+    "CMSSW_11_1_4" : "CMSSW_11_3_1_patch1",
+    "CMSSW_11_1_5" : "CMSSW_11_3_1_patch1",
+    "CMSSW_11_2_1" : "CMSSW_11_3_1_patch1",
+    "CMSSW_11_2_2" : "CMSSW_11_3_1_patch1",
+    "CMSSW_11_2_3" : "CMSSW_11_3_1_patch1"
     }
 
 expressVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_11_2_4",
-    "CMSSW_10_0_1" : "CMSSW_11_2_4",
-    "CMSSW_10_0_2" : "CMSSW_11_2_4",
-    "CMSSW_10_0_3" : "CMSSW_11_2_4",
-    "CMSSW_10_0_4" : "CMSSW_11_2_4",
-    "CMSSW_10_0_5" : "CMSSW_11_2_4",
-    "CMSSW_10_1_0" : "CMSSW_11_2_4",
-    "CMSSW_10_1_1" : "CMSSW_11_2_4",
-    "CMSSW_10_1_2" : "CMSSW_11_2_4",
-    "CMSSW_10_1_3" : "CMSSW_11_2_4",
-    "CMSSW_10_1_4" : "CMSSW_11_2_4",
-    "CMSSW_10_1_5" : "CMSSW_11_2_4",
-    "CMSSW_10_1_6" : "CMSSW_11_2_4",
-    "CMSSW_10_1_7" : "CMSSW_11_2_4",
-    "CMSSW_10_1_8" : "CMSSW_11_2_4",
-    "CMSSW_10_1_9" : "CMSSW_11_2_4",
-    "CMSSW_10_1_10" : "CMSSW_11_2_4",
-    "CMSSW_10_2_0" : "CMSSW_11_2_4",
-    "CMSSW_10_2_1" : "CMSSW_11_2_4",
-    "CMSSW_10_2_5" : "CMSSW_11_2_4",
-    "CMSSW_10_3_0" : "CMSSW_11_2_4",
-    "CMSSW_10_3_1" : "CMSSW_11_2_4",
-    "CMSSW_10_3_3" : "CMSSW_11_2_4",
-    "CMSSW_10_6_1" : "CMSSW_11_2_4",
-    "CMSSW_10_6_3" : "CMSSW_11_2_4",
-    "CMSSW_10_6_8" : "CMSSW_11_2_4",
-    "CMSSW_11_0_1" : "CMSSW_11_2_4",
-    "CMSSW_11_0_2" : "CMSSW_11_2_4",
-    "CMSSW_11_1_0" : "CMSSW_11_2_4",
-    "CMSSW_11_1_3_Patatrack" : "CMSSW_11_2_4",
-    "CMSSW_11_1_3" : "CMSSW_11_2_4",
-    "CMSSW_11_1_4" : "CMSSW_11_2_4",
-    "CMSSW_11_1_5" : "CMSSW_11_2_4",
-    "CMSSW_11_2_1" : "CMSSW_11_2_4",
-    "CMSSW_11_2_2" : "CMSSW_11_2_4",
-    "CMSSW_11_2_3" : "CMSSW_11_2_4"
+    "CMSSW_10_0_0" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_0_1" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_0_2" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_0_3" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_0_4" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_0_5" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_1_0" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_1_1" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_1_2" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_1_3" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_1_4" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_1_5" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_1_6" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_1_7" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_1_8" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_1_9" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_1_10" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_2_0" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_2_1" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_2_5" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_3_0" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_3_1" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_3_3" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_6_1" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_6_3" : "CMSSW_11_3_1_patch1",
+    "CMSSW_10_6_8" : "CMSSW_11_3_1_patch1",
+    "CMSSW_11_0_1" : "CMSSW_11_3_1_patch1",
+    "CMSSW_11_0_2" : "CMSSW_11_3_1_patch1",
+    "CMSSW_11_1_0" : "CMSSW_11_3_1_patch1",
+    "CMSSW_11_1_3_Patatrack" : "CMSSW_11_3_1_patch1",
+    "CMSSW_11_1_3" : "CMSSW_11_3_1_patch1",
+    "CMSSW_11_1_4" : "CMSSW_11_3_1_patch1",
+    "CMSSW_11_1_5" : "CMSSW_11_3_1_patch1",
+    "CMSSW_11_2_1" : "CMSSW_11_3_1_patch1",
+    "CMSSW_11_2_2" : "CMSSW_11_3_1_patch1",
+    "CMSSW_11_2_3" : "CMSSW_11_3_1_patch1"
     }
 
 #set default repack settings for bulk streams
