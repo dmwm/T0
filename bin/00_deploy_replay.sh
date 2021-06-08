@@ -4,9 +4,8 @@ BASE_DIR=/data/tier0
 DEPLOY_DIR=$BASE_DIR/srv/wmagent
 SPEC_DIR=$BASE_DIR/admin/Specs
 
-TIER0_VERSION=2.2.3
+TIER0_VERSION=2.2.4
 TIER0_ARCH=slc7_amd64_gcc630
-DEPLOY_TAG=HG2104a
 
 function echo_header {
     echo ''
@@ -24,8 +23,11 @@ mkdir -p $SPEC_DIR
 cd $BASE_DIR
 echo_header "deleting deployment dir \"deployment\""
 rm -rf deployment
-git clone https://github.com/dmwm/deployment.git --branch $DEPLOY_TAG
+git clone https://github.com/dmwm/deployment.git
 cd deployment
+
+#Patch to test deployment adjustments
+#curl https://patch-diff.githubusercontent.com/raw/dmwm/deployment/pull/893.patch| patch -d ./ -p1
 
 echo_header 'Deploying Tier0 WMAgent'
 #Dirk's private repo deployment
@@ -33,9 +35,22 @@ echo_header 'Deploying Tier0 WMAgent'
 #./Deploy -s sw -r comp=comp.hufnagel -A $TIER0_ARCH -t $TIER0_VERSION -R tier0@$TIER0_VERSION $DEPLOY_DIR tier0@$TIER0_VERSION
 #./Deploy -s post -r comp=comp.hufnagel -A $TIER0_ARCH -t $TIER0_VERSION -R tier0@$TIER0_VERSION $DEPLOY_DIR tier0@$TIER0_VERSION
 
+#German deployment
+#./Deploy -s prep -r comp=comp.ggiraldo -A $TIER0_ARCH -t $TIER0_VERSION -R tier0@$TIER0_VERSION $DEPLOY_DIR tier0@$TIER0_VERSION
+#./Deploy -s sw -r comp=comp.ggiraldo -A $TIER0_ARCH -t $TIER0_VERSION -R tier0@$TIER0_VERSION $DEPLOY_DIR tier0@$TIER0_VERSION
+#./Deploy -s post -r comp=comp.ggiraldo -A $TIER0_ARCH -t $TIER0_VERSION -R tier0@$TIER0_VERSION $DEPLOY_DIR tier0@$TIER0_VERSION
+
+#JamadoVa deployment
+#./Deploy -s prep -r comp=comp.jamadova -A $TIER0_ARCH -t $TIER0_VERSION -R tier0@$TIER0_VERSION $DEPLOY_DIR tier0@$TIER0_VERSION
+#./Deploy -s sw -r comp=comp.jamadova -A $TIER0_ARCH -t $TIER0_VERSION -R tier0@$TIER0_VERSION $DEPLOY_DIR tier0@$TIER0_VERSION
+#./Deploy -s post -r comp=comp.jamadova -A $TIER0_ARCH -t $TIER0_VERSION -R tier0@$TIER0_VERSION $DEPLOY_DIR tier0@$TIER0_VERSION
+
 #Usual deployment
+#echo '---- Pre-deployment:'
 ./Deploy -s prep -r comp=comp -A $TIER0_ARCH -t $TIER0_VERSION -R tier0@$TIER0_VERSION $DEPLOY_DIR tier0@$TIER0_VERSION
+#echo '---- Deployment:'
 ./Deploy -s sw -r comp=comp -A $TIER0_ARCH -t $TIER0_VERSION -R tier0@$TIER0_VERSION $DEPLOY_DIR tier0@$TIER0_VERSION
+#echo '---- Post-deployment:'
 ./Deploy -s post -r comp=comp -A $TIER0_ARCH -t $TIER0_VERSION -R tier0@$TIER0_VERSION $DEPLOY_DIR tier0@$TIER0_VERSION
 
 ## global patch override
@@ -55,7 +70,8 @@ echo_header 'Initializing services / agent'
 ./config/tier0/manage start-services
 ./config/tier0/manage init-tier0
 sleep 5
-
+echo '-------------------------------------'
+echo $TIER0_CONFIG_FILE
 #
 # mandatory configuration tweaks
 #
@@ -110,11 +126,10 @@ echo "config.RetryManager.PauseAlgo.default.coolOffTime = {'create': 10, 'job': 
 #echo 'config.DBS3Upload.pollInterval = 30' >> ./config/tier0/config.py
 #echo 'config.PhEDExInjector.pollInterval = 30' >> ./config/tier0/config.py
 
-#
-# configure Tier0-Mode for PhEDEx
-#
 # Twiking Rucio configuration
-sed -i "s+config.RucioInjector.containerDiskRuleParams.*+config.RucioInjector.containerDiskRuleParams = {'lifetime': 15 * 24 * 60 * 60}+" ./config/tier0/config.py
+sed -i "s+config.RucioInjector.listTiersToInject.*+config.RucioInjector.listTiersToInject = ['AOD', 'MINIAOD', 'NANOAOD', 'NANOAODSIM', 'RAW', 'FEVT', 'USER', 'ALCARECO', 'ALCAPROMPT', 'DQMIO','RAW-RECO']+" ./config/tier0/config.py
+sed -i "s+config.RucioInjector.containerDiskRuleParams.*+config.RucioInjector.containerDiskRuleParams = {'lifetime': 7 * 24 * 60 * 60}+" ./config/tier0/config.py
+
 
 #
 # Set output datasets status to VALID in DBS
@@ -207,7 +222,13 @@ echo 'config.BossAir.pluginNames = ["SimpleCondorPlugin"]' >> ./config/tier0/con
 # Setting up sites
 #
 
-./config/tier0/manage execute-agent wmagent-resource-control --site-name=T2_CH_CERN --cms-name=T2_CH_CERN --pnn=T2_CH_CERN --ce-name=T2_CH_CERN --pending-slots=20000 --running-slots=20000 --plugin=SimpleCondorPlugin
+#Setting for T0_CH_CERN_Disk
+./config/tier0/manage execute-agent wmagent-resource-control --site-name=T2_CH_CERN --cms-name=T2_CH_CERN --pnn=T0_CH_CERN_Disk --ce-name=T2_CH_CERN --pending-slots=20000 --running-slots=20000 --plugin=SimpleCondorPlugin
+./config/tier0/manage execute-agent wmagent-resource-control --site-name=T0_CH_CERN_Disk --cms-name=T0_CH_CERN_Disk --pnn=T2_CH_CERN --ce-name=T0_CH_CERN_Disk --pending-slots=20000 --running-slots=20000 --plugin=SimpleCondorPlugin
+
+#Setting for T2_CH_CERN
+#./config/tier0/manage execute-agent wmagent-resource-control --site-name=T2_CH_CERN --cms-name=T2_CH_CERN --pnn=T2_CH_CERN --ce-name=T2_CH_CERN --pending-slots=20000 --running-slots=20000 --plugin=SimpleCondorPlugin
+
 ./config/tier0/manage execute-agent wmagent-resource-control --site-name=T2_CH_CERN --task-type=Processing --pending-slots=10000 --running-slots=10000
 ./config/tier0/manage execute-agent wmagent-resource-control --site-name=T2_CH_CERN --task-type=Merge --pending-slots=1000 --running-slots=1000
 ./config/tier0/manage execute-agent wmagent-resource-control --site-name=T2_CH_CERN --task-type=Cleanup --pending-slots=1000 --running-slots=1000
