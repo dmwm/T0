@@ -31,6 +31,9 @@ class ExpressMergeTest(unittest.TestCase):
         """
         _setUp_
         """
+        import WMQuality.TestInit
+        WMQuality.TestInit.deleteDatabaseAfterEveryTest("I'm Serious")
+
         self.testInit = TestInit(__file__)
         self.testInit.setLogging()
         self.testInit.setDatabaseConnection()

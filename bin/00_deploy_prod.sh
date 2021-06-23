@@ -4,8 +4,9 @@ BASE_DIR=/data/tier0
 DEPLOY_DIR=$BASE_DIR/srv/wmagent
 SPEC_DIR=$BASE_DIR/admin/Specs
 
-TIER0_VERSION=2.1.7
+TIER0_VERSION=2.2.4
 TIER0_ARCH=slc7_amd64_gcc630
+DEPLOY_TAG=HG2105a
 
 function echo_header {
 	echo ''
@@ -40,7 +41,7 @@ mkdir -p $SPEC_DIR
 cd $BASE_DIR
 echo_header "deleting deployment dir \"deployment\""
 rm -rfv deployment
-git clone https://github.com/dmwm/deployment.git
+git clone https://github.com/dmwm/deployment.git  --branch $DEPLOY_TAG
 
 cd deployment
 
@@ -131,12 +132,8 @@ echo "config.RetryManager.PauseAlgo.default.coolOffTime = {'create': 10, 'job': 
 #echo 'config.DBS3Upload.pollInterval = 30' >> ./config/tier0/config.py
 #echo 'config.PhEDExInjector.pollInterval = 30' >> ./config/tier0/config.py
 
-#
-# configure Tier0-Mode for PhEDEx
-#
-echo 'config.PhEDExInjector.tier0Mode = False' >> ./config/tier0/config.py
-echo 'config.PhEDExInjector.autoDelete = False' >> ./config/tier0/config.py
-sed -i "s+config.PhEDExInjector.subscribeInterval = 43200+config.PhEDExInjector.subscribeInterval = 30+g" ./config/tier0/config.py
+# Twiking Rucio configuration
+sed -i "s+config.RucioInjector.containerDiskRuleParams.*+config.RucioInjector.containerDiskRuleParams = {}+" ./config/tier0/config.py
 
 #
 # Set output datasets status to VALID in DBS
@@ -225,6 +222,7 @@ echo 'config.BossAir.pluginNames = ["SimpleCondorPlugin"]' >> ./config/tier0/con
 # Setting up sites
 #
 
+# Settings for using T2_CH_CERN
 #./config/tier0/manage execute-agent wmagent-resource-control --site-name=T0_CH_CERN --cms-name=T0_CH_CERN --pnn=T0_CH_CERN_Disk --ce-name=T0_CH_CERN --pending-slots=1600 --running-slots=9000 --plugin=SimpleCondorPlugin
 #./config/tier0/manage execute-agent wmagent-resource-control --site-name=T0_CH_CERN --task-type=Processing --pending-slots=800 --running-slots=9000
 #./config/tier0/manage execute-agent wmagent-resource-control --site-name=T0_CH_CERN --task-type=Merge --pending-slots=200 --running-slots=1000
@@ -236,7 +234,9 @@ echo 'config.BossAir.pluginNames = ["SimpleCondorPlugin"]' >> ./config/tier0/con
 #./config/tier0/manage execute-agent wmagent-resource-control --site-name=T0_CH_CERN --task-type=Express --pending-slots=800 --running-slots=9000
 #./config/tier0/manage execute-agent wmagent-resource-control --site-name=T0_CH_CERN --task-type=Repack --pending-slots=500 --running-slots=2500
 
-./config/tier0/manage execute-agent wmagent-resource-control --site-name=T2_CH_CERN --cms-name=T2_CH_CERN --pnn=T2_CH_CERN --ce-name=T2_CH_CERN --pending-slots=20000 --running-slots=20000 --plugin=SimpleCondorPlugin
+#Settings for using T0_CH_CERN_Disk
+./config/tier0/manage execute-agent wmagent-resource-control --site-name=T2_CH_CERN --cms-name=T2_CH_CERN --pnn=T0_CH_CERN_Disk --ce-name=T2_CH_CERN --pending-slots=20000 --running-slots=20000 --plugin=SimpleCondorPlugin
+./config/tier0/manage execute-agent wmagent-resource-control --site-name=T0_CH_CERN_Disk --cms-name=T0_CH_CERN_Disk --pnn=T2_CH_CERN --ce-name=T0_CH_CERN_Disk --pending-slots=20000 --running-slots=20000 --plugin=SimpleCondorPlugin
 ./config/tier0/manage execute-agent wmagent-resource-control --site-name=T2_CH_CERN --task-type=Processing --pending-slots=10000 --running-slots=10000
 ./config/tier0/manage execute-agent wmagent-resource-control --site-name=T2_CH_CERN --task-type=Merge --pending-slots=1000 --running-slots=1000
 ./config/tier0/manage execute-agent wmagent-resource-control --site-name=T2_CH_CERN --task-type=Cleanup --pending-slots=1000 --running-slots=1000

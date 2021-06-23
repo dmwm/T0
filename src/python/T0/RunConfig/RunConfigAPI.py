@@ -711,6 +711,11 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                       'GracePeriod': 3600,
                                       'Dashboard': "t0" } )
 
+            if tier0Config.Global.ProcessingSite=='T0_CH_CERN':
+                wmSpec.setTaskEnvironmentVariables({'WMAGENT_SITE_CONFIG_OVERRIDE':tier0Config.Global.siteLocalConfig})
+                wmSpec.setOverrideCatalog(tier0Config.Global.overrideCatalog)
+                wmSpec.updateArguments( { 'SiteWhitelist': [ 'T2_CH_CERN' ] } )
+
             wmbsHelper = WMBSHelper(wmSpec, taskName, cachepath = specDirectory)
 
         filesetName = "Run%d_Stream%s" % (run, stream)
@@ -1116,6 +1121,14 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 wmSpec.setOwnerDetails("Dirk.Hufnagel@cern.ch", "T0",
                                        { 'vogroup': 'DEFAULT', 'vorole': 'DEFAULT',
                                          'dn' : "Dirk.Hufnagel@cern.ch" } )
+
+                #Overriding site configuration
+                if 'T0_CH_CERN' in datasetConfig.SiteWhitelist:
+                    wmSpec.setTaskEnvironmentVariables({'WMAGENT_SITE_CONFIG_OVERRIDE':tier0Config.Global.siteLocalConfig})
+                    wmSpec.setOverrideCatalog(tier0Config.Global.overrideCatalog)
+
+                #Overriding processing site in case we using T0 disk
+                datasetConfig.SiteWhitelist = [ 'T2_CH_CERN' if s=='T0_CH_CERN' else s for s in datasetConfig.SiteWhitelist]
 
                 wmSpec.updateArguments( { 'SiteWhitelist': datasetConfig.SiteWhitelist,
                                           'SiteBlacklist': [],

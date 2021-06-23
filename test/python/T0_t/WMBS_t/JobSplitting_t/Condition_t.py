@@ -34,6 +34,9 @@ class ConditionTest(unittest.TestCase):
         _setUp_
 
         """
+        import WMQuality.TestInit
+        WMQuality.TestInit.deleteDatabaseAfterEveryTest("I'm Serious")
+
         self.testInit = TestInit(__file__)
         self.testInit.setLogging()
         self.testInit.setDatabaseConnection()
@@ -58,12 +61,12 @@ class ConditionTest(unittest.TestCase):
         
         myThread.dbi.processData("""INSERT INTO wmbs_pnns
                                     (id, pnn) 
-                                    VALUES (2, 'SomePNN')
+                                    VALUES (1, 'SomePNN')
                                     """, transaction = False)
 
-        myThread.dbi.processData("""INSERT INTO wmbs_location_pnn
+        myThread.dbi.processData("""INSERT INTO wmbs_location_pnns
                                     (location, pnn)
-                                    VALUES (1, 'SomePNN')
+                                    VALUES (1, 1)
                                     """, transaction = False)
 
         insertRunDAO = daoFactory(classname = "RunConfig.InsertRun")
@@ -101,6 +104,7 @@ class ConditionTest(unittest.TestCase):
                                               'NUM_PRODUCER' : 1},
                                             transaction = False)
 
+        self.completeFilesDAO = wmbsDaoFactory(classname = "Subscriptions.CompleteFiles")
         self.markPromptCalibrationFinishedDAO = daoFactory(classname = "ConditionUpload.MarkPromptCalibrationFinished")
         
         self.fileset1 = Fileset(name = "TestFileset1")
@@ -218,12 +222,12 @@ class ConditionTest(unittest.TestCase):
         self.assertEqual(self.countPromptCalibFiles(), 1,
                          "ERROR: there should be one prompt_calib_file")
 
-        
+        self.completeFilesDAO.execute(1, 4, transaction = False)
         self.markPromptCalibrationFinishedDAO.execute(1, 1, transaction = False)
         
-        #self.fileset1.markOpen(False)
+        self.fileset1.markOpen(False)
 
-        #jobGroups = jobFactory(**mySplitArgs)
+        jobGroups = jobFactory(**mySplitArgs)
 
         self.assertEqual(len(jobGroups), 0,
                          "ERROR: JobFactory should have returned no JobGroup")
