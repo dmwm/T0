@@ -26,7 +26,7 @@ config.RetryManager.plugins = {"default" : "PauseAlgo",
 
 config.ErrorHandler.maxRetries = {"default" : 30,
                                   "Cleanup" : 2,
-                                  "LogCollect" : 2}
+                                  "LogCollect" : 30}
 
 config.TaskArchiver.useReqMgrForCompletionCheck = False
 
