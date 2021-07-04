@@ -31,7 +31,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [341169,341754,338628,338714])
+setInjectRuns(tier0Config, [341169, 341754, 338628, 338714, 342154])
 
 # Settings up sites
 processingSite = "T0_CH_CERN"
@@ -86,7 +86,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_11_3_1_patch1"
+    'default': "CMSSW_11_3_2"
 }
 
 # Configure ScramArch
@@ -110,9 +110,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "113X_dataRun3_Express_v2"
-promptrecoGlobalTag = "113X_dataRun3_Prompt_v2"
-alcap0GlobalTag = "113X_dataRun3_Prompt_v2"
+expressGlobalTag = "113X_dataRun3_Express_Candidate_2021_07_02_14_38_40"
+promptrecoGlobalTag = "113X_dataRun3_Prompt_v3"
+alcap0GlobalTag = "113X_dataRun3_Prompt_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -137,7 +137,8 @@ repackVersionOverride = {
     "CMSSW_11_2_1" : defaultCMSSWVersion['default'],
     "CMSSW_11_2_2" : defaultCMSSWVersion['default'],
     "CMSSW_11_2_3" : defaultCMSSWVersion['default'],
-    "CMSSW_11_2_4" : defaultCMSSWVersion['default']
+    "CMSSW_11_2_4" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_1" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -149,7 +150,8 @@ expressVersionOverride = {
     "CMSSW_11_2_1" : defaultCMSSWVersion['default'],
     "CMSSW_11_2_2" : defaultCMSSWVersion['default'],
     "CMSSW_11_2_3" : defaultCMSSWVersion['default'],
-    "CMSSW_11_2_4" : defaultCMSSWVersion['default']
+    "CMSSW_11_2_4" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_1" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -180,7 +182,7 @@ addDataset(tier0Config, "Default",
            global_tag_connect=globalTagConnect,
            #archival_node="T0_CH_CERN_MSS",
            #tape_node="T1_US_FNAL_MSS",
-           disk_node="T2_CH_CERN",
+           #disk_node="T2_CH_CERN",
            #raw_to_disk=False,
            blockCloseDelay=1200,
            timePerEvent=5,
@@ -218,7 +220,6 @@ addExpressConfig(tier0Config, "Express",
 
 addExpressConfig(tier0Config, "ExpressCosmics",
                  scenario=cosmicsScenario,
-                 diskNode="T2_CH_CERN",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T",
@@ -243,7 +244,6 @@ addExpressConfig(tier0Config, "ExpressCosmics",
 
 addExpressConfig(tier0Config, "HLTMonitor",
                  scenario=ppScenario,
-                 diskNode="T2_CH_CERN",
                  data_tiers=["FEVTHLTALL"],
                  write_dqm=True,
                  alca_producers=[],
@@ -284,8 +284,7 @@ addExpressConfig(tier0Config, "Calibration",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
-                 dataType="data",
-                 diskNode="T2_CH_CERN")
+                 dataType="data")
 
 addExpressConfig(tier0Config, "ExpressAlignment",
                  scenario=alcaTrackingOnlyScenario,
@@ -307,8 +306,7 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  blockCloseDelay=2 * 3600,
                  timePerEvent=4,
                  sizePerEvent=1700,
-                 versionOverride=expressVersionOverride,
-                 diskNode="T2_CH_CERN")
+                 versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
                  scenario=alcaLumiPixelsScenario,
@@ -330,8 +328,7 @@ addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
                  blockCloseDelay=2 * 3600,
                  timePerEvent=4,
                  sizePerEvent=1700,
-                 versionOverride=expressVersionOverride,
-                 diskNode="T2_CH_CERN")
+                 versionOverride=expressVersionOverride)
 
 #####################
 ### HI Tests 2018 ###
@@ -339,7 +336,6 @@ addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
 
 addExpressConfig(tier0Config, "HIExpress",
                  scenario=hiTestppScenario,
-                 diskNode="T2_CH_CERN",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
@@ -384,8 +380,7 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  blockCloseDelay=2 * 3600,
                  timePerEvent=4,
                  sizePerEvent=1700,
-                 versionOverride=expressVersionOverride,
-                 diskNode="T2_CH_CERN")
+                 versionOverride=expressVersionOverride)
 
 ###################################
 ### Standard Physics PDs (2017) ###
@@ -1329,7 +1324,6 @@ addExpressConfig(tier0Config, "ExpressPA",
                  blockCloseDelay=1200,
                  timePerEvent=4,
                  sizePerEvent=1700,
-                 diskNode="T2_CH_CERN",
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "HLTMonitorPA",
@@ -1352,7 +1346,6 @@ addExpressConfig(tier0Config, "HLTMonitorPA",
                  blockCloseDelay=1200,
                  timePerEvent=4, #I have to get some stats to set this properly
                  sizePerEvent=1700, #I have to get some stats to set this properly
-                 diskNode="T2_CH_CERN",
                  versionOverride=expressVersionOverride)
 
 #########################################
