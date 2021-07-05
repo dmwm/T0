@@ -1,0 +1,11 @@
+{   
+    "do_reco":true,
+    "write_reco":false,
+    "write_aod":true,
+    "write_miniaod":false,
+    "write_dqm":true,
+    "alca_producers":["TkAlCosmics0T", "MuAlGlobalCosmics"],
+    "physics_skims":["CosmicSP", "CosmicTP", "LogError", "LogErrorMonitor"],
+    "timePerEvent":0.5,
+    "sizePerEvent":155
+}

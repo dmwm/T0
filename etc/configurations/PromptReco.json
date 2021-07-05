@@ -1,0 +1,18 @@
+
+defaultRecoTimeout = 10 * 60
+defaultRecoLockTimeout = 5 * 60
+
+
+# PCL parameters
+setPromptCalibrationConfig(tier0Config,
+                           alcaHarvestTimeout=12*3600,
+                           alcaHarvestCondLFNBase="/store/unmerged/tier0_harvest",
+                           alcaHarvestLumiURL="root://eoscms.cern.ch//eos/cms/store/unmerged/tier0_harvest",
+                           conditionUploadTimeout=18*3600,
+                           dropboxHost="webcondvm.cern.ch",
+                           validationMode=True)
+
+                           # Splitting parameters for PromptReco
+                           defaultRecoSplitting = 750 * numberOfCores
+                           hiRecoSplitting = 200 * numberOfCores
+                           alcarawSplitting = 20000 * numberOfCores                           

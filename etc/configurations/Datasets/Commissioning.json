@@ -1,0 +1,9 @@
+{   
+    "do_reco":true,
+    "write_dqm":true,
+    "alca_producers":["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk", "HcalCalIsolatedBunchSelector"],
+    "dqm_sequences":["@common", "@hcal"],
+    "physics_skims":["EcalActivity", "LogError", "LogErrorMonitor"],
+    "timePerEvent":12,
+    "sizePerEvent":4000
+}

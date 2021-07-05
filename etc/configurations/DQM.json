@@ -1,0 +1,4 @@
+{
+    "DQMDataTier":"DQMIO",
+    "DQMUploadUrl":"https://cmsweb.cern.ch/dqm/dev;https://cmsweb-testbed.cern.ch/dqm/offline-test"
+}

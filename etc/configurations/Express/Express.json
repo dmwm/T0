@@ -1,0 +1,15 @@
+{"data_tiers": ["FEVT"], 
+"alca_producers": ["SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG", "TkAlMinBias", 
+		   "LumiPixelsMinBias", "SiPixelCalZeroBias", "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli", 
+                   "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel"], 
+"timePerEvent": 4, 
+"maxInputEvents": 400, 
+"maxInputRat": 23000, 
+"blockCloseDelay": 1200, 
+"maxInputSize": 2147483648, 
+"maxLatency": 345, 
+"maxInputFiles": 15, 
+"periodicHarvestInterval": 1200, 
+"write_dqm": true, 
+"sizePerEvent": 1700
+}

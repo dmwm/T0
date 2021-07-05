@@ -226,6 +226,7 @@ Tier0Configuration - Global configuration object
 
 import logging
 import copy
+import json
 
 from WMCore.Configuration import Configuration
 from WMCore.Configuration import ConfigSection
@@ -324,6 +325,11 @@ def retrieveDatasetConfig(config, datasetName, fromAddDataset = False):
 
     return datasetConfig
 
+def loadConfigFile( path ):
+    fd = open( path, "r")
+    options = json.load(fd)
+    fd.close()
+    return options
 
 def addDataset(config, datasetName, **settings):
     """

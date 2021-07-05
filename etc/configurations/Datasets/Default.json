@@ -1,0 +1,12 @@
+{   
+    "do_reco":false,
+    "write_reco":false, "write_aod":true, "write_miniaod":true, "write_dqm":false,
+    "archival_node":"T0_CH_CERN_MSS",
+    "tape_node":"T1_US_FNAL_MSS",
+    "disk_node":"T2_CH_CERN",
+    "raw_to_disk":false,
+    "blockCloseDelay":1200,
+    "timePerEvent":5,
+    "sizePerEvent":1500
+}
+    

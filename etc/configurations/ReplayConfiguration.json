@@ -1,0 +1,14 @@
+{
+    "runs":[341169, 341754, 338628, 338714],
+    "defaultCMSSW":"CMSSW_11_3_1_patch1",
+    "scramArch":"slc7_amd64_gcc900",
+    "acquisitionEra":"Tier0_REPLAY_2021",
+    "backfill":1,
+    "bulkDataType":"data",
+    "processingSite":"T0_CH_CERN",
+    "streamerPNN":"T0_CH_CERN_Disk",
+    "baseRequesPriority":251000,
+    "expressGlobalTag":"113X_dataRun3_Express_v2",
+    "promptrecoGlobalTag":"113X_dataRun3_Prompt_v2",
+    "alcap0GlobalTag":"113X_dataRun3_Prompt_v2"
+}

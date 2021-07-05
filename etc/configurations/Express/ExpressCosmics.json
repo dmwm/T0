@@ -1,0 +1,18 @@
+{
+    "diskNode":"T2_CH_CERN",
+    "data_tiers":["FEVT"],
+    "write_dqm":true,
+    "alca_producers":["SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T",
+                    "SiPixelCalZeroBias",
+                    "PromptCalibProdSiStrip", "PromptCalibProdSiPixel", "SiStripCalCosmics"
+                    ],
+    "maxInputRate":23000,
+    "maxInputEvents":400,
+    "maxInputSize": 2147483648,
+    "maxInputFiles":15,
+    "maxLatency":345,
+    "periodicHarvestInterval":1200,
+    "blockCloseDelay":1200,
+    "timePerEvent":4,
+    "sizePerEvent":1700
+}                 
