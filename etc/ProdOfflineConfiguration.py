@@ -85,7 +85,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_11_3_1_patch1"
+    'default': "CMSSW_11_3_2"
 }
 
 # Configure ScramArch
@@ -118,9 +118,9 @@ expressProcVersion = {
 }
 
 # Defaults for GlobalTag
-expressGlobalTag = "113X_dataRun3_Express_v2"
-promptrecoGlobalTag = "113X_dataRun3_Prompt_v2"
-alcap0GlobalTag = "113X_dataRun3_Prompt_v2"
+expressGlobalTag = "113X_dataRun3_Express_v4"
+promptrecoGlobalTag = "113X_dataRun3_Prompt_v3"
+alcap0GlobalTag = "113X_dataRun3_Prompt_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -137,81 +137,33 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_0_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_0_2" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_0_3" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_0_4" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_0_5" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_0" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_2" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_3" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_4" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_5" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_6" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_7" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_8" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_9" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_10" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_2_0" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_2_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_2_5" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_3_0" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_3_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_3_3" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_6_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_6_3" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_6_8" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_0_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_0_2" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_1_0" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_1_3_Patatrack" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_1_3" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_1_4" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_1_5" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_2_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_2_2" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_2_3" : "CMSSW_11_3_1_patch1"
+    "CMSSW_11_0_1" : defaultCMSSWVersion['default'],
+    "CMSSW_11_0_2" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_0" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_3_Patatrack" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_3" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_4" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_5" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_1" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_2" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_3" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_4" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_1" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_0_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_0_2" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_0_3" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_0_4" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_0_5" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_0" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_2" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_3" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_4" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_5" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_6" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_7" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_8" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_9" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_10" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_2_0" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_2_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_2_5" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_3_0" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_3_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_3_3" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_6_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_6_3" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_6_8" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_0_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_0_2" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_1_0" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_1_3_Patatrack" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_1_3" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_1_4" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_1_5" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_2_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_2_2" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_2_3" : "CMSSW_11_3_1_patch1"
+    "CMSSW_11_0_1" : defaultCMSSWVersion['default'],
+    "CMSSW_11_0_2" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_0" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_3_Patatrack" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_3" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_4" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_5" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_1" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_2" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_3" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_4" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_1" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -286,7 +238,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T",
                                  "SiPixelCalZeroBias",
-                                 "PromptCalibProdSiStrip", "PromptCalibProdSiPixel", "SiStripCalCosmics"
+                                 "PromptCalibProdSiStrip", "PromptCalibProdSiPixel"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
