@@ -1128,9 +1128,9 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                     wmSpec.setOverrideCatalog(tier0Config.Global.overrideCatalog)
 
                 #Overriding processing site in case we using T0 disk
-                datasetConfig.SiteWhitelist = [ 'T2_CH_CERN' if s=='T0_CH_CERN' else s for s in datasetConfig.SiteWhitelist]
+                siteWhitelist = [ 'T2_CH_CERN' if s=='T0_CH_CERN' else s for s in datasetConfig.SiteWhitelist]
 
-                wmSpec.updateArguments( { 'SiteWhitelist': datasetConfig.SiteWhitelist,
+                wmSpec.updateArguments( { 'SiteWhitelist': siteWhitelist,
                                           'SiteBlacklist': [],
                                           'TrustSitelists': "True",
                                           'BlockCloseMaxWaitTime': datasetConfig.BlockCloseDelay,
