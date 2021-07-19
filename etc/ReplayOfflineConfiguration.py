@@ -23,7 +23,7 @@ from T0.RunConfig.Tier0Config import addExpressConfig
 from T0.RunConfig.Tier0Config import setInjectRuns
 from T0.RunConfig.Tier0Config import setStreamerPNN
 from T0.RunConfig.Tier0Config import setEnableUniqueWorkflowName
-
+from T0.RunConfig.Tier0Config import setStreamMem
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
 
@@ -1516,6 +1516,11 @@ ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 
+###################################
+### configure memory for stream ###
+###################################
+setStreamMem(tier0Config,"NanoDST",value=2000)
+setStreamMem(tier0Config,"ScoutingPF",value=2000)
 ###################################
 ### currently inactive settings ###
 ###################################

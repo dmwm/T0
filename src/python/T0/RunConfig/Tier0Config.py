@@ -65,7 +65,7 @@ Tier0Configuration - Global configuration object
 |       |
 |       | |--> Default - Configuration section for repacking defaults
 |       |                (configured just like a repack stream)
-|       |      
+|       |
 |       |--> STREAMNAME - Configuration section for a stream.
 |             |
 |             |--> ProcessingStyle - The processing style for the stream
@@ -127,7 +127,7 @@ Tier0Configuration - Global configuration object
 |             |     |--> ProcessingVersion - processing version
 |             |     |
 |             |     |--> MaxInputRate - max input rate that is accepted for processing
-|             |     |                       (in events per lumi section) 
+|             |     |                       (in events per lumi section)
 |             |     |
 |             |     |--> MaxInputEvents - max input events for express processing job
 |             |     |
@@ -268,7 +268,7 @@ def createTier0Config():
 def retrieveStreamConfig(config, streamName):
     """
     _retrieveStreamConfig_
-    
+
     Lookup the configuration for the given stream.  If the configuration for a
     particular stream is not explicitly defined, return the default configuration.
     """
@@ -290,7 +290,7 @@ def retrieveStreamConfig(config, streamName):
 def deleteStreamConfig(config, streamName):
     """
     _deleteStreamConfig_
-    
+
     Removes a stream configuration
     """
     streamConfig =  getattr(config.Streams, streamName, None)
@@ -302,7 +302,7 @@ def deleteStreamConfig(config, streamName):
 def retrieveDatasetConfig(config, datasetName, fromAddDataset = False):
     """
     _retrieveDatasetConfig_
-    
+
     Lookup the configuration for the given dataset.  If the configuration for a
     particular dataset is not defined return the default configuration.
     """
@@ -354,7 +354,7 @@ def addDataset(config, datasetName, **settings):
                        out into separate sampls in alca skimming
                        (defaults to empty list)
       dqm_sequences - dqm sequences used for reco
-                      (defaults to empty list) 
+                      (defaults to empty list)
       custodial_node - PhEDEx custodial node for this dataset
       custodial_priority - priority for the custodial subscription
                            (defaults to high)
@@ -573,6 +573,18 @@ def setProcessingSite(config, site):
     config.Global.ProcessingSite = site
     return
 
+def setStreamMem(config, streamname, **options):
+    """
+    _SetStreamMem_
+    Define memory usage for any type of streamer configurable.
+    The following keys may be passed:
+        value - size of memory to be assigned 
+    """
+    if 'value' in options:
+        config.Global.StreamMem = options['value']
+
+    return streamname
+
 def setStreamerPNN(config, pnn):
     """
     _setStreamerPNN_
@@ -629,7 +641,7 @@ def setDQMUploadUrl(config, dqmuploadurl):
     _setDQMUploadUrl_
 
     Set the DQM upload Url in the configuration.
-    
+
     """
     config.Global.DQMUploadUrl = dqmuploadurl
     return
@@ -974,7 +986,7 @@ def addConversionConfig(config, streamName, **options):
     streamConfig.Convert.AcqEra = acq_era
     streamConfig.Convert.ProcVers = proc_version
     streamConfig.Convert.ProcString = proc_string
-    
+
     if proc_string == None:
         streamConfig.Convert.ProcessedDataset = "%s-%s" % (acq_era, proc_version)
     else:
@@ -993,7 +1005,7 @@ def addTier1Skim(config, skimName, dataTier, primaryDataset, cmsswVersion,
     skims will be launched as blocks are transfered to the site.  The site name
     must correspond to the site name in the ProdAgent JobQueue.
     """
-    datasetConfig = config.Datasets.section_(primaryDataset)    
+    datasetConfig = config.Datasets.section_(primaryDataset)
 
     skimConfig = ConfigSection(name = "SomeTier1Skim")
     skimConfig.PrimaryDataset = primaryDataset
