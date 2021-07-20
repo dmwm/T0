@@ -283,6 +283,8 @@ def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationM
                 try:
                     upload.uploadTier0Files([filenameDB], username, password)
                 except:
+                    # Remove the re-raising of the exception if you want to resume operations while fixing the issue
+                    raise RuntimeError("Unable to upload T0 files to Dropbox...")
                     logging.exception("Something went wrong with the Dropbox upload...")
                     uploadStatus = False
 
