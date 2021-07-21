@@ -22,6 +22,8 @@ from WMCore.ReqMgr.DataStructs.RequestStatus import REQUEST_START_STATE
 from T0.RunConfig.Tier0Config import retrieveDatasetConfig
 from T0.RunConfig.Tier0Config import addRepackConfig
 from T0.RunConfig.Tier0Config import deleteStreamConfig
+from T0.RunConfig.Tier0Config import setStreamMem
+
 
 from WMCore.WMSpec.StdSpecs.Repack import RepackWorkloadFactory
 from WMCore.WMSpec.StdSpecs.Express import ExpressWorkloadFactory
@@ -382,7 +384,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             streamConfig.Express.ScramArch = tier0Config.Global.ScramArches.get(streamConfig.Express.CMSSWVersion,
                                                                                 tier0Config.Global.DefaultScramArch)
-            
+
             streamConfig.Express.RecoScramArch = None
             if streamConfig.Express.RecoCMSSWVersion != None:
 
@@ -553,16 +555,17 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             taskName = "Repack"
 
             if tier0Config.Global.EnableUniqueWorkflowName:
-                workflowName = "Repack_Run%d_Stream%s_%s_v%s_%s" % (run, stream, 
-                    tier0Config.Global.AcquisitionEra, streamConfig.Repack.ProcessingVersion, 
+                workflowName = "Repack_Run%d_Stream%s_%s_v%s_%s" % (run, stream,
+                    tier0Config.Global.AcquisitionEra, streamConfig.Repack.ProcessingVersion,
                     time.strftime('%y%m%d_%H%M', time.localtime(time.time())))
             else:
                 workflowName = "Repack_Run%d_Stream%s" % (run, stream)
 
             specArguments = {}
+            streamidmem = dict(tier0Config.Global.StreamMem)
 
-            if stream == 'ScoutingPF':
-                specArguments['Memory'] = 2000
+            if stream in streamidmem:
+                specArguments['Memory'] = streamidmem.get(stream)
             else:
                 specArguments['Memory'] = 1000
 
@@ -608,7 +611,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             taskName = "Express"
 
             if tier0Config.Global.EnableUniqueWorkflowName:
-                workflowName = "Express_Run%d_Stream%s_%s_v%s_%s" % (run, stream, 
+                workflowName = "Express_Run%d_Stream%s_%s_v%s_%s" % (run, stream,
                     tier0Config.Global.AcquisitionEra, streamConfig.Express.ProcessingVersion,
                     time.strftime('%y%m%d_%H%M', time.localtime(time.time())))
             else:
