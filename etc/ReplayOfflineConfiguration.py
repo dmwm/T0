@@ -138,7 +138,8 @@ repackVersionOverride = {
     "CMSSW_11_2_2" : defaultCMSSWVersion['default'],
     "CMSSW_11_2_3" : defaultCMSSWVersion['default'],
     "CMSSW_11_2_4" : defaultCMSSWVersion['default'],
-    "CMSSW_11_3_1" : defaultCMSSWVersion['default']
+    "CMSSW_11_3_1" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_2" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -151,7 +152,8 @@ expressVersionOverride = {
     "CMSSW_11_2_2" : defaultCMSSWVersion['default'],
     "CMSSW_11_2_3" : defaultCMSSWVersion['default'],
     "CMSSW_11_2_4" : defaultCMSSWVersion['default'],
-    "CMSSW_11_3_1" : defaultCMSSWVersion['default']
+    "CMSSW_11_3_1" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_2" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
