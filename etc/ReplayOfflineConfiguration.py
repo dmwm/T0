@@ -1519,8 +1519,7 @@ ignoreStream(tier0Config, "streamDQMRates")
 ###################################
 ### configure memory for stream ###
 ###################################
-setStreamMem(tier0Config,"NanoDST",value=2000)
-setStreamMem(tier0Config,"ScoutingPF",value=2000)
+setStreamMem(tier0Config, NanoDST = 2000, ScoutingPF = 2000)
 ###################################
 ### currently inactive settings ###
 ###################################

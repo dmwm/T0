@@ -1020,3 +1020,17 @@ def addTier1Skim(config, skimName, dataTier, primaryDataset, cmsswVersion,
 
     datasetConfig.Tier1Skims.append(skimConfig)
     return
+
+def setStreamMem(config, *streamid, **streamidvalue):
+    """
+    _setStreamMem_
+    For each streamid and streamidvalue in KB, create a dict to update the max
+    memory within the specArgument['Memory']
+    """
+
+    streamidmem = {}
+    for i, a in enumerate(streamid):
+        streamidmem['arg%s' % (i+1)] = a
+    streamidmem.update(streamidvalue)
+    config.Global.StreamMem = streamidmem
+    return

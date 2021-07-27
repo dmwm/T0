@@ -24,6 +24,7 @@ from T0.RunConfig.Tier0Config import addRepackConfig
 from T0.RunConfig.Tier0Config import deleteStreamConfig
 from T0.RunConfig.Tier0Config import setStreamMem
 
+
 from WMCore.WMSpec.StdSpecs.Repack import RepackWorkloadFactory
 from WMCore.WMSpec.StdSpecs.Express import ExpressWorkloadFactory
 from WMCore.WMSpec.StdSpecs.PromptReco import PromptRecoWorkloadFactory
@@ -561,9 +562,10 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 workflowName = "Repack_Run%d_Stream%s" % (run, stream)
 
             specArguments = {}
+            streamidmem = dict(tier0Config.Global.StreamMem)
 
-            if stream == setStreamMem(tier0Config,stream):
-                specArguments['Memory']=tier0Config.Global.StreamMem
+            if stream in streamidmem:
+                specArguments['Memory'] = streamidmem.get(stream)
             else:
                 specArguments['Memory']=1000
 
