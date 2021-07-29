@@ -31,7 +31,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [341169,341754,338628,338714,342154])
+setInjectRuns(tier0Config, [343082, 343070, 343007])
 
 # Settings up sites
 processingSite = "T0_CH_CERN"
@@ -73,7 +73,7 @@ setDQMUploadUrl(tier0Config, "https://cmsweb.cern.ch/dqm/dev;https://cmsweb-test
 setPromptCalibrationConfig(tier0Config,
                            alcaHarvestTimeout=12*3600,
                            alcaHarvestCondLFNBase="/store/unmerged/tier0_harvest",
-                           alcaHarvestLumiURL="root://eoscms.cern.ch//eos/cms/store/unmerged/tier0_harvest",
+                           alcaHarvestLumiURL="root://eoscms.cern.ch//eos/cms/tier0/store/unmerged/tier0_harvest",
                            conditionUploadTimeout=18*3600,
                            dropboxHost="webcondvm.cern.ch",
                            validationMode=True)
@@ -110,9 +110,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "113X_dataRun3_Express_Candidate_2021_07_02_14_38_40"
-promptrecoGlobalTag = "113X_dataRun3_Prompt_v3"
-alcap0GlobalTag = "113X_dataRun3_Prompt_v3"
+expressGlobalTag = "113X_dataRun3_Express_Candidate_2021_07_28_16_24_26"
+promptrecoGlobalTag = "113X_dataRun3_Prompt_Candidate_2021_07_28_15_38_40"
+alcap0GlobalTag = "113X_dataRun3_Prompt_Candidate_2021_07_28_15_38_40"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
