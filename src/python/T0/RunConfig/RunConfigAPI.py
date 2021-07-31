@@ -382,7 +382,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             streamConfig.Express.ScramArch = tier0Config.Global.ScramArches.get(streamConfig.Express.CMSSWVersion,
                                                                                 tier0Config.Global.DefaultScramArch)
-            
+
             streamConfig.Express.RecoScramArch = None
             if streamConfig.Express.RecoCMSSWVersion != None:
 
@@ -553,18 +553,20 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             taskName = "Repack"
 
             if tier0Config.Global.EnableUniqueWorkflowName:
-                workflowName = "Repack_Run%d_Stream%s_%s_v%s_%s" % (run, stream, 
-                    tier0Config.Global.AcquisitionEra, streamConfig.Repack.ProcessingVersion, 
+                workflowName = "Repack_Run%d_Stream%s_%s_v%s_%s" % (run, stream,
+                    tier0Config.Global.AcquisitionEra, streamConfig.Repack.ProcessingVersion,
                     time.strftime('%y%m%d_%H%M', time.localtime(time.time())))
             else:
                 workflowName = "Repack_Run%d_Stream%s" % (run, stream)
 
             specArguments = {}
 
-            if stream == 'ScoutingPF':
-                specArguments['Memory'] = 2000
+            streamConfMemory = dict(streamConfig.Repack.SetConfStreamMemory)
+
+            if stream in streamConfMemory:
+                specArguments['Memory'] = streamConfMemory.get(stream)
             else:
-                specArguments['Memory'] = 1000
+                specArguments['Memory'] = streamConfig.Repack.SetStreamMemory
 
             specArguments['Requestor'] = "Tier0"
             specArguments['RequestName'] = workflowName
@@ -608,7 +610,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             taskName = "Express"
 
             if tier0Config.Global.EnableUniqueWorkflowName:
-                workflowName = "Express_Run%d_Stream%s_%s_v%s_%s" % (run, stream, 
+                workflowName = "Express_Run%d_Stream%s_%s_v%s_%s" % (run, stream,
                     tier0Config.Global.AcquisitionEra, streamConfig.Express.ProcessingVersion,
                     time.strftime('%y%m%d_%H%M', time.localtime(time.time())))
             else:

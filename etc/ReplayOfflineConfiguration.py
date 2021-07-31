@@ -167,6 +167,8 @@ addRepackConfig(tier0Config, "Default",
                 maxInputFiles=1000,
                 maxLatency=24 * 3600,
                 blockCloseDelay=1200,
+                setStreamMemory=2000,
+                #setConfStreamMemory={"NanoDST" : 2000},
                 versionOverride=repackVersionOverride)
 
 addDataset(tier0Config, "Default",
