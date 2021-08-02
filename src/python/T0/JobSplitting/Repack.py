@@ -147,7 +147,7 @@ class Repack(JobFactory):
         Return age of youngest streamer in filesByLumi
         """
         maxInsertTime = 0
-        for filesInfos in filesByLumi.values():
+        for filesInfos in list(filesByLumi.values()):
             for fileInfo in filesInfos:
                 if fileInfo['insert_time'] > maxInsertTime:
                     maxInsertTime = fileInfo['insert_time']

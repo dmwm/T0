@@ -91,11 +91,11 @@ def diagnoseRun(runNumber, doChange):
             logging.error("Number of instances in SM don't match.")
         if result["instancesWithEoR"] and result["instancesWithoutEoR"]:
             for instance in result["instancesWithoutEoR"]:
-                print "Instance %s didn't write an EoR record." % instance
+                print("Instance %s didn't write an EoR record." % instance)
         elif result["instancesWithEoR"]:
-            print "Run %s has already ended according to SM, but not in T0AST. Check the Tier0Feeder" % runNumber
+            print("Run %s has already ended according to SM, but not in T0AST. Check the Tier0Feeder" % runNumber)
         else:
-            print "Run %s has not ended yet according to SM." % runNumber
+            print("Run %s has not ended yet according to SM." % runNumber)
         return 0
 
     findClosedRunsDAO = daoFactorySM(classname = "RunLumiCloseout.FindClosedRuns")
@@ -112,14 +112,14 @@ def diagnoseRun(runNumber, doChange):
     activeWorkflows = requestDBreader.getRequestByStatus(["new"])
     closedWorkflows = requestDBreader.getRequestByStatus(all_status)
     regex = re.compile(r"^[\w]+_Run%s_[\w]+$" % runNumber)
-    matchingWorkflows = filter(regex.match, activeWorkflows)
-    matchingAllWorkflows = filter(regex.match, closedWorkflows)
+    matchingWorkflows = list(filter(regex.match, activeWorkflows))
+    matchingAllWorkflows = list(filter(regex.match, closedWorkflows))
 
     if not matchingWorkflows and not matchingAllWorkflows:
-        print "Run is not yet available in WMStats."
+        print("Run is not yet available in WMStats.")
         return 0
     elif not matchingWorkflows:
-        print "All workflows associated to the run are closed already."
+        print("All workflows associated to the run are closed already.")
         return 0
 
     for workflow in matchingWorkflows:
@@ -135,14 +135,14 @@ def diagnoseRun(runNumber, doChange):
     for entry in closedRecords:
         if entry["closed_lumi_count"] != entry["expected_lumi_count"] or \
            entry["closed_lumi_count"] != entry["max_lumi"]:
-            affectedStreams[entry["stream_id"]] = range(1, entry["expected_lumi_count"] + 1)
+            affectedStreams[entry["stream_id"]] = list(range(1, entry["expected_lumi_count"] + 1))
 
     # If there are lumis with mismatching EoLS, report on the specific lumis
     if affectedStreams:
-        print "There are missing EoLS records"
+        print("There are missing EoLS records")
         logging.debug("Checking individual streams")
         closedLumisDAO = daoFactoryT0AST(classname = "RunLumiCloseout.GetClosedLumisForStream")
-        closedLumis = closedLumisDAO.execute(run = runNumber, streams = affectedStreams.keys())
+        closedLumis = closedLumisDAO.execute(run = runNumber, streams = list(affectedStreams.keys()))
 
         for stream in affectedStreams:
             logging.debug("Stream %s has lumis missing EoLS" % stream)
@@ -157,7 +157,7 @@ def diagnoseRun(runNumber, doChange):
                 lumiRanges = buildLumiRanges(lumis)
                 msg = "Stream %s has missing EoLS records in lumis: %s" % (closedLumis[stream]["name"],
                                                                                     str(sorted(lumiRanges)))
-                print msg
+                print(msg)
 
             # Extra closed lumi section records found
             if spuriousLumis:
@@ -165,7 +165,7 @@ def diagnoseRun(runNumber, doChange):
                 lumiRanges = buildLumiRanges(lumis)
                 msg = "Stream %s has spurious EoLS records in lumis: %s" % (closedLumis[stream]["name"],
                                                                                      str(sorted(lumiRanges)))
-                print msg
+                print(msg)
         return 0
 
     logging.debug("There are no EoLS missing records")
@@ -176,15 +176,15 @@ def diagnoseRun(runNumber, doChange):
 
     # Not problem so far, point the user to other systems.
     if not openLumis:
-        print "No problem was found, check WMStats monitoring if run is still marked as Active."
+        print("No problem was found, check WMStats monitoring if run is still marked as Active.")
         return 0
 
     # Inform about the lumis with missing/extra streamers
     for streamKey in openLumis:
-        print "Stream %s has lumis with inconsistent data" % streamKey[1]
+        print("Stream %s has lumis with inconsistent data" % streamKey[1])
         for lumi in openLumis[streamKey]:
             msg = "Lumi %s has a mismatching number of streamers:\n Expected: %s, Found: %s" % (lumi, openLumis[streamKey][lumi][0], openLumis[streamKey][lumi][1])
-            print msg
+            print(msg)
 
     if doChange:
         # We are changing T0AST to closeout the run
@@ -219,14 +219,14 @@ def diagnoseRun(runNumber, doChange):
             deleteWMBSFileDAO = daoFactoryWMBS(classname = "Files.Delete")
             if fileList:
                 # Get rid of the remaining streamer files
-                deleteStreamerDAO.execute(fileList.keys(), conn = trans.conn, transaction = True)
-                deleteWMBSFileDAO.execute(fileList.values(), conn = trans.conn, transaction = True)
+                deleteStreamerDAO.execute(list(fileList.keys()), conn = trans.conn, transaction = True)
+                deleteWMBSFileDAO.execute(list(fileList.values()), conn = trans.conn, transaction = True)
 
             # Everything went well, commit it
             trans.commit()
-            print "Done with the changes, run should close soon."
+            print("Done with the changes, run should close soon.")
             return 0
-        except Exception, ex:
+        except Exception as ex:
             if trans:
                 # In case of error, rollback and close connection
                 trans.rollbackForError()
@@ -255,7 +255,7 @@ def main():
     (options, args) = parser.parse_args()
 
     if options.verbose and options.silent:
-        print "Conflicting options: silent and verbose. Exiting."
+        print("Conflicting options: silent and verbose. Exiting.")
         return 1
     loggingLevel = logging.INFO
     if options.silent:
