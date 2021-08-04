@@ -20,6 +20,7 @@ from WMCore.WMBS.Fileset import Fileset
 from WMCore.ReqMgr.DataStructs.RequestStatus import REQUEST_START_STATE
 
 from T0.RunConfig.Tier0Config import retrieveDatasetConfig
+from T0.RunConfig.Tier0Config import retrieveSiteConfig
 from T0.RunConfig.Tier0Config import addRepackConfig
 from T0.RunConfig.Tier0Config import deleteStreamConfig
 
@@ -711,10 +712,10 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                       'GracePeriod': 3600,
                                       'Dashboard': "t0" } )
 
-            if tier0Config.Global.ProcessingSite=='T0_CH_CERN':
-                wmSpec.setTaskEnvironmentVariables({'WMAGENT_SITE_CONFIG_OVERRIDE':tier0Config.Global.siteLocalConfig})
-                wmSpec.setOverrideCatalog(tier0Config.Global.overrideCatalog)
-                wmSpec.updateArguments( { 'SiteWhitelist': [ 'T2_CH_CERN' ] } )
+            if tier0Config.Global.ProcessingSite!=tier0Config.Global.StorageSite:
+                site = retrieveSiteConfig(tier0Config,tier0Config.Global.StorageSite)
+                wmSpec.setTaskEnvironmentVariables({'WMAGENT_SITE_CONFIG_OVERRIDE':site.SiteLocalConfig})
+                wmSpec.setOverrideCatalog(site.OverrideCatalog)
 
             wmbsHelper = WMBSHelper(wmSpec, taskName, cachepath = specDirectory)
 
@@ -1123,14 +1124,13 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                          'dn' : "Dirk.Hufnagel@cern.ch" } )
 
                 #Overriding site configuration
-                if 'T0_CH_CERN' in datasetConfig.SiteWhitelist:
-                    wmSpec.setTaskEnvironmentVariables({'WMAGENT_SITE_CONFIG_OVERRIDE':tier0Config.Global.siteLocalConfig})
-                    wmSpec.setOverrideCatalog(tier0Config.Global.overrideCatalog)
+                if tier0Config.Global.ProcessingSite!=tier0Config.Global.StorageSite:
+                    site = retrieveSiteConfig(tier0Config,tier0Config.Global.StorageSite)
+                    wmSpec.setTaskEnvironmentVariables({'WMAGENT_SITE_CONFIG_OVERRIDE':site.SiteLocalConfig})
+                    wmSpec.setOverrideCatalog(site.OverrideCatalog)
 
                 #Overriding processing site in case we using T0 disk
-                siteWhitelist = [ 'T2_CH_CERN' if s=='T0_CH_CERN' else s for s in datasetConfig.SiteWhitelist]
-
-                wmSpec.updateArguments( { 'SiteWhitelist': siteWhitelist,
+                wmSpec.updateArguments( { 'SiteWhitelist': datasetConfig.SiteWhitelist,
                                           'SiteBlacklist': [],
                                           'TrustSitelists': "True",
                                           'BlockCloseMaxWaitTime': datasetConfig.BlockCloseDelay,

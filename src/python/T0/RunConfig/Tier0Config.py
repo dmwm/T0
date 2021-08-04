@@ -6,6 +6,12 @@ Utility methods for creating and manipulating a Tier0 configuration
 The Tier0 configuration has the following form:
 
 Tier0Configuration - Global configuration object
+| | | |--> Sites - Configuration parameter for sites that are going
+| | |        |     to be use for processing and storage
+| | |        |
+| | |        |--> OverrideCatalog - Path to this site's trivial catalog file
+| | |        |
+| | |        |--> SiteLocalConfig - Path to this site's site local config file
 | | |
 | | |--> Global - Configuration parameters that do not belong to a particular
 | |       |       stream or dataset and can be applied to an entire run.
@@ -240,6 +246,7 @@ def createTier0Config():
     tier0Config = Configuration()
     tier0Config.section_("Streams")
     tier0Config.section_("Datasets")
+    tier0Config.section_("Sites")
     tier0Config.section_("Global")
 
     tier0Config.Global.InjectRuns = None
@@ -249,13 +256,11 @@ def createTier0Config():
     tier0Config.Global.ScramArches = {}
     tier0Config.Global.Backfill = None
 
-    tier0Config.Global.ProcessingSite = "T0_CH_CERN"
+    tier0Config.Global.ProcessingSite = "T2_CH_CERN"
 
     tier0Config.Global.StreamerPNN = "T0_CH_CERN_Disk"
 
-    tier0Config.Global.overrideCatalog = "trivialcatalog_file:/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/PhEDEx/storage.xml?protocol=eos"
-
-    tier0Config.Global.siteLocalConfig = "/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/JobConfig/site-local-config.xml"
+    tier0Config.Global.StorageSite = "T0_CH_CERN_Disk"
 
     tier0Config.Global.DQMDataTier = "DQMIO"
 
@@ -296,6 +301,40 @@ def deleteStreamConfig(config, streamName):
     streamConfig =  getattr(config.Streams, streamName, None)
     if streamConfig != None:
         delattr(config.Streams, streamName)
+
+    return
+
+def retrieveSiteConfig(config, siteName):
+    """
+    _retrieveSiteConfig_
+    
+    Lookup the configuration for the given site.  If the configuration for a
+    particular site is not explicitly defined, return the default configuration.
+    """
+    siteConfig = getattr(config.Sites, siteName, None)
+    if siteConfig == None:
+
+        defaultInstance = getattr(config.Sites, "Default", None)
+
+        if defaultInstance == None:
+            siteConfig = config.Sites.section_(siteName)
+        else:
+            siteConfig = copy.deepcopy(defaultInstance)
+            siteConfig._internal_name = siteName
+            siteConfig.Name = siteName
+            setattr(config.Sites, siteName, siteConfig)
+
+    return siteConfig
+
+def deleteSiteConfig(config, siteName):
+    """
+    _deleteSiteConfig_
+    
+    Removes a site configuration
+    """
+    siteConfig =  getattr(config.Sites, siteName, None)
+    if siteConfig != None:
+        delattr(config.Sites, siteName)
 
     return
 
@@ -571,6 +610,15 @@ def setProcessingSite(config, site):
     Set the (CERN) site used for processing.
     """
     config.Global.ProcessingSite = site
+    return
+
+def setStorageSite(config, site):
+    """
+    _setStorageSite_
+
+    Set the (CERN) site used for disk storage.
+    """
+    config.Global.StorageSite = site
     return
 
 def setStreamerPNN(config, pnn):
@@ -865,6 +913,25 @@ def addExpressConfig(config, streamName, **options):
     streamConfig.Express.PhEDExGroup = options.get("phedexGroup", "express")
 
     streamConfig.Express.BlockCloseDelay = options.get("blockCloseDelay", 3600)
+
+    return
+
+def addSiteConfig(config, siteName, **options):
+    """
+    _addSiteConfig_
+    Add a site configuration.
+    """
+    siteConfig = retrieveSiteConfig(config, siteName)
+
+    if hasattr(siteConfig, "OverrideCatalog"):
+        siteConfig.OverrideCatalog = options.get("overrideCatalog", siteConfig.OverrideCatalog)
+    else:
+        siteConfig.OverrideCatalog = options.get("overrideCatalog", "trivialcatalog_file:/cvmfs/cms.cern.ch/local/T0_CH_CERN/PhEDEx/storage.xml?protocol=eos")
+
+    if hasattr(siteConfig, "SiteLocalConfig"):
+        siteConfig.SiteLocalConfig = options.get("siteLocalConfig", siteConfig.SiteLocalConfig)
+    else:
+        siteConfig.SiteLocalConfig = options.get("siteLocalConfig", "/cvmfs/cms.cern.ch/SITECONF/local/JobConfig/site-local-config.xml")
 
     return
 

@@ -20,8 +20,10 @@ from T0.RunConfig.Tier0Config import setConfigVersion
 from T0.RunConfig.Tier0Config import ignoreStream
 from T0.RunConfig.Tier0Config import addRepackConfig
 from T0.RunConfig.Tier0Config import addExpressConfig
+from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setInjectRuns
 from T0.RunConfig.Tier0Config import setStreamerPNN
+from T0.RunConfig.Tier0Config import setStorageSite
 from T0.RunConfig.Tier0Config import setEnableUniqueWorkflowName
 
 # Create the Tier0 configuration object
@@ -34,8 +36,19 @@ setConfigVersion(tier0Config, "replace with real version")
 setInjectRuns(tier0Config, [341169,341754,338628,338714,342154])
 
 # Settings up sites
-processingSite = "T0_CH_CERN"
+processingSite = "T2_CH_CERN"
+storageSite = "T0_CH_CERN_Disk"
 streamerPNN = "T0_CH_CERN_Disk"
+
+addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
+                siteLocalConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/JobConfig/site-local-config.xml",
+                overrideCatalog="trivialcatalog_file:/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/PhEDEx/storage.xml?protocol=eos"
+                )
+
+addSiteConfig(tier0Config, "EOS_PILOT",
+                siteLocalConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/JobConfig/site-local-config_EOS_PILOT.xml",
+                overrideCatalog="trivialcatalog_file:/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/PhEDEx/storage_EOS_PILOT.xml?protocol=eos"
+                )
 
 # Set global parameters:
 #  Acquisition era
@@ -50,6 +63,7 @@ setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
 setProcessingSite(tier0Config, processingSite)
 setStreamerPNN(tier0Config, streamerPNN)
+setStorageSite(tier0Config, storageSite)
 
 # Override for DQM data tier
 setDQMDataTier(tier0Config, "DQMIO")
