@@ -789,6 +789,11 @@ def addRepackConfig(config, streamName, **options):
     else:
         streamConfig.Repack.BlockCloseDelay = options.get("blockCloseDelay", 24 * 3600)
 
+    if hasattr(streamConfig.Repack, "MaxMemory"):
+        streamConfig.Repack.MaxMemory = options.get("maxMemory", streamConfig.Repack.MaxMemory)
+    else:
+        streamConfig.Repack.MaxMemory = options.get("maxMemory", 2000)
+
     return
 
 def addExpressConfig(config, streamName, **options):
