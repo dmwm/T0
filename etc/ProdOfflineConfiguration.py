@@ -179,6 +179,7 @@ addRepackConfig(tier0Config, "Default",
                 maxInputFiles=1000,
                 maxLatency=24 * 3600,
                 blockCloseDelay=24 * 3600,
+                maxMemory=2000,
                 versionOverride=repackVersionOverride)
 
 addDataset(tier0Config, "Default",
