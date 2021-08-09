@@ -1130,7 +1130,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                           'SiteBlacklist': [],
                                           'TrustSitelists': "True",
                                           'BlockCloseMaxWaitTime': datasetConfig.BlockCloseDelay,
-                                          'SoftTimeout': 604800, #7 days, effectively disabled
+                                          'SoftTimeout': 165600, #46 hours
                                           'GracePeriod': 3600,
                                           'Dashboard': "t0" } )
 

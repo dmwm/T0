@@ -204,11 +204,6 @@ echo "config.AgentStatusWatcher.enabled = False" >> ./config/tier0/config.py
 echo "config.AgentStatusWatcher.onlySSB = False" >> ./config/tier0/config.py
 
 #
-# Increase ErrorHandler maxFailTime
-#
-echo "config.ErrorHandler.maxFailTime = 604800" >> ./config/tier0/config.py
-
-#
 # JobAccountant Repack Error Dataset settings
 #
 echo 'config.JobAccountant.maxAllowedRepackOutputSize = 24 * 1024 * 1024 * 1024' >> ./config/tier0/config.py
@@ -258,8 +253,8 @@ echo "config.AgentStatusWatcher.runningRepackPercent = 10" >> ./config/tier0/con
 
 #Configurable retry number for failing jobs before they go to paused
 echo "config.RetryManager.PauseAlgo.section_('Express')" >> ./config/tier0/config.py
-echo "config.RetryManager.PauseAlgo.Express.retryErrorCodes = { 8001: 0, 70: 0, 50513: 0, 50660: 0, 50661: 0, 71304: 0, 99109: 0, 99303: 0, 99400: 0, 8001: 0, 50115: 0 }" >> ./config/tier0/config.py
+echo "config.RetryManager.PauseAlgo.Express.retryErrorCodes = { 8001: 0, 70: 0, 50513: 0, 50660: 0, 50661: 0, 50664: 0, 71304: 0, 99109: 0, 99303: 0, 99400: 0, 8001: 0, 50115: 0 }" >> ./config/tier0/config.py
 echo "config.RetryManager.PauseAlgo.section_('Processing')" >> ./config/tier0/config.py
-echo "config.RetryManager.PauseAlgo.Processing.retryErrorCodes = { 8001: 0, 70: 0, 50513: 0, 50660: 0, 50661: 0, 71304: 0, 99109: 0, 99303: 0, 99400: 0, 8001: 0, 50115: 0 }" >> ./config/tier0/config.py
+echo "config.RetryManager.PauseAlgo.Processing.retryErrorCodes = { 8001: 0, 70: 0, 50513: 0, 50660: 0, 50661: 0, 50664: 0, 71304: 0, 99109: 0, 99303: 0, 99400: 0, 8001: 0, 50115: 0 }" >> ./config/tier0/config.py
 echo "config.RetryManager.PauseAlgo.section_('Repack')" >> ./config/tier0/config.py
-echo "config.RetryManager.PauseAlgo.Repack.retryErrorCodes = { 8001: 0, 70: 0, 50513: 0, 50660: 0, 50661: 0, 71304: 0, 99109: 0, 99303: 0, 99400: 0, 8001: 0, 50115: 0 }" >> ./config/tier0/config.py
+echo "config.RetryManager.PauseAlgo.Repack.retryErrorCodes = { 8001: 0, 70: 0, 50513: 0, 50660: 0, 50661: 0, 50664: 0, 71304: 0, 99109: 0, 99303: 0, 99400: 0, 8001: 0, 50115: 0 }" >> ./config/tier0/config.py
