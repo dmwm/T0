@@ -37,8 +37,14 @@ setInjectMinRun(tier0Config, 341801)
 setInjectMaxRun(tier0Config, 9999999)
 
 # Settings up sites
-processingSite = "T0_CH_CERN"
+processingSite = "T2_CH_CERN"
+storageSite = "T0_CH_CERN_Disk"
 streamerPNN = "T0_CH_CERN_Disk"
+
+addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
+                siteLocalConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/JobConfig/site-local-config.xml",
+                overrideCatalog="trivialcatalog_file:/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/PhEDEx/storage.xml?protocol=eos"
+                )
 
 # Set global parameters:
 #  Acquisition era
