@@ -219,6 +219,7 @@ addDataset(tier0Config, "Default",
            blockCloseDelay=1200,
            timePerEvent=5,
            sizePerEvent=1500,
+           diskLifetime=18*30*24*60*60,#lifetime of container rules given in seconds
            scenario=ppScenario)
 
 #############################
@@ -272,6 +273,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  blockCloseDelay=1200,
                  timePerEvent=4, #I have to get some stats to set this properly
                  sizePerEvent=1700, #I have to get some stats to set this properly
+                 diskLifetime=12*30*24*60*60,
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "HLTMonitor",
@@ -316,6 +318,7 @@ addExpressConfig(tier0Config, "Calibration",
                  blockCloseDelay=2 * 3600,
                  timePerEvent=4,
                  sizePerEvent=1700,
+                 diskLifetime=6*30*24*60*60,
                  versionOverride=expressVersionOverride,
                  dataType="data",
                  diskNode="T0_CH_CERN_Disk")
@@ -469,6 +472,7 @@ for dataset in DATASETS:
                physics_skims=["CosmicSP", "CosmicTP", "LogError", "LogErrorMonitor"],
                timePerEvent=0.5,
                sizePerEvent=155,
+               diskLifetime=24*30*24*60*60,
                scenario=cosmicsScenario)
 
 DATASETS = ["DisplacedJet"]
