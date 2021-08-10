@@ -549,6 +549,11 @@ def addDataset(config, datasetName, **settings):
     else:
         datasetConfig.SiteWhitelist = settings.get("siteWhitelist", [ config.Global.ProcessingSite ])
 
+    if hasattr(datasetConfig, "Dataset_lifetime"):
+        datasetConfig.datasetLifetime = settings.get("dataset_lifetime", datasetConfig.datasetLifetime)
+    else:
+        datasetConfig.datasetLifetime = settings.get("dataset_lifetime", 48*30*24*60*60)
+
     #
     # finally some parameters for which Default isn't used
     #
@@ -931,6 +936,11 @@ def addExpressConfig(config, streamName, **options):
     streamConfig.Express.PhEDExGroup = options.get("phedexGroup", "express")
 
     streamConfig.Express.BlockCloseDelay = options.get("blockCloseDelay", 3600)
+
+    if hasattr(streamConfig, "Dataset_lifetime"):
+        streamConfig.Express.datasetLifetime = options.get("dataset_lifetime", streamConfig.Express.datasetLifetime)
+    else:
+        streamConfig.Express.datasetLifetime = options.get("dataset_lifetime", 48*30*24*60*60)
 
     return
 

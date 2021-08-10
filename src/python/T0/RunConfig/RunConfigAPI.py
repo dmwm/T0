@@ -354,7 +354,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                             'autoApproveSites' : autoApproveSites,
                                             'priority' : "high",
                                             'primaryDataset' : specialDataset,
-                                            'deleteFromSource' : True } )
+                                            'deleteFromSource' : True,
+                                            'datasetLifetime' : streamConfig.Express.datasetLifetime } )
 
             alcaSkim = None
             if len(streamConfig.Express.AlcaSkims) > 0:
@@ -487,7 +488,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                             'priority' : "high",
                                             'primaryDataset' : dataset,
                                             'deleteFromSource' : True,
-                                            'dataTier' : "RAW" } )
+                                            'dataTier' : "RAW",
+                                            'datasetLifetime' : datasetConfig.datasetLifetime } )
 
                 #
                 # set subscriptions for error dataset
@@ -500,7 +502,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                             'priority' : "high",
                                             'primaryDataset' : "%s-Error" % dataset,
                                             'deleteFromSource' : True,
-                                            'dataTier' : "RAW" } )
+                                            'dataTier' : "RAW",
+                                            'datasetLifetime' : datasetConfig.datasetLifetime } )
 
 
             elif streamConfig.ProcessingStyle == "Express":
@@ -543,7 +546,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                                 'autoApproveSites' : autoApproveSites,
                                                 'priority' : "high",
                                                 'primaryDataset' : dataset,
-                                                'deleteFromSource' : True } )
+                                                'deleteFromSource' : True,
+                                                'datasetLifetime' : datasetConfig.datasetLifetime } )
 
         #
         # finally create WMSpec
@@ -944,7 +948,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                                 'useSkim' : True,
                                                 'isSkim' : False,
                                                 'deleteFromSource' : True,
-                                                'dataTier' : dataTier } )
+                                                'dataTier' : dataTier,
+                                                'datasetLifetime' : datasetConfig.datasetLifetime } )
 
                     for dataTier in skimDataTiers:
                         subscriptions.append( { 'custodialSites' : [phedexConfig['tape_node']],
@@ -959,7 +964,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                                 'useSkim' : True,
                                                 'isSkim' : True,
                                                 'deleteFromSource' : True,
-                                                'dataTier' : dataTier } )
+                                                'dataTier' : dataTier,
+                                                'dataset_lifetime' : datasetConfig.Dataset_lifetime } )
 
                     for dataTier in tapeDataTiers - diskDataTiers:
                         subscriptions.append( { 'custodialSites' : [phedexConfig['tape_node']],
@@ -971,7 +977,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                                 'useSkim' : True,
                                                 'isSkim' : False,
                                                 'deleteFromSource' : True,
-                                                'dataTier' : dataTier } )
+                                                'dataTier' : dataTier,
+                                                'datasetLifetime' : datasetConfig.datasetLifetime } )
 
                     for dataTier in alcaDataTiers:
                         subscriptions.append( { 'custodialSites' : [phedexConfig['tape_node']],
@@ -983,7 +990,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                                 'useSkim' : True,
                                                 'isSkim' : True,
                                                 'deleteFromSource' : True,
-                                                'dataTier' : dataTier } )
+                                                'dataTier' : dataTier,
+                                                'datasetLifetime' : datasetConfig.datasetLifetime } )
 
                     for dataTier in diskDataTiers - tapeDataTiers:
 
@@ -1001,7 +1009,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                                 'useSkim' : True,
                                                 'isSkim' : False,
                                                 'deleteFromSource' : True,
-                                                'dataTier' : dataTier } )
+                                                'dataTier' : dataTier,
+                                                'datasetLifetime' : datasetConfig.datasetLifetime } )
 
                 elif phedexConfig['archival_node'] != None:
 
@@ -1014,7 +1023,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                                 'priority' : "high",
                                                 'primaryDataset' : dataset,
                                                 'deleteFromSource' : True,
-                                                'dataTier' : dataTier } )
+                                                'dataTier' : dataTier,
+                                                'datasetLifetime' : datasetConfig.datasetLifetime } )
 
             writeTiers = []
             if datasetConfig.WriteRECO:
