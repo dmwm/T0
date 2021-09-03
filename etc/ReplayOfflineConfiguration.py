@@ -435,6 +435,18 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
 ### Standard Physics PDs (2017) ###
 ###################################
 
+DATASETS = ["DoubleMuon"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_reco=True,
+               write_dqm=True,
+               alca_producers=["TkAlZMuMu", "TkAlDiMuonAndVertex"],
+               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon"],
+               physics_skims=["LogError", "LogErrorMonitor"],
+               scenario=ppScenario)
+
 DATASETS = ["SingleMuon"] # SingleMuonTnP only for 2017 ppRef run
 
 for dataset in DATASETS:
