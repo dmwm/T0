@@ -104,7 +104,10 @@ defaultCMSSWVersion = {
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "slc7_amd64_gcc900")
+from T0.RunConfig.Tier0Config import setScramArch
+
+setDefaultScramArch(tier0Config, "slc7_amd64_gcc630")
+setScramArch(tier0Config, "CMSSW_12_0_0", "slc7_amd64_gcc900")
 
 # Configure scenarios
 ppScenario = "ppEra_Run2_2018"
