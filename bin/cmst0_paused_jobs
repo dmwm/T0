@@ -59,8 +59,7 @@ class PausedJobsChecker:
         list of fully loaded WMBS Job objects
         """
         transitions = Transitions()
-        pausedStates = filter(lambda x : x.find('paused') != -1,
-                              transitions.keys())
+        pausedStates = [x for x in list(transitions.keys()) if x.find('paused') != -1]
 
         pausedJobs = []
         for pausedType in pausedStates:
@@ -166,7 +165,7 @@ def buildSLSXML(config, availability, pausedJobs):
         outputFile = open(os.path.join(config.Settings.xmlDir, xmlFile), 'w')
         outputFile.write(xml)
     except:
-        print "Couldn't write the XML file"
+        print("Couldn't write the XML file")
         traceback.print_exc()
     finally:
         outputFile.close()
@@ -184,7 +183,7 @@ def main():
     """
     try:
         # Load only the relevant alarm configuration
-        if os.environ.has_key("config"):
+        if "config" in os.environ:
             os.environ['WMAGENT_CONFIG'] = os.path.join(os.environ.get("config"), 'config.py')
         
         configPath = os.path.join(os.environ.get("SLS_CONFIG") or
@@ -198,14 +197,14 @@ def main():
         try:
             checker = PausedJobsChecker()
             jobsByWorkflow = checker.getJobsByWorkflow()
-        except Exception, ex:
-            print "Exception in checker procedure:"
-            print str(ex)
-            print traceback.format_exc()
+        except Exception as ex:
+            print("Exception in checker procedure:")
+            print(str(ex))
+            print(traceback.format_exc())
     
         processPausedJobInformation(config, jobsByWorkflow)
 
-    except Exception, e:
+    except Exception as e:
         timezone = str(int(-time.timezone / 3600)).zfill(2)
         timestamp = time.strftime("%Y-%m-%dT%H:%M:%S+")
         timestamp += "%s:00" % timezone

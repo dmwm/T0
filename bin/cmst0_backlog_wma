@@ -177,7 +177,7 @@ def buildSLSXML(config, jobCountsByType, availability):
         outputFile = open(os.path.join(config.Settings.xmlDir, xmlFile), 'w')
         outputFile.write(xml)
     except:
-        print "Couldn't write the XML file"
+        print("Couldn't write the XML file")
         traceback.print_exc()
     finally:
         outputFile.close()
@@ -192,7 +192,7 @@ def main():
     """
     try:
         # Check if the wmagent config file path exists in the environment
-        if os.environ.has_key("config"):
+        if "config" in os.environ:
             os.environ['WMAGENT_CONFIG'] = os.path.join(os.environ.get("config"), 'config.py')
         
         config = setup()
@@ -201,7 +201,7 @@ def main():
         buildSLSXML(config, jobCountsByType, availability)
         return 0
     
-    except Exception, e:
+    except Exception as e:
         timezone = str(int(-time.timezone / 3600)).zfill(2)
         timestamp = time.strftime("%Y-%m-%dT%H:%M:%S+")
         timestamp += "%s:00" % timezone

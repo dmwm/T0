@@ -6,7 +6,7 @@ _Tier0Feeder_
 Component wrapper, for real work look at Tier0FeederPoller
 
 """
-from __future__ import print_function
+
 import logging
 import threading
 

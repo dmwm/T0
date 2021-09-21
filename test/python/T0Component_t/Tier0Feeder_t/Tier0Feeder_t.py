@@ -5,7 +5,7 @@ _Tier0Feeder_t_
 Testing the Tier0Feeder code
 
 """
-from __future__ import print_function
+
 import unittest
 import threading
 import logging
@@ -1263,7 +1263,7 @@ class Tier0FeederTest(unittest.TestCase):
                          "ERROR: there should be no new run")
 
         runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
-        self.assertEqual(len(runStreams.keys()), 0,
+        self.assertEqual(len(list(runStreams.keys())), 0,
                          "ERROR: there should be no new run/stream")
 
         self.feedStreamers()
@@ -1277,7 +1277,7 @@ class Tier0FeederTest(unittest.TestCase):
         self.assertEqual(len(runs), 1,
                          "ERROR: there should be one new run")
         runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
-        self.assertEqual(len(runStreams.keys()), 0,
+        self.assertEqual(len(list(runStreams.keys())), 0,
                          "ERROR: there should be no new run/stream")
 
         RunConfigAPI.configureRun(self.tier0Config, 176161,
@@ -1302,7 +1302,7 @@ class Tier0FeederTest(unittest.TestCase):
         RunConfigAPI.configureRunStream(self.tier0Config, 176161, "A", self.testDir, self.dqmUploadProxy)
 
         runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
-        self.assertEqual(len(runStreams.keys()), 0,
+        self.assertEqual(len(list(runStreams.keys())), 0,
                          "ERROR: there should be no new run/stream")
 
         self.feedStreamers()
@@ -1391,7 +1391,7 @@ class Tier0FeederTest(unittest.TestCase):
                          "ERROR: there should be two new runs")
 
         runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
-        self.assertEqual(len(runStreams.keys()), 0,
+        self.assertEqual(len(list(runStreams.keys())), 0,
                          "ERROR: there should be no new run/stream")
 
         self.feedStreamers()
@@ -1518,7 +1518,7 @@ class Tier0FeederTest(unittest.TestCase):
         RunConfigAPI.configureRunStream(self.tier0Config, 176163, "A", self.testDir, self.dqmUploadProxy)
 
         runStreams = self.findNewRunStreamsDAO.execute(transaction = False)
-        self.assertEqual(len(runStreams.keys()), 0,
+        self.assertEqual(len(list(runStreams.keys())), 0,
                          "ERROR: there should be no new run/stream")
 
         self.feedStreamers()
@@ -1564,7 +1564,7 @@ class Tier0FeederTest(unittest.TestCase):
 
         RunLumiCloseoutAPI.closeRuns(self.dbInterfaceStorageManager)
         endedRuns = self.getEndedRuns()
-        self.assertEqual(endedRuns.keys(), [176161],
+        self.assertEqual(list(endedRuns.keys()), [176161],
                          "ERROR: there should be 1 ended run: 176161")
         self.assertEqual(endedRuns[176161], 23,
                          "ERROR: there should be 23 lumis in run 176161")
@@ -1593,11 +1593,11 @@ class Tier0FeederTest(unittest.TestCase):
         RunLumiCloseoutAPI.closeLumiSections(self.dbInterfaceStorageManager)
 
         runStreamLumiDict = self.getClosedLumis()
-        self.assertEqual(runStreamLumiDict.keys(), [176161],
+        self.assertEqual(list(runStreamLumiDict.keys()), [176161],
                          "ERROR: there should be closed lumis for run 176161")
-        self.assertEqual(runStreamLumiDict[176161].keys(), ['A'],
+        self.assertEqual(list(runStreamLumiDict[176161].keys()), ['A'],
                          "ERROR: there should be closed lumis for run 176161 and stream A")
-        self.assertEqual(sorted(runStreamLumiDict[176161]['A'].keys()), range(1, 24),
+        self.assertEqual(sorted(runStreamLumiDict[176161]['A'].keys()), list(range(1, 24)),
                          "ERROR: there should be closed lumis for run 176161, stream A and lumi 1 to 23")
 
         for lumi in range(1, 24):
@@ -1611,13 +1611,13 @@ class Tier0FeederTest(unittest.TestCase):
         RunLumiCloseoutAPI.closeLumiSections(self.dbInterfaceStorageManager)
 
         runStreamLumiDict = self.getClosedLumis()
-        self.assertEqual(runStreamLumiDict.keys(), [176161],
+        self.assertEqual(list(runStreamLumiDict.keys()), [176161],
                          "ERROR: there should be closed lumis for run 176161")
         self.assertEqual(sorted(runStreamLumiDict[176161].keys()), ['A', 'HLTMON'],
                          "ERROR: there should be closed lumis for run 176161 and stream A and HLTMON")
-        self.assertEqual(sorted(runStreamLumiDict[176161]['A'].keys()), range(1, 24),
+        self.assertEqual(sorted(runStreamLumiDict[176161]['A'].keys()), list(range(1, 24)),
                          "ERROR: there should be closed lumis for run 176161, stream A and lumi 1 to 23")
-        self.assertEqual(sorted(runStreamLumiDict[176161]['HLTMON'].keys()), range(1, 24),
+        self.assertEqual(sorted(runStreamLumiDict[176161]['HLTMON'].keys()), list(range(1, 24)),
                          "ERROR: there should be closed lumis for run 176161, stream HLTMON and lumi 1 to 23")
 
         for lumi in range(1, 24):

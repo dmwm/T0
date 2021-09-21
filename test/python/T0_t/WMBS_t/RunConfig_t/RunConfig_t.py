@@ -5,7 +5,7 @@ _RunConfig_t_
 Testing the RunConfig code
 
 """
-from __future__ import print_function
+
 import unittest
 import threading
 import logging
@@ -1162,7 +1162,7 @@ class RunConfigTest(unittest.TestCase):
 
             self.assertEqual(sorted(mapping.keys()), sorted(self.referenceMapping[stream].keys()),
                              "ERROR: primary datasets do not match reference")
-            for primds in mapping.keys():
+            for primds in list(mapping.keys()):
                 self.assertEqual(sorted(mapping[primds]), sorted(self.referenceMapping[stream][primds]),
                                  "ERROR: trigger paths do not match reference")
 
@@ -1365,7 +1365,7 @@ class RunConfigTest(unittest.TestCase):
         recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
                                                    transaction = False)
 
-        self.assertEqual(len(recoConfigs.keys()), 0,
+        self.assertEqual(len(list(recoConfigs.keys())), 0,
                          "ERROR: there are reco configs present")
 
         RunConfigAPI.releasePromptReco(self.tier0Config, self.testDir, self.dqmUploadProxy)
@@ -1373,7 +1373,7 @@ class RunConfigTest(unittest.TestCase):
         recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
                                                    transaction = False)
 
-        self.assertEqual(len(recoConfigs.keys()), 0,
+        self.assertEqual(len(list(recoConfigs.keys())), 0,
                          "ERROR: there are reco configs present")
 
         self.removeRecoDelay("Cosmics")
@@ -1383,7 +1383,7 @@ class RunConfigTest(unittest.TestCase):
         recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
                                                    transaction = False)
 
-        self.assertEqual(len(recoConfigs.keys()), 0,
+        self.assertEqual(len(list(recoConfigs.keys())), 0,
                          "ERROR: there are reco configs present")
 
         delay = self.delay
@@ -1398,7 +1398,7 @@ class RunConfigTest(unittest.TestCase):
         recoConfigs = self.getRecoConfigDAO.execute(176161, "A",
                                                    transaction = False)
 
-        self.assertEqual(len(recoConfigs.keys()), 0,
+        self.assertEqual(len(list(recoConfigs.keys())), 0,
                          "ERROR: there are reco configs present")
       
         self.closeRunsDAO.execute(binds = { 'RUN' : 176161,
@@ -1431,7 +1431,7 @@ class RunConfigTest(unittest.TestCase):
         self.assertEqual(set(recoConfigs.keys()), set(datasets),
                          "ERROR: problems retrieving reco configs for stream A")
 
-        for primds, recoConfig in recoConfigs.items():
+        for primds, recoConfig in list(recoConfigs.items()):
 
             if primds == "Cosmics":
 
@@ -1570,7 +1570,7 @@ class RunConfigTest(unittest.TestCase):
         self.assertEqual(set(phedexConfigs.keys()),set(['MinimumBias','Cosmics']),
                          "ERROR: problems retrieving PhEDEx configs")
 
-        for primds, phedexConfig in phedexConfigs.items():
+        for primds, phedexConfig in list(phedexConfigs.items()):
 
             if primds == "Cosmics":
 

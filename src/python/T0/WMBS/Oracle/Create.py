@@ -860,7 +860,7 @@ class Create(DBCreator):
                       8 : "CloseOutExport",
                       9 : "CloseOutT1Skimming",
                       10 : "Complete" }
-        for id, name in runStates.items():
+        for id, name in list(runStates.items()):
             sql = """INSERT INTO run_status
                      (ID, NAME)
                      VALUES (%d, '%s')
@@ -873,7 +873,7 @@ class Create(DBCreator):
                              4 : "Convert",
                              5 : "RegisterAndConvert",
                              6 : "Ignore" }
-        for id, name in processingStyles.items():
+        for id, name in list(processingStyles.items()):
             sql = """INSERT INTO processing_style
                      (ID, NAME)
                      VALUES (%d, '%s')
@@ -920,7 +920,7 @@ class Create(DBCreator):
                            38 : "cosmicsEra_Run3",
                            39 : "hcalnzsEra_Run3",
                            40 : "trackingOnlyEra_Run3" }
-        for id, name in eventScenarios.items():
+        for id, name in list(eventScenarios.items()):
             sql = """INSERT INTO event_scenario
                      (ID, NAME)
                      VALUES (%d, '%s')

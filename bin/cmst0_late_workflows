@@ -56,7 +56,7 @@ def processWorkflows(requestDBreader, workflowLimits, statusList):
     """
     workflowStates = {}
     workflowInfo = requestDBreader.getRequestByStatus(statusList, detail = True)
-    for workflow in workflowInfo.keys():
+    for workflow in list(workflowInfo.keys()):
         workflowStatus = workflowInfo[workflow]['RequestStatus']
         statusTimestamps = workflowInfo[workflow]['RequestTransition']
         for stateInfo in statusTimestamps:
@@ -69,7 +69,7 @@ def processWorkflows(requestDBreader, workflowLimits, statusList):
     for workflowType in workflowLimits:
         for state in workflowLimits[workflowType]:
             if state in workflowStates:
-                workflows = filter(regexpMapping[workflowType].match, workflowStates[state])
+                workflows = list(filter(regexpMapping[workflowType].match, workflowStates[state]))
                 for workflow in workflows:
                     stateTime = workflowStates[state][workflow]
                     if currentTime - stateTime > 3600 * float(workflowLimits[workflowType][state]):
@@ -153,7 +153,7 @@ def buildSLSXML(outputFilePath, data, runBlacklist, interventionInfo):
         outputFile = open(outputFilePath, 'w')
         outputFile.write(xml)
     except:
-        print "Couldn't write the XML file"
+        print("Couldn't write the XML file")
         traceback.print_exc()
     finally:
         outputFile.close()
@@ -168,7 +168,7 @@ def main():
     """
     try:
         #Load configuration files
-        if os.environ.has_key("config"):
+        if "config" in os.environ:
             os.environ['WMAGENT_CONFIG'] = os.path.join(os.environ.get("config"), 'config.py')
         agentConfig = loadConfigurationFile(os.environ["WMAGENT_CONFIG"])
         
@@ -207,7 +207,7 @@ def main():
     
         return
 
-    except Exception, e:
+    except Exception as e:
         timezone = str(int(-time.timezone / 3600)).zfill(2)
         timestamp = time.strftime("%Y-%m-%dT%H:%M:%S+")
         timestamp += "%s:00" % timezone

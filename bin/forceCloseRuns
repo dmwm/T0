@@ -121,8 +121,8 @@ def forceCloseRun(run, writeChange):
                              'LUMI' : lumi } )
 
         closedLumis = []
-        for stream in streamLumiCountDict.keys():
-            for lumi, count in streamLumiCountDict[stream].items():
+        for stream in list(streamLumiCountDict.keys()):
+            for lumi, count in list(streamLumiCountDict[stream].items()):
                 closedLumis.append( { 'RUN' : run,
                                       'STREAM' : stream,
                                       'LUMI' : lumi,
@@ -158,9 +158,9 @@ def forceCloseRun(run, writeChange):
 
             # Everything went well, commit it
             trans.commit()
-            print "Done with the changes, run %s should close soon." % run
+            print("Done with the changes, run %s should close soon." % run)
             return 0
-        except Exception, ex:
+        except Exception as ex:
             if trans:
                 # In case of error, rollback and close connection
                 trans.rollbackForError()
@@ -189,7 +189,7 @@ def main():
     (options, args) = parser.parse_args()
 
     if options.verbose and options.silent:
-        print "Conflicting options: silent and verbose. Exiting."
+        print("Conflicting options: silent and verbose. Exiting.")
         return 1
     loggingLevel = logging.INFO
     if options.silent:
