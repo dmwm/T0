@@ -33,7 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [341169,341754,338628,338714,342154])
+setInjectRuns(tier0Config, [341169,341754,342154,344518])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -100,7 +100,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_11_3_2"
+    'default': "CMSSW_12_1_0_pre3"
 }
 
 # Configure ScramArch
@@ -124,7 +124,7 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "113X_dataRun3_Express_Candidate_2021_07_02_14_38_40"
+expressGlobalTag = "113X_dataRun3_Express_v4"
 promptrecoGlobalTag = "113X_dataRun3_Prompt_v3"
 alcap0GlobalTag = "113X_dataRun3_Prompt_v3"
 
