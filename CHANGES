@@ -1,3 +1,32 @@
+2.2.4 to 3.0.1:
+  - Fix Promt GT
+  -  Replay test with 12_1_0_pre3 (#4607)
+  - Merge pull request #4603 from jhonatanamado/py3v2
+  - Migrating T0 code from PY2 to PY3
+  - Merge pull request #4596 from germanfgv/sites
+  - Merge pull request #4599 from dmwm/CRUZET_11_3_4
+  - Update production CMSSW release
+  - Add sites configuration to easily switch storage sites
+  - Merge pull request #4597 from jhonatanamado/Config_Streamv4
+  - ConfigurableStreamMemory
+  - Merge pull request #4592 from dmwm/newAlCaProd
+  - Updating Prod config with new Cosmics AlCa producers
+  - Updating Replay config with new Cosmics AlCa producers
+  - Merge pull request #4590 from jhonatanamado/Tunning-Jobs
+  - Merge pull request #4582 from dmwm/condUpload
+  - Merge pull request #4589 from dmwm/FixSiteOverride
+  - Tunning LogCollect and CleanUp Jobs
+  - Create a list of sites intead of modifying the dataset config
+  - Merge pull request #4587 from dmwm/CRUZET_Prod
+  - Update Offline config files for Cruzet 2021
+  - Raise expetion when unable to upload conditions to Dropbox
+  - Merge pull request #4579 from dmwm/2021MWGR4_Replay
+  - Replay configuration used in preparation for MWGR4 of 2021
+  - Merge pull request #4578 from dmwm/2021MWGR4_PROD
+  - Production configuration for MWGR#4 of 2021
+  - Merge pull request #4566 from germanfgv/OverrideSiteConfig
+  - Using WMWorkload.setStepEnvironmentVariables to override site config
+
 2.2.3 to 2.2.4:
   - Merge pull request #4570 from dmwm/Config_MWGR3_2021
   - Update ExampleConfig.py
