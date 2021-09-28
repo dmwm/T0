@@ -23,6 +23,8 @@ from T0.RunConfig.Tier0Config import addExpressConfig
 from T0.RunConfig.Tier0Config import setInjectMinRun
 from T0.RunConfig.Tier0Config import setInjectMaxRun
 from T0.RunConfig.Tier0Config import setStreamerPNN
+from T0.RunConfig.Tier0Config import addSiteConfig
+from T0.RunConfig.Tier0Config import setStorageSite
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -31,7 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 341801)
+setInjectMinRun(tier0Config, 345130)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
@@ -77,7 +79,7 @@ setDQMUploadUrl(tier0Config, "https://cmsweb.cern.ch/dqm/offline")
 setPromptCalibrationConfig(tier0Config,
                            alcaHarvestTimeout=12*3600,
                            alcaHarvestCondLFNBase="/store/express/tier0_harvest",
-                           alcaHarvestLumiURL="root://eoscms.cern.ch//eos/cms/store/unmerged/tier0_harvest",
+                           alcaHarvestLumiURL="root://eoscms.cern.ch//eos/cms/tier0/store/unmerged/tier0_harvest",
                            conditionUploadTimeout=18*3600,
                            dropboxHost="webcondvm.cern.ch",
                            validationMode=False)
