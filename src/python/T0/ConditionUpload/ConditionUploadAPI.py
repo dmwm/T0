@@ -221,7 +221,7 @@ def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationM
     p = subprocess.Popen(command, shell = True,
                          stdout=subprocess.PIPE,
                          stderr=subprocess.STDOUT)
-    output = p.communicate()[0]
+    output = p.communicate()[0].decode('utf-8')
     if p.returncode > 0:
         logging.error("Failure during copy from EOS: %s" % output)
         logging.error("  ==> Upload failed for payload %s" % filenamePrefix)
@@ -234,7 +234,7 @@ def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationM
     p = subprocess.Popen(command, shell = True,
                          stdout=subprocess.PIPE,
                          stderr=subprocess.STDOUT)
-    output = p.communicate()[0]
+    output = p.communicate()[0].decode('utf-8')
     if p.returncode > 0:
         logging.error("Failure during copy from EOS: %s" % output)
         logging.error("  ==> Upload failed for payload %s" % filenamePrefix)
@@ -274,7 +274,7 @@ def uploadPayload(filenamePrefix, sqliteFile, metaFile, dropboxHost, validationM
                                  stdin=subprocess.PIPE,
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.STDOUT)
-            output = p.communicate()[0]
+            output = p.communicate()[0].decode('utf-8')
             if p.returncode > 0:
                 logging.error("Failure during copy of .uploaded file to EOS: %s" % output)
                 logging.error("  ==> Upload failed for payload %s" % filenamePrefix)
