@@ -100,14 +100,14 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_0_0"
+    'default': "CMSSW_12_0_2"
 }
 
 # Configure ScramArch
 from T0.RunConfig.Tier0Config import setScramArch
 
 setDefaultScramArch(tier0Config, "slc7_amd64_gcc630")
-setScramArch(tier0Config, "CMSSW_12_0_0", "slc7_amd64_gcc900")
+setScramArch(tier0Config, "CMSSW_12_0_2", "slc7_amd64_gcc900")
 
 # Configure scenarios
 ppScenario = "ppEra_Run2_2018"
@@ -127,9 +127,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "113X_dataRun3_Express_Candidate_2021_06_21_16_58_57"
-promptrecoGlobalTag = "113X_dataRun3_Prompt_Candidate_2021_06_21_16_59_39"
-alcap0GlobalTag = "113X_dataRun3_Prompt_Candidate_2021_06_21_16_59_39"
+expressGlobalTag = "120X_dataRun3_Express_Candidate_2021_09_30_18_36_13"
+promptrecoGlobalTag = "120X_dataRun3_Prompt_Candidate_2021_10_01_08_44_53"
+alcap0GlobalTag = "120X_dataRun3_Prompt_Candidate_2021_10_01_08_44_53"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -343,7 +343,7 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  data_tiers=["ALCARECO"],
                  write_dqm=True,
                  alca_producers=["TkAlMinBias", "PromptCalibProdBeamSpotHP"],
-                 dqm_sequences=["DQMOfflineTracking"],
+                 dqm_sequences=["@trackingOnlyDQM"],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
                  global_tag_connect=globalTagConnect,
@@ -416,7 +416,7 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  data_tiers=["ALCARECO", "RAW"],
                  write_dqm=True,
                  alca_producers=["TkAlMinBias"],
-                 dqm_sequences=["DQMOfflineTracking"],
+                 dqm_sequences=["@trackingOnlyDQM"],
                  reco_version=defaultCMSSWVersion,
                  raw_to_disk=True,
                  multicore=numberOfCores,
