@@ -20,11 +20,11 @@ from T0.RunConfig.Tier0Config import setConfigVersion
 from T0.RunConfig.Tier0Config import ignoreStream
 from T0.RunConfig.Tier0Config import addRepackConfig
 from T0.RunConfig.Tier0Config import addExpressConfig
-from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setInjectRuns
 from T0.RunConfig.Tier0Config import setStreamerPNN
-from T0.RunConfig.Tier0Config import setStorageSite
 from T0.RunConfig.Tier0Config import setEnableUniqueWorkflowName
+from T0.RunConfig.Tier0Config import addSiteConfig
+from T0.RunConfig.Tier0Config import setStorageSite
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -33,7 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [341169,341754,342154,343498])
+setInjectRuns(tier0Config, [343082,344063])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -100,7 +100,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_1_0_pre3"
+    'default': "CMSSW_12_0_2_patch1"
 }
 
 # Configure ScramArch
@@ -156,7 +156,9 @@ repackVersionOverride = {
     "CMSSW_11_3_2" : defaultCMSSWVersion['default'],
     "CMSSW_11_3_3" : defaultCMSSWVersion['default'],
     "CMSSW_11_3_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_0" : defaultCMSSWVersion['default']  
+    "CMSSW_12_0_0" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_2" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -173,7 +175,9 @@ expressVersionOverride = {
     "CMSSW_11_3_2" : defaultCMSSWVersion['default'],
     "CMSSW_11_3_3" : defaultCMSSWVersion['default'],
     "CMSSW_11_3_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_0" : defaultCMSSWVersion['default']  
+    "CMSSW_12_0_0" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_2" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -205,7 +209,7 @@ addDataset(tier0Config, "Default",
            global_tag_connect=globalTagConnect,
            #archival_node="T0_CH_CERN_MSS",
            #tape_node="T1_US_FNAL_MSS",
-           disk_node="T2_CH_CERN",
+           disk_node="T0_CH_CERN_Disk",
            #raw_to_disk=False,
            blockCloseDelay=1200,
            timePerEvent=5,
@@ -240,15 +244,15 @@ addExpressConfig(tier0Config, "Express",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride)
-
+ 
 addExpressConfig(tier0Config, "ExpressCosmics",
                  scenario=cosmicsScenario,
-                 diskNode="T2_CH_CERN",
+                 diskNode="T0_CH_CERN_Disk",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T",
                                  "SiPixelCalZeroBias",
-                                 "PromptCalibProdSiStrip", "PromptCalibProdSiPixel"
+                                 "PromptCalibProdSiStrip", "PromptCalibProdSiPixel", "SiStripCalCosmics"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
@@ -268,7 +272,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
 
 addExpressConfig(tier0Config, "HLTMonitor",
                  scenario=ppScenario,
-                 diskNode="T2_CH_CERN",
+                 diskNode="T0_CH_CERN_Disk",
                  data_tiers=["FEVTHLTALL"],
                  write_dqm=True,
                  alca_producers=[],
@@ -310,8 +314,8 @@ addExpressConfig(tier0Config, "Calibration",
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
                  dataType="data",
-                 diskNode="T2_CH_CERN")
-
+                 diskNode="T0_CH_CERN_Disk")
+ 
 addExpressConfig(tier0Config, "ExpressAlignment",
                  scenario=alcaTrackingOnlyScenario,
                  data_tiers=["ALCARECO"],
@@ -333,8 +337,8 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
-                 diskNode="T2_CH_CERN")
-
+                 diskNode="T0_CH_CERN_Disk")
+ 
 addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
                  scenario=alcaLumiPixelsScenario,
                  data_tiers=["ALCARECO"],
@@ -356,15 +360,15 @@ addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
-                 diskNode="T2_CH_CERN")
-
+                 diskNode="T0_CH_CERN_Disk")
+ 
 #####################
 ### HI Tests 2018 ###
 #####################
-
+ 
 addExpressConfig(tier0Config, "HIExpress",
                  scenario=hiTestppScenario,
-                 diskNode="T2_CH_CERN",
+                 diskNode="T0_CH_CERN_Disk",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
@@ -410,7 +414,7 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
-                 diskNode="T2_CH_CERN")
+                 diskNode="T0_CH_CERN_Disk")
 
 ###################################
 ### Standard Physics PDs (2017) ###
@@ -457,7 +461,7 @@ for dataset in DATASETS:
                write_aod=True,
                write_miniaod=False,
                write_dqm=True,
-               alca_producers=["SiStripCalCosmics", "SiPixelCalCosmics", "TkAlCosmics0T", "MuAlGlobalCosmics"],
+               alca_producers=["SiStripCalCosmics","SiPixelCalCosmics","TkAlCosmics0T","MuAlGlobalCosmics"],
                physics_skims=["CosmicSP", "CosmicTP", "LogError", "LogErrorMonitor"],
                timePerEvent=0.5,
                sizePerEvent=155,
@@ -1354,7 +1358,7 @@ addExpressConfig(tier0Config, "ExpressPA",
                  blockCloseDelay=1200,
                  timePerEvent=4,
                  sizePerEvent=1700,
-                 diskNode="T2_CH_CERN",
+                 diskNode="T0_CH_CERN_Disk",
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "HLTMonitorPA",
@@ -1377,7 +1381,7 @@ addExpressConfig(tier0Config, "HLTMonitorPA",
                  blockCloseDelay=1200,
                  timePerEvent=4, #I have to get some stats to set this properly
                  sizePerEvent=1700, #I have to get some stats to set this properly
-                 diskNode="T2_CH_CERN",
+                 diskNode="T0_CH_CERN_Disk",
                  versionOverride=expressVersionOverride)
 
 #########################################
