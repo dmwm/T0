@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 '''Script that uploads to the new CMS conditions uploader.
 Adapted to the new infrastructure from v6 of the upload.py script for the DropBox from Miguel Ojeda.
 '''
@@ -509,7 +509,7 @@ class ConditionsUploader(object):
 
     def getDestDbFromMetaData(self, filename):
 
-        with open(filename, 'r') as jFile:
+        with open(filename, 'rb') as jFile:
             md = json.load( jFile )
 
         destDb = 'prod'
@@ -553,19 +553,20 @@ class ConditionsUploader(object):
             logging.error(msg)
             raise Exception(msg)
 
-        with tempfile.NamedTemporaryFile() as metadata:
+        logging.debug('Adding to tar file for upload ...')
+        with tempfile.NamedTemporaryFile(mode = "w") as metadata:
             with open('%s.txt' % basepath, 'rb') as originalMetadata:
                 originalMetadata_dic = json.load(originalMetadata)
-                originalMetadata_encode = json.dumps(originalMetadata_dic, indent = 2).encode('utf-8')
                 try:
-                    json.dump(originalMetadata_encode, metadata, sort_keys = True, indent = 4)
+                    json.dump(originalMetadata_dic, metadata, sort_keys = True, indent = 4)
                 except TypeError as err:
-                    msg = 'raised a %s when ' % err.__repr__()
+                    msg = 'raised a %s ' % err.__repr__()
                     logging.error(msg)
 
             metadata.seek(0)
-            addToTarFile(tarFile, metadata, 'metadata.txt')
-
+            metadataReader=open(metadata.name,'rb')
+            addToTarFile(tarFile, metadataReader, 'metadata.txt')
+            
         tarFile.close()
 
         logging.debug('%s: %s: Calculating hash...', self.hostname, basename)
