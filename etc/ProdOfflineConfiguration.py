@@ -33,7 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 345130)
+setInjectMinRun(tier0Config, 345500)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
@@ -93,7 +93,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_11_3_4"
+    'default': "CMSSW_12_0_2_patch1"
 }
 
 # Configure ScramArch
@@ -126,9 +126,9 @@ expressProcVersion = {
 }
 
 # Defaults for GlobalTag
-expressGlobalTag = "113X_dataRun3_Express_v4"
-promptrecoGlobalTag = "113X_dataRun3_Prompt_v3"
-alcap0GlobalTag = "113X_dataRun3_Prompt_v3"
+expressGlobalTag = "120X_dataRun3_Express_v2"
+promptrecoGlobalTag = "120X_dataRun3_Prompt_v2"
+alcap0GlobalTag = "120X_dataRun3_Prompt_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -158,7 +158,10 @@ repackVersionOverride = {
     "CMSSW_11_2_4" : defaultCMSSWVersion['default'],
     "CMSSW_11_3_1" : defaultCMSSWVersion['default'],
     "CMSSW_11_3_2" : defaultCMSSWVersion['default'],
-    "CMSSW_11_3_3" : defaultCMSSWVersion['default']
+    "CMSSW_11_3_3" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_4" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_0" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_1" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -175,7 +178,10 @@ expressVersionOverride = {
     "CMSSW_11_2_4" : defaultCMSSWVersion['default'],
     "CMSSW_11_3_1" : defaultCMSSWVersion['default'],
     "CMSSW_11_3_2" : defaultCMSSWVersion['default'],
-    "CMSSW_11_3_3" : defaultCMSSWVersion['default']
+    "CMSSW_11_3_3" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_4" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_0" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_1" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -251,7 +257,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T",
                                  "SiPixelCalZeroBias",
-                                 "PromptCalibProdSiStrip", "PromptCalibProdSiPixel"
+                                 "PromptCalibProdSiStrip", "PromptCalibProdSiPixel", "SiStripCalCosmics"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
@@ -750,7 +756,8 @@ for dataset in DATASETS:
                write_dqm=True,
                tape_node="T1_IT_CNAF_MSS",
                disk_node="T1_IT_CNAF_Disk",
-               alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym", "HcalCalIsoTrkFilter", "EcalESAlign"],
+               alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym",
+                               "HcalCalIsoTrkFilter", "EcalESAlign"],
                dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
                physics_skims=["EXOMONOPOLE", "ZElectron", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
