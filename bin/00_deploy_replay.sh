@@ -6,6 +6,8 @@ SPEC_DIR=$BASE_DIR/admin/Specs
 
 TIER0_VERSION=2.2.4
 TIER0_ARCH=slc7_amd64_gcc630
+DEPLOY_TAG=HG2105a
+
 
 function echo_header {
     echo ''
@@ -23,7 +25,7 @@ mkdir -p $SPEC_DIR
 cd $BASE_DIR
 echo_header "deleting deployment dir \"deployment\""
 rm -rf deployment
-git clone https://github.com/dmwm/deployment.git
+git clone https://github.com/dmwm/deployment.git  --branch $DEPLOY_TAG
 cd deployment
 
 #Patch to test deployment adjustments
