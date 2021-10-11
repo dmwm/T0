@@ -436,7 +436,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common"],
+               dqm_sequences=["@commonReduced"],
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -447,7 +447,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common"],
+               dqm_sequences=["@commonReduced"],
                alca_producers=["TkAlJpsiMuMu"],
                physics_skims=["BPHSkim", "MuonPOGJPsiSkim", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
@@ -473,7 +473,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common"],
+               dqm_sequences=["@commonReduced"],
                physics_skims=["EXODisplacedJet", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -485,7 +485,7 @@ for dataset in DATASETS:
                write_reco=True,
                write_dqm=True,
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym", "HcalCalIsoTrkFilter"],
-               dqm_sequences=["@common", "@ecal", "@egamma"],
+               dqm_sequences=["@commonReduced", "@ecal", "@egamma"],
                physics_skims=["ZElectron", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -497,7 +497,7 @@ for dataset in DATASETS:
                write_reco=True,
                write_dqm=True,
                alca_producers=["TkAlZMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu"],
-               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon"],
+               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@ctpps"],
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -510,7 +510,7 @@ for dataset in DATASETS:
                raw_to_disk=True,
                write_dqm=True,
                alca_producers=["TkAlZMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu"],
-               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon"],
+               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@ctpps"],
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=1,
                scenario=ppScenario)
@@ -542,7 +542,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common", "@jetmet"],
+               dqm_sequences=["@commonReduced", "@jetmet"],
                scenario=ppScenario)
 
 DATASETS = ["HINCaloJets", "HINPFJets"]
@@ -649,7 +649,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common"],
+               dqm_sequences=["@commonReduced"],
                physics_skims=["TopMuEG", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -672,7 +672,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                alca_producers=["EcalUncalWElectron", "EcalUncalZElectron", "HcalCalIterativePhiSym", "EcalESAlign"],
-               dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
+               dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma", "@L1TMon", "@tau", "@ctpps"],
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -684,7 +684,7 @@ for dataset in DATASETS:
                write_dqm=True,
                alca_producers=["TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu",
                                "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HcalCalHBHEMuonFilter"],
-               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon"],
+               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@L1TMon", "@tau"],
                physics_skims=["MuonPOGSkim", "MuTau", "ZMu", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -694,7 +694,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common", "@ecal", "@egamma"],
+               dqm_sequences=["@commonReduced", "@ecal", "@egamma"],
                physics_skims=["EXOMONOPOLE", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -706,7 +706,7 @@ for dataset in DATASETS:
                write_dqm=True,
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym",
                                "HcalCalIsoTrkFilter", "EcalESAlign"],
-               dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
+               dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma", "@L1TMon", "@tau", "@ctpps"],
                physics_skims=["EXOMONOPOLE", "ZElectron", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -716,7 +716,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common"],
+               dqm_sequences=["@commonReduced", "@tau"],
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -1014,7 +1014,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_reco=True,
                write_dqm=True,
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@L1TMon", "@ctpps"],
                alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias", "AlCaPCCZeroBiasFromRECO"],
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=3.5,
@@ -1293,7 +1293,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common", "@ecal", "@egamma"],
+               dqm_sequences=["@commonReduced", "@ecal", "@egamma"],
                scenario=ppScenario)
 
 
