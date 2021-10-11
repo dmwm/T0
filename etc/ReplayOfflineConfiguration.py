@@ -124,9 +124,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "120X_dataRun3_Express_Candidate_2021_09_30_18_36_13"
-promptrecoGlobalTag = "120X_dataRun3_Prompt_Candidate_2021_10_01_08_44_53"
-alcap0GlobalTag = "120X_dataRun3_Prompt_Candidate_2021_10_01_08_44_53"
+expressGlobalTag = "120X_dataRun3_Express_v2"
+promptrecoGlobalTag = "120X_dataRun3_Prompt_v2"
+alcap0GlobalTag = "120X_dataRun3_Prompt_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
