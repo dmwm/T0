@@ -1,4 +1,3 @@
-from __future__ import print_function
 from distutils.core import Command
 from distutils.command.build import build
 from distutils.command.install import install
@@ -63,7 +62,7 @@ def list_packages(package_dirs = [], recurse=True):
                     rel_path = rel_path.split('/')[2:]
                     packages.append('.'.join(rel_path))
                 else:
-                    print('Ignoring %s' % dirpath)
+                    print('Ignoring {}'.format(dirpath))
         else:
             rel_path = os.path.relpath(a_dir, get_path_to_wmcore_root())
             rel_path = rel_path.split('/')[2:]
@@ -88,7 +87,7 @@ def data_files_for(dir):
                 localfiles = [os.path.join(rel_path, f) for f in filenames]
                 add_static((rel_path.replace('src/', 'data/'), localfiles))
             else:
-                print('Ignoring %s' % dirpath)
+                print('Ignoring {}'.format(dirpath))
     else:
         localfiles = []
         for ifile in os.listdir(dir):
@@ -311,7 +310,7 @@ class InstallCommand(install):
         check_system(self)
         # Check install destination looks valid if patching.
         if self.patch and not os.path.isdir("%s/xbin" % self.prefix):
-            print("Patch destination %s does not look like a valid location." % self.prefix)
+            print("Patch destination {} does not look like a valid location.".format(self.prefix))
             sys.exit(1)
         # Set what actually gets installed
         self.distribution.packages, self.distribution.py_modules = things_to_build(self)

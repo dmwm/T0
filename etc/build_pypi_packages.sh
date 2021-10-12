@@ -4,9 +4,9 @@
 #
 # Usage
 # Build a single package:
-# sh tools/build_pypi_packages.sh <package name>
+# sh etc/build_pypi_packages.sh <package name>
 # Build all WMCore packages:
-# sh tools/build_pypi_packages.sh all
+# sh etc/build_pypi_packages.sh all
 #
 
 set -x
@@ -19,8 +19,8 @@ PACKAGES="t0"
 PACKAGE_REGEX="^($(echo $PACKAGES | sed 's/\ /|/g')|all)$"
 
 if [[ -z $TOBUILD ]]; then
-  echo "Usage: sh tools/build_pypi_packages.sh <package name>"
-  echo "Usage: sh tools/build_pypi_packages.sh all"
+  echo "Usage: sh etc/build_pypi_packages.sh <package name>"
+  echo "Usage: sh etc/build_pypi_packages.sh all"
   exit 1
 fi
 
@@ -41,15 +41,16 @@ fi
 for package in $TOBUILD; do
   # make a copy of requirements.txt to reference for each build
   cp requirements.txt requirements.t0.txt
+  cp requirements.txt requirements.backup.txt
 
   # update the setup script template with package name
   sed "s/PACKAGE_TO_BUILD/$package/" setup_template.py > setup.py
 
   # build requirements.txt file
-  awk "/($package$)|($package,)/ {print \$1}" ../requirements.t0.txt > requirements.txt
+  awk "/($package$)|($package,)/ {print \$1}" requirements.t0.txt > requirements.txt
 
   # build the package
-  python setup.py clean sdist
+  python3 setup.py clean sdist
   if [[ $? -ne 0 ]]; then
     echo "Error building package $package"
     exit 1

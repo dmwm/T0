@@ -8,7 +8,6 @@
 # The version number comes from WMCore/__init__.py and needs to
 # follow PEP 440 conventions
 
-from __future__ import print_function, division
 import os
 import sys
 import subprocess
@@ -23,7 +22,7 @@ try:
 except:
   print("fail to import T0")
   import T0
-t0_version=subprocess.check_output(['git','describe','--tags']).strip("\n")
+t0_version="-".join(subprocess.check_output(['git','describe','--tags']).decode().strip("\n").split("-")[:-1])
 
 # we need to override 'clean' command to remove specific files
 class TestCommand(Command):
@@ -110,12 +109,12 @@ classifiers  = [
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: Microsoft :: Windows",
         "Operating System :: POSIX",
-        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
         "Topic :: Database"
 ]
 if  sys.version < required_python_version:
-    msg = "I'm sorry, but %s %s requires Python %s or later."
-    print(msg % (name, version, required_python_version))
+    msg = "I'm sorry, but {} {} requires Python {} or later."
+    print(msg.format(name, version, required_python_version))
     sys.exit(1)
 setup(name=package_name,
       version=t0_version,
