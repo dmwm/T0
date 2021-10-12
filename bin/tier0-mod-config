@@ -2,7 +2,6 @@
 # encoding: utf-8
 """
 tier0-mod-config.py
-
 Created by Dirk Hufnagel on 2012-04-12.
 Copyright (c) 2011 Fermilab. All rights reserved.
 """
@@ -10,6 +9,7 @@ Copyright (c) 2011 Fermilab. All rights reserved.
 import sys
 import getopt
 import imp
+import importlib
 import socket
 import traceback
 import os
@@ -27,38 +27,40 @@ class Usage(Exception):
     def __init__(self, msg):
         self.msg = msg
 
+
 def importConfigTemplate(filename):
     """
     _importConfigTemplate_
-    
+
     Given filename, load it and grab the configuration object from it
-    
+
     """
     mod = imp.load_module("wmcore_config_input", open(filename, 'r'), filename, (".py", "r", imp.PY_SOURCE)   )
     config = getattr(mod, 'config', None)
+    #
     if config == None:
         msg = "No config attribute found in %s" % filename
-        raise RuntimeError, msg
+        raise RuntimeError(msg)
     return config
 
 def saveConfiguration(configObject, outputPath):
     """
     _saveConfiguration_
-    
+
     Save the configuration to the output path provided
-    
+
     """
     saveConfigurationFile(configObject, outputPath)
-    os.chmod(outputPath, 0600)
+    os.chmod(outputPath, 0o600)
 
-    
+
 def modifyConfiguration(config, **args):
     """
     _modifyConfiguration_
-    
+
     Given the dictionary of key: value, look up the entry matching the key in the configuration
     and set it to that value in the config
-    
+
     """
     config.BossAir.pluginNames = ["SimpleCondorPlugin"]
 
@@ -69,15 +71,15 @@ def modifyConfiguration(config, **args):
         delattr(config, "WorkQueueManager")
     if hasattr(config, "ArchiveDataReporter"):
         delattr(config, "ArchiveDataReporter")
-    
+
     config.TaskArchiver.useWorkQueue = False
 
     # tier0 specific accounting group
     config.BossAir.acctGroup = 'tier0'
     config.BossAir.acctGroupUser = 'cmsdataops'
-    
+
     # t0 wmstats specific configuration
-    config.AnalyticsDataCollector.localT0RequestDBURL = "%s/%s" % (config.JobStateMachine.couchurl, 
+    config.AnalyticsDataCollector.localT0RequestDBURL = "%s/%s" % (config.JobStateMachine.couchurl,
                                                                    config.Tier0Feeder.requestDBName)
     config.AnalyticsDataCollector.RequestCouchApp = "T0Request"
 
@@ -87,7 +89,7 @@ def modifyConfiguration(config, **args):
 
     # don't set bad exit codes for the tier0 jobs
     config.ErrorHandler.failureExitCodes = []
-    
+
     if 'confdb_url' in args:
         config.section_("HLTConfDatabase")
         config.HLTConfDatabase.connectUrl = args['confdb_url']
@@ -114,17 +116,17 @@ def modifyConfiguration(config, **args):
 def main(argv=None):
     if argv is None:
         argv = sys.argv
-    
+
     inputFile = None
     outputFile = None
     parameters = {}
 
     try:
         try:
-            opts, args = getopt.getopt(argv[1:], "h", 
+            opts, args = getopt.getopt(argv[1:], "h",
             ["help", "input=", "output=", "confdb_url=", "smdb_url=", "popconlogdb_url=", "t0datasvcdb_url=", "smnotifydb_url="])
 
-        except getopt.error, msg:
+        except getopt.error as msg:
             raise Usage(msg)
 
         # option processing
@@ -138,32 +140,32 @@ def main(argv=None):
             if option in ('--confdb_url', '--smdb_url', '--popconlogdb_url', '--t0datasvcdb_url', '--smnotifydb_url'):
                 parameters[option[2:]] = value
 
-    except Usage, err:
-        print >> sys.stderr, sys.argv[0].split("/")[-1] + ": " + str(err.msg)
-        print >> sys.stderr, "\t for help use --help"
+    except Usage as err:
+        print(sys.argv[0].split("/")[-1] + ": " + str(err.msg), file=sys.stderr)
+        print("\t for help use --help", file=sys.stderr)
         return 2
 
     try:
         cfg = importConfigTemplate(inputFile)
-    except Exception, ex:
+    except Exception as ex:
         msg = "Failed to import template config: %s\n" % inputFile
         msg += str(ex)
-        print >> sys.stderr, msg
+        print(msg, file=sys.stderr)
         return 3
     try:
         cfg = modifyConfiguration(cfg, **parameters)
-    except Exception, ex:
+    except Exception as ex:
         msg = "Error modifying configuration:\n %s" % str(ex)
-        print >> sys.stderr, msg
-        print >> sys.stderr, traceback.format_exc()
+        print(msg, file=sys.stderr)
+        print(traceback.format_exc(), file=sys.stderr)
         return 4
     try:
         saveConfiguration(cfg, outputFile)
-    except Exception, ex:
+    except Exception as ex:
         msg = "Error saving output configuration file:\n %s\n" % outputFile
         msg += str(ex)
-        print >> sys.stderr, msg
-        return 5 
+        print(msg, file=sys.stderr)
+        return 5
 
 if __name__ == "__main__":
     sys.exit(main())

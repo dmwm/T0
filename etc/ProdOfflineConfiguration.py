@@ -23,6 +23,8 @@ from T0.RunConfig.Tier0Config import addExpressConfig
 from T0.RunConfig.Tier0Config import setInjectMinRun
 from T0.RunConfig.Tier0Config import setInjectMaxRun
 from T0.RunConfig.Tier0Config import setStreamerPNN
+from T0.RunConfig.Tier0Config import addSiteConfig
+from T0.RunConfig.Tier0Config import setStorageSite
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -31,14 +33,20 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 341801)
+setInjectMinRun(tier0Config, 345500)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
 
 # Settings up sites
-processingSite = "T0_CH_CERN"
+processingSite = "T2_CH_CERN"
+storageSite = "T0_CH_CERN_Disk"
 streamerPNN = "T0_CH_CERN_Disk"
+
+addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
+                siteLocalConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/JobConfig/site-local-config.xml",
+                overrideCatalog="trivialcatalog_file:/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/PhEDEx/storage.xml?protocol=eos"
+                )
 
 # Set global parameters:
 #  Acquisition era
@@ -71,7 +79,7 @@ setDQMUploadUrl(tier0Config, "https://cmsweb.cern.ch/dqm/offline")
 setPromptCalibrationConfig(tier0Config,
                            alcaHarvestTimeout=12*3600,
                            alcaHarvestCondLFNBase="/store/express/tier0_harvest",
-                           alcaHarvestLumiURL="root://eoscms.cern.ch//eos/cms/store/unmerged/tier0_harvest",
+                           alcaHarvestLumiURL="root://eoscms.cern.ch//eos/cms/tier0/store/unmerged/tier0_harvest",
                            conditionUploadTimeout=18*3600,
                            dropboxHost="webcondvm.cern.ch",
                            validationMode=False)
@@ -85,7 +93,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_11_3_1_patch1"
+    'default': "CMSSW_12_0_2_patch1"
 }
 
 # Configure ScramArch
@@ -118,9 +126,9 @@ expressProcVersion = {
 }
 
 # Defaults for GlobalTag
-expressGlobalTag = "113X_dataRun3_Express_v2"
-promptrecoGlobalTag = "113X_dataRun3_Prompt_v2"
-alcap0GlobalTag = "113X_dataRun3_Prompt_v2"
+expressGlobalTag = "120X_dataRun3_Express_v2"
+promptrecoGlobalTag = "120X_dataRun3_Prompt_v2"
+alcap0GlobalTag = "120X_dataRun3_Prompt_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -137,81 +145,43 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_0_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_0_2" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_0_3" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_0_4" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_0_5" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_0" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_2" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_3" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_4" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_5" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_6" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_7" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_8" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_9" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_10" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_2_0" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_2_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_2_5" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_3_0" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_3_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_3_3" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_6_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_6_3" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_6_8" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_0_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_0_2" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_1_0" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_1_3_Patatrack" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_1_3" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_1_4" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_1_5" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_2_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_2_2" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_2_3" : "CMSSW_11_3_1_patch1"
+    "CMSSW_11_0_1" : defaultCMSSWVersion['default'],
+    "CMSSW_11_0_2" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_0" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_3_Patatrack" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_3" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_4" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_5" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_1" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_2" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_3" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_4" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_1" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_2" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_3" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_4" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_0" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_1" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
-    "CMSSW_10_0_0" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_0_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_0_2" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_0_3" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_0_4" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_0_5" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_0" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_2" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_3" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_4" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_5" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_6" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_7" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_8" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_9" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_1_10" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_2_0" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_2_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_2_5" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_3_0" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_3_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_3_3" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_6_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_6_3" : "CMSSW_11_3_1_patch1",
-    "CMSSW_10_6_8" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_0_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_0_2" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_1_0" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_1_3_Patatrack" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_1_3" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_1_4" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_1_5" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_2_1" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_2_2" : "CMSSW_11_3_1_patch1",
-    "CMSSW_11_2_3" : "CMSSW_11_3_1_patch1"
+    "CMSSW_11_0_1" : defaultCMSSWVersion['default'],
+    "CMSSW_11_0_2" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_0" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_3_Patatrack" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_3" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_4" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_5" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_1" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_2" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_3" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_4" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_1" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_2" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_3" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_4" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_0" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_1" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -227,6 +197,7 @@ addRepackConfig(tier0Config, "Default",
                 maxInputFiles=1000,
                 maxLatency=24 * 3600,
                 blockCloseDelay=24 * 3600,
+                maxMemory=2000,
                 versionOverride=repackVersionOverride)
 
 addDataset(tier0Config, "Default",
@@ -505,7 +476,7 @@ for dataset in DATASETS:
                write_aod=True,
                write_miniaod=False,
                write_dqm=True,
-               alca_producers=["TkAlCosmics0T", "MuAlGlobalCosmics"],
+               alca_producers=["SiStripCalCosmics", "SiPixelCalCosmics", "TkAlCosmics0T", "MuAlGlobalCosmics"],
                physics_skims=["CosmicSP", "CosmicTP", "LogError", "LogErrorMonitor"],
                timePerEvent=0.5,
                sizePerEvent=155,
@@ -785,7 +756,8 @@ for dataset in DATASETS:
                write_dqm=True,
                tape_node="T1_IT_CNAF_MSS",
                disk_node="T1_IT_CNAF_Disk",
-               alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym", "HcalCalIsoTrkFilter", "EcalESAlign"],
+               alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym",
+                               "HcalCalIsoTrkFilter", "EcalESAlign"],
                dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
                physics_skims=["EXOMONOPOLE", "ZElectron", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)

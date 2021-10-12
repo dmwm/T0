@@ -51,7 +51,7 @@ def stopRuns(dbInterfaceStorageManager):
         stoppedRuns = findStoppedRunsDAO.execute(runs = activeRuns, transaction = False)
 
         bindVarList = []
-        for run, (start_time, stop_time) in stoppedRuns.items():
+        for run, (start_time, stop_time) in list(stoppedRuns.items()):
             bindVarList.append( { 'RUN' : run,
                                   'START_TIME' : start_time,
                                   'STOP_TIME' : stop_time } )
@@ -102,15 +102,15 @@ def closeRuns(dbInterfaceStorageManager):
     # find all runs with open run/stream filesets and check which have changed lumicount, update those
     runLumicountT0 = getOpenRunStreamLumicountDAO.execute(transaction = False)
     if len(runLumicountT0) > 0:
-        runLumicountSM = findClosedRunsDAO.execute(runs = runLumicountT0.keys(), transaction = False)
-        for run, lumicount in runLumicountSM.items():
+        runLumicountSM = findClosedRunsDAO.execute(runs = list(runLumicountT0.keys()), transaction = False)
+        for run, lumicount in list(runLumicountSM.items()):
             if lumicount != runLumicountT0[run]:
                 closedRuns[run] = lumicount
 
     if len(closedRuns) > 0:
         bindVarList = []
         currentTime = int(time.time())
-        for run, lumicount in closedRuns.items():
+        for run, lumicount in list(closedRuns.items()):
             bindVarList.append( { 'RUN' : run,
                                   'LUMICOUNT' : lumicount,
                                   'CLOSE_TIME' : currentTime } )
@@ -183,7 +183,7 @@ def closeLumiSections(dbInterfaceStorageManager):
             runLumis[run].add(lumi)
 
         bindVarList = []
-        for run, lumis in runLumis.items():
+        for run, lumis in list(runLumis.items()):
             for lumi in lumis:
                 bindVarList.append( { 'RUN' : run,
                                       'LUMI' : lumi } )

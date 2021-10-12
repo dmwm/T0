@@ -23,6 +23,8 @@ from T0.RunConfig.Tier0Config import addExpressConfig
 from T0.RunConfig.Tier0Config import setInjectRuns
 from T0.RunConfig.Tier0Config import setStreamerPNN
 from T0.RunConfig.Tier0Config import setEnableUniqueWorkflowName
+from T0.RunConfig.Tier0Config import addSiteConfig
+from T0.RunConfig.Tier0Config import setStorageSite
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -31,11 +33,22 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [341169,341754,338628,338714])
+setInjectRuns(tier0Config, [343082,344063])
 
 # Settings up sites
-processingSite = "T0_CH_CERN"
+processingSite = "T2_CH_CERN"
+storageSite = "T0_CH_CERN_Disk"
 streamerPNN = "T0_CH_CERN_Disk"
+
+addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
+                siteLocalConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/JobConfig/site-local-config.xml",
+                overrideCatalog="trivialcatalog_file:/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/PhEDEx/storage.xml?protocol=eos"
+                )
+
+addSiteConfig(tier0Config, "EOS_PILOT",
+                siteLocalConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/JobConfig/site-local-config_EOS_PILOT.xml",
+                overrideCatalog="trivialcatalog_file:/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/PhEDEx/storage_EOS_PILOT.xml?protocol=eos"
+                )
 
 # Set global parameters:
 #  Acquisition era
@@ -50,6 +63,7 @@ setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
 setProcessingSite(tier0Config, processingSite)
 setStreamerPNN(tier0Config, streamerPNN)
+setStorageSite(tier0Config, storageSite)
 
 # Override for DQM data tier
 setDQMDataTier(tier0Config, "DQMIO")
@@ -86,7 +100,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_11_3_1_patch1"
+    'default': "CMSSW_12_0_2_patch1"
 }
 
 # Configure ScramArch
@@ -110,9 +124,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "113X_dataRun3_Express_v2"
-promptrecoGlobalTag = "113X_dataRun3_Prompt_v2"
-alcap0GlobalTag = "113X_dataRun3_Prompt_v2"
+expressGlobalTag = "120X_dataRun3_Express_Candidate_2021_09_30_18_36_13"
+promptrecoGlobalTag = "120X_dataRun3_Prompt_Candidate_2021_10_01_08_44_53"
+alcap0GlobalTag = "120X_dataRun3_Prompt_Candidate_2021_10_01_08_44_53"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -137,7 +151,14 @@ repackVersionOverride = {
     "CMSSW_11_2_1" : defaultCMSSWVersion['default'],
     "CMSSW_11_2_2" : defaultCMSSWVersion['default'],
     "CMSSW_11_2_3" : defaultCMSSWVersion['default'],
-    "CMSSW_11_2_4" : defaultCMSSWVersion['default']
+    "CMSSW_11_2_4" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_1" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_2" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_3" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_4" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_0" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_2" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -149,7 +170,14 @@ expressVersionOverride = {
     "CMSSW_11_2_1" : defaultCMSSWVersion['default'],
     "CMSSW_11_2_2" : defaultCMSSWVersion['default'],
     "CMSSW_11_2_3" : defaultCMSSWVersion['default'],
-    "CMSSW_11_2_4" : defaultCMSSWVersion['default']
+    "CMSSW_11_2_4" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_1" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_2" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_3" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_4" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_0" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_2" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -165,6 +193,7 @@ addRepackConfig(tier0Config, "Default",
                 maxInputFiles=1000,
                 maxLatency=24 * 3600,
                 blockCloseDelay=1200,
+                maxMemory=2000,
                 versionOverride=repackVersionOverride)
 
 addDataset(tier0Config, "Default",
@@ -180,7 +209,7 @@ addDataset(tier0Config, "Default",
            global_tag_connect=globalTagConnect,
            #archival_node="T0_CH_CERN_MSS",
            #tape_node="T1_US_FNAL_MSS",
-           disk_node="T2_CH_CERN",
+           disk_node="T0_CH_CERN_Disk",
            #raw_to_disk=False,
            blockCloseDelay=1200,
            timePerEvent=5,
@@ -215,10 +244,10 @@ addExpressConfig(tier0Config, "Express",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride)
-
+ 
 addExpressConfig(tier0Config, "ExpressCosmics",
                  scenario=cosmicsScenario,
-                 diskNode="T2_CH_CERN",
+                 diskNode="T0_CH_CERN_Disk",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T",
@@ -243,7 +272,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
 
 addExpressConfig(tier0Config, "HLTMonitor",
                  scenario=ppScenario,
-                 diskNode="T2_CH_CERN",
+                 diskNode="T0_CH_CERN_Disk",
                  data_tiers=["FEVTHLTALL"],
                  write_dqm=True,
                  alca_producers=[],
@@ -285,8 +314,8 @@ addExpressConfig(tier0Config, "Calibration",
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
                  dataType="data",
-                 diskNode="T2_CH_CERN")
-
+                 diskNode="T0_CH_CERN_Disk")
+ 
 addExpressConfig(tier0Config, "ExpressAlignment",
                  scenario=alcaTrackingOnlyScenario,
                  data_tiers=["ALCARECO"],
@@ -308,8 +337,8 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
-                 diskNode="T2_CH_CERN")
-
+                 diskNode="T0_CH_CERN_Disk")
+ 
 addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
                  scenario=alcaLumiPixelsScenario,
                  data_tiers=["ALCARECO"],
@@ -331,15 +360,15 @@ addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
-                 diskNode="T2_CH_CERN")
-
+                 diskNode="T0_CH_CERN_Disk")
+ 
 #####################
 ### HI Tests 2018 ###
 #####################
-
+ 
 addExpressConfig(tier0Config, "HIExpress",
                  scenario=hiTestppScenario,
-                 diskNode="T2_CH_CERN",
+                 diskNode="T0_CH_CERN_Disk",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
@@ -385,7 +414,7 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
-                 diskNode="T2_CH_CERN")
+                 diskNode="T0_CH_CERN_Disk")
 
 ###################################
 ### Standard Physics PDs (2017) ###
@@ -432,7 +461,7 @@ for dataset in DATASETS:
                write_aod=True,
                write_miniaod=False,
                write_dqm=True,
-               alca_producers=["TkAlCosmics0T", "MuAlGlobalCosmics"],
+               alca_producers=["SiStripCalCosmics","SiPixelCalCosmics","TkAlCosmics0T","MuAlGlobalCosmics"],
                physics_skims=["CosmicSP", "CosmicTP", "LogError", "LogErrorMonitor"],
                timePerEvent=0.5,
                sizePerEvent=155,
@@ -1329,7 +1358,7 @@ addExpressConfig(tier0Config, "ExpressPA",
                  blockCloseDelay=1200,
                  timePerEvent=4,
                  sizePerEvent=1700,
-                 diskNode="T2_CH_CERN",
+                 diskNode="T0_CH_CERN_Disk",
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "HLTMonitorPA",
@@ -1352,7 +1381,7 @@ addExpressConfig(tier0Config, "HLTMonitorPA",
                  blockCloseDelay=1200,
                  timePerEvent=4, #I have to get some stats to set this properly
                  sizePerEvent=1700, #I have to get some stats to set this properly
-                 diskNode="T2_CH_CERN",
+                 diskNode="T0_CH_CERN_Disk",
                  versionOverride=expressVersionOverride)
 
 #########################################

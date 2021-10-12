@@ -40,4 +40,4 @@ class GetAllFiles(DBFormatter):
             else:
                 result[entry['lfn']]['location'].add(entry['location'])
 
-        return result.values()
+        return list(result.values())

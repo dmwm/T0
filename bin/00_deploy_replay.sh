@@ -4,8 +4,9 @@ BASE_DIR=/data/tier0
 DEPLOY_DIR=$BASE_DIR/srv/wmagent
 SPEC_DIR=$BASE_DIR/admin/Specs
 
-TIER0_VERSION=2.2.4
+TIER0_VERSION=3.0.1
 TIER0_ARCH=slc7_amd64_gcc630
+DEPLOY_TAG=HG2110b
 
 function echo_header {
     echo ''
@@ -23,7 +24,7 @@ mkdir -p $SPEC_DIR
 cd $BASE_DIR
 echo_header "deleting deployment dir \"deployment\""
 rm -rf deployment
-git clone https://github.com/dmwm/deployment.git
+git clone https://github.com/dmwm/deployment.git  --branch $DEPLOY_TAG
 cd deployment
 
 #Patch to test deployment adjustments
@@ -255,3 +256,7 @@ echo "config.RetryManager.PauseAlgo.section_('Processing')" >> ./config/tier0/co
 echo "config.RetryManager.PauseAlgo.Processing.retryErrorCodes = { 8001: 0, 70: 0, 50513: 0, 50660: 0, 50661: 0, 71304: 0, 99109: 0, 99303: 0, 99400: 0, 8001: 0, 50115: 0 }" >> ./config/tier0/config.py
 echo "config.RetryManager.PauseAlgo.section_('Repack')" >> ./config/tier0/config.py
 echo "config.RetryManager.PauseAlgo.Repack.retryErrorCodes = { 8001: 0, 70: 0, 50513: 0, 50660: 0, 50661: 0, 71304: 0, 99109: 0, 99303: 0, 99400: 0, 8001: 0, 50115: 0 }" >> ./config/tier0/config.py
+
+#Overwrite RetryManager to show Logcollect and CleanUp jobs paused instead of automatically fails
+sed -i "s/config.RetryManager.plugins.*/config.RetryManager.plugins={'default': 'PauseAlgo', 'Cleanup': 'PauseAlgo', 'LogCollect': 'PauseAlgo'}/g" ./config/tier0/config.py
+sed -i "s/config.ErrorHandler.maxRetries.*/config.ErrorHandler.maxRetries={'default': 30, 'Cleanup': 30, 'LogCollect': 30}/g" ./config/tier0/config.py

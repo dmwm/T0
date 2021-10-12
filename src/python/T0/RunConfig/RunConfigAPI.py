@@ -20,6 +20,7 @@ from WMCore.WMBS.Fileset import Fileset
 from WMCore.ReqMgr.DataStructs.RequestStatus import REQUEST_START_STATE
 
 from T0.RunConfig.Tier0Config import retrieveDatasetConfig
+from T0.RunConfig.Tier0Config import retrieveSiteConfig
 from T0.RunConfig.Tier0Config import addRepackConfig
 from T0.RunConfig.Tier0Config import deleteStreamConfig
 
@@ -110,9 +111,9 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         bindsTrigger = []
         bindsDatasetTrigger = []
 
-        for stream, datasetDict in hltConfig['mapping'].items():
+        for stream, datasetDict in list(hltConfig['mapping'].items()):
             bindsStream.append( { 'STREAM' : stream } )
-            for dataset, paths in datasetDict.items():
+            for dataset, paths in list(datasetDict.items()):
 
                 if dataset == "Unassigned path":
 
@@ -201,7 +202,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
     if runInfo['hltkey'] != None:
 
         # streams not explicitely configured are repacked
-        if stream not in tier0Config.Streams.dictionary_().keys():
+        if stream not in list(tier0Config.Streams.dictionary_().keys()):
             addRepackConfig(tier0Config, stream)
 
         streamConfig = tier0Config.Streams.dictionary_()[stream]
@@ -429,7 +430,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         getStreamDatasetTriggersDAO = daoFactory(classname = "RunConfig.GetStreamDatasetTriggers")
         datasetTriggers = getStreamDatasetTriggersDAO.execute(run, stream, transaction = False)
 
-        for dataset, paths in datasetTriggers.items():
+        for dataset, paths in list(datasetTriggers.items()):
 
             datasetConfig = retrieveDatasetConfig(tier0Config, dataset)
 
@@ -561,11 +562,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             specArguments = {}
 
-            if stream == 'ScoutingPF':
-                specArguments['Memory'] = 2000
-            else:
-                specArguments['Memory'] = 1000
-
+            specArguments['Memory'] = streamConfig.Repack.MaxMemory
             specArguments['Requestor'] = "Tier0"
             specArguments['RequestName'] = workflowName
             specArguments['RequestString'] = workflowName
@@ -711,10 +708,10 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                       'GracePeriod': 3600,
                                       'Dashboard': "t0" } )
 
-            if tier0Config.Global.ProcessingSite=='T0_CH_CERN':
-                wmSpec.setTaskEnvironmentVariables({'WMAGENT_SITE_CONFIG_OVERRIDE':tier0Config.Global.siteLocalConfig})
-                wmSpec.setOverrideCatalog(tier0Config.Global.overrideCatalog)
-                wmSpec.updateArguments( { 'SiteWhitelist': [ 'T2_CH_CERN' ] } )
+            if tier0Config.Global.ProcessingSite!=tier0Config.Global.StorageSite:
+                site = retrieveSiteConfig(tier0Config,tier0Config.Global.StorageSite)
+                wmSpec.setTaskEnvironmentVariables({'WMAGENT_SITE_CONFIG_OVERRIDE':site.SiteLocalConfig})
+                wmSpec.setOverrideCatalog(site.OverrideCatalog)
 
             wmbsHelper = WMBSHelper(wmSpec, taskName, cachepath = specDirectory)
 
@@ -755,7 +752,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 insertWorkflowMonitoringDAO.execute([fileset.id],  conn = myThread.transaction.conn, transaction = True)
             if streamConfig.ProcessingStyle == "Bulk":
                 bindsRecoReleaseConfig = []
-                for fileset, primds in wmbsHelper.getMergeOutputMapping().items():
+                for fileset, primds in list(wmbsHelper.getMergeOutputMapping().items()):
                     bindsRecoReleaseConfig.append( { 'RUN' : run,
                                                      'PRIMDS' : primds,
                                                      'FILESET' : fileset } )
@@ -1123,13 +1120,12 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                          'dn' : "Dirk.Hufnagel@cern.ch" } )
 
                 #Overriding site configuration
-                if 'T0_CH_CERN' in datasetConfig.SiteWhitelist:
-                    wmSpec.setTaskEnvironmentVariables({'WMAGENT_SITE_CONFIG_OVERRIDE':tier0Config.Global.siteLocalConfig})
-                    wmSpec.setOverrideCatalog(tier0Config.Global.overrideCatalog)
+                if tier0Config.Global.ProcessingSite!=tier0Config.Global.StorageSite:
+                    site = retrieveSiteConfig(tier0Config,tier0Config.Global.StorageSite)
+                    wmSpec.setTaskEnvironmentVariables({'WMAGENT_SITE_CONFIG_OVERRIDE':site.SiteLocalConfig})
+                    wmSpec.setOverrideCatalog(site.OverrideCatalog)
 
                 #Overriding processing site in case we using T0 disk
-                datasetConfig.SiteWhitelist = [ 'T2_CH_CERN' if s=='T0_CH_CERN' else s for s in datasetConfig.SiteWhitelist]
-
                 wmSpec.updateArguments( { 'SiteWhitelist': datasetConfig.SiteWhitelist,
                                           'SiteBlacklist': [],
                                           'TrustSitelists': "True",
@@ -1154,11 +1150,11 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 insertStorageNodeDAO.execute(bindsStorageNode, conn = myThread.transaction.conn, transaction = True)
             if len(bindsReleasePromptReco) > 0:
                 releasePromptRecoDAO.execute(bindsReleasePromptReco, conn = myThread.transaction.conn, transaction = True)
-            for (wmbsHelper, wmSpec, fileset) in recoSpecs.values():
+            for (wmbsHelper, wmSpec, fileset) in list(recoSpecs.values()):
                 wmbsHelper.createSubscription(wmSpec.getTask(taskName), Fileset(id = fileset), alternativeFilesetClose = True)
                 insertWorkflowMonitoringDAO.execute([fileset],  conn = myThread.transaction.conn, transaction = True)
             if len(recoSpecs) > 0:
-                markWorkflowsInjectedDAO.execute(recoSpecs.keys(), injected = True, conn = myThread.transaction.conn, transaction = True)
+                markWorkflowsInjectedDAO.execute(list(recoSpecs.keys()), injected = True, conn = myThread.transaction.conn, transaction = True)
         except Exception as ex:
             logging.exception(ex)
             myThread.transaction.rollback()

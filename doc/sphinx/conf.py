@@ -38,8 +38,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'T0 System'
-copyright = u'2012, CMS collaboration'
+project = 'T0 System'
+copyright = '2012, CMS collaboration'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -176,8 +176,8 @@ htmlhelp_basename = 'T0doc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'T0.tex', u'T0 Documentation',
-   u'Valentin Kuznetsov', 'manual'),
+  ('index', 'T0.tex', 'T0 Documentation',
+   'Valentin Kuznetsov', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
