@@ -41,7 +41,6 @@ fi
 for package in $TOBUILD; do
   # make a copy of requirements.txt to reference for each build
   cp requirements.txt requirements.t0.txt
-  cp requirements.txt requirements.backup.txt
 
   # update the setup script template with package name
   sed "s/PACKAGE_TO_BUILD/$package/" setup_template.py > setup.py
