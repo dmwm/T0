@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # This template for the setup script is used to build several pypi packages
 # from the WMCore codebase. The variable package_name controls which package
@@ -95,7 +95,7 @@ def parse_requirements(requirements_file):
         print("ERROR: requirements file " + requirements_file + " not found.")
         sys.exit(1)
 
-required_python_version = '2.6'
+required_python_version = '3.6'
 cms_license  = "CMS experiment software"
 url = "https://github.com/dmwm/T0"
 # the contents of package_name are modified via tools/build_pypi_packages.sh
