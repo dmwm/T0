@@ -58,7 +58,7 @@ for package in $TOBUILD; do
   # upload the package to pypi
   echo "Uploading package $package to PyPI"
   #twine upload dist/$package-*
-  twine upload --repository testpypi dist/$package-*
+  twine upload --repository pypi dist/$package-*
   
   # replace requirements.txt contents
   cp requirements.t0.txt requirements.txt
