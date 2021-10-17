@@ -33,7 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [317696])
+setInjectRuns(tier0Config, [319077])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -100,7 +100,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_0_2_patch1"
+    'default': "CMSSW_12_0_2_patch2"
 }
 
 # Configure ScramArch
