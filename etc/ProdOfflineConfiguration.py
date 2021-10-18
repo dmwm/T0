@@ -61,6 +61,7 @@ setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
 setProcessingSite(tier0Config, processingSite)
 setStreamerPNN(tier0Config, streamerPNN)
+setStorageSite(tier0Config, storageSite)
 
 # Override for DQM data tier
 setDQMDataTier(tier0Config, "DQMIO")
@@ -93,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_0_2_patch1"
+    'default': "CMSSW_12_0_2_patch2"
 }
 
 # Configure ScramArch
@@ -161,7 +162,9 @@ repackVersionOverride = {
     "CMSSW_11_3_3" : defaultCMSSWVersion['default'],
     "CMSSW_11_3_4" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_0" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_1" : defaultCMSSWVersion['default']
+    "CMSSW_12_0_1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_2" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_2_patch1" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -181,7 +184,9 @@ expressVersionOverride = {
     "CMSSW_11_3_3" : defaultCMSSWVersion['default'],
     "CMSSW_11_3_4" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_0" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_1" : defaultCMSSWVersion['default']
+    "CMSSW_12_0_1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_2" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_2_patch1" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -257,7 +262,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T",
                                  "SiPixelCalZeroBias",
-                                 "PromptCalibProdSiStrip", "PromptCalibProdSiPixel", "SiStripCalCosmics"
+                                 "PromptCalibProdSiStrip", "PromptCalibProdSiPixel"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
@@ -327,7 +332,7 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  data_tiers=["ALCARECO"],
                  write_dqm=True,
                  alca_producers=["TkAlMinBias", "PromptCalibProdBeamSpotHP"],
-                 dqm_sequences=["DQMOfflineTracking"],
+                 dqm_sequences=["@trackingOnlyDQM"],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
                  global_tag_connect=globalTagConnect,
@@ -370,6 +375,29 @@ addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
                  tapeNode=None,
                  diskNode=None)
 
+addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
+                 scenario=alcaLumiPixelsScenario,
+                 data_tiers=["ALCARECO"],
+                 write_dqm=True,
+                 alca_producers=["AlCaPCCRandom", "PromptCalibProdLumiPCC"],
+                 dqm_sequences=[],
+                 reco_version=defaultCMSSWVersion,
+                 multicore=1,
+                 global_tag_connect=globalTagConnect,
+                 global_tag=expressGlobalTag,
+                 proc_ver=expressProcVersion,
+                 maxInputRate=23 * 1000,
+                 maxInputEvents=100 * 1000 * 1000,
+                 maxInputSize=4 * 1024 * 1024 * 1024,
+                 maxInputFiles=10000,
+                 maxLatency=1 * 3600,
+                 periodicHarvestInterval=24 * 3600,
+                 blockCloseDelay=2 * 3600,
+                 timePerEvent=4,
+                 sizePerEvent=1700,
+                 versionOverride=expressVersionOverride,
+                 diskNode="T0_CH_CERN_Disk")
+
 #####################
 ### HI Tests 2018 ###
 #####################
@@ -405,7 +433,7 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  data_tiers=["ALCARECO", "RAW"],
                  write_dqm=True,
                  alca_producers=["TkAlMinBias"],
-                 dqm_sequences=["DQMOfflineTracking"],
+                 dqm_sequences=["@trackingOnlyDQM"],
                  reco_version=defaultCMSSWVersion,
                  raw_to_disk=True,
                  multicore=numberOfCores,
@@ -514,7 +542,7 @@ DATASETS = ["DoubleMuon"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
-               write_reco=False,
+               write_reco=True,
                raw_to_disk=True,
                write_dqm=True,
                tape_node="T1_DE_KIT_MSS",
@@ -818,7 +846,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
                raw_to_disk=True,
-               alca_producers=["EcalTestPulsesRaw", "PromptCalibProdEcalPedestals"],
+               alca_producers=["EcalTestPulsesRaw", "PromptCalibProdEcalPedestals", "HcalCalPedestal"],
                dqm_sequences=["@common"],
                scenario=alcaTestEnableScenario)
 
@@ -855,7 +883,10 @@ for dataset in DATASETS:
 ### special AlcaRaw PDs ###
 ###########################
 
-DATASETS = ["AlCaLumiPixels"]
+DATASETS = ["AlCaLumiPixels", "AlCaLumiPixels0", "AlCaLumiPixels1", "AlCaLumiPixels2", "AlCaLumiPixels3",
+            "AlCaLumiPixels4", "AlCaLumiPixels5", "AlCaLumiPixels6", "AlCaLumiPixels7",
+            "AlCaLumiPixels8", "AlCaLumiPixels9", "AlCaLumiPixels10", "AlCaLumiPixels11",
+            "AlCaLumiPixels12"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -871,10 +902,10 @@ for dataset in DATASETS:
                sizePerEvent=38,
                scenario=alcaLumiPixelsScenario)
 
-DATASETS = ["AlCaLumiPixels0", "AlCaLumiPixels1", "AlCaLumiPixels2", "AlCaLumiPixels3",
-            "AlCaLumiPixels4", "AlCaLumiPixels5", "AlCaLumiPixels6", "AlCaLumiPixels7",
-            "AlCaLumiPixels8", "AlCaLumiPixels9", "AlCaLumiPixels10", "AlCaLumiPixels11",
-            "AlCaLumiPixels12"]
+DATASETS = ["ALCALumiPixelsCountsPrompt0", "ALCALumiPixelsCountsPrompt1", "ALCALumiPixelsCountsPrompt2", "ALCALumiPixelsCountsPrompt3",
+            "ALCALumiPixelsCountsPrompt4", "ALCALumiPixelsCountsPrompt5", "ALCALumiPixelsCountsPrompt6", "ALCALumiPixelsCountsPrompt7",
+            "ALCALumiPixelsCountsPrompt8", "ALCALumiPixelsCountsPrompt9", "ALCALumiPixelsCountsPrompt10", "ALCALumiPixelsCountsPrompt11",
+            "ALCALumiPixelsCountsPrompt12", "ALCALumiPixelsCountsPrompt"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -912,7 +943,10 @@ for dataset in DATASETS:
 ### HLTPhysics PDs                                   ###
 ########################################################
 
-DATASETS = ["HLTPhysics"]
+DATASETS = ["HLTPhysics", "HLTPhysics0", "HLTPhysics1",
+            "HLTPhysics2", "HLTPhysics3", "HLTPhysics4",
+            "HLTPhysics5", "HLTPhysics6", "HLTPhysics7",
+            "HLTPhysics8", "HLTPhysics9", "HLTPhysics10"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -922,22 +956,6 @@ for dataset in DATASETS:
                write_dqm=True,
                write_miniaod=True,
                write_aod=True,
-               dqm_sequences=["@common", "@ecal", "@jetmet", "@hcal", "@L1TEgamma"],
-               alca_producers=["TkAlMinBias"],
-               physics_skims=["LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
-
-DATASETS = ["HLTPhysics0", "HLTPhysics1", "HLTPhysics2",
-            "HLTPhysics3", "HLTPhysics4", "HLTPhysics5",
-            "HLTPhysics6", "HLTPhysics7", "HLTPhysics8",
-            "HLTPhysics9", "HLTPhysics10"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               raw_to_disk=True,
-               write_reco=False,
-               write_dqm=True,
                dqm_sequences=["@common", "@ecal", "@jetmet", "@hcal", "@L1TEgamma"],
                alca_producers=["TkAlMinBias"],
                physics_skims=["LogError", "LogErrorMonitor"],
@@ -991,19 +1009,7 @@ for dataset in DATASETS:
 ### MinimumBias PDs                                  ###
 ########################################################
 
-DATASETS = ["MinimumBias"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_dqm=True,
-               tape_node="T1_RU_JINR_MSS",
-               disk_node="T1_RU_JINR_Disk",
-               dqm_sequences=["@common", "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
-               alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias"],
-               scenario=ppScenario)
-
-DATASETS = ["MinimumBias0", "MinimumBias1", "MinimumBias2", "MinimumBias3",
+DATASETS = ["MinimumBias", "MinimumBias0", "MinimumBias1", "MinimumBias2", "MinimumBias3",
             "MinimumBias4", "MinimumBias5", "MinimumBias6", "MinimumBias7",
             "MinimumBias8", "MinimumBias9", "MinimumBias10", "MinimumBias11",
             "MinimumBias12", "MinimumBias13", "MinimumBias14", "MinimumBias15",
@@ -1019,7 +1025,8 @@ for dataset in DATASETS:
                disk_node="T1_RU_JINR_Disk",
                dqm_sequences=["@common", "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
                timePerEvent=1,
-               alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias"],
+               alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias", "HcalCalHO", 
+                               "HcalCalIterativePhiSym", "HcalCalHBHEMuonFilter", "HcalCalIsoTrkFilter"],
                scenario=ppScenario)
 
 DATASETS = ["L1MinimumBias"]
