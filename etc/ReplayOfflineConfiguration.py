@@ -100,7 +100,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_0_2_patch1"
+    'default': "CMSSW_12_0_2_patch2"
 }
 
 # Configure ScramArch
@@ -320,7 +320,7 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  data_tiers=["ALCARECO"],
                  write_dqm=True,
                  alca_producers=["TkAlMinBias", "PromptCalibProdBeamSpotHP"],
-                 dqm_sequences=["DQMOfflineTracking"],
+                 dqm_sequences=["@trackingOnlyDQM"],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
                  global_tag_connect=globalTagConnect,
@@ -361,7 +361,7 @@ addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
                  versionOverride=expressVersionOverride,
                  diskNode="T0_CH_CERN_Disk")
 
-addExpressConfig(tier0Config, "ALCALumiPixelCountsExpress",
+addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
                  scenario=alcaLumiPixelsScenario,
                  data_tiers=["ALCARECO"],
                  write_dqm=True,
@@ -419,7 +419,7 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  data_tiers=["ALCARECO", "RAW"],
                  write_dqm=True,
                  alca_producers=["TkAlMinBias"],
-                 dqm_sequences=["DQMOfflineTracking"],
+                 dqm_sequences=["@trackingOnlyDQM"],
                  reco_version=defaultCMSSWVersion,
                  raw_to_disk=True,
                  multicore=numberOfCores,
@@ -483,7 +483,7 @@ for dataset in DATASETS:
                write_aod=True,
                write_miniaod=False,
                write_dqm=True,
-               alca_producers=["SiStripCalCosmics","SiPixelCalCosmics","TkAlCosmics0T","MuAlGlobalCosmics"],
+               alca_producers=["SiStripCalCosmics", "SiPixelCalCosmics", "TkAlCosmics0T", "MuAlGlobalCosmics"],
                physics_skims=["CosmicSP", "CosmicTP", "LogError", "LogErrorMonitor"],
                timePerEvent=0.5,
                sizePerEvent=155,
@@ -835,10 +835,10 @@ for dataset in DATASETS:
                sizePerEvent=38,
                scenario=alcaLumiPixelsScenario)
 
-DATASETS = ["ALCALumiPixelCountsPrompt0", "ALCALumiPixelCountsPrompt1", "ALCALumiPixelCountsPrompt2", "ALCALumiPixelCountsPrompt3",
-            "ALCALumiPixelCountsPrompt4", "ALCALumiPixelCountsPrompt5", "ALCALumiPixelCountsPrompt6", "ALCALumiPixelCountsPrompt7",
-            "ALCALumiPixelCountsPrompt8", "ALCALumiPixelCountsPrompt9", "ALCALumiPixelCountsPrompt10", "ALCALumiPixelCountsPrompt11",
-            "ALCALumiPixelCountsPrompt12", "ALCALumiPixelCountsPrompt"]
+DATASETS = ["ALCALumiPixelsCountsPrompt0", "ALCALumiPixelsCountsPrompt1", "ALCALumiPixelsCountsPrompt2", "ALCALumiPixelsCountsPrompt3",
+            "ALCALumiPixelsCountsPrompt4", "ALCALumiPixelsCountsPrompt5", "ALCALumiPixelsCountsPrompt6", "ALCALumiPixelsCountsPrompt7",
+            "ALCALumiPixelsCountsPrompt8", "ALCALumiPixelsCountsPrompt9", "ALCALumiPixelsCountsPrompt10", "ALCALumiPixelsCountsPrompt11",
+            "ALCALumiPixelsCountsPrompt12", "ALCALumiPixelsCountsPrompt"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
