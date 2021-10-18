@@ -946,7 +946,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common", "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
                timePerEvent=1,
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias", "HcalCalHO", 
                                "HcalCalIterativePhiSym", "HcalCalHBHEMuonFilter", "HcalCalIsoTrkFilter"],
