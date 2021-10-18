@@ -22,7 +22,14 @@ try:
 except:
   print("fail to import T0")
   import T0
-t0_version="-".join(subprocess.check_output(['git','describe','--tags']).decode().strip("\n").split("-")[:-1])
+
+tag = subprocess.check_output(['git', 'describe', '--abbrev=0', '--tags']).decode().strip("\n")
+tag_hash = subprocess.check_output(['git', 'describe', '--tags']).decode().strip("\n")
+if( tag == tag_hash ):
+  t0_version=tag
+else:
+  t0_version="-".join(tag_hash.split("-")[:-1])
+print("T0 version: ",t0_version)
 
 # we need to override 'clean' command to remove specific files
 class TestCommand(Command):
