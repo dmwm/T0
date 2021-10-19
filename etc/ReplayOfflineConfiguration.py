@@ -813,6 +813,9 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=alcaLumiPixelsScenario)
 
+########################################################
+### Pilot Tests PDs                                  ###
+########################################################
 DATASETS = ["ALCALumiPixelsCountsPrompt0", "ALCALumiPixelsCountsPrompt1", "ALCALumiPixelsCountsPrompt2", "ALCALumiPixelsCountsPrompt3",
             "ALCALumiPixelsCountsPrompt4", "ALCALumiPixelsCountsPrompt5", "ALCALumiPixelsCountsPrompt6", "ALCALumiPixelsCountsPrompt7",
             "ALCALumiPixelsCountsPrompt8", "ALCALumiPixelsCountsPrompt9", "ALCALumiPixelsCountsPrompt10", "ALCALumiPixelsCountsPrompt11",
@@ -821,14 +824,30 @@ DATASETS = ["ALCALumiPixelsCountsPrompt0", "ALCALumiPixelsCountsPrompt1", "ALCAL
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
-               write_reco=False, write_aod=False, write_miniaod=False, write_dqm=True,
+               write_reco=False, write_aod=False, write_miniaod=False, write_dqm=False,
+               disk_node=None,
+               tape_node=None,
                reco_split=alcarawSplitting,
                proc_version=alcarawProcVersion,
-               alca_producers=[],
-               dqm_sequences=["@common"],
                timePerEvent=0.02,
                sizePerEvent=38,
-               disk_node="T2_CH_CERN",
+               scenario=alcaLumiPixelsScenario)
+
+DATASETS = ["ALCALumiPixelsCountsExpress0", "ALCALumiPixelsCountsExpress1", "ALCALumiPixelsCountsExpress2", "ALCALumiPixelsCountsExpress3",
+            "ALCALumiPixelsCountsExpress4", "ALCALumiPixelsCountsExpress5", "ALCALumiPixelsCountsExpress6", "ALCALumiPixelsCountsExpress7",
+            "ALCALumiPixelsCountsExpress8", "ALCALumiPixelsCountsExpress9", "ALCALumiPixelsCountsExpress10", "ALCALumiPixelsCountsExpress11",
+            "ALCALumiPixelsCountsExpress12", "ALCALumiPixelsCountsExpress"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               write_reco=False, write_aod=False, write_miniaod=False, write_dqm=False,
+               disk_node=None,
+               tape_node=None,
+               reco_split=alcarawSplitting,
+               proc_version=alcarawProcVersion,
+               timePerEvent=0.02,
+               sizePerEvent=38,
                scenario=alcaLumiPixelsScenario)
 
 DATASETS = ["AlCaPhiSym"]
