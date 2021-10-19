@@ -375,28 +375,6 @@ addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
                  tapeNode=None,
                  diskNode=None)
 
-addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
-                 scenario=alcaLumiPixelsScenario,
-                 data_tiers=["ALCARECO"],
-                 write_dqm=True,
-                 alca_producers=["AlCaPCCRandom", "PromptCalibProdLumiPCC"],
-                 dqm_sequences=[],
-                 reco_version=defaultCMSSWVersion,
-                 multicore=1,
-                 global_tag_connect=globalTagConnect,
-                 global_tag=expressGlobalTag,
-                 proc_ver=expressProcVersion,
-                 maxInputRate=23 * 1000,
-                 maxInputEvents=100 * 1000 * 1000,
-                 maxInputSize=4 * 1024 * 1024 * 1024,
-                 maxInputFiles=10000,
-                 maxLatency=1 * 3600,
-                 periodicHarvestInterval=24 * 3600,
-                 blockCloseDelay=2 * 3600,
-                 timePerEvent=4,
-                 sizePerEvent=1700,
-                 versionOverride=expressVersionOverride,
-                 diskNode="T0_CH_CERN_Disk")
 
 #####################
 ### HI Tests 2018 ###
@@ -902,6 +880,9 @@ for dataset in DATASETS:
                sizePerEvent=38,
                scenario=alcaLumiPixelsScenario)
 
+########################################################
+### Pilot Tests PDs                                  ###
+########################################################
 DATASETS = ["ALCALumiPixelsCountsPrompt0", "ALCALumiPixelsCountsPrompt1", "ALCALumiPixelsCountsPrompt2", "ALCALumiPixelsCountsPrompt3",
             "ALCALumiPixelsCountsPrompt4", "ALCALumiPixelsCountsPrompt5", "ALCALumiPixelsCountsPrompt6", "ALCALumiPixelsCountsPrompt7",
             "ALCALumiPixelsCountsPrompt8", "ALCALumiPixelsCountsPrompt9", "ALCALumiPixelsCountsPrompt10", "ALCALumiPixelsCountsPrompt11",
@@ -909,14 +890,29 @@ DATASETS = ["ALCALumiPixelsCountsPrompt0", "ALCALumiPixelsCountsPrompt1", "ALCAL
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_reco=False, write_aod=False, write_miniaod=False, write_dqm=True,
+               do_reco=False,
+               write_reco=False, write_aod=False, write_miniaod=False, write_dqm=False,
                disk_node=None,
                tape_node=None,
                reco_split=alcarawSplitting,
                proc_version=alcarawProcVersion,
-               alca_producers=["AlCaPCCZeroBias"],
-               dqm_sequences=["@common"],
+               timePerEvent=0.02,
+               sizePerEvent=38,
+               scenario=alcaLumiPixelsScenario)
+
+DATASETS = ["ALCALumiPixelsCountsExpress0", "ALCALumiPixelsCountsExpress1", "ALCALumiPixelsCountsExpress2", "ALCALumiPixelsCountsExpress3",
+            "ALCALumiPixelsCountsExpress4", "ALCALumiPixelsCountsExpress5", "ALCALumiPixelsCountsExpress6", "ALCALumiPixelsCountsExpress7",
+            "ALCALumiPixelsCountsExpress8", "ALCALumiPixelsCountsExpress9", "ALCALumiPixelsCountsExpress10", "ALCALumiPixelsCountsExpress11",
+            "ALCALumiPixelsCountsExpress12", "ALCALumiPixelsCountsExpress"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               write_reco=False, write_aod=False, write_miniaod=False, write_dqm=False,
+               disk_node=None,
+               tape_node=None,
+               reco_split=alcarawSplitting,
+               proc_version=alcarawProcVersion,
                timePerEvent=0.02,
                sizePerEvent=38,
                scenario=alcaLumiPixelsScenario)
