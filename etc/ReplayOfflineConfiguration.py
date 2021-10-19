@@ -361,33 +361,10 @@ addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
                  versionOverride=expressVersionOverride,
                  diskNode="T0_CH_CERN_Disk")
 
-addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
-                 scenario=alcaLumiPixelsScenario,
-                 data_tiers=["ALCARECO"],
-                 write_dqm=True,
-                 alca_producers=["AlCaPCCRandom", "PromptCalibProdLumiPCC"],
-                 dqm_sequences=[],
-                 reco_version=defaultCMSSWVersion,
-                 multicore=1,
-                 global_tag_connect=globalTagConnect,
-                 global_tag=expressGlobalTag,
-                 proc_ver=expressProcVersion,
-                 maxInputRate=23 * 1000,
-                 maxInputEvents=100 * 1000 * 1000,
-                 maxInputSize=4 * 1024 * 1024 * 1024,
-                 maxInputFiles=10000,
-                 maxLatency=1 * 3600,
-                 periodicHarvestInterval=24 * 3600,
-                 blockCloseDelay=2 * 3600,
-                 timePerEvent=4,
-                 sizePerEvent=1700,
-                 versionOverride=expressVersionOverride,
-                 diskNode="T0_CH_CERN_Disk")
- 
 #####################
 ### HI Tests 2018 ###
 #####################
- 
+
 addExpressConfig(tier0Config, "HIExpress",
                  scenario=hiTestppScenario,
                  diskNode="T0_CH_CERN_Disk",
@@ -825,14 +802,15 @@ DATASETS = ["AlCaLumiPixels", "AlCaLumiPixels0", "AlCaLumiPixels1", "AlCaLumiPix
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=True,
+               do_reco=False,
                write_reco=False, write_aod=False, write_miniaod=False, write_dqm=True,
                reco_split=alcarawSplitting,
                proc_version=alcarawProcVersion,
-               alca_producers=["AlCaPCCZeroBias"],
+               alca_producers=[],
                dqm_sequences=["@common"],
                timePerEvent=0.02,
                sizePerEvent=38,
+               disk_node="T2_CH_CERN",
                scenario=alcaLumiPixelsScenario)
 
 DATASETS = ["ALCALumiPixelsCountsPrompt0", "ALCALumiPixelsCountsPrompt1", "ALCALumiPixelsCountsPrompt2", "ALCALumiPixelsCountsPrompt3",
@@ -842,14 +820,15 @@ DATASETS = ["ALCALumiPixelsCountsPrompt0", "ALCALumiPixelsCountsPrompt1", "ALCAL
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=True,
+               do_reco=False,
                write_reco=False, write_aod=False, write_miniaod=False, write_dqm=True,
                reco_split=alcarawSplitting,
                proc_version=alcarawProcVersion,
-               alca_producers=["AlCaPCCZeroBias"],
+               alca_producers=[],
                dqm_sequences=["@common"],
                timePerEvent=0.02,
                sizePerEvent=38,
+               disk_node="T2_CH_CERN",
                scenario=alcaLumiPixelsScenario)
 
 DATASETS = ["AlCaPhiSym"]
