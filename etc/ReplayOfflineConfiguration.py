@@ -4,7 +4,6 @@ Processing configuration for the Tier0 - Replay version
 """
 from __future__ import print_function
 
-import datetime
 from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
@@ -118,7 +117,7 @@ alcaLumiPixelsScenario = "AlCaLumiPixels"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
-dt = int(datetime.datetime.now().strftime("%y%m%d%H%M"))
+dt = 1
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt

@@ -65,6 +65,8 @@ Tier0Configuration - Global configuration object
 | |       |--> DefaultScramArch - Default ScramArch if nothing else is specified for release
 | |       |
 | |       |--> BaseRequestPriority - Base for request priorities for PromptReco/Repack/Express
+| |       |
+| |       |--> DeploymentID - Unique identifier for every T0 Agent deployment
 | |
 | |
 | |--> Streams - Configuration parameters that belong to a particular stream
@@ -267,6 +269,8 @@ def createTier0Config():
     tier0Config.Global.BaseRequestPriority = 150000
 
     tier0Config.Global.EnableUniqueWorkflowName = False
+
+    tier0Config.Global.DeploymentID = 1
 
     return tier0Config
 
@@ -745,6 +749,15 @@ def setEnableUniqueWorkflowName(config):
     PromptReco_Run322057_Charmonium_Tier0_REPLAY_vocms047_v274_190221_121
     """
     config.Global.EnableUniqueWorkflowName = True
+    return
+
+def setDeploymentId(config, id):
+    """
+    _setDeploymentId_
+
+    Sets an ID for the current deployment of T0
+    """
+    config.Global.DeploymentID = id
     return
 
 def ignoreStream(config, streamName):
