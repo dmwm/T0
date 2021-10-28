@@ -18,58 +18,21 @@ from setup_dependencies import dependencies
 # get the WMCore version (thanks rucio devs)
 sys.path.insert(0, os.path.abspath('src/python'))
 try:
-  from T0 import version as t0_version
+  from T0 import version
 except:
   print("fail to import T0")
   import T0
 
-tag = subprocess.check_output(['git', 'describe', '--abbrev=0', '--tags']).decode().strip("\n")
-tag_hash = subprocess.check_output(['git', 'describe', '--tags']).decode().strip("\n")
-if( tag == tag_hash ):
-  t0_version=tag
-else:
-  t0_version="-".join(tag_hash.split("-")[:-1])
+#tag = subprocess.check_output(['git', 'describe', '--abbrev=0', '--tags']).decode().strip("\n")
+#tag_hash = subprocess.check_output(['git', 'describe', '--tags']).decode().strip("\n")
+#if( tag == tag_hash ):
+#  t0_version=tag
+#else:
+#  t0_version="-".join(tag_hash.split("-")[:-1])
+t0_version = version
 print("T0 version: ",t0_version)
 
 # we need to override 'clean' command to remove specific files
-class TestCommand(Command):
-    """
-    Class to handle unit tests
-    """
-    user_options = [ ]
-
-    def initialize_options(self):
-        """Init method"""
-        self._dir = os.getcwd()
-
-    def finalize_options(self):
-        """Finalize method"""
-        pass
-
-    def run(self):
-        """
-        Finds all the tests modules in test/, and runs them.
-        """
-        # list of files to exclude,
-        # e.g. [pjoin(self._dir, 'test', 'exclude_t.py')]
-        exclude = []
-        # list of test files
-        testfiles = []
-        for tname in glob(pjoin(self._dir, 'test', '*_t.py')):
-            if  not tname.endswith('__init__.py') and \
-                tname not in exclude:
-                testfiles.append('.'.join(
-                    ['test', splitext(basename(tname))[0]])
-                )
-        testfiles.sort()
-        try:
-            tests = TestLoader().loadTestsFromNames(testfiles)
-        except:
-            print("\nFail to load unit tests", testfiles)
-            raise
-        test = TextTestRunner(verbosity = 2)
-        test.run(tests)
-
 class CleanCommand(Command):
     """
     Class which clean-up all pyc files
@@ -133,7 +96,6 @@ setup(name=package_name,
       maintainer='CMS DMWM Group',
       maintainer_email='hn-cms-wmdevelopment@cern.ch',
       cmdclass={
-          'test': TestCommand,
           'clean': CleanCommand,
       },
       url=url,
