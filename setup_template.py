@@ -18,9 +18,9 @@ from setup_dependencies import dependencies
 # get the WMCore version (thanks rucio devs)
 sys.path.insert(0, os.path.abspath('src/python'))
 try:
-  from T0 import version
+  import T0
 except:
-  print("fail to import T0")
+  print("failed to import T0")
   import T0
 
 #tag = subprocess.check_output(['git', 'describe', '--abbrev=0', '--tags']).decode().strip("\n")
@@ -29,7 +29,8 @@ except:
 #  t0_version=tag
 #else:
 #  t0_version="-".join(tag_hash.split("-")[:-1])
-t0_version = version
+try:t0_version = T0.__version__
+except:t0_version = T0.version
 print("T0 version: ",t0_version)
 
 # we need to override 'clean' command to remove specific files
