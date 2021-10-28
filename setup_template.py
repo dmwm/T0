@@ -10,7 +10,6 @@
 
 import os
 import sys
-import subprocess
 from setuptools import setup, Command
 from setup_build import list_static_files, things_to_build
 from setup_dependencies import dependencies
@@ -18,19 +17,13 @@ from setup_dependencies import dependencies
 # get the WMCore version (thanks rucio devs)
 sys.path.insert(0, os.path.abspath('src/python'))
 try:
-  import T0
+    import T0
 except:
-  print("failed to import T0")
-  import T0
+    print("failed to import T0")
+    import T0
 
-#tag = subprocess.check_output(['git', 'describe', '--abbrev=0', '--tags']).decode().strip("\n")
-#tag_hash = subprocess.check_output(['git', 'describe', '--tags']).decode().strip("\n")
-#if( tag == tag_hash ):
-#  t0_version=tag
-#else:
-#  t0_version="-".join(tag_hash.split("-")[:-1])
-try:t0_version = T0.__version__
-except:t0_version = T0.version
+try: t0_version = T0.version
+except: t0_version = T0.__version__
 print("T0 version: ",t0_version)
 
 # we need to override 'clean' command to remove specific files
@@ -38,11 +31,11 @@ class CleanCommand(Command):
     """
     Class which clean-up all pyc files
     """
-    user_options = [ ]
+    user_options = []
 
     #def initialize_options(self):
     #    """Init method"""
-    #    self._clean_me = [ ]
+    #    self._clean_me = []
     #    for root, dirs, files in os.walk('.'):
     #        for fname in files:
     #            if fname.endswith('.pyc'):
@@ -67,25 +60,25 @@ def parse_requirements(requirements_file):
         sys.exit(1)
 
 required_python_version = '3.6'
-cms_license  = "CMS experiment software"
+cms_license = "CMS experiment software"
 url = "https://github.com/dmwm/T0"
 # the contents of package_name are modified via tools/build_pypi_packages.sh
 package_name = "PACKAGE_TO_BUILD"
 packages, py_modules = things_to_build(package_name, pypi=True)
 data_files = list_static_files(dependencies[package_name])
-classifiers  = [
-        "Development Status :: 3 - Production/Beta",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: CMS/CERN Software License",
-        "Operating System :: MacOS :: MacOS X",
-        "Operating System :: Microsoft :: Windows",
-        "Operating System :: POSIX",
-        "Programming Language :: Python :: 3",
-        "Topic :: Database"
+classifiers = [
+       "Development Status :: 3 - Production/Beta",
+       "Intended Audience :: Developers",
+       "License :: OSI Approved :: CMS/CERN Software License",
+       "Operating System :: MacOS :: MacOS X",
+       "Operating System :: Microsoft :: Windows",
+       "Operating System :: POSIX",
+       "Programming Language :: Python :: 3",
+       "Topic :: Database"
 ]
 if  sys.version < required_python_version:
     msg = "I'm sorry, but {} {} requires Python {} or later."
-    print(msg.format(name, version, required_python_version))
+    print(msg.format(package_name, t0_version, required_python_version))
     sys.exit(1)
 setup(name=package_name,
       version=t0_version,
@@ -101,4 +94,4 @@ setup(name=package_name,
       },
       url=url,
       license=cms_license,
-      )
+     )
