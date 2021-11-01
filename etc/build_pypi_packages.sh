@@ -39,6 +39,14 @@ fi
 
 # loop through packages to build
 for package in $TOBUILD; do
+  echo "==========" $package "=========="
+  released="$( curl -X GET https://pypi.org/pypi/${package}/json | jq -r '.releases' | jq 'keys' )"
+  tag=$( grep -m 1 version ../T0/src/python/T0/__init__.py | sed -E "s/version|_|\ |=|'//g")
+  if [[ ${released} =~ "\"${tag}\"" ]]; then
+     echo "$package-$tag file already exists. See https://pypi.org/help/#file-name-reuse for more information."
+     exit 1
+  fi
+
   # make a copy of requirements.txt to reference for each build
   cp requirements.txt requirements.t0.txt
 
