@@ -44,7 +44,7 @@ for package in $TOBUILD; do
   tag=$( grep -m 1 version ../T0/src/python/T0/__init__.py | sed -E "s/version|_|\ |=|'//g")
   if [[ ${released} =~ "\"${tag}\"" ]]; then
      echo "$package-$tag file already exists. See https://pypi.org/help/#file-name-reuse for more information."
-     exit 1
+     exit 0
   fi
 
   # make a copy of requirements.txt to reference for each build
