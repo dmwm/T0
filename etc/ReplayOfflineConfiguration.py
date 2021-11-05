@@ -104,18 +104,21 @@ defaultCMSSWVersion = {
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "slc7_amd64_gcc900")
+from T0.RunConfig.Tier0Config import setScramArch
+
+setDefaultScramArch(tier0Config, "slc7_amd64_gcc630")
+setScramArch(tier0Config, defaultCMSSWVersion['default'], "slc7_amd64_gcc900")
 
 # Configure scenarios
-ppScenario = "ppEra_Run3"
-ppScenarioB0T = "ppEra_Run3"
-cosmicsScenario = "cosmicsEra_Run3"
-hcalnzsScenario = "hcalnzsEra_Run3"
-hiScenario = "ppEra_Run3"
+ppScenario = "ppEra_Run2_2018"
+ppScenarioB0T = "ppEra_Run2_2018"
+cosmicsScenario = "cosmicsEra_Run2_2018"
+hcalnzsScenario = "hcalnzsEra_Run2_2018"
+hiScenario = "ppEra_Run2_2018"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run2_2018"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels"
-hiTestppScenario = "ppEra_Run3"
+hiTestppScenario = "ppEra_Run2_2018"
 
 # Procesing version number replays
 dt = int(datetime.datetime.now().strftime("%y%m%d%H%M"))
