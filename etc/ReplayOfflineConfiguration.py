@@ -121,7 +121,7 @@ alcaLumiPixelsScenario = "AlCaLumiPixels"
 hiTestppScenario = "ppEra_Run2_2018"
 
 # Procesing version number replays
-dt = int(datetime.datetime.now().strftime("%y%m%d%H%M"))
+dt = 1
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
@@ -693,7 +693,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               alca_producers=["TkAlMuonIsolated", "HcalCalIterativePhiSym", "DtCalib", "MuAlCalIsolatedMu",
+               alca_producers=["TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu",
                                "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HcalCalHBHEMuonFilter"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@L1TMon", "@tau"],
                physics_skims=["MuonPOGSkim", "MuTau", "ZMu", "LogError", "LogErrorMonitor"],
@@ -1351,7 +1351,7 @@ addExpressConfig(tier0Config, "ExpressPA",
                  scenario=hiScenario,
                  data_tiers=["FEVT"],
                  write_dqm=True,
-                 alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "DtCalib", "SiStripCalMinBias",
+                 alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias",
                                  "SiStripCalMinBiasAfterAbortGap", "LumiPixelsMinBias", "PromptCalibProd",
                                  "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli", "PromptCalibProdSiStripGains",
                                  "PromptCalibProdSiStripGainsAfterAbortGap", "SiStripPCLHistos"],
