@@ -32,7 +32,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [345595, 345881, 345915, 345970])
+setInjectRuns(tier0Config, [324841])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -99,22 +99,23 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_0_3"
+    'default': "CMSSW_12_1_0"
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "slc7_amd64_gcc900")
+setDefaultScramArch(tier0Config, "slc7_amd64_gcc630")
+setScramArch(tier0Config, defaultCMSSWVersion['default'], "slc7_amd64_gcc900")
 
 # Configure scenarios
-ppScenario = "ppEra_Run3"
-ppScenarioB0T = "ppEra_Run3"
-cosmicsScenario = "cosmicsEra_Run3"
-hcalnzsScenario = "hcalnzsEra_Run3"
-hiScenario = "ppEra_Run3"
+ppScenario = "ppEra_Run2_2018"
+ppScenarioB0T = "ppEra_Run2_2018"
+cosmicsScenario = "cosmicsEra_Run2_2018"
+hcalnzsScenario = "hcalnzsEra_Run2_2018"
+hiScenario = "ppEra_Run2_2018"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run2_2018"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels"
-hiTestppScenario = "ppEra_Run3"
+hiTestppScenario = "ppEra_Run2_2018"
 
 # Procesing version number replays
 dt = 1
@@ -123,9 +124,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "120X_dataRun3_Express_v2"
-promptrecoGlobalTag = "120X_dataRun3_Prompt_v2"
-alcap0GlobalTag = "120X_dataRun3_Prompt_v2"
+expressGlobalTag = "121X_dataRun3_Express_TIER0_REPLAY_Run2_v1"
+promptrecoGlobalTag = "121X_dataRun3_Prompt_TIER0_REPLAY_Run2_v1"
+alcap0GlobalTag = "121X_dataRun3_Prompt_TIER0_REPLAY_Run2_v1"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -225,12 +226,14 @@ addDataset(tier0Config, "Default",
 #############################
 addExpressConfig(tier0Config, "Express",
                  scenario=ppScenario,
+                 diskNode="T2_CH_CERN",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
-                                 "TkAlMinBias", "LumiPixelsMinBias", "SiPixelCalZeroBias",
+                                 "TkAlMinBias", "LumiPixelsMinBias", "SiPixelCalZeroBias","SiPixelCalSingleMuon",
                                  "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
-                                 "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel"
+                                 "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG",
+                                 "PromptCalibProdSiPixel", "PromptCalibProdSiPixelLorentzAngle"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
@@ -686,7 +689,8 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                alca_producers=["TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu",
-                               "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HcalCalHBHEMuonFilter"],
+                               "MuAlOverlaps", "MuAlZMuMu", "HcalCalHO", "HcalCalHBHEMuonFilter",
+                               "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon"],
                physics_skims=["MuonPOGSkim", "MuTau", "ZMu", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
