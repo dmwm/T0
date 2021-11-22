@@ -24,6 +24,7 @@ from T0.RunConfig.Tier0Config import setStreamerPNN
 from T0.RunConfig.Tier0Config import setEnableUniqueWorkflowName
 from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setStorageSite
+from T0.RunConfig.Tier0Config import setScramArch
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -621,7 +622,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                alca_producers=["HcalCalIsoTrkFilter", "HcalCalIsolatedBunchFilter"],
-               dqm_sequences=["@common", "@jetmet", "@hcal"],
+               dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
                physics_skims=["JetHTJetPlusHOFilter", "LogError", "LogErrorMonitor"],
                timePerEvent=5.7,
                sizePerEvent=2250,
@@ -634,7 +635,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                alca_producers=["HcalCalNoise"],
-               dqm_sequences=["@common", "@jetmet", "@hcal"],
+               dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
                physics_skims=["EXOMONOPOLE", "HighMET", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -741,7 +742,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                alca_producers=["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk", "HcalCalIsolatedBunchSelector"],
-               dqm_sequences=["@common", "@hcal"],
+               dqm_sequences=["@common", "@L1TMon", "@hcal"],
                physics_skims=["EcalActivity", "LogError", "LogErrorMonitor"],
                timePerEvent=12,
                sizePerEvent=4000,
@@ -756,7 +757,7 @@ for dataset in DATASETS:
                write_aod=True,
                write_miniaod=True,
                write_reco=False,
-               dqm_sequences=["@common", "@hcal"],
+               dqm_sequences=["@common", "@L1TMon", "@hcal"],
                alca_producers=["HcalCalMinBias"],
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=4.2,
@@ -892,7 +893,7 @@ for dataset in DATASETS:
                write_dqm=True,
                write_miniaod=True,
                write_aod=True,
-               dqm_sequences=["@common", "@ecal", "@jetmet", "@hcal", "@L1TEgamma"],
+               dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
                alca_producers=["TkAlMinBias"],
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
@@ -952,7 +953,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common", "@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
+               dqm_sequences=["@common", "@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
                timePerEvent=1,
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias", "HcalCalHO", 
                                "HcalCalIterativePhiSym", "HcalCalHBHEMuonFilter", "HcalCalIsoTrkFilter"],
@@ -1024,7 +1025,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_reco=True,
                write_dqm=True,
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
                alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias", "AlCaPCCZeroBiasFromRECO"],
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=3.5,
@@ -1160,7 +1161,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common", "@ecal", "@egamma", "@hcal", "@jetmet"],
+               dqm_sequences=["@common", "@ecal", "@egamma", "@L1TMon", "@hcal", "@jetmet"],
                scenario=ppScenario)
 
 DATASETS = ["HeavyFlavor", "SingleTrack"]
@@ -1180,7 +1181,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon"],
                alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias", "AlCaPCCZeroBiasFromRECO"],
                timePerEvent=3.5,
                sizePerEvent=1500,
@@ -1447,7 +1448,7 @@ for dataset in DATASETS:
 addDataset(tier0Config, "PAEGJet1",
            do_reco=True,
            write_dqm=True,
-           dqm_sequences=["@common", "@ecal", "@egamma", "@hcal", "@jetmet"],
+           dqm_sequences=["@common", "@ecal", "@egamma", "@L1TMon", "@hcal", "@jetmet"],
            physics_skims=["PAZEE"],
            scenario=hiScenario)
 
@@ -1514,7 +1515,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                alca_producers=["LumiPixelsMinBias"],
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon"],
                scenario=hiScenario)
 
 addDataset(tier0Config, "PADoubleMuOpen",
