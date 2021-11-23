@@ -900,21 +900,6 @@ for dataset in DATASETS:
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["HLTPhysics0", "HLTPhysics1", "HLTPhysics2",
-            "HLTPhysics3", "HLTPhysics4", "HLTPhysics5",
-            "HLTPhysics6", "HLTPhysics7", "HLTPhysics8",
-            "HLTPhysics9", "HLTPhysics10"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_reco=True,
-               write_dqm=True,
-               dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
-               alca_producers=["TkAlMinBias"],
-               physics_skims=["LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
-
 DATASETS = ["HLTPhysicsBunchTrains", "HLTPhysicsIsolatedBunch"]
 
 for dataset in DATASETS:
@@ -1053,7 +1038,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_reco=True,
                write_dqm=True,
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@L1TMon", "@ctpps"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet", "@ctpps"],
                alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias", "AlCaPCCZeroBiasFromRECO"],
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=3.5,
