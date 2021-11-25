@@ -15,6 +15,7 @@ import os
 import logging
 import threading
 import subprocess
+import datetime
 
 from Utils.Timers import timeFunction
 from WMCore.WorkerThreads.BaseWorkerThread import BaseWorkerThread
@@ -28,6 +29,7 @@ from T0.RunConfig import RunConfigAPI
 from T0.RunLumiCloseout import RunLumiCloseoutAPI
 from T0.ConditionUpload import ConditionUploadAPI
 from T0.StorageManager import StorageManagerAPI
+from T0.RunConfig.Tier0Config import setDeploymentId
 
 
 class Tier0FeederPoller(BaseWorkerThread):
@@ -98,6 +100,22 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                       logger = logging,
                                                       dbinterface = dbInterfaceT0DataSvc)
 
+        #
+        # Set deployment ID
+        #
+
+        SetDeploymentIdDAO = self.daoFactory(classname = "Tier0Feeder.SetDeploymentID")
+        GetDeploymentIdDAO = self.daoFactory(classname = "Tier0Feeder.GetDeploymentID")
+        try:
+            self.deployID = GetDeploymentIdDAO.execute()
+            if self.deployID == 0:
+                self.deployID = int(datetime.datetime.now().strftime("%y%m%d%H%M%S"))
+                SetDeploymentIdDAO.execute(self.deployID)
+
+        except:
+            logging.exception("Something went wrong with setting deployment ID")
+            raise
+
         return
 
     @timeFunction
@@ -158,6 +176,11 @@ class Tier0FeederPoller(BaseWorkerThread):
                 # shouldn't happen, just a catch all insurance
                 logging.exception("Something went wrong with data retrieval from StorageManager")
 
+            #
+            # Set deployment ID
+            #
+            setDeploymentId(tier0Config, self.deployID)
+            logging.info("Deploy ID: %d" % tier0Config.Global.DeploymentID)
 
             #
             # find new runs, setup global run settings and stream/dataset/trigger mapping

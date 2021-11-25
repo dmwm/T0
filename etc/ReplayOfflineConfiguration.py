@@ -4,7 +4,6 @@ Processing configuration for the Tier0 - Replay version
 """
 from __future__ import print_function
 
-import datetime
 from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
@@ -966,7 +965,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common", "@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
                timePerEvent=1,
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias", "HcalCalHO", 
                                "HcalCalIterativePhiSym", "HcalCalHBHEMuonFilter", "HcalCalIsoTrkFilter"],

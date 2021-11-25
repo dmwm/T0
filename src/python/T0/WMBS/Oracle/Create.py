@@ -37,6 +37,14 @@ class Create(DBCreator):
                ) ORGANIZATION INDEX"""
 
         self.create[len(self.create)] = \
+            """CREATE TABLE t0_deployment_id (
+                 name   varchar2(15)  not null,
+                 id     int           not null,
+                 primary key(name),
+                 constraint CK_DEPLOY_ID CHECK (name='deployment_id')
+               ) ORGANIZATION INDEX"""
+
+        self.create[len(self.create)] = \
             """CREATE TABLE run_status (
                  id     int          not null,
                  name   varchar2(25) not null,
