@@ -24,6 +24,7 @@ from T0.RunConfig.Tier0Config import setStreamerPNN
 from T0.RunConfig.Tier0Config import setEnableUniqueWorkflowName
 from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setStorageSite
+from T0.RunConfig.Tier0Config import setScramArch
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -32,7 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [345595, 345881, 345915, 345970])
+setInjectRuns(tier0Config, [319077, 317696])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -99,22 +100,23 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_0_3_patch2"
+    'default': "CMSSW_12_1_0"
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "slc7_amd64_gcc900")
+setDefaultScramArch(tier0Config, "slc7_amd64_gcc630")
+setScramArch(tier0Config, defaultCMSSWVersion['default'], "slc7_amd64_gcc900")
 
 # Configure scenarios
-ppScenario = "ppEra_Run3"
-ppScenarioB0T = "ppEra_Run3"
-cosmicsScenario = "cosmicsEra_Run3"
-hcalnzsScenario = "hcalnzsEra_Run3"
-hiScenario = "ppEra_Run3"
+ppScenario = "ppEra_Run2_2018"
+ppScenarioB0T = "ppEra_Run2_2018"
+cosmicsScenario = "cosmicsEra_Run2_2018"
+hcalnzsScenario = "hcalnzsEra_Run2_2018"
+hiScenario = "ppEra_Run2_2018"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run2_2018"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels"
-hiTestppScenario = "ppEra_Run3"
+hiTestppScenario = "ppEra_Run2_2018"
 
 # Procesing version number replays
 dt = 1
@@ -123,9 +125,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "120X_dataRun3_Express_v2"
-promptrecoGlobalTag = "120X_dataRun3_Prompt_v2"
-alcap0GlobalTag = "120X_dataRun3_Prompt_v2"
+expressGlobalTag = "121X_dataRun3_Express_Candidate_2021_11_07_15_29_55"
+promptrecoGlobalTag = "121X_dataRun3_Prompt_Candidate_2021_11_07_15_30_12"
+alcap0GlobalTag = "121X_dataRun3_Prompt_Candidate_2021_11_07_15_30_12"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
