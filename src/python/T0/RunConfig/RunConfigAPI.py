@@ -616,18 +616,10 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['TimePerEvent'] = streamConfig.Express.TimePerEvent
             specArguments['SizePerEvent'] = streamConfig.Express.SizePerEvent
 
-            if streamConfig.Express.Scenario == "HeavyIonsRun2":
-                baseMemory = 3000
-                perCoreMemory = 1300
-            else:
-                baseMemory = 3500
-                perCoreMemory = 1050
-
-            specArguments['Memory'] = baseMemory + perCoreMemory
-
+            specArguments['Memory'] = streamConfig.Express.MaxMemoryperCore
             if streamConfig.Express.Multicore:
                 specArguments['Multicore'] = streamConfig.Express.Multicore
-                specArguments['Memory'] += (streamConfig.Express.Multicore - 1) * perCoreMemory
+                specArguments['Memory'] += (streamConfig.Express.Multicore - 1) * streamConfig.Express.MaxMemoryperCore
 
             specArguments['Requestor'] = "Tier0"
             specArguments['RequestName'] = workflowName
@@ -1047,20 +1039,10 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 specArguments['TimePerEvent'] = datasetConfig.TimePerEvent
                 specArguments['SizePerEvent'] = datasetConfig.SizePerEvent
 
-                if datasetConfig.Scenario == "HeavyIonsRun2":
-                    baseMemory = 3000
-                    perCoreMemory = 1300
-                else:
-                    baseMemory = 3500
-                    perCoreMemory = 1050
-
-                specArguments['Memory'] = baseMemory + perCoreMemory
-
+                specArguments['Memory'] = datasetConfig.MaxMemoryperCore
                 if datasetConfig.Multicore:
                     specArguments['Multicore'] = datasetConfig.Multicore
-                    specArguments['Memory'] += (datasetConfig.Multicore - 1) * perCoreMemory
-
-                specArguments['Memory'] += len(datasetConfig.PhysicsSkims) * 100
+                    specArguments['Memory'] += (datasetConfig.Multicore - 1) * datasetConfig.MaxMemoryperCore
 
                 specArguments['Requestor'] = "Tier0"
                 specArguments['RequestName'] = workflowName
