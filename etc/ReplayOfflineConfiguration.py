@@ -32,7 +32,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [345595, 345881, 345915, 345970])
+setInjectRuns(tier0Config, [346169, 347028])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -99,7 +99,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_0_3_patch2"
+    'default': "CMSSW_12_2_0_pre3"
 }
 
 # Configure ScramArch
@@ -123,9 +123,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "120X_dataRun3_Express_v2"
-promptrecoGlobalTag = "120X_dataRun3_Prompt_v2"
-alcap0GlobalTag = "120X_dataRun3_Prompt_v2"
+expressGlobalTag = "122X_dataRun3_Express_v1"
+promptrecoGlobalTag = "122X_dataRun3_Prompt_v1"
+alcap0GlobalTag = "122X_dataRun3_Prompt_v1"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -161,7 +161,8 @@ repackVersionOverride = {
     "CMSSW_12_0_2_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_2_patch2" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_3_patch1" : defaultCMSSWVersion['default']
+    "CMSSW_12_0_3_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_3_patch2" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -185,7 +186,8 @@ expressVersionOverride = {
     "CMSSW_12_0_2_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_2_patch2" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_3_patch1" : defaultCMSSWVersion['default']
+    "CMSSW_12_0_3_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_3_patch2" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
