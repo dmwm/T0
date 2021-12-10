@@ -681,7 +681,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                alca_producers=["EcalUncalWElectron", "EcalUncalZElectron", "HcalCalIterativePhiSym", "EcalESAlign"],
-               dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma", "@L1TMon", "@tau", "@ctpps"],
+               dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma", "@L1TMon", "@tau"],
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -1026,7 +1026,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_reco=True,
                write_dqm=True,
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet", "ctpps"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
                alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias", "AlCaPCCZeroBiasFromRECO"],
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=3.5,
