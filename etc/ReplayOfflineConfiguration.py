@@ -24,6 +24,7 @@ from T0.RunConfig.Tier0Config import setStreamerPNN
 from T0.RunConfig.Tier0Config import setEnableUniqueWorkflowName
 from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setStorageSite
+from T0.RunConfig.Tier0Config import setScramArch
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -32,7 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [345595, 345881, 345915, 345970])
+setInjectRuns(tier0Config, [324841])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -99,22 +100,23 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_0_3_patch2"
+    'default': "CMSSW_12_2_0_pre3"
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "slc7_amd64_gcc900")
+setDefaultScramArch(tier0Config, "slc7_amd64_gcc630")
+setScramArch(tier0Config, defaultCMSSWVersion['default'], "slc7_amd64_gcc900")
 
 # Configure scenarios
-ppScenario = "ppEra_Run3"
-ppScenarioB0T = "ppEra_Run3"
-cosmicsScenario = "cosmicsEra_Run3"
-hcalnzsScenario = "hcalnzsEra_Run3"
-hiScenario = "ppEra_Run3"
+ppScenario = "ppEra_Run2_2018"
+ppScenarioB0T = "ppEra_Run2_2018"
+cosmicsScenario = "cosmicsEra_Run2_2018"
+hcalnzsScenario = "hcalnzsEra_Run2_2018"
+hiScenario = "ppEra_Run2_2018"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run2_2018"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels"
-hiTestppScenario = "ppEra_Run3"
+hiTestppScenario = "ppEra_Run2_2018"
 
 # Procesing version number replays
 dt = 1
@@ -123,9 +125,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "120X_dataRun3_Express_v2"
-promptrecoGlobalTag = "120X_dataRun3_Prompt_v2"
-alcap0GlobalTag = "120X_dataRun3_Prompt_v2"
+expressGlobalTag = "122X_dataRun3_Express_TIER0_REPLAY_Run2_v1"
+promptrecoGlobalTag = "122X_dataRun3_Prompt_TIER0_REPLAY_Run2_v1"
+alcap0GlobalTag = "122X_dataRun3_Prompt_TIER0_REPLAY_Run2_v1"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -232,9 +234,11 @@ addExpressConfig(tier0Config, "Express",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
-                                 "TkAlMinBias", "LumiPixelsMinBias", "SiPixelCalZeroBias",
+                                 "TkAlMinBias", "LumiPixelsMinBias", "SiPixelCalZeroBias", "PPSCalTrackBasedSel",
+                                 "PPSTimingCalib", "PPSAlignment",
                                  "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
-                                 "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel"
+                                 "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG",
+                                 "PromptCalibProdPPS", "PromptCalibProdPPSAlig"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
@@ -259,7 +263,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T",
                                  "SiPixelCalZeroBias",
-                                 "PromptCalibProdSiStrip", "PromptCalibProdSiPixel"
+                                 "PromptCalibProdSiStrip"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
@@ -381,7 +385,7 @@ addExpressConfig(tier0Config, "HIExpress",
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
                                  "TkAlMinBias", "LumiPixelsMinBias", "SiPixelCalZeroBias",
                                  "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
-                                 "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel"
+                                 "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
@@ -622,7 +626,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                alca_producers=["HcalCalIsoTrkFilter", "HcalCalIsolatedBunchFilter"],
-               dqm_sequences=["@common", "@jetmet", "@hcal"],
+               dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
                physics_skims=["JetHTJetPlusHOFilter", "LogError", "LogErrorMonitor"],
                timePerEvent=5.7,
                sizePerEvent=2250,
@@ -635,7 +639,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                alca_producers=["HcalCalNoise"],
-               dqm_sequences=["@common", "@jetmet", "@hcal"],
+               dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
                physics_skims=["EXOMONOPOLE", "HighMET", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -741,7 +745,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                alca_producers=["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk", "HcalCalIsolatedBunchSelector"],
-               dqm_sequences=["@common", "@hcal"],
+               dqm_sequences=["@common", "@L1TMon", "@hcal"],
                physics_skims=["EcalActivity", "LogError", "LogErrorMonitor"],
                timePerEvent=12,
                sizePerEvent=4000,
@@ -756,7 +760,7 @@ for dataset in DATASETS:
                write_aod=True,
                write_miniaod=True,
                write_reco=False,
-               dqm_sequences=["@common", "@hcal"],
+               dqm_sequences=["@common", "@L1TMon", "@hcal"],
                alca_producers=["HcalCalMinBias"],
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=4.2,
@@ -892,7 +896,7 @@ for dataset in DATASETS:
                write_dqm=True,
                write_miniaod=True,
                write_aod=True,
-               dqm_sequences=["@common", "@ecal", "@jetmet", "@hcal", "@L1TEgamma"],
+               dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
                alca_producers=["TkAlMinBias"],
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
@@ -952,7 +956,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
+               dqm_sequences=["@common", "@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
                timePerEvent=1,
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias", "HcalCalHO", 
                                "HcalCalIterativePhiSym", "HcalCalHBHEMuonFilter", "HcalCalIsoTrkFilter"],
@@ -1024,8 +1028,9 @@ for dataset in DATASETS:
                do_reco=True,
                write_reco=True,
                write_dqm=True,
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
-               alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias", "AlCaPCCZeroBiasFromRECO"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
+               alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias", "AlCaPCCZeroBiasFromRECO"
+               				   ],
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=3.5,
                sizePerEvent=1500,
@@ -1160,7 +1165,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common", "@ecal", "@egamma", "@hcal", "@jetmet"],
+               dqm_sequences=["@common", "@ecal", "@L1TMon", "@egamma", "@hcal", "@jetmet"],
                scenario=ppScenario)
 
 DATASETS = ["HeavyFlavor", "SingleTrack"]
@@ -1180,7 +1185,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon"],
                alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias", "AlCaPCCZeroBiasFromRECO"],
                timePerEvent=3.5,
                sizePerEvent=1500,
@@ -1447,7 +1452,7 @@ for dataset in DATASETS:
 addDataset(tier0Config, "PAEGJet1",
            do_reco=True,
            write_dqm=True,
-           dqm_sequences=["@common", "@ecal", "@egamma", "@hcal", "@jetmet"],
+           dqm_sequences=["@common", "@ecal", "@egamma", "@L1TMon", "@hcal", "@jetmet"],
            physics_skims=["PAZEE"],
            scenario=hiScenario)
 
@@ -1514,7 +1519,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                alca_producers=["LumiPixelsMinBias"],
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon"],
                scenario=hiScenario)
 
 addDataset(tier0Config, "PADoubleMuOpen",
