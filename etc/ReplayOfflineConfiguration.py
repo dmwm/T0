@@ -224,6 +224,7 @@ addDataset(tier0Config, "Default",
            timePerEvent=5,
            sizePerEvent=1500,
            maxMemoryperCore=2000,
+           dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
            scenario=ppScenario)
 
 #############################
@@ -253,6 +254,7 @@ addExpressConfig(tier0Config, "Express",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  maxMemoryperCore=2000,
+                 dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "ExpressCosmics",
@@ -279,6 +281,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  timePerEvent=4, #I have to get some stats to set this properly
                  sizePerEvent=1700, #I have to get some stats to set this properly
                  maxMemoryperCore=2000,
+                 dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "HLTMonitor",
@@ -303,6 +306,7 @@ addExpressConfig(tier0Config, "HLTMonitor",
                  timePerEvent=4, #I have to get some stats to set this properly
                  sizePerEvent=1700, #I have to get some stats to set this properly
                  maxMemoryperCore=2000,
+                 dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "Calibration",
@@ -327,6 +331,7 @@ addExpressConfig(tier0Config, "Calibration",
                  versionOverride=expressVersionOverride,
                  maxMemoryperCore=2000,
                  dataType="data",
+                 dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
                  diskNode="T0_CH_CERN_Disk")
 
 addExpressConfig(tier0Config, "ExpressAlignment",
@@ -351,6 +356,7 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
                  maxMemoryperCore=2000,
+                 dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
                  diskNode="T0_CH_CERN_Disk")
 
 addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
@@ -375,6 +381,7 @@ addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
                  maxMemoryperCore=2000,
+                 dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
                  diskNode="T0_CH_CERN_Disk")
 
 #####################
@@ -406,6 +413,7 @@ addExpressConfig(tier0Config, "HIExpress",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  maxMemoryperCore=2000,
+                 dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "HIExpressAlignment",
@@ -431,6 +439,7 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
                  maxMemoryperCore=2000,
+                 dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
                  diskNode="T0_CH_CERN_Disk")
 
 ###################################
