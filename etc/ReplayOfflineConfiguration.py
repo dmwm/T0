@@ -32,7 +32,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [345595, 345881, 345915, 345970])
+setInjectRuns(tier0Config, [345755,346062,346512,347028])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -56,7 +56,7 @@ addSiteConfig(tier0Config, "EOS_PILOT",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Tier0_REPLAY_2021")
+setAcquisitionEra(tier0Config, "Tier0_REPLAY_2022")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
@@ -99,7 +99,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_0_3_patch2"
+    'default': "CMSSW_12_2_0"
 }
 
 # Configure ScramArch
@@ -161,7 +161,8 @@ repackVersionOverride = {
     "CMSSW_12_0_2_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_2_patch2" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_3_patch1" : defaultCMSSWVersion['default']
+    "CMSSW_12_0_3_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_3_patch2" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -185,7 +186,8 @@ expressVersionOverride = {
     "CMSSW_12_0_2_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_2_patch2" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_3_patch1" : defaultCMSSWVersion['default']
+    "CMSSW_12_0_3_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_3_patch2" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
