@@ -57,7 +57,7 @@ addSiteConfig(tier0Config, "EOS_PILOT",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Tier0_REPLAY_2021")
+setAcquisitionEra(tier0Config, "Tier0_REPLAY_2022")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
@@ -119,7 +119,7 @@ alcaLumiPixelsScenario = "AlCaLumiPixels"
 hiTestppScenario = "ppEra_Run2_2018"
 
 # Procesing version number replays
-dt = 1
+dt = 0127
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
@@ -235,7 +235,7 @@ addExpressConfig(tier0Config, "Express",
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
                                  "TkAlMinBias", "LumiPixelsMinBias", "SiPixelCalZeroBias", "PPSCalTrackBasedSel",
-                                 "PPSTimingCalib", "PPSAlignment",
+                                 "PromptCalibProdPPSTimingCalib", "PromptCalibProdPPSAlignment",
                                  "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
                                  "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG",
                                  "PromptCalibProdPPS", "PromptCalibProdPPSAlig"
