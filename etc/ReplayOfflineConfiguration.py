@@ -237,8 +237,7 @@ addExpressConfig(tier0Config, "Express",
                                  "TkAlMinBias", "LumiPixelsMinBias", "SiPixelCalZeroBias", "PPSCalTrackBasedSel",
                                  "PromptCalibProdPPSTimingCalib", "PromptCalibProdPPSAlignment",
                                  "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
-                                 "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG",
-                                 "PromptCalibProdPPS", "PromptCalibProdPPSAlig"
+                                 "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
