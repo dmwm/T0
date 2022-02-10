@@ -134,7 +134,7 @@ echo "config.RetryManager.PauseAlgo.default.coolOffTime = {'create': 10, 'job': 
 
 # Twiking Rucio configuration
 sed -i "s+config.RucioInjector.containerDiskRuleParams.*+config.RucioInjector.containerDiskRuleParams = {}+" ./config/tier0/config.py
-
+echo "config.RucioInjector.blockRuleParams = {}" >> ./config/tier0/config.py
 #
 # Set output datasets status to VALID in DBS
 #
