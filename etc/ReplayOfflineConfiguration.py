@@ -263,7 +263,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T",
                                  "SiPixelCalZeroBias",
-                                 "PromptCalibProdSiStrip", "PromptCalibProdSiPixel"
+                                 "PromptCalibProdSiStrip"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
