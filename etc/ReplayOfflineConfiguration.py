@@ -57,7 +57,7 @@ addSiteConfig(tier0Config, "EOS_PILOT",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Tier0_REPLAY_2021")
+setAcquisitionEra(tier0Config, "Tier0_REPLAY_2022")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
@@ -100,7 +100,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_2_0_patch1"
+    'default': "CMSSW_12_2_1"
 }
 
 # Configure ScramArch
@@ -119,7 +119,7 @@ alcaLumiPixelsScenario = "AlCaLumiPixels"
 hiTestppScenario = "ppEra_Run2_2018"
 
 # Procesing version number replays
-dt = 1
+dt = 128
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
