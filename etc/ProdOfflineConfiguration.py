@@ -229,6 +229,7 @@ addDataset(tier0Config, "Default",
            blockCloseDelay=24 * 3600,
            timePerEvent=5,
            sizePerEvent=1500,
+           maxMemoryperCore=2000,
            scenario=ppScenario)
 
 #############################
@@ -259,6 +260,7 @@ addExpressConfig(tier0Config, "Express",
                  blockCloseDelay=1200,
                  timePerEvent=4,
                  sizePerEvent=1700,
+                 maxMemoryperCore=2000,
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "ExpressCosmics",
@@ -284,6 +286,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  blockCloseDelay=1200,
                  timePerEvent=4, #I have to get some stats to set this properly
                  sizePerEvent=1700, #I have to get some stats to set this properly
+                 maxMemoryperCore=2000,
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "HLTMonitor",
@@ -307,6 +310,7 @@ addExpressConfig(tier0Config, "HLTMonitor",
                  blockCloseDelay=1200,
                  timePerEvent=4, #I have to get some stats to set this properly
                  sizePerEvent=1700, #I have to get some stats to set this properly
+                 maxMemoryperCore=2000,
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "Calibration",
@@ -329,6 +333,7 @@ addExpressConfig(tier0Config, "Calibration",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
+                 maxMemoryperCore=2000,
                  archivalNode="T0_CH_CERN_MSS",
                  dataType="data",
                  tape_node="T1_US_FNAL_MSS")
@@ -354,6 +359,7 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
+                 maxMemoryperCore=2000,
                  diskNode="T2_CH_CERN")
 
 addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
@@ -377,6 +383,7 @@ addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
+                 maxMemoryperCore=2000,
                  archivalNode=None,
                  tapeNode=None,
                  diskNode=None)
@@ -410,6 +417,7 @@ addExpressConfig(tier0Config, "HIExpress",
                  blockCloseDelay=1200,
                  timePerEvent=4,
                  sizePerEvent=1700,
+                 maxMemoryperCore=2000,
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "HIExpressAlignment",
@@ -434,6 +442,7 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
+                 maxMemoryperCore=2000,
                  diskNode="T2_CH_CERN")
 
 ###################################
