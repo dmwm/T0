@@ -123,9 +123,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "122X_dataRun3_Express_Candidate_2022_02_11_12_52_11"
-promptrecoGlobalTag = "122X_dataRun3_Prompt_Candidate_2022_02_11_12_53_14"
-alcap0GlobalTag = "122X_dataRun3_Prompt_Candidate_2022_02_11_12_53_14"
+expressGlobalTag = "122X_dataRun3_Express_v3"
+promptrecoGlobalTag = "122X_dataRun3_Prompt_v3"
+alcap0GlobalTag = "122X_dataRun3_Prompt_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -162,7 +162,7 @@ repackVersionOverride = {
     "CMSSW_12_0_2_patch2" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_3_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_1" : defaultCMSSWVersion['default']   
+    "CMSSW_12_2_1" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -181,7 +181,6 @@ expressVersionOverride = {
     "CMSSW_11_3_4" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_0" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_2" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_2" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_2_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_2_patch2" : defaultCMSSWVersion['default'],
