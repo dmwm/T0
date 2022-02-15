@@ -16,5 +16,5 @@ DEPLOY_DIR=$BASE_DIR/srv/wmagent
 #wget -nv https://github.com/dmwm/T0/pull/4597.patch -O - | patch -f -d $DEPLOY_DIR/current/apps/t0/lib/python*/site-packages/ -p 3
 
 #Patches on top of 3.0.1
-wget -nv https://github.com/dmwm/WMCore/pull/10801.patch -O - | patch -f -d $DEPLOY_DIR/current/apps/t0/lib/python3*/site-packages/ -p 3
+#wget -nv https://github.com/dmwm/WMCore/pull/10801.patch -O - | patch -f -d $DEPLOY_DIR/current/apps/t0/lib/python3*/site-packages/ -p 3
 wget -nv https://github.com/dmwm/T0/pull/4611.patch -O - | patch -f -d $DEPLOY_DIR/current/apps/t0/lib/python3*/site-packages/ -p 3
