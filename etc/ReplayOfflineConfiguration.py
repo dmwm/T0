@@ -217,7 +217,7 @@ addDataset(tier0Config, "Default",
            global_tag=promptrecoGlobalTag,
            global_tag_connect=globalTagConnect,
            #archival_node="T0_CH_CERN_MSS",
-           tape_node="T1_US_FNAL_MSS",
+           #tape_node="T1_US_FNAL_MSS",
            #disk_node="T0_CH_CERN_Disk",
            #raw_to_disk=False,
            blockCloseDelay=1200,
@@ -225,6 +225,52 @@ addDataset(tier0Config, "Default",
            sizePerEvent=1500,
            maxMemoryperCore=2000,
            scenario=ppScenario)
+
+DATASETS = ["D01", "D02", "D03"]
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+            do_reco=False,
+            write_reco=False, write_aod=True, write_miniaod=True, write_dqm=False,
+            reco_delay=defaultRecoTimeout,
+            reco_delay_offset=defaultRecoLockTimeout,
+            reco_split=defaultRecoSplitting,
+            proc_version=defaultProcVersion,
+            cmssw_version=defaultCMSSWVersion,
+            multicore=numberOfCores,
+            global_tag=promptrecoGlobalTag,
+            global_tag_connect=globalTagConnect,
+            #archival_node="T0_CH_CERN_MSS",
+            tape_node="T1_ES_PIC_MSS",
+            #disk_node="T0_CH_CERN_Disk",
+            #raw_to_disk=False,
+            blockCloseDelay=1200,
+            timePerEvent=5,
+            sizePerEvent=1500,
+            maxMemoryperCore=2000,
+            scenario=ppScenario)
+
+DATASETS = ["D04", "D05", "D06", "D07", "D08", "Parking"]
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+            do_reco=False,
+            write_reco=False, write_aod=True, write_miniaod=True, write_dqm=False,
+            reco_delay=defaultRecoTimeout,
+            reco_delay_offset=defaultRecoLockTimeout,
+            reco_split=defaultRecoSplitting,
+            proc_version=defaultProcVersion,
+            cmssw_version=defaultCMSSWVersion,
+            multicore=numberOfCores,
+            global_tag=promptrecoGlobalTag,
+            global_tag_connect=globalTagConnect,
+            #archival_node="T0_CH_CERN_MSS",
+            tape_node="T1_US_FNAL_MSS",
+            #disk_node="T0_CH_CERN_Disk",
+            #raw_to_disk=False,
+            blockCloseDelay=1200,
+            timePerEvent=5,
+            sizePerEvent=1500,
+            maxMemoryperCore=2000,
+            scenario=ppScenario)
 
 #######################
 ### ignored streams ###
@@ -243,9 +289,9 @@ ignoreStream(tier0Config, "streamDQMRates")
 
 
 ### Ignores streams for this Test ###
-ignoreStream(tier0Config, "S01")
-ignoreStream(tier0Config, "S02")
-ignoreStream(tier0Config, "S03")
+#ignoreStream(tier0Config, "S01")
+#ignoreStream(tier0Config, "S02")
+#ignoreStream(tier0Config, "S03")
 ignoreStream(tier0Config, "S09")
 ignoreStream(tier0Config, "S10")
 ignoreStream(tier0Config, "S11")
