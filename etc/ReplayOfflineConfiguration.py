@@ -32,7 +32,11 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [345755,346062,346512,347028])
+# 345755 - 2021 CRAFT
+# 346062 - 2021 splashes
+# 346512 - 2021 pp
+# 347952 - 2022 MWGR
+setInjectRuns(tier0Config, [345755,346062,346512,347952])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -99,7 +103,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_2_1"
+    'default': "CMSSW_12_2_1_patch1"
 }
 
 # Configure ScramArch
@@ -162,7 +166,8 @@ repackVersionOverride = {
     "CMSSW_12_0_2_patch2" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_3_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_1" : defaultCMSSWVersion['default']
+    "CMSSW_12_2_1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_2_1_patch1" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -186,7 +191,8 @@ expressVersionOverride = {
     "CMSSW_12_0_2_patch2" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_3_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_1" : defaultCMSSWVersion['default']
+    "CMSSW_12_2_1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_2_1_patch1" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
