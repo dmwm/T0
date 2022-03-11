@@ -17,4 +17,4 @@ A replay test is costly, both in computational and human resources. Please descr
 
 **T0 Operations cmsTalk thread**  
 If necessary, provide a link to the cmsTalk thread announcing the test to the relevant groups. 
-[Tier0 Operations cmsTalk Forum](https://cms-talk.web.cern.ch/c/offcomp/compops/151?)
+[Tier0 Operations cmsTalk Forum](https://cms-talk.web.cern.ch/c/offcomp/compops/tier0/210?)
