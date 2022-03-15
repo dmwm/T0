@@ -556,6 +556,11 @@ def addDataset(config, datasetName, **settings):
     datasetConfig.PhysicsSkims = settings.get("physics_skims", [])
     datasetConfig.DqmSequences = settings.get("dqm_sequences", [])
 
+    if hasattr(datasetConfig, "MaxMemoryperCore"):
+        datasetConfig.MaxMemoryperCore = settings.get("maxMemoryperCore", datasetConfig.MaxMemoryperCore)
+    else:
+        datasetConfig.MaxMemoryperCore = settings.get("maxMemoryperCore", 2000)
+
     return
 
 def setAcquisitionEra(config, acquisitionEra):
@@ -931,6 +936,11 @@ def addExpressConfig(config, streamName, **options):
     streamConfig.Express.PhEDExGroup = options.get("phedexGroup", "express")
 
     streamConfig.Express.BlockCloseDelay = options.get("blockCloseDelay", 3600)
+
+    if hasattr(streamConfig.Express, "MaxMemoryperCore"):
+        streamConfig.Express.MaxMemoryperCore = options.get("maxMemoryperCore", streamConfig.Express.MaxMemoryperCore)
+    else:
+        streamConfig.Express.MaxMemoryperCore = options.get("maxMemoryperCore", 2000)
 
     return
 

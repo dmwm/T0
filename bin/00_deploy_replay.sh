@@ -4,9 +4,9 @@ BASE_DIR=/data/tier0
 DEPLOY_DIR=$BASE_DIR/srv/wmagent
 SPEC_DIR=$BASE_DIR/admin/Specs
 
-TIER0_VERSION=3.0.1
+TIER0_VERSION=3.0.3
 TIER0_ARCH=slc7_amd64_gcc630
-DEPLOY_TAG=HG2110b
+DEPLOY_TAG=HG2201e
 
 function echo_header {
     echo ''
@@ -130,7 +130,7 @@ echo "config.RetryManager.PauseAlgo.default.coolOffTime = {'create': 10, 'job': 
 # Twiking Rucio configuration
 sed -i "s+config.RucioInjector.listTiersToInject.*+config.RucioInjector.listTiersToInject = ['AOD', 'MINIAOD', 'NANOAOD', 'NANOAODSIM', 'RAW', 'FEVT', 'USER', 'ALCARECO', 'ALCAPROMPT', 'DQMIO','RAW-RECO']+" ./config/tier0/config.py
 sed -i "s+config.RucioInjector.containerDiskRuleParams.*+config.RucioInjector.containerDiskRuleParams = {'lifetime': 7 * 24 * 60 * 60}+" ./config/tier0/config.py
-
+echo "config.RucioInjector.blockRuleParams = {'lifetime': 7 * 24 * 60 * 60}" >> ./config/tier0/config.py
 
 #
 # Set output datasets status to VALID in DBS

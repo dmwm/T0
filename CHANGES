@@ -1,3 +1,9 @@
+3.0.2 to 3.0.3:
+  - Make Express and Promt memory configurable (#4638)
+  - Adding deployment ID to db and Tier0Config (#4632)
+  - Setting a 46h soft timeout for PromptReco jobs (#4600)
+  - Fix new AlCa datasets for collisions (#4626)
+
 2.2.4 to 3.0.2:
   - Merge pull request #4624 from germanfgv/ProdPilotBeam
   - Production configuration for Pilot Beam test 2021

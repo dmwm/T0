@@ -33,7 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 345500)
+setInjectMinRun(tier0Config, 347611)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
@@ -55,7 +55,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Commissioning2021")
+setAcquisitionEra(tier0Config, "Commissioning2022")
 setBaseRequestPriority(tier0Config, 250000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -94,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_0_3_patch2"
+    'default': "CMSSW_12_2_1_patch1"
 }
 
 # Configure ScramArch
@@ -127,9 +127,9 @@ expressProcVersion = {
 }
 
 # Defaults for GlobalTag
-expressGlobalTag = "120X_dataRun3_Express_v2"
-promptrecoGlobalTag = "120X_dataRun3_Prompt_v2"
-alcap0GlobalTag = "120X_dataRun3_Prompt_v2"
+expressGlobalTag = "122X_dataRun3_Express_v3"
+promptrecoGlobalTag = "122X_dataRun3_Prompt_v3"
+alcap0GlobalTag = "122X_dataRun3_Prompt_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -167,7 +167,8 @@ repackVersionOverride = {
     "CMSSW_12_0_2_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_2_patch2" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_3_patch1" : defaultCMSSWVersion['default']
+    "CMSSW_12_0_3_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_2_1" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -192,7 +193,8 @@ expressVersionOverride = {
     "CMSSW_12_0_2_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_2_patch2" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_3_patch1" : defaultCMSSWVersion['default']
+    "CMSSW_12_0_3_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_2_1" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -229,6 +231,7 @@ addDataset(tier0Config, "Default",
            blockCloseDelay=24 * 3600,
            timePerEvent=5,
            sizePerEvent=1500,
+           maxMemoryperCore=2000,
            scenario=ppScenario)
 
 #############################
@@ -259,6 +262,7 @@ addExpressConfig(tier0Config, "Express",
                  blockCloseDelay=1200,
                  timePerEvent=4,
                  sizePerEvent=1700,
+                 maxMemoryperCore=2000,
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "ExpressCosmics",
@@ -268,7 +272,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T",
                                  "SiPixelCalZeroBias",
-                                 "PromptCalibProdSiStrip", "PromptCalibProdSiPixel"
+                                 "PromptCalibProdSiStrip"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
@@ -284,6 +288,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  blockCloseDelay=1200,
                  timePerEvent=4, #I have to get some stats to set this properly
                  sizePerEvent=1700, #I have to get some stats to set this properly
+                 maxMemoryperCore=2000,
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "HLTMonitor",
@@ -307,6 +312,7 @@ addExpressConfig(tier0Config, "HLTMonitor",
                  blockCloseDelay=1200,
                  timePerEvent=4, #I have to get some stats to set this properly
                  sizePerEvent=1700, #I have to get some stats to set this properly
+                 maxMemoryperCore=2000,
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "Calibration",
@@ -329,6 +335,7 @@ addExpressConfig(tier0Config, "Calibration",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
+                 maxMemoryperCore=2000,
                  archivalNode="T0_CH_CERN_MSS",
                  dataType="data",
                  tape_node="T1_US_FNAL_MSS")
@@ -354,6 +361,7 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
+                 maxMemoryperCore=2000,
                  diskNode="T2_CH_CERN")
 
 addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
@@ -377,6 +385,7 @@ addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
+                 maxMemoryperCore=2000,
                  archivalNode=None,
                  tapeNode=None,
                  diskNode=None)
@@ -410,6 +419,7 @@ addExpressConfig(tier0Config, "HIExpress",
                  blockCloseDelay=1200,
                  timePerEvent=4,
                  sizePerEvent=1700,
+                 maxMemoryperCore=2000,
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "HIExpressAlignment",
@@ -434,6 +444,7 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
+                 maxMemoryperCore=2000,
                  diskNode="T2_CH_CERN")
 
 ###################################
@@ -660,7 +671,7 @@ for dataset in DATASETS:
                tape_node="T1_UK_RAL_MSS",
                disk_node="T1_UK_RAL_Disk",
                alca_producers=["HcalCalIsoTrkFilter", "HcalCalIsolatedBunchFilter"],
-               dqm_sequences=["@common", "@jetmet", "@hcal"],
+               dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
                physics_skims=["JetHTJetPlusHOFilter", "LogError", "LogErrorMonitor"],
                timePerEvent=5.7,
                sizePerEvent=2250,
@@ -676,7 +687,7 @@ for dataset in DATASETS:
                tape_node="T1_DE_KIT_MSS",
                disk_node="T1_DE_KIT_Disk",
                alca_producers=["HcalCalNoise"],
-               dqm_sequences=["@common", "@jetmet", "@hcal"],
+               dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
                physics_skims=["EXOMONOPOLE", "HighMET", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -802,7 +813,7 @@ for dataset in DATASETS:
                raw_to_disk=True,
                write_dqm=True,
                alca_producers=["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk", "HcalCalIsolatedBunchSelector"],
-               dqm_sequences=["@common", "@hcal"],
+               dqm_sequences=["@common", "@L1TMon", "@hcal"],
                physics_skims=["EcalActivity", "LogError", "LogErrorMonitor"],
                timePerEvent=12,
                sizePerEvent=4000,
@@ -817,7 +828,7 @@ for dataset in DATASETS:
                write_aod=True,
                write_miniaod=True,
                write_reco=False,
-               dqm_sequences=["@common", "@hcal"],
+               dqm_sequences=["@common", "@L1TMon", "@hcal"],
                alca_producers=["HcalCalMinBias"],
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=4.2,
@@ -958,7 +969,7 @@ for dataset in DATASETS:
                write_dqm=True,
                write_miniaod=True,
                write_aod=True,
-               dqm_sequences=["@common", "@ecal", "@jetmet", "@hcal", "@L1TEgamma"],
+               dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
                alca_producers=["TkAlMinBias"],
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
@@ -1025,7 +1036,7 @@ for dataset in DATASETS:
                write_dqm=True,
                tape_node="T1_RU_JINR_MSS",
                disk_node="T1_RU_JINR_Disk",
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
                timePerEvent=1,
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias", "HcalCalHO", 
                                "HcalCalIterativePhiSym", "HcalCalHBHEMuonFilter", "HcalCalIsoTrkFilter"],
@@ -1098,7 +1109,7 @@ for dataset in DATASETS:
                raw_to_disk=True,
                write_reco=False,
                write_dqm=True,
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
                alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias", "AlCaPCCZeroBiasFromRECO"],
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=3.5,
@@ -1262,7 +1273,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common", "@ecal", "@egamma", "@hcal", "@jetmet"],
+               dqm_sequences=["@common", "@ecal", "@egamma", "@L1TMon", "@hcal", "@jetmet"],
                scenario=ppScenario)
 
 DATASETS = ["HeavyFlavor", "SingleTrack"]
@@ -1282,7 +1293,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon"],
                alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias", "AlCaPCCZeroBiasFromRECO"],
                timePerEvent=3.5,
                sizePerEvent=1500,
@@ -1549,7 +1560,7 @@ for dataset in DATASETS:
 addDataset(tier0Config, "PAEGJet1",
            do_reco=True,
            write_dqm=True,
-           dqm_sequences=["@common", "@ecal", "@egamma", "@hcal", "@jetmet"],
+           dqm_sequences=["@common", "@ecal", "@egamma", "@L1TMon", "@hcal", "@jetmet"],
            physics_skims=["PAZEE"],
            scenario=hiScenario)
 
@@ -1616,7 +1627,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                alca_producers=["LumiPixelsMinBias"],
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon"],
                scenario=hiScenario)
 
 addDataset(tier0Config, "PADoubleMuOpen",
