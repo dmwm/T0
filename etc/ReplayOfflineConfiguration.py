@@ -100,12 +100,12 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_3_0_pre6"
+    'default': "CMSSW_12_2_1_patch2"
 }
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc7_amd64_gcc630")
-setScramArch(tier0Config, defaultCMSSWVersion['default'], "slc7_amd64_gcc10")
+setScramArch(tier0Config, defaultCMSSWVersion['default'], "slc7_amd64_gcc900")
 
 # Configure scenarios
 ppScenario = "ppEra_Run2_2018"
@@ -119,15 +119,15 @@ alcaLumiPixelsScenario = "AlCaLumiPixels"
 hiTestppScenario = "ppEra_Run2_2018"
 
 # Procesing version number replays
-dt = 128
+dt = 130
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "123X_dataRun3_Express_TIER0_REPLAY_Run2_v1"
-promptrecoGlobalTag = "123X_dataRun3_Prompt_TIER0_REPLAY_Run2_v2"
-alcap0GlobalTag = "123X_dataRun3_Prompt_TIER0_REPLAY_Run2_v2"
+expressGlobalTag = "122X_dataRun3_Express_TIER0_REPLAY_Run2_v1"
+promptrecoGlobalTag = "122X_dataRun3_Prompt_TIER0_REPLAY_Run2_v1"
+alcap0GlobalTag = "122X_dataRun3_Prompt_TIER0_REPLAY_Run2_v1"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
