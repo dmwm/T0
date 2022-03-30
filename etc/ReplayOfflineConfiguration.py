@@ -100,7 +100,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_3_0_pre6"
+    'default': "CMSSW_12_4_0_pre2"
 }
 
 # Configure ScramArch
@@ -118,7 +118,7 @@ alcaLumiPixelsScenario = "AlCaLumiPixels"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
-dt = 213
+dt = 20220330
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
@@ -251,6 +251,25 @@ addExpressConfig(tier0Config, "AlcaLumiPixelsExpress",
                  versionOverride=expressVersionOverride,
                  maxMemoryperCore=2000,
                  diskNode="T2_CH_CERN")
+                 
+# New prompt reco PD for Run-3
+DATASETS = ["ALCALumiPixelsCountsPrompt0", "ALCALumiPixelsCountsPrompt1", "ALCALumiPixelsCountsPrompt2", "ALCALumiPixelsCountsPrompt3",
+            "ALCALumiPixelsCountsPrompt4", "ALCALumiPixelsCountsPrompt5", "ALCALumiPixelsCountsPrompt6", "ALCALumiPixelsCountsPrompt7",
+            "ALCALumiPixelsCountsPrompt8", "ALCALumiPixelsCountsPrompt9", "ALCALumiPixelsCountsPrompt10", "ALCALumiPixelsCountsPrompt11",
+            "ALCALumiPixelsCountsPrompt12", "ALCALumiPixelsCountsPrompt"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               write_reco=False, write_aod=False, write_miniaod=False, write_dqm=False,
+               disk_node=None,
+               tape_node=None,
+               reco_split=alcarawSplitting,
+               proc_version=alcarawProcVersion,
+               alca_producers = [ "AlCaPCCZeroBias", "RawPCCProducer" ],
+               timePerEvent=0.02,
+               sizePerEvent=38,
+               scenario=alcaLumiPixelsScenario)
 
 #######################
 ### ignored streams ###
@@ -266,6 +285,25 @@ ignoreStream(tier0Config, "DQMOffline")
 ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
+ignoreStream(tier0Config, "ALCAP0")
+ignoreStream(tier0Config, "ALCAPHISYM")
+ignoreStream(tier0Config, "Calibration")
+ignoreStream(tier0Config, "ExpressAlignment")
+ignoreStream(tier0Config, "HLTMonitor")
+ignoreStream(tier0Config, "NanoDST")
+ignoreStream(tier0Config, "ParkingBPH1")
+ignoreStream(tier0Config, "ParkingBPH2")
+ignoreStream(tier0Config, "ParkingBPH3")
+ignoreStream(tier0Config, "ParkingBPH4")
+ignoreStream(tier0Config, "ParkingBPH5")
+ignoreStream(tier0Config, "PhysicsCommissioning")
+ignoreStream(tier0Config, "PhysicsEGamma")
+ignoreStream(tier0Config, "PhysicsHadronsTaus")
+ignoreStream(tier0Config, "PhysicsMuons")
+ignoreStream(tier0Config, "PhysicsScoutingMonitor")
+ignoreStream(tier0Config, "RPCMON")
+ignoreStream(tier0Config, "ScoutingCaloMuon")
+ignoreStream(tier0Config, "ScoutingPF")
 
 ###################################
 ### currently inactive settings ###
