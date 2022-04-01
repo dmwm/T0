@@ -118,7 +118,7 @@ alcaLumiPixelsScenario = "AlCaLumiPixels"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
-dt = 20220330
+dt = 20220401
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
@@ -228,7 +228,7 @@ addDataset(tier0Config, "Default",
            scenario=ppScenario)
 
 # New express lumi workflow for Run-3
-addExpressConfig(tier0Config, "AlcaLumiPixelsExpress",
+addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
                  scenario=alcaLumiPixelsScenario,
                  data_tiers=["ALCARECO"],
                  write_dqm=True,
@@ -304,6 +304,41 @@ ignoreStream(tier0Config, "PhysicsScoutingMonitor")
 ignoreStream(tier0Config, "RPCMON")
 ignoreStream(tier0Config, "ScoutingCaloMuon")
 ignoreStream(tier0Config, "ScoutingPF")
+ignoreStream(tier0Config, "HLTPhysics")
+ignoreStream(tier0Config, "HcalNZS")
+ignoreStream(tier0Config, "MinimumBias")
+ignoreStream(tier0Config, "MinimumBias0")
+ignoreStream(tier0Config, "MinimumBias1")
+ignoreStream(tier0Config, "MinimumBias2")
+ignoreStream(tier0Config, "MinimumBias3")
+ignoreStream(tier0Config, "MinimumBias4")
+ignoreStream(tier0Config, "MinimumBias5")
+ignoreStream(tier0Config, "MinimumBias6")
+ignoreStream(tier0Config, "MinimumBias7")
+ignoreStream(tier0Config, "MinimumBias8")
+ignoreStream(tier0Config, "MinimumBias9")
+ignoreStream(tier0Config, "NoBPTX")
+ignoreStream(tier0Config, "ZeroBias")
+ignoreStream(tier0Config, "ZeroBias0")
+ignoreStream(tier0Config, "ZeroBias1")
+ignoreStream(tier0Config, "ZeroBias10")
+ignoreStream(tier0Config, "ZeroBias11")
+ignoreStream(tier0Config, "ZeroBias12")
+ignoreStream(tier0Config, "ZeroBias13")
+ignoreStream(tier0Config, "ZeroBias14")
+ignoreStream(tier0Config, "ZeroBias15")
+ignoreStream(tier0Config, "ZeroBias16")
+ignoreStream(tier0Config, "ZeroBias17")
+ignoreStream(tier0Config, "ZeroBias18")
+ignoreStream(tier0Config, "ZeroBias19")
+ignoreStream(tier0Config, "ZeroBias2")
+ignoreStream(tier0Config, "ZeroBias3")
+ignoreStream(tier0Config, "ZeroBias4")
+ignoreStream(tier0Config, "ZeroBias5")
+ignoreStream(tier0Config, "ZeroBias6")
+ignoreStream(tier0Config, "ZeroBias7")
+ignoreStream(tier0Config, "ZeroBias8")
+ignoreStream(tier0Config, "ZeroBias9")
 
 ###################################
 ### currently inactive settings ###
