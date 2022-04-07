@@ -529,31 +529,10 @@ ignoreStream(tier0Config, "streamDQMRates")
 ############################################
 ### ignored streams for the current test ###
 ############################################
-ignoreStream(tier0Config, "ALCALUMIPIXELS")
-ignoreStream(tier0Config, "ALCALUMIPIXELSEXPRESS")
-ignoreStream(tier0Config, "ALCAP0")
-ignoreStream(tier0Config, "ALCAPHISYM")
-ignoreStream(tier0Config, "Calibration")
-ignoreStream(tier0Config, "Express")
-ignoreStream(tier0Config, "ExpressAlignment")
-ignoreStream(tier0Config, "ExpressPA")
-ignoreStream(tier0Config, "HIExpress")
-ignoreStream(tier0Config, "HIExpressAlignment")
-ignoreStream(tier0Config, "HLTMonitor")
-ignoreStream(tier0Config, "HLTMonitorPA")
 ignoreStream(tier0Config, "NanoDST")
-ignoreStream(tier0Config, "ParkingBPH1")
-ignoreStream(tier0Config, "ParkingBPH2")
-ignoreStream(tier0Config, "ParkingBPH3")
-ignoreStream(tier0Config, "ParkingBPH4")
-ignoreStream(tier0Config, "ParkingBPH5")
-ignoreStream(tier0Config, "PhysicsEGamma")
-ignoreStream(tier0Config, "PhysicsHadronsTaus")
-ignoreStream(tier0Config, "PhysicsMuons")
-ignoreStream(tier0Config, "PhysicsScoutingMonitor")
-ignoreStream(tier0Config, "RPCMON")
-ignoreStream(tier0Config, "ScoutingCaloMuon")
-ignoreStream(tier0Config, "ScoutingPF")
+ignoreStream(tier0Config, "Calibration")
+ignoreStream(tier0Config, "ExpressCosmics")
+
 
 ###################################
 ### currently inactive settings ###
