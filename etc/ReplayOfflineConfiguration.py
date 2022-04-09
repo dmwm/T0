@@ -100,7 +100,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_4_0_pre2"
+    'default': "CMSSW_12_3_0"
 }
 
 # Configure ScramArch
@@ -114,7 +114,7 @@ hcalnzsScenario = "hcalnzsEra_Run3"
 hiScenario = "ppEra_Run3"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run3"
 alcaTestEnableScenario = "AlCaTestEnable"
-alcaLumiPixelsScenario = "AlCaLumiPixels"
+alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
@@ -260,8 +260,8 @@ DATASETS = ["ALCALumiPixelsCountsPrompt0", "ALCALumiPixelsCountsPrompt1", "ALCAL
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
-               write_reco=False, write_aod=False, write_miniaod=False, write_dqm=False,
+               do_reco=True,
+               write_reco=True, write_aod=False, write_miniaod=False, write_dqm=False,
                disk_node=None,
                tape_node=None,
                reco_split=alcarawSplitting,
