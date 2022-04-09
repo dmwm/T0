@@ -15,6 +15,6 @@ Team or person that requests this replay
 **Purpose of the test**  
 A replay test is costly, both in computational and human resources. Please describe the reason why this test is needed.
 
-**T0 Operations HyperNews thread**  
-If necessary, provide a link to the HN thread announcing the test to the relevant groups. 
-[Tier0 Operations HN Forum](https://hypernews.cern.ch/HyperNews/CMS/get/tier0-Ops.html?)
+**T0 Operations cmsTalk thread**  
+If necessary, provide a link to the cmsTalk thread announcing the test to the relevant groups. 
+[Tier0 Operations cmsTalk Forum](https://cms-talk.web.cern.ch/c/offcomp/compops/tier0/210?)

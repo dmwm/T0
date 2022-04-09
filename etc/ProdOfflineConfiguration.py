@@ -33,7 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 347611)
+setInjectMinRun(tier0Config, 348843)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
@@ -94,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_2_1_patch1"
+    'default': "CMSSW_12_2_3_patch1"
 }
 
 # Configure ScramArch
@@ -168,7 +168,10 @@ repackVersionOverride = {
     "CMSSW_12_0_2_patch2" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_3_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_1" : defaultCMSSWVersion['default']
+    "CMSSW_12_2_1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_2_1_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_2_2" : defaultCMSSWVersion['default'],
+    "CMSSW_12_2_3" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -194,7 +197,10 @@ expressVersionOverride = {
     "CMSSW_12_0_2_patch2" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_3_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_1" : defaultCMSSWVersion['default']
+    "CMSSW_12_2_1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_2_1_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_2_2" : defaultCMSSWVersion['default'],
+    "CMSSW_12_2_3" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -1109,7 +1115,7 @@ for dataset in DATASETS:
                raw_to_disk=True,
                write_reco=False,
                write_dqm=True,
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet", "@ctpps"],
                alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias", "AlCaPCCZeroBiasFromRECO"],
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=3.5,
