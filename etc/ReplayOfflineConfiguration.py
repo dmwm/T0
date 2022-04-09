@@ -118,7 +118,7 @@ alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
-dt = 20220401
+dt = 16
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
@@ -262,14 +262,13 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_reco=True, write_aod=False, write_miniaod=False, write_dqm=False,
-               disk_node=None,
-               tape_node=None,
                reco_split=alcarawSplitting,
                proc_version=alcarawProcVersion,
                alca_producers = [ "AlCaPCCZeroBias", "RawPCCProducer" ],
                timePerEvent=0.02,
                sizePerEvent=38,
-               scenario=alcaLumiPixelsScenario)
+               scenario=alcaLumiPixelsScenario,
+               diskNode="T2_CH_CERN")
 
 #######################
 ### ignored streams ###
