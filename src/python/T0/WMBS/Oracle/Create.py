@@ -927,7 +927,9 @@ class Create(DBCreator):
                            37 : "ppEra_Run3",
                            38 : "cosmicsEra_Run3",
                            39 : "hcalnzsEra_Run3",
-                           40 : "trackingOnlyEra_Run3" }
+                           40 : "trackingOnlyEra_Run3",
+                           41 : "AlCaLumiPixels_Run3",
+                           42 : "AlCaPhiSymEcal_Nano" }
         for id, name in list(eventScenarios.items()):
             sql = """INSERT INTO event_scenario
                      (ID, NAME)
