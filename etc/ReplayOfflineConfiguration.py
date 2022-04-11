@@ -251,12 +251,12 @@ addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
                  versionOverride=expressVersionOverride,
                  maxMemoryperCore=2000,
                  diskNode="T2_CH_CERN")
-                 
+
 # New prompt reco PD for Run-3
-DATASETS = ["ALCALumiPixelsCountsPrompt0", "ALCALumiPixelsCountsPrompt1", "ALCALumiPixelsCountsPrompt2", "ALCALumiPixelsCountsPrompt3",
-            "ALCALumiPixelsCountsPrompt4", "ALCALumiPixelsCountsPrompt5", "ALCALumiPixelsCountsPrompt6", "ALCALumiPixelsCountsPrompt7",
-            "ALCALumiPixelsCountsPrompt8", "ALCALumiPixelsCountsPrompt9", "ALCALumiPixelsCountsPrompt10", "ALCALumiPixelsCountsPrompt11",
-            "ALCALumiPixelsCountsPrompt12", "ALCALumiPixelsCountsPrompt"]
+DATASETS = ["AlCaLumiPixelsCountsPrompt0", "AlCaLumiPixelsCountsPrompt1", "AlCaLumiPixelsCountsPrompt2", "AlCaLumiPixelsCountsPrompt3",
+            "AlCaLumiPixelsCountsPrompt4", "AlCaLumiPixelsCountsPrompt5", "AlCaLumiPixelsCountsPrompt6", "AlCaLumiPixelsCountsPrompt7",
+            "AlCaLumiPixelsCountsPrompt8", "AlCaLumiPixelsCountsPrompt9", "AlCaLumiPixelsCountsPrompt10", "AlCaLumiPixelsCountsPrompt11",
+            "AlCaLumiPixelsCountsPrompt12", "AlCaLumiPixelsCountsPrompt"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
