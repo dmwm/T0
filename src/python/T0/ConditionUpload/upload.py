@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 '''Script that uploads to the new CMS conditions uploader.
 Adapted to the new infrastructure from v6 of the upload.py script for the DropBox from Miguel Ojeda.
 '''
@@ -334,7 +334,7 @@ class HTTP(object):
         # self.curl.setopt( self.curl.POST, {})
         self.curl.setopt(self.curl.HTTPGET, 0)
 
-        response = io.StringIO()
+        response = io.BytesIO()
         self.curl.setopt(pycurl.WRITEFUNCTION, response.write)
         self.curl.setopt(pycurl.USERPWD, '%s:%s' % (username, password) )
 
@@ -345,7 +345,7 @@ class HTTP(object):
         logging.debug('got: %s ', str(code))
 
         try:
-            self.token = json.loads( response.getvalue() )['token']
+            self.token = json.loads( response.getvalue().decode('UTF-8') )['token']
         except Exception as e:
             logging.error('http::getToken> got error from server: %s ', str(e) )
             if 'No JSON object could be decoded' in str(e):
@@ -354,9 +354,9 @@ class HTTP(object):
             return None
 
         logging.debug('token: %s', self.token)
-        logging.debug('returning: %s', response.getvalue())
+        logging.debug('returning: %s', response.getvalue().decode('UTF-8'))
 
-        return response.getvalue()
+        return response.getvalue().decode('UTF-8')
 
     def query(self, url, data = None, files = None, keepCookies = True):
         '''Queries a URL, optionally with some data (dictionary).
@@ -413,7 +413,7 @@ class HTTP(object):
 
                 self.curl.setopt(pycurl.VERBOSE, 0)
 
-                response = io.StringIO()
+                response = io.BytesIO()
                 self.curl.setopt(self.curl.WRITEFUNCTION, response.write)
                 self.curl.perform()
 
@@ -424,9 +424,9 @@ class HTTP(object):
                     continue
 
                 if code != 200:
-                    raise HTTPError(code, response.getvalue())
+                    raise HTTPError(code, response.getvalue().decode('UTF-8'))
 
-                return response.getvalue()
+                return response.getvalue().decode('UTF-8')
 
             except pycurl.error as e:
                 if len(retries) == 0:
@@ -509,7 +509,7 @@ class ConditionsUploader(object):
 
     def getDestDbFromMetaData(self, filename):
 
-        with open(filename, 'r') as jFile:
+        with open(filename, 'rb') as jFile:
             md = json.load( jFile )
 
         destDb = 'prod'
@@ -553,13 +553,20 @@ class ConditionsUploader(object):
             logging.error(msg)
             raise Exception(msg)
 
-        with tempfile.NamedTemporaryFile() as metadata:
+        logging.debug('Adding to tar file for upload ...')
+        with tempfile.NamedTemporaryFile(mode = "w") as metadata:
             with open('%s.txt' % basepath, 'rb') as originalMetadata:
-                json.dump(json.load(originalMetadata), metadata, sort_keys = True, indent = 4)
+                originalMetadata_dic = json.load(originalMetadata)
+                try:
+                    json.dump(originalMetadata_dic, metadata, sort_keys = True, indent = 4)
+                except TypeError as err:
+                    msg = 'raised a %s ' % err.__repr__()
+                    logging.error(msg)
 
             metadata.seek(0)
-            addToTarFile(tarFile, metadata, 'metadata.txt')
-
+            metadataReader=open(metadata.name,'rb')
+            addToTarFile(tarFile, metadataReader, 'metadata.txt')
+            
         tarFile.close()
 
         logging.debug('%s: %s: Calculating hash...', self.hostname, basename)
