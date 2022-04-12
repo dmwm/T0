@@ -27,6 +27,7 @@ from T0.RunConfig.Tier0Config import deleteStreamConfig
 from WMCore.WMSpec.StdSpecs.Repack import RepackWorkloadFactory
 from WMCore.WMSpec.StdSpecs.Express import ExpressWorkloadFactory
 from WMCore.WMSpec.StdSpecs.PromptReco import PromptRecoWorkloadFactory
+from WMCore.Storage.SiteLocalConfig import loadSiteLocalConfig
 
 def extractConfigParameter(configParameter, era, run):
     """
@@ -701,9 +702,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                       'Dashboard': "t0" } )
 
             if tier0Config.Global.ProcessingSite!=tier0Config.Global.StorageSite:
-                site = retrieveSiteConfig(tier0Config,tier0Config.Global.StorageSite)
-                wmSpec.setTaskEnvironmentVariables({'WMAGENT_SITE_CONFIG_OVERRIDE':site.SiteLocalConfig})
-                wmSpec.setOverrideCatalog(site.OverrideCatalog)
+                setStorageSite(tier0Config, wmSpec, tier0Config.Global.StorageSite)
 
             wmbsHelper = WMBSHelper(wmSpec, taskName, cachepath = specDirectory)
 
@@ -1103,9 +1102,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
 
                 #Overriding site configuration
                 if tier0Config.Global.ProcessingSite!=tier0Config.Global.StorageSite:
-                    site = retrieveSiteConfig(tier0Config,tier0Config.Global.StorageSite)
-                    wmSpec.setTaskEnvironmentVariables({'WMAGENT_SITE_CONFIG_OVERRIDE':site.SiteLocalConfig})
-                    wmSpec.setOverrideCatalog(site.OverrideCatalog)
+                    setStorageSite(tier0Config, wmSpec, tier0Config.Global.StorageSite)
 
                 #Overriding processing site in case we using T0 disk
                 wmSpec.updateArguments( { 'SiteWhitelist': datasetConfig.SiteWhitelist,
@@ -1144,4 +1141,15 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
         else:
             myThread.transaction.commit()
 
+    return
+
+def setStorageSite(tier0Config, wmSpec, storagesite):
+    site = retrieveSiteConfig(tier0Config, storagesite)
+    wmSpec.setTaskEnvironmentVariables({'WMAGENT_SITE_CONFIG_OVERRIDE':site.SiteLocalConfig})
+    wmSpec.setOverrideCatalog(site.OverrideCatalog)
+    for task in wmSpec.getAllTasks():
+        for stepName in task.listAllStepNames():
+            stepHelper = task.getStepHelper(stepName)
+            if stepHelper.stepType() == "LogCollect":
+                stepHelper.addOverride("logRedirectSiteLocalConfig",True)
     return
