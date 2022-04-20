@@ -99,7 +99,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_3_0"
+    'default': "CMSSW_12_4_0_pre3"
 }
 
 # Configure ScramArch
@@ -114,7 +114,9 @@ hiScenario = "ppEra_Run3"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run3"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels"
+alcaPhiSymEcalScenario = "AlCaPhiSymEcal_Nano"
 hiTestppScenario = "ppEra_Run3"
+
 
 # Procesing version number replays
 dt = 212
@@ -240,8 +242,8 @@ for dataset in DATASETS:
                do_reco=False,
                raw_to_disk=True,
                disk_node="T2_CH_CERN"
-               alca_producers=["EcalCalPhiSym","EcalPhiSymByRun"],
-               scenario=ppScenario)
+               alca_producers=["EcalPhiSymByRun"],
+               scenario=alcaPhiSymEcalScenario)
 
 #######################
 ### ignored streams ###
