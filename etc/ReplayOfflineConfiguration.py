@@ -260,8 +260,8 @@ DATASETS = ["AlCaLumiPixelsCountsPrompt0", "AlCaLumiPixelsCountsPrompt1", "AlCaL
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_reco=True, write_aod=False, write_miniaod=False, write_dqm=False,
+               do_reco=False,
+               write_reco=False, write_aod=False, write_miniaod=False, write_dqm=False,
                reco_split=alcarawSplitting,
                proc_version=alcarawProcVersion,
                alca_producers = [ "AlCaPCCZeroBias", "RawPCCProducer" ],
