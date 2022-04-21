@@ -125,8 +125,8 @@ alcarawProcVersion = dt
 
 # Defaults for GlobalTag
 expressGlobalTag = "123X_dataRun3_Express_TIER0_REPLAY_Run2_v1"
-promptrecoGlobalTag = "123X_dataRun3_Prompt_TIER0_REPLAY_Run2_v2"
-alcap0GlobalTag = "123X_dataRun3_Prompt_TIER0_REPLAY_Run2_v2"
+promptrecoGlobalTag = "123X_dataRun3_Prompt_TIER0_REPLAY_Run2_v3"
+alcap0GlobalTag = "123X_dataRun3_Prompt_TIER0_REPLAY_Run2_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
