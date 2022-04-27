@@ -164,6 +164,9 @@ Tier0Configuration - Global configuration object
 |             |     |--> PhEDExGroup - The PhEDEx group for the subscriptions.
 |             |     |
 |             |     |--> BlockCloseDelay - delay to close block in WMAgent
+|             |     |
+|             |     |--> DatasetLifetime - dataset_lifetime for subscription to
+|             |     |                       disk in seconds. 0 means lifetime of None
 |             |
 |             |--> Register - Configuration section for register streams
 |             |     |
@@ -230,6 +233,9 @@ Tier0Configuration - Global configuration object
             |--> BlockCloseDelay - Delay to close block in WMAgent
             |
             |--> SiteWhitelist - Site whitelist for PromptReco
+            |
+            |--> DatasetLifetime - dataset_lifetime for subscription to disk in
+                                    seconds. 0 means lifetime of None
 """
 
 import logging
@@ -560,6 +566,11 @@ def addDataset(config, datasetName, **settings):
         datasetConfig.MaxMemoryperCore = settings.get("maxMemoryperCore", datasetConfig.MaxMemoryperCore)
     else:
         datasetConfig.MaxMemoryperCore = settings.get("maxMemoryperCore", 2000)
+
+    if hasattr(datasetConfig, "datasetLifetime"):
+        datasetConfig.datasetLifetime = settings.get("dataset_lifetime", datasetConfig.datasetLifetime)
+    else:
+        datasetConfig.datasetLifetime = settings.get("dataset_lifetime", 0)
 
     return
 
@@ -941,6 +952,11 @@ def addExpressConfig(config, streamName, **options):
         streamConfig.Express.MaxMemoryperCore = options.get("maxMemoryperCore", streamConfig.Express.MaxMemoryperCore)
     else:
         streamConfig.Express.MaxMemoryperCore = options.get("maxMemoryperCore", 2000)
+
+    if hasattr(streamConfig, "datasetLifetime"):
+        streamConfig.Express.datasetLifetime = options.get("dataset_lifetime", streamConfig.Express.datasetLifetime)
+    else:
+        streamConfig.Express.datasetLifetime = options.get("dataset_lifetime", 0)
 
     return
 
