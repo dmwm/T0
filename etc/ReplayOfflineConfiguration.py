@@ -118,7 +118,7 @@ alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
-dt = 16
+dt = 19
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
@@ -260,15 +260,14 @@ DATASETS = ["AlCaLumiPixelsCountsPrompt0", "AlCaLumiPixelsCountsPrompt1", "AlCaL
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
+               do_reco=True,
                write_reco=False, write_aod=False, write_miniaod=False, write_dqm=False,
                reco_split=alcarawSplitting,
                proc_version=alcarawProcVersion,
                alca_producers = [ "AlCaPCCZeroBias", "RawPCCProducer" ],
                timePerEvent=0.02,
                sizePerEvent=38,
-               scenario=alcaLumiPixelsScenario,
-               diskNode="T2_CH_CERN")
+               scenario=alcaLumiPixelsScenario)
 
 #######################
 ### ignored streams ###
