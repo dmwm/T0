@@ -32,7 +32,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [346512,347028,349840])
+setInjectRuns(tier0Config, [347028,349840,350683,350963])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -99,7 +99,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_3_0"
+    'default': "CMSSW_12_3_2"
 }
 
 # Configure ScramArch
@@ -117,7 +117,7 @@ alcaLumiPixelsScenario = "AlCaLumiPixels"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
-dt = 410
+dt = 429
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
@@ -166,7 +166,8 @@ repackVersionOverride = {
     "CMSSW_12_2_1_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_2_2" : defaultCMSSWVersion['default'],
     "CMSSW_12_2_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_3_patch1" : defaultCMSSWVersion['default']
+    "CMSSW_12_2_3_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_0" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -194,7 +195,8 @@ expressVersionOverride = {
     "CMSSW_12_2_1_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_2_2" : defaultCMSSWVersion['default'],
     "CMSSW_12_2_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_3_patch1" : defaultCMSSWVersion['default']
+    "CMSSW_12_2_3_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_0" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
