@@ -1,3 +1,23 @@
+3.0.3 to 3.0.4:
+  - Fix typo ALCALumiPixelsCountsPrompt (#4666)
+  - AddNewScenario (#4665)
+  - Merge pull request #4642 from jhonatanamado/add_ruciocontainer_lifetime
+  - Production configuration for splashes April 2022 (CMSSW_12_3_0) (#4663)
+  - Add lifetime to dataset from ConfigFile
+  - Add siteLocalConfig to LogCollect overrides (#4636)
+  - additional fix for condition upload (#4611)
+  - Merge pull request #4660 from jhonatanamado/CMSSW_12_2_3_patch1
+  - Upgrade T0 to CMSSW_12_2_3_patch1
+  - Merge pull request #4658 from jhonatanamado/CMSSW_12_2_3
+  - Update T0 configuration to use CMSSW_12_2_3
+  - Merge pull request #4655 from jhonatanamado/add_ctppsDQM_ZeroBias
+  - Add `@ctpps` dqm sequence on ZeroBias dataset
+  - Add cmsTalk instead of HN in the PR request template (#4651)
+  - Configuration for CRAFT 2022 (#4649)
+  - Merge pull request #4643 from jhonatanamado/addparams_blocklevel_rules
+  - T0 Configuration for MWGR1 of 2022. (#4645)
+  - Add parameters to block-level rules
+
 3.0.2 to 3.0.3:
   - Make Express and Promt memory configurable (#4638)
   - Adding deployment ID to db and Tier0Config (#4632)
