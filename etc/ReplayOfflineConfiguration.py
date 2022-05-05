@@ -99,7 +99,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_3_2"
+    'default': "CMSSW_12_3_2_patch1"
 }
 
 # Configure ScramArch
@@ -239,7 +239,7 @@ DATASETS = ["AlCaPhiSym"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
+               do_reco=True,
                raw_to_disk=True,
                disk_node="T2_CH_CERN",
                alca_producers=["EcalPhiSymByRun"],
