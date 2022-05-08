@@ -113,7 +113,7 @@ hcalnzsScenario = "hcalnzsEra_Run3"
 hiScenario = "ppEra_Run3"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run3"
 alcaTestEnableScenario = "AlCaTestEnable"
-alcaLumiPixelsScenario = "AlCaLumiPixels"
+alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
@@ -390,6 +390,31 @@ addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
                  versionOverride=expressVersionOverride,
                  maxMemoryperCore=2000,
                  dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
+                 diskNode="T0_CH_CERN_Disk")
+
+addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
+                 scenario=alcaLumiPixelsScenario,
+                 data_tiers=["ALCARECO"],
+                 write_dqm=True,
+                 alca_producers=["AlCaPCCRandom", "PromptCalibProdLumiPCC"],
+                 dqm_sequences=[],
+                 reco_version=defaultCMSSWVersion,
+                 multicore=1,
+                 global_tag_connect=globalTagConnect,
+                 global_tag=expressGlobalTag,
+                 proc_ver=expressProcVersion,
+                 maxInputRate=23 * 1000,
+                 maxInputEvents=100 * 1000 * 1000,
+                 maxInputSize=4 * 1024 * 1024 * 1024,
+                 maxInputFiles=10000,
+                 maxLatency=1 * 3600,
+                 periodicHarvestInterval=24 * 3600,
+                 blockCloseDelay=2 * 3600,
+                 timePerEvent=4,
+                 sizePerEvent=1700,
+                 versionOverride=expressVersionOverride,
+                 maxMemoryperCore=2000,
+                 dataset_lifetime=14*24*3600,#lifetime for container rules. Default 3 months
                  diskNode="T0_CH_CERN_Disk")
 
 #####################
@@ -858,29 +883,27 @@ DATASETS = ["AlCaLumiPixelsCountsPrompt0", "AlCaLumiPixelsCountsPrompt1", "AlCaL
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
+               do_reco=True,
                write_reco=False, write_aod=False, write_miniaod=False, write_dqm=False,
-               disk_node=None,
-               tape_node=None,
                reco_split=alcarawSplitting,
                proc_version=alcarawProcVersion,
+               alca_producers=["AlCaPCCZeroBias", "RawPCCProducer"],
                timePerEvent=0.02,
                sizePerEvent=38,
                scenario=alcaLumiPixelsScenario)
 
-DATASETS = ["ALCALumiPixelsCountsExpress0", "ALCALumiPixelsCountsExpress1", "ALCALumiPixelsCountsExpress2", "ALCALumiPixelsCountsExpress3",
-            "ALCALumiPixelsCountsExpress4", "ALCALumiPixelsCountsExpress5", "ALCALumiPixelsCountsExpress6", "ALCALumiPixelsCountsExpress7",
-            "ALCALumiPixelsCountsExpress8", "ALCALumiPixelsCountsExpress9", "ALCALumiPixelsCountsExpress10", "ALCALumiPixelsCountsExpress11",
-            "ALCALumiPixelsCountsExpress12", "ALCALumiPixelsCountsExpress"]
+DATASETS = ["AlCaLumiPixelsCountsExpress0", "AlCaLumiPixelsCountsExpress1", "AlCaLumiPixelsCountsExpress2", "AlCaLumiPixelsCountsExpress3",
+            "AlCaLumiPixelsCountsExpress4", "AlCaLumiPixelsCountsExpress5", "AlCaLumiPixelsCountsExpress6", "AlCaLumiPixelsCountsExpress7",
+            "AlCaLumiPixelsCountsExpress8", "AlCaLumiPixelsCountsExpress9", "AlCaLumiPixelsCountsExpress10", "AlCaLumiPixelsCountsExpress11",
+            "AlCaLumiPixelsCountsExpress12", "AlCaLumiPixelsCountsExpress"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
+               do_reco=True,
                write_reco=False, write_aod=False, write_miniaod=False, write_dqm=False,
-               disk_node=None,
-               tape_node=None,
                reco_split=alcarawSplitting,
                proc_version=alcarawProcVersion,
+               alca_producers=["AlCaPCCZeroBias", "RawPCCProducer"],
                timePerEvent=0.02,
                sizePerEvent=38,
                scenario=alcaLumiPixelsScenario)
