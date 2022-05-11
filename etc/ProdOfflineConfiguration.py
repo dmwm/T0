@@ -33,10 +33,10 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 348843)
+setInjectMinRun(tier0Config, 999998)
 
 # Set the max run number:
-setInjectMaxRun(tier0Config, 9999999)
+setInjectMaxRun(tier0Config, 999999)
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -55,8 +55,8 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Commissioning2022")
-setBaseRequestPriority(tier0Config, 250000)
+setAcquisitionEra(tier0Config, "EOSTest_May2022")
+setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
 setProcessingSite(tier0Config, processingSite)
@@ -70,7 +70,7 @@ setDQMDataTier(tier0Config, "DQMIO")
 # First timeout is used directly for reco release
 # Second timeout is used for the data service PromptReco start check
 # (to basically say we started PromptReco even though we haven't)
-defaultRecoTimeout = 48 * 3600
+defaultRecoTimeout = 9999 * 3600
 defaultRecoLockTimeout = 1800
 
 # DQM Server
@@ -234,15 +234,14 @@ addDataset(tier0Config, "Default",
            multicore=numberOfCores,
            global_tag=promptrecoGlobalTag,
            global_tag_connect=globalTagConnect,
-           archival_node="T0_CH_CERN_MSS",
-           tape_node="T1_US_FNAL_MSS",
-           disk_node="T1_US_FNAL_Disk",
+           #archival_node="T0_CH_CERN_Tape",
+           #tape_node="T1_US_FNAL_MSS",
+           #disk_node="T0_CH_CERN_Disk",
            raw_to_disk=False,
            blockCloseDelay=24 * 3600,
            timePerEvent=5,
            sizePerEvent=1500,
            maxMemoryperCore=2000,
-           dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
            scenario=ppScenario)
 
 #############################
@@ -274,7 +273,6 @@ addExpressConfig(tier0Config, "Express",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  maxMemoryperCore=2000,
-                 dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "ExpressCosmics",
@@ -301,7 +299,6 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  timePerEvent=4, #I have to get some stats to set this properly
                  sizePerEvent=1700, #I have to get some stats to set this properly
                  maxMemoryperCore=2000,
-                 dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "HLTMonitor",
@@ -326,7 +323,6 @@ addExpressConfig(tier0Config, "HLTMonitor",
                  timePerEvent=4, #I have to get some stats to set this properly
                  sizePerEvent=1700, #I have to get some stats to set this properly
                  maxMemoryperCore=2000,
-                 dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "Calibration",
@@ -352,7 +348,6 @@ addExpressConfig(tier0Config, "Calibration",
                  maxMemoryperCore=2000,
                  archivalNode="T0_CH_CERN_MSS",
                  dataType="data",
-                 dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
                  tape_node="T1_US_FNAL_MSS")
 
 addExpressConfig(tier0Config, "ExpressAlignment",
@@ -377,7 +372,6 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
                  maxMemoryperCore=2000,
-                 dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
                  diskNode="T2_CH_CERN")
 
 addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
@@ -404,7 +398,6 @@ addExpressConfig(tier0Config, "ALCALUMIPIXELSEXPRESS",
                  maxMemoryperCore=2000,
                  archivalNode=None,
                  tapeNode=None,
-                 dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
                  diskNode=None)
 
 
@@ -437,7 +430,6 @@ addExpressConfig(tier0Config, "HIExpress",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  maxMemoryperCore=2000,
-                 dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "HIExpressAlignment",
@@ -463,7 +455,6 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
                  maxMemoryperCore=2000,
-                 dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
                  diskNode="T2_CH_CERN")
 
 ###################################
@@ -919,10 +910,10 @@ for dataset in DATASETS:
 ########################################################
 ### Pilot Tests PDs                                  ###
 ########################################################
-DATASETS = ["AlCaLumiPixelsCountsPrompt0", "AlCaLumiPixelsCountsPrompt1", "AlCaLumiPixelsCountsPrompt2", "AlCaLumiPixelsCountsPrompt3",
-            "AlCaLumiPixelsCountsPrompt4", "AlCaLumiPixelsCountsPrompt5", "AlCaLumiPixelsCountsPrompt6", "AlCaLumiPixelsCountsPrompt7",
-            "AlCaLumiPixelsCountsPrompt8", "AlCaLumiPixelsCountsPrompt9", "AlCaLumiPixelsCountsPrompt10", "AlCaLumiPixelsCountsPrompt11",
-            "AlCaLumiPixelsCountsPrompt12", "AlCaLumiPixelsCountsPrompt"]
+DATASETS = ["ALCALumiPixelsCountsPrompt0", "ALCALumiPixelsCountsPrompt1", "ALCALumiPixelsCountsPrompt2", "ALCALumiPixelsCountsPrompt3",
+            "ALCALumiPixelsCountsPrompt4", "ALCALumiPixelsCountsPrompt5", "ALCALumiPixelsCountsPrompt6", "ALCALumiPixelsCountsPrompt7",
+            "ALCALumiPixelsCountsPrompt8", "ALCALumiPixelsCountsPrompt9", "ALCALumiPixelsCountsPrompt10", "ALCALumiPixelsCountsPrompt11",
+            "ALCALumiPixelsCountsPrompt12", "ALCALumiPixelsCountsPrompt"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1128,7 +1119,7 @@ for dataset in DATASETS:
                raw_to_disk=True,
                write_reco=False,
                write_dqm=True,
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet", "@ctpps"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
                alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias", "AlCaPCCZeroBiasFromRECO"],
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=3.5,

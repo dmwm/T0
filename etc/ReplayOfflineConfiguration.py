@@ -32,7 +32,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [347028,349840])
+setInjectRuns(tier0Config, [347998])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -117,7 +117,7 @@ alcaLumiPixelsScenario = "AlCaLumiPixels"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
-dt = 429
+dt = 1
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
@@ -228,7 +228,7 @@ addDataset(tier0Config, "Default",
            global_tag_connect=globalTagConnect,
            #archival_node="T0_CH_CERN_MSS",
            #tape_node="T1_US_FNAL_MSS",
-           disk_node="T0_CH_CERN_Disk",
+           #disk_node="T0_CH_CERN_Disk",
            #raw_to_disk=False,
            blockCloseDelay=1200,
            timePerEvent=5,
