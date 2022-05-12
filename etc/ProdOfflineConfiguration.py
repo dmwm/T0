@@ -503,8 +503,8 @@ for dataset in DATASETS:
                raw_to_disk=True,
                write_dqm=True,
                dqm_sequences=["@common"],
-               tape_node="T1_RU_JINR_MSS",
-               disk_node="T1_RU_JINR_Disk",
+               tape_node="T1_US_FNAL_MSS",
+               disk_node="T1_US_FNAL_Disk",
                alca_producers=["TkAlJpsiMuMu"],
                physics_skims=["BPHSkim", "MuonPOGJPsiSkim", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
@@ -1053,8 +1053,8 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               tape_node="T1_RU_JINR_MSS",
-               disk_node="T1_RU_JINR_Disk",
+               tape_node="T1_US_FNAL_MSS",
+               disk_node="T1_US_FNAL_Disk",
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
                timePerEvent=1,
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias", "HcalCalHO", 
@@ -1239,7 +1239,7 @@ DATASETS = ["ParkingHT410to430", "ParkingHT500to550", "ParkingHT430to450", "Park
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
-               tape_node="T1_RU_JINR_MSS",
+               tape_node="T1_US_FNAL_MSS",
                disk_node=None,
                scenario=ppScenario)
 
