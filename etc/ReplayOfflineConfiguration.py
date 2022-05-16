@@ -24,6 +24,7 @@ from T0.RunConfig.Tier0Config import setStreamerPNN
 from T0.RunConfig.Tier0Config import setEnableUniqueWorkflowName
 from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setStorageSite
+from T0.RunConfig.Tier0Config import setScramArch
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
