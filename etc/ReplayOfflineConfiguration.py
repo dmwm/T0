@@ -57,7 +57,7 @@ addSiteConfig(tier0Config, "EOS_PILOT",
 #  Processing site (where jobs run)
 #  PhEDEx locations
 setAcquisitionEra(tier0Config, "Tier0_REPLAY_2022")
-setBaseRequestPriority(tier0Config, 251000)
+setBaseRequestPriority(tier0Config, 240000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
 setProcessingSite(tier0Config, processingSite)
