@@ -106,7 +106,7 @@ defaultCMSSWVersion = {
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc7_amd64_gcc630")
-setScramArch(tier0Config, defaultCMSSWVersion['default'], "slc7_amd64_gcc900")
+setScramArch(tier0Config, defaultCMSSWVersion['default'], "slc7_amd64_gcc10")
 
 # Configure scenarios
 ppScenario = "ppEra_Run2_2018"
@@ -126,9 +126,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "122X_dataRun3_Express_TIER0_REPLAY_Run2_v1"
-promptrecoGlobalTag = "122X_dataRun3_Prompt_TIER0_REPLAY_Run2_v1"
-alcap0GlobalTag = "122X_dataRun3_Prompt_TIER0_REPLAY_Run2_v1"
+expressGlobalTag = "123X_dataRun3_Express_TIER0_REPLAY_Run2_v2"
+promptrecoGlobalTag = "123X_dataRun3_Prompt_TIER0_REPLAY_Run2_v3"
+alcap0GlobalTag = "123X_dataRun3_Prompt_TIER0_REPLAY_Run2_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
