@@ -120,15 +120,15 @@ alcaLumiPixelsScenario = "AlCaLumiPixels"
 hiTestppScenario = "ppEra_Run2_2018"
 
 # Procesing version number replays
-dt = 429
+dt = 430
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "123X_dataRun3_Express_TIER0_REPLAY_Run2_v2"
-promptrecoGlobalTag = "123X_dataRun3_Prompt_TIER0_REPLAY_Run2_v3"
-alcap0GlobalTag = "123X_dataRun3_Prompt_TIER0_REPLAY_Run2_v3"
+expressGlobalTag = "123X_dataRun3_Express_TIER0_REPLAY_Run2_v3"
+promptrecoGlobalTag = "123X_dataRun3_Prompt_TIER0_REPLAY_Run2_v4"
+alcap0GlobalTag = "123X_dataRun3_Prompt_TIER0_REPLAY_Run2_v4"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -247,6 +247,7 @@ addDataset(tier0Config, "Default",
 #############################
 addExpressConfig(tier0Config, "Express",
                  scenario=ppScenario,
+                 diskNode="T0_CH_CERN_Disk",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripCalMinBias",
