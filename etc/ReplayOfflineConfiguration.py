@@ -172,7 +172,8 @@ repackVersionOverride = {
     "CMSSW_12_2_3_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_0" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_3_patch1" : "CMSSW_12_3_3"
     }
 
 expressVersionOverride = {
