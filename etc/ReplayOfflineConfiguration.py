@@ -35,7 +35,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 346512 - 2021 pp
 # 349840 - 2022 CRAFT
 # 350966 - 2022 Splashes
-setInjectRuns(tier0Config, [346512,349840,350966])
+setInjectRuns(tier0Config, [346512,349840])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -102,7 +102,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_3_3_patch1"
+    'default': "CMSSW_12_3_4_patch2"
 }
 
 # Configure ScramArch
@@ -120,15 +120,15 @@ alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
-dt = 431
+dt = 434
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "123X_dataRun3_Express_Candidate_2022_05_19_09_12_41"
-promptrecoGlobalTag = "123X_dataRun3_Prompt_Candidate_2022_05_19_09_16_57"
-alcap0GlobalTag = "123X_dataRun3_Prompt_Candidate_2022_05_19_09_16_57"
+expressGlobalTag = "123X_dataRun3_Express_Candidate_2022_05_21_09_05_18"
+promptrecoGlobalTag = "123X_dataRun3_Prompt_Candidate_2022_05_21_09_02_41"
+alcap0GlobalTag = "123X_dataRun3_Prompt_Candidate_2022_05_21_09_02_41"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -145,35 +145,35 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_11_0_1" : "CMSSW_12_3_3",
-    "CMSSW_11_0_2" : "CMSSW_12_3_3",
-    "CMSSW_11_1_3" : "CMSSW_12_3_3",
-    "CMSSW_11_1_4" : "CMSSW_12_3_3",
-    "CMSSW_11_1_5" : "CMSSW_12_3_3",
-    "CMSSW_11_2_1" : "CMSSW_12_3_3",
-    "CMSSW_11_2_2" : "CMSSW_12_3_3",
-    "CMSSW_11_2_3" : "CMSSW_12_3_3",
-    "CMSSW_11_2_4" : "CMSSW_12_3_3",
-    "CMSSW_11_3_1" : "CMSSW_12_3_3",
-    "CMSSW_11_3_2" : "CMSSW_12_3_3",
-    "CMSSW_11_3_3" : "CMSSW_12_3_3",
-    "CMSSW_11_3_4" : "CMSSW_12_3_3",
-    "CMSSW_12_0_0" : "CMSSW_12_3_3",
-    "CMSSW_12_0_1" : "CMSSW_12_3_3",
-    "CMSSW_12_0_2" : "CMSSW_12_3_3",
-    "CMSSW_12_0_2_patch1" : "CMSSW_12_3_3",
-    "CMSSW_12_0_2_patch2" : "CMSSW_12_3_3",
-    "CMSSW_12_0_3" : "CMSSW_12_3_3",
-    "CMSSW_12_0_3_patch1" : "CMSSW_12_3_3",
-    "CMSSW_12_2_1" : "CMSSW_12_3_3",
-    "CMSSW_12_2_1_patch1" : "CMSSW_12_3_3",
-    "CMSSW_12_2_2" : "CMSSW_12_3_3",
-    "CMSSW_12_2_3" : "CMSSW_12_3_3",
-    "CMSSW_12_2_3_patch1" : "CMSSW_12_3_3",
-    "CMSSW_12_3_0" : "CMSSW_12_3_3",
-    "CMSSW_12_3_2" : "CMSSW_12_3_3",
-    "CMSSW_12_3_2_patch1" : "CMSSW_12_3_3",
-    "CMSSW_12_3_3_patch1" : "CMSSW_12_3_3"
+    "CMSSW_11_0_1" : defaultCMSSWVersion['default'],
+    "CMSSW_11_0_2" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_3" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_4" : defaultCMSSWVersion['default'],
+    "CMSSW_11_1_5" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_1" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_2" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_3" : defaultCMSSWVersion['default'],
+    "CMSSW_11_2_4" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_1" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_2" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_3" : defaultCMSSWVersion['default'],
+    "CMSSW_11_3_4" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_0" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_2" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_2_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_2_patch2" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_3" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_3_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_2_1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_2_1_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_2_2" : defaultCMSSWVersion['default'],
+    "CMSSW_12_2_3" : defaultCMSSWVersion['default'],
+    "CMSSW_12_2_3_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_0" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_2" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_3" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -204,7 +204,8 @@ expressVersionOverride = {
     "CMSSW_12_2_3_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_0" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_3" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
