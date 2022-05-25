@@ -89,7 +89,7 @@ setDQMUploadUrl(tier0Config, "https://cmsweb.cern.ch/dqm/dev;https://cmsweb-test
 setPromptCalibrationConfig(tier0Config,
                            alcaHarvestTimeout=12*3600,
                            alcaHarvestCondLFNBase="/store/unmerged/tier0_harvest",
-                           alcaHarvestLumiURL="root://eoscms.cern.ch//eos/cms/store/unmerged/tier0_harvest",
+                           alcaHarvestLumiURL="root://eoscms.cern.ch//eos/cms/tier0/store/unmerged/tier0_harvest",
                            conditionUploadTimeout=18*3600,
                            dropboxHost="webcondvm.cern.ch",
                            validationMode=True)
@@ -126,9 +126,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "123X_dataRun3_Express_Candidate_2022_05_21_09_05_18"
-promptrecoGlobalTag = "123X_dataRun3_Prompt_Candidate_2022_05_21_09_02_41"
-alcap0GlobalTag = "123X_dataRun3_Prompt_Candidate_2022_05_21_09_02_41"
+expressGlobalTag = "123X_dataRun3_Express_v6"
+promptrecoGlobalTag = "123X_dataRun3_Prompt_v8"
+alcap0GlobalTag = "123X_dataRun3_Prompt_v8"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -173,7 +173,8 @@ repackVersionOverride = {
     "CMSSW_12_3_0" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_2" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_3" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_3" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_4" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -205,7 +206,8 @@ expressVersionOverride = {
     "CMSSW_12_3_0" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_2" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_3" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_3" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_4" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
