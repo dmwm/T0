@@ -35,7 +35,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 346512 - 2021 pp
 # 349840 - 2022 CRAFT
 # 350966 - 2022 Splashes
-setInjectRuns(tier0Config, [346512,349840])
+setInjectRuns(tier0Config, [352417])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
