@@ -161,8 +161,6 @@ Tier0Configuration - Global configuration object
 |             |     |
 |             |     |--> RAWToDisk - Do we subscribe RAW to disk?
 |             |     |
-|             |     |--> PhEDExGroup - The PhEDEx group for the subscriptions.
-|             |     |
 |             |     |--> BlockCloseDelay - delay to close block in WMAgent
 |             |     |
 |             |     |--> DatasetLifetime - dataset_lifetime for subscription to
@@ -944,7 +942,6 @@ def addExpressConfig(config, streamName, **options):
     streamConfig.Express.ArchivalNode = options.get("archivalNode", None)
     streamConfig.Express.TapeNode = options.get("tapeNode", None)
     streamConfig.Express.DiskNode = options.get("diskNode", None)
-    streamConfig.Express.PhEDExGroup = options.get("phedexGroup", "express")
 
     streamConfig.Express.BlockCloseDelay = options.get("blockCloseDelay", 3600)
 
