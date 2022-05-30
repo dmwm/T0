@@ -570,7 +570,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common", "@muon", "@L1TMon],
+               dqm_sequences=["@common", "@muon", "@L1TMon"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                physics_skims=["LogError", "LogErrorMonitor", "BPHSkim", "MuonPOGJPsiSkim"],
                scenario=ppScenario)
