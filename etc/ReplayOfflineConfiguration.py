@@ -497,8 +497,6 @@ for dataset in DATASETS:
                raw_to_disk=True,
                write_dqm=True,
                dqm_sequences=["@common"],
-               tape_node="T1_US_FNAL_MSS",
-               disk_node="T1_US_FNAL_Disk",
                alca_producers=["TkAlJpsiMuMu"],
                physics_skims=["BPHSkim", "MuonPOGJPsiSkim", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
@@ -572,11 +570,9 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common"],
-               tape_node="T1_US_FNAL_MSS",
-               disk_node="T1_US_FNAL_Disk",
+               dqm_sequences=["@common", "@muon", "@L1TMon],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
-               physics_skims=["LogError", "LogErrorMonitor", "BPHSkim"],
+               physics_skims=["LogError", "LogErrorMonitor", "BPHSkim", "MuonPOGJPsiSkim"],
                scenario=ppScenario)
  
 DATASETS = ["EmptyBX"]
@@ -692,8 +688,6 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               tape_node="T1_US_FNAL_MSS",
-               disk_node="T1_US_FNAL_Disk",
                alca_producers=["TkAlUpsilonMuMu"],
                dqm_sequences=["@common", "@muon"],
                physics_skims=["LogError", "LogErrorMonitor", "BPHSkim"],
