@@ -35,7 +35,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 346512 - 2021 pp
 # 349840 - 2022 CRAFT
 # 350966 - 2022 Splashes
-setInjectRuns(tier0Config, [346512,349840])
+setInjectRuns(tier0Config, [352417])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -489,17 +489,18 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 DATASETS = ["Charmonium"]
-
+ 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
-               write_reco=True,
+               write_reco=False,
+               raw_to_disk=True,
                write_dqm=True,
                dqm_sequences=["@common"],
                alca_producers=["TkAlJpsiMuMu"],
                physics_skims=["BPHSkim", "MuonPOGJPsiSkim", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
-
+ 
 DATASETS = ["Cosmics"]
 
 for dataset in DATASETS:
@@ -564,15 +565,16 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 DATASETS = ["DoubleMuonLowMass"]
-
+ 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common"],
-               physics_skims=["LogError", "LogErrorMonitor", "BPHSkim"],
+               dqm_sequences=["@common", "@muon"],
+               alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
+               physics_skims=["LogError", "LogErrorMonitor", "BPHSkim", "MuonPOGJPsiSkim"],
                scenario=ppScenario)
-
+ 
 DATASETS = ["EmptyBX"]
 
 for dataset in DATASETS:
@@ -681,7 +683,7 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 DATASETS = ["MuOnia"]
-
+ 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
