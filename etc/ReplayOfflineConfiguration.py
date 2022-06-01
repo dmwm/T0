@@ -35,7 +35,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 346512 - 2021 pp
 # 349840 - 2022 CRAFT
 # 350966 - 2022 Splashes
-setInjectRuns(tier0Config, [352417])
+setInjectRuns(tier0Config, [352493,349840])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -60,7 +60,7 @@ addSiteConfig(tier0Config, "EOS_PILOT",
 #  Processing site (where jobs run)
 #  PhEDEx locations
 setAcquisitionEra(tier0Config, "Tier0_REPLAY_2022")
-setBaseRequestPriority(tier0Config, 240000)
+setBaseRequestPriority(tier0Config, 260000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
 setProcessingSite(tier0Config, processingSite)
@@ -102,7 +102,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_3_4_patch2"
+    'default': "CMSSW_12_3_4_patch3"
 }
 
 # Configure ScramArch
@@ -174,7 +174,8 @@ repackVersionOverride = {
     "CMSSW_12_3_2" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_4" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_4" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -207,7 +208,8 @@ expressVersionOverride = {
     "CMSSW_12_3_2" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_4" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_4" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -510,7 +512,7 @@ for dataset in DATASETS:
                write_aod=True,
                write_miniaod=False,
                write_dqm=True,
-               alca_producers=["SiStripCalCosmics", "SiPixelCalCosmics", "TkAlCosmics0T", "MuAlGlobalCosmics"],
+               alca_producers=["SiStripCalCosmics", "SiPixelCalCosmics", "TkAlCosmics0T", "MuAlGlobalCosmics", "SiStripCalCosmicsNano"],
                physics_skims=["CosmicSP", "CosmicTP", "LogError", "LogErrorMonitor"],
                timePerEvent=0.5,
                sizePerEvent=155,
