@@ -55,7 +55,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Commissioning2022")
+setAcquisitionEra(tier0Config, "Run2022A")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -94,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_3_4_patch2"
+    'default': "CMSSW_12_3_4_patch3"
 }
 
 # Configure ScramArch
@@ -162,7 +162,8 @@ repackVersionOverride = {
     "CMSSW_12_3_2" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_4" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_4" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -182,7 +183,8 @@ expressVersionOverride = {
     "CMSSW_12_3_2" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_4" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_4" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -497,7 +499,7 @@ for dataset in DATASETS:
                write_aod=True,
                write_miniaod=False,
                write_dqm=True,
-               alca_producers=["SiStripCalCosmics", "SiPixelCalCosmics", "TkAlCosmics0T", "MuAlGlobalCosmics"],
+               alca_producers=["SiStripCalCosmics", "SiPixelCalCosmics", "TkAlCosmics0T", "MuAlGlobalCosmics", "SiStripCalCosmicsNano"],
                physics_skims=["CosmicSP", "CosmicTP", "LogError", "LogErrorMonitor"],
                timePerEvent=0.5,
                sizePerEvent=155,
@@ -567,10 +569,11 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common"],
+               dqm_sequences=["@common", "@muon"],
+               alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
+               physics_skims=["LogError", "LogErrorMonitor", "BPHSkim", "MuonPOGJPsiSkim"],
                tape_node="T1_US_FNAL_MSS",
                disk_node="T1_US_FNAL_Disk",
-               physics_skims=["LogError", "LogErrorMonitor", "BPHSkim"],
                scenario=ppScenario)
 
 DATASETS = ["EmptyBX"]
