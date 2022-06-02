@@ -60,7 +60,7 @@ addSiteConfig(tier0Config, "EOS_PILOT",
 #  Processing site (where jobs run)
 #  PhEDEx locations
 setAcquisitionEra(tier0Config, "Tier0_REPLAY_2022")
-setBaseRequestPriority(tier0Config, 260000)
+setBaseRequestPriority(tier0Config, 240000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
 setProcessingSite(tier0Config, processingSite)
@@ -860,7 +860,7 @@ for dataset in DATASETS:
                write_reco=False, write_aod=False, write_miniaod=False, write_dqm=True,
                reco_split=alcarawSplitting,
                proc_version=alcarawProcVersion,
-               alca_producers=[],
+               alca_producers=["AlCaPCCZeroBias"],
                dqm_sequences=["@common"],
                timePerEvent=0.02,
                sizePerEvent=38,
