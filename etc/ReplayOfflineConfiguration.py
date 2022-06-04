@@ -263,7 +263,7 @@ addExpressConfig(tier0Config, "Express",
                                  "TkAlMinBias", "SiPixelCalZeroBias", "SiPixelCalSingleMuon",
                                  "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
                                  "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel",
-                                 "PromptCalibProdSiPixelLorentzAngle", "PromptCalibProdSiStripHitEfficiency"
+                                 "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
