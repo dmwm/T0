@@ -1345,6 +1345,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                alca_producers=["PPSCalMaxTracks"],
+               dqm_sequences=["@ctpps"],
                scenario=ppScenario)
 
 ################################
