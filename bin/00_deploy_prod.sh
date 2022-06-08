@@ -82,39 +82,22 @@ sleep 5
 # mandatory configuration tweaks
 #
 sed -i 's+TIER0_CONFIG_FILE+/data/tier0/admin/ProdOfflineConfiguration.py+' ./config/tier0/config.py
-#sed -i 's+TIER0_CONFIG_FILE+/data/tier0/admin/ReplayOfflineConfiguration.py+' ./config/tier0/config.py
 sed -i 's+TIER0_SPEC_DIR+/data/tier0/admin/Specs+' ./config/tier0/config.py
 
 # Real information for WMStats
 sed -i "s+config.Agent.teamName = 'REPLACE_TEAM_NAME'+config.Agent.teamName = 'Tier0Production'+" ./config/tier0/config.py
 sed -i "s+config.Agent.contact = 'cms-comp-ops-workflow-team@cern.ch'+config.Agent.contact = 'cms-tier0-operations@cern.ch'+" ./config/tier0/config.py
-#sed -i "s+OP EMAIL+Dirk.Hufnagel@cern.ch+g" ./config/tier0/config.py
-#sed -i "s+wmagentalerts@gmail.com+Dirk.Hufnagel@cern.ch+g" ./config/tier0/config.py
+
 
 #
 # Use this team and not the default 
 #
 sed -i "s+'team1,team2,cmsdataops'+'tier0production'+g" ./config/tier0/config.py
-#sed -i "s+'team1,team2,cmsdataops'+'tier0replay'+g" ./config/tier0/config.py
 
 #
 # configure retry settings
 #
 echo "config.RetryManager.PauseAlgo.default.coolOffTime = {'create': 10, 'job': 10, 'submit': 10}" >> ./config/tier0/config.py
-#sed -i "s+ErrorHandler.pollInterval = 240+ErrorHandler.pollInterval = 30+g" ./config/tier0/config.py
-#sed -i "s+RetryManager.pollInterval = 240+RetryManager.pollInterval = 30+g" ./config/tier0/config.py
-
-#
-# switch to ProcessingAlgo
-#
-#sed -i "s+config.RetryManager.plugins = {'default': 'PauseAlgo', 'Cleanup': 'SquaredAlgo', 'LogCollect': 'SquaredAlgo'}+config.RetryManager.plugins = {'default': 'ProcessingAlgo'}+g" ./config/tier0/config.py
-#echo "config.RetryManager.section_('ProcessingAlgo')" >> ./config/tier0/config.py
-#echo "config.RetryManager.ProcessingAlgo.section_('default')" >> ./config/tier0/config.py
-#echo "config.RetryManager.ProcessingAlgo.default.coolOffTime = {'create': 10, 'job': 10, 'submit': 10}" >> ./config/tier0/config.py
-#echo "config.RetryManager.ProcessingAlgo.default.closeoutPercentage = 95" >> ./config/tier0/config.py
-#echo "config.RetryManager.ProcessingAlgo.default.guaranteedRetries = 4" >> ./config/tier0/config.py
-#echo "config.RetryManager.ProcessingAlgo.default.minRetryTime = 1" >> ./config/tier0/config.py
-#echo "config.RetryManager.ProcessingAlgo.default.maxRetryTime = 2" >> ./config/tier0/config.py
 
 #
 # configure DEBUG output
@@ -139,11 +122,6 @@ echo "config.RucioInjector.blockRuleParams = {}" >> ./config/tier0/config.py
 # Set output datasets status to VALID in DBS
 #
 echo "config.DBS3Upload.datasetType = 'VALID'" >> ./config/tier0/config.py
-
-#
-# needed for LSF DQM uploads
-#
-#echo 'config.Tier0Feeder.dqmUploadProxy = "/afs/cern.ch/user/h/hufnagel/private/Certificates/dqmcert.pem"' >> ./config/tier0/config.py
 
 #
 # needed for conditions upload
@@ -177,11 +155,6 @@ echo 'config.Tier0Feeder.dropboxuser = "'$DROPBOX_USER'"' >> ./config/tier0/conf
 echo 'config.Tier0Feeder.dropboxpass = "'$DROPBOX_PASS'"' >> ./config/tier0/config.py
 
 #
-# needed for passing notifications back to StorageManager
-#
-#echo 'config.Tier0Feeder.transferSystemBaseDir = "/data/tier0/sminject"' >> ./config/tier0/config.py
-
-#
 # upload PromptReco performance data
 #
 echo 'config.TaskArchiver.dashBoardUrl = "http://dashb-luminosity.cern.ch/dashboard/request.py/putluminositydata"' >> ./config/tier0/config.py
@@ -200,6 +173,7 @@ echo 'config.TaskArchiver.useWorkQueue = False' >> ./config/tier0/config.py
 #
 # Enable AgentStatusWatcher - site status automatic updated
 #
+sed -i "s+config.RucioInjector.ignoreDisks.*+config.RucioInjector.ignoreDisks = [ '/cvmfs/cvmfs-config.cern.ch', '/cvmfs/cms.cern.ch', '/eos/cms', '/cvmfs/cms-ib.cern.ch' ]+" ./config/tier0/config.py
 echo "config.AgentStatusWatcher.enabled = False" >> ./config/tier0/config.py
 echo "config.AgentStatusWatcher.onlySSB = False" >> ./config/tier0/config.py
 
@@ -253,8 +227,8 @@ echo "config.AgentStatusWatcher.runningRepackPercent = 10" >> ./config/tier0/con
 
 #Configurable retry number for failing jobs before they go to paused
 echo "config.RetryManager.PauseAlgo.section_('Express')" >> ./config/tier0/config.py
-echo "config.RetryManager.PauseAlgo.Express.retryErrorCodes = { 8001: 0, 70: 0, 50513: 0, 50660: 0, 50661: 0, 50664: 0, 71304: 0, 99109: 0, 99303: 0, 99400: 0, 8001: 0, 50115: 0 }" >> ./config/tier0/config.py
+echo "config.RetryManager.PauseAlgo.Express.retryErrorCodes = { 70: 0, 50513: 0, 50660: 0, 50661: 0, 50664: 0, 71304: 0, 99109: 0 }" >> ./config/tier0/config.py
 echo "config.RetryManager.PauseAlgo.section_('Processing')" >> ./config/tier0/config.py
-echo "config.RetryManager.PauseAlgo.Processing.retryErrorCodes = { 8001: 0, 70: 0, 50513: 0, 50660: 0, 50661: 0, 50664: 0, 71304: 0, 99109: 0, 99303: 0, 99400: 0, 8001: 0, 50115: 0 }" >> ./config/tier0/config.py
+echo "config.RetryManager.PauseAlgo.Processing.retryErrorCodes = { 70: 0, 50513: 0, 50660: 0, 50661: 0, 50664: 0, 71304: 0, 99109: 0 }" >> ./config/tier0/config.py
 echo "config.RetryManager.PauseAlgo.section_('Repack')" >> ./config/tier0/config.py
-echo "config.RetryManager.PauseAlgo.Repack.retryErrorCodes = { 8001: 0, 70: 0, 50513: 0, 50660: 0, 50661: 0, 50664: 0, 71304: 0, 99109: 0, 99303: 0, 99400: 0, 8001: 0, 50115: 0 }" >> ./config/tier0/config.py
+echo "config.RetryManager.PauseAlgo.Repack.retryErrorCodes = { 70: 0, 50513: 0, 50660: 0, 50661: 0, 50664: 0, 71304: 0, 99109: 0 }" >> ./config/tier0/config.py
