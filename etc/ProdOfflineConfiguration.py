@@ -25,6 +25,7 @@ from T0.RunConfig.Tier0Config import setInjectMaxRun
 from T0.RunConfig.Tier0Config import setStreamerPNN
 from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setStorageSite
+from T0.RunConfig.Tier0Config import setInjectRuns
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -33,10 +34,13 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 351591)
+#setInjectMinRun(tier0Config, 351591)
 
 # Set the max run number:
-setInjectMaxRun(tier0Config, 9999999)
+#setInjectMaxRun(tier0Config, 9999999)
+
+# Set run number to inject
+setInjectRuns(tier0Config, [352337,352394,352568,352582,352588])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -94,7 +98,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_3_4_patch3"
+    'default': "CMSSW_12_3_4_patch2"
 }
 
 # Configure ScramArch
@@ -162,8 +166,7 @@ repackVersionOverride = {
     "CMSSW_12_3_2" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_4" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -183,8 +186,7 @@ expressVersionOverride = {
     "CMSSW_12_3_2" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_4" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -386,7 +388,7 @@ addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
                  archivalNode=None,
                  tapeNode=None,
                  dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
-                 diskNode=None)
+                 diskNode="T2_CH_CERN")
 
 
 #####################
@@ -499,7 +501,7 @@ for dataset in DATASETS:
                write_aod=True,
                write_miniaod=False,
                write_dqm=True,
-               alca_producers=["SiStripCalCosmics", "SiPixelCalCosmics", "TkAlCosmics0T", "MuAlGlobalCosmics", "SiStripCalCosmicsNano"],
+               alca_producers=["SiStripCalCosmics", "SiPixelCalCosmics", "TkAlCosmics0T", "MuAlGlobalCosmics"],
                physics_skims=["CosmicSP", "CosmicTP", "LogError", "LogErrorMonitor"],
                timePerEvent=0.5,
                sizePerEvent=155,
@@ -570,8 +572,8 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common", "@muon"],
-               alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
-               physics_skims=["LogError", "LogErrorMonitor", "BPHSkim", "MuonPOGJPsiSkim"],
+               alca_producers=[],
+               physics_skims=["LogError", "LogErrorMonitor", "BPHSkim"],
                tape_node="T1_US_FNAL_MSS",
                disk_node="T1_US_FNAL_Disk",
                scenario=ppScenario)
@@ -1041,7 +1043,7 @@ for dataset in DATASETS:
                disk_node="T1_US_FNAL_Disk",
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
                timePerEvent=1,
-               alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias", "HcalCalHO", 
+               alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias", "HcalCalHO",
                                "HcalCalIterativePhiSym", "HcalCalHBHEMuonProducerFilter", "HcalCalIsoTrkProducerFilter"],
                scenario=ppScenario)
 
