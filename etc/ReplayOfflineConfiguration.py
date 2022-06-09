@@ -126,9 +126,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "123X_dataRun3_Express_v6"
-promptrecoGlobalTag = "123X_dataRun3_Prompt_v8"
-alcap0GlobalTag = "123X_dataRun3_Prompt_v8"
+expressGlobalTag = "123X_dataRun3_Express_v8"
+promptrecoGlobalTag = "123X_dataRun3_Prompt_v10"
+alcap0GlobalTag = "123X_dataRun3_Prompt_v10"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -283,7 +283,6 @@ addExpressConfig(tier0Config, "Express",
                  
 addExpressConfig(tier0Config, "ALCAPPS",
                  scenario=ppScenario,
-                 diskNode=["T2_CH_CERN"],
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["PPSCalMaxTracks", "PromptCalibProdPPSTimingCalib", "PromptCalibProdPPSAlignment"],
