@@ -94,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_3_4_patch3"
+    'default': "CMSSW_12_3_5"
 }
 
 # Configure ScramArch
@@ -163,7 +163,8 @@ repackVersionOverride = {
     "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_5" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -184,7 +185,8 @@ expressVersionOverride = {
     "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_5" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -238,7 +240,7 @@ addExpressConfig(tier0Config, "Express",
                                  "TkAlMinBias", "SiPixelCalZeroBias", "SiPixelCalSingleMuon",
                                  "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
                                  "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel",
-                                 "PromptCalibProdSiPixelLorentzAngle", "PromptCalibProdSiStripHitEfficiency"
+                                 "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
@@ -386,7 +388,7 @@ addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
                  archivalNode=None,
                  tapeNode=None,
                  dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
-                 diskNode=None)
+                 diskNode="T2_CH_CERN")
 
 
 #####################
