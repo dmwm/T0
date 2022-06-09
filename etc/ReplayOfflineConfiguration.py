@@ -35,7 +35,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 346512 - 2021 pp
 # 349840 - 2022 CRAFT
 # 350966 - 2022 Splashes
-setInjectRuns(tier0Config, [349840,352503])
+setInjectRuns(tier0Config, [352493,349840,352705,352503])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -102,7 +102,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_3_5"
+    'default': "CMSSW_12_3_5_patch1"
 }
 
 # Configure ScramArch
@@ -126,9 +126,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "123X_dataRun3_Express_v6"
-promptrecoGlobalTag = "123X_dataRun3_Prompt_v8"
-alcap0GlobalTag = "123X_dataRun3_Prompt_v8"
+expressGlobalTag = "123X_dataRun3_Express_v8"
+promptrecoGlobalTag = "123X_dataRun3_Prompt_v10"
+alcap0GlobalTag = "123X_dataRun3_Prompt_v10"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -176,7 +176,8 @@ repackVersionOverride = {
     "CMSSW_12_3_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_4" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_5" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_5" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_5_patch1" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -211,7 +212,8 @@ expressVersionOverride = {
     "CMSSW_12_3_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_4" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_5" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_5" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_5_patch1" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
