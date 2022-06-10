@@ -559,9 +559,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             taskName = "Repack"
 
             if tier0Config.Global.EnableUniqueWorkflowName:
-                workflowName = "Repack_Run%d_Stream%s_%s_ID%d_v%s_%s" % (run, stream, 
-                    tier0Config.Global.AcquisitionEra, tier0Config.Global.DeploymentID, streamConfig.Repack.ProcessingVersion, 
-                    time.strftime('%y%m%d_%H%M', time.localtime(time.time())))
+                workflowName = "Repack_Run%d_Stream%s_%s_ID%d_v%s" % (run, stream,
+                    tier0Config.Global.AcquisitionEra, tier0Config.Global.DeploymentID, streamConfig.Repack.ProcessingVersion)
             else:
                 workflowName = "Repack_Run%d_Stream%s" % (run, stream)
 
@@ -610,9 +609,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             taskName = "Express"
 
             if tier0Config.Global.EnableUniqueWorkflowName:
-                workflowName = "Express_Run%d_Stream%s_%s_ID%d_v%s_%s" % (run, stream, 
-                    tier0Config.Global.AcquisitionEra, tier0Config.Global.DeploymentID, streamConfig.Express.ProcessingVersion,
-                    time.strftime('%y%m%d_%H%M', time.localtime(time.time())))
+                workflowName = "Express_Run%d_Stream%s_%s_ID%d_v%s" % (run, stream,
+                    tier0Config.Global.AcquisitionEra, tier0Config.Global.DeploymentID, streamConfig.Express.ProcessingVersion)
             else:
                 workflowName = "Express_Run%d_Stream%s" % (run, stream)
 
@@ -1037,9 +1035,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 taskName = "Reco"
 
                 if tier0Config.Global.EnableUniqueWorkflowName:
-                    workflowName = "PromptReco_Run%d_%s_%s_ID%d_v%s_%s" % (run, dataset,
-                        tier0Config.Global.AcquisitionEra, tier0Config.Global.DeploymentID, datasetConfig.ProcessingVersion,
-                        time.strftime('%y%m%d_%H%M', time.localtime(time.time())))
+                    workflowName = "PromptReco_Run%d_%s_%s_ID%d_v%s" % (run, dataset,
+                        tier0Config.Global.AcquisitionEra, tier0Config.Global.DeploymentID, datasetConfig.ProcessingVersion)
                 else:
                     workflowName = "PromptReco_Run%d_%s" % (run, dataset)
 
