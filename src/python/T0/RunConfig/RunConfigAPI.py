@@ -701,7 +701,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             wmSpec.updateArguments( { 'SiteWhitelist': [ tier0Config.Global.ProcessingSite ],
                                       'SiteBlacklist': [],
                                       'BlockCloseMaxWaitTime': blockCloseDelay,
-                                      'SoftTimeout': 604800, #7 days, effectively disabled
+                                      'SoftTimeout': 165600, #46 hours
                                       'GracePeriod': 3600,
                                       'Dashboard': "t0" } )
 
