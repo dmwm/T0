@@ -94,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_3_5"
+    'default': "CMSSW_12_3_5_patch1"
 }
 
 # Configure ScramArch
@@ -127,9 +127,9 @@ expressProcVersion = {
 }
 
 # Defaults for GlobalTag
-expressGlobalTag = "123X_dataRun3_Express_v6"
-promptrecoGlobalTag = "123X_dataRun3_Prompt_v8"
-alcap0GlobalTag = "123X_dataRun3_Prompt_v8"
+expressGlobalTag = "123X_dataRun3_Express_v8"
+promptrecoGlobalTag = "123X_dataRun3_Prompt_v10"
+alcap0GlobalTag = "123X_dataRun3_Prompt_v10"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
