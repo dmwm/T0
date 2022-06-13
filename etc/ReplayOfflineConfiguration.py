@@ -35,7 +35,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 346512 - 2021 pp
 # 349840 - 2022 CRAFT
 # 350966 - 2022 Splashes
-setInjectRuns(tier0Config, [352705,352503])
+setInjectRuns(tier0Config, [353689])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -126,9 +126,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "123X_dataRun3_Express_v8"
-promptrecoGlobalTag = "123X_dataRun3_Prompt_v10"
-alcap0GlobalTag = "123X_dataRun3_Prompt_v10"
+expressGlobalTag = "123X_dataRun3_Express_v9"
+promptrecoGlobalTag = "123X_dataRun3_Prompt_v11"
+alcap0GlobalTag = "123X_dataRun3_Prompt_v11"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -1601,16 +1601,32 @@ for dataset in DATASETS:
 ### ignored streams ###
 #######################
 
-ignoreStream(tier0Config, "Error")
-ignoreStream(tier0Config, "HLTMON")
-ignoreStream(tier0Config, "EventDisplay")
-ignoreStream(tier0Config, "DQM")
-ignoreStream(tier0Config, "DQMEventDisplay")
-ignoreStream(tier0Config, "LookArea")
-ignoreStream(tier0Config, "DQMOffline")
-ignoreStream(tier0Config, "streamHLTRates")
-ignoreStream(tier0Config, "streamL1Rates")
-ignoreStream(tier0Config, "streamDQMRates")
+ignoreStream(tier0Config, "ALCALumiPixelsCountsExpress")
+ignoreStream(tier0Config, "ALCALumiPixelsCountsPrompt")
+ignoreStream(tier0Config, "ALCAP0")
+ignoreStream(tier0Config, "ALCAPHISYM")
+ignoreStream(tier0Config, "Calibration")
+ignoreStream(tier0Config, "ExpressAlignment")
+ignoreStream(tier0Config, "HLTMonitor")
+ignoreStream(tier0Config, "NanoDST")
+ignoreStream(tier0Config, "Physics")
+ignoreStream(tier0Config, "PhysicsMinimumBias0")
+ignoreStream(tier0Config, "PhysicsMinimumBias1")
+ignoreStream(tier0Config, "PhysicsMinimumBias2")
+ignoreStream(tier0Config, "PhysicsMinimumBias3")
+ignoreStream(tier0Config, "PhysicsMinimumBias4")
+ignoreStream(tier0Config, "PhysicsZeroBias0")
+ignoreStream(tier0Config, "PhysicsZeroBias1")
+ignoreStream(tier0Config, "PhysicsZeroBias2")
+ignoreStream(tier0Config, "PhysicsZeroBias3")
+ignoreStream(tier0Config, "PhysicsZeroBias4")
+ignoreStream(tier0Config, "PhysicsZeroBias5")
+ignoreStream(tier0Config, "PhysicsZeroBias6")
+ignoreStream(tier0Config, "PhysicsZeroBias7")
+ignoreStream(tier0Config, "PhysicsZeroBias8")
+ignoreStream(tier0Config, "PhysicsZeroBias9")
+ignoreStream(tier0Config, "RPCMON")
+ignoreStream(tier0Config, "ScoutingPF")
 
 ###################################
 ### currently inactive settings ###
