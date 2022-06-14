@@ -286,6 +286,7 @@ addExpressConfig(tier0Config, "ALCAPPS",
                  data_tiers=["FEVT"],
                  dqm_sequences=["@none"],
                  write_dqm=False,
+                 do_reco=False,
                  alca_producers=["PPSCalMaxTracks", "PromptCalibProdPPSTimingCalib", "PromptCalibProdPPSAlignment"],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
@@ -1343,7 +1344,7 @@ DATASETS = ["AlCaPPS"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=True,
+               do_reco=False,
                alca_producers=["PPSCalMaxTracks"],
                dqm_sequences=["@ctpps"],
                scenario=ppScenario)
