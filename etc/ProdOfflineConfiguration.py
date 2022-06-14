@@ -1069,7 +1069,7 @@ for dataset in DATASETS:
 
 DATASETS = ["ZeroBias"]
 
-DATASETS += ["ZeroBias0", "ZeroBias1", "ZeroBias2",
+DATASETS += ["ZeroBias1", "ZeroBias2",
              "ZeroBias3", "ZeroBias4", "ZeroBias5", "ZeroBias6",
              "ZeroBias7", "ZeroBias8", "ZeroBias9", "ZeroBias10",
              "ZeroBias11", "ZeroBias12", "ZeroBias13", "ZeroBias14",
@@ -1121,6 +1121,22 @@ for dataset in DATASETS:
                sizePerEvent=1500,
                scenario=ppScenario)
 
+DATASETS = ["ZeroBias0"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               raw_to_disk=True,
+               write_reco=False,
+               write_dqm=True,
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet", "@ctpps"],
+               alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias"],
+               physics_skims=["LogError", "LogErrorMonitor"],
+               siteWhitelist = ["T2_CH_CERN_HLT"],
+               timePerEvent=3.5,
+               sizePerEvent=1500,
+               scenario=ppScenario)
+    
 DATASETS = ["EphemeralZeroBias1", "EphemeralZeroBias2", "EphemeralZeroBias3",
             "EphemeralZeroBias4", "EphemeralZeroBias5", "EphemeralZeroBias6",
             "EphemeralZeroBias7", "EphemeralZeroBias8"]
