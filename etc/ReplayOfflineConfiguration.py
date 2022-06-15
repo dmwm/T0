@@ -227,7 +227,7 @@ addRepackConfig(tier0Config, "Default",
                 maxOverSize=8 * 1024 * 1024 * 1024,
                 maxInputEvents=3 * 1000 * 1000,
                 maxInputFiles=1000,
-                maxLatency=24 * 3600,
+                maxLatency=2 * 3600,
                 blockCloseDelay=1200,
                 maxMemory=2000,
                 versionOverride=repackVersionOverride)
