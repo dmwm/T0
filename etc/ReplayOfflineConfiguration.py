@@ -102,7 +102,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_5_0_pre2"
+    'default': "CMSSW_12_5_0_pre3"
 }
 
 # Configure ScramArch
@@ -117,6 +117,7 @@ hiScenario = "ppEra_Run3"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run3"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
+alcaPPSScenario = "AlCaLumiPixels_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
@@ -282,7 +283,7 @@ addExpressConfig(tier0Config, "Express",
                  versionOverride=expressVersionOverride)
                  
 addExpressConfig(tier0Config, "ALCAPPS",
-                 scenario=ppScenario,
+                 scenario=alcaPPSScenario,
                  data_tiers=["FEVT"],
                  dqm_sequences=["@none"],
                  write_dqm=False,
@@ -1346,8 +1347,8 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
                alca_producers=["PPSCalMaxTracks"],
-               dqm_sequences=["@ctpps"],
-               scenario=ppScenario)
+               dqm_sequences=["@none"],
+               scenario=alcaPPSScenario)
 
 ################################
 ### 50 ns Physics Menu       ###
