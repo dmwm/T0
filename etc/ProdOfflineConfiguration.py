@@ -912,7 +912,7 @@ DATASETS = ["AlCaLumiPixelsCountsPrompt0", "AlCaLumiPixelsCountsPrompt1", "AlCaL
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
-               write_reco=True, write_aod=True, write_miniaod=False, write_dqm=False,
+               write_reco=False, write_aod=False, write_miniaod=False, write_dqm=False,
                disk_node="T2_CH_CERN",
                tape_node=None,
                reco_split=alcarawSplitting,
