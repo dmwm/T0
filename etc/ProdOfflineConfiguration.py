@@ -539,7 +539,7 @@ DATASETS = ["DoubleMuon"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
-               write_reco=True,
+               write_reco=False,
                raw_to_disk=True,
                write_dqm=True,
                tape_node="T1_DE_KIT_MSS",
