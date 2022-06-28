@@ -126,9 +126,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "123X_dataRun3_Express_v9"
-promptrecoGlobalTag = "123X_dataRun3_Prompt_v11"
-alcap0GlobalTag = "123X_dataRun3_Prompt_v11"
+expressGlobalTag = "123X_dataRun3_Express_v10"
+promptrecoGlobalTag = "123X_dataRun3_Prompt_v12"
+alcap0GlobalTag = "123X_dataRun3_Prompt_v12"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -672,7 +672,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               alca_producers=["HcalCalIsoTrkProducerFilter", "TkAlMinBias"],
+               alca_producers=["HcalCalIsoTrkProducerFilter", "TkAlJetHT"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
                physics_skims=["JetHTJetPlusHOFilter", "LogError", "LogErrorMonitor"],
                timePerEvent=5.7,
