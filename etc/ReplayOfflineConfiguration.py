@@ -35,7 +35,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 346512 - 2021 pp
 # 349840 - 2022 CRAFT
 # 350966 - 2022 Splashes
-setInjectRuns(tier0Config, [352929])
+setInjectRuns(tier0Config, [352929,354332])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -127,9 +127,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "123X_dataRun3_Express_v8"
-promptrecoGlobalTag = "123X_dataRun3_Prompt_v10"
-alcap0GlobalTag = "123X_dataRun3_Prompt_v10"
+expressGlobalTag = "123X_dataRun3_Express_v10"
+promptrecoGlobalTag = "123X_dataRun3_Prompt_v12"
+alcap0GlobalTag = "123X_dataRun3_Prompt_v12"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
