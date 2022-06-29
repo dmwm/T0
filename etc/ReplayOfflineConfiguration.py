@@ -102,7 +102,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_5_0_pre3"
+    'default': "CMSSW_12_3_6"
 }
 
 # Configure ScramArch
@@ -121,7 +121,7 @@ alcaPPSScenario = "AlCaLumiPixels_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
-dt = 436
+dt = 444
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
