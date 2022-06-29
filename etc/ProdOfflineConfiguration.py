@@ -94,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_3_5_patch1"
+    'default': "CMSSW_12_3_6"
 }
 
 # Configure ScramArch
@@ -127,9 +127,9 @@ expressProcVersion = {
 }
 
 # Defaults for GlobalTag
-expressGlobalTag = "123X_dataRun3_Express_v9"
-promptrecoGlobalTag = "123X_dataRun3_Prompt_v11"
-alcap0GlobalTag = "123X_dataRun3_Prompt_v11"
+expressGlobalTag = "123X_dataRun3_Express_v10"
+promptrecoGlobalTag = "123X_dataRun3_Prompt_v12"
+alcap0GlobalTag = "123X_dataRun3_Prompt_v12"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -164,7 +164,9 @@ repackVersionOverride = {
     "CMSSW_12_3_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_4" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_5" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_5" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_5_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_6" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -186,7 +188,9 @@ expressVersionOverride = {
     "CMSSW_12_3_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_4" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_5" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_5" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_5_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_6" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -673,7 +677,7 @@ for dataset in DATASETS:
                write_dqm=True,
                tape_node="T1_UK_RAL_MSS",
                disk_node="T1_UK_RAL_Disk",
-               alca_producers=["HcalCalIsoTrkProducerFilter", "TkAlMinBias"],
+               alca_producers=["HcalCalIsoTrkProducerFilter", "TkAlJetHT"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
                physics_skims=["JetHTJetPlusHOFilter", "LogError", "LogErrorMonitor"],
                timePerEvent=5.7,
