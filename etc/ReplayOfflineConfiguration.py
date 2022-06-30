@@ -1613,6 +1613,7 @@ ignoreStream(tier0Config, "DQMOffline")
 ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
+ignoreStream(tier0Config, "ScoutingPF")
 
 ###################################
 ### currently inactive settings ###
