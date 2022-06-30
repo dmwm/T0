@@ -35,7 +35,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 352929 - 2022 pp with tracker
 # 353737 - 2022 circulating
 # 353739 - 2022 cosmics
-setInjectRuns(tier0Config, [352929,353737,353739])
+setInjectRuns(tier0Config, [352929])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -102,11 +102,11 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_3_6"
+    'default': "CMSSW_12_4_1"
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "slc7_amd64_gcc10")
+setDefaultScramArch(tier0Config, "el8_amd64_gcc10")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3"
@@ -126,9 +126,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "123X_dataRun3_Express_v10"
-promptrecoGlobalTag = "123X_dataRun3_Prompt_v12"
-alcap0GlobalTag = "123X_dataRun3_Prompt_v12"
+expressGlobalTag = "124X_dataRun3_Express_v2"
+promptrecoGlobalTag = "124X_dataRun3_Prompt_v2"
+alcap0GlobalTag = "124X_dataRun3_Prompt_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
