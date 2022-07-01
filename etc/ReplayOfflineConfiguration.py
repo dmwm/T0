@@ -35,7 +35,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 352929 - 2022 pp with tracker
 # 353737 - 2022 circulating
 # 353739 - 2022 cosmics
-setInjectRuns(tier0Config, [352929,353737,353739])
+setInjectRuns(tier0Config, [352929])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -102,11 +102,11 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_3_6"
+    'default': "CMSSW_12_4_1"
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "slc7_amd64_gcc10")
+setDefaultScramArch(tier0Config, "el8_amd64_gcc10")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3"
@@ -120,15 +120,15 @@ alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
-dt = 434
+dt = 464
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "123X_dataRun3_Express_v10"
-promptrecoGlobalTag = "123X_dataRun3_Prompt_v12"
-alcap0GlobalTag = "123X_dataRun3_Prompt_v12"
+expressGlobalTag = "124X_dataRun3_Express_v3"
+promptrecoGlobalTag = "124X_dataRun3_Prompt_v3"
+alcap0GlobalTag = "124X_dataRun3_Prompt_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -267,7 +267,7 @@ addExpressConfig(tier0Config, "Express",
                                  "TkAlMinBias", "SiPixelCalZeroBias", "SiPixelCalSingleMuon",
                                  "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
                                  "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel",
-                                 "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff"
+                                 "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff", "PromptCalibProdSiPixelAliHG"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
@@ -1603,16 +1603,33 @@ for dataset in DATASETS:
 ### ignored streams ###
 #######################
 
-ignoreStream(tier0Config, "Error")
-ignoreStream(tier0Config, "HLTMON")
-ignoreStream(tier0Config, "EventDisplay")
-ignoreStream(tier0Config, "DQM")
-ignoreStream(tier0Config, "DQMEventDisplay")
-ignoreStream(tier0Config, "LookArea")
-ignoreStream(tier0Config, "DQMOffline")
-ignoreStream(tier0Config, "streamHLTRates")
-ignoreStream(tier0Config, "streamL1Rates")
-ignoreStream(tier0Config, "streamDQMRates")
+ignoreStream(tier0Config, "ALCALumiPixelsCountsExpress")
+ignoreStream(tier0Config, "ALCALumiPixelsCountsPrompt")
+ignoreStream(tier0Config, "ALCAP0")
+ignoreStream(tier0Config, "ALCAPHISYM")
+ignoreStream(tier0Config, "ALCAPPS")
+ignoreStream(tier0Config, "Calibration")
+ignoreStream(tier0Config, "ExpressAlignment")
+ignoreStream(tier0Config, "HLTMonitor")
+ignoreStream(tier0Config, "NanoDST")
+ignoreStream(tier0Config, "Physics")
+ignoreStream(tier0Config, "PhysicsMinimumBias0")
+ignoreStream(tier0Config, "PhysicsMinimumBias1")
+ignoreStream(tier0Config, "PhysicsMinimumBias2")
+ignoreStream(tier0Config, "PhysicsMinimumBias3")
+ignoreStream(tier0Config, "PhysicsMinimumBias4")
+ignoreStream(tier0Config, "PhysicsZeroBias0")
+ignoreStream(tier0Config, "PhysicsZeroBias1")
+ignoreStream(tier0Config, "PhysicsZeroBias2")
+ignoreStream(tier0Config, "PhysicsZeroBias3")
+ignoreStream(tier0Config, "PhysicsZeroBias4")
+ignoreStream(tier0Config, "PhysicsZeroBias5")
+ignoreStream(tier0Config, "PhysicsZeroBias6")
+ignoreStream(tier0Config, "PhysicsZeroBias7")
+ignoreStream(tier0Config, "PhysicsZeroBias8")
+ignoreStream(tier0Config, "PhysicsZeroBias9")
+ignoreStream(tier0Config, "RPCMON")
+ignoreStream(tier0Config, "ScoutingPF")
 
 ###################################
 ### currently inactive settings ###
