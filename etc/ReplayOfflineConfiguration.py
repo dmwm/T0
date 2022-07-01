@@ -120,7 +120,7 @@ alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
-dt = 434
+dt = int(open("DeploymentID.txt","r").read())
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
