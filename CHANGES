@@ -1,3 +1,33 @@
+3.0.4 to 3.0.5:
+  - Update deployment scripts T0 3.0.5 (#4703)
+  - Update HLT resources in deployment scripts (#4697)
+  - Change CMSSW to CMSSW_12_3_6 (#4701)
+  - Merge pull request #4700 from tvami/RemoveRECOfromDoubleMuon
+  - Dont write RECO for DoubleMuon PD
+  - Merge pull request #4699 from tvami/ChangeLumiPCCSettings
+  - Switch of AOD and RECO for AlCaLumiPixelsCountsPrompt
+  - Reduce merge delay for repack jobs
+  - Move ZeroBias0 PD PromptReco to HLT (#4695)
+  - Add retries to error code 99109 (#4696)
+  - Update GTs with PPS tag fix (#4694)
+  - Update production node to CMSSW_12_3_5_patch1 (#4691)
+  - Shorten unique wf name used on replays (#4690)
+  - Replay configuration for CMSSW_12_3_5_patch1 (#4689)
+  - Properly set soft timeout for Express and Repack
+  - Production upgrade to CMSSW_12_3_5 (#4688)
+  - Clean up deploy scripts and remove 0-retries error codes (#4685)
+  - Clean up deploy replay and remove 0 retries codes
+  - Production configuration update to CMSSW_12_3_4_patch3 (#4682)
+  - Replay to test DoubleMuonLowMass PD (#4680)
+  - Production configuration for Run3 May collisions (#4678)
+  - Replay configuration for CMSSW_12_3_2_patch1 (#4676)
+  - Update to CMSSW_12_3_2_patch1 (#4675)
+  - Decrease priority for Replays (#4671)
+  - Merge pull request #4672 from jhonatanamado/change_subscriptions
+  - Update Initial subscriptions
+  - Update deployment scripts (#4670)
+  - Production configuration update to CMSSW_12_3_2 (#4669)
+
 3.0.3 to 3.0.4:
   - Fix typo ALCALumiPixelsCountsPrompt (#4666)
   - AddNewScenario (#4665)
