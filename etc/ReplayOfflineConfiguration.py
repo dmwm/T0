@@ -24,6 +24,7 @@ from T0.RunConfig.Tier0Config import setStreamerPNN
 from T0.RunConfig.Tier0Config import setEnableUniqueWorkflowName
 from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setStorageSite
+from T0.RunConfig.Tier0Config import setScramArch
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -35,7 +36,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 352929 - 2022 pp with tracker
 # 353737 - 2022 circulating
 # 353739 - 2022 cosmics
-setInjectRuns(tier0Config, [352929])
+setInjectRuns(tier0Config, [324841])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -106,10 +107,11 @@ defaultCMSSWVersion = {
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "el8_amd64_gcc10")
+setDefaultScramArch(tier0Config, "slc7_amd64_gcc630")
+setScramArch(tier0Config, defaultCMSSWVersion['default'], "el8_amd64_gcc10")
 
 # Configure scenarios
-ppScenario = "ppEra_Run3"
+ppScenario = "ppEra_Run2_2018"
 ppScenarioB0T = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
 hcalnzsScenario = "hcalnzsEra_Run3"
@@ -120,15 +122,15 @@ alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
-dt = 464
+dt = 466
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "124X_dataRun3_Express_v3"
-promptrecoGlobalTag = "124X_dataRun3_Prompt_v3"
-alcap0GlobalTag = "124X_dataRun3_Prompt_v3"
+expressGlobalTag = "124X_dataRun3_Express_TIER0_REPLAY_Run2_v1"
+promptrecoGlobalTag = "124X_dataRun3_Prompt_TIER0_REPLAY_Run2_v1"
+alcap0GlobalTag = "124X_dataRun3_Prompt_TIER0_REPLAY_Run2_v1"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
