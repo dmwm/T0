@@ -108,7 +108,7 @@ defaultCMSSWVersion = {
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "slc7_amd64_gcc630")
-setScramArch(tier0Config, defaultCMSSWVersion['default'], "el8_amd64_gcc10")
+setScramArch(tier0Config, defaultCMSSWVersion['default'], "slc7_amd64_gcc10")
 
 # Configure scenarios
 ppScenario = "ppEra_Run2_2018"
@@ -180,7 +180,8 @@ repackVersionOverride = {
     "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_5" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_5_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_6" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_6" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_1" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -217,7 +218,8 @@ expressVersionOverride = {
     "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_5" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_5_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_6" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_6" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_1" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -1605,33 +1607,28 @@ for dataset in DATASETS:
 ### ignored streams ###
 #######################
 
-ignoreStream(tier0Config, "ALCALumiPixelsCountsExpress")
-ignoreStream(tier0Config, "ALCALumiPixelsCountsPrompt")
+ignoreStream(tier0Config, "ALCALUMIPIXELS")
+ignoreStream(tier0Config, "ALCALUMIPIXELSEXPRESS")
 ignoreStream(tier0Config, "ALCAP0")
 ignoreStream(tier0Config, "ALCAPHISYM")
-ignoreStream(tier0Config, "ALCAPPS")
 ignoreStream(tier0Config, "Calibration")
 ignoreStream(tier0Config, "ExpressAlignment")
 ignoreStream(tier0Config, "HLTMonitor")
 ignoreStream(tier0Config, "NanoDST")
-ignoreStream(tier0Config, "Physics")
-ignoreStream(tier0Config, "PhysicsMinimumBias0")
-ignoreStream(tier0Config, "PhysicsMinimumBias1")
-ignoreStream(tier0Config, "PhysicsMinimumBias2")
-ignoreStream(tier0Config, "PhysicsMinimumBias3")
-ignoreStream(tier0Config, "PhysicsMinimumBias4")
-ignoreStream(tier0Config, "PhysicsZeroBias0")
-ignoreStream(tier0Config, "PhysicsZeroBias1")
-ignoreStream(tier0Config, "PhysicsZeroBias2")
-ignoreStream(tier0Config, "PhysicsZeroBias3")
-ignoreStream(tier0Config, "PhysicsZeroBias4")
-ignoreStream(tier0Config, "PhysicsZeroBias5")
-ignoreStream(tier0Config, "PhysicsZeroBias6")
-ignoreStream(tier0Config, "PhysicsZeroBias7")
-ignoreStream(tier0Config, "PhysicsZeroBias8")
-ignoreStream(tier0Config, "PhysicsZeroBias9")
+ignoreStream(tier0Config, "ParkingBPH1")
+ignoreStream(tier0Config, "ParkingBPH2")
+ignoreStream(tier0Config, "ParkingBPH3")
+ignoreStream(tier0Config, "ParkingBPH4")
+ignoreStream(tier0Config, "ParkingBPH5")
+ignoreStream(tier0Config, "PhysicsCommissioning")
+ignoreStream(tier0Config, "PhysicsEGamma")
+ignoreStream(tier0Config, "PhysicsHadronsTaus")
+ignoreStream(tier0Config, "PhysicsMuons")
+ignoreStream(tier0Config, "PhysicsScoutingMonitor")
 ignoreStream(tier0Config, "RPCMON")
+ignoreStream(tier0Config, "ScoutingCaloMuon")
 ignoreStream(tier0Config, "ScoutingPF")
+
 
 ###################################
 ### currently inactive settings ###
