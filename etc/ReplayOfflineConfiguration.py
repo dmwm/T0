@@ -35,7 +35,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 346512 - 2021 pp
 # 349840 - 2022 CRAFT
 # 350966 - 2022 Splashes
-setInjectRuns(tier0Config, [352929,354332])
+setInjectRuns(tier0Config, [354332])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -286,9 +286,9 @@ addExpressConfig(tier0Config, "ALCAPPS",
                  scenario=alcaPPSScenario,
                  data_tiers=["FEVT"],
                  dqm_sequences=["@none"],
-                 write_dqm=False,
+                 write_dqm=True,
                  do_reco=False,
-                 alca_producers=["PPSCalMaxTracks", "PromptCalibProdPPSTimingCalib", "PromptCalibProdPPSAlignment"],
+                 alca_producers=["PPSCalMaxTracks", "PromptCalibProdPPSTimingCalib", "PromptCalibProdPPSAlignment", "PromptCalibProdPPSDiamondSampic"],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
                  global_tag_connect=globalTagConnect,
@@ -1346,6 +1346,7 @@ DATASETS = ["AlCaPPS"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
+               write_dqm=True,
                alca_producers=["PPSCalMaxTracks"],
                dqm_sequences=["@none"],
                scenario=alcaPPSScenario)
