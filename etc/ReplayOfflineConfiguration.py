@@ -35,7 +35,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 352929 - 2022 pp with tracker
 # 353737 - 2022 circulating
 # 353739 - 2022 cosmics
-setInjectRuns(tier0Config, [352929,353737,353739])
+setInjectRuns(tier0Config, [352929])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -102,7 +102,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_3_6"
+    'default': "CMSSW_12_4_2"
 }
 
 # Configure ScramArch
@@ -120,7 +120,7 @@ alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
-dt = 434
+dt = 707
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
