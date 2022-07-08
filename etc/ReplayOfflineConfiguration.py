@@ -117,6 +117,7 @@ hiScenario = "ppEra_Run3"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run3"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
+alcaPPSScenario = "AlCaLumiPixels_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
@@ -1351,7 +1352,10 @@ DATASETS = ["AlCaPPS"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
-               scenario=ppScenario)
+               write_dqm=True,
+               alca_producers=["PPSCalMaxTracks"],
+               dqm_sequences=["@none"],
+               scenario=alcaPPSScenario)
 
 ################################
 ### 50 ns Physics Menu       ###
