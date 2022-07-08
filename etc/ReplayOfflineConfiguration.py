@@ -106,7 +106,7 @@ defaultCMSSWVersion = {
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "slc7_amd64_gcc10")
+setDefaultScramArch(tier0Config, "el8_amd64_gcc10")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3"
@@ -126,9 +126,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "123X_dataRun3_Express_v10"
-promptrecoGlobalTag = "123X_dataRun3_Prompt_v12"
-alcap0GlobalTag = "123X_dataRun3_Prompt_v12"
+expressGlobalTag = "124X_dataRun3_Express_v3"
+promptrecoGlobalTag = "124X_dataRun3_Prompt_v3"
+alcap0GlobalTag = "124X_dataRun3_Prompt_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -158,7 +158,7 @@ repackVersionOverride = {
     "CMSSW_11_3_2" : defaultCMSSWVersion['default'],
     "CMSSW_11_3_3" : defaultCMSSWVersion['default'],
     "CMSSW_11_3_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_0" : defaultCMSSWVersion['default'],
+    "CMSSW_12_0_0" : defaultCMSSWVersion['default'], produces
     "CMSSW_12_0_1" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_2" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_2_patch1" : defaultCMSSWVersion['default'],
@@ -267,7 +267,7 @@ addExpressConfig(tier0Config, "Express",
                                  "TkAlMinBias", "SiPixelCalZeroBias", "SiPixelCalSingleMuon",
                                  "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
                                  "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel",
-                                 "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff"
+                                 "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff", "PromptCalibProdSiPixelAliHG"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
