@@ -35,7 +35,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 352929 - 2022 pp with tracker
 # 353737 - 2022 circulating
 # 353739 - 2022 cosmics
-setInjectRuns(tier0Config, [352929,353737,353739])
+setInjectRuns(tier0Config, [352929])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
