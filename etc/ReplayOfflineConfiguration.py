@@ -158,7 +158,7 @@ repackVersionOverride = {
     "CMSSW_11_3_2" : defaultCMSSWVersion['default'],
     "CMSSW_11_3_3" : defaultCMSSWVersion['default'],
     "CMSSW_11_3_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_0" : defaultCMSSWVersion['default'], produces
+    "CMSSW_12_0_0" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_1" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_2" : defaultCMSSWVersion['default'],
     "CMSSW_12_0_2_patch1" : defaultCMSSWVersion['default'],
