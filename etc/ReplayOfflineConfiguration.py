@@ -117,6 +117,7 @@ hiScenario = "ppEra_Run3"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run3"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
+alcaPPSScenario = "AlCaLumiPixels_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
@@ -472,6 +473,32 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
                  diskNode="T0_CH_CERN_Disk")
 
+
+addExpressConfig(tier0Config, "ALCAPPS",
+                 scenario=alcaPPSScenario,
+                 data_tiers=["FEVT"],
+                 dqm_sequences=["@none"],
+                 write_dqm=True,
+                 do_reco=False,
+                 alca_producers=["PPSCalMaxTracks", "PromptCalibProdPPSTimingCalib", "PromptCalibProdPPSAlignment"],
+                 reco_version=defaultCMSSWVersion,
+                 multicore=numberOfCores,
+                 global_tag_connect=globalTagConnect,
+                 global_tag=expressGlobalTag,
+                 proc_ver=expressProcVersion,
+                 maxInputRate=23 * 1000,
+                 maxInputEvents=400,
+                 maxInputSize=2 * 1024 * 1024 * 1024,
+                 maxInputFiles=15,
+                 maxLatency=15 * 23,
+                 periodicHarvestInterval=20 * 60,
+                 blockCloseDelay=1200,
+                 timePerEvent=4,
+                 sizePerEvent=1700,
+                 maxMemoryperCore=2000,
+                 dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
+                 versionOverride=expressVersionOverride)
+                 
 ###################################
 ### Standard Physics PDs (2017) ###
 ###################################
@@ -1326,7 +1353,10 @@ DATASETS = ["AlCaPPS"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
-               scenario=ppScenario)
+               write_dqm=True,
+               alca_producers=["PPSCalMaxTracks"],
+               dqm_sequences=["@none"],
+               scenario=alcaPPSScenario)
 
 ################################
 ### 50 ns Physics Menu       ###
