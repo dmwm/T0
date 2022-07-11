@@ -979,7 +979,10 @@ for dataset in DATASETS:
 DATASETS = ["HLTPhysics", "HLTPhysics0", "HLTPhysics1",
             "HLTPhysics2", "HLTPhysics3", "HLTPhysics4",
             "HLTPhysics5", "HLTPhysics6", "HLTPhysics7",
-            "HLTPhysics8", "HLTPhysics9", "HLTPhysics10"]
+            "HLTPhysics8", "HLTPhysics9", "HLTPhysics10",
+            "HLTPhysics11", "HLTPhysics12", "HLTPhysics13",
+            "HLTPhysics14", "HLTPhysics15", "HLTPhysics16",
+            "HLTPhysics17", "HLTPhysics18", "HLTPhysics19"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
