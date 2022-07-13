@@ -32,10 +32,10 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-# 352929 - 2022 pp with tracker
+# 355205 - 2022 pp collisions, 13.6 TeV, 48 lumisections
 # 353737 - 2022 circulating
 # 353739 - 2022 cosmics
-setInjectRuns(tier0Config, [352929])
+setInjectRuns(tier0Config, [355205])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
