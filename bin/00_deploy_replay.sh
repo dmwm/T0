@@ -166,7 +166,6 @@ echo 'config.TaskArchiver.logLevel = "DEBUG"' >> ./config/tier0/config.py
 # Workflow archive delay
 #
 #echo 'config.TaskArchiver.archiveDelayHours = 1' >> ./config/tier0/config.py
-sed -i "s+config.TaskArchiver.archiveDelayHours = 24+config.TaskArchiver.archiveDelayHours = 24+" ./config/tier0/config.py
 
 #
 # Do not use WorkQueue
