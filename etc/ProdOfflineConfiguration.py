@@ -33,7 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 351591)
+setInjectMinRun(tier0Config, 355065)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
@@ -94,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_3_7"
+    'default': "CMSSW_12_3_7_patch1"
 }
 
 # Configure ScramArch
@@ -167,7 +167,8 @@ repackVersionOverride = {
     "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_5" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_5_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_6" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_6" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_7" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -191,7 +192,8 @@ expressVersionOverride = {
     "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_5" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_5_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_6" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_6" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_7" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
