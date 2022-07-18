@@ -55,7 +55,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2022B")
+setAcquisitionEra(tier0Config, "Run2022C")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -94,11 +94,11 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_3_7_patch1"
+    'default': "CMSSW_12_4_3"
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "slc7_amd64_gcc10")
+setDefaultScramArch(tier0Config, "el8_amd64_gcc10")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3"
@@ -109,7 +109,7 @@ hiScenario = "ppEra_Run3"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run3"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
-alcaPPSScenario = "AlCaLumiPixels_Run3"
+alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Defaults for processing version
@@ -128,9 +128,9 @@ expressProcVersion = {
 }
 
 # Defaults for GlobalTag
-expressGlobalTag = "123X_dataRun3_Express_v10"
-promptrecoGlobalTag = "123X_dataRun3_Prompt_v12"
-alcap0GlobalTag = "123X_dataRun3_Prompt_v12"
+expressGlobalTag = "124X_dataRun3_Express_v4"
+promptrecoGlobalTag = "124X_dataRun3_Prompt_v4"
+alcap0GlobalTag = "124X_dataRun3_Prompt_v4"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -147,18 +147,6 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_12_0_0" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_2_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_2_patch2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_3_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_1_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_3_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_0" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_2" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
@@ -168,22 +156,11 @@ repackVersionOverride = {
     "CMSSW_12_3_5" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_5_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_6" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_7" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_7" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_7_patch1" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
-    "CMSSW_12_0_0" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_2_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_2_patch2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_3_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_1_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_3_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_0" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_2" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
@@ -193,7 +170,8 @@ expressVersionOverride = {
     "CMSSW_12_3_5" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_5_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_6" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_7" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_7" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_7_patch1" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -247,7 +225,7 @@ addExpressConfig(tier0Config, "Express",
                                  "TkAlMinBias", "SiPixelCalZeroBias", "SiPixelCalSingleMuon",
                                  "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
                                  "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel",
-                                 "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff"
+                                 "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff", "PromptCalibProdSiPixelAliHG"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
@@ -397,6 +375,33 @@ addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
                  dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
                  diskNode="T2_CH_CERN")
 
+addExpressConfig(tier0Config, "ALCAPPS",
+                 scenario=alcaPPSScenario,
+                 data_tiers=["FEVT"],
+                 dqm_sequences=["@none"],
+                 write_dqm=True,
+                 do_reco=False,
+                 alca_producers=["PPSCalMaxTracks", "PromptCalibProdPPSTimingCalib", "PromptCalibProdPPSAlignment",
+                                 "PromptCalibProdPPSDiamondSampic"
+                                ],
+                 reco_version=defaultCMSSWVersion,
+                 multicore=numberOfCores,
+                 global_tag_connect=globalTagConnect,
+                 global_tag=expressGlobalTag,
+                 proc_ver=expressProcVersion,
+                 maxInputRate=23 * 1000,
+                 maxInputEvents=400,
+                 maxInputSize=2 * 1024 * 1024 * 1024,
+                 maxInputFiles=15,
+                 maxLatency=15 * 23,
+                 periodicHarvestInterval=20 * 60,
+                 blockCloseDelay=1200,
+                 timePerEvent=4,
+                 sizePerEvent=1700,
+                 maxMemoryperCore=2000,
+                 dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
+                 diskNode="T2_CH_CERN",
+                 versionOverride=expressVersionOverride)
 
 #####################
 ### HI Tests 2018 ###
@@ -455,32 +460,6 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  maxMemoryperCore=2000,
                  dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
                  diskNode="T2_CH_CERN")
-
-addExpressConfig(tier0Config, "ALCAPPS",
-                 scenario=alcaPPSScenario,
-                 data_tiers=["FEVT"],
-                 dqm_sequences=["@none"],
-                 write_dqm=True,
-                 do_reco=False,
-                 alca_producers=["PPSCalMaxTracks", "PromptCalibProdPPSTimingCalib", "PromptCalibProdPPSAlignment"],
-                 reco_version=defaultCMSSWVersion,
-                 multicore=numberOfCores,
-                 global_tag_connect=globalTagConnect,
-                 global_tag=expressGlobalTag,
-                 proc_ver=expressProcVersion,
-                 maxInputRate=23 * 1000,
-                 maxInputEvents=400,
-                 maxInputSize=2 * 1024 * 1024 * 1024,
-                 maxInputFiles=15,
-                 maxLatency=15 * 23,
-                 periodicHarvestInterval=20 * 60,
-                 blockCloseDelay=1200,
-                 timePerEvent=4,
-                 sizePerEvent=1700,
-                 maxMemoryperCore=2000,
-                 dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
-                 diskNode="T2_CH_CERN",
-                 versionOverride=expressVersionOverride)
 
 ###################################
 ### Standard Physics PDs (2017) ###
@@ -594,16 +573,25 @@ for dataset in DATASETS:
                timePerEvent=1,
                scenario=ppScenario)
 
-DATASETS = ["DoubleMuonLowMass"]
+DATASETS = ["ReservedDoubleMuonLowMass"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               scenario=ppScenario)
+
+DATASETS = ["ParkingDoubleMuonLowMass0","ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
+            "ParkingDoubleMuonLowMass3","ParkingDoubleMuonLowMass4","ParkingDoubleMuonLowMass5",
+            "ParkingDoubleMuonLowMass6","ParkingDoubleMuonLowMass7"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common", "@muon"],
+               dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                physics_skims=["LogError", "LogErrorMonitor", "BPHSkim", "MuonPOGJPsiSkim"],
-               tape_node="T1_US_FNAL_MSS",
+               tape_node=None,
                disk_node="T1_US_FNAL_Disk",
                scenario=ppScenario)
 
@@ -1020,9 +1008,11 @@ for dataset in DATASETS:
                raw_to_disk=True,
                scenario=ppScenario)
 
-DATASETS = ["EphemeralHLTPhysics1", "EphemeralHLTPhysics2", "EphemeralHLTPhysics3",
-            "EphemeralHLTPhysics4", "EphemeralHLTPhysics5", "EphemeralHLTPhysics6",
-            "EphemeralHLTPhysics7", "EphemeralHLTPhysics8"]
+DATASETS = ["EphemeralHLTPhysics0","EphemeralHLTPhysics1", "EphemeralHLTPhysics2", "EphemeralHLTPhysics3",
+            "EphemeralHLTPhysics4", "EphemeralHLTPhysics5", "EphemeralHLTPhysics6","EphemeralHLTPhysics7"
+            "EphemeralHLTPhysics8", "EphemeralHLTPhysics9","EphemeralHLTPhysics10","EphemeralHLTPhysics11"
+            "EphemeralHLTPhysics12","EphemeralHLTPhysics13","EphemeralHLTPhysics14","EphemeralHLTPhysics15"
+            "EphemeralHLTPhysics16","EphemeralHLTPhysics17","EphemeralHLTPhysics18","EphemeralHLTPhysics19"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1158,10 +1148,10 @@ for dataset in DATASETS:
                timePerEvent=3.5,
                sizePerEvent=1500,
                scenario=ppScenario)
-    
+
 DATASETS = ["EphemeralZeroBias1", "EphemeralZeroBias2", "EphemeralZeroBias3",
             "EphemeralZeroBias4", "EphemeralZeroBias5", "EphemeralZeroBias6",
-            "EphemeralZeroBias7", "EphemeralZeroBias8"]
+            "EphemeralZeroBias7", "EphemeralZeroBias8", "EphemeralZeroBias0"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1175,6 +1165,22 @@ for dataset in DATASETS:
 ########################################################
 ### Parking and Scouting PDs                         ###
 ########################################################
+
+DATASETS = ["ScoutingPFRun3"]
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               scenario=ppScenario)
+
+
+DATASETS = ["ParkingDoubleElectronLowMass0","ParkingDoubleElectronLowMass1","ParkingDoubleElectronLowMass2",
+            "ParkingDoubleElectronLowMass3","ParkingDoubleElectronLowMass4","ParkingDoubleElectronLowMass5"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               tape_node=None,
+               scenario=ppScenario)
 
 DATASETS = ["ParkingMonitor"]
 
@@ -1237,6 +1243,16 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 DATASETS = ["ScoutingMonitor"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               dqm_sequences=["@common"],
+               write_reco=False, write_aod=False, write_miniaod=True, write_dqm=True,
+               tape_node="T1_US_FNAL_MSS",
+               scenario=ppScenario)
+
+DATASETS = ["ScoutingPFMonitor"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
