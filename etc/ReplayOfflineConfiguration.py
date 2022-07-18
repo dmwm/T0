@@ -32,10 +32,10 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-# 352929 - 2022 pp with tracker
-# 353737 - 2022 circulating
-# 353739 - 2022 cosmics
-setInjectRuns(tier0Config, [352929,353737,353739])
+# 352929 - 2022 pp at 900 GeV
+# 355189 - 2022 cosmics
+# 355559 - 2022 pp at 13.6 TeV (1h long, 300 bunches)
+setInjectRuns(tier0Config, [355189,355559])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -102,11 +102,11 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_3_7"
+    'default': "CMSSW_12_4_3"
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "slc7_amd64_gcc10")
+setDefaultScramArch(tier0Config, "el8_amd64_gcc10")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3"
@@ -117,19 +117,19 @@ hiScenario = "ppEra_Run3"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run3"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
-alcaPPSScenario = "AlCaLumiPixels_Run3"
+alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
-dt = 434
+dt = 710
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "123X_dataRun3_Express_v10"
-promptrecoGlobalTag = "123X_dataRun3_Prompt_v12"
-alcap0GlobalTag = "123X_dataRun3_Prompt_v12"
+expressGlobalTag = "124X_dataRun3_Express_v4"
+promptrecoGlobalTag = "124X_dataRun3_Prompt_v4"
+alcap0GlobalTag = "124X_dataRun3_Prompt_v4"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -146,31 +146,6 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_11_0_1" : defaultCMSSWVersion['default'],
-    "CMSSW_11_0_2" : defaultCMSSWVersion['default'],
-    "CMSSW_11_1_3" : defaultCMSSWVersion['default'],
-    "CMSSW_11_1_4" : defaultCMSSWVersion['default'],
-    "CMSSW_11_1_5" : defaultCMSSWVersion['default'],
-    "CMSSW_11_2_1" : defaultCMSSWVersion['default'],
-    "CMSSW_11_2_2" : defaultCMSSWVersion['default'],
-    "CMSSW_11_2_3" : defaultCMSSWVersion['default'],
-    "CMSSW_11_2_4" : defaultCMSSWVersion['default'],
-    "CMSSW_11_3_1" : defaultCMSSWVersion['default'],
-    "CMSSW_11_3_2" : defaultCMSSWVersion['default'],
-    "CMSSW_11_3_3" : defaultCMSSWVersion['default'],
-    "CMSSW_11_3_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_0" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_2_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_2_patch2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_3_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_1_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_3_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_0" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_2" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
@@ -179,35 +154,12 @@ repackVersionOverride = {
     "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_5" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_5_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_6" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_6" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_7" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_7_patch1" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
-    "CMSSW_11_0_1" : defaultCMSSWVersion['default'],
-    "CMSSW_11_0_2" : defaultCMSSWVersion['default'],
-    "CMSSW_11_1_3" : defaultCMSSWVersion['default'],
-    "CMSSW_11_1_4" : defaultCMSSWVersion['default'],
-    "CMSSW_11_1_5" : defaultCMSSWVersion['default'],
-    "CMSSW_11_2_1" : defaultCMSSWVersion['default'],
-    "CMSSW_11_2_2" : defaultCMSSWVersion['default'],
-    "CMSSW_11_2_3" : defaultCMSSWVersion['default'],
-    "CMSSW_11_2_4" : defaultCMSSWVersion['default'],
-    "CMSSW_11_3_1" : defaultCMSSWVersion['default'],
-    "CMSSW_11_3_2" : defaultCMSSWVersion['default'],
-    "CMSSW_11_3_3" : defaultCMSSWVersion['default'],
-    "CMSSW_11_3_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_0" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_2_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_2_patch2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_0_3_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_1_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_2_3_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_0" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_2" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
@@ -216,7 +168,9 @@ expressVersionOverride = {
     "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_5" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_5_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_6" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_6" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_7" : defaultCMSSWVersion['default'],
+    "CMSSW_12_3_7_patch1" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -268,7 +222,7 @@ addExpressConfig(tier0Config, "Express",
                                  "TkAlMinBias", "SiPixelCalZeroBias", "SiPixelCalSingleMuon",
                                  "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
                                  "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel",
-                                 "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff"
+                                 "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff", "PromptCalibProdSiPixelAliHG"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
@@ -415,6 +369,33 @@ addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
                  dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
                  diskNode="T0_CH_CERN_Disk")
 
+addExpressConfig(tier0Config, "ALCAPPS",
+                 scenario=alcaPPSScenario,
+                 data_tiers=["FEVT"],
+                 dqm_sequences=["@none"],
+                 write_dqm=True,
+                 do_reco=False,
+                 alca_producers=["PPSCalMaxTracks", "PromptCalibProdPPSTimingCalib", "PromptCalibProdPPSAlignment",
+                                 "PromptCalibProdPPSDiamondSampic"
+                                ],
+                 reco_version=defaultCMSSWVersion,
+                 multicore=numberOfCores,
+                 global_tag_connect=globalTagConnect,
+                 global_tag=expressGlobalTag,
+                 proc_ver=expressProcVersion,
+                 maxInputRate=23 * 1000,
+                 maxInputEvents=400,
+                 maxInputSize=2 * 1024 * 1024 * 1024,
+                 maxInputFiles=15,
+                 maxLatency=15 * 23,
+                 periodicHarvestInterval=20 * 60,
+                 blockCloseDelay=1200,
+                 timePerEvent=4,
+                 sizePerEvent=1700,
+                 maxMemoryperCore=2000,
+                 dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
+                 versionOverride=expressVersionOverride)
+
 #####################
 ### HI Tests 2018 ###
 #####################
@@ -472,32 +453,6 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  maxMemoryperCore=2000,
                  dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
                  diskNode="T0_CH_CERN_Disk")
-
-
-addExpressConfig(tier0Config, "ALCAPPS",
-                 scenario=alcaPPSScenario,
-                 data_tiers=["FEVT"],
-                 dqm_sequences=["@none"],
-                 write_dqm=True,
-                 do_reco=False,
-                 alca_producers=["PPSCalMaxTracks", "PromptCalibProdPPSTimingCalib", "PromptCalibProdPPSAlignment"],
-                 reco_version=defaultCMSSWVersion,
-                 multicore=numberOfCores,
-                 global_tag_connect=globalTagConnect,
-                 global_tag=expressGlobalTag,
-                 proc_ver=expressProcVersion,
-                 maxInputRate=23 * 1000,
-                 maxInputEvents=400,
-                 maxInputSize=2 * 1024 * 1024 * 1024,
-                 maxInputFiles=15,
-                 maxLatency=15 * 23,
-                 periodicHarvestInterval=20 * 60,
-                 blockCloseDelay=1200,
-                 timePerEvent=4,
-                 sizePerEvent=1700,
-                 maxMemoryperCore=2000,
-                 dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
-                 versionOverride=expressVersionOverride)
                  
 ###################################
 ### Standard Physics PDs (2017) ###
@@ -605,7 +560,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common", "@muon"],
+               dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                physics_skims=["LogError", "LogErrorMonitor", "BPHSkim", "MuonPOGJPsiSkim"],
                scenario=ppScenario)
