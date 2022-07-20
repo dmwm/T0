@@ -109,7 +109,7 @@ hiScenario = "ppEra_Run3"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run3"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
-alcaPPSScenario = "AlCaPPS_Run3"
+alcaPPSScenario = "AlCaLumiPixels_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Defaults for processing version
