@@ -460,20 +460,8 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  diskNode="T2_CH_CERN")
 
 ###################################
-### Standard Physics PDs (2017) ###
+### Standard Physics PDs (2022) ###
 ###################################
-
-DATASETS = ["BTagCSV"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_dqm=True,
-               dqm_sequences=["@common"],
-               tape_node="T1_UK_RAL_MSS",
-               disk_node="T1_UK_RAL_Disk",
-               physics_skims=["LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
 
 DATASETS = ["BTagMu"]
 
@@ -485,20 +473,6 @@ for dataset in DATASETS:
                tape_node="T1_US_FNAL_MSS",
                disk_node="T1_US_FNAL_Disk",
                physics_skims=["LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
-
-DATASETS = ["Charmonium"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_reco=False,
-               write_dqm=True,
-               dqm_sequences=["@common"],
-               tape_node="T1_US_FNAL_MSS",
-               disk_node="T1_US_FNAL_Disk",
-               alca_producers=["TkAlJpsiMuMu"],
-               physics_skims=["BPHSkim", "MuonPOGJPsiSkim", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
 DATASETS = ["Cosmics"]
@@ -525,23 +499,11 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                tape_node="T1_FR_CCIN2P3_MSS",
                disk_node="T1_FR_CCIN2P3_Disk",
-               physics_skims=["EXODisplacedJet", "LogError", "LogErrorMonitor"],
+               physics_skims=["EXODisplacedJet", "EXODelayedJet", "EXODTCluster", "LogError", "LogErrorMonitor"],
+               # EXOCSCCluster needs to be added when 12_4_4 is introduced
                scenario=ppScenario)
 
-DATASETS = ["DoubleEG"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_reco=False,
-               write_dqm=True,
-               tape_node="T1_UK_RAL_MSS",
-               disk_node="T1_UK_RAL_Disk",
-               alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym", "HcalCalIsoTrkProducerFilter"],
-               dqm_sequences=["@common", "@ecal", "@egamma"],
-               physics_skims=["ZElectron", "LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
-
+# will be "Muon" after  HLT V1.3 menu
 DATASETS = ["DoubleMuon"]
 
 for dataset in DATASETS:
@@ -588,7 +550,6 @@ for dataset in DATASETS:
                write_dqm=True,
                dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
-               physics_skims=["LogError", "LogErrorMonitor", "BPHSkim", "MuonPOGJPsiSkim"],
                tape_node=None,
                disk_node="T1_US_FNAL_Disk",
                scenario=ppScenario)
@@ -624,20 +585,6 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
-               scenario=ppScenario)
-
-DATASETS = ["HTMHT"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_dqm=True,
-               dqm_sequences=["@common"],
-               tape_node="T1_UK_RAL_MSS",
-               disk_node="T1_UK_RAL_Disk",
-               physics_skims=["LogError", "LogErrorMonitor"],
-               timePerEvent=9.4,
-               sizePerEvent=2000,
                scenario=ppScenario)
 
 DATASETS = ["HighMultiplicity"]
@@ -678,6 +625,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                scenario=ppScenario)
 
+# Will be "JetMET"  after  HLT V1.3 menu
 DATASETS = ["JetHT"]
 
 for dataset in DATASETS:
@@ -693,6 +641,7 @@ for dataset in DATASETS:
                sizePerEvent=2250,
                scenario=ppScenario)
 
+# Will be "JetMET"  after  HLT V1.3 menu
 DATASETS = ["MET"]
 
 for dataset in DATASETS:
@@ -703,20 +652,8 @@ for dataset in DATASETS:
                disk_node="T1_DE_KIT_Disk",
                alca_producers=["HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
-               physics_skims=["EXOMONOPOLE", "HighMET", "LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
-
-DATASETS = ["MuOnia"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_dqm=True,
-               tape_node="T1_US_FNAL_MSS",
-               disk_node="T1_US_FNAL_Disk",
-               alca_producers=["TkAlUpsilonMuMu"],
-               dqm_sequences=["@common", "@muon"],
-               physics_skims=["LogError", "LogErrorMonitor", "BPHSkim"],
+               # add EXODelayedJetMET after 12_4_4 is cut
+               physics_skims=["EXOHighMET", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
 DATASETS = ["MuonEG"]
@@ -743,20 +680,8 @@ for dataset in DATASETS:
                physics_skims=["EXONoBPTXSkim", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["SingleElectron"]
 
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_dqm=True,
-               tape_node="T1_US_FNAL_MSS",
-               disk_node="T1_US_FNAL_Disk",
-               alca_producers=["EcalUncalWElectron", "EcalUncalZElectron", "HcalCalIterativePhiSym", "EcalESAlign"],
-               dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
-               physics_skims=["LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
-
-DATASETS = ["SingleMuon", "SingleMuonTnP"] # SingleMuonTnP only for 2017 ppRef run
+DATASETS = ["SingleMuon"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -768,19 +693,7 @@ for dataset in DATASETS:
                                "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
                                "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon"],
-               physics_skims=["MuonPOGSkim", "MuTau", "ZMu", "LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
-
-DATASETS = ["SinglePhoton"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_dqm=True,
-               tape_node="T1_FR_CCIN2P3_MSS",
-               disk_node="T1_FR_CCIN2P3_Disk",
-               dqm_sequences=["@common", "@ecal", "@egamma"],
-               physics_skims=["EXOMONOPOLE", "LogError", "LogErrorMonitor"],
+               physics_skims=["ZMu", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
 DATASETS = ["EGamma"]
@@ -794,7 +707,7 @@ for dataset in DATASETS:
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym",
                                "HcalCalIsoTrkProducerFilter", "EcalESAlign"],
                dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
-               physics_skims=["EXOMONOPOLE", "ZElectron", "LogError", "LogErrorMonitor"],
+               physics_skims=["ZElectron","WElectron", "EXOMONOPOLE", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
 DATASETS = ["Tau"]
@@ -810,7 +723,7 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 #############################################
-### Standard Commisioning PDs (2017)      ###
+### Standard Commisioning PDs (2022)      ###
 #############################################
 
 DATASETS = ["Commissioning"]
@@ -1016,6 +929,8 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                raw_to_disk=True,
+               dqm_sequences=["@none"],
+               write_dqm=False,
                archival_node=None,
                tape_node=None,
                disk_node="T2_CH_CERN",
@@ -1155,6 +1070,8 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                raw_to_disk=True,
+               dqm_sequences=["@none"],
+               write_dqm=False,
                archival_node=None,
                tape_node=None,
                disk_node="T2_CH_CERN",
