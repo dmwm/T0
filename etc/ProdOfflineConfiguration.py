@@ -377,7 +377,7 @@ addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
 
 addExpressConfig(tier0Config, "ALCAPPS",
                  scenario=alcaPPSScenario,
-                 data_tiers=["FEVT"],
+                 data_tiers=["ALCARECO"],
                  dqm_sequences=["@none"],
                  write_dqm=True,
                  do_reco=False,
