@@ -35,7 +35,8 @@ setConfigVersion(tier0Config, "replace with real version")
 # 352929 - 2022 pp at 900 GeV
 # 355189 - 2022 cosmics
 # 355559 - 2022 pp at 13.6 TeV (1h long, 300 bunches)
-setInjectRuns(tier0Config, [355189,355559])
+# 356005 - 2022 pp at 13.5 TeV (1h long, 600 bunches)
+setInjectRuns(tier0Config, [356005])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -121,7 +122,7 @@ alcaPPSScenario = "AlCaLumiPixels_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
-dt = 710
+dt = 711
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
@@ -453,18 +454,8 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  diskNode="T0_CH_CERN_Disk")
                  
 ###################################
-### Standard Physics PDs (2017) ###
+### Standard Physics PDs (2022) ###
 ###################################
-
-DATASETS = ["BTagCSV"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_dqm=True,
-               dqm_sequences=["@common"],
-               physics_skims=["LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
 
 DATASETS = ["BTagMu"]
 
@@ -474,19 +465,6 @@ for dataset in DATASETS:
                write_dqm=True,
                dqm_sequences=["@common"],
                physics_skims=["LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
-
-DATASETS = ["Charmonium"]
- 
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_reco=False,
-               raw_to_disk=True,
-               write_dqm=True,
-               dqm_sequences=["@common"],
-               alca_producers=["TkAlJpsiMuMu"],
-               physics_skims=["BPHSkim", "MuonPOGJPsiSkim", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
  
 DATASETS = ["Cosmics"]
@@ -511,21 +489,13 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
-               physics_skims=["EXODisplacedJet", "LogError", "LogErrorMonitor"],
+               tape_node="T1_FR_CCIN2P3_MSS",
+               disk_node="T1_FR_CCIN2P3_Disk",
+               physics_skims=["EXODisplacedJet", "EXODelayedJet", "EXODTCluster", "LogError", "LogErrorMonitor"],
+               # EXOCSCCluster needs to be added when 12_4_4 is introduced
                scenario=ppScenario)
 
-DATASETS = ["DoubleEG"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_reco=True,
-               write_dqm=True,
-               alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym", "HcalCalIsoTrkProducerFilter"],
-               dqm_sequences=["@common", "@ecal", "@egamma"],
-               physics_skims=["ZElectron", "LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
-
+# will be "Muon" after  HLT V1.3 menu
 DATASETS = ["DoubleMuon"]
 
 for dataset in DATASETS:
@@ -552,15 +522,25 @@ for dataset in DATASETS:
                timePerEvent=1,
                scenario=ppScenario)
 
-DATASETS = ["DoubleMuonLowMass"]
- 
+DATASETS = ["ReservedDoubleMuonLowMass"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               scenario=ppScenario)
+
+DATASETS = ["ParkingDoubleMuonLowMass0","ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
+            "ParkingDoubleMuonLowMass3","ParkingDoubleMuonLowMass4","ParkingDoubleMuonLowMass5",
+            "ParkingDoubleMuonLowMass6","ParkingDoubleMuonLowMass7"]
+
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
-               physics_skims=["LogError", "LogErrorMonitor", "BPHSkim", "MuonPOGJPsiSkim"],
+               tape_node=None,
+               disk_node="T1_US_FNAL_Disk",
                scenario=ppScenario)
  
 DATASETS = ["EmptyBX"]
@@ -594,18 +574,6 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
-               scenario=ppScenario)
-
-DATASETS = ["HTMHT"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_dqm=True,
-               dqm_sequences=["@common"],
-               physics_skims=["LogError", "LogErrorMonitor"],
-               timePerEvent=9.4,
-               sizePerEvent=2000,
                scenario=ppScenario)
 
 DATASETS = ["HighMultiplicity"]
@@ -646,6 +614,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                scenario=ppScenario)
 
+# Will be "JetMET"  after  HLT V1.3 menu
 DATASETS = ["JetHT"]
 
 for dataset in DATASETS:
@@ -659,6 +628,7 @@ for dataset in DATASETS:
                sizePerEvent=2250,
                scenario=ppScenario)
 
+# Will be "JetMET"  after  HLT V1.3 menu
 DATASETS = ["MET"]
 
 for dataset in DATASETS:
@@ -667,18 +637,8 @@ for dataset in DATASETS:
                write_dqm=True,
                alca_producers=["HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
-               physics_skims=["EXOMONOPOLE", "HighMET", "LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
-
-DATASETS = ["MuOnia"]
- 
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_dqm=True,
-               alca_producers=["TkAlUpsilonMuMu"],
-               dqm_sequences=["@common", "@muon"],
-               physics_skims=["LogError", "LogErrorMonitor", "BPHSkim"],
+               # add EXODelayedJetMET after 12_4_4 is cut
+               physics_skims=["EXOHighMET", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
 DATASETS = ["MuonEG"]
@@ -703,18 +663,8 @@ for dataset in DATASETS:
                physics_skims=["EXONoBPTXSkim", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["SingleElectron"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_dqm=True,
-               alca_producers=["EcalUncalWElectron", "EcalUncalZElectron", "HcalCalIterativePhiSym", "EcalESAlign"],
-               dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
-               physics_skims=["LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
-
-DATASETS = ["SingleMuon", "SingleMuonTnP"] # SingleMuonTnP only for 2017 ppRef run
+# Will be "Muon"  after  HLT V1.3 menu
+DATASETS = ["SingleMuon"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -724,17 +674,7 @@ for dataset in DATASETS:
                                "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
                                "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon"],
-               physics_skims=["MuonPOGSkim", "MuTau", "ZMu", "LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
-
-DATASETS = ["SinglePhoton"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_dqm=True,
-               dqm_sequences=["@common", "@ecal", "@egamma"],
-               physics_skims=["EXOMONOPOLE", "LogError", "LogErrorMonitor"],
+               physics_skims=["ZMu", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
 DATASETS = ["EGamma"]
@@ -746,7 +686,7 @@ for dataset in DATASETS:
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym",
                                "HcalCalIsoTrkProducerFilter", "EcalESAlign"],
                dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
-               physics_skims=["EXOMONOPOLE", "ZElectron", "LogError", "LogErrorMonitor"],
+               physics_skims=["ZElectron","WElectron", "EXOMONOPOLE", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
 DATASETS = ["Tau"]
@@ -760,7 +700,7 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 #############################################
-### Standard Commisioning PDs (2017)      ###
+### Standard Commisioning PDs (2022)      ###
 #############################################
 
 DATASETS = ["Commissioning"]
@@ -959,6 +899,8 @@ DATASETS = ["EphemeralHLTPhysics1", "EphemeralHLTPhysics2", "EphemeralHLTPhysics
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
+               dqm_sequences=["@none"],
+               write_dqm=False,
                scenario=ppScenario)
 
 DATASETS = ["HLTPhysicsCosmics", "HLTPhysicsCosmics1", "HLTPhysicsCosmics2",
@@ -1074,6 +1016,8 @@ DATASETS = ["EphemeralZeroBias1", "EphemeralZeroBias2", "EphemeralZeroBias3",
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
+               dqm_sequences=["@none"],
+               write_dqm=False,
                scenario=ppScenario)
 
 ########################################################
