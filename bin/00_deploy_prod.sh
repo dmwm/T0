@@ -117,6 +117,7 @@ echo "config.RetryManager.PauseAlgo.default.coolOffTime = {'create': 10, 'job': 
 
 # Twiking Rucio configuration
 sed -i "s+config.RucioInjector.containerDiskRuleParams.*+config.RucioInjector.containerDiskRuleParams = {}+" ./config/tier0/config.py
+sed -i "s+config.RucioInjector.metaDIDProject.*+config.RucioInjector.metaDIDProject = 'Tier0'+" ./config/tier0/config.py
 echo "config.RucioInjector.blockRuleParams = {}" >> ./config/tier0/config.py
 echo "config.RucioInjector.blockDeletionDelayHours = 168" >> ./config/tier0/config.py
 #
