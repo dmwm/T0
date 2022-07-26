@@ -369,7 +369,7 @@ addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
                  maxMemoryperCore=2000,
                  dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
                  diskNode="T0_CH_CERN_Disk")
-
+"""
 addExpressConfig(tier0Config, "ALCAPPS",
                  scenario=alcaPPSScenario,
                  data_tiers=["ALCARECO"],
@@ -394,7 +394,7 @@ addExpressConfig(tier0Config, "ALCAPPS",
                  maxMemoryperCore=2000,
                  dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
                  versionOverride=expressVersionOverride)
-
+"""
 #####################
 ### HI Tests 2018 ###
 #####################

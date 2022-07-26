@@ -374,7 +374,7 @@ addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
                  tapeNode=None,
                  dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
                  diskNode="T2_CH_CERN")
-
+"""
 addExpressConfig(tier0Config, "ALCAPPS",
                  scenario=alcaPPSScenario,
                  data_tiers=["ALCARECO"],
@@ -400,7 +400,7 @@ addExpressConfig(tier0Config, "ALCAPPS",
                  dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
                  diskNode="T2_CH_CERN",
                  versionOverride=expressVersionOverride)
-
+"""
 #####################
 ### HI Tests 2018 ###
 #####################
@@ -541,7 +541,20 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 DATASETS = ["ParkingDoubleMuonLowMass0","ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
-            "ParkingDoubleMuonLowMass3","ParkingDoubleMuonLowMass4","ParkingDoubleMuonLowMass5",
+            "ParkingDoubleMuonLowMass3"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               dqm_sequences=["@common", "@muon", "@heavyFlavor"],
+               alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
+               tape_node=None,
+               disk_node="T1_US_FNAL_Disk",
+               siteWhitelist = ["T2_CH_CERN_HLT", "T2_CH_CERN"],
+               scenario=ppScenario)
+    
+DATASETS = ["ParkingDoubleMuonLowMass4","ParkingDoubleMuonLowMass5",
             "ParkingDoubleMuonLowMass6","ParkingDoubleMuonLowMass7"]
 
 for dataset in DATASETS:
