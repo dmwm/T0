@@ -288,12 +288,12 @@ class Repack(JobFactory):
 
         """
         # find largest file
-        largestFile = 0
-        for streamer in streamerList:
-            largestFile = max(largestFile, streamer['filesize'])
+        #largestFile = 0
+        #for streamer in streamerList:
+        #    largestFile = max(largestFile, streamer['filesize'])
 
         # calculate number of cores based on disk usage
-        numberOfCores = 1 + (int)((jobSize+largestFile)/(20*1000*1000*1000))
+        numberOfCores = 1 + (int)((jobSize)/(20*1000*1000*1000))
 
         # jobs requesting more than 8 cores would never run
         if numberOfCores > 8:
@@ -326,7 +326,7 @@ class Repack(JobFactory):
         #  - output on local disk (factor 1)
         jobTime = 300 + jobSize/1500000 + (jobSize*2)/5000000
         self.currentJob.addResourceEstimates(jobTime = jobTime,
-                                             disk = (jobSize+largestFile)/1024,
+                                             disk = (jobSize)/1024,
                                              memory = memoryRequirement)
 
         return
