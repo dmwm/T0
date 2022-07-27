@@ -1107,7 +1107,7 @@ DATASETS = ["ParkingDoubleElectronLowMass0","ParkingDoubleElectronLowMass1","Par
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
+               do_reco=True,
                tape_node=None,
                scenario=ppScenario)
 
