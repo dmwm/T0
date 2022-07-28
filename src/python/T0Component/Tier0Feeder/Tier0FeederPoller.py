@@ -207,6 +207,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                     RunConfigAPI.configureRun(tier0Config, run, hltConfig)
                 except:
                     logging.exception("Can't configure for run %d" % (run))
+                    raise
 
             #
             # find unconfigured run/stream with data
@@ -222,6 +223,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                         self.dqmUploadProxy)
                     except:
                         logging.exception("Can't configure for run %d and stream %s" % (run, stream))
+                        raise
 
         #
         # stop and close runs based on RunSummary and StorageManager records
