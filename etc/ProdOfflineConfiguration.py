@@ -376,8 +376,8 @@ addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
                  tapeNode=None,
                  dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
                  diskNode="T2_CH_CERN")
-"""
-addExpressConfig(tier0Config, "ALCAPPS",
+
+addExpressConfig(tier0Config, "ALCAPPSExpress",
                  scenario=alcaPPSScenario,
                  data_tiers=["ALCARECO"],
                  dqm_sequences=["@none"],
@@ -402,7 +402,7 @@ addExpressConfig(tier0Config, "ALCAPPS",
                  dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
                  diskNode="T2_CH_CERN",
                  versionOverride=expressVersionOverride)
-"""
+
 #####################
 ### HI Tests 2018 ###
 #####################
@@ -504,7 +504,6 @@ for dataset in DATASETS:
                physics_skims=["EXODisplacedJet", "EXODelayedJet", "EXODTCluster", "LogError", "LogErrorMonitor", "EXOCSCCluster"],
                scenario=ppScenario)
 
-# will be "Muon" after  HLT V1.3 menu
 DATASETS = ["DoubleMuon"]
 
 for dataset in DATASETS:
@@ -535,6 +534,13 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 DATASETS = ["ReservedDoubleMuonLowMass"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               scenario=ppScenario)
+
+DATASETS = ["ParkingSingleMuon"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -639,7 +645,21 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                scenario=ppScenario)
 
-# Will be "JetMET"  after  HLT V1.3 menu
+DATASET ["JetMET"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               tape_node="T1_UK_RAL_MSS",  # JetHT was in "T1_UK_RAL_MSS" , MET was in "T1_DE_KIT_MSS"
+               disk_node="T1_UK_RAL_Disk", # JetHT was in "T1_UK_RAL_Disk", MET was in "T1_DE_KIT_Disk"
+               alca_producers=["HcalCalIsoTrkProducerFilter", "TkAlJetHT", "HcalCalNoise"],
+               dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
+               physics_skims=["EXODelayedJetMET", "JetHTJetPlusHOFilter", "LogError", "LogErrorMonitor"],
+               timePerEvent=5.7,  # copied from JetHT - should be checked
+               sizePerEvent=2250, # copied from JetHT - should be checked
+               scenario=ppScenario)
+
 DATASETS = ["JetHT"]
 
 for dataset in DATASETS:
@@ -655,7 +675,6 @@ for dataset in DATASETS:
                sizePerEvent=2250,
                scenario=ppScenario)
 
-# Will be "JetMET"  after  HLT V1.3 menu
 DATASETS = ["MET"]
 
 for dataset in DATASETS:
@@ -666,7 +685,6 @@ for dataset in DATASETS:
                disk_node="T1_DE_KIT_Disk",
                alca_producers=["HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
-               # add EXODelayedJetMET after 12_4_4 is cut
                physics_skims=["EXOHighMET", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -680,6 +698,23 @@ for dataset in DATASETS:
                tape_node="T1_FR_CCIN2P3_MSS",
                disk_node="T1_FR_CCIN2P3_Disk",
                physics_skims=["TopMuEG", "LogError", "LogErrorMonitor"],
+               scenario=ppScenario)
+
+DATASETS = ["Muon"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_reco=False,
+               write_dqm=True,
+               tape_node="T1_US_FNAL_MSS",  # SingleMon was in "T1_US_FNAL_MSS" , DoubleMuon was in "T1_DE_KIT_MSS"
+               disk_node="T1_US_FNAL_Disk", # SingleMon was in "T1_US_FNAL_Disk", DoubleMuon was in "T1_DE_KIT_Disk"
+               alca_producers=["TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu",
+                               "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
+                               "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
+                               "TkAlZMuMu", "TkAlDiMuonAndVertex"],
+               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon"],
+               physics_skims=["ZMu", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
 DATASETS = ["NoBPTX"]
@@ -832,6 +867,13 @@ for dataset in DATASETS:
                timePerEvent=0.02,
                sizePerEvent=38,
                scenario=alcaLumiPixelsScenario)
+
+DATASETS = ["AlCaLowPtJet"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               scenario=ppScenario)
 
 ########################################################
 ### Pilot Tests PDs                                  ###
@@ -1076,9 +1118,11 @@ for dataset in DATASETS:
                sizePerEvent=1500,
                scenario=ppScenario)
 
-DATASETS = ["EphemeralZeroBias1", "EphemeralZeroBias2", "EphemeralZeroBias3",
-            "EphemeralZeroBias4", "EphemeralZeroBias5", "EphemeralZeroBias6",
-            "EphemeralZeroBias7", "EphemeralZeroBias8", "EphemeralZeroBias0"]
+DATASETS = ["EphemeralZeroBias0", "EphemeralZeroBias1", "EphemeralZeroBias2", "EphemeralZeroBias3",
+            "EphemeralZeroBias4", "EphemeralZeroBias5", "EphemeralZeroBias6", "EphemeralZeroBias7",
+            "EphemeralZeroBias8", "EphemeralZeroBias9", "EphemeralZeroBias10", "EphemeralZeroBias11",
+            "EphemeralZeroBias12", "EphemeralZeroBias13", "EphemeralZeroBias14", "EphemeralZeroBias15",
+            "EphemeralZeroBias16", "EphemeralZeroBias17", "EphemeralZeroBias18", "EphemeralZeroBias19"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1364,7 +1408,7 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 # PPS 2022
-DATASETS = ["AlCaPPS"]
+DATASETS = ["AlCaPPSPrompt"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
