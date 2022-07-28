@@ -630,7 +630,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                scenario=ppScenario)
 
-DATASET ["JetMET"]
+DATASETS = ["JetMET"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
