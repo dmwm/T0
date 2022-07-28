@@ -94,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_4_3"
+    'default': "CMSSW_12_4_4"
 }
 
 # Configure ScramArch
@@ -157,7 +157,8 @@ repackVersionOverride = {
     "CMSSW_12_3_5_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_6" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_7" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_7_patch1" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_7_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_3" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -171,7 +172,8 @@ expressVersionOverride = {
     "CMSSW_12_3_5_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_6" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_7" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_7_patch1" : defaultCMSSWVersion['default']
+    "CMSSW_12_3_7_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_3" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -499,8 +501,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                tape_node="T1_FR_CCIN2P3_MSS",
                disk_node="T1_FR_CCIN2P3_Disk",
-               physics_skims=["EXODisplacedJet", "EXODelayedJet", "EXODTCluster", "LogError", "LogErrorMonitor"],
-               # EXOCSCCluster needs to be added when 12_4_4 is introduced
+               physics_skims=["EXODisplacedJet", "EXODelayedJet", "EXODTCluster", "LogError", "LogErrorMonitor", "EXOCSCCluster"],
                scenario=ppScenario)
 
 # will be "Muon" after  HLT V1.3 menu
