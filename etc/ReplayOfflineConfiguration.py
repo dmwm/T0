@@ -99,7 +99,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_4_3"
+    'default': "CMSSW_12_4_4"
 }
 
 # Configure ScramArch
@@ -119,7 +119,7 @@ hiTestppScenario = "ppEra_Run3"
 
 
 # Procesing version number replays
-dt = 213
+dt = 729
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
