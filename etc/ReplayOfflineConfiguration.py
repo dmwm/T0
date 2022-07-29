@@ -240,9 +240,9 @@ DATASETS = ["AlCaPhiSym"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
+               data_tiers=["ALCARECO"],
                raw_to_disk=True,
                disk_node="T2_CH_CERN",
-               alca_producers=["EcalPhiSymByRun"],
                scenario=alcaPhiSymEcalScenario)
 
 #######################
