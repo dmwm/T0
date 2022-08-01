@@ -35,8 +35,9 @@ setConfigVersion(tier0Config, "replace with real version")
 # 352929 - 2022 pp at 900 GeV
 # 355189 - 2022 cosmics
 # 355559 - 2022 pp at 13.6 TeV (1h long, 300 bunches)
-# 356005 - 2022 pp at 13.5 TeV (1h long, 600 bunches)
-setInjectRuns(tier0Config, [356005, 356069])
+# 356005 - 2022 pp at 13.6 TeV (1h long, 600 bunches)
+# 356433 - 2022 pp at 13.6 TeV (2h long, 1200 bunches, HLT menu v1.3)
+setInjectRuns(tier0Config, [356433])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -118,7 +119,7 @@ hiScenario = "ppEra_Run3"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run3"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
-alcaPPSScenario = "AlCaLumiPixels_Run3"
+alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
@@ -380,7 +381,9 @@ addExpressConfig(tier0Config, "ALCAPPSExpress",
                  dqm_sequences=["@none"],
                  write_dqm=True,
                  do_reco=False,
-                 alca_producers=["PPSCalMaxTracks", "PromptCalibProdPPSTimingCalib", "PromptCalibProdPPSAlignment"],
+                 alca_producers=["PPSCalMaxTracks", "PromptCalibProdPPSTimingCalib", "PromptCalibProdPPSAlignment",
+                                 "PromptCalibProdPPSDiamondSampic"
+                                ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
                  global_tag_connect=globalTagConnect,
@@ -1349,7 +1352,8 @@ DATASETS = ["AlCaPPSPrompt"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
+               do_reco=True,
+               write_reco=False, write_aod=False, write_miniaod=False,
                write_dqm=True,
                alca_producers=["PPSCalMaxTracks"],
                dqm_sequences=["@none"],
@@ -1641,6 +1645,43 @@ ignoreStream(tier0Config, "DQMOffline")
 ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
+
+# Ingore following streams only for this replay
+ignoreStream(tier0Config, "ALCALowPtJet")
+ignoreStream(tier0Config, "ALCALumiPixelsCountsExpress")
+ignoreStream(tier0Config, "ALCALumiPixelsCountsPrompt")
+ignoreStream(tier0Config, "ALCAP0")
+ignoreStream(tier0Config, "ALCAPHISYM")
+ignoreStream(tier0Config, "Calibration")
+ignoreStream(tier0Config, "Express")
+ignoreStream(tier0Config, "ExpressAlignment")
+ignoreStream(tier0Config, "HLTMonitor")
+ignoreStream(tier0Config, "NanoDST")
+ignoreStream(tier0Config, "ParkingDoubleElectronLowMass0")
+ignoreStream(tier0Config, "ParkingDoubleElectronLowMass1")
+ignoreStream(tier0Config, "ParkingDoubleElectronLowMass2")
+ignoreStream(tier0Config, "ParkingDoubleMuonLowMass0")
+ignoreStream(tier0Config, "ParkingDoubleMuonLowMass1")
+ignoreStream(tier0Config, "ParkingDoubleMuonLowMass2")
+ignoreStream(tier0Config, "ParkingDoubleMuonLowMass3")
+ignoreStream(tier0Config, "ParkingSingleMuon")
+ignoreStream(tier0Config, "PhysicsCommissioning")
+ignoreStream(tier0Config, "PhysicsEGamma")
+ignoreStream(tier0Config, "PhysicsHLTPhysics0")
+ignoreStream(tier0Config, "PhysicsHLTPhysics1")
+ignoreStream(tier0Config, "PhysicsHLTPhysics2")
+ignoreStream(tier0Config, "PhysicsHLTPhysics3")
+ignoreStream(tier0Config, "PhysicsHLTPhysics4")
+ignoreStream(tier0Config, "PhysicsHLTPhysics5")
+ignoreStream(tier0Config, "PhysicsHLTPhysics6")
+ignoreStream(tier0Config, "PhysicsHLTPhysics7")
+ignoreStream(tier0Config, "PhysicsHLTPhysics8")
+ignoreStream(tier0Config, "PhysicsHLTPhysics9")
+ignoreStream(tier0Config, "PhysicsHadronsTaus")
+ignoreStream(tier0Config, "PhysicsMuons")
+ignoreStream(tier0Config, "PhysicsScoutingPFMonitor")
+ignoreStream(tier0Config, "RPCMON")
+ignoreStream(tier0Config, "ScoutingPF")
 
 ###################################
 ### currently inactive settings ###
