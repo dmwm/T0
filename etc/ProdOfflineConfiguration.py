@@ -540,11 +540,12 @@ for dataset in DATASETS:
                do_reco=False,
                scenario=ppScenario)
 
-DATASETS = ["ParkingSingleMuon"]
+DATASETS = ["ParkingSingleMuon","ParkingSingleMuon0","ParkingSingleMuon1","ParkingSingleMuon2"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
+               do_reco=True,
+               tape_node=None,
                scenario=ppScenario)
 
 DATASETS = ["ParkingDoubleMuonLowMass0","ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
