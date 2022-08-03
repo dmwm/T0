@@ -36,7 +36,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 355189 - 2022 cosmics
 # 355559 - 2022 pp at 13.6 TeV (1h long, 300 bunches)
 # 356005 - 2022 pp at 13.5 TeV (1h long, 600 bunches)
-setInjectRuns(tier0Config, [356005, 356069])
+setInjectRuns(tier0Config, [356005])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -103,7 +103,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_4_4"
+    'default': "CMSSW_12_4_5"
 }
 
 # Configure ScramArch
@@ -158,7 +158,8 @@ repackVersionOverride = {
     "CMSSW_12_3_6" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_7" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_7_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_3" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_3" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_4" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -173,7 +174,8 @@ expressVersionOverride = {
     "CMSSW_12_3_6" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_7" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_7_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_3" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_3" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_4" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
