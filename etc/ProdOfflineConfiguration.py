@@ -548,23 +548,13 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                tape_node=None,
+               siteWhitelist = ["T2_CH_CERN_HLT", "T2_CH_CERN"],
                scenario=ppScenario)
 
 DATASETS = ["ParkingDoubleMuonLowMass0","ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
             "ParkingDoubleMuonLowMass3"]
 
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_dqm=True,
-               dqm_sequences=["@common", "@muon", "@heavyFlavor"],
-               alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
-               tape_node=None,
-               disk_node="T1_US_FNAL_Disk",
-               siteWhitelist = ["T2_CH_CERN_HLT", "T2_CH_CERN"],
-               scenario=ppScenario)
-    
-DATASETS = ["ParkingDoubleMuonLowMass4","ParkingDoubleMuonLowMass5",
+DATASETS += ["ParkingDoubleMuonLowMass4","ParkingDoubleMuonLowMass5",
             "ParkingDoubleMuonLowMass6","ParkingDoubleMuonLowMass7"]
 
 for dataset in DATASETS:
@@ -575,6 +565,7 @@ for dataset in DATASETS:
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                tape_node=None,
                disk_node="T1_US_FNAL_Disk",
+               siteWhitelist = ["T2_CH_CERN_HLT", "T2_CH_CERN"],
                scenario=ppScenario)
 
 DATASETS = ["EmptyBX"]
