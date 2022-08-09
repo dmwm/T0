@@ -16,9 +16,9 @@ DEPLOY_DIR=$BASE_DIR/srv/wmagent
 #wget -nv https://github.com/dmwm/T0/pull/4597.patch -O - | patch -f -d $DEPLOY_DIR/current/apps/t0/lib/python*/site-packages/ -p 3
 
 #Patches on top of 3.0.5
+# Raise condition when run/streams can't be configured
+wget -nv https://github.com/dmwm/T0/pull/4729.patch -O - | patch -f -d $DEPLOY_DIR/current/apps/t0/lib/python*/site-packages/ -p 3
 #Replay rdeployment ID as procesing version
 wget -nv https://github.com/dmwm/T0/pull/4705.patch -O - | patch -f -d $DEPLOY_DIR/current/apps/t0/lib/python*/site-packages/ -p 3
 #Repack jobsplitting fix
 wget -nv https://github.com/dmwm/T0/pull/4724.patch -O - | patch -f -d $DEPLOY_DIR/current/apps/t0/lib/python*/site-packages/ -p 3
-
-
