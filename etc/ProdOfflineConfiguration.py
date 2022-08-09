@@ -25,6 +25,7 @@ from T0.RunConfig.Tier0Config import setInjectMaxRun
 from T0.RunConfig.Tier0Config import setStreamerPNN
 from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setStorageSite
+from T0.RunConfig.Tier0Config import setInjectRuns
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -33,11 +34,13 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 355794)
+#setInjectMinRun(tier0Config, 355794)
 
 # Set the max run number:
-setInjectMaxRun(tier0Config, 9999999)
+#setInjectMaxRun(tier0Config, 9999999)
 
+# Reprocess Run
+setInjectRuns(tier0Config, [356719])
 # Settings up sites
 processingSite = "T2_CH_CERN"
 storageSite = "T0_CH_CERN_Disk"
@@ -1705,6 +1708,46 @@ ignoreStream(tier0Config, "DQMOffline")
 ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
+
+# Ignored Streams for this reprocessing
+ignoreStream(tier0Config, "ALCALowPtJet")
+ignoreStream(tier0Config, "ALCALumiPixelsCountsExpress")
+ignoreStream(tier0Config, "ALCALumiPixelsCountsPrompt")
+ignoreStream(tier0Config, "ALCAP0")
+ignoreStream(tier0Config, "ALCAPHISYM")
+ignoreStream(tier0Config, "ALCAPPSExpress")
+ignoreStream(tier0Config, "ALCAPPSPrompt")
+ignoreStream(tier0Config, "Calibration")
+ignoreStream(tier0Config, "Express")
+ignoreStream(tier0Config, "ExpressAlignment")
+ignoreStream(tier0Config, "HLTMonitor")
+ignoreStream(tier0Config, "NanoDST")
+ignoreStream(tier0Config, "ParkingDoubleElectronLowMass0")
+ignoreStream(tier0Config, "ParkingDoubleElectronLowMass1")
+ignoreStream(tier0Config, "ParkingDoubleElectronLowMass2")
+ignoreStream(tier0Config, "ParkingDoubleMuonLowMass0")
+ignoreStream(tier0Config, "ParkingDoubleMuonLowMass1")
+ignoreStream(tier0Config, "ParkingDoubleMuonLowMass2")
+ignoreStream(tier0Config, "ParkingDoubleMuonLowMass3")
+ignoreStream(tier0Config, "ParkingSingleMuon0")
+ignoreStream(tier0Config, "ParkingSingleMuon2")
+ignoreStream(tier0Config, "PhysicsCommissioning")
+ignoreStream(tier0Config, "PhysicsEGamma")
+ignoreStream(tier0Config, "PhysicsHadronsTaus")
+ignoreStream(tier0Config, "PhysicsHLTPhysics0")
+ignoreStream(tier0Config, "PhysicsHLTPhysics1")
+ignoreStream(tier0Config, "PhysicsHLTPhysics2")
+ignoreStream(tier0Config, "PhysicsHLTPhysics3")
+ignoreStream(tier0Config, "PhysicsHLTPhysics4")
+ignoreStream(tier0Config, "PhysicsHLTPhysics5")
+ignoreStream(tier0Config, "PhysicsHLTPhysics6")
+ignoreStream(tier0Config, "PhysicsHLTPhysics7")
+ignoreStream(tier0Config, "PhysicsHLTPhysics8")
+ignoreStream(tier0Config, "PhysicsHLTPhysics9")
+ignoreStream(tier0Config, "PhysicsMuons")
+ignoreStream(tier0Config, "PhysicsScoutingPFMonitor")
+ignoreStream(tier0Config, "RPCMON")
+ignoreStream(tier0Config, "ScoutingPF")
 
 ###################################
 ### currently inactive settings ###
