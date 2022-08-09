@@ -129,7 +129,7 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "124X_dataRun3_Express_v4"
+expressGlobalTag = "124X_dataRun3_Express_Candidate_2022_08_05_17_14_24"
 promptrecoGlobalTag = "124X_dataRun3_Prompt_v4"
 alcap0GlobalTag = "124X_dataRun3_Prompt_v4"
 
