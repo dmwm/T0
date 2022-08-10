@@ -118,7 +118,7 @@ hiScenario = "ppEra_Run3"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run3"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
-alcaPPSScenario = "AlCaLumiPixels_Run3"
+alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
@@ -128,7 +128,7 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "124X_dataRun3_Express_v4"
+expressGlobalTag = "124X_dataRun3_Express_v5"
 promptrecoGlobalTag = "124X_dataRun3_Prompt_v4"
 alcap0GlobalTag = "124X_dataRun3_Prompt_v4"
 
@@ -384,7 +384,9 @@ addExpressConfig(tier0Config, "ALCAPPSExpress",
                  dqm_sequences=["@none"],
                  write_dqm=True,
                  do_reco=False,
-                 alca_producers=["PPSCalMaxTracks", "PromptCalibProdPPSTimingCalib", "PromptCalibProdPPSAlignment"],
+                 alca_producers=["PPSCalMaxTracks", "PromptCalibProdPPSTimingCalib", "PromptCalibProdPPSAlignment",
+                                "PromptCalibProdPPSDiamondSampic"
+                                ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
                  global_tag_connect=globalTagConnect,
@@ -1353,7 +1355,8 @@ DATASETS = ["AlCaPPSPrompt"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
+               do_reco=True,
+               write_reco=False, write_aod=False, write_miniaod=False,
                write_dqm=True,
                alca_producers=["PPSCalMaxTracks"],
                dqm_sequences=["@none"],
