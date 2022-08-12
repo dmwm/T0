@@ -36,7 +36,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 355189 - 2022 cosmics
 # 355559 - 2022 pp at 13.6 TeV (1h long, 300 bunches)
 # 356005 - 2022 pp at 13.5 TeV (1h long, 600 bunches)
-setInjectRuns(tier0Config, [356433])
+setInjectRuns(tier0Config, [356824])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -103,7 +103,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_4_5"
+    'default': "CMSSW_12_4_6"
 }
 
 # Configure ScramArch
@@ -118,7 +118,7 @@ hiScenario = "ppEra_Run3"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run3"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
-alcaPPSScenario = "AlCaLumiPixels_Run3"
+alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
@@ -128,7 +128,7 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "124X_dataRun3_Express_v4"
+expressGlobalTag = "124X_dataRun3_Express_v5"
 promptrecoGlobalTag = "124X_dataRun3_Prompt_v4"
 alcap0GlobalTag = "124X_dataRun3_Prompt_v4"
 
@@ -159,7 +159,8 @@ repackVersionOverride = {
     "CMSSW_12_3_7" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_7_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_4" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_4" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_5" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -175,7 +176,8 @@ expressVersionOverride = {
     "CMSSW_12_3_7" : defaultCMSSWVersion['default'],
     "CMSSW_12_3_7_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_4" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_4" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_5" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -382,7 +384,9 @@ addExpressConfig(tier0Config, "ALCAPPSExpress",
                  dqm_sequences=["@none"],
                  write_dqm=True,
                  do_reco=False,
-                 alca_producers=["PPSCalMaxTracks", "PromptCalibProdPPSTimingCalib", "PromptCalibProdPPSAlignment"],
+                 alca_producers=["PPSCalMaxTracks", "PromptCalibProdPPSTimingCalib", "PromptCalibProdPPSAlignment",
+                                "PromptCalibProdPPSDiamondSampic"
+                                ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
                  global_tag_connect=globalTagConnect,
@@ -1351,7 +1355,8 @@ DATASETS = ["AlCaPPSPrompt"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
+               do_reco=True,
+               write_reco=False, write_aod=False, write_miniaod=False,
                write_dqm=True,
                alca_producers=["PPSCalMaxTracks"],
                dqm_sequences=["@none"],
