@@ -992,12 +992,11 @@ DATASETS = ["EphemeralHLTPhysics0","EphemeralHLTPhysics1", "EphemeralHLTPhysics2
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=True,
                raw_to_disk=True,
                dqm_sequences=["@none"],
                write_dqm=False,
                tape_node=None,
-               disk_node=None,
+               disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
 DATASETS = ["HLTPhysicsCosmics", "HLTPhysicsCosmics1", "HLTPhysicsCosmics2",
@@ -1138,11 +1137,9 @@ DATASETS = ["EphemeralZeroBias0", "EphemeralZeroBias1", "EphemeralZeroBias2", "E
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=True,
                raw_to_disk=True,
                dqm_sequences=["@none"],
                write_dqm=False,
-               archival_node=None,
                tape_node=None,
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
