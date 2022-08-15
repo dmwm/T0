@@ -36,7 +36,8 @@ setConfigVersion(tier0Config, "replace with real version")
 # 355189 - 2022 cosmics
 # 355559 - 2022 pp at 13.6 TeV (1h long, 300 bunches)
 # 356005 - 2022 pp at 13.5 TeV (1h long, 600 bunches)
-setInjectRuns(tier0Config, [356824])
+# 357442 - 2022 pp at 13.5 TeV (9h long, 2400 bunches)
+setInjectRuns(tier0Config, [357442])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -128,7 +129,7 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "124X_dataRun3_Express_v5"
+expressGlobalTag = "124X_dataRun3_Express_v5w2022v0PixelCPE"
 promptrecoGlobalTag = "124X_dataRun3_Prompt_v4"
 alcap0GlobalTag = "124X_dataRun3_Prompt_v4"
 
@@ -227,12 +228,7 @@ addExpressConfig(tier0Config, "Express",
                  diskNode="T0_CH_CERN_Disk",
                  data_tiers=["FEVT"],
                  write_dqm=True,
-                 alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
-                                 "TkAlMinBias", "SiPixelCalZeroBias", "SiPixelCalSingleMuon",
-                                 "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
-                                 "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel",
-                                 "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff", "PromptCalibProdSiPixelAliHG"
-                                ],
+                 alca_producers=["TkAlMinBias","PromptCalibProdSiPixelAliHG"],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
                  global_tag_connect=globalTagConnect,
@@ -1648,6 +1644,34 @@ ignoreStream(tier0Config, "DQMOffline")
 ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
+ignoreStream(tier0Config, "ALCALowPtJet")
+ignoreStream(tier0Config, "ALCALumiPixelsCountsExpress")
+ignoreStream(tier0Config, "ALCALumiPixelsCountsPrompt")
+ignoreStream(tier0Config, "ALCAP0")
+ignoreStream(tier0Config, "ALCAPHISYM")
+ignoreStream(tier0Config, "ALCAPPSExpress")
+ignoreStream(tier0Config, "ALCAPPSPrompt")
+ignoreStream(tier0Config, "Calibration")
+ignoreStream(tier0Config, "ExpressAlignment")
+ignoreStream(tier0Config, "HLTMonitor")
+ignoreStream(tier0Config, "NanoDST")
+ignoreStream(tier0Config, "ParkingDoubleElectronLowMass0")
+ignoreStream(tier0Config, "ParkingDoubleElectronLowMass1")
+ignoreStream(tier0Config, "ParkingDoubleElectronLowMass2")
+ignoreStream(tier0Config, "ParkingDoubleMuonLowMass0")
+ignoreStream(tier0Config, "ParkingDoubleMuonLowMass1")
+ignoreStream(tier0Config, "ParkingDoubleMuonLowMass2")
+ignoreStream(tier0Config, "ParkingDoubleMuonLowMass3")
+ignoreStream(tier0Config, "ParkingSingleMuon0")
+ignoreStream(tier0Config, "ParkingSingleMuon1")
+ignoreStream(tier0Config, "ParkingSingleMuon2")
+ignoreStream(tier0Config, "PhysicsCommissioning")
+ignoreStream(tier0Config, "PhysicsEGamma")
+ignoreStream(tier0Config, "PhysicsHadronsTaus")
+ignoreStream(tier0Config, "PhysicsMuons")
+ignoreStream(tier0Config, "PhysicsScoutingPFMonitor")
+ignoreStream(tier0Config, "RPCMON")
+ignoreStream(tier0Config, "ScoutingPF")
 
 ###################################
 ### currently inactive settings ###
