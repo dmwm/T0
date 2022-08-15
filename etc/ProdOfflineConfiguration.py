@@ -554,8 +554,9 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                siteWhitelist = ["T2_CH_CERN_HLT", "T2_CH_CERN"],
-               tape_node=None,
-               disk_node=None,
+               archival_node=None,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
 DATASETS = ["ParkingDoubleMuonLowMass0","ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
@@ -571,8 +572,9 @@ for dataset in DATASETS:
                dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                siteWhitelist = ["T2_CH_CERN_HLT", "T2_CH_CERN"],
-               tape_node=None,
-               disk_node=None,
+               archival_node=None,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
 DATASETS = ["EmptyBX"]
@@ -1164,8 +1166,9 @@ DATASETS = ["ParkingDoubleElectronLowMass0","ParkingDoubleElectronLowMass1","Par
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
-               tape_node=None,
-               disk_node=None,
+               archival_node=None,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
 DATASETS = ["ParkingMonitor"]
