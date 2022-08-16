@@ -55,7 +55,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2022C")
+setAcquisitionEra(tier0Config, "Run2022D")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -478,8 +478,8 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
-               tape_node="T1_US_FNAL_MSS",
-               disk_node="T1_US_FNAL_Disk",
+               tape_node="T1_ES_PIC_MSS",
+               disk_node="T1_ES_PIC_Disk",
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -505,8 +505,8 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
-               tape_node="T1_FR_CCIN2P3_MSS",
-               disk_node="T1_FR_CCIN2P3_Disk",
+               tape_node="T1_DE_KIT_MSS",
+               disk_node="T1_DE_KIT_Disk",
                physics_skims=["EXODisplacedJet", "EXODelayedJet", "EXODTCluster", "LogError", "LogErrorMonitor", "EXOCSCCluster"],
                scenario=ppScenario)
 
@@ -544,6 +544,8 @@ DATASETS = ["ReservedDoubleMuonLowMass"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
+               tape_node="T1_IT_CNAF_MSS",
+               disk_node="T1_IT_CNAF_Disk",
                scenario=ppScenario)
 
 DATASETS = ["ParkingSingleMuon","ParkingSingleMuon0","ParkingSingleMuon1","ParkingSingleMuon2"]
@@ -551,8 +553,10 @@ DATASETS = ["ParkingSingleMuon","ParkingSingleMuon0","ParkingSingleMuon1","Parki
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
-               tape_node=None,
                siteWhitelist = ["T2_CH_CERN_HLT", "T2_CH_CERN"],
+               archival_node=None,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
 DATASETS = ["ParkingDoubleMuonLowMass0","ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
@@ -567,9 +571,10 @@ for dataset in DATASETS:
                write_dqm=True,
                dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
-               tape_node=None,
-               disk_node="T1_US_FNAL_Disk",
                siteWhitelist = ["T2_CH_CERN_HLT", "T2_CH_CERN"],
+               archival_node=None,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
 DATASETS = ["EmptyBX"]
@@ -649,8 +654,8 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               tape_node="T1_UK_RAL_MSS",  # JetHT was in "T1_UK_RAL_MSS" , MET was in "T1_DE_KIT_MSS"
-               disk_node="T1_UK_RAL_Disk", # JetHT was in "T1_UK_RAL_Disk", MET was in "T1_DE_KIT_Disk"
+               tape_node="T1_US_FNAL_MSS",  # JetHT was in "T1_UK_RAL_MSS" , MET was in "T1_DE_KIT_MSS"
+               disk_node="T1_US_FNAL_Disk", # JetHT was in "T1_UK_RAL_Disk", MET was in "T1_DE_KIT_Disk"
                alca_producers=["HcalCalIsoTrkProducerFilter", "TkAlJetHT", "HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
                physics_skims=["EXODelayedJetMET", "JetHTJetPlusHOFilter", "LogError", "LogErrorMonitor"],
@@ -693,8 +698,8 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
-               tape_node="T1_FR_CCIN2P3_MSS",
-               disk_node="T1_FR_CCIN2P3_Disk",
+               tape_node="T1_DE_KIT_MSS",
+               disk_node="T1_DE_KIT_Disk",
                physics_skims=["TopMuEG", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -705,8 +710,8 @@ for dataset in DATASETS:
                do_reco=True,
                write_reco=False,
                write_dqm=True,
-               tape_node="T1_US_FNAL_MSS",  # SingleMon was in "T1_US_FNAL_MSS" , DoubleMuon was in "T1_DE_KIT_MSS"
-               disk_node="T1_US_FNAL_Disk", # SingleMon was in "T1_US_FNAL_Disk", DoubleMuon was in "T1_DE_KIT_Disk"
+               tape_node="T1_FR_CCIN2P3_MSS",  # SingleMon was in "T1_US_FNAL_MSS" , DoubleMuon was in "T1_DE_KIT_MSS"
+               disk_node="T1_FR_CCIN2P3_Disk", # SingleMon was in "T1_US_FNAL_Disk", DoubleMuon was in "T1_DE_KIT_Disk"
                alca_producers=["TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu",
                                "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
                                "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
@@ -725,6 +730,8 @@ for dataset in DATASETS:
                alca_producers=["TkAlCosmicsInCollisions"],
                dqm_sequences=["@common"],
                physics_skims=["EXONoBPTXSkim", "LogError", "LogErrorMonitor"],
+               tape_node="T1_DE_KIT_MSS",
+               disk_node="T1_DE_KIT_Disk",
                scenario=ppScenario)
 
 
@@ -749,8 +756,8 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               tape_node="T1_IT_CNAF_MSS",
-               disk_node="T1_IT_CNAF_Disk",
+               tape_node="T1_US_FNAL_MSS",
+               disk_node="T1_US_FNAL_Disk",
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym",
                                "HcalCalIsoTrkProducerFilter", "EcalESAlign"],
                dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
@@ -764,8 +771,8 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
-               tape_node="T1_ES_PIC_MSS",
-               disk_node="T1_ES_PIC_Disk",
+               tape_node="T1_DE_KIT_MSS",
+               disk_node="T1_DE_KIT_Disk",
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -787,6 +794,8 @@ for dataset in DATASETS:
                physics_skims=["EcalActivity", "LogError", "LogErrorMonitor"],
                timePerEvent=12,
                sizePerEvent=4000,
+               tape_node="T1_DE_KIT_MSS",
+               disk_node="T1_DE_KIT_Disk",
                scenario=ppScenario)
 
 DATASETS = ["HcalNZS"]
@@ -841,6 +850,8 @@ for dataset in DATASETS:
                write_miniaod=True,
                write_reco=False,
                dqm_sequences=["@common"],
+               tape_node="T1_ES_PIC_MSS",
+               disk_node="T1_ES_PIC_Disk",
                scenario=ppScenario)
 
 ###########################
@@ -981,11 +992,9 @@ DATASETS = ["EphemeralHLTPhysics0","EphemeralHLTPhysics1", "EphemeralHLTPhysics2
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=True,
                raw_to_disk=True,
                dqm_sequences=["@none"],
                write_dqm=False,
-               archival_node=None,
                tape_node=None,
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
@@ -1098,6 +1107,8 @@ for dataset in DATASETS:
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=3.5,
                sizePerEvent=1500,
+               tape_node="T1_ES_PIC_MSS",
+               disk_node="T1_ES_PIC_Disk",
                scenario=ppScenario)
 
 DATASETS = ["ZeroBias0"]
@@ -1114,6 +1125,8 @@ for dataset in DATASETS:
                siteWhitelist = ["T2_CH_CERN_HLT"],
                timePerEvent=3.5,
                sizePerEvent=1500,
+               tape_node="T1_ES_PIC_MSS",
+               disk_node="T1_ES_PIC_Disk",
                scenario=ppScenario)
 
 DATASETS = ["EphemeralZeroBias0", "EphemeralZeroBias1", "EphemeralZeroBias2", "EphemeralZeroBias3",
@@ -1124,11 +1137,9 @@ DATASETS = ["EphemeralZeroBias0", "EphemeralZeroBias1", "EphemeralZeroBias2", "E
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=True,
                raw_to_disk=True,
                dqm_sequences=["@none"],
                write_dqm=False,
-               archival_node=None,
                tape_node=None,
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
@@ -1141,6 +1152,8 @@ DATASETS = ["ScoutingPFRun3"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
+               tape_node="T1_UK_RAL_MSS",
+               disk_node="T1_UK_RAL_Disk",
                scenario=ppScenario)
 
 
@@ -1150,7 +1163,9 @@ DATASETS = ["ParkingDoubleElectronLowMass0","ParkingDoubleElectronLowMass1","Par
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
-               tape_node=None,
+               archival_node=None,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
 DATASETS = ["ParkingMonitor"]
@@ -1211,6 +1226,8 @@ DATASETS = ["RPCMonitor"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
+               tape_node="T1_DE_KIT_MSS",
+               disk_node="T1_DE_KIT_Disk",
                scenario=ppScenario)
 
 DATASETS = ["ScoutingMonitor"]
