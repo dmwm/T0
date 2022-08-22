@@ -35,8 +35,10 @@ setConfigVersion(tier0Config, "replace with real version")
 # 352929 - 2022 pp at 900 GeV
 # 355189 - 2022 cosmics
 # 355559 - 2022 pp at 13.6 TeV (1h long, 300 bunches)
-# 356005 - 2022 pp at 13.5 TeV (1h long, 600 bunches)
-setInjectRuns(tier0Config, [356824])
+# 356005 - 2022 pp at 13.6 TeV (1h long, 600 bunches)
+# 356824 - 2022 pp at 13.6 TeV (30' long, 1900 bunches)
+# 356948 - 2022 pp at 13.6 TeV (30' long, 1900 bunches)
+setInjectRuns(tier0Config, [356824,356948])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -103,7 +105,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_4_6"
+    'default': "CMSSW_12_4_7"
 }
 
 # Configure ScramArch
@@ -122,7 +124,8 @@ alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
-dt = int(open("DeploymentID.txt","r").read()[4:-1])
+# Taking Replay processing ID from the last 8 digits of the DeploymentID
+dt = int(open("DeploymentID.txt","r").read()[4:]) 
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
@@ -147,37 +150,17 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_12_3_0" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_5" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_5_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_6" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_7" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_7_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_5" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_5" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_6" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
-    "CMSSW_12_3_0" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_5" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_5_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_6" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_7" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_7_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_5" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_5" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_6" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams

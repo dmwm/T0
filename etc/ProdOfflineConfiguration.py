@@ -94,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_4_6"
+    'default': "CMSSW_12_4_7"
 }
 
 # Configure ScramArch
@@ -114,17 +114,16 @@ hiTestppScenario = "ppEra_Run3"
 
 # Defaults for processing version
 defaultProcVersionRAW = 1
-
 alcarawProcVersion = {
-    'default': "1"
+    'default': "2"
 }
 
 defaultProcVersionReco = {
-    'default': "1"
+    'default': "2"
 }
 
 expressProcVersion = {
-    'default': "1"
+    'default': "2"
 }
 
 # Defaults for GlobalTag
@@ -147,37 +146,17 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_12_3_0" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_5" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_5_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_6" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_7" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_7_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_5" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_5" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_6" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
-    "CMSSW_12_3_0" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_5" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_5_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_6" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_7" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_7_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_5" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_5" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_6" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
