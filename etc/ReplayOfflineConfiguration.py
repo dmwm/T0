@@ -124,7 +124,8 @@ alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
-dt = int(open("DeploymentID.txt","r").read()[4:-1])
+# Taking Replay processing ID from the last 8 digits of the DeploymentID
+dt = int(open("DeploymentID.txt","r").read()[4:]) 
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
@@ -163,7 +164,7 @@ repackVersionOverride = {
     "CMSSW_12_4_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_4" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_5" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_6" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_6" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -181,7 +182,7 @@ expressVersionOverride = {
     "CMSSW_12_4_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_4" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_5" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_6" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_6" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams

@@ -94,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_4_6"
+    'default': "CMSSW_12_4_7"
 }
 
 # Configure ScramArch
@@ -114,13 +114,12 @@ hiTestppScenario = "ppEra_Run3"
 
 # Defaults for processing version
 defaultProcVersionRAW = 1
-
 alcarawProcVersion = {
-    'default': "1"
+    'default': "2"
 }
 
 defaultProcVersionReco = {
-    'default': "1"
+    'default': "2"
 }
 
 expressProcVersion = {
@@ -160,7 +159,8 @@ repackVersionOverride = {
     "CMSSW_12_3_7_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_5" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_5" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_6" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -177,7 +177,8 @@ expressVersionOverride = {
     "CMSSW_12_3_7_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_5" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_5" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_6" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
