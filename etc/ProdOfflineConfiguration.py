@@ -146,17 +146,6 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_12_3_0" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_5" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_5_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_6" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_7" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_7_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_4" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_5" : defaultCMSSWVersion['default'],
@@ -164,17 +153,6 @@ repackVersionOverride = {
     }
 
 expressVersionOverride = {
-    "CMSSW_12_3_0" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_2_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_4_patch2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_5" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_5_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_6" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_7" : defaultCMSSWVersion['default'],
-    "CMSSW_12_3_7_patch1" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_4" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_5" : defaultCMSSWVersion['default'],
