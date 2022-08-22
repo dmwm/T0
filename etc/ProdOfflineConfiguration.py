@@ -123,7 +123,7 @@ defaultProcVersionReco = {
 }
 
 expressProcVersion = {
-    'default': "1"
+    'default': "2"
 }
 
 # Defaults for GlobalTag
