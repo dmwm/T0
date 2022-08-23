@@ -176,7 +176,7 @@ echo 'config.TaskArchiver.useWorkQueue = False' >> ./config/tier0/config.py
 #
 # Enable AgentStatusWatcher - site status automatic updated
 #
-sed -i "s+config.RucioInjector.ignoreDisks.*+config.RucioInjector.ignoreDisks = [ '/cvmfs/cvmfs-config.cern.ch', '/cvmfs/cms.cern.ch', '/eos/cms', '/cvmfs/cms-ib.cern.ch' ]+" ./config/tier0/config.py
+sed -i "s+config.AgentStatusWatcher.ignoreDisks.*+config.AgentStatusWatcher.ignoreDisks = [ '/cvmfs/cvmfs-config.cern.ch', '/cvmfs/cms.cern.ch', '/eos/cms', '/cvmfs/cms-ib.cern.ch', '/cvmfs/patatrack.cern.ch' ]+" ./config/tier0/config.py
 echo "config.AgentStatusWatcher.enabled = False" >> ./config/tier0/config.py
 echo "config.AgentStatusWatcher.onlySSB = False" >> ./config/tier0/config.py
 
