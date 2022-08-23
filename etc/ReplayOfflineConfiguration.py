@@ -895,6 +895,14 @@ DATASETS = ["HLTPhysics", "HLTPhysics0", "HLTPhysics1",
             "HLTPhysics14", "HLTPhysics15", "HLTPhysics16",
             "HLTPhysics17", "HLTPhysics18", "HLTPhysics19"]
 
+DATASETS += ["SpecialHLTPhysics", "SpecialHLTPhysics0", "SpecialHLTPhysics1",
+            "SpecialHLTPhysics2", "SpecialHLTPhysics3", "SpecialHLTPhysics4",
+            "SpecialHLTPhysics5", "SpecialHLTPhysics6", "SpecialHLTPhysics7",
+            "SpecialHLTPhysics8", "SpecialHLTPhysics9", "SpecialHLTPhysics10",
+            "SpecialHLTPhysics11", "SpecialHLTPhysics12", "SpecialHLTPhysics13",
+            "SpecialHLTPhysics14", "SpecialHLTPhysics15", "SpecialHLTPhysics16",
+            "SpecialHLTPhysics17", "SpecialHLTPhysics18", "SpecialHLTPhysics19"]
+
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
