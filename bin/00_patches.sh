@@ -24,3 +24,5 @@ wget -nv https://github.com/dmwm/T0/pull/4705.patch -O - | patch -f -d $DEPLOY_D
 wget -nv https://github.com/dmwm/T0/pull/4724.patch -O - | patch -f -d $DEPLOY_DIR/current/apps/t0/lib/python*/site-packages/ -p 3
 #Add AlCaPPS scnerario
 wget -nv https://github.com/dmwm/T0/pull/4718.patch -O - | patch -f -d $DEPLOY_DIR/current/apps/t0/lib/python*/site-packages/ -p 3
+#Rucio Deletions fix
+wget -nv https://github.com/dmwm/WMCore/pull/11245.patch -O - | patch -f -d $DEPLOY_DIR/current/apps/t0/lib/python*/site-packages/ -p 3
