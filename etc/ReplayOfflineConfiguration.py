@@ -38,7 +38,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 356005 - 2022 pp at 13.6 TeV (1h long, 600 bunches)
 # 356824 - 2022 pp at 13.6 TeV (30' long, 1900 bunches)
 # 356948 - 2022 pp at 13.6 TeV (30' long, 1900 bunches)
-setInjectRuns(tier0Config, [356824,356948])
+setInjectRuns(tier0Config, [356824])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
