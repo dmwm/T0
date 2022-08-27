@@ -38,7 +38,8 @@ setConfigVersion(tier0Config, "replace with real version")
 # 356005 - 2022 pp at 13.6 TeV (1h long, 600 bunches)
 # 356824 - 2022 pp at 13.6 TeV (30' long, 1900 bunches)
 # 356948 - 2022 pp at 13.6 TeV (30' long, 1900 bunches)
-setInjectRuns(tier0Config, [356824,356948])
+# 357842 - 2022 pp at 13.6 TeV with special HLT physics triggers
+setInjectRuns(tier0Config, [357842])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -105,7 +106,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_4_7"
+    'default': "CMSSW_12_4_8"
 }
 
 # Configure ScramArch
@@ -153,14 +154,16 @@ repackVersionOverride = {
     "CMSSW_12_4_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_4" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_5" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_6" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_6" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_7" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
     "CMSSW_12_4_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_4" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_5" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_6" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_6" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_7" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -894,8 +897,21 @@ DATASETS = ["HLTPhysics", "HLTPhysics0", "HLTPhysics1",
             "HLTPhysics11", "HLTPhysics12", "HLTPhysics13",
             "HLTPhysics14", "HLTPhysics15", "HLTPhysics16",
             "HLTPhysics17", "HLTPhysics18", "HLTPhysics19"]
-
-DATASETS += ["SpecialHLTPhysics", "SpecialHLTPhysics0", "SpecialHLTPhysics1",
+            
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               raw_to_disk=True,
+               write_reco=False,
+               write_dqm=True,
+               write_miniaod=True,
+               write_aod=True,
+               dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
+               alca_producers=["TkAlMinBias"],
+               physics_skims=["LogError", "LogErrorMonitor"],
+               scenario=ppScenario)
+               
+DATASETS = ["SpecialHLTPhysics", "SpecialHLTPhysics0", "SpecialHLTPhysics1",
             "SpecialHLTPhysics2", "SpecialHLTPhysics3", "SpecialHLTPhysics4",
             "SpecialHLTPhysics5", "SpecialHLTPhysics6", "SpecialHLTPhysics7",
             "SpecialHLTPhysics8", "SpecialHLTPhysics9", "SpecialHLTPhysics10",
@@ -912,7 +928,7 @@ for dataset in DATASETS:
                write_miniaod=True,
                write_aod=True,
                dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
-               alca_producers=["TkAlMinBias"],
+               alca_producers=["TkAlMinBias","LumiPixelsMinBias"],
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -1640,6 +1656,11 @@ ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 
+ignoreStream(tier0Config, "ALCALumiPixelsCountsExpress")
+ignoreStream(tier0Config, "ALCALumiPixelsCountsPrompt")
+ignoreStream(tier0Config, "Calibration")
+ignoreStream(tier0Config, "Express")
+ignoreStream(tier0Config, "NanoDST")
 ###################################
 ### currently inactive settings ###
 ###################################
