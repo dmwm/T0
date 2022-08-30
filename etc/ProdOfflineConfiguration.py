@@ -931,6 +931,19 @@ DATASETS = ["HLTPhysics", "HLTPhysics0", "HLTPhysics1",
             "HLTPhysics14", "HLTPhysics15", "HLTPhysics16",
             "HLTPhysics17", "HLTPhysics18", "HLTPhysics19"]
 
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               raw_to_disk=True,
+               write_reco=False,
+               write_dqm=True,
+               write_miniaod=True,
+               write_aod=True,
+               dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
+               alca_producers=["TkAlMinBias"],
+               physics_skims=["LogError", "LogErrorMonitor"],
+               scenario=ppScenario)
+
 DATASETS += ["SpecialHLTPhysics", "SpecialHLTPhysics0", "SpecialHLTPhysics1",
             "SpecialHLTPhysics2", "SpecialHLTPhysics3", "SpecialHLTPhysics4",
             "SpecialHLTPhysics5", "SpecialHLTPhysics6", "SpecialHLTPhysics7",
@@ -948,7 +961,7 @@ for dataset in DATASETS:
                write_miniaod=True,
                write_aod=True,
                dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
-               alca_producers=["TkAlMinBias"],
+               alca_producers=["TkAlMinBias","LumiPixelsMinBias"],
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
