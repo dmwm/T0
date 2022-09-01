@@ -94,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_4_7"
+    'default': "CMSSW_12_4_8"
 }
 
 # Configure ScramArch
@@ -115,15 +115,15 @@ hiTestppScenario = "ppEra_Run3"
 # Defaults for processing version
 defaultProcVersionRAW = 1
 alcarawProcVersion = {
-    'default': "2"
+    'default': "3"
 }
 
 defaultProcVersionReco = {
-    'default': "2"
+    'default': "3"
 }
 
 expressProcVersion = {
-    'default': "2"
+    'default': "3"
 }
 
 # Defaults for GlobalTag
@@ -149,14 +149,16 @@ repackVersionOverride = {
     "CMSSW_12_4_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_4" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_5" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_6" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_6" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_7" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
     "CMSSW_12_4_3" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_4" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_5" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_6" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_6" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_7" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -929,7 +931,20 @@ DATASETS = ["HLTPhysics", "HLTPhysics0", "HLTPhysics1",
             "HLTPhysics14", "HLTPhysics15", "HLTPhysics16",
             "HLTPhysics17", "HLTPhysics18", "HLTPhysics19"]
 
-DATASETS += ["SpecialHLTPhysics", "SpecialHLTPhysics0", "SpecialHLTPhysics1",
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               raw_to_disk=True,
+               write_reco=False,
+               write_dqm=True,
+               write_miniaod=True,
+               write_aod=True,
+               dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
+               alca_producers=["TkAlMinBias"],
+               physics_skims=["LogError", "LogErrorMonitor"],
+               scenario=ppScenario)
+
+DATASETS = ["SpecialHLTPhysics", "SpecialHLTPhysics0", "SpecialHLTPhysics1",
             "SpecialHLTPhysics2", "SpecialHLTPhysics3", "SpecialHLTPhysics4",
             "SpecialHLTPhysics5", "SpecialHLTPhysics6", "SpecialHLTPhysics7",
             "SpecialHLTPhysics8", "SpecialHLTPhysics9", "SpecialHLTPhysics10",
@@ -946,7 +961,7 @@ for dataset in DATASETS:
                write_miniaod=True,
                write_aod=True,
                dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
-               alca_producers=["TkAlMinBias"],
+               alca_producers=["TkAlMinBias","LumiPixelsMinBias"],
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
