@@ -1655,11 +1655,6 @@ ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 
-ignoreStream(tier0Config, "ALCALumiPixelsCountsExpress")
-ignoreStream(tier0Config, "ALCALumiPixelsCountsPrompt")
-ignoreStream(tier0Config, "Calibration")
-ignoreStream(tier0Config, "Express")
-ignoreStream(tier0Config, "NanoDST")
 ###################################
 ### currently inactive settings ###
 ###################################
