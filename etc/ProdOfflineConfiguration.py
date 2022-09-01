@@ -944,7 +944,7 @@ for dataset in DATASETS:
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS += ["SpecialHLTPhysics", "SpecialHLTPhysics0", "SpecialHLTPhysics1",
+DATASETS = ["SpecialHLTPhysics", "SpecialHLTPhysics0", "SpecialHLTPhysics1",
             "SpecialHLTPhysics2", "SpecialHLTPhysics3", "SpecialHLTPhysics4",
             "SpecialHLTPhysics5", "SpecialHLTPhysics6", "SpecialHLTPhysics7",
             "SpecialHLTPhysics8", "SpecialHLTPhysics9", "SpecialHLTPhysics10",
