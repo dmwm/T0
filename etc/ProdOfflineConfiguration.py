@@ -33,7 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 357487)
+setInjectMinRun(tier0Config, 9999999)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
@@ -55,7 +55,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2022D")
+setAcquisitionEra(tier0Config, "DAQHITestSept2022")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -188,15 +188,15 @@ addDataset(tier0Config, "Default",
            multicore=numberOfCores,
            global_tag=promptrecoGlobalTag,
            global_tag_connect=globalTagConnect,
-           archival_node="T0_CH_CERN_MSS",
-           tape_node="T1_US_FNAL_MSS",
-           disk_node="T1_US_FNAL_Disk",
-           raw_to_disk=False,
+           archival_node=None,
+           tape_node=None,
+           disk_node="T0_CH_CERN_Disk",
+           raw_to_disk=True,
            blockCloseDelay=24 * 3600,
            timePerEvent=5,
            sizePerEvent=1500,
            maxMemoryperCore=2000,
-           dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
+           dataset_lifetime=24*3600,#lifetime for container rules. 1 day for the test.
            scenario=ppScenario)
 
 #############################
