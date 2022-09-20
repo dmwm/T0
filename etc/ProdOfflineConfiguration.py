@@ -55,7 +55,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2022D")
+setAcquisitionEra(tier0Config, "Run2022E")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -94,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_4_8"
+    'default': "CMSSW_12_4_9"
 }
 
 # Configure ScramArch
@@ -150,7 +150,8 @@ repackVersionOverride = {
     "CMSSW_12_4_4" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_5" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_6" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_7" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_7" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_8" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -158,7 +159,8 @@ expressVersionOverride = {
     "CMSSW_12_4_4" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_5" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_6" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_7" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_7" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_8" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -209,7 +211,7 @@ addExpressConfig(tier0Config, "Express",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
-                                 "TkAlMinBias", "SiPixelCalZeroBias", "SiPixelCalSingleMuon",
+                                 "TkAlMinBias", "SiPixelCalZeroBias", "SiPixelCalSingleMuon", "SiPixelCalSingleMuonTight",
                                  "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
                                  "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel",
                                  "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff", "PromptCalibProdSiPixelAliHG"
