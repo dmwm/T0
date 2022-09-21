@@ -641,7 +641,7 @@ for dataset in DATASETS:
                disk_node="T1_US_FNAL_Disk", # JetHT was in "T1_UK_RAL_Disk", MET was in "T1_DE_KIT_Disk"
                alca_producers=["HcalCalIsoTrkProducerFilter", "TkAlJetHT", "HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
-               physics_skims=["EXODelayedJetMET", "JetHTJetPlusHOFilter", "LogError", "LogErrorMonitor"],
+               physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "LogError", "LogErrorMonitor"],
                timePerEvent=5.7,  # copied from JetHT - should be checked
                sizePerEvent=2250, # copied from JetHT - should be checked
                scenario=ppScenario)
@@ -700,7 +700,7 @@ for dataset in DATASETS:
                                "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
                                "TkAlZMuMu", "TkAlDiMuonAndVertex"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon"],
-               physics_skims=["ZMu", "LogError", "LogErrorMonitor"],
+               physics_skims=["ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
 DATASETS = ["NoBPTX"]
@@ -744,7 +744,7 @@ for dataset in DATASETS:
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym",
                                "HcalCalIsoTrkProducerFilter", "EcalESAlign"],
                dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
-               physics_skims=["ZElectron","WElectron", "EXOMONOPOLE", "LogError", "LogErrorMonitor"],
+               physics_skims=["ZElectron","WElectron", "EXOMONOPOLE", "EXODisappTrk", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
 DATASETS = ["Tau"]
@@ -756,7 +756,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                tape_node="T1_DE_KIT_MSS",
                disk_node="T1_DE_KIT_Disk",
-               physics_skims=["LogError", "LogErrorMonitor"],
+               physics_skims=["EXODisappTrk", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
 #############################################
