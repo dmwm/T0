@@ -872,6 +872,20 @@ for dataset in DATASETS:
                sizePerEvent=38,
                scenario=alcaLumiPixelsScenario)
 
+DATASETS = ["AlCaLumiPixelsCountsUngated"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               write_reco=False, write_aod=False, write_miniaod=False, write_dqm=False,
+               disk_node=None,
+               tape_node=None,
+               reco_split=alcarawSplitting,
+               proc_version=alcarawProcVersion,
+               timePerEvent=0.02,
+               sizePerEvent=38,
+               scenario=alcaLumiPixelsScenario)
+
 DATASETS = ["AlCaPhiSym"]
 
 for dataset in DATASETS:
