@@ -35,10 +35,9 @@ setConfigVersion(tier0Config, "replace with real version")
 # 352929 - 2022 pp at 900 GeV
 # 355189 - 2022 cosmics
 # 355559 - 2022 pp at 13.6 TeV (1h long, 300 bunches)
-# 356005 - 2022 pp at 13.6 TeV (1h long, 600 bunches)
-# 356824 - 2022 pp at 13.6 TeV (30' long, 1900 bunches)
-# 356948 - 2022 pp at 13.6 TeV (30' long, 1900 bunches)
-setInjectRuns(tier0Config, [356824])
+# 356005 - 2022 pp at 13.6 TeV (1h long, 600 bunches - ALL detectors included)
+# 359060 - 2022 cosmics - Oberved failures in Express (https://cms-talk.web.cern.ch/t/paused-jobs-for-express-run359045-streamexpress/15232)
+setInjectRuns(tier0Config, [356005,359060])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -105,7 +104,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_4_9"
+    'default': "CMSSW_12_4_9_patch1"
 }
 
 # Configure ScramArch
@@ -155,7 +154,8 @@ repackVersionOverride = {
     "CMSSW_12_4_5" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_6" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_7" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_8" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_8" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_9" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -164,7 +164,8 @@ expressVersionOverride = {
     "CMSSW_12_4_5" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_6" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_7" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_8" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_8" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_9" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
