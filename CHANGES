@@ -1,3 +1,72 @@
+3.0.5 to 3.0.6:
+  - Merge pull request #4762 from jhonatanamado/deployTag_T0-3.0.6
+  - Change to new T0 release  and update deployment tag
+  - Enable Prompt for Ephemeral datasets (#4761)
+  - Add AlCaLumiPixelsCountsUngated dataset for VdM scans (#4760)
+  - Update replay CMSSW_12_4_9_patch1 (#4757)
+  - Merge pull request #4759 from jhonatanamado/CMSSW_12_4_9_patch1
+  - Update production node to use CMSSW_12_4_9_patch1
+  - Add missing skims to prod configuration (#4758)
+  - Add missing physics skims to some PDs (#4756)
+  - Change era to Run2022E and release to CMSSW_12_4_9 (#4755)
+  - Merge pull request #4751 from jhonatanamado/minRun_vocms0313
+  - Add proper minRun
+  - Remove unnecessary ignoreStream calls
+  - Change CMSSW version to 12_4_8 (#4750)
+  - Merge pull request #4679 from jhonatanamado/dropping_phedex_args
+  - Add Rucio deletions fix to patches script
+  - Update 00_deploy_replay.sh
+  - Add patatrack site to ignore list
+  - Adding SpecialHLTPhysics* datasets (#4747)
+  - Change CMSSW version to 12_4_7 (#4746)
+  - Run2022D and data rebalancing (#4741)
+  - Merge pull request #4743 from jhonatanamado/AlCaPPS_patch
+  - Add AlCaPPS_Run3 to the patches file
+  - Change CMSSW version to 12_4_6 (#4740)
+  - Add raise conditions when run/stream can't be configured (#4729)
+  - Whitelist T2_CH_CERN_HLT for more Parking* PDs (#4736)
+  - Change CMSSW version to 12_4_5 (#4734)
+  - Fix configuration for ParkingSingleMuon* (#4731)
+  - Add recent patches to 3.0.5 deployment
+  - Update configurations for new HLT menu v1.3 (#4730)
+  - Merge pull request #4727 from jhonatanamado/enable_reco_ParkingDoubleElectronLowMass
+  - Update replay config file with the latest changes of production
+  - Enable prompt for ParkingDoubleElectronLowMass*
+  - Change Production config to CMSSW_12_4_4 (#4728)
+  - Use deployment ID as processing version (#4705)
+  - Remove AlcaPPS Express (#4725)
+  - Update repack job core splitting (#4724)
+  - Update Rucio metadata for T0  (#4723)
+  - Merge pull request #4722 from tvami/Run3Skims
+  - minRun for bookkeeping with CMSSW_12_4_3
+  - Update PD and skims for Run-3
+  - Merge pull request #4721 from jeyserma/patch-4
+  - Change FEVT to ALCARECO for ALCAPPS (Replay)
+  - Change FEVT to ALCARECO for ALCAPPS
+  - Merge pull request #4720 from tvami/RemoveSAMPIC
+  - Remove PPS SAMPIC PCL producer
+  - Merge pull request #4719 from tvami/RevertPPS_Scenario
+  - Revert the use of AlCaLumiPixels_Run3
+  - Merge pull request #4718 from tvami/AddPPS_Scenario
+  - Add AlCaPPS_Run3 scenario to T0 DB
+  - Merge pull request #4716 from francescobrivio/test_CMSSW_12_4_3
+  - Merge remote-tracking branch 'origin/master' into test_CMSSW_12_4_3
+  - Merge pull request #4717 from jhonatanamado/CMSSW_12_4_3
+  - Update replay configuration for CMSSW_12_4_3
+  - Update to CMSSW_12_4_3 and New Era
+  - Merge pull request #4714 from gpetruc/replay_12_3_7_patch1
+  - Update Prod CMSSW_12_3_7_patch1
+  - Increase TaskArchiver delay to 24 hours (replays) (#4715)
+  - Run 355205 for replay
+  - test CMSSW_12_3_7_patch1
+  - Increase HLTPhysics datasets in T0 config (#4712)
+  - Merge pull request #4711 from jhonatanamado/CMSSW_12_3_7
+  - Change CMSSW to CMSSW_12_3_7
+  - Merge pull request #4708 from tvami/AddPCL_forPPS_Run3
+  - Add PPS ALCARECOs and PCL wf-s
+  - Changing era to Run2022B (#4706)
+  - Dropping phedex args
+
 3.0.4 to 3.0.5:
   - Update deployment scripts T0 3.0.5 (#4703)
   - Update HLT resources in deployment scripts (#4697)
