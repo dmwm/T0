@@ -124,7 +124,7 @@ hiTestppScenario = "ppEra_Run3"
 
 # Procesing version number replays
 # Taking Replay processing ID from the last 8 digits of the DeploymentID
-dt = int(open("DeploymentID.txt","r").read()[4:]) 
+dt = int(open("DeploymentID.txt","r").read()[4:])
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt

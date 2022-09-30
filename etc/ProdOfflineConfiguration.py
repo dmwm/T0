@@ -913,7 +913,8 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
                write_reco=False, write_aod=False, write_miniaod=False, write_dqm=False,
-               disk_node=None,
+               raw_to_disk=True,
+               disk_node="T2_CH_CERN",
                tape_node=None,
                reco_split=alcarawSplitting,
                proc_version=alcarawProcVersion,
@@ -927,6 +928,8 @@ DATASETS = ["AlCaPhiSym"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
+               raw_to_disk=True,
+               disk_node="T2_CH_CERN",
                alca_producers=["EcalCalPhiSym"],
                scenario=ppScenario)
 
@@ -935,6 +938,8 @@ DATASETS = ["AlCaP0"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
+               raw_to_disk=True,
+               disk_node="T2_CH_CERN",
                alca_producers=["EcalCalPi0Calib", "EcalCalEtaCalib"],
                scenario=ppScenario)
 
