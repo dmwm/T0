@@ -786,6 +786,18 @@ def ignoreStream(config, streamName):
 
     return
 
+def specifyStream(config, streamName):
+    """
+    _specifyStream_
+    adds configurations for streams that
+    not specified it to be ignored
+    """
+    for stream in list(config.Streams.dictionary_().keys()):
+        if(stream != streamName):
+            streamConfig = retrieveStreamConfig(config, streamName)
+            streamConfig.ProcessingStyle = "Ignore"
+    return
+
 def addRepackConfig(config, streamName, **options):
     """
     _addRepackConfig_
