@@ -786,15 +786,18 @@ def ignoreStream(config, streamName):
 
     return
 
-def specifyStream(config, streamName):
+def specifyStreams(config, streamNames):
     """
-    _specifyStream_
-    adds configurations for streams that
-    not specified it to be ignored
+    _specifyStreams_
+    
+    adds ignore configurations for streams that
+    not in specified streams
     """
-    for stream in list(config.Streams.dictionary_().keys()):
-        if(stream != streamName):
-            streamConfig = retrieveStreamConfig(config, streamName)
+    if(type(streamNames)!=list):
+        streamNames=[streamNames]
+    for stream in config.Streams.dictionary_().keys():
+        if not stream in streamNames:
+            streamConfig = retrieveStreamConfig(config, stream)
             streamConfig.ProcessingStyle = "Ignore"
     return
 
