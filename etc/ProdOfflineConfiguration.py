@@ -233,7 +233,7 @@ addExpressConfig(tier0Config, "Express",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  maxMemoryperCore=2000,
-                 dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
+                 dataset_lifetime=12*30*24*3600,#lifetime for container rules. Default 12 months
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "ExpressCosmics",
@@ -260,7 +260,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  timePerEvent=4, #I have to get some stats to set this properly
                  sizePerEvent=1700, #I have to get some stats to set this properly
                  maxMemoryperCore=2000,
-                 dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
+                 dataset_lifetime=12*30*24*3600,#lifetime for container rules. Default 12 months
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "HLTMonitor",
@@ -336,7 +336,7 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
                  maxMemoryperCore=2000,
-                 dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
+                 dataset_lifetime=12*30*24*3600,#lifetime for container rules. Default 12 months
                  diskNode="T2_CH_CERN")
 
 addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
@@ -363,7 +363,7 @@ addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
                  maxMemoryperCore=2000,
                  archivalNode=None,
                  tapeNode=None,
-                 dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
+                 dataset_lifetime=12*30*24*3600,#lifetime for container rules. Default 12 months
                  diskNode="T2_CH_CERN")
 
 addExpressConfig(tier0Config, "ALCAPPSExpress",
@@ -390,7 +390,7 @@ addExpressConfig(tier0Config, "ALCAPPSExpress",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  maxMemoryperCore=2000,
-                 dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
+                 dataset_lifetime=12*30*24*3600,#lifetime for container rules. Default 12 months
                  diskNode="T2_CH_CERN",
                  versionOverride=expressVersionOverride)
 
