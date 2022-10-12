@@ -24,7 +24,8 @@ Tier0Configuration - Global configuration object
 | |       |
 | |       |--> InjectMaxRun - Highest run number to be injected into the system from the SM database (default is unlimited)
 | |       |
-| |       |--> SpecifiedStreamNames - Streamer names to be ran exclusivley(default is None)
+| |       |--> SpecifiedStreamNames - Streamer names list to be ran exclusivley. (default is None)
+| |       |                           If it is None, all streamer will processed except which is set to be ignored.
 | |       |
 | |       |--> AcquisitionEra - The acquisition era for the run
 | |       |
@@ -798,13 +799,6 @@ def specifyStreams(config, streamNames):
     not in specified streams
     """
     config.Global.SpecifiedStreamNames = streamNames
-
-    if(type(streamNames)!=list):
-        streamNames=[streamNames]
-    for stream in config.Streams.dictionary_().keys():
-        if not stream in streamNames:
-            streamConfig = retrieveStreamConfig(config, stream)
-            streamConfig.ProcessingStyle = "Ignore"
 
     return
 
