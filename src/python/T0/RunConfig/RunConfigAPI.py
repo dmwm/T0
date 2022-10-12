@@ -210,6 +210,9 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
         # consistency check to make sure stream exists and has datasets defined
         # only run if we don't ignore the stream
+        if tier0Config.Global.SpecifiedStreamNames!=None:
+            if(not stream in tier0Config.Global.SpecifiedStreamNames:
+                streamConfig.ProcessingStyle = "Ignore"
         if streamConfig.ProcessingStyle != "Ignore":
             getStreamDatasetsDAO = daoFactory(classname = "RunConfig.GetStreamDatasets")
             datasets = getStreamDatasetsDAO.execute(run, stream, transaction = False)
