@@ -795,8 +795,7 @@ def specifyStreams(config, streamNames):
     """
     _specifyStreams_
     
-    adds ignore configurations for streams that
-    not in specified streams
+    Set the list of streamer names to be processed exclusively.
     """
     config.Global.SpecifiedStreamNames = streamNames
 
