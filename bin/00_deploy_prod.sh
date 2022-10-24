@@ -244,3 +244,6 @@ echo "config.RetryManager.PauseAlgo.section_('Processing')" >> ./config/tier0/co
 echo "config.RetryManager.PauseAlgo.Processing.retryErrorCodes = { 70: 0, 50513: 0, 50660: 0, 50661: 0, 50664: 0, 71304: 0 }" >> ./config/tier0/config.py
 echo "config.RetryManager.PauseAlgo.section_('Repack')" >> ./config/tier0/config.py
 echo "config.RetryManager.PauseAlgo.Repack.retryErrorCodes = { 70: 0, 50513: 0, 50660: 0, 50661: 0, 50664: 0, 71304: 0 }" >> ./config/tier0/config.py
+
+#Overwrite ErrorHandler to avoid jobs going to ensure T0 jobs can always be retried
+sed -i "s/config.ErrorHandler.maxFailTime.*/config.ErrorHandler.maxFailTime=601200/g" ./config/tier0/config.py
