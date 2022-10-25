@@ -25,6 +25,7 @@ from T0.RunConfig.Tier0Config import setInjectMaxRun
 from T0.RunConfig.Tier0Config import setStreamerPNN
 from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setStorageSite
+from T0.RunConfig.Tier0Config import setInjectRuns
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -33,10 +34,13 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 360275)
+#setInjectMinRun(tier0Config, 359022)
 
 # Set the max run number:
-setInjectMaxRun(tier0Config, 9999999)
+#setInjectMaxRun(tier0Config, 9999999)
+
+# Reprocess Run
+setInjectRuns(tier0Config, [359750])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -55,7 +59,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2022F")
+setAcquisitionEra(tier0Config, "Run2022E")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -94,7 +98,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_4_10"
+    'default': "CMSSW_12_4_9_patch1"
 }
 
 # Configure ScramArch
@@ -152,8 +156,7 @@ repackVersionOverride = {
     "CMSSW_12_4_6" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_7" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_8" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_9" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_9_patch1" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_9" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -163,8 +166,7 @@ expressVersionOverride = {
     "CMSSW_12_4_6" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_7" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_8" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_9" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_9_patch1" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_9" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -235,7 +237,7 @@ addExpressConfig(tier0Config, "Express",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  maxMemoryperCore=2000,
-                 dataset_lifetime=12*30*24*3600,#lifetime for container rules. Default 12 months
+                 dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "ExpressCosmics",
@@ -262,7 +264,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  timePerEvent=4, #I have to get some stats to set this properly
                  sizePerEvent=1700, #I have to get some stats to set this properly
                  maxMemoryperCore=2000,
-                 dataset_lifetime=12*30*24*3600,#lifetime for container rules. Default 12 months
+                 dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "HLTMonitor",
@@ -338,7 +340,7 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
                  maxMemoryperCore=2000,
-                 dataset_lifetime=12*30*24*3600,#lifetime for container rules. Default 12 months
+                 dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
                  diskNode="T2_CH_CERN")
 
 addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
@@ -365,7 +367,7 @@ addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
                  maxMemoryperCore=2000,
                  archivalNode=None,
                  tapeNode=None,
-                 dataset_lifetime=12*30*24*3600,#lifetime for container rules. Default 12 months
+                 dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
                  diskNode="T2_CH_CERN")
 
 addExpressConfig(tier0Config, "ALCAPPSExpress",
@@ -392,7 +394,7 @@ addExpressConfig(tier0Config, "ALCAPPSExpress",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  maxMemoryperCore=2000,
-                 dataset_lifetime=12*30*24*3600,#lifetime for container rules. Default 12 months
+                 dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
                  diskNode="T2_CH_CERN",
                  versionOverride=expressVersionOverride)
 
@@ -909,29 +911,11 @@ for dataset in DATASETS:
                sizePerEvent=38,
                scenario=alcaLumiPixelsScenario)
 
-DATASETS = ["AlCaLumiPixelsCountsUngated"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=False,
-               write_reco=False, write_aod=False, write_miniaod=False, write_dqm=False,
-               raw_to_disk=True,
-               disk_node="T2_CH_CERN",
-               tape_node=None,
-               reco_split=alcarawSplitting,
-               proc_version=alcarawProcVersion,
-               timePerEvent=0.02,
-               sizePerEvent=38,
-               scenario=alcaLumiPixelsScenario)
-
-
 DATASETS = ["AlCaPhiSym"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
-               raw_to_disk=True,
-               disk_node="T2_CH_CERN",
                alca_producers=["EcalCalPhiSym"],
                scenario=ppScenario)
 
@@ -940,8 +924,6 @@ DATASETS = ["AlCaP0"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
-               raw_to_disk=True,
-               disk_node="T2_CH_CERN",
                alca_producers=["EcalCalPi0Calib", "EcalCalEtaCalib"],
                scenario=ppScenario)
 
@@ -1020,13 +1002,10 @@ DATASETS = ["EphemeralHLTPhysics0","EphemeralHLTPhysics1", "EphemeralHLTPhysics2
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=True,
                raw_to_disk=True,
                dqm_sequences=["@none"],
                write_dqm=False,
-               write_aod=False,
-               archival_node=None,
-               tape_node="T0_CH_CERN_MSS",
+               tape_node=None,
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
@@ -1168,13 +1147,10 @@ DATASETS = ["EphemeralZeroBias0", "EphemeralZeroBias1", "EphemeralZeroBias2", "E
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=True,
                raw_to_disk=True,
                dqm_sequences=["@none"],
                write_dqm=False,
-               write_aod=False,
-               archival_node=None,
-               tape_node="T0_CH_CERN_MSS",
+               tape_node=None,
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
