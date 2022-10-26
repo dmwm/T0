@@ -37,7 +37,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 355559 - 2022 pp at 13.6 TeV (1h long, 300 bunches)
 # 356005 - 2022 pp at 13.6 TeV (1h long, 600 bunches - ALL detectors included)
 # 359060 - 2022 cosmics - Oberved failures in Express (https://cms-talk.web.cern.ch/t/paused-jobs-for-express-run359045-streamexpress/15232)
-setInjectRuns(tier0Config, [359762])
+setInjectRuns(tier0Config, [325174, 327527])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -62,7 +62,7 @@ addSiteConfig(tier0Config, "EOS_PILOT",
 #  Processing site (where jobs run)
 #  PhEDEx locations
 setAcquisitionEra(tier0Config, "Tier0_REPLAY_2022")
-setBaseRequestPriority(tier0Config, 240000)
+setBaseRequestPriority(tier0Config, 260000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
 setProcessingSite(tier0Config, processingSite)
@@ -104,23 +104,24 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_4_10"
+    'default': "CMSSW_12_5_1"
 }
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "el8_amd64_gcc10")
 
 # Configure scenarios
-ppScenario = "ppEra_Run3"
-ppScenarioB0T = "ppEra_Run3"
+ppScenario = "ppEra_Run3_pp_on_PbPb"
+ppScenarioB0T = "ppEra_Run3_pp_on_PbPb"
 cosmicsScenario = "cosmicsEra_Run3"
-hcalnzsScenario = "hcalnzsEra_Run3"
-hiScenario = "ppEra_Run3"
+hcalnzsScenario = "hcalnzsEra_Run3_pp_on_PbPb"
+hiScenario = "ppEra_Run3_pp_on_PbPb"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run3"
+HIalcaTrackingOnlyScenario = "trackingOnlyEra_Run3_pp_on_PbPb"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
-hiTestppScenario = "ppEra_Run3"
+hiTestppScenario = "ppEra_Run3_pp_on_PbPb"
 
 # Procesing version number replays
 # Taking Replay processing ID from the last 8 digits of the DeploymentID
@@ -130,9 +131,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "124X_dataRun3_Express_v5"
-promptrecoGlobalTag = "124X_dataRun3_Prompt_v4"
-alcap0GlobalTag = "124X_dataRun3_Prompt_v4"
+expressGlobalTag = "124X_dataRun3_Express_TIER0_REPLAY_Run2_v3"
+promptrecoGlobalTag = "124X_dataRun3_Prompt_TIER0_REPLAY_Run2_v3"
+alcap0GlobalTag = "124X_dataRun3_Prompt_TIER0_REPLAY_Run2_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -401,7 +402,7 @@ addExpressConfig(tier0Config, "ALCAPPSExpress",
 #####################
 
 addExpressConfig(tier0Config, "HIExpress",
-                 scenario=hiTestppScenario,
+                 scenario=HIalcaTrackingOnlyScenario,
                  diskNode="T0_CH_CERN_Disk",
                  data_tiers=["FEVT"],
                  write_dqm=True,
@@ -453,6 +454,29 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  maxMemoryperCore=2000,
                  dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
                  diskNode="T0_CH_CERN_Disk")
+
+addExpressConfig(tier0Config, "HIHLTMonitor",
+                 scenario=hiTestppScenario,
+                 diskNode="T2_CH_CERN",
+                 data_tiers=["FEVTHLTALL"],
+                 write_dqm=True,
+                 alca_producers=[],
+                 dqm_sequences=["@HLTMon"],
+                 reco_version=defaultCMSSWVersion,
+                 multicore=numberOfCores,
+                 global_tag_connect=globalTagConnect,
+                 global_tag=expressGlobalTag,
+                 proc_ver=expressProcVersion,
+                 maxInputRate=23 * 1000,
+                 maxInputEvents=400,
+                 maxInputSize=2 * 1024 * 1024 * 1024,
+                 maxInputFiles=15,
+                 maxLatency=15 * 23,
+                 periodicHarvestInterval=20 * 60,
+                 blockCloseDelay=1200,
+                 timePerEvent=4,
+                 sizePerEvent=1700,
+                 versionOverride=expressVersionOverride)
                  
 ###################################
 ### Standard Physics PDs (2022) ###
@@ -852,7 +876,7 @@ for dataset in DATASETS:
                tape_node=None,
                reco_split=alcarawSplitting,
                proc_version=alcarawProcVersion,
-               alca_producers = [ "AlCaPCCZeroBias", "RawPCCProducer" ],
+               alca_producers = ["AlCaPCCZeroBias", "RawPCCProducer"],
                timePerEvent=0.02,
                sizePerEvent=38,
                scenario=alcaLumiPixelsScenario)
@@ -1647,7 +1671,7 @@ addDataset(tier0Config, "PADoubleMuOpen",
            scenario=hiScenario)
 
 #####################
-### HI TESTS 2018 ###
+### HI TESTS 2022 ###
 #####################
 
 DATASETS = ["HITestFull", "HITestReduced"]
@@ -1655,8 +1679,196 @@ DATASETS = ["HITestFull", "HITestReduced"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
+               raw_to_disk=True,
                write_dqm=True,
                dqm_sequences=["@common"],
+               scenario=hiTestppScenario)
+
+DATASETS = ["HIHardProbesPrescaled", "HIHardProbesPeripheral", "HICommissioning",
+             "HICastor"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               write_miniaod=False,
+               do_reco=True,
+               raw_to_disk=True,
+               write_dqm=True,
+               dqm_sequences=["@common"],
+               scenario=hiTestppScenario)
+
+DATASETS = ["HIHeavyFlavor", "HIHighMultiplicityETTAsym"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               write_miniaod=False,
+               do_reco=True,
+               write_dqm=True,
+               reco_split=hiRecoSplitting,
+               dqm_sequences=["@common"],
+               scenario=hiTestppScenario)
+
+DATASETS = ["HIMinimumBiasReducedFormat0", "HILowMultiplicityReducedFormat", "HILowMultiplicity"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               write_miniaod=False,
+               do_reco=True,
+               raw_to_disk=True,
+               write_dqm=True,
+               dqm_sequences=["@common"],
+               scenario=hiTestppScenario)
+
+# CMS VdM scan PDs
+DATASETS = ["HICentralityVetoReducedFormat0", "HICentralityVetoReducedFormat1", "HICentralityVetoReducedFormat2",
+             "HICentralityVetoReducedFormat3", "HICentralityVetoReducedFormat4", "HICentralityVetoReducedFormat5",
+             "HICentralityVetoReducedFormat6", "HICentralityVetoReducedFormat7", "HICentralityVetoReducedFormat8",
+             "HICentralityVetoReducedFormat9", "HICentralityVetoReducedFormat10", "HICentralityVetoReducedFormat11"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               write_miniaod=False,
+               do_reco=True,
+               write_dqm=True,
+               dqm_sequences=["@common"],
+               scenario=hiTestppScenario)
+
+DATASETS = ["HIMinimumBiasReducedFormat1", "HIMinimumBiasReducedFormat10", "HIMinimumBiasReducedFormat11", 
+             "HIMinimumBiasReducedFormat2", "HIMinimumBiasReducedFormat3", "HIMinimumBiasReducedFormat4", 
+             "HIMinimumBiasReducedFormat5", "HIMinimumBiasReducedFormat6", "HIMinimumBiasReducedFormat7", 
+             "HIMinimumBiasReducedFormat8", "HIMinimumBiasReducedFormat9"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               write_miniaod=False,
+               do_reco=True,
+               raw_to_disk=True,
+               write_dqm=False,
+               dqm_sequences=["@none"],
+               scenario=hiTestppScenario)
+
+DATASETS = ["HIForward"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               write_miniaod=False,
+               do_reco=True,
+               raw_to_disk=True,
+               write_dqm=True,
+               dqm_sequences=["@commonSiStripZeroBias"],
+               scenario=hiTestppScenario)
+
+DATASETS = ["HIMinimumBias0", "HIMinimumBias1"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               write_miniaod=False,
+               do_reco=True,
+               write_dqm=True,
+               dqm_sequences=["@commonSiStripZeroBias", "@hcal"],
+               scenario=hiTestppScenario)
+
+DATASETS = ["HIMinimumBias2",
+             "HIMinimumBias3", "HIMinimumBias4", "HIMinimumBias5",
+             "HIMinimumBias6", "HIMinimumBias7", "HIMinimumBias8",
+             "HIMinimumBias9", "HIMinimumBias10", "HIMinimumBias11",
+             "HIMinimumBias12", "HIMinimumBias13", "HIMinimumBias14",
+             "HIMinimumBias15", "HIMinimumBias16", "HIMinimumBias17",
+             "HIMinimumBias18","HIMinimumBias19"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               write_miniaod=False,
+               do_reco=True,
+               raw_to_disk=True,
+               write_dqm=False,
+               dqm_sequences=["@none"],
+               scenario=hiTestppScenario)
+
+DATASETS = ["HIHcalNZS"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               write_miniaod=False,
+               do_reco=True,
+               raw_to_disk=True,
+               write_dqm=True,
+               alca_producers=["HcalCalMinBias"],
+               dqm_sequences=["@common", "@hcal"],
+               scenario=hcalnzsScenario)
+
+DATASETS = ["HIHLTPhysics"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               write_miniaod=False,
+               do_reco=True,
+               raw_to_disk=True,
+               write_dqm=True,
+               alca_producers=["TkAlMinBias"],
+               dqm_sequences=["@common"],
+               scenario=hiTestppScenario)
+
+DATASETS = ["HIHardProbesLower"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               write_miniaod=False,
+               do_reco=True,
+               raw_to_disk=True,
+               write_dqm=True,
+               reco_split=hiRecoSplitting,
+               dqm_sequences=["@common", "@ecal", "@egamma"],
+               scenario=hiTestppScenario)
+
+DATASETS = ["HIHardProbes"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               write_miniaod=False,
+               do_reco=True,
+               raw_to_disk=True,
+               write_dqm=True,
+               reco_split=hiRecoSplitting,
+               alca_producers=["TkAlMinBias", "HcalCalIterativePhiSym", "SiStripCalSmallBiasScan"],
+               dqm_sequences=["@common", "@ecal", "@hcal", "@jetmet", "@egamma"],
+               physics_skims=["PbPbEMu", "PbPbZEE"],
+               scenario=hiTestppScenario)
+
+DATASETS = ["HISingleMuon"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               raw_to_disk=True,
+               write_miniaod=False,
+               reco_split=hiRecoSplitting,
+               alca_producers=["TkAlZMuMu", "TkAlMuonIsolated", "DtCalib", "HcalCalIterativePhiSym"],
+               dqm_sequences=["@common", "@muon", "@lumi"],
+               physics_skims=["PbPbZMu"],
+               scenario=hiTestppScenario)
+
+DATASETS = ["HIDoubleMuon", "HIDoubleMuonPsiPeri"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_reco=False,
+               raw_to_disk=True,
+               write_miniaod=False,
+               write_dqm=True,
+               reco_split=hiRecoSplitting,
+               alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
+               dqm_sequences=["@common", "@muon", "@lumi"],
+               physics_skims=["PbPbZMM"],
+               scenario=hiTestppScenario)
+
+DATASETS = ["HIOnlineMonitor", "HITrackerNZS"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               raw_to_disk=True,
                scenario=hiTestppScenario)
 
 #######################
