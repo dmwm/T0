@@ -24,6 +24,9 @@ Tier0Configuration - Global configuration object
 | |       |
 | |       |--> InjectMaxRun - Highest run number to be injected into the system from the SM database (default is unlimited)
 | |       |
+| |       |--> SpecifiedStreamNames - Streamer names list to be ran exclusivley. (default is None)
+| |       |                           If it is None, all streamer will processed except which is set to be ignored.
+| |       |
 | |       |--> AcquisitionEra - The acquisition era for the run
 | |       |
 | |       |--> Backfill - The backfill mode, can be None, 1 or 2
@@ -258,6 +261,8 @@ def createTier0Config():
     tier0Config.Global.InjectRuns = None
     tier0Config.Global.InjectMinRun = None
     tier0Config.Global.InjectMaxRun = None
+    
+    tier0Config.Global.SpecifiedStreamNames = None
 
     tier0Config.Global.ScramArches = {}
     tier0Config.Global.Backfill = None
@@ -783,6 +788,16 @@ def ignoreStream(config, streamName):
     """
     streamConfig = retrieveStreamConfig(config, streamName)
     streamConfig.ProcessingStyle = "Ignore"
+
+    return
+
+def specifyStreams(config, streamNames):
+    """
+    _specifyStreams_
+    
+    Set the list of streamer names to be processed exclusively.
+    """
+    config.Global.SpecifiedStreamNames = streamNames
 
     return
 
