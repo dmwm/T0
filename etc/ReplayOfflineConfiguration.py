@@ -37,7 +37,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 355559 - 2022 pp at 13.6 TeV (1h long, 300 bunches)
 # 356005 - 2022 pp at 13.6 TeV (1h long, 600 bunches - ALL detectors included)
 # 359060 - 2022 cosmics - Oberved failures in Express (https://cms-talk.web.cern.ch/t/paused-jobs-for-express-run359045-streamexpress/15232)
-setInjectRuns(tier0Config, [325174, 327527])
+setInjectRuns(tier0Config, [325174, 360886])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -402,14 +402,15 @@ addExpressConfig(tier0Config, "ALCAPPSExpress",
 #####################
 
 addExpressConfig(tier0Config, "HIExpress",
-                 scenario=HIalcaTrackingOnlyScenario,
+                 scenario=hiTestppScenario,
                  diskNode="T0_CH_CERN_Disk",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
-                                 "TkAlMinBias", "LumiPixelsMinBias", "SiPixelCalZeroBias",
+                                 "TkAlMinBias", "SiPixelCalZeroBias","PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff",
                                  "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
-                                 "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel"
+                                 "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel",
+                                 "PromptCalibProdSiPixelLorentzAngle", "PromptCalibProdSiPixelAliHG"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
@@ -430,10 +431,10 @@ addExpressConfig(tier0Config, "HIExpress",
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "HIExpressAlignment",
-                 scenario=hiTestppScenario,
+                 scenario=HIalcaTrackingOnlyScenario,
                  data_tiers=["ALCARECO", "RAW"],
                  write_dqm=True,
-                 alca_producers=["TkAlMinBias"],
+                 alca_producers=["TkAlMinBias", "PromptCalibProdBeamSpotHP"],
                  dqm_sequences=["@trackingOnlyDQM"],
                  reco_version=defaultCMSSWVersion,
                  raw_to_disk=True,
@@ -1684,8 +1685,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                scenario=hiTestppScenario)
 
-DATASETS = ["HIHardProbesPrescaled", "HIHardProbesPeripheral", "HICommissioning",
-             "HICastor"]
+DATASETS = ["HIHardProbesPrescaled", "HIHardProbesPeripheral", "HICommissioning"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1843,7 +1843,7 @@ for dataset in DATASETS:
                raw_to_disk=True,
                write_miniaod=False,
                reco_split=hiRecoSplitting,
-               alca_producers=["TkAlZMuMu", "TkAlMuonIsolated", "DtCalib", "HcalCalIterativePhiSym"],
+               alca_producers=["TkAlZMuMu", "TkAlMuonIsolated", "HcalCalIterativePhiSym"],
                dqm_sequences=["@common", "@muon", "@lumi"],
                physics_skims=["PbPbZMu"],
                scenario=hiTestppScenario)
