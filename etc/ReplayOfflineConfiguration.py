@@ -8,6 +8,7 @@ from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
 from T0.RunConfig.Tier0Config import setDefaultScramArch
+from T0.RunConfig.Tier0Config import setScramArch
 from T0.RunConfig.Tier0Config import setBaseRequestPriority
 from T0.RunConfig.Tier0Config import setBackfill
 from T0.RunConfig.Tier0Config import setBulkDataType
@@ -108,7 +109,8 @@ defaultCMSSWVersion = {
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "el8_amd64_gcc10")
+setDefaultScramArch(tier0Config, "slc7_amd64_gcc700")
+setScramArch(tier0Config, defaultCMSSWVersion['default'], "el8_amd64_gcc10")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3"
@@ -157,7 +159,8 @@ repackVersionOverride = {
     "CMSSW_12_4_7" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_8" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_9" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_9_patch1" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_9_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_10" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -168,7 +171,8 @@ expressVersionOverride = {
     "CMSSW_12_4_7" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_8" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_9" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_9_patch1" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_9_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_10" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
