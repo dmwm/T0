@@ -111,8 +111,8 @@ defaultCMSSWVersion = {
 setDefaultScramArch(tier0Config, "el8_amd64_gcc10")
 
 # Configure scenarios
-ppScenario = "ppEra_Run3_pp_on_PbPb"
-ppScenarioB0T = "ppEra_Run3_pp_on_PbPb"
+ppScenario = "ppEra_Run3"
+ppScenarioB0T = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
 hcalnzsScenario = "hcalnzsEra_Run3_pp_on_PbPb"
 hiScenario = "ppEra_Run3_pp_on_PbPb"
