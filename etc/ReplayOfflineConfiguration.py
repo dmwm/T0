@@ -38,7 +38,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 355559 - 2022 pp at 13.6 TeV (1h long, 300 bunches)
 # 356005 - 2022 pp at 13.6 TeV (1h long, 600 bunches - ALL detectors included)
 # 359060 - 2022 cosmics - Oberved failures in Express (https://cms-talk.web.cern.ch/t/paused-jobs-for-express-run359045-streamexpress/15232)
-setInjectRuns(tier0Config, [359762])
+setInjectRuns(tier0Config, [361239])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -1676,6 +1676,8 @@ ignoreStream(tier0Config, "DQMOffline")
 ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
+
+specifyStreams(tier0Config, "PhysicsMuon")
 
 ###################################
 ### currently inactive settings ###
