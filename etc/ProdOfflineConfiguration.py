@@ -1026,6 +1026,7 @@ for dataset in DATASETS:
                write_dqm=False,
                write_aod=False,
                archival_node=None,
+               siteWhitelist = ["T2_CH_CERN_HLT", "T2_CH_CERN"],
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
@@ -1135,6 +1136,7 @@ for dataset in DATASETS:
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet", "@ctpps"],
                alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias", "HcalCalIsolatedBunchSelector"],
                physics_skims=["LogError", "LogErrorMonitor"],
+               siteWhitelist = ["T2_CH_CERN_HLT", "T2_CH_CERN"],
                timePerEvent=3.5,
                sizePerEvent=1500,
                tape_node="T1_ES_PIC_MSS",
@@ -1173,6 +1175,7 @@ for dataset in DATASETS:
                write_dqm=False,
                write_aod=False,
                archival_node=None,
+               siteWhitelist = ["T2_CH_CERN_HLT", "T2_CH_CERN"],
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
@@ -1197,6 +1200,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                archival_node=None,
+               siteWhitelist = ["T2_CH_CERN_HLT", "T2_CH_CERN"],
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
