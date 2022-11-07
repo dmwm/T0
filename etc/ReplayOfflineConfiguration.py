@@ -1016,8 +1016,7 @@ for dataset in DATASETS:
                write_dqm=True,
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
                timePerEvent=1,
-               alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias", "HcalCalHO",
-                               "HcalCalIterativePhiSym", "HcalCalHBHEMuonProducerFilter", "HcalCalIsoTrkProducerFilter"],
+               alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias"],
                scenario=ppScenario)
 
 DATASETS = ["L1MinimumBias"]
