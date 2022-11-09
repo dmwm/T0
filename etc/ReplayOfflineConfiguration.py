@@ -38,7 +38,8 @@ setConfigVersion(tier0Config, "replace with real version")
 # 355559 - 2022 pp at 13.6 TeV (1h long, 300 bunches)
 # 356005 - 2022 pp at 13.6 TeV (1h long, 600 bunches - ALL detectors included)
 # 359060 - 2022 cosmics - Oberved failures in Express (https://cms-talk.web.cern.ch/t/paused-jobs-for-express-run359045-streamexpress/15232)
-setInjectRuns(tier0Config, [359762])
+# 361694:361699 - 2022 HI dry-run test runs
+setInjectRuns(tier0Config, [361697])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -105,7 +106,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_4_10"
+    'default': "CMSSW_12_5_2_patch1"
 }
 
 # Configure ScramArch
@@ -116,12 +117,15 @@ ppScenario = "ppEra_Run3"
 ppScenarioB0T = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
 hcalnzsScenario = "hcalnzsEra_Run3"
-hiScenario = "ppEra_Run3"
+HIhcalnzsScenario = "hcalnzsEra_Run3_pp_on_PbPb"
+hiScenario = "ppEra_Run3_pp_on_PbPb"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run3"
+HIalcaTrackingOnlyScenario = "trackingOnlyEra_Run3_pp_on_PbPb"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
-hiTestppScenario = "ppEra_Run3"
+hiTestppScenario = "ppEra_Run3_pp_on_PbPb"
+hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters"
 
 # Procesing version number replays
 # Taking Replay processing ID from the last 8 digits of the DeploymentID
@@ -131,9 +135,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "124X_dataRun3_Express_v5"
-promptrecoGlobalTag = "124X_dataRun3_Prompt_v4"
-alcap0GlobalTag = "124X_dataRun3_Prompt_v4"
+expressGlobalTag = "124X_dataRun3_Express_HIreplay2022_v1"
+promptrecoGlobalTag = "124X_dataRun3_Prompt_HIreplay2022_v1"
+alcap0GlobalTag = "124X_dataRun3_Prompt_HIreplay2022_v1"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -157,7 +161,8 @@ repackVersionOverride = {
     "CMSSW_12_4_7" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_8" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_9" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_9_patch1" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_9_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_10" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -168,7 +173,8 @@ expressVersionOverride = {
     "CMSSW_12_4_7" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_8" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_9" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_9_patch1" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_9_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_10" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
@@ -398,7 +404,7 @@ addExpressConfig(tier0Config, "ALCAPPSExpress",
                  versionOverride=expressVersionOverride)
 
 #####################
-### HI Tests 2018 ###
+### HI Tests 2022 ###
 #####################
 
 addExpressConfig(tier0Config, "HIExpress",
@@ -407,9 +413,10 @@ addExpressConfig(tier0Config, "HIExpress",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
-                                 "TkAlMinBias", "LumiPixelsMinBias", "SiPixelCalZeroBias",
+                                 "TkAlMinBias", "SiPixelCalZeroBias","SiPixelCalSingleMuon", "SiPixelCalSingleMuonTight",
                                  "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
-                                 "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel"
+                                 "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel",
+                                 "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff", "PromptCalibProdSiPixelAliHG"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
@@ -430,10 +437,10 @@ addExpressConfig(tier0Config, "HIExpress",
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "HIExpressAlignment",
-                 scenario=hiTestppScenario,
+                 scenario=HIalcaTrackingOnlyScenario,
                  data_tiers=["ALCARECO", "RAW"],
                  write_dqm=True,
-                 alca_producers=["TkAlMinBias"],
+                 alca_producers=["TkAlMinBias", "PromptCalibProdBeamSpotHP"],
                  dqm_sequences=["@trackingOnlyDQM"],
                  reco_version=defaultCMSSWVersion,
                  raw_to_disk=True,
@@ -454,7 +461,30 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  maxMemoryperCore=2000,
                  dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
                  diskNode="T0_CH_CERN_Disk")
-                 
+
+addExpressConfig(tier0Config, "HIHLTMonitor",
+                 scenario=hiTestppScenario,
+                 diskNode="T2_CH_CERN",
+                 data_tiers=["FEVTHLTALL"],
+                 write_dqm=True,
+                 alca_producers=[],
+                 dqm_sequences=["@HLTMon"],
+                 reco_version=defaultCMSSWVersion,
+                 multicore=numberOfCores,
+                 global_tag_connect=globalTagConnect,
+                 global_tag=expressGlobalTag,
+                 proc_ver=expressProcVersion,
+                 maxInputRate=23 * 1000,
+                 maxInputEvents=400,
+                 maxInputSize=2 * 1024 * 1024 * 1024,
+                 maxInputFiles=15,
+                 maxLatency=15 * 23,
+                 periodicHarvestInterval=20 * 60,
+                 blockCloseDelay=1200,
+                 timePerEvent=4,
+                 sizePerEvent=1700,
+                 versionOverride=expressVersionOverride)
+
 ###################################
 ### Standard Physics PDs (2022) ###
 ###################################
@@ -853,7 +883,7 @@ for dataset in DATASETS:
                tape_node=None,
                reco_split=alcarawSplitting,
                proc_version=alcarawProcVersion,
-               alca_producers = [ "AlCaPCCZeroBias", "RawPCCProducer" ],
+               alca_producers = ["AlCaPCCZeroBias", "RawPCCProducer"],
                timePerEvent=0.02,
                sizePerEvent=38,
                scenario=alcaLumiPixelsScenario)
@@ -1647,10 +1677,42 @@ addDataset(tier0Config, "PADoubleMuOpen",
            scenario=hiScenario)
 
 #####################
-### HI TESTS 2018 ###
+### HI TESTS 2022 ###
 #####################
 
-DATASETS = ["HITestFull", "HITestReduced"]
+DATASETS = ["HIHcalNZS"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               write_miniaod=False,
+               do_reco=True,
+               raw_to_disk=True,
+               write_dqm=True,
+               alca_producers=["HcalCalMinBias"],
+               dqm_sequences=["@common", "@L1TMon", "@hcal"],
+               scenario=HIhcalnzsScenario)
+
+DATASETS = ["HIHLTPhysics"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               write_miniaod=False,
+               do_reco=True,
+               raw_to_disk=True,
+               write_dqm=True,
+               alca_producers=["TkAlMinBias"],
+               dqm_sequences=["@common"],
+               scenario=hiTestppScenario)
+
+DATASETS = ["HIOnlineMonitor", "HITrackerNZS"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               raw_to_disk=True,
+               scenario=hiTestppScenario)
+
+DATASETS = ["HIEmptyBX"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1658,6 +1720,40 @@ for dataset in DATASETS:
                write_dqm=True,
                dqm_sequences=["@common"],
                scenario=hiTestppScenario)
+
+DATASETS = ["HITestRaw0", "HITestRaw1", "HITestRaw2", "HITestRaw3", "HITestRaw4", "HITestRaw5",
+            "HITestRaw6", "HITestRaw7", "HITestRaw8", "HITestRaw9", "HITestRaw10", "HITestRaw11",
+            "HITestRaw12", "HITestRaw13", "HITestRaw14", "HITestRaw15", "HITestRaw16", "HITestRaw17",
+            "HITestRaw18", "HITestRaw19", "HITestRaw20", "HITestRaw21", "HITestRaw22", "HITestRaw23"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               write_miniaod=False,
+               do_reco=True,
+               raw_to_disk=True,
+               write_dqm=True,
+               alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
+                               "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
+                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
+               dqm_sequences=["@commonSiStripZeroBias"],
+               scenario=hiTestppScenario)
+
+DATASETS = ["HITestRawPrime0", "HITestRawPrime1", "HITestRawPrime2", "HITestRawPrime3", "HITestRawPrime4",
+            "HITestRawPrime5", "HITestRawPrime6", "HITestRawPrime7", "HITestRawPrime8", "HITestRawPrime9",
+            "HITestRawPrime10", "HITestRawPrime11", "HITestRawPrime12", "HITestRawPrime13", "HITestRawPrime14",
+            "HITestRawPrime15", "HITestRawPrime16", "HITestRawPrime17", "HITestRawPrime18", "HITestRawPrime19"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               write_miniaod=False,
+               do_reco=True,
+               raw_to_disk=True,
+               write_dqm=True,
+               alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
+                               "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
+                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
+               dqm_sequences=["@commonSiStripZeroBias"],
+               scenario=hiRawPrimeScenario)
 
 #######################
 ### ignored streams ###
