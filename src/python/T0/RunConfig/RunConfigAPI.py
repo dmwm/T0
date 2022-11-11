@@ -874,7 +874,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                     diskDataTiers.add("RECO")
                 if datasetConfig.WriteAOD:
                     tapeDataTiers.add("AOD")
-                    diskDataTiers.add("AOD")
+                    if datasetConfig.AODtoDisk:
+                        diskDataTiers.add("AOD")
                 if datasetConfig.WriteMINIAOD:
                     tapeDataTiers.add("MINIAOD")
                     diskDataTiers.add("MINIAOD")
