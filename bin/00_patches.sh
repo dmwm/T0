@@ -13,3 +13,6 @@ curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11353.patch |
 
 # Add SpecifyStream function
 curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4765.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+
+# MaxFailTime fix
+curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4771.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
