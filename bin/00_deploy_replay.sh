@@ -240,4 +240,7 @@ echo "config.RetryManager.PauseAlgo.Repack.retryErrorCodes = { 70: 0, 50513: 0, 
 
 #Overwrite RetryManager to show Logcollect and CleanUp jobs paused instead of automatically fails
 sed -i "s/config.RetryManager.plugins.*/config.RetryManager.plugins={'default': 'PauseAlgo', 'Cleanup': 'PauseAlgo', 'LogCollect': 'PauseAlgo'}/g" ./config/tier0/config.py
+
+#Overwrite ErrorHandler to ensure T0 jobs can always be retried
+sed -i "s/config.ErrorHandler.maxFailTime.*/config.ErrorHandler.maxFailTime=601200/g" ./config/tier0/config.py
 sed -i "s/config.ErrorHandler.maxRetries.*/config.ErrorHandler.maxRetries={'default': 30, 'Cleanup': 30, 'LogCollect': 30}/g" ./config/tier0/config.py
