@@ -1736,7 +1736,7 @@ for dataset in DATASETS:
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
                                "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
-               dqm_sequences=["@commonSiStripZeroBias"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
                scenario=hiTestppScenario)
 
 DATASETS = ["HITestRawPrime0", "HITestRawPrime1", "HITestRawPrime2", "HITestRawPrime3", "HITestRawPrime4",
