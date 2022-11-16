@@ -201,7 +201,7 @@ addDataset(tier0Config, "Default",
            global_tag_connect=globalTagConnect,
            archival_node="T0_CH_CERN_MSS",
            tape_node="T1_US_FNAL_MSS",
-           disk_node="T1_US_FNAL_Disk",
+           disk_node="T2_US_Vanderbilt",
            raw_to_disk=False,
            blockCloseDelay=24 * 3600,
            timePerEvent=5,
@@ -402,12 +402,12 @@ addExpressConfig(tier0Config, "ALCAPPSExpress",
                  versionOverride=expressVersionOverride)
 
 #####################
-### HI Tests 2018 ###
+### HI Tests 2022 ###
 #####################
 
 addExpressConfig(tier0Config, "HIExpress",
                  scenario=hiTestppScenario,
-                 diskNode="T2_CH_CERN",
+                 diskNode="T2_US_Vanderbilt",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
@@ -457,10 +457,11 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  versionOverride=expressVersionOverride,
                  maxMemoryperCore=2000,
                  dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
-                 diskNode="T2_CH_CERN")
+                 diskNode="T2_US_Vanderbilt")
+
 addExpressConfig(tier0Config, "HIHLTMonitor",
                  scenario=hiTestppScenario,
-                 diskNode="T2_CH_CERN",
+                 diskNode="T2_US_Vanderbilt",
                  data_tiers=["FEVTHLTALL"],
                  write_dqm=True,
                  alca_producers=[],
@@ -480,8 +481,7 @@ addExpressConfig(tier0Config, "HIHLTMonitor",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
-                 dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
-                 diskNode="T2_CH_CERN")
+                 dataset_lifetime=3*30*24*3600)#lifetime for container rules. Default 3 months
 
 ###################################
 ### Standard Physics PDs (2022) ###
@@ -1383,6 +1383,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
+               disk_node="T2_US_Vanderbilt",
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon"],
                alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias", "AlCaPCCZeroBiasFromRECO"],
                timePerEvent=3.5,
@@ -1752,6 +1753,7 @@ for dataset in DATASETS:
                do_reco=True,
                raw_to_disk=True,
                write_dqm=True,
+               disk_node="T2_US_Vanderbilt",
                alca_producers=["HcalCalMinBias"],
                dqm_sequences=["@common", "@L1TMon", "@hcal"],
                scenario=HIhcalnzsScenario)
@@ -1764,6 +1766,7 @@ for dataset in DATASETS:
                do_reco=True,
                raw_to_disk=True,
                write_dqm=True,
+               disk_node="T2_US_Vanderbilt",
                alca_producers=["TkAlMinBias"],
                dqm_sequences=["@common"],
                scenario=hiTestppScenario)
@@ -1774,6 +1777,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
                raw_to_disk=True,
+               disk_node="T2_US_Vanderbilt",
                scenario=hiTestppScenario)
 
 DATASETS = ["HIEmptyBX"]
@@ -1782,6 +1786,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
+               disk_node="T2_US_Vanderbilt",
                dqm_sequences=["@common"],
                scenario=hiTestppScenario)
 
@@ -1796,10 +1801,11 @@ for dataset in DATASETS:
                do_reco=True,
                raw_to_disk=True,
                write_dqm=True,
+               disk_node="T2_US_Vanderbilt",
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
                                "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
-               dqm_sequences=["@commonSiStripZeroBias"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
                scenario=hiTestppScenario)
 
 DATASETS = ["HITestRawPrime0", "HITestRawPrime1", "HITestRawPrime2", "HITestRawPrime3", "HITestRawPrime4",
@@ -1813,6 +1819,7 @@ for dataset in DATASETS:
                do_reco=True,
                raw_to_disk=True,
                write_dqm=True,
+               disk_node="T2_US_Vanderbilt",
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
                                "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
@@ -1826,6 +1833,7 @@ for dataset in DATASETS:
 ignoreStream(tier0Config, "Error")
 ignoreStream(tier0Config, "HLTMON")
 ignoreStream(tier0Config, "EventDisplay")
+ignoreStream(tier0Config, "HIEventDisplay")
 ignoreStream(tier0Config, "DQM")
 ignoreStream(tier0Config, "DQMEventDisplay")
 ignoreStream(tier0Config, "LookArea")
