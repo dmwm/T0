@@ -156,13 +156,9 @@ Tier0Configuration - Global configuration object
 |             |     |
 |             |     |--> TapeNode - The tape PhEDEx node (default None)
 |             |     |
-|             |     |--> RAWTapeNode - The tape PhEDEx node for RAW (default None)
-|             |     |
 |             |     |--> DiskNode - The disk PhEDEx node (default None)
 |             |     |
 |             |     |--> DiskNodeReco - The disk PhEDEx node for bulk RECO data (default None)
-|             |     |
-|             |     |--> RAWToDisk - Do we subscribe RAW to disk?
 |             |     |
 |             |     |--> BlockCloseDelay - delay to close block in WMAgent
 |             |     |
@@ -178,7 +174,7 @@ Tier0Configuration - Global configuration object
 |             |     |--> DataTier - data tier to use
 |             |
 |             |--> Convert - Configuration section for convert streams
-|                   |
+|                   | 
 |                   |--> PrimaryDataset - primary dataset for output
 |                   |
 |                   |--> ProcessedDataset - processed dataset for output
@@ -214,6 +210,12 @@ Tier0Configuration - Global configuration object
             |--> TapeNode - The tape PhEDEx node (should be T1 _MSS)
             |
             |--> DiskNode - The disk PhEDEx node (should be T1 _Disk)
+            |
+            |--> RAWTapeNode - The tape PhEDEx node for RAW (default None)
+            |
+            |--> RAWToDisk - Do we subscribe RAW to disk?
+            |
+            |--> AODToDisk - Do we subscribe AOD to disk?
             |
             |--> ProcessingVersion - Used for all output from PromptReco
             |
@@ -396,6 +398,8 @@ def addDataset(config, datasetName, **settings):
       global_tag - the global tag to use
       global_tag_connect - connect straing for global tag
       reco_split - number of events to process per reco job
+      raw_to_disk - whether to subscribe RAW data to disk
+      aod_to_disk - whether to subscribe AOD data to disk
       write_reco - whether the reco jobs writes RECO output
       write_aod - whether the reco job writes AOD output
       write_miniaod - whether the reco job writes MINIAOD output
@@ -539,6 +543,11 @@ def addDataset(config, datasetName, **settings):
         datasetConfig.RAWtoDisk = settings.get('raw_to_disk', datasetConfig.RAWtoDisk)
     else:
         datasetConfig.RAWtoDisk = settings.get('raw_to_disk', True)
+
+    if hasattr(datasetConfig, "AODtoDisk"):
+        datasetConfig.AODtoDisk = settings.get('aod_to_disk', datasetConfig.AODtoDisk)
+    else:
+        datasetConfig.AODtoDisk = settings.get('aod_to_disk', True)
 
     if hasattr(datasetConfig, "Multicore"):
         datasetConfig.Multicore = settings.get('multicore', datasetConfig.Multicore)
