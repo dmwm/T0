@@ -16,3 +16,6 @@ curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4765.patch | patc
 
 # MaxFailTime fix
 curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4771.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+
+# aod_to_disk patch
+curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4779.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
