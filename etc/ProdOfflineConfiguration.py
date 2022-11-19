@@ -33,7 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 360275)
+setInjectMinRun(tier0Config, 9999999)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
@@ -55,7 +55,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2022F")
+setAcquisitionEra(tier0Config, "Run2022G")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -198,6 +198,7 @@ addDataset(tier0Config, "Default",
            tape_node="T1_US_FNAL_MSS",
            disk_node="T1_US_FNAL_Disk",
            raw_to_disk=False,
+           aod_to_disk=True,
            blockCloseDelay=24 * 3600,
            timePerEvent=5,
            sizePerEvent=1500,
@@ -535,7 +536,7 @@ for dataset in DATASETS:
                disk_node="T1_IT_CNAF_Disk",
                scenario=ppScenario)
 
-DATASETS = ["ParkingSingleMuon","ParkingSingleMuon0","ParkingSingleMuon1","ParkingSingleMuon2"]
+DATASETS = ["ParkingSingleMuon","ParkingSingleMuon0"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -546,16 +547,41 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
-DATASETS = ["ParkingDoubleMuonLowMass0","ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
-            "ParkingDoubleMuonLowMass3"]
+DATASETS = ["ParkingSingleMuon1","ParkingSingleMuon2"]
 
-DATASETS += ["ParkingDoubleMuonLowMass4","ParkingDoubleMuonLowMass5",
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               aod_to_disk=False,
+               siteWhitelist = ["T2_CH_CERN_HLT", "T2_CH_CERN"],
+               archival_node=None,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_CH_CERN",
+               scenario=ppScenario)
+
+DATASETS = ["ParkingDoubleMuonLowMass0"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               dqm_sequences=["@common", "@muon", "@heavyFlavor"],
+               alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
+               siteWhitelist = ["T2_CH_CERN_HLT", "T2_CH_CERN"],
+               archival_node=None,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_CH_CERN",
+               scenario=ppScenario)
+
+DATASETS = ["ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
+            "ParkingDoubleMuonLowMass3","ParkingDoubleMuonLowMass4","ParkingDoubleMuonLowMass5",
             "ParkingDoubleMuonLowMass6","ParkingDoubleMuonLowMass7"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
+               aod_to_disk=False,
                dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                siteWhitelist = ["T2_CH_CERN_HLT", "T2_CH_CERN"],
@@ -1192,14 +1218,24 @@ for dataset in DATASETS:
                disk_node="T1_UK_RAL_Disk",
                scenario=ppScenario)
 
+DATASETS = ["ParkingDoubleElectronLowMass0"]
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               archival_node=None,
+               siteWhitelist = ["T2_CH_CERN_HLT", "T2_CH_CERN"],
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_CH_CERN",
+               scenario=ppScenario)
 
-DATASETS = ["ParkingDoubleElectronLowMass0","ParkingDoubleElectronLowMass1","ParkingDoubleElectronLowMass2",
+DATASETS = ["ParkingDoubleElectronLowMass1","ParkingDoubleElectronLowMass2",
             "ParkingDoubleElectronLowMass3","ParkingDoubleElectronLowMass4","ParkingDoubleElectronLowMass5"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                archival_node=None,
+               aod_to_disk=False,
                siteWhitelist = ["T2_CH_CERN_HLT", "T2_CH_CERN"],
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
