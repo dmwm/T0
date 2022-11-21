@@ -94,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_4_10"
+    'default': "CMSSW_12_4_11_patch1"
 }
 
 # Configure ScramArch
@@ -127,9 +127,9 @@ expressProcVersion = {
 }
 
 # Defaults for GlobalTag
-expressGlobalTag = "124X_dataRun3_Express_v5"
-promptrecoGlobalTag = "124X_dataRun3_Prompt_v4"
-alcap0GlobalTag = "124X_dataRun3_Prompt_v4"
+expressGlobalTag = "124X_dataRun3_Express_v9"
+promptrecoGlobalTag = "124X_dataRun3_Prompt_v10"
+alcap0GlobalTag = "124X_dataRun3_Prompt_v10"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -153,7 +153,8 @@ repackVersionOverride = {
     "CMSSW_12_4_7" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_8" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_9" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_9_patch1" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_9_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_10" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -164,7 +165,8 @@ expressVersionOverride = {
     "CMSSW_12_4_7" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_8" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_9" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_9_patch1" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_9_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_10" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
