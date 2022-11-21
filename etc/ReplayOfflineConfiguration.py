@@ -33,15 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-# 352929 - 2022 pp at 900 GeV
-# 355189 - 2022 cosmics
-# 355559 - 2022 pp at 13.6 TeV (1h long, 300 bunches)
-# 356005 - 2022 pp at 13.6 TeV (1h long, 600 bunches - ALL detectors included)
-# 359060 - 2022 cosmics - Oberved failures in Express (https://cms-talk.web.cern.ch/t/paused-jobs-for-express-run359045-streamexpress/15232)
-# 359762 - 2022 pp at 13.6 TeV (2h long, 2400 bunches - ALL detectors included)
-# 361468 - 2022 pp at 13.6 TeV - Observed Abort Signal in Prompt (https://github.com/cms-sw/cmssw/issues/40032) 
-# 361971 - 2022 pp at 13.6 TeV - Observed GsfTracking Error (https://cms-talk.web.cern.ch/t/paused-job-in-run-361971-due-to-gsftraking-logic-error/17617) 
-setInjectRuns(tier0Config, [359762, 361468, 361971])
+setInjectRuns(tier0Config, [359762])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
