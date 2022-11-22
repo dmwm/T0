@@ -33,11 +33,6 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-# 352929 - 2022 pp at 900 GeV
-# 355189 - 2022 cosmics
-# 355559 - 2022 pp at 13.6 TeV (1h long, 300 bunches)
-# 356005 - 2022 pp at 13.6 TeV (1h long, 600 bunches - ALL detectors included)
-# 359060 - 2022 cosmics - Oberved failures in Express (https://cms-talk.web.cern.ch/t/paused-jobs-for-express-run359045-streamexpress/15232)
 setInjectRuns(tier0Config, [359762])
 
 # Settings up sites
@@ -105,7 +100,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_4_10"
+    'default': "CMSSW_12_4_11_patch1"
 }
 
 # Configure ScramArch
@@ -131,9 +126,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "124X_dataRun3_Express_v5"
-promptrecoGlobalTag = "124X_dataRun3_Prompt_v4"
-alcap0GlobalTag = "124X_dataRun3_Prompt_v4"
+expressGlobalTag = "124X_dataRun3_Express_v9"
+promptrecoGlobalTag = "124X_dataRun3_Prompt_v10"
+alcap0GlobalTag = "124X_dataRun3_Prompt_v10"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -157,7 +152,8 @@ repackVersionOverride = {
     "CMSSW_12_4_7" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_8" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_9" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_9_patch1" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_9_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_10" : defaultCMSSWVersion['default']
     }
 
 expressVersionOverride = {
@@ -168,7 +164,8 @@ expressVersionOverride = {
     "CMSSW_12_4_7" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_8" : defaultCMSSWVersion['default'],
     "CMSSW_12_4_9" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_9_patch1" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_9_patch1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_4_10" : defaultCMSSWVersion['default']
     }
 
 #set default repack settings for bulk streams
