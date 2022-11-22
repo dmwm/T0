@@ -1,3 +1,30 @@
+3.0.6 to 3.0.7:
+  - Merge pull request #4786 from jhonatanamado/Release3.0.7_deployment
+  - Update deployment scripts and patches T0 3.0.7
+  - Merge pull request #4785 from jhonatanamado/increase_SpecialHLTPhysics
+  - Add SpecialHLTPhysics* [20-31]
+  - Move to Run2022G (#4783)
+  - Add AODtoDisk parameter to dataset config (#4779)
+  - Fix scenario and missing alca producers (#4782)
+  - Production configuration for Heavy Ion 2022 (#4780)
+  - Add  MaxFailTime fix
+  - Fix ErrorHandler's Max Fail time (#4771)
+  - Add HLT to whitelist of several PDs
+  - Move HcalCalIsolatedBunchSelector from Commissioning to ZB PDs (#4777)
+  - Add specifyStream PR to patches
+  - Add WMCore #11353 patch
+  - Add specifyStreams function (#4765)
+  - Change era to Run2022F (#4767)
+  - Merge pull request #4769 from jhonatanamado/prod_CMSSW_12_4_10
+  - Merge pull request #4768 from sarafiorendi/replay_12_4_10
+  - Update production node to use CMSSW_12_4_10
+  - replay for 12_4_10, update run number
+  - Extend express alcareco lifetime on disk to 1 year (#4766)
+  - Merge pull request #4764 from tvami/AddPDsToDisk
+  - Keep ECAL and Lumi RAW on DISK
+  - Merge pull request #4763 from jhonatanamado/patches_T0-3.0.6
+  - Update patches file T0 3.0.6
+
 3.0.5 to 3.0.6:
   - Merge pull request #4762 from jhonatanamado/deployTag_T0-3.0.6
   - Change to new T0 release  and update deployment tag
