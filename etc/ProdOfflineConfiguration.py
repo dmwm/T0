@@ -1002,7 +1002,11 @@ DATASETS = ["SpecialHLTPhysics", "SpecialHLTPhysics0", "SpecialHLTPhysics1",
             "SpecialHLTPhysics8", "SpecialHLTPhysics9", "SpecialHLTPhysics10",
             "SpecialHLTPhysics11", "SpecialHLTPhysics12", "SpecialHLTPhysics13",
             "SpecialHLTPhysics14", "SpecialHLTPhysics15", "SpecialHLTPhysics16",
-            "SpecialHLTPhysics17", "SpecialHLTPhysics18", "SpecialHLTPhysics19"]
+            "SpecialHLTPhysics17", "SpecialHLTPhysics18", "SpecialHLTPhysics19",
+            "SpecialHLTPhysics20", "SpecialHLTPhysics21", "SpecialHLTPhysics22",
+            "SpecialHLTPhysics23", "SpecialHLTPhysics24", "SpecialHLTPhysics25",
+            "SpecialHLTPhysics26", "SpecialHLTPhysics27", "SpecialHLTPhysics28",
+            "SpecialHLTPhysics29", "SpecialHLTPhysics30", "SpecialHLTPhysics31"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
