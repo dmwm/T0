@@ -120,6 +120,7 @@ sed -i "s+config.RucioInjector.containerDiskRuleParams.*+config.RucioInjector.co
 sed -i "s+config.RucioInjector.metaDIDProject.*+config.RucioInjector.metaDIDProject = 'Tier0'+" ./config/tier0/config.py
 echo "config.RucioInjector.blockRuleParams = {}" >> ./config/tier0/config.py
 echo "config.RucioInjector.blockDeletionDelayHours = 168" >> ./config/tier0/config.py
+echo "config.RucioInjector.useDsetReplicaDeep = True" >> ./config/tier0/config.py
 #
 # Set output datasets status to VALID in DBS
 #
