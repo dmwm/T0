@@ -1107,7 +1107,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
 
 def setStorageSite(tier0Config, wmSpec, storagesite):
     site = retrieveSiteConfig(tier0Config, storagesite)
-    wmSpec.setTaskEnvironmentVariables({'WMAGENT_SITE_CONFIG_OVERRIDE':site.SiteLocalConfig})
+    wmSpec.setTaskEnvironmentVariables({'WMAGENT_SITE_CONFIG_OVERRIDE':site.SiteLocalConfig,'SITECONFIG_PATH':site.SiteLocalConfig.split("JobConfig")[0]})
     wmSpec.setOverrideCatalog(site.OverrideCatalog)
     for task in wmSpec.getAllTasks():
         for stepName in task.listAllStepNames():
