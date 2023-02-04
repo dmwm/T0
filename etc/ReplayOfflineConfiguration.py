@@ -100,7 +100,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_6_2"
+    'default': "CMSSW_12_6_3"
 }
 
 # Configure ScramArch
@@ -144,29 +144,9 @@ alcarawSplitting = 20000 * numberOfCores
 #
 # Setup repack and express mappings
 #
-repackVersionOverride = {
-    "CMSSW_12_4_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_5" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_6" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_7" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_8" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_9" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_9_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_10" : defaultCMSSWVersion['default']
-    }
+repackVersionOverride = {}
 
-expressVersionOverride = {
-    "CMSSW_12_4_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_5" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_6" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_7" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_8" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_9" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_9_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_10" : defaultCMSSWVersion['default']
-    }
+expressVersionOverride = {}
 
 #set default repack settings for bulk streams
 addRepackConfig(tier0Config, "Default",
