@@ -55,7 +55,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2022G")
+setAcquisitionEra(tier0Config, "Commissioning2023")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -94,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_4_11_patch1"
+    'default': "CMSSW_12_6_3"
 }
 
 # Configure ScramArch
@@ -127,9 +127,9 @@ expressProcVersion = {
 }
 
 # Defaults for GlobalTag
-expressGlobalTag = "124X_dataRun3_Express_v9"
-promptrecoGlobalTag = "124X_dataRun3_Prompt_v10"
-alcap0GlobalTag = "124X_dataRun3_Prompt_v10"
+expressGlobalTag = "126X_dataRun3_Express_v2"
+promptrecoGlobalTag = "126X_dataRun3_Prompt_v2"
+alcap0GlobalTag = "126X_dataRun3_Prompt_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -145,29 +145,9 @@ alcarawSplitting = 20000 * numberOfCores
 #
 # Setup repack and express mappings
 #
-repackVersionOverride = {
-    "CMSSW_12_4_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_5" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_6" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_7" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_8" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_9" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_9_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_10" : defaultCMSSWVersion['default']
-    }
+repackVersionOverride = {}
 
-expressVersionOverride = {
-    "CMSSW_12_4_3" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_4" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_5" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_6" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_7" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_8" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_9" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_9_patch1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_4_10" : defaultCMSSWVersion['default']
-    }
+expressVersionOverride = {}
 
 #set default repack settings for bulk streams
 addRepackConfig(tier0Config, "Default",
