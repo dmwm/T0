@@ -1,3 +1,10 @@
+3.0.7 to 3.0.8:
+  - Add overrides to CMSSW version using storage.json
+  - Change T2_CH_CERN_HLT to T2_CH_CERN_P5 (#4790)
+  - Set T2_CH_CERN_HLT in whitelist by default (#4787)
+  - Setting Deep flag for production RucioInjector
+  - Change production to CMSSW_12_4_11_patch1 (#4784)
+
 3.0.6 to 3.0.7:
   - Merge pull request #4786 from jhonatanamado/Release3.0.7_deployment
   - Update deployment scripts and patches T0 3.0.7
