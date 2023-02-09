@@ -145,9 +145,15 @@ alcarawSplitting = 20000 * numberOfCores
 #
 # Setup repack and express mappings
 #
-repackVersionOverride = {}
+repackVersionOverride = {
+    "CMSSW_12_6_1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_6_2" : defaultCMSSWVersion['default']
+}
 
-expressVersionOverride = {}
+expressVersionOverride = {
+    "CMSSW_12_6_1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_6_2" : defaultCMSSWVersion['default']
+}
 
 #set default repack settings for bulk streams
 addRepackConfig(tier0Config, "Default",
