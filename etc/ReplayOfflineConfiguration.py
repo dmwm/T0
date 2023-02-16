@@ -42,7 +42,7 @@ streamerPNN = "T0_CH_CERN_Disk"
 
 addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
                 siteLocalConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/JobConfig/site-local-config.xml",
-                overrideCatalog="T2_CH_CERN,,T0_CH_CERN,CERN_EOS_T0,XRootD"
+                overrideCatalog="trivialcatalog_file:/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/PhEDEx/storage.xml?protocol=eos"
                 )
 
 addSiteConfig(tier0Config, "EOS_PILOT",
@@ -232,9 +232,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  diskNode="T0_CH_CERN_Disk",
                  data_tiers=["FEVT"],
                  write_dqm=True,
-                 alca_producers=["SiPixelCalCosmics",
-                                 "PromptCalibProdSiPixelLAMCS"
-                                ],
+                 alca_producers=["SiPixelCalCosmics", "PromptCalibProdSiPixelLAMCS"],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
                  global_tag_connect=globalTagConnect,
