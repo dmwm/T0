@@ -233,8 +233,8 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T",
-                                 "SiPixelCalZeroBias", "PromptCalibProdSiPixelLAMCS",
-                                 "PromptCalibProdSiStrip"
+                                 "SiPixelCalZeroBias", "SiPixelCalCosmics",
+                                 "PromptCalibProdSiStrip", "PromptCalibProdSiPixelLAMCS"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
