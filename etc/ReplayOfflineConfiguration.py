@@ -126,9 +126,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "126X_dataRun3_Express_v2"
-promptrecoGlobalTag = "126X_dataRun3_Prompt_v2"
-alcap0GlobalTag = "126X_dataRun3_Prompt_v2"
+expressGlobalTag = "126X_dataRun3_Express_v3"
+promptrecoGlobalTag = "126X_dataRun3_Prompt_v3"
+alcap0GlobalTag = "126X_dataRun3_Prompt_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -233,7 +233,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T",
-                                 "SiPixelCalZeroBias",
+                                 "SiPixelCalZeroBias", "PromptCalibProdSiPixelLAMCS",
                                  "PromptCalibProdSiStrip"
                                 ],
                  reco_version=defaultCMSSWVersion,
