@@ -45,7 +45,7 @@ streamerPNN = "T0_CH_CERN_Disk"
 
 addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
                 siteLocalConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/JobConfig/site-local-config.xml",
-                overrideCatalog="trivialcatalog_file:/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/PhEDEx/storage.xml?protocol=eos"
+                overrideCatalog="T2_CH_CERN,,T0_CH_CERN,CERN_EOS_T0,XRootD"
                 )
 
 # Set global parameters:
@@ -94,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_6_3"
+    'default': "CMSSW_12_6_4"
 }
 
 # Configure ScramArch
@@ -127,9 +127,9 @@ expressProcVersion = {
 }
 
 # Defaults for GlobalTag
-expressGlobalTag = "126X_dataRun3_Express_v2"
-promptrecoGlobalTag = "126X_dataRun3_Prompt_v2"
-alcap0GlobalTag = "126X_dataRun3_Prompt_v2"
+expressGlobalTag = "126X_dataRun3_Express_v3"
+promptrecoGlobalTag = "126X_dataRun3_Prompt_v3"
+alcap0GlobalTag = "126X_dataRun3_Prompt_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -147,12 +147,14 @@ alcarawSplitting = 20000 * numberOfCores
 #
 repackVersionOverride = {
     "CMSSW_12_6_1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_6_2" : defaultCMSSWVersion['default']
+    "CMSSW_12_6_2" : defaultCMSSWVersion['default'],
+    "CMSSW_12_6_3" : defaultCMSSWVersion['default']
 }
 
 expressVersionOverride = {
     "CMSSW_12_6_1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_6_2" : defaultCMSSWVersion['default']
+    "CMSSW_12_6_2" : defaultCMSSWVersion['default'],
+    "CMSSW_12_6_3" : defaultCMSSWVersion['default']
 }
 
 #set default repack settings for bulk streams
@@ -234,8 +236,8 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T",
-                                 "SiPixelCalZeroBias",
-                                 "PromptCalibProdSiStrip"
+                                 "SiPixelCalZeroBias", "SiPixelCalCosmics",
+                                 "PromptCalibProdSiStrip", "PromptCalibProdSiPixelLAMCS"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,

@@ -33,7 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [359473])
+setInjectRuns(tier0Config, [363534])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -42,7 +42,7 @@ streamerPNN = "T0_CH_CERN_Disk"
 
 addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
                 siteLocalConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/JobConfig/site-local-config.xml",
-                overrideCatalog="trivialcatalog_file:/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/PhEDEx/storage.xml?protocol=eos"
+                overrideCatalog="T2_CH_CERN,,T0_CH_CERN,CERN_EOS_T0,XRootD"
                 )
 
 addSiteConfig(tier0Config, "EOS_PILOT",
@@ -58,7 +58,7 @@ addSiteConfig(tier0Config, "EOS_PILOT",
 #  Processing site (where jobs run)
 #  PhEDEx locations
 setAcquisitionEra(tier0Config, "Tier0_REPLAY_2023")
-setBaseRequestPriority(tier0Config, 240000)
+setBaseRequestPriority(tier0Config, 260000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
 setProcessingSite(tier0Config, processingSite)
@@ -100,7 +100,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_6_3"
+    'default': "CMSSW_12_6_4"
 }
 
 # Configure ScramArch
@@ -126,9 +126,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "126X_dataRun3_Express_v2"
-promptrecoGlobalTag = "126X_dataRun3_Prompt_v2"
-alcap0GlobalTag = "126X_dataRun3_Prompt_v2"
+expressGlobalTag = "126X_dataRun3_Express_v3"
+promptrecoGlobalTag = "126X_dataRun3_Prompt_v3"
+alcap0GlobalTag = "126X_dataRun3_Prompt_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -144,9 +144,17 @@ alcarawSplitting = 20000 * numberOfCores
 #
 # Setup repack and express mappings
 #
-repackVersionOverride = {}
+repackVersionOverride = {
+    "CMSSW_12_6_1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_6_2" : defaultCMSSWVersion['default'],
+    "CMSSW_12_6_3" : defaultCMSSWVersion['default']
+}
 
-expressVersionOverride = {}
+expressVersionOverride = {
+    "CMSSW_12_6_1" : defaultCMSSWVersion['default'],
+    "CMSSW_12_6_2" : defaultCMSSWVersion['default'],
+    "CMSSW_12_6_3" : defaultCMSSWVersion['default']
+}
 
 #set default repack settings for bulk streams
 addRepackConfig(tier0Config, "Default",
@@ -225,8 +233,8 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T",
-                                 "SiPixelCalZeroBias",
-                                 "PromptCalibProdSiStrip"
+                                 "SiPixelCalZeroBias", "SiPixelCalCosmics",
+                                 "PromptCalibProdSiStrip", "PromptCalibProdSiPixelLAMCS"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
