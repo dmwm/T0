@@ -8,5 +8,5 @@ Cheetah==2.4.0
 pyOpenSSL==18.0.0
 pyzmq==17.1.2
 psutil==5.6.6
-future==0.18.2
+future==0.18.3
 retry==0.9.1 
