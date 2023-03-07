@@ -318,8 +318,8 @@ class RepackMerge(JobFactory):
 
         # jobs requesting more than 8 cores would never run
         if numberOfCores > 8:
-            self.markFailed(streamerList)
-            return
+            msg = "Job requires too many cores: %d" % (numberOfCores)
+            raise RuntimeError(msg)
 
         if not self.createdGroup:
             self.newGroup()

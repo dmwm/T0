@@ -94,53 +94,48 @@ def getInputRepeat(prompt = ''):
 
 def runWizard(basename, dataFilename, metadataFilename):
     while True:
-        print(('''\nWizard for metadata for %s
-
-I will ask you some questions to fill the metadata file. For some of the questions there are defaults between square brackets (i.e. []), leave empty (i.e. hit Enter) to use them.''' % basename))
+        print('''\nWizard for metadata for %s
+I will ask you some questions to fill the metadata file. For some of the questions there are defaults between square brackets (i.e. []), leave empty (i.e. hit Enter) to use them.''' % basename)
 
         # Try to get the available inputTags
-        try:
-            dataConnection = sqlite3.connect(dataFilename)
-            dataCursor = dataConnection.cursor()
-            dataCursor.execute('select name from sqlite_master where type == "table"')
-            tables = set(zip(*dataCursor.fetchall())[0])
+        dataConnection = sqlite3.connect(dataFilename)
+        dataCursor = dataConnection.cursor()
 
-            # Old POOL format
-            if 'POOL_RSS_DB' in tables:
-                dataCursor.execute('select NAME from METADATA')
-
-            # Good ORA DB (i.e. skip the intermediate unsupported format)
-            elif 'ORA_DB' in tables and 'METADATA' not in tables:
-                dataCursor.execute('select OBJECT_NAME from ORA_NAMING_SERVICE')
-
-            # In any other case, do not try to get the inputTags
-            else:
-                raise Exception()
-
-            inputTags = dataCursor.fetchall()
-            if len(inputTags) == 0:
-                raise Exception()
-            inputTags = list(zip(*inputTags))[0]
-
-        except Exception:
-            inputTags = []
+        dataCursor.execute('select NAME from TAG')
+        records = dataCursor.fetchall()
+        inputTags = []
+        for rec in records:
+            inputTags.append(rec[0])
 
         if len(inputTags) == 0:
-            print('\nI could not find any input tag in your data file, but you can still specify one manually.')
-
-            inputTag = getInputRepeat(
-                '\nWhich is the input tag (i.e. the tag to be read from the SQLite data file)?\ne.g. BeamSpotObject_ByRun\ninputTag: ')
+            raise Exception("Could not find any input tag in the data file.")
 
         else:
             print('\nI found the following input tags in your SQLite data file:')
             for (index, inputTag) in enumerate(inputTags):
-                print(('   %s) %s' % (index, inputTag)))
+                print('   %s) %s' % (index, inputTag))
 
             inputTag = getInputChoose(inputTags, '0',
                                       '\nWhich is the input tag (i.e. the tag to be read from the SQLite data file)?\ne.g. 0 (you select the first in the list)\ninputTag [0]: ')
 
-        destinationDatabase = getInputRepeat(
-            '\nWhich is the destination database where the tags should be exported and/or duplicated?\ne.g. oracle://cms_orcoff_prep/CMS_COND_BEAMSPOT\ndestinationDatabase: ')
+        destinationDatabase = ''
+        ntry = 0
+        while ( destinationDatabase != 'oracle://cms_orcon_prod/CMS_CONDITIONS' and destinationDatabase != 'oracle://cms_orcoff_prep/CMS_CONDITIONS' ): 
+            if ntry==0:
+                inputMessage = \
+                '\nWhich is the destination database where the tags should be exported? \nPossible choices: oracle://cms_orcon_prod/CMS_CONDITIONS (or prod); oracle://cms_orcoff_prep/CMS_CONDITIONS (or prep) \ndestinationDatabase: '
+            elif ntry==1:
+                inputMessage = \
+                '\nPlease choose one of the two valid destinations: \noracle://cms_orcon_prod/CMS_CONDITIONS (for prod) or oracle://cms_orcoff_prep/CMS_CONDITIONS (for prep) \
+\ndestinationDatabase: '
+            else:
+                raise Exception('No valid destination chosen. Bailing out...')
+            destinationDatabase = getInputRepeat(inputMessage)
+            if destinationDatabase == 'prod':
+                destinationDatabase = 'oracle://cms_orcon_prod/CMS_CONDITIONS'
+            if destinationDatabase == 'prep':
+                destinationDatabase = 'oracle://cms_orcoff_prep/CMS_CONDITIONS'
+            ntry += 1
 
         while True:
             since = getInput('',
@@ -158,14 +153,6 @@ I will ask you some questions to fill the metadata file. For some of the questio
         userText = getInput('',
                             '\nWrite any comments/text you may want to describe your request\ne.g. Muon alignment scenario for...\nuserText []: ')
 
-        print('''
-Finally, we are going to add the destination tags. There must be at least one.
-The tags (and its dependencies) can be synchronized to several workflows. You can synchronize to the following workflows:
-   * "offline" means no checks/synchronization will be done.
-   * "hlt" and "express" means that the IOV will be synchronized to the last online run number plus one (as seen by RunInfo).
-   * "prompt" means that the IOV will be synchronized to the smallest run number waiting for Prompt Reconstruction not having larger run numbers already released (as seen by the Tier0 monitoring).
-   * "pcl" is like "prompt", but the exportation will occur if and only if the begin time of the first IOV (as stored in the SQLite file or established by the since field in the metadata file) is larger than the first condition safe run number obtained from Tier0.''')
-
         destinationTags = {}
         while True:
             destinationTag = getInput('',
@@ -180,33 +167,7 @@ The tags (and its dependencies) can be synchronized to several workflows. You ca
                 logging.warning(
                     'You already added this destination tag. Overwriting the previous one with this new one.')
 
-            synchronizeTo = getInputWorkflow(
-                '\n  * To which workflow (see above) this tag %s has to be synchronized to?\n    e.g. offline\n    synchronizeTo [%s]: ' % (
-                destinationTag, defaultWorkflow))
-
-            print('''
-    If you need to add dependencies to this tag (i.e. tags that will be duplicated from this tag to another workflow), you can specify them now. There may be none.''')
-
-            dependencies = {}
-            while True:
-                dependency = getInput('',
-                                      '\n  * Which is the next dependency for %s to be added (leave empty to stop)?\n    e.g. BeamSpotObjects_PCL_byRun_v0_hlt\n    dependency []: ' % destinationTag)
-                if not dependency:
-                    break
-
-                if dependency in dependencies:
-                    logging.warning(
-                        'You already added this dependency. Overwriting the previous one with this new one.')
-
-                workflow = getInputWorkflow(
-                    '\n     + To which workflow (see above) this dependency %s has to be synchronized to?\n       e.g. offline\n       synchronizeTo [%s]: ' % (
-                    dependency, defaultWorkflow))
-
-                dependencies[dependency] = workflow
-
             destinationTags[destinationTag] = {
-                'synchronizeTo': synchronizeTo,
-                'dependencies': dependencies,
             }
 
         metadata = {
@@ -218,13 +179,13 @@ The tags (and its dependencies) can be synchronized to several workflows. You ca
         }
 
         metadata = json.dumps(metadata, sort_keys=True, indent=4)
-        print(('\nThis is the generated metadata:\n%s' % metadata))
+        print('\nThis is the generated metadata:\n%s' % metadata)
 
         if getInput('n',
                     '\nIs it fine (i.e. save in %s and *upload* the conditions if this is the latest file)?\nAnswer [n]: ' % metadataFilename).lower() == 'y':
             break
     logging.info('Saving generated metadata in %s...', metadataFilename)
-    with open(metadataFilename, 'wb') as metadataFile:
+    with open(metadataFilename, 'w') as metadataFile:
         metadataFile.write(metadata)
 
 class HTTPError(Exception):
@@ -743,7 +704,7 @@ def uploadTier0Files(filenames, username, password, cookieFileName = None):
                 # 400 Bad Request: This is an exception related to the upload
                 # being wrong for some reason (e.g. duplicated file).
                 # Since for Tier0 this is not an issue, continue
-                logging.error('Got HTTP Exception 400 Bad Request for %s: Upload-related, skipping. Message: %s', (filename, e) )
+                logging.error('Got HTTP Exception 400 Bad Request for %s: Upload-related, skipping. Message: %s', filename, e )
                 continue
 
             # In any other case, re-raise.
