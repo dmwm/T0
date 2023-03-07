@@ -127,9 +127,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "126X_dataRun3_Express_v3"
-promptrecoGlobalTag = "126X_dataRun3_Prompt_v3"
-alcap0GlobalTag = "126X_dataRun3_Prompt_v3"
+expressGlobalTag = "130X_dataRun3_Express_Candidate_2023_03_07_09_53_07"
+promptrecoGlobalTag = "130X_dataRun3_Prompt_Candidate_2023_03_07_09_53_07"
+alcap0GlobalTag = "130X_dataRun3_Prompt_Candidate_2023_03_07_09_53_07"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -613,7 +613,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                scenario=ppScenario)
 
-DATASETS = ["JetMET"]
+DATASETS = ["JetMET", "JetMET0", "JetMET1"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -660,7 +660,7 @@ for dataset in DATASETS:
                physics_skims=["TopMuEG", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["Muon"]
+DATASETS = ["Muon", "Muon0", "Muon1"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -700,7 +700,7 @@ for dataset in DATASETS:
                physics_skims=["ZMu", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["EGamma"]
+DATASETS = ["EGamma", "EGamma0", "EGamma1"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -839,7 +839,7 @@ for dataset in DATASETS:
                tape_node=None,
                reco_split=alcarawSplitting,
                proc_version=alcarawProcVersion,
-               alca_producers = [ "AlCaPCCZeroBias", "RawPCCProducer" ],
+               alca_producers = [ "AlCaPCCZeroBias", "RawPCCProducer", "AlCaPCCRandom"],
                timePerEvent=0.02,
                sizePerEvent=38,
                scenario=alcaLumiPixelsScenario)
