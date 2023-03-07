@@ -33,7 +33,8 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [363534])
+# Cosmics from cruzet, splashes, and 2022 collisions
+setInjectRuns(tier0Config, [364158,350966,359691])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -100,7 +101,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_6_4"
+    'default': "CMSSW_13_0_0"
 }
 
 # Configure ScramArch
