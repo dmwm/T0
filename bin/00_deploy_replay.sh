@@ -4,9 +4,9 @@ BASE_DIR=/data/tier0
 DEPLOY_DIR=$BASE_DIR/srv/wmagent
 SPEC_DIR=$BASE_DIR/admin/Specs
 
-TIER0_VERSION=3.0.7
+TIER0_VERSION=3.0.8
 TIER0_ARCH=slc7_amd64_gcc630
-DEPLOY_TAG=HG2211g
+DEPLOY_TAG=HG2302a
 
 function echo_header {
     echo ''
