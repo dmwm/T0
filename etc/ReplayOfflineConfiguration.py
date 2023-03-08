@@ -106,6 +106,7 @@ defaultCMSSWVersion = {
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "el8_amd64_gcc10")
+setScramArch(tier0Config, defaultCMSSWVersion['default'], "el8_amd64_gcc11")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3"
