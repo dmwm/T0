@@ -858,6 +858,17 @@ for dataset in DATASETS:
                disk_node="T1_ES_PIC_Disk",
                scenario=ppScenario)
 
+#############################################
+### MiniDAQ                               ###
+#############################################
+
+DATASETS = ["MiniDaq"]
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               raw_to_disk=True,
+               disk_node="T2_CH_CERN",
+               dataset_lifetime=6*30*24*3600)
+
 ###########################
 ### special AlcaRaw PDs ###
 ###########################
