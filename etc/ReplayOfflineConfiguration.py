@@ -8,6 +8,7 @@ from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
 from T0.RunConfig.Tier0Config import setDefaultScramArch
+from T0.RunConfig.Tier0Config import setScramArch
 from T0.RunConfig.Tier0Config import setBaseRequestPriority
 from T0.RunConfig.Tier0Config import setBackfill
 from T0.RunConfig.Tier0Config import setBulkDataType
@@ -107,6 +108,7 @@ defaultCMSSWVersion = {
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "el8_amd64_gcc10")
 setScramArch(tier0Config, defaultCMSSWVersion['default'], "el8_amd64_gcc11")
+setScramArch(tier0Config, "CMSSW_12_3_0", "cs8_amd64_gcc10")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3"
@@ -128,9 +130,8 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "130X_dataRun3_Express_Candidate_2023_03_07_09_53_07"
-promptrecoGlobalTag = "130X_dataRun3_Prompt_Candidate_2023_03_07_09_53_07"
-alcap0GlobalTag = "130X_dataRun3_Prompt_Candidate_2023_03_07_09_53_07"
+expressGlobalTag = "130X_dataRun3_Express_v1"
+promptrecoGlobalTag = "130X_dataRun3_Prompt_v1"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
