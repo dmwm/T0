@@ -94,11 +94,11 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_6_4"
+    'default': "CMSSW_13_0_0"
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "el8_amd64_gcc10")
+setDefaultScramArch(tier0Config, "el8_amd64_gcc11")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3"
@@ -113,23 +113,22 @@ alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Defaults for processing version
-defaultProcVersionRAW = 1
+defaultProcVersionRAW = 2
 alcarawProcVersion = {
-    'default': "1"
+    'default': "2"
 }
 
 defaultProcVersionReco = {
-    'default': "1"
+    'default': "2"
 }
 
 expressProcVersion = {
-    'default': "1"
+    'default': "2"
 }
 
 # Defaults for GlobalTag
-expressGlobalTag = "126X_dataRun3_Express_v3"
-promptrecoGlobalTag = "126X_dataRun3_Prompt_v3"
-alcap0GlobalTag = "126X_dataRun3_Prompt_v3"
+expressGlobalTag = "130X_dataRun3_Express_v1"
+promptrecoGlobalTag = "130X_dataRun3_Prompt_v1"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -146,15 +145,15 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_12_6_1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_6_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_6_3" : defaultCMSSWVersion['default']
+    "CMSSW_12_6_1" : "CMSSW_12_6_4",
+    "CMSSW_12_6_2" : "CMSSW_12_6_4",
+    "CMSSW_12_6_3" : "CMSSW_12_6_4"
 }
 
 expressVersionOverride = {
-    "CMSSW_12_6_1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_6_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_6_3" : defaultCMSSWVersion['default']
+    "CMSSW_12_6_1" : "CMSSW_12_6_4",
+    "CMSSW_12_6_2" : "CMSSW_12_6_4",
+    "CMSSW_12_6_3" : "CMSSW_12_6_4"
 }
 
 #set default repack settings for bulk streams
@@ -652,7 +651,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                scenario=ppScenario)
 
-DATASETS = ["JetMET"]
+DATASETS = ["JetMET", "JetMET0", "JetMET1"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -707,7 +706,7 @@ for dataset in DATASETS:
                physics_skims=["TopMuEG", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["Muon"]
+DATASETS = ["Muon", "Muon0", "Muon1"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -754,7 +753,7 @@ for dataset in DATASETS:
                physics_skims=["ZMu", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["EGamma"]
+DATASETS = ["EGamma", "EGamma0", "EGamma1"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -915,7 +914,7 @@ for dataset in DATASETS:
                tape_node=None,
                reco_split=alcarawSplitting,
                proc_version=alcarawProcVersion,
-               alca_producers = [ "AlCaPCCZeroBias", "RawPCCProducer" ],
+               alca_producers = [ "AlCaPCCZeroBias", "RawPCCProducer", "AlCaPCCRandom"],
                timePerEvent=0.02,
                sizePerEvent=38,
                scenario=alcaLumiPixelsScenario)

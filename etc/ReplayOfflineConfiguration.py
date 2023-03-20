@@ -8,6 +8,7 @@ from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
 from T0.RunConfig.Tier0Config import setDefaultScramArch
+from T0.RunConfig.Tier0Config import setScramArch
 from T0.RunConfig.Tier0Config import setBaseRequestPriority
 from T0.RunConfig.Tier0Config import setBackfill
 from T0.RunConfig.Tier0Config import setBulkDataType
@@ -33,7 +34,8 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-setInjectRuns(tier0Config, [363534])
+# Cosmics from cruzet, splashes, and 2022 collisions
+setInjectRuns(tier0Config, [364158,350966,359691])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -100,11 +102,13 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_6_4"
+    'default': "CMSSW_13_0_0"
 }
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "el8_amd64_gcc10")
+setScramArch(tier0Config, defaultCMSSWVersion['default'], "el8_amd64_gcc11")
+setScramArch(tier0Config, "CMSSW_12_3_0", "cs8_amd64_gcc10")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3"
@@ -126,9 +130,8 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "126X_dataRun3_Express_v3"
-promptrecoGlobalTag = "126X_dataRun3_Prompt_v3"
-alcap0GlobalTag = "126X_dataRun3_Prompt_v3"
+expressGlobalTag = "130X_dataRun3_Express_v1"
+promptrecoGlobalTag = "130X_dataRun3_Prompt_v1"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -612,7 +615,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                scenario=ppScenario)
 
-DATASETS = ["JetMET"]
+DATASETS = ["JetMET", "JetMET0", "JetMET1"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -659,7 +662,7 @@ for dataset in DATASETS:
                physics_skims=["TopMuEG", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["Muon"]
+DATASETS = ["Muon", "Muon0", "Muon1"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -699,7 +702,7 @@ for dataset in DATASETS:
                physics_skims=["ZMu", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["EGamma"]
+DATASETS = ["EGamma", "EGamma0", "EGamma1"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -838,7 +841,7 @@ for dataset in DATASETS:
                tape_node=None,
                reco_split=alcarawSplitting,
                proc_version=alcarawProcVersion,
-               alca_producers = [ "AlCaPCCZeroBias", "RawPCCProducer" ],
+               alca_producers = [ "AlCaPCCZeroBias", "RawPCCProducer", "AlCaPCCRandom"],
                timePerEvent=0.02,
                sizePerEvent=38,
                scenario=alcaLumiPixelsScenario)
