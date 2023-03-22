@@ -34,8 +34,8 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-# Cosmics from cruzet, splashes, and 2022 collisions
-setInjectRuns(tier0Config, [364158,350966,359691])
+# (short) collisions run from 2022
+setInjectRuns(tier0Config, [359691])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -148,9 +148,7 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_12_6_1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_6_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_6_3" : defaultCMSSWVersion['default']
+    "CMSSW_12_4_9_patch1" : "CMSSW_12_4_9_patch1"
 }
 
 expressVersionOverride = {
@@ -737,7 +735,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               alca_producers=["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk"],
+               alca_producers=["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk", "HcalCalIsolatedBunchFilter"],
                dqm_sequences=["@common", "@L1TMon", "@hcal"],
                physics_skims=["EcalActivity", "LogError", "LogErrorMonitor"],
                timePerEvent=12,
@@ -1665,6 +1663,38 @@ ignoreStream(tier0Config, "DQMOffline")
 ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
+
+# Ignore these streams only for this replay
+ignoreStream(tier0Config, "ALCALowPtJet")
+ignoreStream(tier0Config, "ALCALumiPixelsCountsExpress")
+ignoreStream(tier0Config, "ALCALumiPixelsCountsPrompt")
+ignoreStream(tier0Config, "ALCAP0")
+ignoreStream(tier0Config, "ALCAPHISYM")
+ignoreStream(tier0Config, "ALCAPPSExpress")
+ignoreStream(tier0Config, "ALCAPPSPrompt")
+ignoreStream(tier0Config, "Calibration")
+ignoreStream(tier0Config, "Express")
+ignoreStream(tier0Config, "ExpressAlignment")
+ignoreStream(tier0Config, "HLTMonitor")
+ignoreStream(tier0Config, "NanoDST")
+ignoreStream(tier0Config, "ParkingDoubleElectronLowMass0")
+ignoreStream(tier0Config, "ParkingDoubleElectronLowMass1")
+ignoreStream(tier0Config, "ParkingDoubleElectronLowMass2")
+ignoreStream(tier0Config, "ParkingDoubleMuonLowMass0")
+ignoreStream(tier0Config, "ParkingDoubleMuonLowMass1")
+ignoreStream(tier0Config, "ParkingDoubleMuonLowMass2")
+ignoreStream(tier0Config, "ParkingDoubleMuonLowMass3")
+ignoreStream(tier0Config, "ParkingSingleMuon0")
+ignoreStream(tier0Config, "ParkingSingleMuon1")
+ignoreStream(tier0Config, "ParkingSingleMuon2")
+ignoreStream(tier0Config, "PhysicsDispJetBTagMuEGTau")
+ignoreStream(tier0Config, "PhysicsEGamma")
+ignoreStream(tier0Config, "PhysicsJetMET")
+ignoreStream(tier0Config, "PhysicsMuon")
+ignoreStream(tier0Config, "PhysicsReservedDoubleMuonLowMass")
+ignoreStream(tier0Config, "PhysicsScoutingPFMonitor")
+ignoreStream(tier0Config, "RPCMON")
+ignoreStream(tier0Config, "ScoutingPF")
 
 ###################################
 ### currently inactive settings ###
