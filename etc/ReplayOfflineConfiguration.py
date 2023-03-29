@@ -35,7 +35,7 @@ setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
 # Cosmics from cruzet, splashes, and 2022 collisions
-setInjectRuns(tier0Config, [364158,350966,359691])
+setInjectRuns(tier0Config, [365118,350966,359691])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -150,13 +150,13 @@ alcarawSplitting = 20000 * numberOfCores
 repackVersionOverride = {
     "CMSSW_12_6_1" : defaultCMSSWVersion['default'],
     "CMSSW_12_6_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_6_3" : defaultCMSSWVersion['default']
+    "CMSSW_12_6_3" : "CMSSW_12_6_4"
 }
 
 expressVersionOverride = {
     "CMSSW_12_6_1" : defaultCMSSWVersion['default'],
     "CMSSW_12_6_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_6_3" : defaultCMSSWVersion['default']
+    "CMSSW_12_6_3" : "CMSSW_12_6_4"
 }
 
 #set default repack settings for bulk streams
