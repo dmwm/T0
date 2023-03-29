@@ -9,7 +9,6 @@ Team or person that requests this replay
 * GTs:
    * expressGlobalTag: 
    * promptrecoGlobalTag:
-   * alcap0GlobalTag:
 * Additional changes:
 
 **Purpose of the test**  
