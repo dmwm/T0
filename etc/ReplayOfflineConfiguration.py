@@ -35,7 +35,9 @@ setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
 # Cosmics from cruzet, splashes, and 2022 collisions
-setInjectRuns(tier0Config, [364158,350966,359691])
+# 365118 - CRAFT 2023
+# 359691 - Collisions 2022
+setInjectRuns(tier0Config, [365118,359691])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -102,7 +104,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_0_0"
+    'default': "CMSSW_13_0_3"
 }
 
 # Configure ScramArch
@@ -130,8 +132,8 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "130X_dataRun3_Express_v1"
-promptrecoGlobalTag = "130X_dataRun3_Prompt_v1"
+expressGlobalTag = "130X_dataRun3_Express_v2"
+promptrecoGlobalTag = "130X_dataRun3_Prompt_Candidate_2023_03_09_09_47_16"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -148,15 +150,13 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_12_6_1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_6_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_6_3" : defaultCMSSWVersion['default']
+    "CMSSW_13_0_0" : defaultCMSSWVersion['default'],
+    "CMSSW_12_6_3" : "CMSSW_12_6_4"
 }
 
 expressVersionOverride = {
-    "CMSSW_12_6_1" : defaultCMSSWVersion['default'],
-    "CMSSW_12_6_2" : defaultCMSSWVersion['default'],
-    "CMSSW_12_6_3" : defaultCMSSWVersion['default']
+    "CMSSW_13_0_0" : defaultCMSSWVersion['default'],
+    "CMSSW_12_6_3" : "CMSSW_12_6_4"
 }
 
 #set default repack settings for bulk streams
