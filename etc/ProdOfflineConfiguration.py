@@ -55,7 +55,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Commissioning2023")
+setAcquisitionEra(tier0Config, "Run2023A")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -792,7 +792,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               alca_producers=["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk"],
+               alca_producers=["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk", "HcalCalIsolatedBunchFilter"],
                dqm_sequences=["@common", "@L1TMon", "@hcal"],
                physics_skims=["EcalActivity", "LogError", "LogErrorMonitor"],
                timePerEvent=12,
@@ -1796,6 +1796,7 @@ ignoreStream(tier0Config, "DQMOffline")
 ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
+ignoreStream(tier0Config, "DQMPPSRandom")
 
 ###################################
 ### currently inactive settings ###
