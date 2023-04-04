@@ -108,8 +108,8 @@ defaultCMSSWVersion = {
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "el8_amd64_gcc10")
-setScramArch(tier0Config, defaultCMSSWVersion['default'], "el8_amd64_gcc11")
+setDefaultScramArch(tier0Config, "el8_amd64_gcc11")
+setScramArch(tier0Config, "CMSSW_12_4_9", "el8_amd64_gcc10")
 setScramArch(tier0Config, "CMSSW_12_3_0", "cs8_amd64_gcc10")
 
 # Configure scenarios
@@ -150,12 +150,10 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_13_0_0" : defaultCMSSWVersion['default'],
     "CMSSW_12_6_3" : "CMSSW_12_6_4"
 }
 
 expressVersionOverride = {
-    "CMSSW_13_0_0" : defaultCMSSWVersion['default'],
     "CMSSW_12_6_3" : "CMSSW_12_6_4"
 }
 
