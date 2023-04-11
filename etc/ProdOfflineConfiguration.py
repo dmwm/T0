@@ -144,7 +144,7 @@ alcarawSplitting = 20000 * numberOfCores
 #
 # Setup repack and express mappings
 #
-expressVersionOverride = {
+repackVersionOverride = {
     "CMSSW_12_6_3" : "CMSSW_12_6_4"
 }
 
