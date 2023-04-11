@@ -115,15 +115,15 @@ hiTestppScenario = "ppEra_Run3"
 # Defaults for processing version
 defaultProcVersionRAW = 1
 alcarawProcVersion = {
-    'default': "1"
+    'default': "2"
 }
 
 defaultProcVersionReco = {
-    'default': "1"
+    'default': "2"
 }
 
 expressProcVersion = {
-    'default': "1"
+    'default': "2"
 }
 
 # Defaults for GlobalTag
