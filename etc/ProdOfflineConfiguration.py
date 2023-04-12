@@ -94,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_0_0"
+    'default': "CMSSW_13_0_3"
 }
 
 # Configure ScramArch
@@ -115,20 +115,20 @@ hiTestppScenario = "ppEra_Run3"
 # Defaults for processing version
 defaultProcVersionRAW = 1
 alcarawProcVersion = {
-    'default': "1"
+    'default': "2"
 }
 
 defaultProcVersionReco = {
-    'default': "1"
+    'default': "2"
 }
 
 expressProcVersion = {
-    'default': "1"
+    'default': "2"
 }
 
 # Defaults for GlobalTag
-expressGlobalTag = "130X_dataRun3_Express_v1"
-promptrecoGlobalTag = "130X_dataRun3_Prompt_v1"
+expressGlobalTag = "130X_dataRun3_Express_v2"
+promptrecoGlobalTag = "130X_dataRun3_Prompt_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -145,14 +145,10 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_12_6_1" : "CMSSW_12_6_4",
-    "CMSSW_12_6_2" : "CMSSW_12_6_4",
     "CMSSW_12_6_3" : "CMSSW_12_6_4"
 }
 
 expressVersionOverride = {
-    "CMSSW_12_6_1" : "CMSSW_12_6_4",
-    "CMSSW_12_6_2" : "CMSSW_12_6_4",
     "CMSSW_12_6_3" : "CMSSW_12_6_4"
 }
 
