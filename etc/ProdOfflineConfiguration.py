@@ -1090,7 +1090,7 @@ for dataset in DATASETS:
                disk_node="T1_UK_RAL_Disk",
                scenario=ppScenario)
 
-DATASETS = ["ParkingDoubleElectronLowMass0"]
+DATASETS = ["ParkingDoubleElectronLowMass","ParkingDoubleElectronLowMass0"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,

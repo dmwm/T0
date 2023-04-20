@@ -998,7 +998,8 @@ for dataset in DATASETS:
 
 
 DATASETS = ["ParkingDoubleElectronLowMass0","ParkingDoubleElectronLowMass1","ParkingDoubleElectronLowMass2",
-            "ParkingDoubleElectronLowMass3","ParkingDoubleElectronLowMass4","ParkingDoubleElectronLowMass5"]
+            "ParkingDoubleElectronLowMass3","ParkingDoubleElectronLowMass4","ParkingDoubleElectronLowMass5",
+            "ParkingDoubleElectronLowMass"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
