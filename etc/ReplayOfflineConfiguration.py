@@ -894,6 +894,31 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 ########################################################
+### SpecialRandom PDs                                ###
+########################################################
+
+DATASETS = ["SpecialRandom0", "SpecialRandom1", "SpecialRandom2",
+            "SpecialRandom3", "SpecialRandom4", "SpecialRandom5",
+            "SpecialRandom6", "SpecialRandom7", "SpecialRandom8",
+            "SpecialRandom9", "SpecialRandom10", "SpecialRandom11",
+            "SpecialRandom12", "SpecialRandom13", "SpecialRandom14",
+            "SpecialRandom15", "SpecialRandom16", "SpecialRandom17",
+            "SpecialRandom18", "SpecialRandom19", "SpecialRandom"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               raw_to_disk=True,
+               write_reco=False,
+               write_dqm=True,
+               write_miniaod=True,
+               write_aod=True,
+               dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
+               alca_producers=["TkAlMinBias","LumiPixelsMinBias"],
+               physics_skims=["LogError", "LogErrorMonitor"],
+               scenario=ppScenario)
+
+########################################################
 ### MinimumBias PDs                                  ###
 ########################################################
 
