@@ -55,7 +55,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2023A")
+setAcquisitionEra(tier0Config, "Run2023B")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -115,15 +115,15 @@ hiTestppScenario = "ppEra_Run3"
 # Defaults for processing version
 defaultProcVersionRAW = 1
 alcarawProcVersion = {
-    'default': "2"
+    'default': "1"
 }
 
 defaultProcVersionReco = {
-    'default': "2"
+    'default': "1"
 }
 
 expressProcVersion = {
-    'default': "2"
+    'default': "1"
 }
 
 # Defaults for GlobalTag
@@ -1115,7 +1115,7 @@ for dataset in DATASETS:
                disk_node="T1_UK_RAL_Disk",
                scenario=ppScenario)
 
-DATASETS = ["ParkingDoubleElectronLowMass0"]
+DATASETS = ["ParkingDoubleElectronLowMass","ParkingDoubleElectronLowMass0"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
