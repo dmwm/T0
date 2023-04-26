@@ -37,7 +37,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # Cosmics from cruzet, splashes, and 2022 collisions
 # 365118 - CRAFT 2023
 # 359691 - Collisions 2022
-setInjectRuns(tier0Config, [365118,359691])
+setInjectRuns(tier0Config, [365537])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
