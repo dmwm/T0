@@ -1030,7 +1030,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common"]
+               dqm_sequences=["@common"],
                tape_node=None,
                scenario=ppScenario)
 
