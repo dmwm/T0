@@ -1119,6 +1119,8 @@ DATASETS = ["ParkingDoubleElectronLowMass","ParkingDoubleElectronLowMass0"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
+               write_dqm=True,
+               dqm_sequences=["@common"]
                archival_node=None,
                siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN"],
                tape_node="T0_CH_CERN_MSS",
@@ -1131,6 +1133,8 @@ DATASETS = ["ParkingDoubleElectronLowMass1","ParkingDoubleElectronLowMass2",
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
+               write_dqm=True,
+               dqm_sequences=["@common"]
                archival_node=None,
                aod_to_disk=False,
                siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN"],
