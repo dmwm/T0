@@ -934,7 +934,8 @@ class Create(DBCreator):
                            44 : "ppEra_Run3_pp_on_PbPb",
                            45 : "trackingOnlyEra_Run3_pp_on_PbPb",
                            46 : "hcalnzsEra_Run3_pp_on_PbPb",
-                           47 : "ppEra_Run3_pp_on_PbPb_approxSiStripClusters" }
+                           47 : "ppEra_Run3_pp_on_PbPb_approxSiStripClusters",
+                           48 : "ppEra_Run3_2023" }
         for id, name in list(eventScenarios.items()):
             sql = """INSERT INTO event_scenario
                      (ID, NAME)
