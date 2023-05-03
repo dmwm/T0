@@ -37,7 +37,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # Cosmics from cruzet, splashes, and 2022 collisions
 # 365118 - CRAFT 2023
 # 359691 - Collisions 2022
-setInjectRuns(tier0Config, [366498])
+setInjectRuns(tier0Config, [366794,366829])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -104,7 +104,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_0_5"
+    'default': "CMSSW_13_0_5_patch1"
 }
 
 # Configure ScramArch
@@ -133,7 +133,7 @@ alcarawProcVersion = dt
 
 # Defaults for GlobalTag
 expressGlobalTag = "130X_dataRun3_Express_v2"
-promptrecoGlobalTag = "130X_dataRun3_Prompt_Candidate_2023_03_09_09_47_16"
+promptrecoGlobalTag = "130X_dataRun3_Prompt_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
