@@ -94,18 +94,17 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_0_3"
+    'default': "CMSSW_13_0_5_patch1"
 }
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "el8_amd64_gcc11")
 
 # Configure scenarios
-ppScenario = "ppEra_Run3"
+ppScenario = "ppEra_Run3_2023"
 ppScenarioB0T = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
 hcalnzsScenario = "hcalnzsEra_Run3"
-hiScenario = "ppEra_Run3"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run3"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
@@ -481,7 +480,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                tape_node="T1_DE_KIT_MSS",
                disk_node="T1_DE_KIT_Disk",
-               physics_skims=["EXODisplacedJet", "EXODelayedJet", "EXODTCluster", "LogError", "LogErrorMonitor", "EXOCSCCluster"],
+               physics_skims=["EXODisplacedJet", "EXODelayedJet", "EXODTCluster", "LogError", "LogErrorMonitor", "EXOLLPJetHCAL"],
                scenario=ppScenario)
 
 DATASETS = ["DoubleMuon"]
@@ -663,7 +662,7 @@ for dataset in DATASETS:
                                "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
                                "TkAlZMuMu", "TkAlDiMuonAndVertex"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon"],
-               physics_skims=["ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor"],
+               physics_skims=["ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
                scenario=ppScenario)
 
 DATASETS = ["NoBPTX"]
