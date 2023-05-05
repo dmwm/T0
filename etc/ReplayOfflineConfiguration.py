@@ -37,7 +37,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # Cosmics from cruzet, splashes, and 2022 collisions
 # 365118 - CRAFT 2023
 # 359691 - Collisions 2022
-setInjectRuns(tier0Config, [366794,366829])
+setInjectRuns(tier0Config, [366891])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -104,7 +104,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_0_5_patch1"
+    'default': "CMSSW_13_0_5_patch2"
 }
 
 # Configure ScramArch
