@@ -37,7 +37,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # Cosmics from cruzet, splashes, and 2022 collisions
 # 365118 - CRAFT 2023
 # 359691 - Collisions 2022
-setInjectRuns(tier0Config, [365118,359691])
+setInjectRuns(tier0Config, [366794,366829])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -104,7 +104,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_0_3"
+    'default': "CMSSW_13_0_5_patch1"
 }
 
 # Configure ScramArch
@@ -113,11 +113,10 @@ setScramArch(tier0Config, "CMSSW_12_4_9", "el8_amd64_gcc10")
 setScramArch(tier0Config, "CMSSW_12_3_0", "cs8_amd64_gcc10")
 
 # Configure scenarios
-ppScenario = "ppEra_Run3"
+ppScenario = "ppEra_Run3_2023"
 ppScenarioB0T = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
 hcalnzsScenario = "hcalnzsEra_Run3"
-hiScenario = "ppEra_Run3"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run3"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
@@ -133,7 +132,7 @@ alcarawProcVersion = dt
 
 # Defaults for GlobalTag
 expressGlobalTag = "130X_dataRun3_Express_v2"
-promptrecoGlobalTag = "130X_dataRun3_Prompt_Candidate_2023_03_09_09_47_16"
+promptrecoGlobalTag = "130X_dataRun3_Prompt_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -477,7 +476,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
-               physics_skims=["EXODisplacedJet", "EXODelayedJet", "EXODTCluster", "LogError", "LogErrorMonitor", "EXOCSCCluster"],
+               physics_skims=["EXODisplacedJet", "EXODelayedJet", "EXODTCluster", "LogError", "LogErrorMonitor", "EXOLLPJetHCAL"],
                scenario=ppScenario)
 
 DATASETS = ["DoubleMuon"]
@@ -618,7 +617,7 @@ for dataset in DATASETS:
                                "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
                                "TkAlZMuMu", "TkAlDiMuonAndVertex"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon"],
-               physics_skims=["ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor"],
+               physics_skims=["ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
                scenario=ppScenario)
 
 DATASETS = ["NoBPTX"]
@@ -1043,6 +1042,8 @@ DATASETS = ["ParkingDoubleElectronLowMass0","ParkingDoubleElectronLowMass1","Par
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
+               write_dqm=True,
+               dqm_sequences=["@common"],
                tape_node=None,
                scenario=ppScenario)
 
