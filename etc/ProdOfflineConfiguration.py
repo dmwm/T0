@@ -448,6 +448,7 @@ DATASETS = ["BTagMu"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
@@ -460,6 +461,7 @@ DATASETS = ["Cosmics"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=True,
                write_reco=False,
                write_aod=True,
@@ -475,6 +477,7 @@ DATASETS = ["DisplacedJet"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
@@ -487,6 +490,7 @@ DATASETS = ["DoubleMuon"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=True,
                write_reco=False,
                write_dqm=True,
@@ -501,6 +505,7 @@ DATASETS = ["DoubleMuonLowPU"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=True,
                write_reco=False,
                write_dqm=True,
@@ -516,6 +521,7 @@ DATASETS = ["ReservedDoubleMuonLowMass"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=False,
                tape_node="T1_IT_CNAF_MSS",
                disk_node="T1_IT_CNAF_Disk",
@@ -579,6 +585,7 @@ DATASETS = ["EmptyBX"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
@@ -588,6 +595,7 @@ DATASETS = ["HighPtLowerPhotons", "HighPtPhoton30AndZ"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
@@ -597,6 +605,7 @@ DATASETS = ["JetMET", "JetMET0", "JetMET1"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=True,
                write_dqm=True,
                tape_node="T1_US_FNAL_MSS",  # JetHT was in "T1_UK_RAL_MSS" , MET was in "T1_DE_KIT_MSS"
@@ -612,6 +621,7 @@ DATASETS = ["JetHT"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=True,
                write_dqm=True,
                tape_node="T1_UK_RAL_MSS",
@@ -627,6 +637,7 @@ DATASETS = ["MET"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=True,
                write_dqm=True,
                tape_node="T1_DE_KIT_MSS",
@@ -640,6 +651,7 @@ DATASETS = ["MuonEG"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
@@ -652,6 +664,7 @@ DATASETS = ["Muon", "Muon0", "Muon1"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=True,
                write_reco=False,
                write_dqm=True,
@@ -669,6 +682,7 @@ DATASETS = ["NoBPTX"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=True,
                write_reco=False,
                write_dqm=True,
@@ -684,6 +698,7 @@ DATASETS = ["SingleMuon"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=True,
                write_dqm=True,
                tape_node="T1_US_FNAL_MSS", # "T1_IT_CNAF_MSS", CNAF is underwater
@@ -699,6 +714,7 @@ DATASETS = ["EGamma", "EGamma0", "EGamma1"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=True,
                write_dqm=True,
                tape_node="T1_US_FNAL_MSS",
@@ -713,6 +729,7 @@ DATASETS = ["Tau"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
@@ -732,6 +749,7 @@ DATASETS += ["Commissioning1", "Commissioning2", "Commissioning3", "Commissionin
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=True,
                write_dqm=True,
                alca_producers=["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk", "HcalCalIsolatedBunchFilter"],
@@ -747,6 +765,7 @@ DATASETS = ["HcalNZS"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=True,
                write_dqm=True,
                write_aod=True,
@@ -763,6 +782,7 @@ DATASETS = ["TestEnablesEcalHcal", "TestEnablesEcalHcalDQM"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=False,
                alca_producers=["EcalTestPulsesRaw", "PromptCalibProdEcalPedestals", "HcalCalPedestal"],
                dqm_sequences=["@common"],
@@ -812,6 +832,7 @@ DATASETS = ["AlCaLumiPixels", "AlCaLumiPixels0", "AlCaLumiPixels1", "AlCaLumiPix
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=True,
                write_reco=False, write_aod=False, write_miniaod=False, write_dqm=True,
                disk_node=None,
@@ -828,6 +849,7 @@ DATASETS = ["AlCaLowPtJet"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=False,
                scenario=ppScenario)
 
@@ -841,6 +863,7 @@ DATASETS = ["AlCaLumiPixelsCountsPrompt0", "AlCaLumiPixelsCountsPrompt1", "AlCaL
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=True,
                write_reco=False, write_aod=False, write_miniaod=False, write_dqm=False,
                disk_node="T2_CH_CERN",
@@ -859,6 +882,7 @@ DATASETS = ["AlCaLumiPixelsCountsExpress0", "AlCaLumiPixelsCountsExpress1", "AlC
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=False,
                write_reco=False, write_aod=False, write_miniaod=False, write_dqm=False,
                disk_node=None,
@@ -1027,6 +1051,7 @@ DATASETS = ["MinimumBias", "MinimumBias0", "MinimumBias1", "MinimumBias2", "Mini
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=True,
                write_dqm=True,
                tape_node="T1_US_FNAL_MSS",
@@ -1123,6 +1148,7 @@ for dataset in DATASETS:
 DATASETS = ["ScoutingPFRun3"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=False,
                tape_node="T1_UK_RAL_MSS",
                disk_node="T1_UK_RAL_Disk",
@@ -1159,6 +1185,7 @@ DATASETS = ["RPCMonitor"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=False,
                tape_node="T1_DE_KIT_MSS",
                disk_node="T1_DE_KIT_Disk",
@@ -1189,6 +1216,7 @@ DATASETS = ["ScoutingCaloCommissioning", "ScoutingCaloHT", "ScoutingCaloMuon",
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=False,
                scenario=ppScenario)
 
@@ -1199,6 +1227,7 @@ DATASETS = ["AlCaElectron", "VRRandom", "VRRandom0", "VRRandom1", "VRRandom2", "
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=False,
                scenario=ppScenario)
 
@@ -1207,6 +1236,7 @@ DATASETS = ["AlCaPPSPrompt"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
+               raw_to_disk=True,
                do_reco=True,
                write_reco=False, write_aod=False, write_miniaod=False,
                write_dqm=True,
