@@ -35,8 +35,7 @@ setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
 # Cosmics from cruzet, splashes, and 2022 collisions
-# 365118 - CRAFT 2023
-# 359691 - Collisions 2022
+# 366891 - Collisions 2023 - 900b - 1h50min long - all components IN
 setInjectRuns(tier0Config, [366891])
 
 # Settings up sites
@@ -132,7 +131,7 @@ alcarawProcVersion = dt
 
 # Defaults for GlobalTag
 expressGlobalTag = "130X_dataRun3_Express_v2"
-promptrecoGlobalTag = "130X_dataRun3_Prompt_v2"
+promptrecoGlobalTag = "130X_dataRun3_Prompt_addBSOnline_v1"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -1130,6 +1129,18 @@ ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
+
+# Run only on the ZB streams
+specifyStreams(tier0Config, "PhysicsZeroBias0")
+specifyStreams(tier0Config, "PhysicsZeroBias1")
+specifyStreams(tier0Config, "PhysicsZeroBias2")
+specifyStreams(tier0Config, "PhysicsZeroBias3")
+specifyStreams(tier0Config, "PhysicsZeroBias4")
+specifyStreams(tier0Config, "PhysicsZeroBias5")
+specifyStreams(tier0Config, "PhysicsZeroBias6")
+specifyStreams(tier0Config, "PhysicsZeroBias7")
+specifyStreams(tier0Config, "PhysicsZeroBias8")
+specifyStreams(tier0Config, "PhysicsZeroBias9")
 
 ###################################
 ### currently inactive settings ###
