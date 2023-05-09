@@ -36,7 +36,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # Set run number to replay
 # Cosmics from cruzet, splashes, and 2022 collisions
 # 367102 - Collisions 2023 - 1200b - 0.5h long - all components IN
-setInjectRuns(tier0Config, [367100])
+setInjectRuns(tier0Config, [367102])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -1131,7 +1131,7 @@ ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
 
 # Run only on the ZB streams
-specifyStreams(tier0Config, ["PhysicsZeroBias0", "PhysicsZeroBias1", "PhysicsZeroBias2", "PhysicsZeroBias3", "PhysicsZeroBias4", "PhysicsZeroBias5", "PhysicsZeroBias6", "PhysicsZeroBias7", "PhysicsZeroBias8", "PhysicsZeroBias9"])
+specifyStreams(tier0Config, [PhysicsCommissioning])
 
 ###################################
 ### currently inactive settings ###
