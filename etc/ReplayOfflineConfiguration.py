@@ -1131,7 +1131,7 @@ ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
 
 # Run only on the ZB streams
-specifyStreams(tier0Config, [PhysicsCommissioning])
+specifyStreams(tier0Config, ["PhysicsCommissioning"])
 
 ###################################
 ### currently inactive settings ###
