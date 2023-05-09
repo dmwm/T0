@@ -36,7 +36,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # Set run number to replay
 # Cosmics from cruzet, splashes, and 2022 collisions
 # 367102 - Collisions 2023 - 1200b - 0.5h long - all components IN
-setInjectRuns(tier0Config, [367102])
+setInjectRuns(tier0Config, [367100])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
