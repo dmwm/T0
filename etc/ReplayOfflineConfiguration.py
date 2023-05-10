@@ -34,10 +34,8 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-# Cosmics from cruzet, splashes, and 2022 collisions
-# 365118 - CRAFT 2023
-# 359691 - Collisions 2022
-setInjectRuns(tier0Config, [366891])
+# 367102 - Collisions 2023 - 1200b - 0.5h long - all components IN
+setInjectRuns(tier0Config, [367102])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -132,7 +130,7 @@ alcarawProcVersion = dt
 
 # Defaults for GlobalTag
 expressGlobalTag = "130X_dataRun3_Express_v2"
-promptrecoGlobalTag = "130X_dataRun3_Prompt_v2"
+promptrecoGlobalTag = "130X_dataRun3_Prompt_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
