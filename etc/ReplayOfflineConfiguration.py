@@ -34,7 +34,6 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-# Cosmics from cruzet, splashes, and 2022 collisions
 # 367102 - Collisions 2023 - 1200b - 0.5h long - all components IN
 setInjectRuns(tier0Config, [367102])
 
@@ -1129,9 +1128,6 @@ ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
-
-# Run only on the ZB streams
-specifyStreams(tier0Config, ["PhysicsCommissioning"])
 
 ###################################
 ### currently inactive settings ###
