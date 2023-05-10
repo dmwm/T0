@@ -1,4 +1,25 @@
 #!/bin/bash
+confirm_deploy="y"
+replay_nodes=("vocms0500" "vocms047" "vocms001" "C4_vocms047")
+bul=0
+for node in ${replay_nodes[@]}; do
+	if [ "$node" == hostname  ]
+	then
+		bul=1
+		break	
+	fi
+done
+
+if [ $bul -eq 0 ]
+then
+	echo "Are you sure you wish to deploy a production node? (y/n)"
+	read confirm_deploy
+fi
+
+if [ "$confirm_deploy" == "n" ]
+then
+	exit
+fi
 
 BASE_DIR=/data/tier0
 DEPLOY_DIR=$BASE_DIR/srv/wmagent
