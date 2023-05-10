@@ -3,7 +3,7 @@ confirm_deploy="y"
 replay_nodes=("vocms0500" "vocms047" "vocms001" "C4_vocms047")
 bul=0
 for node in ${replay_nodes[@]}; do
-	if [ "$node" == hostname  ]
+	if [ "$node" == `hostname`  ]
 	then
 		bul=1
 		break	
