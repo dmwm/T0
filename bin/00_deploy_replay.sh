@@ -1,6 +1,6 @@
 #!/bin/bash
 confirm_deploy="y"
-replay_nodes=("vocms0500" "vocms047" "vocms001" "C4_vocms047")
+replay_nodes=("vocms0500.cern.ch" "vocms047.cern.ch" "vocms001.cern.ch" "C4_vocms047.cern.ch")
 bul=0
 for node in ${replay_nodes[@]}; do
 	if [ "$node" == `hostname`  ]
