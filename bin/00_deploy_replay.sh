@@ -12,13 +12,14 @@ done
 
 if [ $is_production_node -eq 1 ]
 then
-	echo "Are you sure you wish to deploy a production node? (y/n)"
+	echo "Are you sure you wish to deploy the production node `hostname`? (y/n)"
 	read confirm_deploy
 fi
 
 
-if [ "$confirm_deploy" == "n" ]
+if [ "$confirm_deploy" != "y" ]
 then
+	echo "Deployment aborted"
 	exit
 fi
 
