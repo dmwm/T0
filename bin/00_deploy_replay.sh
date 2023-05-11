@@ -1,5 +1,5 @@
 #!/bin/bash
-confirm_deploy="y"
+confirm_deploy=""
 replay_nodes=("vocms0500.cern.ch" "vocms047.cern.ch" "vocms001.cern.ch" "C4_vocms047.cern.ch")
 is_production_node=1
 for node in ${replay_nodes[@]}; do
@@ -14,6 +14,8 @@ if [ $is_production_node -eq 1 ]
 then
 	echo "Are you sure you wish to deploy the production node `hostname`? (y/n)"
 	read confirm_deploy
+else
+	confirm_deploy="y"
 fi
 
 
