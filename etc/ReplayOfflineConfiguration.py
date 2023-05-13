@@ -129,8 +129,8 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "130X_dataRun3_Express_v2"
-promptrecoGlobalTag = "130X_dataRun3_Prompt_v3"
+expressGlobalTag = "130X_dataRun3_Express_PPSReplay_w19_2023_v1"
+promptrecoGlobalTag = "130X_dataRun3_Prompt_PPSReplay_w19_2023_v1"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -1128,6 +1128,9 @@ ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
+
+# Run only on ALCAPPS streams
+specifyStreams(tier0Config, ["ALCAPPSExpress","ALCAPPSPrompt"])
 
 ###################################
 ### currently inactive settings ###
