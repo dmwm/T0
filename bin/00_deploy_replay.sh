@@ -1,4 +1,29 @@
 #!/bin/bash
+confirm_deploy=""
+replay_nodes=("vocms0500.cern.ch" "vocms047.cern.ch" "vocms001.cern.ch" "vocms015.cern.ch")
+is_production_node=1
+for node in ${replay_nodes[@]}; do
+	if [ "$node" == `hostname` ]
+	then
+		is_production_node=0
+		break	
+	fi
+done
+
+if [ $is_production_node -eq 1 ]
+then
+	echo "Are you sure you wish to deploy the production node `hostname`? (y/n)"
+	read confirm_deploy
+else
+	confirm_deploy="y"
+fi
+
+
+if [ "$confirm_deploy" != "y" ]
+then
+	echo "Deployment aborted"
+	exit
+fi
 
 BASE_DIR=/data/tier0
 DEPLOY_DIR=$BASE_DIR/srv/wmagent
