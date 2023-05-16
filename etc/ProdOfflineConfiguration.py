@@ -575,6 +575,20 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
+DATASETS = ["ParkingHH", "ParkingLLP", "ParkingVBF0",
+            "ParkingVBF1", "ParkingVBF2", "ParkingVBF3"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               aod_to_disk=False,
+               dqm_sequences=["@common"],
+               archival_node=None,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_CH_CERN",
+               scenario=ppScenario)
+
 DATASETS = ["EmptyBX"]
 
 for dataset in DATASETS:
