@@ -1,3 +1,49 @@
+3.0.7 to 2.2.0.4:
+  - Merge pull request #4824 from LinaresToine/master
+  - Merge branch 'dmwm:master' into master
+  - Adding ParkingHH, ParkingLLP, and ParkingVBF* datasets (#4823)
+  - Change to processing version 2
+  - Change to CMSSW_13_0_6 in ReplayOfflineConfiguration.py
+  - Merge branch 'dmwm:master' into master
+  - Change to CMSSW_13_0_6 in ProdOfflineConfiguration.py
+  - Update 00_deploy_replay.sh to prevent deployments on production nodes (#4819)
+  - Fixed hostnames of replay nodes
+  - Minor improvement on updated 00_deploy_replay.sh file
+  - Update production Prompt GT to 130X_dataRun3_Prompt_v3 (#4820)
+  - Update 00_deploy_replay.sh
+  - Update 00_deploy_replay.sh
+  - Update 00_deploy_replay.sh
+  - Complete deploy_replay script
+  - Fixed name error in command hostname
+  - Modify to prevent wrong deployments on production machines
+  - Production era change to Run2023C and release CMSSW_13_0_5_patch2 (#4815)
+  - Update 00_patches.sh
+  - Roll back era change after delays in delivery of 1200b beams
+  - Production configuration change to CMSSW_13_0_5_patch1 (#4813)
+  - Update acquisition Era to Era2023C (#4811)
+  - add AlCaLumiPixelsCountsGated to the datasets (#4808)
+  - include WMCore 11502
+  - Update of configuration for Era 2023B (#4807)
+  - Add SpecialRandom PDs prod (#4805)
+  - Removing unused datasets (#4799)
+  - Production configuration change to CMSSW_13_0_3 (#4804)
+  - Tier0 Configuration for stable beams at injection energy (#4802)
+  - remove alcap0GlobalTag
+  - Production configuration for CRAFT and new processing version (#4798)
+  - Add disk subscription to MiniDAQ (#4797)
+  - Update 00_deploy_replay.sh
+  - Update 00_deploy_prod.sh
+  - Fix Pylint sintax errors (#4796)
+  - Update requirements.txt
+  - Update 00_patches.sh
+  - Production update to CMSSW_12_6_4. Adding FPIX LA PCL workflow (#4794)
+  - Add overrides to storage.json CMSSW version
+  - Replay testing CMSSW_12_6_3 for MWGR1 2023 (#4788)
+  - Change T2_CH_CERN_HLT to T2_CH_CERN_P5 (#4790)
+  - Set T2_CH_CERN_HLT in whitelist by default (#4787)
+  - Setting Deep flag for production RucioInjector
+  - Change production to CMSSW_12_4_11_patch1 (#4784)
+
 3.0.6 to 3.0.7:
   - Merge pull request #4786 from jhonatanamado/Release3.0.7_deployment
   - Update deployment scripts and patches T0 3.0.7
