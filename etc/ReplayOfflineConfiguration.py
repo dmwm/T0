@@ -539,6 +539,17 @@ for dataset in DATASETS:
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                scenario=ppScenario)
 
+DATASETS = ["ParkingHH", "ParkingLLP", "ParkingVBF0",
+            "ParkingVBF1", "ParkingVBF2", "ParkingVBF3"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               aod_to_disk=False,
+               dqm_sequences=["@common"],
+               scenario=ppScenario)
+
 DATASETS = ["EmptyBX"]
 
 for dataset in DATASETS:
