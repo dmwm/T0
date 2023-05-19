@@ -524,7 +524,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common", "@muon", "@heavyFlavor"],
+               dqm_sequences=["@common", "@jetmet", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                tape_node=None,
                scenario=ppScenario)
@@ -1071,7 +1071,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common"],
+               dqm_sequences=["@common", "@jetmet"],
                tape_node=None,
                scenario=ppScenario)
 
