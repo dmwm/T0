@@ -35,7 +35,7 @@ setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
 # 367102 - Collisions 2023 - 1200b - 0.5h long - all components IN
-setInjectRuns(tier0Config, [367102])
+setInjectRuns(tier0Config, [367666])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -561,7 +561,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                aod_to_disk=False,
-               dqm_sequences=["@common"],
+               dqm_sequences=["@common", "@jetmet"],
                scenario=ppScenario)
 
 DATASETS = ["EmptyBX"]
@@ -1160,6 +1160,7 @@ ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
 
+specifyStreams(tier0Config, ["ParkingLLP"])
 ###################################
 ### currently inactive settings ###
 ###################################
