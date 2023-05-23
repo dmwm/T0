@@ -851,6 +851,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                       'WRITE_DQM' : int(datasetConfig.WriteDQM),
                                       'WRITE_AOD' : int(datasetConfig.WriteAOD),
                                       'WRITE_MINIAOD' : int(datasetConfig.WriteMINIAOD),
+									  'WRITE_NANOAOD' : int(datasetConfig.WriteNANOAOD),
                                       'PROC_VER' : datasetConfig.ProcessingVersion,
                                       'ALCA_SKIM' : alcaSkim,
                                       'PHYSICS_SKIM' : physicsSkim,
@@ -879,6 +880,9 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 if datasetConfig.WriteMINIAOD:
                     tapeDataTiers.add("MINIAOD")
                     diskDataTiers.add("MINIAOD")
+				if datasetConfig.WriteNANOAOD:
+					tapeDataTiers.add("NANOAOD")
+					diskDataTiers.add("NANOAOD")
                 if datasetConfig.WriteDQM:
                     tapeDataTiers.add(tier0Config.Global.DQMDataTier)
                 if len(datasetConfig.PhysicsSkims) > 0:
@@ -977,6 +981,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 writeTiers.append("AOD")
             if datasetConfig.WriteMINIAOD:
                 writeTiers.append("MINIAOD")
+			if datasetConfig.WriteNANOAOD:
+				writeTiers.append("NANOAOD")
             if datasetConfig.WriteDQM:
                 writeTiers.append(tier0Config.Global.DQMDataTier)
             if len(datasetConfig.AlcaSkims) > 0:
