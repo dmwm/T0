@@ -118,11 +118,11 @@ alcarawProcVersion = {
 }
 
 defaultProcVersionReco = {
-    'default': "2"
+    'default': "3"
 }
 
 expressProcVersion = {
-    'default': "2"
+    'default': "3"
 }
 
 # Defaults for GlobalTag
