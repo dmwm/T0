@@ -576,7 +576,9 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 DATASETS = ["ParkingHH", "ParkingLLP", "ParkingVBF0",
-            "ParkingVBF1", "ParkingVBF2", "ParkingVBF3"]
+            "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
+            "ParkingVBF4", "ParkingVBF5", "ParkingVBF6",
+            "ParkingVBF7"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
