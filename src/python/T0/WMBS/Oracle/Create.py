@@ -327,6 +327,7 @@ class Create(DBCreator):
                  write_dqm      int            not null,
                  write_aod      int            not null,
                  write_miniaod  int            not null,
+				 write_nanoaod  int            not null,
                  proc_version   int            not null,
                  cmssw_id       int            not null,
                  scram_arch     varchar2(50)   not null,
