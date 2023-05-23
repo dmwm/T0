@@ -112,9 +112,9 @@ alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Defaults for processing version
-defaultProcVersionRAW = 2
+defaultProcVersionRAW = 1
 alcarawProcVersion = {
-    'default': "2"
+    'default': "3"
 }
 
 defaultProcVersionReco = {
