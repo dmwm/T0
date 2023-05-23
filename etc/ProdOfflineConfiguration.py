@@ -112,17 +112,17 @@ alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Defaults for processing version
-defaultProcVersionRAW = 2
+defaultProcVersionRAW = 1
 alcarawProcVersion = {
-    'default': "2"
+    'default': "4"
 }
 
 defaultProcVersionReco = {
-    'default': "2"
+    'default': "4"
 }
 
 expressProcVersion = {
-    'default': "2"
+    'default': "4"
 }
 
 # Defaults for GlobalTag
@@ -576,7 +576,9 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 DATASETS = ["ParkingHH", "ParkingLLP", "ParkingVBF0",
-            "ParkingVBF1", "ParkingVBF2", "ParkingVBF3"]
+            "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
+            "ParkingVBF4", "ParkingVBF5", "ParkingVBF6",
+            "ParkingVBF7"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
