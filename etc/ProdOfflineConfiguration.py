@@ -33,10 +33,10 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 9999999)
+setInjectMinRun(tier0Config, 367516)
 
 # Set the max run number:
-setInjectMaxRun(tier0Config, 9999999)
+setInjectMaxRun(tier0Config, 367763)
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -70,8 +70,8 @@ setDQMDataTier(tier0Config, "DQMIO")
 # First timeout is used directly for reco release
 # Second timeout is used for the data service PromptReco start check
 # (to basically say we started PromptReco even though we haven't)
-defaultRecoTimeout = 48 * 3600
-defaultRecoLockTimeout = 1800
+defaultRecoTimeout = 10 * 60
+defaultRecoLockTimeout = 10 * 60
 
 # DQM Server
 setDQMUploadUrl(tier0Config, "https://cmsweb.cern.ch/dqm/offline")
@@ -114,15 +114,15 @@ hiTestppScenario = "ppEra_Run3"
 # Defaults for processing version
 defaultProcVersionRAW = 1
 alcarawProcVersion = {
-    'default': "4"
+    'default': "3"
 }
 
 defaultProcVersionReco = {
-    'default': "4"
+    'default': "3"
 }
 
 expressProcVersion = {
-    'default': "4"
+    'default': "3"
 }
 
 # Defaults for GlobalTag
@@ -1258,6 +1258,15 @@ ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
+
+# Ignoring Express streams for reprocessing
+ignoreStream(tier0Config, "Calibration")
+ignoreStream(tier0Config, "ExpressCosmics")
+ignoreStream(tier0Config, "ALCAPPSExpress")
+ignoreStream(tier0Config, "Express")
+ignoreStream(tier0Config, "ALCALumiPixelsCountsExpress")
+ignoreStream(tier0Config, "ExpressAlignment")
+ignoreStream(tier0Config, "HLTMonitor")
 
 ###################################
 ### currently inactive settings ###
