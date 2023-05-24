@@ -495,8 +495,8 @@ def addDataset(config, datasetName, **settings):
     if 'write_nanoaod' in settings:
         datasetConfig.WriteNANOAOD = settings['write_nanoaod']
     elif not hasattr(datasetConfig, "WriteNANOAOD"):
-        msg = "Tier0Config.addDataset : no write_miniaod defined for dataset %s or Default" % datasetName
-        raise RuntimeError, msg
+        msg = "Tier0Config.addDataset : no write_nanoaod defined for dataset %s or Default" % datasetName
+        raise RuntimeError, (msg)
 
     if 'write_dqm' in settings:
         datasetConfig.WriteDQM = settings['write_dqm']
