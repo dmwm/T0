@@ -1157,6 +1157,8 @@ ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
 
+specifyStreams(tier0Config, ["PhysicsDispJetBTagMuEGTau"])
+
 ###################################
 ### currently inactive settings ###
 ###################################
