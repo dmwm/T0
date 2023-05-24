@@ -35,7 +35,7 @@ setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
 # 367102 - Collisions 2023 - 1200b - 0.5h long - all components IN
-setInjectRuns(tier0Config, [367666])
+setInjectRuns(tier0Config, [367102])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -524,7 +524,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common", "@jetmet", "@muon", "@heavyFlavor"],
+               dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                tape_node=None,
                scenario=ppScenario)
@@ -539,9 +539,6 @@ for dataset in DATASETS:
                dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                scenario=ppScenario)
-
-
-    
 
 DATASETS = [ "ParkingLLP" ]
 for dataset in DATASETS:
@@ -1071,7 +1068,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common", "@jetmet"],
+               dqm_sequences=["@common"],
                tape_node=None,
                scenario=ppScenario)
 
@@ -1160,7 +1157,6 @@ ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
 
-specifyStreams(tier0Config, ["ParkingLLP"])
 ###################################
 ### currently inactive settings ###
 ###################################
