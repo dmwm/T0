@@ -19,7 +19,7 @@ class GetRecoConfig(DBFormatter):
                         reco_config.write_reco,
                         reco_config.write_aod,
                         reco_config.write_miniaod,
-						reco_config.write_nanoaod,
+                        reco_config.write_nanoaod,
                         reco_config.write_dqm,
                         reco_config.proc_version,
                         reco_config.alca_skim,
@@ -64,7 +64,7 @@ class GetRecoConfig(DBFormatter):
             resultDict[primds]['write_reco'] = result[3]
             resultDict[primds]['write_aod'] = result[4]
             resultDict[primds]['write_miniaod'] = result[5]
-			resultDict[primds]['write_nanoaod'] = result[6]
+            resultDict[primds]['write_nanoaod'] = result[6]
             resultDict[primds]['write_dqm'] = result[7]
             resultDict[primds]['proc_ver'] = result[8]
             resultDict[primds]['alca_skim'] = result[9]

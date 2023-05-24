@@ -403,7 +403,7 @@ def addDataset(config, datasetName, **settings):
       write_reco - whether the reco jobs writes RECO output
       write_aod - whether the reco job writes AOD output
       write_miniaod - whether the reco job writes MINIAOD output
-	  write_nanoaod - whether the reco job writes NANOAOD output
+      write_nanoaod - whether the reco job writes NANOAOD output
       write_dqm - whether the reco job writes DQM output
       archival_node - PhEDEx archival node for this dataset
                       (defaults to None)
@@ -491,7 +491,7 @@ def addDataset(config, datasetName, **settings):
     if not hasattr(datasetConfig, "WriteMINIAOD") or not isinstance(datasetConfig.WriteMINIAOD, bool):
         msg = "Tier0Config.addDataset : no valid write_miniaod defined for dataset %s or Default" % datasetName
         raise RuntimeError(msg)
-
+    
     if 'write_nanoaod' in settings:
         datasetConfig.WriteNANOAOD = settings['write_nanoaod']
     elif not hasattr(datasetConfig, "WriteNANOAOD"):

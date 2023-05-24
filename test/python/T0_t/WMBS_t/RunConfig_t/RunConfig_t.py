@@ -192,6 +192,7 @@ class RunConfigTest(unittest.TestCase):
                                     'express_subscribe' : 'T2_CH_CERN',
                                     'valid_mode' : int(True), } ]
 
+
         self.referenceMapping = {}
         self.referenceMapping['A'] = {}
         self.referenceMapping['A']['BTag'] = []

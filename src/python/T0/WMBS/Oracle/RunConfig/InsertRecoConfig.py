@@ -23,7 +23,7 @@ class InsertRecoConfig(DBFormatter):
                          :WRITE_DQM,
                          :WRITE_AOD,
                          :WRITE_MINIAOD,
-						 :WRITE_NANOAOD,
+                         :WRITE_NANOAOD,
                          :PROC_VER,
                          :ALCA_SKIM,
                          :PHYSICS_SKIM,
