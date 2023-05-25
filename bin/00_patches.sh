@@ -17,8 +17,14 @@ DEPLOY_DIR=$BASE_DIR/srv/wmagent
 #Patches on top of 3.0.8
 # Adopt CMS_PATH and SITECONFIG_PATH to locate the site catalog
 curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11481.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
-curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4796.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
 
-curl https://patch-diff.githubusercontent.com/raw/LinaresToine/T0/pull/2.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+# Add new CMSCouch exception for Request Entity Too Large
+curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11502.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+
+# Add new pp scenario
+curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4813.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+
+#Adding support for writing nano aod
+curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4827.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
 
 
