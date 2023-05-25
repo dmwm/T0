@@ -1044,7 +1044,7 @@ DATASETS = ["EphemeralZeroBias0", "EphemeralZeroBias1", "EphemeralZeroBias2", "E
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
-               raw_to_disk=True,#specifyStreams(tier0Config, ["PhysicsDispJetBTagMuEGTau"])
+               raw_to_disk=True,
                dqm_sequences=["@none"],
                write_dqm=False,
                scenario=ppScenario)
