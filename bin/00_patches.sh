@@ -16,8 +16,13 @@ DEPLOY_DIR=$BASE_DIR/srv/wmagent
 
 #Patches on top of 3.0.8
 # Adopt CMS_PATH and SITECONFIG_PATH to locate the site catalog
-curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11481.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+# curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11481.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
 # Add new CMSCouch exception for Request Entity Too Large
-curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11502.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+# curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11502.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+# Add new pp scenario
+# curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4813.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+
+
+#Patches on top of 3.1.0
 # Add new pp scenario
 curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4813.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
