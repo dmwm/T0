@@ -30,3 +30,5 @@ curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11481.patch |
 curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11502.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
 # Add new pp scenario
 curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4813.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+# Implement nanoAOD
+curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4827.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
