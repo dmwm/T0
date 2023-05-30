@@ -33,10 +33,10 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 9999999)
+setInjectMinRun(tier0Config, 367765)
 
 # Set the max run number:
-setInjectMaxRun(tier0Config, 9999999)
+setInjectMaxRun(tier0Config, 367840)
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -1263,6 +1263,15 @@ ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
+
+# Ignoring Express streams for reprocessing
+ignoreStream(tier0Config, "Calibration")
+ignoreStream(tier0Config, "ExpressCosmics")
+ignoreStream(tier0Config, "ALCAPPSExpress")
+ignoreStream(tier0Config, "Express")
+ignoreStream(tier0Config, "ALCALumiPixelsCountsExpress")
+ignoreStream(tier0Config, "ExpressAlignment")
+ignoreStream(tier0Config, "HLTMonitor")
 
 ###################################
 ### currently inactive settings ###

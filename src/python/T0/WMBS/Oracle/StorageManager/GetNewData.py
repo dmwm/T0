@@ -22,9 +22,9 @@ class GetNewData(DBFormatter):
                           """
         else:
             binds = {}
-            whereSql = """WHERE CMS_STOMGR.T0_NEEDS_TO_INJECT(CMS_STOMGR.FILE_TRANSFER_STATUS.STATUS_FLAG,
-                                                     CMS_STOMGR.FILE_TRANSFER_STATUS.INJECT_FLAG,
-                                                     CMS_STOMGR.FILE_TRANSFER_STATUS.BAD_CHECKSUM) = 0
+            whereSql = """WHERE CMS_STOMGR.FILE_TRANSFER_STATUS.STATUS_FLAG >= 2
+                          AND CMS_STOMGR.FILE_TRANSFER_STATUS.INJECT_FLAG = 1
+                          AND CMS_STOMGR.FILE_TRANSFER_STATUS.BAD_CHECKSUM = 0
                           """
             if minRun:
                 binds['MINRUN'] = minRun
