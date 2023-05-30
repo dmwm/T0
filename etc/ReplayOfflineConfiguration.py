@@ -102,7 +102,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_0_6"
+    'default': "CMSSW_13_0_7"
 }
 
 # Configure ScramArch
@@ -540,11 +540,22 @@ for dataset in DATASETS:
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                scenario=ppScenario)
 
-DATASETS = ["ParkingHH", "ParkingLLP", "ParkingVBF0",
+
+    
+
+DATASETS = [ "ParkingLLP" ]
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               aod_to_disk=False,
+               dqm_sequences=["@common", "@jetmet"],
+               scenario=ppScenario)
+
+DATASETS = ["ParkingHH", "ParkingVBF0",
             "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
             "ParkingVBF4", "ParkingVBF5", "ParkingVBF6",
             "ParkingVBF7"]
-
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
