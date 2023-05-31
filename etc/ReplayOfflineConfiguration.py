@@ -639,7 +639,7 @@ for dataset in DATASETS:
                                "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
                                "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
                                "TkAlZMuMu", "TkAlDiMuonAndVertex"],
-               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon"],
+               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
                physics_skims=["ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
                scenario=ppScenario)
 
@@ -1159,6 +1159,9 @@ ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
+
+# Run only on Muon0 and Muon1 streams
+specifyStreams(tier0Config, ["PhysicsMuon0","PhysicsMuon1"])
 
 ###################################
 ### currently inactive settings ###
