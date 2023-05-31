@@ -94,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_0_6"
+    'default': "CMSSW_13_0_7"
 }
 
 # Configure ScramArch
@@ -576,7 +576,7 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
-DATASETS = ["ParkingHH", "ParkingLLP", "ParkingVBF0",
+DATASETS = ["ParkingHH", "ParkingVBF0",
             "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
             "ParkingVBF4", "ParkingVBF5", "ParkingVBF6",
             "ParkingVBF7"]
@@ -591,7 +591,20 @@ for dataset in DATASETS:
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
+    
+DATASETS = ["ParkingLLP"]
 
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               aod_to_disk=False,
+               dqm_sequences=["@common", "@jetmet"],
+               archival_node=None,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_CH_CERN",
+               scenario=ppScenario)
+    
 DATASETS = ["EmptyBX"]
 
 for dataset in DATASETS:
