@@ -1160,9 +1160,6 @@ ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
 
-# Run only on Muon0 and Muon1 streams
-#specifyStreams(tier0Config, ["PhysicsMuon0","PhysicsMuon1"])
-
 ###################################
 ### currently inactive settings ###
 ###################################
