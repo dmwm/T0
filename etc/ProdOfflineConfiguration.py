@@ -691,7 +691,7 @@ for dataset in DATASETS:
                                "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
                                "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
                                "TkAlZMuMu", "TkAlDiMuonAndVertex"],
-               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon"],
+               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
                physics_skims=["ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
                scenario=ppScenario)
 
