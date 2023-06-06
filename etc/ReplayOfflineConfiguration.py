@@ -816,7 +816,7 @@ for dataset in DATASETS:
                reco_split=alcarawSplitting,
                proc_version=alcarawProcVersion,
                timePerEvent=0.02,
-               sizePerEvent=38, 
+               sizePerEvent=38,
                scenario=alcaLumiPixelsScenario)
 
 DATASETS = ["AlCaLumiPixelsCountsUngated"]
@@ -1156,18 +1156,6 @@ ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
-
-# Ignoring Express streams
-ignoreStream(tier0Config, "Calibration")
-ignoreStream(tier0Config, "ExpressCosmics")
-ignoreStream(tier0Config, "ALCAPPSExpress")
-ignoreStream(tier0Config, "Express")
-ignoreStream(tier0Config, "ALCALumiPixelsCountsExpress")
-ignoreStream(tier0Config, "ExpressAlignment")
-ignoreStream(tier0Config, "HLTMonitor")
-
-
-#specifyStreams(tier0Config, ["PhysicsDispJetBTagMuEGTau"])
 
 ###################################
 ### currently inactive settings ###
