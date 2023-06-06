@@ -187,7 +187,11 @@ class RunConfigTest(unittest.TestCase):
                                     'db_host' : "webcondvm.cern.ch",
                                     'acq_era': "ExampleConfig_UnitTest",
                                     'bulk_data_type' : "data",
+                                    'bulk_inject' : "T2_CH_CERN",
+                                    'express_inject' : 'T2_CH_CERN',
+                                    'express_subscribe' : 'T2_CH_CERN',
                                     'valid_mode' : int(True), } ]
+
 
         self.referenceMapping = {}
         self.referenceMapping['A'] = {}
@@ -633,7 +637,9 @@ class RunConfigTest(unittest.TestCase):
         self.referenceMapping['Express']['ExpressPhysics'].append("HLT_Mu100_eta2p1_v1")
         self.referenceMapping['Express']['ExpressPhysics'].append("HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v4")
         self.referenceMapping['Express']['ExpressPhysics'].append("HLT_Mu17_Mu8_v7")
+
         #self.referenceMapping['Express']['ExpressPhysics'].append("HLT_Photon200_NoHE_v4")
+
         self.referenceMapping['Express']['ExpressPhysics'].append("HLT_Photon36_CaloIdL_IsoVL_Photon22_CaloIdL_IsoVL_v4")
         self.referenceMapping['Express']['ExpressPhysics'].append("HLT_Photon400_v2")
         self.referenceMapping['Express']['ExpressPhysics'].append("HLT_Photon75_CaloIdVL_IsoL_v8")
@@ -1459,6 +1465,9 @@ class RunConfigTest(unittest.TestCase):
                 self.assertEqual(recoConfig['write_miniaod'], 1,
                                  "ERROR: problem in reco configuration")
 
+                self.assertEqual(recoConfig['write_nanoaod'], 1,
+                                 "ERROR: problem in reco configuration")
+
                 self.assertEqual(recoConfig['write_dqm'], 1,
                                  "ERROR: problem in reco configuration")
 
@@ -1503,6 +1512,9 @@ class RunConfigTest(unittest.TestCase):
                 self.assertEqual(recoConfig['write_miniaod'], 0,
                                  "ERROR: problem in reco configuration")
 
+                self.assertEqual(recoConfig['write_nanoaod'], 0,
+                                 "ERROR: problem in reco configuration")
+
                 self.assertEqual(recoConfig['write_dqm'], 0,
                                  "ERROR: problem in reco configuration")
 
@@ -1545,6 +1557,9 @@ class RunConfigTest(unittest.TestCase):
                                  "ERROR: problem in reco configuration")
 
                 self.assertEqual(recoConfig['write_miniaod'], 1,
+                                 "ERROR: problem in reco configuration")
+
+                self.assertEqual(recoConfig['write_nanoaod'], 1,
                                  "ERROR: problem in reco configuration")
 
                 self.assertEqual(recoConfig['write_dqm'], 1,

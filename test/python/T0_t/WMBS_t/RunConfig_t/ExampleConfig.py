@@ -5,6 +5,8 @@ Example configuration for RunConfig unittest
 
 """
 
+
+
 from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
@@ -26,15 +28,21 @@ from T0.RunConfig.Tier0Config import setInjectRuns
 from T0.RunConfig.Tier0Config import setStreamerPNN
 from T0.RunConfig.Tier0Config import setEnableUniqueWorkflowName
 
+
+
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
 
 # set the config version (not really used at the moment)
 setConfigVersion(tier0Config, "replace with real version")
 
+
+
 # Settings up sites
 processingSite = "T2_CH_CERN"
 streamerPNN = "T2_CH_CERN"
+
+
 # Set global parameters:
 #  acquisition era
 #  backfill mode
@@ -44,6 +52,7 @@ setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
 setProcessingSite(tier0Config, processingSite)
 setStreamerPNN(tier0Config, streamerPNN)
+
 
 defaultCMSSWVersion = {
        'default': "CMSSW_6_2_4"
@@ -134,7 +143,7 @@ addExpressConfig(tier0Config, "HLTMON",
 
 addDataset(tier0Config, "Default",
            do_reco = False,
-           write_reco = False, write_aod = True, write_miniaod = True, write_dqm = True,
+           write_reco = False, write_aod = True, write_miniaod = True, write_nanoaod = True, write_dqm = True,
            reco_delay = 60,
            reco_delay_offset = 30,
            reco_split = 2000,
@@ -165,7 +174,7 @@ addDataset(tier0Config, "Cosmics",
            scenario = "cosmics")
 
 addDataset(tier0Config, "MinimumBias",
-           write_reco = False, write_aod = False, write_miniaod = False, write_dqm = False,
+           write_reco = False, write_aod = False, write_miniaod = False, write_nanoaod = False, write_dqm = False,
            reco_split = 200,
            proc_version = 6,
            cmssw_version = defaultCMSSWVersion,
