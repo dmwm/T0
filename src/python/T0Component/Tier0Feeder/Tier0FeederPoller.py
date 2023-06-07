@@ -549,7 +549,8 @@ class Tier0FeederPoller(BaseWorkerThread):
                                       'WRITE_RECO' : config['write_reco'],
                                       'WRITE_DQM' : config['write_dqm'],
                                       'WRITE_AOD' : config['write_aod'],
-                                      'WRITE_MINIAOD' : config['write_miniaod'] } )
+                                      'WRITE_MINIAOD' : config['write_miniaod'],
+                                      'WRITE_NANOAOD' : config['write_nanoaod']} )
                 bindsUpdate.append( { 'RUN' : config['run'],
                                       'PRIMDS' : config['primds'] } )
 
