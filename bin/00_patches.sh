@@ -27,4 +27,6 @@ curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4813.patch | patc
 #Adding support for writing nano aod
 curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4827.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
 
+#Include nanoaod support in Tier0FeederPoller
+curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4836.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
 
