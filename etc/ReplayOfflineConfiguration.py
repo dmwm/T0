@@ -35,7 +35,8 @@ setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
 # 367102 - Collisions 2023 - 1200b - 0.5h long - all components IN
-setInjectRuns(tier0Config, [367102])
+# 367696 - Collisions 2023 - 2400b - 12h long - all components IN
+setInjectRuns(tier0Config, [367696])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -129,7 +130,7 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "130X_dataRun3_Express_v2"
+expressGlobalTag = "130X_dataRun3_Express_PPSReplay_w23_2023_v1"
 promptrecoGlobalTag = "130X_dataRun3_Prompt_v3"
 
 # Mandatory for CondDBv2
@@ -1156,6 +1157,9 @@ ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
+
+# Run only on ALCAPPSExpress stream
+specifyStreams(tier0Config, ["ALCAPPSExpress"])
 
 ###################################
 ### currently inactive settings ###
