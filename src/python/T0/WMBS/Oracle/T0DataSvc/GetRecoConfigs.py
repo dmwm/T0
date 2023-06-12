@@ -26,7 +26,8 @@ class GetRecoConfigs(DBFormatter):
                         reco_config.write_reco AS write_reco,
                         reco_config.write_dqm AS write_dqm,
                         reco_config.write_aod AS write_aod,
-                        reco_config.write_miniaod AS write_miniaod
+                        reco_config.write_miniaod AS write_miniaod,
+                        reco_config.write_nanoaod AS write_nanoaod
                  FROM reco_config
                  INNER JOIN primary_dataset ON
                    primary_dataset.id = reco_config.primds_id
