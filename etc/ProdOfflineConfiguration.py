@@ -112,7 +112,6 @@ alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3"
 
 # Defaults for processing version
-defaultProcVersionRAW = 1
 alcarawProcVersion = {
     'default': "4"
 }
@@ -153,7 +152,7 @@ expressVersionOverride = {
 
 #set default repack settings for bulk streams
 addRepackConfig(tier0Config, "Default",
-                proc_ver=defaultProcVersionRAW,
+                proc_ver=1, # Should remain 1. Changing it can cause several issues.
                 maxSizeSingleLumi=24 * 1024 * 1024 * 1024,
                 maxSizeMultiLumi=8 * 1024 * 1024 * 1024,
                 minInputSize=2.1 * 1024 * 1024 * 1024,
