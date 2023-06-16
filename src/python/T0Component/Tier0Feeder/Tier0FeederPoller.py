@@ -266,12 +266,14 @@ class Tier0FeederPoller(BaseWorkerThread):
         # insert express and reco configs into Tier0 Data Service
         #
         if self.haveT0DataSvc:
+            logging.info("Updating T0 Data Service...")
             self.updateRunConfigT0DataSvc()
             self.updateRunStreamDoneT0DataSvc()
             self.updateExpressConfigsT0DataSvc()
             self.updateRecoConfigsT0DataSvc()
             self.updateRecoReleaseConfigsT0DataSvc()
             self.lockDatasetsT0DataSvc()
+            self.updateSkippedStreamersT0DataSvc()
 
         #
         # mark express and repack workflows as injected if certain conditions are met
@@ -672,6 +674,37 @@ class Tier0FeederPoller(BaseWorkerThread):
             updateDatasetLockedDAO = self.daoFactory(classname = "T0DataSvc.UpdateDatasetLocked")
             updateDatasetLockedDAO.execute(binds = bindsUpdate, transaction = False)
 
+        return
+
+    def updateSkippedStreamersT0DataSvc(self):
+        """
+        _updateSkippedStreamersT0DataSvc_
+
+        Publish lumis that have been skipped by the agent
+
+        """
+        logging.debug("Updating Skipped Streamers in T0 Data Service...")
+        getSkippedStreamersDAO = self.daoFactory(classname = "T0DataSvc.GetSkippedStreamers")
+        skippedStreamers = getSkippedStreamersDAO.execute(transaction = False)
+        logging.debug("Skipped lumis: %s", str(skippedStreamers))
+
+        if len(skippedStreamers) > 0:
+
+            bindsInsert = []
+            bindsUpdate = []
+            for lumi in skippedStreamers:
+                bindsInsert.append( { 'RUN' : lumi['run_id'],
+                                      'STREAM' : lumi['name'],
+                                      'LUMI' : lumi['lumi_id'],
+                                      'EVENTS' : lumi['events']
+                                     } )
+                bindsUpdate.append( { 'ID' : lumi['id'] } )
+
+            insertSkippedStreamers = self.daoFactoryT0DataSvc(classname = "T0DataSvc.InsertSkippedStreamers")
+            insertSkippedStreamers.execute(binds = bindsInsert, transaction = False)
+
+            updateSkippedStreamers = self.daoFactory(classname = "T0DataSvc.UpdateSkippedStreamers")
+            updateSkippedStreamers.execute(binds = bindsUpdate, transaction = False)
         return
 
     def terminate(self, params):
