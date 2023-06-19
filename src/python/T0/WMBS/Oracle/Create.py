@@ -251,6 +251,7 @@ class Create(DBCreator):
                  insert_time   int not null,
                  used          int default 0 not null,
                  deleted       int default 0 not null,
+                 skipped       int default 0 not null,
                  primary key(id)
                )"""
 
