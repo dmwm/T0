@@ -1022,6 +1022,8 @@ DATASETS += ["ZeroBiasPD01", "ZeroBiasPD02", "ZeroBiasPD03",
              "ZeroBiasPD07", "ZeroBiasPD08", "ZeroBiasPD09",
              "ZeroBiasPD10"]
 
+DATASETS += ["ZeroBiasNonColliding"]
+
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,

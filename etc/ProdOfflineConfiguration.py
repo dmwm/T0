@@ -94,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_0_7"
+    'default': "CMSSW_13_0_7_TOTEM"
 }
 
 # Configure ScramArch
@@ -1112,6 +1112,8 @@ DATASETS += ["ZeroBiasPD01", "ZeroBiasPD02", "ZeroBiasPD03",
              "ZeroBiasPD04", "ZeroBiasPD05", "ZeroBiasPD06",
              "ZeroBiasPD07", "ZeroBiasPD08", "ZeroBiasPD09",
              "ZeroBiasPD10"]
+
+DATASETS += ["ZeroBiasNonColliding"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
