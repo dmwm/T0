@@ -83,14 +83,14 @@ echo_header 'Deploying Tier0 WMAgent'
 echo_header 'Applying general patches and cleaning t0ast'
 $BASE_DIR/00_patches.sh 2>&1 > /dev/null
 
-## clean database
-$BASE_DIR/00_wipe_t0ast.sh 2>&1 > /dev/null
-
 # needs location of user certs
 source $BASE_DIR/admin/env.sh
 
 # Override secrets file location for replays
 export WMAGENT_SECRETS_LOCATION=$BASE_DIR/admin/WMAgent.secrets.replay
+
+## clean database
+$BASE_DIR/00_wipe_t0ast.sh 2>&1 > /dev/null
 
 cd $DEPLOY_DIR/current
 
