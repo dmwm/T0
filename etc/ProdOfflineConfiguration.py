@@ -55,7 +55,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2023C")
+setAcquisitionEra(tier0Config, "Run2023D")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -94,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_0_7_TOTEM"
+    'default': "CMSSW_13_0_7_patch1"
 }
 
 # Configure ScramArch
@@ -113,20 +113,20 @@ hiTestppScenario = "ppEra_Run3"
 
 # Defaults for processing version
 alcarawProcVersion = {
-    'default': "4"
+    'default': "1"
 }
 
 defaultProcVersionReco = {
-    'default': "4"
+    'default': "1"
 }
 
 expressProcVersion = {
-    'default': "4"
+    'default': "1"
 }
 
 # Defaults for GlobalTag
-expressGlobalTag = "130X_dataRun3_Express_v2"
-promptrecoGlobalTag = "130X_dataRun3_Prompt_v3"
+expressGlobalTag = "130X_dataRun3_Express_v3"
+promptrecoGlobalTag = "130X_dataRun3_Prompt_v4"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
