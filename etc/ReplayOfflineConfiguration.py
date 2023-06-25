@@ -35,7 +35,7 @@ setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
 # 367102 - Collisions 2023 - 1200b - 0.5h long - all components IN
-setInjectRuns(tier0Config, [367102])
+setInjectRuns(tier0Config, [369585])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -102,7 +102,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_0_7"
+    'default': "CMSSW_13_0_7_TOTEM"
 }
 
 # Configure ScramArch
@@ -1158,6 +1158,9 @@ ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
+
+# Run only on PhysicsCommissioning stream which contains the ZeroBiasNonColliding dataset
+specifyStreams(tier0Config, ["PhysicsCommissioning"])
 
 ###################################
 ### currently inactive settings ###
