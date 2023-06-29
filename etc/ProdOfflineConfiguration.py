@@ -55,7 +55,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2023C")
+setAcquisitionEra(tier0Config, "Run2023D")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -94,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_0_7_TOTEM"
+    'default': "CMSSW_13_0_9"
 }
 
 # Configure ScramArch
@@ -113,20 +113,20 @@ hiTestppScenario = "ppEra_Run3"
 
 # Defaults for processing version
 alcarawProcVersion = {
-    'default': "4"
+    'default': "1"
 }
 
 defaultProcVersionReco = {
-    'default': "4"
+    'default': "1"
 }
 
 expressProcVersion = {
-    'default': "4"
+    'default': "1"
 }
 
 # Defaults for GlobalTag
-expressGlobalTag = "130X_dataRun3_Express_v2"
-promptrecoGlobalTag = "130X_dataRun3_Prompt_v3"
+expressGlobalTag = "130X_dataRun3_Express_v3"
+promptrecoGlobalTag = "130X_dataRun3_Prompt_v4"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -205,6 +205,7 @@ addExpressConfig(tier0Config, "Express",
                                  "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel",
                                  "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff", "PromptCalibProdSiPixelAliHG"
                                 ],
+                 dqm_sequences=["@standardDQMExpress"],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
                  global_tag_connect=globalTagConnect,
@@ -478,8 +479,8 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
-               tape_node="T1_DE_KIT_MSS",
-               disk_node="T1_DE_KIT_Disk",
+               tape_node="T1_IT_CNAF_MSS",
+               disk_node="T1_IT_CNAF_Disk",
                physics_skims=["EXODisplacedJet", "EXODelayedJet", "EXODTCluster", "LogError", "LogErrorMonitor", "EXOLLPJetHCAL"],
                scenario=ppScenario)
 
@@ -672,12 +673,12 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
-               tape_node="T1_DE_KIT_MSS",
-               disk_node="T1_DE_KIT_Disk",
+               tape_node="T1_US_FNAL_MSS",
+               disk_node="T1_US_FNAL_Disk",
                physics_skims=["TopMuEG", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["Muon", "Muon0", "Muon1"]
+DATASETS = ["Muon", "Muon0"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -686,6 +687,23 @@ for dataset in DATASETS:
                write_dqm=True,
                tape_node="T1_FR_CCIN2P3_MSS",  # SingleMon was in "T1_US_FNAL_MSS" , DoubleMuon was in "T1_DE_KIT_MSS"
                disk_node="T1_FR_CCIN2P3_Disk", # SingleMon was in "T1_US_FNAL_Disk", DoubleMuon was in "T1_DE_KIT_Disk"
+               alca_producers=["TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu",
+                               "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
+                               "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
+                               "TkAlZMuMu", "TkAlDiMuonAndVertex"],
+               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
+               physics_skims=["ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
+               scenario=ppScenario)
+
+DATASETS = ["Muon1"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_reco=False,
+               write_dqm=True,
+               tape_node="T1_US_FNAL_MSS",
+               disk_node="T1_US_FNAL_Disk",
                alca_producers=["TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu",
                                "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
                                "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
@@ -704,8 +722,8 @@ for dataset in DATASETS:
                alca_producers=["TkAlCosmicsInCollisions"],
                dqm_sequences=["@common"],
                physics_skims=["EXONoBPTXSkim", "LogError", "LogErrorMonitor"],
-               tape_node="T1_DE_KIT_MSS",
-               disk_node="T1_DE_KIT_Disk",
+               tape_node="T1_UK_RAL_MSS",
+               disk_node="T1_UK_RAL_Disk",
                scenario=ppScenario)
 
 
@@ -974,6 +992,8 @@ for dataset in DATASETS:
                dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
                alca_producers=["TkAlMinBias"],
                physics_skims=["LogError", "LogErrorMonitor"],
+               disk_node="T1_IT_CNAF_Disk",
+               tape_node="T1_IT_CNAF_MSS",
                scenario=ppScenario)
 
 DATASETS = ["SpecialHLTPhysics", "SpecialHLTPhysics0", "SpecialHLTPhysics1",
