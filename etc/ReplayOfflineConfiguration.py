@@ -35,7 +35,7 @@ setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
 # 367102 - Collisions 2023 - 1200b - 0.5h long - all components IN
-setInjectRuns(tier0Config, [368389])
+setInjectRuns(tier0Config, [368823])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -102,7 +102,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_0_7_patch1"
+    'default': "CMSSW_13_0_9"
 }
 
 # Configure ScramArch
@@ -207,6 +207,7 @@ addExpressConfig(tier0Config, "Express",
                                  "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel",
                                  "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff", "PromptCalibProdSiPixelAliHG"
                                 ],
+                 dqm_sequences=["@standardDQMExpress"],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
                  global_tag_connect=globalTagConnect,
