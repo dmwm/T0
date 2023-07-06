@@ -27,16 +27,17 @@ class InsertRecoConfigs(DBFormatter):
                               write_reco = :WRITE_RECO,
                               write_dqm = :WRITE_DQM,
                               write_aod = :WRITE_AOD,
-                              write_miniaod = :WRITE_MINIAOD
+                              write_miniaod = :WRITE_MINIAOD,
+                              write_nanoaod = :WRITE_NANOAOD
                  WHEN NOT MATCHED THEN
                    INSERT (run, primds, cmssw, scram_arch, alca_skim,
                            physics_skim, dqm_seq, global_tag, scenario,
                            multicore, write_reco, write_dqm,
-                           write_aod, write_miniaod)
+                           write_aod, write_miniaod, write_nanoaod)
                    VALUES (:RUN, :PRIMDS, :CMSSW, :SCRAM_ARCH, :ALCA_SKIM,
                            :PHYSICS_SKIM, :DQM_SEQ, :GLOBAL_TAG, :SCENARIO,
                            :MULTICORE, :WRITE_RECO, :WRITE_DQM,
-                           :WRITE_AOD, :WRITE_MINIAOD)
+                           :WRITE_AOD, :WRITE_MINIAOD, :WRITE_NANOAOD)
                  """
 
         self.dbi.processData(sql, binds, conn = conn,
