@@ -29,9 +29,9 @@ BASE_DIR=/data/tier0
 DEPLOY_DIR=$BASE_DIR/srv/wmagent
 SPEC_DIR=$BASE_DIR/admin/Specs
 
-TIER0_VERSION=3.0.8
+TIER0_VERSION=3.1.0
 TIER0_ARCH=slc7_amd64_gcc630
-DEPLOY_TAG=HG2302a
+DEPLOY_TAG=HG2305b
 
 function echo_header {
     echo ''
@@ -83,11 +83,14 @@ echo_header 'Deploying Tier0 WMAgent'
 echo_header 'Applying general patches and cleaning t0ast'
 $BASE_DIR/00_patches.sh 2>&1 > /dev/null
 
+# needs location of user certs
+source $BASE_DIR/admin/env.sh
+
+# Override secrets file location for replays
+export WMAGENT_SECRETS_LOCATION=$BASE_DIR/admin/WMAgent.secrets.replay
+
 ## clean database
 $BASE_DIR/00_wipe_t0ast.sh 2>&1 > /dev/null
-
-# needs secret file location and user certs
-source $BASE_DIR/admin/env.sh
 
 cd $DEPLOY_DIR/current
 
