@@ -125,6 +125,7 @@ echo "config.RucioInjector.useDsetReplicaDeep = True" >> ./config/tier0/config.p
 # Set output datasets status to VALID in DBS
 #
 echo "config.DBS3Upload.datasetType = 'VALID'" >> ./config/tier0/config.py
+sed -i "s+config.DBS3Upload.uploaderName = 'WMAgent'+config.DBS3Upload.uploaderName = 'T0Prod'+g" ./config/tier0/config.py
 
 #
 # needed for conditions upload
