@@ -552,7 +552,7 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 DATASETS = ["ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
-            "ParkingDoubleMuonLowMass3","ParkingDoubleMuonLowMass4","ParkingDoubleMuonLowMass5"
+            "ParkingDoubleMuonLowMass3","ParkingDoubleMuonLowMass4","ParkingDoubleMuonLowMass5",
             "ParkingDoubleMuonLowMass6","ParkingDoubleMuonLowMass7"]
 
 for dataset in DATASETS:
