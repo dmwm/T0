@@ -513,15 +513,6 @@ for dataset in DATASETS:
                timePerEvent=1,
                scenario=ppScenario)
 
-DATASETS = ["ReservedDoubleMuonLowMass"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=False,
-               tape_node="T1_IT_CNAF_MSS",
-               disk_node="T1_IT_CNAF_Disk",
-               scenario=ppScenario)
-
 DATASETS = ["ParkingSingleMuon","ParkingSingleMuon0"]
 
 for dataset in DATASETS:
@@ -554,13 +545,14 @@ for dataset in DATASETS:
                dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN"],
+               physics_skims=["ReserveDMu"],
                archival_node=None,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
 DATASETS = ["ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
-            "ParkingDoubleMuonLowMass3","ParkingDoubleMuonLowMass4","ParkingDoubleMuonLowMass5",
+            "ParkingDoubleMuonLowMass3","ParkingDoubleMuonLowMass4","ParkingDoubleMuonLowMass5"
             "ParkingDoubleMuonLowMass6","ParkingDoubleMuonLowMass7"]
 
 for dataset in DATASETS:
@@ -570,6 +562,7 @@ for dataset in DATASETS:
                aod_to_disk=False,
                dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
+               physics_skims=["ReserveDMu"],
                siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN"],
                archival_node=None,
                tape_node="T0_CH_CERN_MSS",
