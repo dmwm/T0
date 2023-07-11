@@ -160,7 +160,8 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                     self.dbInterfaceSMNotify,
                                                     streamerPNN = tier0Config.Global.StreamerPNN,
                                                     minRun = tier0Config.Global.InjectMinRun,
-                                                    maxRun = tier0Config.Global.InjectMaxRun)
+                                                    maxRun = tier0Config.Global.InjectMaxRun,
+                                                    injectLimit= tier0Config.Global.InjectLimit)
                 else:
                     injectRuns = set()
                     for injectRun in tier0Config.Global.InjectRuns:
