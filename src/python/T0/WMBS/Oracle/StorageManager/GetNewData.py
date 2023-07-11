@@ -35,40 +35,25 @@ class GetNewData(DBFormatter):
                 whereSql += """AND CMS_STOMGR.FILE_TRANSFER_STATUS.RUNNUMBER <= :MAXRUN
                                """
 
+        sql = """SELECT CMS_STOMGR.FILE_TRANSFER_STATUS.FILE_ID AS p5_id,
+                        CMS_STOMGR.FILE_TRANSFER_STATUS.RUNNUMBER AS run,
+                        CMS_STOMGR.FILE_TRANSFER_STATUS.LS AS lumi,
+                        CMS_STOMGR.FILE_TRANSFER_STATUS.STREAM AS stream,
+                        CMS_STOMGR.FILE_TRANSFER_STATUS.PATH AS path,
+                        CMS_STOMGR.FILE_TRANSFER_STATUS.FILENAME AS filename,
+                        CMS_STOMGR.FILE_QUALITY_CONTROL.FILE_SIZE AS filesize,
+                        NVL(CMS_STOMGR.FILE_QUALITY_CONTROL.EVENTS_ACCEPTED, 0) AS events
+                FROM CMS_STOMGR.FILE_TRANSFER_STATUS
+                INNER JOIN CMS_STOMGR.FILE_QUALITY_CONTROL ON
+                CMS_STOMGR.FILE_QUALITY_CONTROL.FILENAME = CMS_STOMGR.FILE_TRANSFER_STATUS.FILENAME
+                %s
+                AND CMS_STOMGR.FILE_TRANSFER_STATUS.PATH IS NOT NULL
+                AND CMS_STOMGR.FILE_QUALITY_CONTROL.FILE_SIZE IS NOT NULL
+                AND CMS_STOMGR.FILE_QUALITY_CONTROL.FILE_SIZE > 0
+                """ % whereSql
+        
         if injectLimit:
-            sql = """SELECT CMS_STOMGR.FILE_TRANSFER_STATUS.FILE_ID AS p5_id,
-                            CMS_STOMGR.FILE_TRANSFER_STATUS.RUNNUMBER AS run,
-                            CMS_STOMGR.FILE_TRANSFER_STATUS.LS AS lumi,
-                            CMS_STOMGR.FILE_TRANSFER_STATUS.STREAM AS stream,
-                            CMS_STOMGR.FILE_TRANSFER_STATUS.PATH AS path,
-                            CMS_STOMGR.FILE_TRANSFER_STATUS.FILENAME AS filename,
-                            CMS_STOMGR.FILE_QUALITY_CONTROL.FILE_SIZE AS filesize,
-                            NVL(CMS_STOMGR.FILE_QUALITY_CONTROL.EVENTS_ACCEPTED, 0) AS events
-                    FROM CMS_STOMGR.FILE_TRANSFER_STATUS
-                    INNER JOIN CMS_STOMGR.FILE_QUALITY_CONTROL ON
-                    CMS_STOMGR.FILE_QUALITY_CONTROL.FILENAME = CMS_STOMGR.FILE_TRANSFER_STATUS.FILENAME
-                    %s
-                    AND CMS_STOMGR.FILE_TRANSFER_STATUS.PATH IS NOT NULL
-                    AND CMS_STOMGR.FILE_QUALITY_CONTROL.FILE_SIZE IS NOT NULL
-                    AND CMS_STOMGR.FILE_QUALITY_CONTROL.FILE_SIZE > 0
-                    """ % whereSql % """ LIMIT {}""".format(injectLimit)
-        else:
-            sql = """SELECT CMS_STOMGR.FILE_TRANSFER_STATUS.FILE_ID AS p5_id,
-                            CMS_STOMGR.FILE_TRANSFER_STATUS.RUNNUMBER AS run,
-                            CMS_STOMGR.FILE_TRANSFER_STATUS.LS AS lumi,
-                            CMS_STOMGR.FILE_TRANSFER_STATUS.STREAM AS stream,
-                            CMS_STOMGR.FILE_TRANSFER_STATUS.PATH AS path,
-                            CMS_STOMGR.FILE_TRANSFER_STATUS.FILENAME AS filename,
-                            CMS_STOMGR.FILE_QUALITY_CONTROL.FILE_SIZE AS filesize,
-                            NVL(CMS_STOMGR.FILE_QUALITY_CONTROL.EVENTS_ACCEPTED, 0) AS events
-                    FROM CMS_STOMGR.FILE_TRANSFER_STATUS
-                    INNER JOIN CMS_STOMGR.FILE_QUALITY_CONTROL ON
-                    CMS_STOMGR.FILE_QUALITY_CONTROL.FILENAME = CMS_STOMGR.FILE_TRANSFER_STATUS.FILENAME
-                    %s
-                    AND CMS_STOMGR.FILE_TRANSFER_STATUS.PATH IS NOT NULL
-                    AND CMS_STOMGR.FILE_QUALITY_CONTROL.FILE_SIZE IS NOT NULL
-                    AND CMS_STOMGR.FILE_QUALITY_CONTROL.FILE_SIZE > 0
-                    """ % whereSql
+            sql = sql % """ LIMIT {}""".format(injectLimit)
 
         results = self.dbi.processData(sql, binds, conn = conn,
                                        transaction = transaction)
