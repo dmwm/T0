@@ -24,8 +24,8 @@ Tier0Configuration - Global configuration object
 | |       |
 | |       |--> InjectMaxRun - Highest run number to be injected into the system from the SM database (default is unlimited)
 | |       |
-| |       |--> InjectLimit - Maximum number of filess to be injected into the system 
-| |       |                 from the SM database (default is unlimited) (used for small functional test)
+| |       |--> InjectLimit - Maximum number of lumis to be injected into the system 
+| |       |                  from the SM database (default is unlimited) (used for small functional test)
 | |       |
 | |       |--> SpecifiedStreamNames - Streamer names list to be ran exclusivley. (default is None)
 | |       |                           If it is None, all streamer will processed except which is set to be ignored.
@@ -783,7 +783,7 @@ def setInjectLimit(config, injectLimit):
     """
     _setInjectLimit_
 
-    Set the limit of files to be injected into the Tier0 (for small functional test).
+    Set the limit of lumis to be injected into the Tier0 (for small functional test).
     """
     config.Global.InjectLimit = injectLimit
     return

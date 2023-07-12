@@ -160,8 +160,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                     self.dbInterfaceSMNotify,
                                                     streamerPNN = tier0Config.Global.StreamerPNN,
                                                     minRun = tier0Config.Global.InjectMinRun,
-                                                    maxRun = tier0Config.Global.InjectMaxRun,
-                                                    injectLimit= tier0Config.Global.InjectLimit)
+                                                    maxRun = tier0Config.Global.InjectMaxRun)
                 else:
                     injectRuns = set()
                     for injectRun in tier0Config.Global.InjectRuns:
@@ -172,7 +171,8 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                         self.dbInterfaceHltConf,
                                                         self.dbInterfaceSMNotify,
                                                         streamerPNN = tier0Config.Global.StreamerPNN,
-                                                        injectRun = injectRun)
+                                                        injectRun = injectRun,
+                                                        injectLimit= tier0Config.Global.InjectLimit)
                         self.injectedRuns.add(injectRun)
             except:
                 # shouldn't happen, just a catch all insurance

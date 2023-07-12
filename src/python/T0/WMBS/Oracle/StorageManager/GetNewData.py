@@ -53,7 +53,7 @@ class GetNewData(DBFormatter):
                 """ % whereSql
         
         if injectLimit:
-            sql = sql % """ LIMIT {}""".format(injectLimit)
+            sql += " AND CMS_STOMGR.FILE_TRANSFER_STATUS.LS < {injectLimit}".format(injectLimit = injectLimit)
 
         results = self.dbi.processData(sql, binds, conn = conn,
                                        transaction = transaction)

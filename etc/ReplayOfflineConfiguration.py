@@ -22,6 +22,7 @@ from T0.RunConfig.Tier0Config import specifyStreams
 from T0.RunConfig.Tier0Config import addRepackConfig
 from T0.RunConfig.Tier0Config import addExpressConfig
 from T0.RunConfig.Tier0Config import setInjectRuns
+from T0.RunConfig.Tier0Config import setInjectLimit
 from T0.RunConfig.Tier0Config import setStreamerPNN
 from T0.RunConfig.Tier0Config import setEnableUniqueWorkflowName
 from T0.RunConfig.Tier0Config import addSiteConfig
@@ -36,6 +37,8 @@ setConfigVersion(tier0Config, "replace with real version")
 # Set run number to replay
 # 367102 - Collisions 2023 - 1200b - 0.5h long - all components IN
 setInjectRuns(tier0Config, [368823])
+
+setInjectLimit(tier0Config, 10)
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
