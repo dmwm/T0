@@ -92,9 +92,11 @@ setPromptCalibrationConfig(tier0Config,
 #   'maxRun': {100000: Value3, 200000: Value4},
 #   'default': Value5 }
 
+maxRunPreviousConfig = 999999 # Last run before magnet half cycle 13 July 2023
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_0_9"
+    'default': "CMSSW_13_0_10",
+    'maxRun': {maxRunPreviousConfig: "CMSSW_13_0_9"}
 }
 
 # Configure ScramArch
@@ -113,15 +115,18 @@ hiTestppScenario = "ppEra_Run3"
 
 # Defaults for processing version
 alcarawProcVersion = {
-    'default': "1"
+    'maxRun': {maxRunPreviousConfig: 1},
+    'default': 2
 }
 
 defaultProcVersionReco = {
-    'default': "1"
+    'maxRun': {maxRunPreviousConfig: 1},
+    'default': 2
 }
 
 expressProcVersion = {
-    'default': "1"
+    'maxRun': {maxRunPreviousConfig: 1},
+    'default': 2
 }
 
 # Defaults for GlobalTag
