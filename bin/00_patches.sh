@@ -34,4 +34,4 @@ curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4841.patch | patc
 
 
 #Adding primary_dataset_config into T0 Data Service
-curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4857.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4858.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
