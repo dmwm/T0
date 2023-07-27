@@ -342,6 +342,7 @@ class Create(DBCreator):
         self.create[len(self.create)] = \
             """CREATE TABLE primary_dataset_config (
                  run_id         int            not null,
+                 acq_era        varchar2(255),
                  primds_id      int            not null,
                  in_datasvc     int            default 0 not null,
                  cmssw_id       int            not null,

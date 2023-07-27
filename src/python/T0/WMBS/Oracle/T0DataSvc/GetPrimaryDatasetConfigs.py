@@ -17,7 +17,7 @@ class GetPrimaryDatasetConfigs(DBFormatter):
         sql = """
                 SELECT 
                       primary_dataset_config.primds_id AS primds, 
-                      run.acq_era AS acq_era, 
+                      primary_dataset_config.acq_era AS acq_era, 
                       MIN(run.run_id) AS min_run, 
                       MAX(run.run_id) AS max_run, 
                       primary_dataset_config.cmssw_id AS cmssw, 

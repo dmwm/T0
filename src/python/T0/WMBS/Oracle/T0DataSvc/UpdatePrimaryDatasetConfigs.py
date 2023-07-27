@@ -16,6 +16,11 @@ class UpdatePrimaryDatasetConfigs(DBFormatter):
         sql = """UPDATE primary_dataset_config
                  SET in_datasvc = 1
                  WHERE primds_id = (SELECT id FROM primary_dataset WHERE name = :PRIMDS)
+                 AND cmssw_id = :CMSSW
+                 AND global_tag = :GLOBAL_TAG
+                 AND physics_skim = :PHYSICS_SKIM
+                 AND dqm_seq = :DQM_SEQ
+                 AND acq_era = :ACQ_ERA
                  """
 
         self.dbi.processData(sql, binds, conn = conn,
