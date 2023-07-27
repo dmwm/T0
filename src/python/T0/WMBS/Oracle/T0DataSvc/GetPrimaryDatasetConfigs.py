@@ -16,17 +16,17 @@ class GetPrimaryDatasetConfigs(DBFormatter):
 
         sql = """
                 SELECT 
-                      reco_config.primds_id AS primds, 
+                      primary_dataset_config.primds_id AS primds, 
                       run.acq_era AS acq_era, 
                       MIN(run.run_id) AS min_run, 
                       MAX(run.run_id) AS max_run, 
-                      reco_config.cmssw_id AS cmssw, 
-                      reco_config.global_tag AS global_tag, 
-                      reco_config.physics_skim AS physics_skim, 
-                      reco_config.dqm_seq AS dqm_seq
-                FROM reco_config
-                JOIN run ON run.run_id = reco_config.run_id
-                WHERE checkForZeroState(reco_config.in_datasvc) = 1
+                      primary_dataset_config.cmssw_id AS cmssw, 
+                      primary_dataset_config.global_tag AS global_tag, 
+                      primary_dataset_config.physics_skim AS physics_skim, 
+                      primary_dataset_config.dqm_seq AS dqm_seq
+                FROM primary_dataset_config
+                JOIN run ON run.run_id = primary_dataset_config.run_id
+                WHERE checkForZeroState(primary_dataset_config.in_datasvc) = 0
                 GROUP BY acq_era, primds, cmssw,  global_tag, physics_skim, dqm_seq
                 ORDER BY primds, min_run desc
                 """

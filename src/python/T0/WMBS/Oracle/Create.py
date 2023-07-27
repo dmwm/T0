@@ -339,7 +339,17 @@ class Create(DBCreator):
                  dqm_seq        varchar2(700),
                  primary key (run_id, primds_id)
                ) ORGANIZATION INDEX"""
-
+        self.create[len(self.create)] = \
+            """CREATE TABLE primary_dataset_config (
+                 run_id         int            not null,
+                 primds_id      int            not null,
+                 in_datasvc     int            default 0 not null,
+                 cmssw_id       int            not null,
+                 global_tag     varchar2(255)  not null,
+                 physics_skim   varchar2(700),
+                 dqm_seq        varchar2(700),
+                 primary key (primds_id)
+               ) ORGANIZATION INDEX"""
         self.create[len(self.create)] = \
             """CREATE TABLE phedex_config (
                  run_id            int not null,

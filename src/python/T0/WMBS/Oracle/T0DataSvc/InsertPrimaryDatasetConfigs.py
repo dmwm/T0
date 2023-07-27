@@ -9,7 +9,7 @@ Insert skipped streamers into Tier0 Data Service
 
 from WMCore.Database.DBFormatter import DBFormatter
 
-class InsertSkippedStreamers(DBFormatter):
+class InsertPrimaryDatasetConfigs(DBFormatter):
 
     def execute(self, binds, conn = None, transaction = False):
 
