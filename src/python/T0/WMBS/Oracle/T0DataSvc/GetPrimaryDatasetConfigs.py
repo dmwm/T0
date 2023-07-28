@@ -26,8 +26,7 @@ class GetPrimaryDatasetConfigs(DBFormatter):
                 FROM reco_config
                 JOIN run ON run.run_id = reco_config.run_id
                 WHERE reco_config.in_datasvc = 1
-                GROUP BY acq_era, primds, cmssw,  global_tag, physics_skim, dqm_seq
-                ORDER BY primds
+                ORDER BY primds, run desc
                 """
 
         results = self.dbi.processData(sql, binds = {}, conn = conn,
