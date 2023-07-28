@@ -17,7 +17,7 @@ class InsertPrimaryDatasetConfigs(DBFormatter):
                  USING DUAL ON ( primds = :PRIMDS )
                  WHEN NOT MATCHED THEN
                    INSERT (primds, acq_era, run, cmssw, global_tag, physics_skim, dqm_seq)
-                   VALUES (:PRIMDS, :ACQ_ERA, :RUN, :MAX_RUN, :CMSSW, :GLOBAL_TAG, :PHYSICS_SKIM, DQM_SEQ)
+                   VALUES (:PRIMDS, :ACQ_ERA, :RUN, :CMSSW, :GLOBAL_TAG, :PHYSICS_SKIM, DQM_SEQ)
                  """
 
         self.dbi.processData(sql, binds, conn = conn,
