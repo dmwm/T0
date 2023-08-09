@@ -1,3 +1,22 @@
+3.1.0 to 3.1.1:
+  - Production configuration change after magnet half cycle (#4854)
+  - Add uploadedName to DBS3Uploader
+  - Add uploaderName to DBSUploader
+  - Add test tape subscriptions
+  - Include nanoaod in Tier0DataSvc (#4836)
+  - Production configuration for era Run2023D (#4844)
+  - Set secrts location before deleting database.
+  - Deployment scripts for 3.1.0 (#4843)
+  - Release change to CMSSW_13_0_7_TOTEM during TS1 (#4842)
+  - Push skipped streamers info into T0 Data Svc (#4841)
+  - Removi RAW processing version
+  - Nano aod addition (#4827)
+  - Add "@jetmet" to Muon datasets in production configuration (#4835)
+  - Implement CMSSW_13_0_7 in production with @jetmet in ParkingLLP datasets (#4833)
+  - Sync ReplayOfflineConfiguration.py with new Parking PDs
+  - Add Nano output to production and replay configurations (#4830)
+  - Procesing version change due to HCAL conditions and Repack version fix (#4826)
+
 3.0.7 to 3.1.0:
   - 2.2.0.4
   - Merge pull request #4824 from LinaresToine/master
