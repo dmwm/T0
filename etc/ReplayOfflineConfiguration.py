@@ -1025,6 +1025,14 @@ DATASETS += ["ZeroBiasPD01", "ZeroBiasPD02", "ZeroBiasPD03",
 
 DATASETS += ["ZeroBiasNonColliding"]
 
+DATASETS += ["SpecialZeroBias", "SpecialZeroBias0", "SpecialZeroBias1",
+				"SpecialZeroBias2", "SpecialZeroBias3", "SpecialZeroBias4",
+				"SpecialZeroBias5", "SpecialZeroBias6", "SpecialZeroBias7",
+				"SpecialZeroBias8", "SpecialZeroBias9", "SpecialZeroBias10",
+            	"SpecialZeroBias11", "SpecialZeroBias12", "SpecialZeroBias13",
+            	"SpecialZeroBias14", "SpecialZeroBias15", "SpecialZeroBias16",
+             	"SpecialZeroBias17", "SpecialZeroBias18", "SpecialZeroBias19"]
+
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
