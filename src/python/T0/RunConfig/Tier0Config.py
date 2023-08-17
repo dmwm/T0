@@ -9,7 +9,10 @@ Tier0Configuration - Global configuration object
 | | | |--> Sites - Configuration parameter for sites that are going
 | | |        |     to be use for processing and storage
 | | |        |
-| | |        |--> OverrideCatalog - Path to this site's trivial catalog file
+| | |        |--> OverrideCatalog - RucioCatalog string, TrivialCatalog string, or a dict containing both strings in separate keys
+| | |        |                      TrivialCatalog: Path to this site's trivial catalog file
+| | |        |                      RucioCatalog: String describing Rucio storage wit comma-separated values as follows:
+| | |        |                                    SITE,SUBSITE,STORAGE_SITE,VOLUME,PROTOCOL
 | | |        |
 | | |        |--> SiteLocalConfig - Path to this site's site local config file
 | | |
