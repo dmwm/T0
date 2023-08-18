@@ -39,7 +39,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 356005 - 2022 pp at 13.6 TeV (1h long, 600 bunches - ALL detectors included)
 # 359060 - 2022 cosmics - Oberved failures in Express (https://cms-talk.web.cern.ch/t/paused-jobs-for-express-run359045-streamexpress/15232)
 # 361694:361699,361779 - 2022 HI dry-run test runs
-setInjectRuns(tier0Config, [361697,361779])
+setInjectRuns(tier0Config, [362321])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -48,7 +48,8 @@ streamerPNN = "T0_CH_CERN_Disk"
 
 addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
                 siteLocalConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/JobConfig/site-local-config.xml",
-                overrideCatalog="trivialcatalog_file:/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/PhEDEx/storage.xml?protocol=eos"
+                overrideCatalog={"RucioCatalog": "T2_CH_CERN,,T0_CH_CERN,CERN_EOS_T0,XRootD",
+                                 "TrivialCatalog": "trivialcatalog_file:/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/PhEDEx/storage.xml?protocol=eos"}
                 )
 
 addSiteConfig(tier0Config, "EOS_PILOT",
@@ -63,8 +64,8 @@ addSiteConfig(tier0Config, "EOS_PILOT",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Tier0_REPLAY_2022")
-setBaseRequestPriority(tier0Config, 240000)
+setAcquisitionEra(tier0Config, "Tier0_REPLAY_2023")
+setBaseRequestPriority(tier0Config, 260000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "hidata")
 setProcessingSite(tier0Config, processingSite)
@@ -106,26 +107,25 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_5_2_patch1"
+    'default': "CMSSW_13_2_1"
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "el8_amd64_gcc10")
+setDefaultScramArch(tier0Config, "el8_amd64_gcc11")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3"
-ppScenarioB0T = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
 hcalnzsScenario = "hcalnzsEra_Run3"
 HIhcalnzsScenario = "hcalnzsEra_Run3_pp_on_PbPb"
-hiScenario = "ppEra_Run3_pp_on_PbPb"
+hiScenario = "ppEra_Run3_pp_on_PbPb_2023"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run3"
 HIalcaTrackingOnlyScenario = "trackingOnlyEra_Run3_pp_on_PbPb"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
-hiTestppScenario = "ppEra_Run3_pp_on_PbPb"
-hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters"
+hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
+hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
 
 # Procesing version number replays
 # Taking Replay processing ID from the last 8 digits of the DeploymentID
@@ -135,9 +135,8 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "124X_dataRun3_Express_v9"
-promptrecoGlobalTag = "124X_dataRun3_Prompt_v10"
-alcap0GlobalTag = "124X_dataRun3_Prompt_v10"
+expressGlobalTag = "132X_dataRun3_Express_v2"
+promptrecoGlobalTag = "132X_dataRun3_Prompt_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
