@@ -102,7 +102,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_2_0"
+    'default': "CMSSW_13_2_1"
 }
 
 # Configure ScramArch
@@ -702,7 +702,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               alca_producers=["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk", "HcalCalIsolatedBunchFilter"],
+               alca_producers=["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk"],
                dqm_sequences=["@common", "@L1TMon", "@hcal"],
                physics_skims=["EcalActivity", "LogError", "LogErrorMonitor"],
                timePerEvent=12,
