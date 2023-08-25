@@ -7,17 +7,19 @@ assignees: ''
 
 ---
 
-**Impact of the new feature**
-Inform which systems would be affected by this new feature. WMAgent? ReqMgr2? WorkQueue? WMStats? MicroServices? etc
+T0 is a system with restricted functionality that focuses on reliability over flexibility. Because of this, new features and developments need to be properly justified. Before requesting a new feature for T0 processing, please provide the following information:
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+**Describe the new feature you would like T0 to implement.**
+  - What are the goals of the new feature?
+  - Which systems will it affect?
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+**What are the changes and technical challenges?**
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+**Describe the implementation timeline of the new feature and relevance for the CMS data taking.**
+
+**Why are these goals are not attainable with existing T0/Central production features?**
+  - Describe the alternative solutions you have considered. 
+  - Provide specific workflows and the reason they are not suited or compatible for your goals.
+
+**Additional information**

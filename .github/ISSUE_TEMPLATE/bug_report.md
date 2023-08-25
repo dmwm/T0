@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **Impact of the bug**
-Inform which systems get affected by this bug. Which agent(s)? Which central service(s)?
+Inform which systems get affected by this bug.
 
 **Describe the bug**
 A clear and concise description of what the bug is.
@@ -20,4 +20,3 @@ Steps to reproduce the behavior:
 A clear and concise description of what you expected to happen.
 
 **Additional context and error message**
-Add any other context about the problem here, like error message and/or traceback. You might want to use triple back ticks to properly format it.
