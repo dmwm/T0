@@ -581,6 +581,18 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
+DATASETS = ["MuonShower"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_reco=False,
+               write_aod=True,
+               write_miniaod=True,
+               write_nanoaod=True,
+               physics_skims=["EXOCSCCluster"],
+               scenario=ppScenario)
+
 DATASETS = ["ParkingHH", "ParkingVBF0",
             "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
             "ParkingVBF4", "ParkingVBF5", "ParkingVBF6",
