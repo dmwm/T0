@@ -129,7 +129,7 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "132X_dataRun3_Express_v2"
+expressGlobalTag = "132X_dataRun3_Express_v3"
 promptrecoGlobalTag = "132X_dataRun3_Prompt_v2"
 
 # Mandatory for CondDBv2

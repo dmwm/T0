@@ -92,11 +92,11 @@ setPromptCalibrationConfig(tier0Config,
 #   'maxRun': {100000: Value3, 200000: Value4},
 #   'default': Value5 }
 
-maxRunPreviousConfig = 999999 # Last run before magnet half cycle 13 July 2023
+maxRunPreviousConfig = 999999 # Last run before era change 29/08/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_0_10",
-    'maxRun': {maxRunPreviousConfig: "CMSSW_13_0_9"}
+    'default': "CMSSW_13_2_2",
+    'maxRun': {maxRunPreviousConfig: "CMSSW_13_0_10"}
 }
 
 # Configure ScramArch
@@ -130,7 +130,7 @@ expressProcVersion = {
 }
 
 # Defaults for GlobalTag
-expressGlobalTag = "132X_dataRun3_Express_v2"
+expressGlobalTag = "132X_dataRun3_Express_v3"
 promptrecoGlobalTag = "132X_dataRun3_Prompt_v2"
 
 # Mandatory for CondDBv2
