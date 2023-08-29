@@ -35,7 +35,7 @@ setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
 # 367102 - Collisions 2023 - 1200b - 0.5h long - all components IN
-setInjectRuns(tier0Config, [359694, 359762, 359764, 366035])
+setInjectRuns(tier0Config, [359694, 359762, 359764])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -100,11 +100,9 @@ setPromptCalibrationConfig(tier0Config,
 #   'maxRun': {100000: Value3, 200000: Value4},
 #   'default': Value5 }
 
-maxRunPreviousConfig = 359765
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_0_3",
-    'maxRun': {maxRunPreviousConfig: "CMSSW_12_4_9"}
+    'default': "CMSSW_12_4_9"
 }
 
 # Configure ScramArch
@@ -136,6 +134,7 @@ promptrecoGlobalTag = "124X_dataRun3_Prompt_v4"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
+
 
 # Multicore settings
 numberOfCores = 8
