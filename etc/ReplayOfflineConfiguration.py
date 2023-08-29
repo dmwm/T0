@@ -35,14 +35,14 @@ setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
 # 367102 - Collisions 2023 - 1200b - 0.5h long - all components IN
-setInjectRuns(tier0Config, [369998])
+setInjectRuns(tier0Config, [359694, 359762, 359764, 366035])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
-storageSite = "T0_CH_CERN_Disk"
-streamerPNN = "T0_CH_CERN_Disk"
+storageSite = "T2_US_Vanderbilt_disk"
+streamerPNN = "T2_CH_CERN"
 
-addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
+addSiteConfig(tier0Config, "T2_US_Vanderbilt_disk",
                 siteLocalConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/JobConfig/site-local-config.xml",
                 overrideCatalog="T2_CH_CERN,,T0_CH_CERN,CERN_EOS_T0,XRootD"
                 )
@@ -100,9 +100,11 @@ setPromptCalibrationConfig(tier0Config,
 #   'maxRun': {100000: Value3, 200000: Value4},
 #   'default': Value5 }
 
+maxRunPreviousConfig = 359765
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_2_2"
+    'default': "CMSSW_13_0_3",
+    'maxRun': {maxRunPreviousConfig: "CMSSW_12_4_9"}
 }
 
 # Configure ScramArch
@@ -129,8 +131,8 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "132X_dataRun3_Express_v3"
-promptrecoGlobalTag = "132X_dataRun3_Prompt_v2"
+expressGlobalTag = "124X_dataRun3_Express_v5"
+promptrecoGlobalTag = "124X_dataRun3_Prompt_v4"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -183,7 +185,7 @@ addDataset(tier0Config, "Default",
            global_tag_connect=globalTagConnect,
            #archival_node="T0_CH_CERN_MSS",
            tape_node="T0_CH_CERN_Disk",
-           disk_node="T0_CH_CERN_Disk",
+           disk_node="T2_US_Vanderbilt_disk",
            #raw_to_disk=False,
            blockCloseDelay=1200,
            timePerEvent=5,
@@ -198,7 +200,7 @@ addDataset(tier0Config, "Default",
 
 addExpressConfig(tier0Config, "Express",
                  scenario=ppScenario,
-                 diskNode="T0_CH_CERN_Disk",
+                 diskNode="T2_US_Vanderbilt_disk",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
@@ -228,7 +230,7 @@ addExpressConfig(tier0Config, "Express",
 
 addExpressConfig(tier0Config, "ExpressCosmics",
                  scenario=cosmicsScenario,
-                 diskNode="T0_CH_CERN_Disk",
+                 diskNode="T2_US_Vanderbilt_disk",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T",
@@ -255,7 +257,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
 
 addExpressConfig(tier0Config, "HLTMonitor",
                  scenario=ppScenario,
-                 diskNode="T0_CH_CERN_Disk",
+                 diskNode="T2_US_Vanderbilt_disk",
                  data_tiers=["FEVTHLTALL"],
                  write_dqm=True,
                  alca_producers=[],
@@ -301,7 +303,7 @@ addExpressConfig(tier0Config, "Calibration",
                  maxMemoryperCore=2000,
                  dataType="data",
                  dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
-                 diskNode="T0_CH_CERN_Disk")
+                 diskNode="T2_US_Vanderbilt_disk")
 
 addExpressConfig(tier0Config, "ExpressAlignment",
                  scenario=alcaTrackingOnlyScenario,
@@ -326,7 +328,7 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  versionOverride=expressVersionOverride,
                  maxMemoryperCore=2000,
                  dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
-                 diskNode="T0_CH_CERN_Disk")
+                 diskNode="T2_US_Vanderbilt_disk")
 
 addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
                  scenario=alcaLumiPixelsScenario,
@@ -351,7 +353,7 @@ addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
                  versionOverride=expressVersionOverride,
                  maxMemoryperCore=2000,
                  dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
-                 diskNode="T0_CH_CERN_Disk")
+                 diskNode="T2_US_Vanderbilt_disk")
 
 addExpressConfig(tier0Config, "ALCAPPSExpress",
                  scenario=alcaPPSScenario,
@@ -378,7 +380,7 @@ addExpressConfig(tier0Config, "ALCAPPSExpress",
                  sizePerEvent=1700,
                  maxMemoryperCore=2000,
                  dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
-                 diskNode="T0_CH_CERN_Disk",
+                 diskNode="T2_US_Vanderbilt_disk",
                  versionOverride=expressVersionOverride)
 
 #####################
@@ -387,7 +389,7 @@ addExpressConfig(tier0Config, "ALCAPPSExpress",
 
 addExpressConfig(tier0Config, "HIExpress",
                  scenario=hiTestppScenario,
-                 diskNode="T0_CH_CERN_Disk",
+                 diskNode="T2_US_Vanderbilt_disk",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
@@ -437,7 +439,7 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  versionOverride=expressVersionOverride,
                  maxMemoryperCore=2000,
                  dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
-                 diskNode="T0_CH_CERN_Disk")
+                 diskNode="T2_US_Vanderbilt_disk")
                  
 ###################################
 ### Standard Physics PDs (2022) ###
