@@ -541,6 +541,18 @@ for dataset in DATASETS:
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                scenario=ppScenario)
 
+DATASETS = ["MuonShower"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_reco=False,
+               write_aod=True,
+               write_miniaod=True,
+               write_nanoaod=True,
+               physics_skims=["EXOCSCCluster"],
+               scenario=ppScenario)
+
 DATASETS = [ "ParkingLLP" ]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
