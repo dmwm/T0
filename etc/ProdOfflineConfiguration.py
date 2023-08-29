@@ -115,18 +115,18 @@ hiTestppScenario = "ppEra_Run3"
 
 # Defaults for processing version
 alcarawProcVersion = {
-    'maxRun': {maxRunPreviousConfig: 1},
-    'default': 2
+    'maxRun': {maxRunPreviousConfig: 2},
+    'default': 1
 }
 
 defaultProcVersionReco = {
-    'maxRun': {maxRunPreviousConfig: 1},
-    'default': 2
+    'maxRun': {maxRunPreviousConfig: 2},
+    'default': 1
 }
 
 expressProcVersion = {
-    'maxRun': {maxRunPreviousConfig: 1},
-    'default': 2
+    'maxRun': {maxRunPreviousConfig: 2},
+    'default': 1
 }
 
 # Defaults for GlobalTag
