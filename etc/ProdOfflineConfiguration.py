@@ -55,7 +55,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2023D")
+setAcquisitionEra(tier0Config, "Run2023E")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -92,11 +92,11 @@ setPromptCalibrationConfig(tier0Config,
 #   'maxRun': {100000: Value3, 200000: Value4},
 #   'default': Value5 }
 
-maxRunPreviousConfig = 999999 # Last run before magnet half cycle 13 July 2023
+maxRunPreviousConfig = 999999 # Last run before era change 29/08/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_0_10",
-    'maxRun': {maxRunPreviousConfig: "CMSSW_13_0_9"}
+    'default': "CMSSW_13_2_2",
+    'maxRun': {maxRunPreviousConfig: "CMSSW_13_0_10"}
 }
 
 # Configure ScramArch
@@ -130,8 +130,8 @@ expressProcVersion = {
 }
 
 # Defaults for GlobalTag
-expressGlobalTag = "130X_dataRun3_Express_v3"
-promptrecoGlobalTag = "130X_dataRun3_Prompt_v4"
+expressGlobalTag = "132X_dataRun3_Express_v3"
+promptrecoGlobalTag = "132X_dataRun3_Prompt_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -770,7 +770,7 @@ for dataset in DATASETS:
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym",
                                "HcalCalIsoTrkProducerFilter", "EcalESAlign"],
                dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
-               physics_skims=["ZElectron","WElectron", "EXOMONOPOLE", "EXODisappTrk", "LogError", "LogErrorMonitor"],
+               physics_skims=["ZElectron","WElectron", "EXOMONOPOLE", "EXODisappTrk", "IsoPhotonEB", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
 DATASETS = ["Tau"]
@@ -798,7 +798,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               alca_producers=["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk", "HcalCalIsolatedBunchFilter"],
+               alca_producers=["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk"],
                dqm_sequences=["@common", "@L1TMon", "@hcal"],
                physics_skims=["EcalActivity", "LogError", "LogErrorMonitor"],
                timePerEvent=12,
