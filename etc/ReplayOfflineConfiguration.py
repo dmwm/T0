@@ -197,7 +197,7 @@ addDataset(tier0Config, "Default",
            #archival_node="T0_CH_CERN_MSS",
            #tape_node="T1_US_FNAL_MSS",
            disk_node="T2_US_Vanderbilt",
-           #raw_to_disk=False,
+           raw_to_disk=True,
            blockCloseDelay=1200,
            timePerEvent=5,
            sizePerEvent=1500,
@@ -782,7 +782,7 @@ DATASETS = ["OnlineMonitor", "EcalLaser"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
-               raw_to_disk=False,
+               raw_to_disk=True,
                scenario=ppScenario)
 
 DATASETS = ["CosmicsForEventDisplay"]
@@ -790,7 +790,7 @@ DATASETS = ["CosmicsForEventDisplay"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
-               raw_to_disk=False,
+               raw_to_disk=True,
                write_miniaod=False,
                scenario=cosmicsScenario)
 
