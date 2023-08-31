@@ -24,6 +24,9 @@ Tier0Configuration - Global configuration object
 | |       |
 | |       |--> InjectMaxRun - Highest run number to be injected into the system from the SM database (default is unlimited)
 | |       |
+| |       |--> InjectLimit - Maximum number of lumis to be injected into the system 
+| |       |                  from the SM database (default is unlimited) (used for small functional test)
+| |       |
 | |       |--> SpecifiedStreamNames - Streamer names list to be ran exclusivley. (default is None)
 | |       |                           If it is None, all streamer will processed except which is set to be ignored.
 | |       |
@@ -261,6 +264,7 @@ def createTier0Config():
     tier0Config.section_("Global")
 
     tier0Config.Global.InjectRuns = None
+    tier0Config.Global.InjectLimit = None
     tier0Config.Global.InjectMinRun = None
     tier0Config.Global.InjectMaxRun = None
     
@@ -774,6 +778,16 @@ def setInjectMaxRun(config, injectMaxRun):
     """
     config.Global.InjectMaxRun = injectMaxRun
     return
+
+def setInjectLimit(config, injectLimit):
+    """
+    _setInjectLimit_
+
+    Set the limit of lumis to be injected into the Tier0 (for small functional test).
+    """
+    config.Global.InjectLimit = injectLimit
+    return
+
 
 def setEnableUniqueWorkflowName(config):
     """

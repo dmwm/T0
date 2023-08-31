@@ -171,7 +171,8 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                         self.dbInterfaceHltConf,
                                                         self.dbInterfaceSMNotify,
                                                         streamerPNN = tier0Config.Global.StreamerPNN,
-                                                        injectRun = injectRun)
+                                                        injectRun = injectRun,
+                                                        injectLimit= tier0Config.Global.InjectLimit)
                         self.injectedRuns.add(injectRun)
             except:
                 # shouldn't happen, just a catch all insurance
