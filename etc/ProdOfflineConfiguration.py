@@ -55,7 +55,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2023D")
+setAcquisitionEra(tier0Config, "Run2023E")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -92,11 +92,11 @@ setPromptCalibrationConfig(tier0Config,
 #   'maxRun': {100000: Value3, 200000: Value4},
 #   'default': Value5 }
 
-maxRunPreviousConfig = 999999 # Last run before magnet half cycle 13 July 2023
+maxRunPreviousConfig = 999999 # Last run before era change 29/08/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_0_10",
-    'maxRun': {maxRunPreviousConfig: "CMSSW_13_0_9"}
+    'default': "CMSSW_13_2_2",
+    'maxRun': {maxRunPreviousConfig: "CMSSW_13_0_10"}
 }
 
 # Configure ScramArch
@@ -115,23 +115,23 @@ hiTestppScenario = "ppEra_Run3"
 
 # Defaults for processing version
 alcarawProcVersion = {
-    'maxRun': {maxRunPreviousConfig: 1},
-    'default': 2
+    'maxRun': {maxRunPreviousConfig: 2},
+    'default': 1
 }
 
 defaultProcVersionReco = {
-    'maxRun': {maxRunPreviousConfig: 1},
-    'default': 2
+    'maxRun': {maxRunPreviousConfig: 2},
+    'default': 1
 }
 
 expressProcVersion = {
-    'maxRun': {maxRunPreviousConfig: 1},
-    'default': 2
+    'maxRun': {maxRunPreviousConfig: 2},
+    'default': 1
 }
 
 # Defaults for GlobalTag
-expressGlobalTag = "130X_dataRun3_Express_v3"
-promptrecoGlobalTag = "130X_dataRun3_Prompt_v4"
+expressGlobalTag = "132X_dataRun3_Express_v3"
+promptrecoGlobalTag = "132X_dataRun3_Prompt_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -581,6 +581,18 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
+DATASETS = ["MuonShower"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_reco=False,
+               write_aod=True,
+               write_miniaod=True,
+               write_nanoaod=True,
+               physics_skims=["EXOCSCCluster"],
+               scenario=ppScenario)
+
 DATASETS = ["ParkingHH", "ParkingVBF0",
             "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
             "ParkingVBF4", "ParkingVBF5", "ParkingVBF6",
@@ -758,7 +770,7 @@ for dataset in DATASETS:
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym",
                                "HcalCalIsoTrkProducerFilter", "EcalESAlign"],
                dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
-               physics_skims=["ZElectron","WElectron", "EXOMONOPOLE", "EXODisappTrk", "LogError", "LogErrorMonitor"],
+               physics_skims=["ZElectron","WElectron", "EXOMONOPOLE", "EXODisappTrk", "IsoPhotonEB", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
 DATASETS = ["Tau"]
@@ -786,7 +798,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               alca_producers=["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk", "HcalCalIsolatedBunchFilter"],
+               alca_producers=["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk"],
                dqm_sequences=["@common", "@L1TMon", "@hcal"],
                physics_skims=["EcalActivity", "LogError", "LogErrorMonitor"],
                timePerEvent=12,
@@ -1139,6 +1151,14 @@ DATASETS += ["ZeroBiasPD01", "ZeroBiasPD02", "ZeroBiasPD03",
              "ZeroBiasPD10"]
 
 DATASETS += ["ZeroBiasNonColliding"]
+
+DATASETS += ["SpecialZeroBias", "SpecialZeroBias0", "SpecialZeroBias1", 
+	     "SpecialZeroBias2", "SpecialZeroBias3", "SpecialZeroBias4", 
+	     "SpecialZeroBias5", "SpecialZeroBias6", "SpecialZeroBias7",
+	     "SpecialZeroBias8", "SpecialZeroBias9", "SpecialZeroBias10",
+	     "SpecialZeroBias11", "SpecialZeroBias12", "SpecialZeroBias13",
+	     "SpecialZeroBias14", "SpecialZeroBias15", "SpecialZeroBias16",
+	     "SpecialZeroBias17", "SpecialZeroBias18", "SpecialZeroBias19"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
