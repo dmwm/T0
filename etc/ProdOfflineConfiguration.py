@@ -95,8 +95,8 @@ setPromptCalibrationConfig(tier0Config,
 maxRunPreviousConfig = 999999 # Last run before era change 29/08/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_2_2",
-    'maxRun': {maxRunPreviousConfig: "CMSSW_13_0_10"}
+    'default': "CMSSW_13_2_3",
+    'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
 
 # Configure ScramArch
@@ -115,23 +115,23 @@ hiTestppScenario = "ppEra_Run3"
 
 # Defaults for processing version
 alcarawProcVersion = {
-    'maxRun': {maxRunPreviousConfig: 2},
+    'maxRun': {maxRunPreviousConfig: 1},
     'default': 1
 }
 
 defaultProcVersionReco = {
-    'maxRun': {maxRunPreviousConfig: 2},
+    'maxRun': {maxRunPreviousConfig: 1},
     'default': 1
 }
 
 expressProcVersion = {
-    'maxRun': {maxRunPreviousConfig: 2},
+    'maxRun': {maxRunPreviousConfig: 1},
     'default': 1
 }
 
 # Defaults for GlobalTag
-expressGlobalTag = "132X_dataRun3_Express_v3"
-promptrecoGlobalTag = "132X_dataRun3_Prompt_v2"
+expressGlobalTag = "132X_dataRun3_Express_v4"
+promptrecoGlobalTag = "132X_dataRun3_Prompt_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -235,8 +235,8 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "TkAlCosmics0T",
-                                 "SiPixelCalZeroBias", "SiPixelCalCosmics",
-                                 "PromptCalibProdSiStrip", "PromptCalibProdSiPixelLAMCS"
+                                 "SiPixelCalZeroBias", "SiPixelCalCosmics", "SiStripCalCosmics",
+                                 "PromptCalibProdSiStrip", "PromptCalibProdSiPixelLAMCS", "PromptCalibProdSiStripLA"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
