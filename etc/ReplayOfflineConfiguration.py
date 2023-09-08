@@ -123,7 +123,8 @@ alcaTrackingOnlyScenario = "trackingOnlyEra_Run3"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
-hiTestppScenario = "ppEra_Run3"
+hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
+hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
 
 # Procesing version number replays
 # Taking Replay processing ID from the last 8 digits of the DeploymentID
@@ -644,6 +645,8 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 DATASETS = ["Muon", "Muon0", "Muon1"]
+DATASETS += ["PPRefDoubleMuon0", "PPRefDoubleMuon1", "PPRefDoubleMuon2", "PPRefDoubleMuon3"]
+DATASETS += ["PPRefSingleMuon0", "PPRefSingleMuon1", "PPRefSingleMuon2"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -705,6 +708,19 @@ for dataset in DATASETS:
                physics_skims=["EXODisappTrk", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
+DATASETS = ["PPRefExotica"]
+DATASETS += ["PPRefHardProbes0", "PPRefHardProbes1", "PPRefHardProbes2"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_reco=False,
+               write_aod=True,
+               write_miniaod=True,
+               write_nanoaod=True,
+               physics_skims=["EXOCSCCluster"],
+               scenario=ppScenario)
+
 #############################################
 ### Standard Commisioning PDs (2022)      ###
 #############################################
@@ -713,6 +729,8 @@ DATASETS = ["Commissioning"]
 
 DATASETS += ["Commissioning1", "Commissioning2", "Commissioning3", "Commissioning4",
              "CommissioningMuons", "CommissioningEGamma", "CommissioningTaus", "CommissioningSingleJet", "CommissioningDoubleJet"]
+
+DATASETS += ["CommissioningZDC"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1049,6 +1067,13 @@ DATASETS += ["SpecialZeroBias", "SpecialZeroBias0", "SpecialZeroBias1",
             	"SpecialZeroBias14", "SpecialZeroBias15", "SpecialZeroBias16",
              	"SpecialZeroBias17", "SpecialZeroBias18", "SpecialZeroBias19"]
 
+DATASETS += ["PPRefZeroBias0", "PPRefZeroBias1", "PPRefZeroBias2",
+             "PPRefZeroBias3", "PPRefZeroBias4", "PPRefZeroBias5", "PPRefZeroBias6",
+             "PPRefZeroBias7", "PPRefZeroBias8", "PPRefZeroBias9", "PPRefZeroBias10",
+             "PPRefZeroBias11", "PPRefZeroBias12", "PPRefZeroBias13", "PPRefZeroBias14",
+             "PPRefZeroBias15", "PPRefZeroBias16", "PPRefZeroBias17", "PPRefZeroBias18",
+             "PPRefZeroBias19"]
+
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -1167,6 +1192,23 @@ for dataset in DATASETS:
                write_dqm=True,
                dqm_sequences=["@common"],
                scenario=hiTestppScenario)
+
+######################
+### RAW' TEST 2023 ###
+######################
+
+DATASETS = ["CommissioningRawPrime"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               alca_producers=["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk"],
+               dqm_sequences=["@common", "@L1TMon", "@hcal"],
+               physics_skims=["EcalActivity", "LogError", "LogErrorMonitor"],
+               timePerEvent=12,
+               sizePerEvent=4000,
+               scenario=hiRawPrimeScenario)
 
 #######################
 ### ignored streams ###
