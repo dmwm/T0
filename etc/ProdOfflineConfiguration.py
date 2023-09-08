@@ -674,7 +674,7 @@ for dataset in DATASETS:
                sizePerEvent=2250, # copied from JetHT - should be checked
                scenario=ppScenario)
 
-DATASETS += ["PPRefHardProbes0", "PPRefHardProbes1", "PPRefHardProbes2"]
+DATASETS = ["PPRefHardProbes0", "PPRefHardProbes1", "PPRefHardProbes2"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -771,10 +771,7 @@ for dataset in DATASETS:
                write_dqm=True,
                tape_node="T1_US_FNAL_MSS",
                disk_node="T1_US_FNAL_Disk",
-               alca_producers=["TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu",
-                               "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
-                               "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
-                               "TkAlZMuMu", "TkAlDiMuonAndVertex", "TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
+               alca_producers=["TkAlZMuMu", "TkAlDiMuonAndVertex", "TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
                physics_skims=["ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
                scenario=ppScenario)
