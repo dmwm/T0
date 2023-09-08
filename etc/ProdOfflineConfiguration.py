@@ -55,7 +55,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2023E")
+setAcquisitionEra(tier0Config, "Run2023F")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -92,10 +92,11 @@ setPromptCalibrationConfig(tier0Config,
 #   'maxRun': {100000: Value3, 200000: Value4},
 #   'default': Value5 }
 
-maxRunPreviousConfig = 999999 # Last run before era change 29/08/23
+maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
     'default': "CMSSW_13_2_3",
+    'acqEra': {'Run2023E': "CMSSW_13_2_2"},
     'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
 
@@ -115,23 +116,28 @@ hiTestppScenario = "ppEra_Run3"
 
 # Defaults for processing version
 alcarawProcVersion = {
-    'maxRun': {maxRunPreviousConfig: 1},
     'default': 1
 }
 
 defaultProcVersionReco = {
-    'maxRun': {maxRunPreviousConfig: 1},
     'default': 1
 }
 
 expressProcVersion = {
-    'maxRun': {maxRunPreviousConfig: 1},
     'default': 1
 }
 
 # Defaults for GlobalTag
-expressGlobalTag = "132X_dataRun3_Express_v4"
-promptrecoGlobalTag = "132X_dataRun3_Prompt_v3"
+expressGlobalTag = {
+    'default': "132X_dataRun3_Express_v4",
+    'acqEra': {'Run2023E': "132X_dataRun3_Express_v3"},
+    'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Express_v3"}
+}
+promptrecoGlobalTag = {
+    'default': "132X_dataRun3_Prompt_v3",
+    'acqEra': {'Run2023E': "132X_dataRun3_Prompt_v2"},
+    'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Prompt_v2"}
+}
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
