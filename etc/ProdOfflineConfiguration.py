@@ -600,6 +600,18 @@ for dataset in DATASETS:
                physics_skims=["EXOCSCCluster"],
                scenario=ppScenario)
 
+DATASETS = ["PPRefExotica"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_reco=False,
+               write_aod=True,
+               write_miniaod=True,
+               write_nanoaod=True,
+               physics_skims=["EXOCSCCluster"],
+               scenario=ppScenario)
+
 DATASETS = ["ParkingHH", "ParkingVBF0",
             "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
             "ParkingVBF4", "ParkingVBF5", "ParkingVBF6",
@@ -660,6 +672,19 @@ for dataset in DATASETS:
                physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "LogError", "LogErrorMonitor"],
                timePerEvent=5.7,  # copied from JetHT - should be checked
                sizePerEvent=2250, # copied from JetHT - should be checked
+               scenario=ppScenario)
+
+DATASETS += ["PPRefHardProbes0", "PPRefHardProbes1", "PPRefHardProbes2"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               alca_producers=["HcalCalIsoTrkProducerFilter", "TkAlJetHT", "HcalCalNoise"],
+               dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
+               physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "LogError", "LogErrorMonitor"],
+               timePerEvent=5.7,
+               sizePerEvent=2250,
                scenario=ppScenario)
 
 DATASETS = ["JetHT"]
@@ -807,19 +832,6 @@ for dataset in DATASETS:
                tape_node="T1_DE_KIT_MSS",
                disk_node="T1_DE_KIT_Disk",
                physics_skims=["EXODisappTrk", "LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
-
-DATASETS = ["PPRefExotica"]
-DATASETS += ["PPRefHardProbes0", "PPRefHardProbes1", "PPRefHardProbes2"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_reco=False,
-               write_aod=True,
-               write_miniaod=True,
-               write_nanoaod=True,
-               physics_skims=["EXOCSCCluster"],
                scenario=ppScenario)
 
 #############################################
