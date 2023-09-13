@@ -1165,7 +1165,7 @@ def setWMTaskOverrideCatalog(task, site):
         step = CoreHelper(step)
         step = step.getTypeHelper()
         logging.info("Step Type: %s", step.stepType()) 
-        if step.stepType() == "CMSSW":
+        if step.stepType() == "CMSSW" or step.stepType() == "LogCollect":
             logging.info("StepName: %s. StepVersion: %s", step.name(), step.getCMSSWVersion())
             if not isCMSSWSupported(step.getCMSSWVersion(),"CMSSW_12_6_2") or step.getCMSSWVersion() == "CMSSW_12_6_3":
                 step.setOverrideCatalog(site.OverrideCatalog["TrivialCatalog"])
