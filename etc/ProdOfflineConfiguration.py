@@ -1372,6 +1372,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
+	       write_nanoaod=False,
                alca_producers=["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk"],
                dqm_sequences=["@common", "@L1TMon", "@hcal"],
                physics_skims=["EcalActivity", "LogError", "LogErrorMonitor"],
