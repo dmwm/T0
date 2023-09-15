@@ -105,7 +105,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_12_4_9"
+    'default': "CMSSW_12_4_9_patch1"
 }
 
 # Configure ScramArch
@@ -196,6 +196,7 @@ addDataset(tier0Config, "Default",
            global_tag_connect=globalTagConnect,
            #archival_node="T0_CH_CERN_MSS",
            #tape_node="T1_US_FNAL_MSS",
+           siteWhitelist=["T1_UK_RAL", "T1_IT_CNAF", "T1_FR_CCIN2P3", "T1_ES_PIC", "T1_DE_KIT"],
            disk_node="T2_US_Vanderbilt",
            raw_to_disk=True,
            blockCloseDelay=1200,
