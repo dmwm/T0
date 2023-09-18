@@ -36,7 +36,7 @@ setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
 # 367102 - Collisions 2023 - 1200b - 0.5h long - all components IN
-setInjectRuns(tier0Config, [369998, 372704])
+setInjectRuns(tier0Config, [369998])
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
@@ -190,6 +190,7 @@ addDataset(tier0Config, "Default",
            tape_node="T0_CH_CERN_Disk",
            disk_node="T0_CH_CERN_Disk",
            #raw_to_disk=False,
+           siteWhitelist=["T2_CH_CERN_HLT"]
            blockCloseDelay=1200,
            timePerEvent=5,
            sizePerEvent=1500,
