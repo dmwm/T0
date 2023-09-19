@@ -105,6 +105,7 @@ setDefaultScramArch(tier0Config, "el8_amd64_gcc11")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3_2023"
+ppScenarioB0T = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
 hcalnzsScenario = "hcalnzsEra_Run3"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run3"
@@ -399,15 +400,13 @@ addExpressConfig(tier0Config, "ALCAPPSExpress",
 
 addExpressConfig(tier0Config, "HIExpress",
                  scenario=hiTestppScenario,
-                 diskNode="T2_US_Vanderbilt",
+                 diskNode="T2_CH_CERN",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
-                                 "TkAlMinBias", "SiPixelCalZeroBias","SiPixelCalSingleMuon", "SiPixelCalSingleMuonTight",
-                                 "SiPixelCalSingleMuonLoose",
+                                 "TkAlMinBias", "LumiPixelsMinBias", "SiPixelCalZeroBias",
                                  "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
-                                 "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel",
-                                 "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff", "PromptCalibProdSiPixelAliHG"
+                                 "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
@@ -428,10 +427,10 @@ addExpressConfig(tier0Config, "HIExpress",
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "HIExpressAlignment",
-                 scenario=HIalcaTrackingOnlyScenario,
+                 scenario=hiTestppScenario,
                  data_tiers=["ALCARECO", "RAW"],
                  write_dqm=True,
-                 alca_producers=["TkAlMinBias", "PromptCalibProdBeamSpotHP"],
+                 alca_producers=["TkAlMinBias"],
                  dqm_sequences=["@trackingOnlyDQM"],
                  reco_version=defaultCMSSWVersion,
                  raw_to_disk=True,
@@ -451,31 +450,7 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  versionOverride=expressVersionOverride,
                  maxMemoryperCore=2000,
                  dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
-                 diskNode="T2_US_Vanderbilt")
-
-addExpressConfig(tier0Config, "HIHLTMonitor",
-                 scenario=hiTestppScenario,
-                 diskNode="T2_US_Vanderbilt",
-                 data_tiers=["FEVTHLTALL"],
-                 write_dqm=True,
-                 alca_producers=[],
-                 dqm_sequences=["@HLTMon"],
-                 reco_version=defaultCMSSWVersion,
-                 multicore=numberOfCores,
-                 global_tag_connect=globalTagConnect,
-                 global_tag=expressGlobalTag,
-                 proc_ver=expressProcVersion,
-                 maxInputRate=23 * 1000,
-                 maxInputEvents=400,
-                 maxInputSize=2 * 1024 * 1024 * 1024,
-                 maxInputFiles=15,
-                 maxLatency=15 * 23,
-                 periodicHarvestInterval=20 * 60,
-                 blockCloseDelay=1200,
-                 timePerEvent=4,
-                 sizePerEvent=1700,
-                 versionOverride=expressVersionOverride,
-                 dataset_lifetime=3*30*24*3600)#lifetime for container rules. Default 3 months
+                 diskNode="T2_CH_CERN")
 
 ###################################
 ### Standard Physics PDs (2022) ###
