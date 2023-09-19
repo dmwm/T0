@@ -31,3 +31,7 @@ curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4827.patch | patc
 
 #Adding skipped streamer info into T0 Data Service
 curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4841.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+
+
+#Adds setInjectLimit() that allows limiting the number of lumisections used in the replay
+curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4850.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
