@@ -94,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_2_3",
+    'default': "CMSSW_13_2_4",
     'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_3"}
 }
 
@@ -130,8 +130,7 @@ expressProcVersion = {
 
 # Defaults for GlobalTag
 expressGlobalTag = "132X_dataRun3_Express_v4"
-promptrecoGlobalTag = "132X_dataRun3_Express_v4"
-alcap0GlobalTag = "132X_dataRun3_Express_v4"
+promptrecoGlobalTag = "132X_dataRun3_Prompt_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
