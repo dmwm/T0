@@ -1415,7 +1415,6 @@ DATASETS = ["HIHcalNZS"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               write_miniaod=False,
                do_reco=True,
                raw_to_disk=False,
                write_dqm=True,
@@ -1428,7 +1427,6 @@ DATASETS = ["HIHLTPhysics"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               write_miniaod=False,
                do_reco=True,
                raw_to_disk=False,
                write_dqm=True,
@@ -1463,7 +1461,6 @@ DATASETS = ["HITestRaw0", "HITestRaw1", "HITestRaw2", "HITestRaw3", "HITestRaw4"
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               write_miniaod=False,
                do_reco=True,
                raw_to_disk=False,
                write_dqm=True,
@@ -1478,7 +1475,6 @@ DATASETS = ["HIForward0", "HIForward1", "HIForward2"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               write_miniaod=False,
                do_reco=True,
                raw_to_disk=False,
                write_dqm=True,
@@ -1493,7 +1489,6 @@ DATASETS = ["HIMinimumBias0", "HIMinimumBias1", "HIMinimumBias2", "HIMinimumBias
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               write_miniaod=False,
                do_reco=True,
                raw_to_disk=False,
                write_dqm=True,
@@ -1508,7 +1503,6 @@ DATASETS = ["HIEphemeralHLTPhysics", "HIEphemeralZeroBias0", "HIEphemeralZeroBia
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               write_miniaod=False,
                do_reco=True,
                raw_to_disk=False,
                write_dqm=True,
@@ -1529,7 +1523,6 @@ DATASETS += ["HIPhysicsRawPrime0", "HIPhysicsRawPrime1"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               write_miniaod=False,
                do_reco=True,
                raw_to_disk=False,
                aod_to_disk=True,
@@ -1552,7 +1545,6 @@ DATASETS += ["HIPhysicsRawPrime2", "HIPhysicsRawPrime3", "HIPhysicsRawPrime4",
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               write_miniaod=False,
                do_reco=True,
                raw_to_disk=False,
                aod_to_disk=False,
