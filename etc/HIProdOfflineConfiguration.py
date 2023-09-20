@@ -426,13 +426,6 @@ addExpressConfig(tier0Config, "HIExpressRawPrime",
                  diskNode="T2_CH_CERN",
                  data_tiers=["FEVT"],
                  write_dqm=True,
-                 alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
-                                 "TkAlMinBias", "SiPixelCalZeroBias","SiPixelCalSingleMuon", "SiPixelCalSingleMuonTight",
-                                 "SiPixelCalSingleMuonLoose",
-                                 "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
-                                 "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel",
-                                 "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff", "PromptCalibProdSiPixelAliHG"
-                                ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
                  global_tag_connect=globalTagConnect,
@@ -1493,10 +1486,6 @@ for dataset in DATASETS:
                raw_to_disk=False,
                write_dqm=True,
                disk_node="T2_US_Vanderbilt",
-               alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
-                               "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
-                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
                scenario=hiTestppScenario)
 
 DATASETS = ["HIEphemeralHLTPhysics", "HIEphemeralZeroBias0", "HIEphemeralZeroBias1"]
@@ -1507,9 +1496,6 @@ for dataset in DATASETS:
                raw_to_disk=False,
                write_dqm=True,
                disk_node="T2_US_Vanderbilt",
-               alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
-                               "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
-                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
                scenario=hiTestppScenario)
 
