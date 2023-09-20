@@ -393,7 +393,7 @@ addExpressConfig(tier0Config, "ALCAPPSExpress",
 
 addExpressConfig(tier0Config, "HIExpress",
                  scenario=hiTestppScenario,
-                 diskNode="T2_US_Vanderbilt",
+                 diskNode="T2_CH_CERN",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
@@ -423,7 +423,7 @@ addExpressConfig(tier0Config, "HIExpress",
 
 addExpressConfig(tier0Config, "HIExpressRawPrime",
                  scenario=hiRawPrimeScenario,
-                 diskNode="T2_US_Vanderbilt",
+                 diskNode="T2_CH_CERN",
                  data_tiers=["FEVT"],
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
@@ -475,7 +475,7 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  versionOverride=expressVersionOverride,
                  maxMemoryperCore=2000,
                  dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
-                 diskNode="T2_US_Vanderbilt")
+                 diskNode="T2_CH_CERN")
 
 addExpressConfig(tier0Config, "HIHLTMonitor",
                  scenario=hiTestppScenario,
@@ -1417,7 +1417,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                write_miniaod=False,
                do_reco=True,
-               raw_to_disk=True,
+               raw_to_disk=False,
                write_dqm=True,
                disk_node="T2_US_Vanderbilt",
                alca_producers=["HcalCalMinBias"],
@@ -1430,7 +1430,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                write_miniaod=False,
                do_reco=True,
-               raw_to_disk=True,
+               raw_to_disk=False,
                write_dqm=True,
                disk_node="T2_US_Vanderbilt",
                alca_producers=["TkAlMinBias"],
@@ -1442,7 +1442,7 @@ DATASETS = ["HIOnlineMonitor", "HITrackerNZS"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
-               raw_to_disk=True,
+               raw_to_disk=False,
                disk_node="T2_US_Vanderbilt",
                scenario=hiTestppScenario)
 
@@ -1465,7 +1465,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                write_miniaod=False,
                do_reco=True,
-               raw_to_disk=True,
+               raw_to_disk=False,
                write_dqm=True,
                disk_node="T2_US_Vanderbilt",
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
@@ -1480,7 +1480,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                write_miniaod=False,
                do_reco=True,
-               raw_to_disk=True,
+               raw_to_disk=False,
                write_dqm=True,
                disk_node="T2_US_Vanderbilt",
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
@@ -1495,7 +1495,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                write_miniaod=False,
                do_reco=True,
-               raw_to_disk=True,
+               raw_to_disk=False,
                write_dqm=True,
                disk_node="T2_US_Vanderbilt",
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
@@ -1510,7 +1510,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                write_miniaod=False,
                do_reco=True,
-               raw_to_disk=True,
+               raw_to_disk=False,
                write_dqm=True,
                disk_node="T2_US_Vanderbilt",
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
@@ -1525,7 +1525,24 @@ DATASETS = ["HITestRawPrime0", "HITestRawPrime1", "HITestRawPrime2", "HITestRawP
             "HITestRawPrime15", "HITestRawPrime16", "HITestRawPrime17", "HITestRawPrime18", "HITestRawPrime19",
             "HITestRawPrime20", "HITestRawPrime21", "HITestRawPrime22", "HITestRawPrime23"]
 
-DATASETS += ["HIPhysicsRawPrime0", "HIPhysicsRawPrime1", "HIPhysicsRawPrime2", "HIPhysicsRawPrime3", "HIPhysicsRawPrime4",
+DATASETS += ["HIPhysicsRawPrime0", "HIPhysicsRawPrime1"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               write_miniaod=False,
+               do_reco=True,
+               raw_to_disk=False,
+               aod_to_disk=True,
+               write_dqm=True,
+               disk_node="T2_US_Vanderbilt",
+               alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
+                               "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
+                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
+               dqm_sequences=["@commonSiStripZeroBias"],
+               physics_skims=["PbPbEMu", "PbPbZEE", "PbPbZMM", "LogError", "LogErrorMonitor"],
+               scenario=hiRawPrimeScenario)
+
+DATASETS += ["HIPhysicsRawPrime2", "HIPhysicsRawPrime3", "HIPhysicsRawPrime4",
             "HIPhysicsRawPrime5", "HIPhysicsRawPrime6", "HIPhysicsRawPrime7", "HIPhysicsRawPrime8", "HIPhysicsRawPrime9",
             "HIPhysicsRawPrime10", "HIPhysicsRawPrime11", "HIPhysicsRawPrime12", "HIPhysicsRawPrime13", "HIPhysicsRawPrime14",
             "HIPhysicsRawPrime15", "HIPhysicsRawPrime16", "HIPhysicsRawPrime17", "HIPhysicsRawPrime18", "HIPhysicsRawPrime19",
@@ -1537,7 +1554,8 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                write_miniaod=False,
                do_reco=True,
-               raw_to_disk=True,
+               raw_to_disk=False,
+               aod_to_disk=False,
                write_dqm=True,
                disk_node="T2_US_Vanderbilt",
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
@@ -1546,6 +1564,8 @@ for dataset in DATASETS:
                dqm_sequences=["@commonSiStripZeroBias"],
                physics_skims=["PbPbEMu", "PbPbZEE", "PbPbZMM", "LogError", "LogErrorMonitor"],
                scenario=hiRawPrimeScenario)
+
+
 
 #######################
 ### ignored streams ###
