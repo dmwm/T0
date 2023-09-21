@@ -1486,6 +1486,7 @@ for dataset in DATASETS:
                raw_to_disk=False,
                write_dqm=True,
                disk_node="T2_US_Vanderbilt",
+               alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias"],
                dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiTestppScenario)
 
