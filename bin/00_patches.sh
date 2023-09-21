@@ -32,3 +32,6 @@ curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4841.patch | patc
 
 #Add logic to handle override catalog
 curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4862.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+
+#Adds setInjectLimit() that allows limiting the number of lumisections used in the replay
+curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4850.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3

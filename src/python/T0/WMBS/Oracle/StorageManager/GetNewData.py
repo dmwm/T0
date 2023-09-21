@@ -11,7 +11,7 @@ from WMCore.Database.DBFormatter import DBFormatter
 
 class GetNewData(DBFormatter):
 
-    def execute(self, minRun = None, maxRun = None, injectRun = None, conn = None, transaction = False):
+    def execute(self, minRun = None, maxRun = None, injectRun = None, injectLimit = None,  conn = None, transaction = False):
 
         if injectRun:
             binds = { 'RUN': injectRun }
@@ -43,14 +43,17 @@ class GetNewData(DBFormatter):
                         CMS_STOMGR.FILE_TRANSFER_STATUS.FILENAME AS filename,
                         CMS_STOMGR.FILE_QUALITY_CONTROL.FILE_SIZE AS filesize,
                         NVL(CMS_STOMGR.FILE_QUALITY_CONTROL.EVENTS_ACCEPTED, 0) AS events
-                 FROM CMS_STOMGR.FILE_TRANSFER_STATUS
-                 INNER JOIN CMS_STOMGR.FILE_QUALITY_CONTROL ON
-                   CMS_STOMGR.FILE_QUALITY_CONTROL.FILENAME = CMS_STOMGR.FILE_TRANSFER_STATUS.FILENAME
-                 %s
-                 AND CMS_STOMGR.FILE_TRANSFER_STATUS.PATH IS NOT NULL
-                 AND CMS_STOMGR.FILE_QUALITY_CONTROL.FILE_SIZE IS NOT NULL
-                 AND CMS_STOMGR.FILE_QUALITY_CONTROL.FILE_SIZE > 0
-                 """ % whereSql
+                FROM CMS_STOMGR.FILE_TRANSFER_STATUS
+                INNER JOIN CMS_STOMGR.FILE_QUALITY_CONTROL ON
+                CMS_STOMGR.FILE_QUALITY_CONTROL.FILENAME = CMS_STOMGR.FILE_TRANSFER_STATUS.FILENAME
+                %s
+                AND CMS_STOMGR.FILE_TRANSFER_STATUS.PATH IS NOT NULL
+                AND CMS_STOMGR.FILE_QUALITY_CONTROL.FILE_SIZE IS NOT NULL
+                AND CMS_STOMGR.FILE_QUALITY_CONTROL.FILE_SIZE > 0
+                """ % whereSql
+        
+        if injectLimit:
+            sql += " AND CMS_STOMGR.FILE_TRANSFER_STATUS.LS < {injectLimit}".format(injectLimit = injectLimit)
 
         results = self.dbi.processData(sql, binds, conn = conn,
                                        transaction = transaction)
