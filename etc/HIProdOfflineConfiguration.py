@@ -1460,7 +1460,7 @@ for dataset in DATASETS:
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
                                "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
                scenario=hiTestppScenario)
 
 DATASETS = ["HIForward0", "HIForward1", "HIForward2"]
@@ -1474,7 +1474,7 @@ for dataset in DATASETS:
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
                                "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
                scenario=hiTestppScenario)
 
 DATASETS = ["HIMinimumBias0", "HIMinimumBias1", "HIMinimumBias2", "HIMinimumBias3"]
@@ -1485,6 +1485,7 @@ for dataset in DATASETS:
                raw_to_disk=False,
                write_dqm=True,
                disk_node="T2_US_Vanderbilt",
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
                scenario=hiTestppScenario)
 
 DATASETS = ["HIEphemeralHLTPhysics", "HIEphemeralZeroBias0", "HIEphemeralZeroBias1"]
@@ -1516,11 +1517,11 @@ for dataset in DATASETS:
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
                                "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
-               dqm_sequences=["@commonSiStripZeroBias"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
                physics_skims=["PbPbEMu", "PbPbZEE", "PbPbZMM", "LogError", "LogErrorMonitor"],
                scenario=hiRawPrimeScenario)
 
-DATASETS += ["HIPhysicsRawPrime2", "HIPhysicsRawPrime3", "HIPhysicsRawPrime4",
+DATASETS = ["HIPhysicsRawPrime2", "HIPhysicsRawPrime3", "HIPhysicsRawPrime4",
             "HIPhysicsRawPrime5", "HIPhysicsRawPrime6", "HIPhysicsRawPrime7", "HIPhysicsRawPrime8", "HIPhysicsRawPrime9",
             "HIPhysicsRawPrime10", "HIPhysicsRawPrime11", "HIPhysicsRawPrime12", "HIPhysicsRawPrime13", "HIPhysicsRawPrime14",
             "HIPhysicsRawPrime15", "HIPhysicsRawPrime16", "HIPhysicsRawPrime17", "HIPhysicsRawPrime18", "HIPhysicsRawPrime19",
@@ -1538,7 +1539,7 @@ for dataset in DATASETS:
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
                                "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
-               dqm_sequences=["@commonSiStripZeroBias"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
                physics_skims=["PbPbEMu", "PbPbZEE", "PbPbZMM", "LogError", "LogErrorMonitor"],
                scenario=hiRawPrimeScenario)
 
