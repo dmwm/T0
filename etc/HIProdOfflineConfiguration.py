@@ -1486,7 +1486,7 @@ for dataset in DATASETS:
                raw_to_disk=False,
                write_dqm=True,
                disk_node="T2_US_Vanderbilt",
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
+               dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiTestppScenario)
 
 DATASETS = ["HIEphemeralHLTPhysics", "HIEphemeralZeroBias0", "HIEphemeralZeroBias1"]
@@ -1497,7 +1497,7 @@ for dataset in DATASETS:
                raw_to_disk=False,
                write_dqm=True,
                disk_node="T2_US_Vanderbilt",
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
+               dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiTestppScenario)
 
 DATASETS = ["HITestRawPrime0", "HITestRawPrime1", "HITestRawPrime2", "HITestRawPrime3", "HITestRawPrime4",
