@@ -1199,7 +1199,7 @@ for dataset in DATASETS:
                write_dqm=True,
                tape_node="T1_US_FNAL_MSS",
                disk_node="T1_US_FNAL_Disk",
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
                timePerEvent=1,
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias"],
                scenario=ppScenario)
@@ -1272,7 +1272,7 @@ for dataset in DATASETS:
                raw_to_disk=True,
                write_reco=False,
                write_dqm=True,
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet", "@ctpps"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@ctpps"],
                alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias", "HcalCalIsolatedBunchSelector"],
                physics_skims=["LogError", "LogErrorMonitor"],
                siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN"],
