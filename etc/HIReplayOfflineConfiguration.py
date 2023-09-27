@@ -1471,6 +1471,8 @@ ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 
+specifyStreams(tier0Config, ["PhysicsHIForward0", "PhysicsHIForward1", "PhysicsHIForward2"])
+
 ###################################
 ### currently inactive settings ###
 ###################################
