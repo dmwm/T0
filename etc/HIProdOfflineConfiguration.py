@@ -1475,6 +1475,7 @@ DATASETS = ["HIForward0", "HIForward1", "HIForward2"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
+               reco_delay=defaultRecoTimeout*100,
                raw_to_disk=False,
                aod_to_disk=True,
                write_dqm=True,
@@ -1494,7 +1495,6 @@ DATASETS = ["HIMinimumBias0", "HIMinimumBias1", "HIMinimumBias2", "HIMinimumBias
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
-               reco_delay=defaultRecoTimeout*100,
                raw_to_disk=False,
                write_dqm=True,
                disk_node="T2_US_Vanderbilt",
