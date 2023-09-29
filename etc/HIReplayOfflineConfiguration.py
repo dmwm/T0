@@ -125,7 +125,7 @@ alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
-hiForwardScenario = "ppEra_Run3_2023_repacked"
+hiForwardScenario = "ppEra_Run3_pp_on_PbPb_2023"
 
 # Procesing version number replays
 # Taking Replay processing ID from the last 8 digits of the DeploymentID
