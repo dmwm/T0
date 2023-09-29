@@ -33,7 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 9999999)
+setInjectMinRun(tier0Config, 373862)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
@@ -91,7 +91,7 @@ setPromptCalibrationConfig(tier0Config,
 #   'maxRun': {100000: Value3, 200000: Value4},
 #   'default': Value5 }
 
-maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
+maxRunPreviousConfig = 373862 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
     'default': "CMSSW_13_2_4",
@@ -184,7 +184,7 @@ addDataset(tier0Config, "Default",
            archival_node="T0_CH_CERN_MSS",
            tape_node="T0_CH_CERN_MSS",
            disk_node="T2_CH_CERN",
-           siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN"],
+           siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN", "T1_IT_CNAF", "T1_FR_CCIN2P3", "T1_UK_RAL", "T1_ES_PIC", "T1_DE_KIT"],
            raw_to_disk=False,
            aod_to_disk=False,
            blockCloseDelay=24 * 3600,
@@ -1475,6 +1475,7 @@ DATASETS = ["HIForward0", "HIForward1", "HIForward2"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
+               #reco_delay=defaultRecoTimeout*100,
                raw_to_disk=False,
                aod_to_disk=True,
                write_dqm=True,
@@ -1485,7 +1486,11 @@ for dataset in DATASETS:
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
                scenario=hiTestppScenario)
 
-DATASETS = ["HIMinimumBias0", "HIMinimumBias1", "HIMinimumBias2", "HIMinimumBias3"]
+DATASETS = ["HIMinimumBias0", "HIMinimumBias1", "HIMinimumBias2", "HIMinimumBias3", 
+            "HIMinimumBias4", "HIMinimumBias5", "HIMinimumBias6", "HIMinimumBias7",
+            "HIMinimumBias8", "HIMinimumBias9", "HIMinimumBias10", "HIMinimumBias11",
+            "HIMinimumBias12", "HIMinimumBias13", "HIMinimumBias14", "HIMinimumBias15",
+            "HIMinimumBias16", "HIMinimumBias17", "HIMinimumBias18", "HIMinimumBias19"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1543,6 +1548,7 @@ for dataset in DATASETS:
                do_reco=True,
                raw_to_disk=False,
                aod_to_disk=False,
+               timePerEvent=7,
                write_dqm=True,
                disk_node="T2_US_Vanderbilt",
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
