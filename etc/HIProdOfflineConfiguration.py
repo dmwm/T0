@@ -33,7 +33,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 373862)
+setInjectMinRun(tier0Config, 9999999)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
@@ -91,7 +91,7 @@ setPromptCalibrationConfig(tier0Config,
 #   'maxRun': {100000: Value3, 200000: Value4},
 #   'default': Value5 }
 
-maxRunPreviousConfig = 373862 # Last run before era change 08/09/23
+maxRunPreviousConfig = 9999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
     'default': "CMSSW_13_2_4",
