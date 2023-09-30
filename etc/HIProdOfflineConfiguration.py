@@ -91,7 +91,7 @@ setPromptCalibrationConfig(tier0Config,
 #   'maxRun': {100000: Value3, 200000: Value4},
 #   'default': Value5 }
 
-maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
+maxRunPreviousConfig = 9999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
     'default': "CMSSW_13_2_4",
@@ -1475,7 +1475,7 @@ DATASETS = ["HIForward0", "HIForward1", "HIForward2"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
-               reco_delay=defaultRecoTimeout*100,
+               #reco_delay=defaultRecoTimeout*100,
                raw_to_disk=False,
                aod_to_disk=True,
                write_dqm=True,
@@ -1485,6 +1485,30 @@ for dataset in DATASETS:
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
                scenario=hiTestppScenario)
+
+
+DATASETS = ["HIForward3", "HIForward4", "HIForward5",
+            "HIForward6", "HIForward7", "HIForward8",
+            "HIForward9", "HIForward10", "HIForward11",
+            "HIForward12", "HIForward13", "HIForward14",
+            "HIForward15", "HIForward16", "HIForward17",
+            "HIForward18", "HIForward19"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_aod=False,
+               #reco_delay=defaultRecoTimeout*100,
+               raw_to_disk=False,
+               aod_to_disk=True,
+               write_dqm=True,
+               disk_node="T2_US_Vanderbilt",
+               alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
+                               "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
+                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
+               scenario=hiTestppScenario)
+    
 
 DATASETS = ["HIMinimumBias0", "HIMinimumBias1", "HIMinimumBias2", "HIMinimumBias3", 
             "HIMinimumBias4", "HIMinimumBias5", "HIMinimumBias6", "HIMinimumBias7",
@@ -1548,6 +1572,7 @@ for dataset in DATASETS:
                do_reco=True,
                raw_to_disk=False,
                aod_to_disk=False,
+               #timePerEvent=7,
                write_dqm=True,
                disk_node="T2_US_Vanderbilt",
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
