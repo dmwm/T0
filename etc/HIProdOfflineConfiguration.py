@@ -1475,6 +1475,7 @@ DATASETS = ["HIForward0", "HIForward1", "HIForward2"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
+               reco_delay=defaultRecoTimeout*100,
                raw_to_disk=False,
                aod_to_disk=True,
                write_dqm=True,
@@ -1485,7 +1486,11 @@ for dataset in DATASETS:
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
                scenario=hiTestppScenario)
 
-DATASETS = ["HIMinimumBias0", "HIMinimumBias1", "HIMinimumBias2", "HIMinimumBias3"]
+DATASETS = ["HIMinimumBias0", "HIMinimumBias1", "HIMinimumBias2", "HIMinimumBias3", 
+            "HIMinimumBias4", "HIMinimumBias5", "HIMinimumBias6", "HIMinimumBias7",
+            "HIMinimumBias8", "HIMinimumBias9", "HIMinimumBias10", "HIMinimumBias11",
+            "HIMinimumBias12", "HIMinimumBias13", "HIMinimumBias14", "HIMinimumBias15",
+            "HIMinimumBias16", "HIMinimumBias17", "HIMinimumBias18", "HIMinimumBias19"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
