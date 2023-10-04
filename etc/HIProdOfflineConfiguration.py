@@ -94,8 +94,8 @@ setPromptCalibrationConfig(tier0Config,
 maxRunPreviousConfig = 9999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_2_5_patch1",
-    'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_4"}
+    'default': "CMSSW_13_2_5_patch2",
+    'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_5_patch1"}
 }
 
 # Configure ScramArch
@@ -130,7 +130,7 @@ expressProcVersion = {
 
 # Defaults for GlobalTag
 expressGlobalTag = "132X_dataRun3_Express_v4"
-promptrecoGlobalTag = "132X_dataRun3_Prompt_v3"
+promptrecoGlobalTag = "132X_dataRun3_Prompt_v4"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -1476,6 +1476,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                #reco_delay=defaultRecoTimeout*100,
+               timePerEvent=1,
                raw_to_disk=False,
                aod_to_disk=True,
                write_dqm=True,
@@ -1499,6 +1500,7 @@ DATASETS = ["HIForward3", "HIForward4", "HIForward5",
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
+               timePerEvent=1,
                #reco_delay=defaultRecoTimeout*100,
                raw_to_disk=False,
                aod_to_disk=False,
@@ -1512,7 +1514,6 @@ for dataset in DATASETS:
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
                scenario=hiTestppScenario)
     
-
 DATASETS = ["HIMinimumBias0", "HIMinimumBias1", "HIMinimumBias2", "HIMinimumBias3", 
             "HIMinimumBias4", "HIMinimumBias5", "HIMinimumBias6", "HIMinimumBias7",
             "HIMinimumBias8", "HIMinimumBias9", "HIMinimumBias10", "HIMinimumBias11",
@@ -1554,6 +1555,8 @@ for dataset in DATASETS:
                raw_to_disk=False,
                aod_to_disk=True,
                write_dqm=True,
+               siteWhitelist = ["T2_CH_CERN"],
+               maxMemoryperCore=2500,
                disk_node="T2_US_Vanderbilt",
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
                                "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
@@ -1578,14 +1581,14 @@ for dataset in DATASETS:
                raw_to_disk=False,
                aod_to_disk=False,
                #timePerEvent=7,
-               write_dqm=True,
+               write_dqm=False,
                disk_node="T2_US_Vanderbilt",
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
                                "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
                                "SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
                                "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
+               dqm_sequences=["@none"],
                physics_skims=["PbPbEMu", "PbPbZEE", "PbPbZMM", "LogError", "LogErrorMonitor"],
                scenario=hiRawPrimeScenario)
 
