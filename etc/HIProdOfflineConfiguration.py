@@ -1515,6 +1515,10 @@ for dataset in DATASETS:
                aod_to_disk=True,
                write_dqm=True,
                disk_node="T2_US_Vanderbilt",
+               alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
+                               "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
+                               "SiStripCalZeroBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
+                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
                scenario=hiForwardScenario)
 
@@ -1542,6 +1546,7 @@ for dataset in DATASETS:
                raw_to_disk=False,
                write_dqm=True,
                disk_node="T2_US_Vanderbilt",
+               alca_producers=["SiStripCalZeroBias"],
                dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiTestppScenario)
 
@@ -1587,16 +1592,16 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                raw_to_disk=False,
-               aod_to_disk=False,
-               #timePerEvent=7,
-               write_dqm=False,
+               aod_to_disk=True,
+               write_dqm=True,
+               siteWhitelist = ["T2_CH_CERN"],
+               maxMemoryperCore=2500,
                disk_node="T2_US_Vanderbilt",
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
                                "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
-                               "SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
-                               "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
+                               "SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
-               dqm_sequences=["@none"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
                physics_skims=["PbPbEMu", "PbPbZEE", "PbPbZMM", "LogError", "LogErrorMonitor"],
                scenario=hiRawPrimeScenario)
 
@@ -1611,6 +1616,10 @@ for dataset in DATASETS:
                siteWhitelist = ["T2_CH_CERN"],
                maxMemoryperCore=2500,
                disk_node="T2_US_Vanderbilt",
+               alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
+                               "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
+                               "SiStripCalZeroBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
+                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
                physics_skims=["PbPbEMu", "PbPbZEE", "PbPbZMM", "LogError", "LogErrorMonitor"],
                scenario=hiRawPrimeScenario)
@@ -1632,6 +1641,10 @@ for dataset in DATASETS:
                #timePerEvent=7,
                write_dqm=False,
                disk_node="T2_US_Vanderbilt",
+               alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
+                               "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
+                               "SiStripCalZeroBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
+                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@none"],
                physics_skims=["PbPbEMu", "PbPbZEE", "PbPbZMM", "LogError", "LogErrorMonitor"],
                scenario=hiRawPrimeScenario)
