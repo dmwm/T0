@@ -91,7 +91,7 @@ setPromptCalibrationConfig(tier0Config,
 #   'maxRun': {100000: Value3, 200000: Value4},
 #   'default': Value5 }
 
-maxRunPreviousConfig = 9999999 # Last run before era change 08/09/23
+maxRunPreviousConfig = 9999999 # Last run before processing version change 05/10/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
     'default': "CMSSW_13_2_5_patch2",
@@ -114,18 +114,25 @@ alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
+hiForwardScenario = {
+    'default': "ppEra_Run3_2023_repacked",
+    'maxRun': {maxRunPreviousConfig: "ppEra_Run3_pp_on_PbPb_2023"}
+}
 
 # Defaults for processing version
 alcarawProcVersion = {
-    'default': "1"
+    'default': "2",
+    'maxRun': {maxRunPreviousConfig: "1"}
 }
 
 defaultProcVersionReco = {
-    'default': "1"
+    'default': "2",
+    'maxRun': {maxRunPreviousConfig: "1"}
 }
 
 expressProcVersion = {
-    'default': "1"
+    'default': "2",
+    'maxRun': {maxRunPreviousConfig: "1"}
 }
 
 # Defaults for GlobalTag
@@ -1470,7 +1477,13 @@ for dataset in DATASETS:
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
                scenario=hiTestppScenario)
 
-DATASETS = ["HIForward0", "HIForward1", "HIForward2"]
+DATASETS = ["HIForward0", "HIForward1", "HIForward2",
+            "HIForward3", "HIForward4", "HIForward5",
+            "HIForward6", "HIForward7", "HIForward8",
+            "HIForward9", "HIForward10", "HIForward11",
+            "HIForward12", "HIForward13", "HIForward14",
+            "HIForward15", "HIForward16", "HIForward17",
+            "HIForward18", "HIForward19"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1487,33 +1500,8 @@ for dataset in DATASETS:
                                "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
-               scenario=hiTestppScenario)
+               scenario=hiForwardScenario)
 
-
-DATASETS = ["HIForward3", "HIForward4", "HIForward5",
-            "HIForward6", "HIForward7", "HIForward8",
-            "HIForward9", "HIForward10", "HIForward11",
-            "HIForward12", "HIForward13", "HIForward14",
-            "HIForward15", "HIForward16", "HIForward17",
-            "HIForward18", "HIForward19"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               timePerEvent=1,
-               #reco_delay=defaultRecoTimeout*100,
-               raw_to_disk=False,
-               aod_to_disk=False,
-               write_dqm=True,
-               disk_node="T2_US_Vanderbilt",
-               alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
-                               "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
-                               "SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
-                               "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
-                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
-               scenario=hiTestppScenario)
-    
 DATASETS = ["HIMinimumBias0", "HIMinimumBias1", "HIMinimumBias2", "HIMinimumBias3", 
             "HIMinimumBias4", "HIMinimumBias5", "HIMinimumBias6", "HIMinimumBias7",
             "HIMinimumBias8", "HIMinimumBias9", "HIMinimumBias10", "HIMinimumBias11",
