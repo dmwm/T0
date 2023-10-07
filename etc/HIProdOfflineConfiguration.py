@@ -94,7 +94,7 @@ setPromptCalibrationConfig(tier0Config,
 maxRunPreviousConfig = 9999999 # Last run before processing version change 05/10/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_2_5_patch2",
+    'default': "CMSSW_13_2_5_patch3",
     'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_5_patch1"}
 }
 
