@@ -24,6 +24,7 @@ class InsertExpressConfigs(DBFormatter):
                               dqm_seq = :DQM_SEQ,
                               global_tag = :GLOBAL_TAG,
                               scenario = :SCENARIO,
+                              proc_version = :PROC_VERSION,
                               multicore = :MULTICORE,
                               write_tiers = :WRITE_TIERS,
                               write_dqm = :WRITE_DQM
