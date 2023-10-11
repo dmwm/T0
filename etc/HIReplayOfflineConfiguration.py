@@ -39,7 +39,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 356005 - 2022 pp at 13.6 TeV (1h long, 600 bunches - ALL detectors included)
 # 359060 - 2022 cosmics - Oberved failures in Express (https://cms-talk.web.cern.ch/t/paused-jobs-for-express-run359045-streamexpress/15232)
 # 361694:361699,361779 - 2022 HI dry-run test runs
-setInjectRuns(tier0Config, [374599, 374591])
+setInjectRuns(tier0Config, [374599])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -106,7 +106,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_2_5_patch2"
+    'default': "CMSSW_13_2_5_patch3"
 }
 
 # Configure ScramArch
@@ -125,6 +125,7 @@ alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
+hiForwardScenario = "ppEra_Run3_2023_repacked"
 
 # Procesing version number replays
 # Taking Replay processing ID from the last 8 digits of the DeploymentID
@@ -134,8 +135,8 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "132X_dataRun3_Express_HcalEmapT0Replay_v1"
-promptrecoGlobalTag = "132X_dataRun3_Prompt_HcalEmapT0Replay_v1"
+expressGlobalTag = "132X_dataRun3_Express_v4"
+promptrecoGlobalTag = "132X_dataRun3_Prompt_v4"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -1395,7 +1396,7 @@ for dataset in DATASETS:
                                "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
-               scenario=hiTestppScenario)
+               scenario=hiForwardScenario)
     
 DATASETS = ["HIMinimumBias0", "HIMinimumBias1", "HIMinimumBias2", "HIMinimumBias3", 
             "HIMinimumBias4", "HIMinimumBias5", "HIMinimumBias6", "HIMinimumBias7",
@@ -1476,6 +1477,13 @@ for dataset in DATASETS:
 #######################
 ### ignored streams ###
 #######################
+specifyStreams(tier0Config, ["HIForward0", "HIForward1", "HIForward2",
+            "HIForward3", "HIForward4", "HIForward5",
+            "HIForward6", "HIForward7", "HIForward8",
+            "HIForward9", "HIForward10", "HIForward11",
+            "HIForward12", "HIForward13", "HIForward14",
+            "HIForward15", "HIForward16", "HIForward17",
+            "HIForward18", "HIForward19"])
 
 ignoreStream(tier0Config, "Error")
 ignoreStream(tier0Config, "HLTMON")
