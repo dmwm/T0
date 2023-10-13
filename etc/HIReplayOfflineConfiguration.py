@@ -1569,7 +1569,7 @@ for dataset in DATASETS:
 #######################
 ### ignored streams ###
 #######################
-specifyStreams(tier0Config, ["PhysicsHIForward0", "PhysicsHIPhysicsRawPrime0", "PhysicsHIMinimumBias0"])
+specifyStreams(tier0Config, ["HIExpressRawPrime", "HIExpress", "HIExpressAlignment", "PhysicsHIForward0", "PhysicsHIPhysicsRawPrime0", "PhysicsHIMinimumBias0"])
 
 ignoreStream(tier0Config, "Error")
 ignoreStream(tier0Config, "HLTMON")
