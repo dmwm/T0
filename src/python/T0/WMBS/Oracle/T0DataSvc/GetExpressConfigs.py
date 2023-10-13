@@ -23,6 +23,7 @@ class GetExpressConfigs(DBFormatter):
                         express_config.dqm_seq AS dqm_seq,
                         express_config.global_tag AS global_tag,
                         event_scenario.name AS scenario,
+                        express_config.proc_version AS proc_version,
                         express_config.multicore AS multicore,
                         express_config.write_tiers AS write_tiers,
                         express_config.write_dqm AS write_dqm

@@ -22,6 +22,7 @@ class GetRecoConfigs(DBFormatter):
                         reco_config.dqm_seq AS dqm_seq,
                         reco_config.global_tag AS global_tag,
                         event_scenario.name AS scenario,
+                        reco_config.proc_version AS proc_version,
                         reco_config.multicore AS multicore,
                         reco_config.write_reco AS write_reco,
                         reco_config.write_dqm AS write_dqm,

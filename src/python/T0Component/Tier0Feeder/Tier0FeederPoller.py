@@ -508,6 +508,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                                       'DQM_SEQ' : config['dqm_seq'],
                                       'GLOBAL_TAG' : config['global_tag'][:50],
                                       'SCENARIO' : config['scenario'],
+                                      'PROC_VERSION' : config['proc_version'],
                                       'MULTICORE' : config['multicore'],
                                       'WRITE_TIERS' : config['write_tiers'],
                                       'WRITE_DQM' : config['write_dqm'] } )
@@ -548,6 +549,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                                       'DQM_SEQ' : config['dqm_seq'],
                                       'GLOBAL_TAG' : config['global_tag'][:50],
                                       'SCENARIO' : config['scenario'],
+                                      'PROC_VERSION' : config['proc_version'],
                                       'MULTICORE' : config['multicore'],
                                       'WRITE_RECO' : config['write_reco'],
                                       'WRITE_DQM' : config['write_dqm'],
