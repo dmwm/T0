@@ -1413,13 +1413,26 @@ for dataset in DATASETS:
                dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiTestppScenario)
 
-DATASETS = ["HIEphemeralHLTPhysics", "HIEphemeralZeroBias0", "HIEphemeralZeroBias1"]
+DATASETS = ["HIEphemeralHLTPhysics"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                raw_to_disk=False,
                write_dqm=True,
+               disk_node="T2_US_Vanderbilt",
+               dqm_sequences=["@commonSiStripZeroBias"],
+               scenario=hiTestppScenario)
+
+DATASETS = ["HIEphemeralZeroBias0", "HIEphemeralZeroBias1"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               raw_to_disk=False,
+               write_dqm=True,
+               timePerEvent=1,
+               disk_node="T2_US_Vanderbilt",
                dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiTestppScenario)
 
