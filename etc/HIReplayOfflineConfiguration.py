@@ -39,7 +39,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 356005 - 2022 pp at 13.6 TeV (1h long, 600 bunches - ALL detectors included)
 # 359060 - 2022 cosmics - Oberved failures in Express (https://cms-talk.web.cern.ch/t/paused-jobs-for-express-run359045-streamexpress/15232)
 # 361694:361699,361779 - 2022 HI dry-run test runs
-setInjectRuns(tier0Config, [374599])
+setInjectRuns(tier0Config, [374951])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -106,7 +106,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_2_5_patch3"
+    'default': "CMSSW_13_2_6"
 }
 
 # Configure ScramArch
@@ -1413,13 +1413,26 @@ for dataset in DATASETS:
                dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiTestppScenario)
 
-DATASETS = ["HIEphemeralHLTPhysics", "HIEphemeralZeroBias0", "HIEphemeralZeroBias1"]
+DATASETS = ["HIEphemeralHLTPhysics"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                raw_to_disk=False,
                write_dqm=True,
+               disk_node="T2_US_Vanderbilt",
+               dqm_sequences=["@commonSiStripZeroBias"],
+               scenario=hiTestppScenario)
+
+DATASETS = ["HIEphemeralZeroBias0", "HIEphemeralZeroBias1"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               raw_to_disk=False,
+               write_dqm=True,
+               timePerEvent=1,
+               disk_node="T2_US_Vanderbilt",
                dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiTestppScenario)
 
@@ -1477,13 +1490,13 @@ for dataset in DATASETS:
 #######################
 ### ignored streams ###
 #######################
-specifyStreams(tier0Config, ["HIForward0", "HIForward1", "HIForward2",
-            "HIForward3", "HIForward4", "HIForward5",
-            "HIForward6", "HIForward7", "HIForward8",
-            "HIForward9", "HIForward10", "HIForward11",
-            "HIForward12", "HIForward13", "HIForward14",
-            "HIForward15", "HIForward16", "HIForward17",
-            "HIForward18", "HIForward19"])
+#specifyStreams(tier0Config, ["HIForward0", "HIForward1", "HIForward2",
+#            "HIForward3", "HIForward4", "HIForward5",
+#            "HIForward6", "HIForward7", "HIForward8",
+#            "HIForward9", "HIForward10", "HIForward11",
+#            "HIForward12", "HIForward13", "HIForward14",
+#            "HIForward15", "HIForward16", "HIForward17",
+#            "HIForward18", "HIForward19"])
 
 ignoreStream(tier0Config, "Error")
 ignoreStream(tier0Config, "HLTMON")

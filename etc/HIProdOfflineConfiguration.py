@@ -91,11 +91,9 @@ setPromptCalibrationConfig(tier0Config,
 #   'maxRun': {100000: Value3, 200000: Value4},
 #   'default': Value5 }
 
-maxRunPreviousConfig = 9999999 # Last run before processing version change 05/10/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_2_5_patch3",
-    'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_5_patch1"}
+    'default': "CMSSW_13_2_6",
 }
 
 # Configure ScramArch
@@ -114,25 +112,19 @@ alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
-hiForwardScenario = {
-    'default': "ppEra_Run3_2023_repacked",
-    'maxRun': {maxRunPreviousConfig: "ppEra_Run3_pp_on_PbPb_2023"}
-}
+hiForwardScenario = "ppEra_Run3_2023_repacked"
 
 # Defaults for processing version
 alcarawProcVersion = {
     'default': "2",
-    'maxRun': {maxRunPreviousConfig: "1"}
 }
 
 defaultProcVersionReco = {
     'default': "2",
-    'maxRun': {maxRunPreviousConfig: "1"}
 }
 
 expressProcVersion = {
     'default': "2",
-    'maxRun': {maxRunPreviousConfig: "1"}
 }
 
 # Defaults for GlobalTag
@@ -1550,13 +1542,25 @@ for dataset in DATASETS:
                dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiTestppScenario)
 
-DATASETS = ["HIEphemeralHLTPhysics", "HIEphemeralZeroBias0", "HIEphemeralZeroBias1"]
+DATASETS = ["HIEphemeralHLTPhysics"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                raw_to_disk=False,
                write_dqm=True,
+               disk_node="T2_US_Vanderbilt",
+               dqm_sequences=["@commonSiStripZeroBias"],
+               scenario=hiTestppScenario)
+
+DATASETS = ["HIEphemeralZeroBias0", "HIEphemeralZeroBias1"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               raw_to_disk=False,
+               write_dqm=True,
+               timePerEvent=1,
                disk_node="T2_US_Vanderbilt",
                dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiTestppScenario)
