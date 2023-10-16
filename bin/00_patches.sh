@@ -23,11 +23,15 @@ DEPLOY_DIR=$BASE_DIR/srv/wmagent
 #Include nanoaod support in Tier0FeederPoller
 curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4836.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
 
-
 #Patches on top of 3.1.0
 #Adding support for writing nano aod
 curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4827.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
 
-
 #Adding skipped streamer info into T0 Data Service
 curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4841.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+
+#Add logic to handle override catalog
+curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4862.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+
+#Adds setInjectLimit() that allows limiting the number of lumisections used in the replay
+curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4850.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3

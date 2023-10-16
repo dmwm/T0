@@ -27,7 +27,9 @@ from T0.RunConfig.Tier0Config import deleteStreamConfig
 from WMCore.WMSpec.StdSpecs.Repack import RepackWorkloadFactory
 from WMCore.WMSpec.StdSpecs.Express import ExpressWorkloadFactory
 from WMCore.WMSpec.StdSpecs.PromptReco import PromptRecoWorkloadFactory
+from WMCore.WMSpec.Steps.Template import CoreHelper
 from WMCore.Storage.SiteLocalConfig import loadSiteLocalConfig
+from WMCore.WMRuntime.Tools.Scram import isCMSSWSupported
 
 def extractConfigParameter(configParameter, era, run):
     """
@@ -1112,12 +1114,65 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
     return
 
 def setStorageSite(tier0Config, wmSpec, storagesite):
+    """
+    _setStorageSite_
+
+    :param tier0Config: Tier0 configuration
+    :param wmSpec: Spec file of the current workflow
+    :param site: Site configuration to apply
+
+    """
     site = retrieveSiteConfig(tier0Config, storagesite)
     wmSpec.setTaskEnvironmentVariables({'WMAGENT_SITE_CONFIG_OVERRIDE':site.SiteLocalConfig})
-    wmSpec.setOverrideCatalog(site.OverrideCatalog)
+    setWMSpecOverrideCatalog(wmSpec, site)
     for task in wmSpec.getAllTasks():
         for stepName in task.listAllStepNames():
             stepHelper = task.getStepHelper(stepName)
             if stepHelper.stepType() == "LogCollect":
                 stepHelper.addOverride("logRedirectSiteLocalConfig",True)
+    return
+
+def setWMSpecOverrideCatalog(wmSpec, site):
+    """
+    _setWMSpecOverrideCatalog_
+
+    :param wmSpec: Spec file of the current workflow
+    :param site: Site configuration to apply
+
+    """
+    if not isinstance(site.OverrideCatalog, dict):
+        wmSpec.setOverrideCatalog(site.OverrideCatalog)
+        return
+    if len(site.OverrideCatalog)!=2 or "TrivialCatalog" not in site.OverrideCatalog or "RucioCatalog" not in site.OverrideCatalog:
+        logging.error("OverrideCatalog dictionary must contain both 'TrivialCatalog' and 'RucioCatalog'")
+        raise RuntimeError("Problem in setWMSpecOverrideCatalog(): Bad OverrideCatalog for site %s!", site)
+    for task in wmSpec.taskIterator():
+        setWMTaskOverrideCatalog(task, site)
+    return
+
+
+def setWMTaskOverrideCatalog(task, site):
+    """
+    _setWMTaskOverrideCatalog_
+
+    CMSSW versions previous to CMSSW_12_6_2 or CMSSW_12_6_3, only support Trivial Catalog for 
+    catalog override. This function makes sure the proper catalog is used
+    :param wmSpec: Spec file of the current workflow
+    :param site: Site configuration to apply
+
+    """
+    for step in task.steps().nodeIterator():
+        step = CoreHelper(step)
+        step = step.getTypeHelper()
+        logging.info("Step Type: %s", step.stepType()) 
+        if step.stepType() == "CMSSW" or step.stepType() == "LogCollect":
+            logging.info("StepName: %s. StepVersion: %s", step.name(), step.getCMSSWVersion())
+            if not isCMSSWSupported(step.getCMSSWVersion(),"CMSSW_12_6_2") or step.getCMSSWVersion() == "CMSSW_12_6_3":
+                step.setOverrideCatalog(site.OverrideCatalog["TrivialCatalog"])
+                logging.info("TrivialCatalog")
+        else:
+            step.setOverrideCatalog(site.OverrideCatalog["RucioCatalog"])
+            logging.info("RucioCatalog")
+    for childTask in task.childTaskIterator():
+            setWMTaskOverrideCatalog(childTask, site)
     return

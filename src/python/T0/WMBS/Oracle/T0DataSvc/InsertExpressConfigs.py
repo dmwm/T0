@@ -24,14 +24,15 @@ class InsertExpressConfigs(DBFormatter):
                               dqm_seq = :DQM_SEQ,
                               global_tag = :GLOBAL_TAG,
                               scenario = :SCENARIO,
+                              proc_version = :PROC_VERSION,
                               multicore = :MULTICORE,
                               write_tiers = :WRITE_TIERS,
                               write_dqm = :WRITE_DQM
                  WHEN NOT MATCHED THEN
                    INSERT (run, stream, cmssw, scram_arch, reco_cmssw, reco_scram_arch, alca_skim,
-                           dqm_seq, global_tag, scenario, multicore, write_tiers, write_dqm)
+                           dqm_seq, global_tag, scenario, proc_version, multicore, write_tiers, write_dqm)
                    VALUES (:RUN, :STREAM, :CMSSW, :SCRAM_ARCH, :RECO_CMSSW, :RECO_SCRAM_ARCH, :ALCA_SKIM,
-                           :DQM_SEQ, :GLOBAL_TAG, :SCENARIO, :MULTICORE, :WRITE_TIERS, :WRITE_DQM)
+                           :DQM_SEQ, :GLOBAL_TAG, :SCENARIO, :PROC_VERSION, :MULTICORE, :WRITE_TIERS, :WRITE_DQM)
                  """
 
         self.dbi.processData(sql, binds, conn = conn,
