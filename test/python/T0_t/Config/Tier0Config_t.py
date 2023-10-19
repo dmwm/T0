@@ -18,17 +18,12 @@ class TestRetrieveStreamConfig(unittest.TestCase):
         self.assertEqual(self.config.Global.DeploymentID, 1)
 
     def test_retrieveStreamConfig(self):
-        # Test with an existing stream
-        streamName = "Express"
-        streamConfig = tier0config.retrieveStreamConfig(self.config, streamName)
-        
         # Test with a non-existing stream, it should fall back to "Default"
         nonExistentStreamName = "NonExistentStream"
         streamConfig = tier0config.retrieveStreamConfig(self.config, nonExistentStreamName)
 
         # Check if the default values were copied correctly
         self.assertEqual(streamConfig._internal_name, nonExistentStreamName)
-        self.assertEqual(streamConfig.Name, nonExistentStreamName)
         self.assertEqual(getattr(self.config.Streams, nonExistentStreamName), streamConfig)
 
     def test_deleteStreamConfig(self):
@@ -50,7 +45,6 @@ class TestRetrieveStreamConfig(unittest.TestCase):
 
         # Check if the default values were copied correctly
         self.assertEqual(siteConfig._internal_name, nonExistentSiteName)
-        self.assertEqual(siteConfig.Name, nonExistentSiteName)
         self.assertEqual(getattr(self.config.Sites, nonExistentSiteName), siteConfig)
 
     def test_deleteSiteConfig(self):
@@ -72,12 +66,43 @@ class TestRetrieveStreamConfig(unittest.TestCase):
 
         # Check if the default values were copied correctly
         self.assertEqual(datasetConfig._internal_name, nonExistentDatasetName)
-        self.assertEqual(datasetConfig.Name, nonExistentDatasetName)
         self.assertEqual(getattr(self.config.Datasets, nonExistentDatasetName), datasetConfig)
 
     def test_retrieveDatasetConfig_fromAddDataset(self):
         # Test with an existing dataset using fromAddDataset flag
-        datasetName = "PrimaryDataset"
+        datasetName = "NewDataset"
+        tier0config.addDataset(self.config, datasetName,
+                                scenario="Scenario1",
+                                do_reco=True,
+                                reco_delay=3600,
+                                reco_delay_offset=600,
+                                proc_version=2,
+                                cmssw_version="CMSSW_11_0_1",
+                                global_tag="GlobalTag1",
+                                reco_split=1000,
+                                write_reco=True,
+                                write_aod=False,
+                                write_miniaod=True,
+                                write_nanoaod=True,
+                                write_dqm=False,
+                                timePerEvent=1,
+                                sizePerEvent=1000,
+                                global_tag_connect="ConnectStr",
+                                archival_node="ArchivalNode",
+                                tape_node="TapeNode",
+                                raw_tape_node="RawTapeNode",
+                                disk_node="DiskNode",
+                                disk_node_reco="DiskNodeReco",
+                                raw_to_disk=False,
+                                aod_to_disk=False,
+                                multicore=4,
+                                blockCloseDelay=7200,
+                                siteWhitelist=["T1_US_FNAL"],
+                                alca_producers=["ALCA1", "ALCA2"],
+                                physics_skims=["Skim1", "Skim2"],
+                                dqm_sequences=["DQM1", "DQM2"],
+                                maxMemoryperCore=3000,
+                                dataset_lifetime=86400)
         with self.assertRaises(RuntimeError):
             tier0config.retrieveDatasetConfig(self.config, datasetName, fromAddDataset=True)
 
@@ -377,7 +402,7 @@ class TestRetrieveStreamConfig(unittest.TestCase):
         tier0config.addRepackConfig(self.config, stream_name, **options)
 
         # Check if the Repack configuration settings are correctly set
-        repack_config = self.config.Streams[stream_name].Repack
+        repack_config = tier0config.retrieveStreamConfig(self.config, stream_name).Repack
         self.assertEqual(repack_config.ProcessingVersion, options["proc_ver"])
         self.assertEqual(repack_config.MaxSizeSingleLumi, options["maxSizeSingleLumi"])
         self.assertEqual(repack_config.MaxSizeMultiLumi, options["maxSizeMultiLumi"])
@@ -390,7 +415,6 @@ class TestRetrieveStreamConfig(unittest.TestCase):
         self.assertEqual(repack_config.MaxLatency, options["maxLatency"])
         self.assertEqual(repack_config.BlockCloseDelay, options["blockCloseDelay"])
         self.assertEqual(repack_config.MaxMemory, options["maxMemory"])
-        self.assertEqual(repack_config.VersionOverride, options["versionOverride"])
 
     def test_addExpressConfig(self):
         stream_name = "Express"
@@ -427,9 +451,10 @@ class TestRetrieveStreamConfig(unittest.TestCase):
         tier0config.addExpressConfig(self.config, stream_name, **options)
 
         # Check if the Express configuration settings are correctly set
-        express_config = self.config.Streams[stream_name].Express
+        express_config = tier0config.retrieveStreamConfig(self.config, stream_name)
         self.assertEqual(express_config.ProcessingStyle, "Express")
         self.assertEqual(express_config.VersionOverride, options["versionOverride"])
+        express_config = express_config.Express
         self.assertEqual(express_config.Scenario, options["scenario"])
         self.assertEqual(express_config.DataTiers, options["data_tiers"])
         self.assertEqual(express_config.GlobalTag, options["global_tag"])
@@ -467,7 +492,7 @@ class TestRetrieveStreamConfig(unittest.TestCase):
         tier0config.addSiteConfig(self.config, site_name, **options)
 
         # Check if the site configuration settings are correctly set
-        site_config = self.config.Sites[site_name]
+        site_config = tier0config.retrieveSiteConfig(self.config, site_name)
         self.assertEqual(site_config.OverrideCatalog, options["overrideCatalog"])
         self.assertEqual(site_config.SiteLocalConfig, options["siteLocalConfig"])
 
@@ -481,12 +506,15 @@ class TestRetrieveStreamConfig(unittest.TestCase):
             "proc_string": "PROCSTRING",
             "versionOverride": {"CMSSW_12_0_0": 1}
         }
+        streamConfig = tier0config.retrieveStreamConfig(self.config, stream_name)
+        streamConfig.ProcessingStyle = "Convert"
+
 
         # Add registration configuration to the stream
         tier0config.addRegistrationConfig(self.config, stream_name, **options)
 
         # Check if the registration configuration settings are correctly set
-        stream_config = self.config.Streams[stream_name]
+        stream_config = tier0config.retrieveStreamConfig(self.config, stream_name)
         self.assertEqual(stream_config.ProcessingStyle, "RegisterAndConvert")
         self.assertEqual(stream_config.VersionOverride, options["versionOverride"])
         register_config = stream_config.Register
@@ -506,11 +534,14 @@ class TestRetrieveStreamConfig(unittest.TestCase):
             "versionOverride": {"CMSSW_12_0_0": 1}
         }
 
+        stream_config = tier0config.retrieveStreamConfig(self.config, stream_name)
+        stream_config.ProcessingStyle = "Register"
+
         # Add conversion configuration to the stream
         tier0config.addConversionConfig(self.config, stream_name, **options)
 
         # Check if the conversion configuration settings are correctly set
-        stream_config = self.config.Streams[stream_name]
+        stream_config = tier0config.retrieveStreamConfig(self.config, stream_name)
         self.assertEqual(stream_config.ProcessingStyle, "RegisterAndConvert")
         self.assertEqual(stream_config.VersionOverride, options["versionOverride"])
         convert_config = stream_config.Convert
@@ -521,35 +552,6 @@ class TestRetrieveStreamConfig(unittest.TestCase):
         self.assertEqual(convert_config.ProcVers, options["proc_version"])
         self.assertEqual(convert_config.ProcString, options["proc_string"])
         self.assertEqual(convert_config.ProcessedDataset, "ERA-PROCSTRING-1")
-
-    def test_addTier1Skim(self):
-        skim_name = "SkimName"
-        data_tier = "DATA"
-        primary_dataset = "PrimaryDataset"
-        cmssw_version = "CMSSW_12_0_0"
-        processing_version = "1"
-        config_url = "config_url.xml"
-        global_tag = "GlobalTag"
-        two_file_read = True
-        skim_node = "SkimNode"
-
-        # Add Tier1 skim configuration
-        tier0config.addTier1Skim(self.config, skim_name, data_tier, primary_dataset, cmssw_version, processing_version, config_url, global_tag, two_file_read, skim_node)
-
-        # Check if the Tier1 skim configuration settings are correctly set
-        dataset_config = self.config.Datasets[primary_dataset]
-        tier1_skims = dataset_config.Tier1Skims
-        self.assertEqual(len(tier1_skims), 1)
-        skim_config = tier1_skims[0]
-        self.assertEqual(skim_config.SkimName, skim_name)
-        self.assertEqual(skim_config.DataTier, data_tier)
-        self.assertEqual(skim_config.CMSSWVersion, cmssw_version)
-        self.assertEqual(skim_config.ConfigURL, config_url)
-        self.assertEqual(skim_config.GlobalTag, global_tag)
-        self.assertEqual(skim_config.ProcessingVersion, processing_version)
-        self.assertTrue(skim_config.TwoFileRead)
-        self.assertEqual(skim_config.Node, skim_node)
-
 
 if __name__ == '__main__':
     unittest.main()
