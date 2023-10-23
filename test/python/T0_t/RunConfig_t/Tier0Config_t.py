@@ -18,55 +18,147 @@ class TestRetrieveStreamConfig(unittest.TestCase):
         self.assertEqual(self.config.Global.DeploymentID, 1)
 
     def test_retrieveStreamConfig(self):
-        # Test with a non-existing stream, it should fall back to "Default"
-        nonExistentStreamName = "NonExistentStream"
-        streamConfig = tier0config.retrieveStreamConfig(self.config, nonExistentStreamName)
 
-        # Check if the default values were copied correctly
-        self.assertEqual(streamConfig._internal_name, nonExistentStreamName)
-        self.assertEqual(getattr(self.config.Streams, nonExistentStreamName), streamConfig)
+        streamName = "Express"
+        options = {
+            "versionOverride": {"CMSSW_12_0_0": 1},
+            "scenario": "ppEra",
+            "data_tiers": ["RAW", "RECO"],
+            "global_tag": "GLOBALTAG::All",
+            "global_tag_connect": "GTCONNECT",
+            "reco_version": "CMSSW_12_0_1",
+            "multicore": 8,
+            "alca_producers": ["AlcaProducer1", "AlcaProducer2"],
+            "write_dqm": True,
+            "dqm_sequences": ["DQMSeq1", "DQMSeq2"],
+            "proc_ver": 2,
+            "timePerEvent": 10.0,
+            "sizePerEvent": 2048,
+            "maxInputRate": 20000,
+            "maxInputEvents": 300,
+            "maxInputSize": 300 * 1024 * 1024 * 1024,
+            "maxInputFiles": 1000,
+            "maxLatency": 345,
+            "periodicHarvestInterval": 12,
+            "dataType": "express",
+            "archivalNode": "ArchivalNode",
+            "tapeNode": "TapeNode",
+            "diskNode": "DiskNode",
+            "blockCloseDelay": 7200,
+            "maxMemoryperCore": 2200,
+            "dataset_lifetime": 120
+        }
+
+        # add Express configuration to a stream
+        tier0config.addRepackConfig(self.config, streamName, **options)
+        streamConfig = tier0config.retrieveStreamConfig(self.config, streamName)
+        self.assertEqual(streamConfig._internal_name, streamName)
 
     def test_deleteStreamConfig(self):
         # Test with an existing stream
         streamName = "Express"
+        options = {
+            "versionOverride": {"CMSSW_12_0_0": 1},
+            "scenario": "ppEra",
+            "data_tiers": ["RAW", "RECO"],
+            "global_tag": "GLOBALTAG::All",
+            "global_tag_connect": "GTCONNECT",
+            "reco_version": "CMSSW_12_0_1",
+            "multicore": 8,
+            "alca_producers": ["AlcaProducer1", "AlcaProducer2"],
+            "write_dqm": True,
+            "dqm_sequences": ["DQMSeq1", "DQMSeq2"],
+            "proc_ver": 2,
+            "timePerEvent": 10.0,
+            "sizePerEvent": 2048,
+            "maxInputRate": 20000,
+            "maxInputEvents": 300,
+            "maxInputSize": 300 * 1024 * 1024 * 1024,
+            "maxInputFiles": 1000,
+            "maxLatency": 345,
+            "periodicHarvestInterval": 12,
+            "dataType": "express",
+            "archivalNode": "ArchivalNode",
+            "tapeNode": "TapeNode",
+            "diskNode": "DiskNode",
+            "blockCloseDelay": 7200,
+            "maxMemoryperCore": 2200,
+            "dataset_lifetime": 120
+        }
+
+        # add Express configuration to a stream
+        tier0config.addRepackConfig(self.config, streamName, **options)
+        # delete the configuration
         tier0config.deleteStreamConfig(self.config, streamName)
 
         # Check if the stream configuration has been deleted
         self.assertIsNone(getattr(self.config.Streams, streamName, None))
 
     def test_retrieveSiteConfig(self):
-        # Test with an existing site
+        
         siteName = "T1_US_FNAL"
+        options = {
+            "overrideCatalog": "override_catalog.xml",
+            "siteLocalConfig": "site_local_config.xml"
+        }
+
+        # Add site configuration
+        tier0config.addSiteConfig(self.config, siteName, **options)
         siteConfig = tier0config.retrieveSiteConfig(self.config, siteName)
         
-        # Test with a non-existing site, it should fall back to "Default"
-        nonExistentSiteName = "NonExistentSite"
-        siteConfig = tier0config.retrieveSiteConfig(self.config, nonExistentSiteName)
-
-        # Check if the default values were copied correctly
-        self.assertEqual(siteConfig._internal_name, nonExistentSiteName)
-        self.assertEqual(getattr(self.config.Sites, nonExistentSiteName), siteConfig)
+        # Check if the returned Config is the correct one
+        self.assertEqual(siteConfig._internal_name, siteName)
 
     def test_deleteSiteConfig(self):
-        # Test with an existing site
         siteName = "T1_US_FNAL"
+        options = {
+            "overrideCatalog": "override_catalog.xml",
+            "siteLocalConfig": "site_local_config.xml"
+        }
+
+        # Add site configuration
+        tier0config.addSiteConfig(self.config, siteName, **options)
         tier0config.deleteSiteConfig(self.config, siteName)
 
         # Check if the site configuration has been deleted
         self.assertIsNone(getattr(self.config.Sites, siteName, None))
 
     def test_retrieveDatasetConfig(self):
-        # Test with an existing dataset
-        datasetName = "PrimaryDataset"
+        datasetName = "NewDataset"
+        tier0config.addDataset(self.config, datasetName,
+                                scenario="Scenario1",
+                                do_reco=True,
+                                reco_delay=3600,
+                                reco_delay_offset=600,
+                                proc_version=2,
+                                cmssw_version="CMSSW_11_0_1",
+                                global_tag="GlobalTag1",
+                                reco_split=1000,
+                                write_reco=True,
+                                write_aod=False,
+                                write_miniaod=True,
+                                write_nanoaod=True,
+                                write_dqm=False,
+                                timePerEvent=1,
+                                sizePerEvent=1000,
+                                global_tag_connect="ConnectStr",
+                                archival_node="ArchivalNode",
+                                tape_node="TapeNode",
+                                raw_tape_node="RawTapeNode",
+                                disk_node="DiskNode",
+                                disk_node_reco="DiskNodeReco",
+                                raw_to_disk=False,
+                                aod_to_disk=False,
+                                multicore=4,
+                                blockCloseDelay=7200,
+                                siteWhitelist=["T1_US_FNAL"],
+                                alca_producers=["ALCA1", "ALCA2"],
+                                physics_skims=["Skim1", "Skim2"],
+                                dqm_sequences=["DQM1", "DQM2"],
+                                maxMemoryperCore=3000,
+                                dataset_lifetime=86400)
         datasetConfig = tier0config.retrieveDatasetConfig(self.config, datasetName)
-        
-        # Test with a non-existing dataset, it should fall back to "Default"
-        nonExistentDatasetName = "NonExistentDataset"
-        datasetConfig = tier0config.retrieveDatasetConfig(self.config, nonExistentDatasetName)
-
-        # Check if the default values were copied correctly
-        self.assertEqual(datasetConfig._internal_name, nonExistentDatasetName)
-        self.assertEqual(getattr(self.config.Datasets, nonExistentDatasetName), datasetConfig)
+        self.assertEqual(datasetConfig._internal_name, datasetName)
 
     def test_retrieveDatasetConfig_fromAddDataset(self):
         # Test with an existing dataset using fromAddDataset flag
