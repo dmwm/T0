@@ -69,7 +69,7 @@ setDQMDataTier(tier0Config, "DQMIO")
 # First timeout is used directly for reco release
 # Second timeout is used for the data service PromptReco start check
 # (to basically say we started PromptReco even though we haven't)
-defaultRecoTimeout = 48 * 3600
+defaultRecoTimeout = 154 * 3600
 defaultRecoLockTimeout = 1800
 
 # DQM Server
@@ -183,7 +183,7 @@ addDataset(tier0Config, "Default",
            archival_node="T0_CH_CERN_MSS",
            tape_node="T0_CH_CERN_MSS",
            disk_node="T2_CH_CERN",
-           siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN", "T1_IT_CNAF", "T1_ES_PIC", "T1_DE_KIT", "T1_FR_CCIN2P3", "T1_UK_RAL"],
+           siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN", "T1_IT_CNAF", "T1_DE_KIT", "T1_FR_CCIN2P3", "T1_UK_RAL"],
            raw_to_disk=False,
            aod_to_disk=False,
            blockCloseDelay=24 * 3600,
@@ -1598,6 +1598,7 @@ for dataset in DATASETS:
                raw_to_disk=False,
                aod_to_disk=True,
                write_dqm=True,
+               timePerEvent=3,
                siteWhitelist = ["T2_CH_CERN"],
                maxMemoryperCore=2500,
                disk_node="T2_US_Vanderbilt",
@@ -1617,6 +1618,7 @@ for dataset in DATASETS:
                raw_to_disk=False,
                aod_to_disk=True,
                write_dqm=True,
+               timePerEvent=3,
                siteWhitelist = ["T2_CH_CERN"],
                maxMemoryperCore=2500,
                disk_node="T2_US_Vanderbilt",
@@ -1642,7 +1644,7 @@ for dataset in DATASETS:
                do_reco=True,
                raw_to_disk=False,
                aod_to_disk=False,
-               #timePerEvent=7,
+               timePerEvent=3,
                write_dqm=False,
                disk_node="T2_US_Vanderbilt",
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
@@ -1653,7 +1655,19 @@ for dataset in DATASETS:
                physics_skims=["PbPbEMu", "PbPbZEE", "PbPbZMM", "LogError", "LogErrorMonitor"],
                scenario=hiRawPrimeScenario)
 
+DATASETS = ["HIZeroBias0", "HIZeroBias1", "HIZeroBias2"]
 
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               raw_to_disk=False,
+               aod_to_disk=True,
+               disk_node="T2_US_Vanderbilt",
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
+               alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias"],
+               timePerEvent=1,
+               scenario=hiForwardScenario)
 
 #######################
 ### ignored streams ###
