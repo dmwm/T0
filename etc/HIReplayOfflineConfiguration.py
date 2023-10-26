@@ -1450,6 +1450,7 @@ for dataset in DATASETS:
                raw_to_disk=False,
                aod_to_disk=True,
                write_dqm=True,
+               timePerEvent=3,
                siteWhitelist = ["T2_CH_CERN"],
                maxMemoryperCore=2500,
                disk_node="T2_US_Vanderbilt",
@@ -1476,6 +1477,7 @@ for dataset in DATASETS:
                raw_to_disk=False,
                aod_to_disk=False,
                write_dqm=False,
+               timePerEvent=3,
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
                                "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
                                "SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
@@ -1485,7 +1487,18 @@ for dataset in DATASETS:
                physics_skims=["PbPbEMu", "PbPbZEE", "PbPbZMM", "LogError", "LogErrorMonitor"],
                scenario=hiRawPrimeScenario)
 
+DATASETS = ["HIZeroBias0", "HIZeroBias1", "HIZeroBias2"]
 
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               raw_to_disk=False,
+               aod_to_disk=True,
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
+               alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias", "AlCaPCCZeroBiasFromRECO"],
+               timePerEvent=1,
+               scenario=hiForwardScenario)
 
 #######################
 ### ignored streams ###
