@@ -1496,7 +1496,7 @@ for dataset in DATASETS:
                raw_to_disk=False,
                aod_to_disk=True,
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
-               alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias", "AlCaPCCZeroBiasFromRECO"],
+               alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias"],
                timePerEvent=1,
                scenario=hiForwardScenario)
 
