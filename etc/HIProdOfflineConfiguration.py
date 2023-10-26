@@ -69,7 +69,7 @@ setDQMDataTier(tier0Config, "DQMIO")
 # First timeout is used directly for reco release
 # Second timeout is used for the data service PromptReco start check
 # (to basically say we started PromptReco even though we haven't)
-defaultRecoTimeout = 48 * 3600
+defaultRecoTimeout = 154 * 3600
 defaultRecoLockTimeout = 1800
 
 # DQM Server
@@ -1665,7 +1665,7 @@ for dataset in DATASETS:
                aod_to_disk=True,
                disk_node="T2_US_Vanderbilt",
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
-               alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "LumiPixelsMinBias", "SiStripCalMinBias", "AlCaPCCZeroBiasFromRECO"],
+               alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias"],
                timePerEvent=1,
                scenario=hiForwardScenario)
 
