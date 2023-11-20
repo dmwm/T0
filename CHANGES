@@ -1,3 +1,36 @@
+3.1.1 to 3.1.2:
+  - Adding unit test for "Tier0Config" (#4899)
+  - Adding HIZeroBias datasets (#4900)
+  - Add processing version parameter to reco_config and express_config ta… (#4895)
+  - Production configuration change to CMSSW_13_2_6 (#4898)
+  - Replay configuration file for CMSSW_13_2_5_patch3 (#4891)
+  - Cmssw 13 2 5 patch3 deployment (#4894)
+  - Deploy CMSSW_13_2_5_patch3 (#4893)
+  - Cut AlCa producers from Forward, MinimumBias and RawPrime PDs (#4892)
+  - Processing version change due to HIForward scenario (#4890)
+  - Change of HI Production to CMSSW_13_2_5_patch2 (#4889)
+  - Fix aod_to_disk parameter in HIProdOfflineConfiguration.py
+  - Production configuration change to CMSSW_13_2_5_patch1 (#4887)
+  - Additional splitting of HIMinimumBias (#4886)
+  - CMSSW_13_2_5_patch1 replay file (#4883)
+  - HIForward PDs split (#4885)
+  - New HIMinimumBias datasets (#4879)
+  - Add T1 sites to siteWhitelist (#4876)
+  - Sync HIReplay configuration with HI Production (#4881)
+  - Update event scenarios (#4880)
+  - Add logic to handle override catalog (#4862)
+  - Configuration for beginning of HI Run 2023 (#4875)
+  - Adds setInjectLimit() patch
+  - Remove NanoAOD from RAW' dataset (#4872)
+  - Add PDs for pp-Ref menu (#4870)
+  - Production configuration for CMSSW_13_2_3 (#4871)
+  - Replay limitation on lumisections (#4850)
+  - Processing version changed back to 1
+  - Production configuration for era Run2023E, CMSSW_13_2_2 (#4867)
+  - Add MuonShower to Production config (#4866)
+  - Adding issue template (#4864)
+  - Add SpecialZeroBias dataset to reco config in configuration files (#4855)
+
 3.1.0 to 3.1.1:
   - Production configuration change after magnet half cycle (#4854)
   - Add uploadedName to DBS3Uploader
