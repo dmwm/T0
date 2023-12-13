@@ -261,11 +261,11 @@ echo "config.AgentStatusWatcher.runningRepackPercent = 10" >> ./config/tier0/con
 
 #Configurable retry number for failing jobs before they go to paused
 echo "config.RetryManager.PauseAlgo.section_('Express')" >> ./config/tier0/config.py
-echo "config.RetryManager.PauseAlgo.Express.retryErrorCodes = { 70: 0, 50513: 3, 50660: 0, 50661: 0, 50664: 0, 71304: 0 }" >> ./config/tier0/config.py
+echo "config.RetryManager.PauseAlgo.Express.retryErrorCodes = { 70: 0, 50660: 0, 50661: 0, 50664: 0, 71304: 0 }" >> ./config/tier0/config.py
 echo "config.RetryManager.PauseAlgo.section_('Processing')" >> ./config/tier0/config.py
-echo "config.RetryManager.PauseAlgo.Processing.retryErrorCodes = { 70: 0, 50513: 3, 50660: 0, 50661: 1, 50664: 0, 71304: 1 }" >> ./config/tier0/config.py
+echo "config.RetryManager.PauseAlgo.Processing.retryErrorCodes = { 70: 0, 50660: 0, 50661: 1, 50664: 0, 71304: 1 }" >> ./config/tier0/config.py
 echo "config.RetryManager.PauseAlgo.section_('Repack')" >> ./config/tier0/config.py
-echo "config.RetryManager.PauseAlgo.Repack.retryErrorCodes = { 70: 0, 50513: 3, 50660: 0, 50661: 0, 50664: 0, 71304: 0 }" >> ./config/tier0/config.py
+echo "config.RetryManager.PauseAlgo.Repack.retryErrorCodes = { 70: 0, 50660: 0, 50661: 0, 50664: 0, 71304: 0 }" >> ./config/tier0/config.py
 
 #Overwrite RetryManager to show Logcollect and CleanUp jobs paused instead of automatically fails
 sed -i "s/config.RetryManager.plugins.*/config.RetryManager.plugins={'default': 'PauseAlgo', 'Cleanup': 'PauseAlgo', 'LogCollect': 'PauseAlgo'}/g" ./config/tier0/config.py
