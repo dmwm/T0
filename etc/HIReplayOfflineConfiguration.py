@@ -129,7 +129,7 @@ hiForwardScenario = "ppEra_Run3_2023_repacked"
 
 # Procesing version number replays
 # Taking Replay processing ID from the last 8 digits of the DeploymentID
-dt = int(open("DeploymentID.txt","r").read()[4:])
+dt = int(open("/data/tier0/srv/wmagent/3.1.2/install/tier0/Tier0Feeder/DeploymentID.txt","r").read()[4:])
 defaultProcVersion = dt
 expressProcVersion = dt
 alcarawProcVersion = dt
