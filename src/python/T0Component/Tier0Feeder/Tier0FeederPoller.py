@@ -39,45 +39,58 @@ class Tier0FeederPoller(BaseWorkerThread):
         _init_
 
         """
+        logging.info("1. Initializing BaseWorkerThread")
         BaseWorkerThread.__init__(self)
 
+        logging.info("2. BaseWorkerThread Initialized Correctly")
         myThread = threading.currentThread()
 
         self.daoFactory = DAOFactory(package = "T0.WMBS",
                                      logger = logging,
                                      dbinterface = myThread.dbi)
-
+        logging.info('3. tier0ConfigFile')
         self.tier0ConfigFile = config.Tier0Feeder.tier0ConfigFile
+
+        logging.info('4. specDirectory')
         self.specDirectory = config.Tier0Feeder.specDirectory
+
+        logging.info('5. Getting dropbox credentials')
         self.dropboxuser = getattr(config.Tier0Feeder, "dropboxuser", None)
         self.dropboxpass = getattr(config.Tier0Feeder, "dropboxpass", None)
-
+        
+        logging.info('6. dqmUploadProxy and serviceProxy')
         self.dqmUploadProxy = getattr(config.Tier0Feeder, "dqmUploadProxy", None)
         self.serviceProxy = getattr(config.Tier0Feeder, "serviceProxy", None)
-
+        
+        logging.info('7.')
         self.localRequestCouchDB = RequestDBWriter(config.AnalyticsDataCollector.localT0RequestDBURL, 
                                                    couchapp = config.AnalyticsDataCollector.RequestCouchApp)
 
         self.injectedRuns = set()
-
+        
+        logging.info('8. hltConfConnectUrl. Connecting to some database, apparently HLT related')
         hltConfConnectUrl = config.HLTConfDatabase.connectUrl
         dbFactoryHltConf = DBFactory(logging, dburl = hltConfConnectUrl, options = {})
         self.dbInterfaceHltConf = dbFactoryHltConf.connect()
         daoFactoryHltConf = DAOFactory(package = "T0.WMBS",
                                        logger = logging,
                                        dbinterface = self.dbInterfaceHltConf)
-        self.getHLTConfigDAO = daoFactoryHltConf(classname = "RunConfig.GetHLTConfig")
 
+        self.getHLTConfigDAO = daoFactoryHltConf(classname = "RunConfig.GetHLTConfig")
+        
+        logging.info('9. Connecting to storageManager')
         storageManagerConnectUrl = config.StorageManagerDatabase.connectUrl
         dbFactoryStorageManager = DBFactory(logging, dburl = storageManagerConnectUrl, options = {})
         self.dbInterfaceStorageManager = dbFactoryStorageManager.connect()
 
         self.dbInterfaceSMNotify = None
+        logging.info('10. Connecting to SMNotifyDatabase')
         if hasattr(config, "SMNotifyDatabase"):
             smNotifyConnectUrl = config.SMNotifyDatabase.connectUrl
             dbFactorySMNotify = DBFactory(logging, dburl = smNotifyConnectUrl, options = {})
             self.dbInterfaceSMNotify = dbFactorySMNotify.connect()
-
+        
+        logging.info('11. Connecting to PopConLogDatabase')
         self.getExpressReadyRunsDAO = None
         if hasattr(config, "PopConLogDatabase"):
             popConLogConnectUrl = getattr(config.PopConLogDatabase, "connectUrl", None)
@@ -88,7 +101,8 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                  logger = logging,
                                                  dbinterface = dbInterfacePopConLog)
                 self.getExpressReadyRunsDAO = daoFactoryPopConLog(classname = "Tier0Feeder.GetExpressReadyRuns")
-
+        
+        logging.info('12. Connecting to T0DataSvc')
         self.haveT0DataSvc = False
         if hasattr(config, "T0DataSvcDatabase"):
             t0datasvcConnectUrl = getattr(config.T0DataSvcDatabase, "connectUrl", None)
