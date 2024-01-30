@@ -1,3 +1,10 @@
+3.1.2 to 3.1.3:
+  - Replay configuration for CMSSW_13_2_6_patch1 (#4901)
+  - Update deployment scripts (#4909)
+  - DeploymentID.txt debug (#4908)
+  - deployment scripts with modified job resubmission (#4902)
+  - Commissioning2024_ProductionFile (#4903)
+
 3.1.1 to 3.1.2:
   - Adding unit test for "Tier0Config" (#4899)
   - Adding HIZeroBias datasets (#4900)
