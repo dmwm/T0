@@ -1,6 +1,6 @@
 #!/bin/bash
 confirm_deploy=""
-replay_nodes=("vocms0500.cern.ch" "vocms047.cern.ch" "vocms001.cern.ch" "vocms015.cern.ch")
+replay_nodes=("vocms0500.cern.ch" "vocms047.cern.ch" "vocms001.cern.ch" "vocms015.cern.ch" "vocms0501.cern.ch" "vocms0502.cern.ch")
 is_production_node=1
 for node in ${replay_nodes[@]}; do
 	if [ "$node" == `hostname` ]
@@ -29,9 +29,9 @@ BASE_DIR=/data/tier0
 DEPLOY_DIR=$BASE_DIR/srv/wmagent
 SPEC_DIR=$BASE_DIR/admin/Specs
 
-TIER0_VERSION=3.1.0
+TIER0_VERSION=3.1.2
 TIER0_ARCH=slc7_amd64_gcc630
-DEPLOY_TAG=HG2305b
+DEPLOY_TAG=HG2311b
 
 function echo_header {
     echo ''
