@@ -112,6 +112,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                 self.deployID = int(datetime.datetime.now().strftime("%y%m%d%H%M%S"))
                 SetDeploymentIdDAO.execute(self.deployID)
                 open("DeploymentID.txt","a").write("%d" % self.deployID)
+                open("/data/tier0/DeploymentID.txt","w").write("%d" % self.deployID)
 
         except:
             logging.exception("Something went wrong with setting deployment ID")
