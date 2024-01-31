@@ -71,6 +71,8 @@ def modifyConfiguration(config, **args):
         delattr(config, "WorkQueueManager")
     if hasattr(config, "ArchiveDataReporter"):
         delattr(config, "ArchiveDataReporter")
+    if hasattr(config, "WorkflowUpdater"):
+        delattr(config, "WorkflowUpdater")
 
     config.TaskArchiver.useWorkQueue = False
 
