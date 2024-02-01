@@ -543,6 +543,22 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         # finally create WMSpec
         #
         outputs = {}
+        
+        if streamConfig.ProcessingStyle in [ 'Bulk', 'Express' ]:
+            
+            specArguments = {}
+            
+            specArguments['Requestor'] = "Tier0"
+            specArguments['RequestorDN'] = "Tier0"
+            specArguments['RequestDate'] = []
+            specArguments['RequestTransition'] = []
+            specArguments['RequestStatus'] = REQUEST_START_STATE
+            specArguments['RunNumber'] = run
+            specArguments['PriorityTransition'] = []
+            specArguments['AcquisitionEra'] = runInfo['acq_era']
+            specArguments['Outputs'] = outputModuleDetails
+            specArguments['ValidStatus'] = "VALID"
+        
         if streamConfig.ProcessingStyle == "Bulk":
 
             taskName = "Repack"
@@ -553,18 +569,10 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             else:
                 workflowName = "Repack_Run%d_Stream%s" % (run, stream)
 
-            specArguments = {}
-
             specArguments['Memory'] = streamConfig.Repack.MaxMemory
-            specArguments['Requestor'] = "Tier0"
             specArguments['RequestName'] = workflowName
             specArguments['RequestString'] = workflowName
-            specArguments['RequestorDN'] = "Tier0"
-            specArguments['RequestDate'] = []
-            specArguments['RequestTransition'] = []
-            specArguments['RequestStatus'] = REQUEST_START_STATE
             specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority + 5000
-            specArguments['PriorityTransition'] = []
 
             specArguments['CMSSWVersion'] = streamConfig.Repack.CMSSWVersion
             specArguments['ScramArch'] = streamConfig.Repack.ScramArch
@@ -603,8 +611,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             else:
                 workflowName = "Express_Run%d_Stream%s" % (run, stream)
 
-            specArguments = {}
-
             specArguments['TimePerEvent'] = streamConfig.Express.TimePerEvent
             specArguments['SizePerEvent'] = streamConfig.Express.SizePerEvent
 
@@ -613,15 +619,9 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 specArguments['Multicore'] = streamConfig.Express.Multicore
                 specArguments['Memory'] += (streamConfig.Express.Multicore - 1) * streamConfig.Express.MaxMemoryperCore
 
-            specArguments['Requestor'] = "Tier0"
             specArguments['RequestName'] = workflowName
             specArguments['RequestString'] = workflowName
-            specArguments['RequestorDN'] = "Tier0"
-            specArguments['RequestDate'] = []
-            specArguments['RequestTransition'] = []
-            specArguments['RequestStatus'] = REQUEST_START_STATE
             specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority + 10000
-            specArguments['PriorityTransition'] = []
 
             specArguments['ProcessingString'] = "Express"
             specArguments['ProcessingVersion'] = streamConfig.Express.ProcessingVersion
@@ -661,13 +661,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['PeriodicHarvestInterval'] = streamConfig.Express.PeriodicHarvestInterval
 
             blockCloseDelay = streamConfig.Express.BlockCloseDelay
-
-        if streamConfig.ProcessingStyle in [ 'Bulk', 'Express' ]:
-
-            specArguments['RunNumber'] = run
-            specArguments['AcquisitionEra'] = runInfo['acq_era']
-            specArguments['Outputs'] = outputModuleDetails
-            specArguments['ValidStatus'] = "VALID"
 
         if streamConfig.ProcessingStyle == "Bulk":
             factory = RepackWorkloadFactory()
