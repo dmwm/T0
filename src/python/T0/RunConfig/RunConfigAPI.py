@@ -54,6 +54,14 @@ def extractConfigParameter(configParameter, era, run):
         return configParameter
     
 def getBindCombination(run,hltConfig):
+    """
+    _getBindCombination_
+    
+    Subfunction of configureRun.
+    
+    Bind combination of stream/dataset/trigger mapping.
+    
+    """
     bindsStream = []
     bindsDataset = []
     bindsStreamDataset = []
@@ -80,7 +88,12 @@ def getBindCombination(run,hltConfig):
                     bindsDatasetTrigger.append( { 'RUN' : run,
                                                     'TRIG' : path,
                                                     'PRIMDS' : dataset } )
-    return bindsStream,bindsDataset,bindsStreamDataset,bindsTrigger,bindsDatasetTrigger
+    bindsCombination={ "Stream":bindsStream,
+                      "Dataset":bindsDataset,
+                      "StreamDataset":bindsStreamDataset,
+                      "Trigger":bindsTrigger,
+                      "DatasetTrigger":bindsDatasetTrigger }
+    return bindsCombination
 
 def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
     """
@@ -110,11 +123,9 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
     if hltConfig != None:
 
         # write stream/dataset/trigger mapping
-        insertStreamDAO = daoFactory(classname = "RunConfig.InsertStream")
-        insertDatasetDAO = daoFactory(classname = "RunConfig.InsertPrimaryDataset")
-        insertStreamDatasetDAO = daoFactory(classname = "RunConfig.InsertStreamDataset")
-        insertTriggerDAO = daoFactory(classname = "RunConfig.InsertTrigger")
-        insertDatasetTriggerDAO = daoFactory(classname = "RunConfig.InsertDatasetTrigger")
+        insertDAO={}
+        for mapping in ['Stream','Dataset','StreamDataset','Trigger','DatasetTrigger']:
+            insertDAO[mapping] = daoFactory(classname = f"RunConfig.Insert{mapping}")
 
         # partition AlcaHarvest upload by year
         if tier0Config.Global.AlcaHarvestCondLFNBase:
@@ -137,16 +148,13 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
                            'DBHOST' : tier0Config.Global.DropboxHost,
                            'VALIDMODE' : tier0Config.Global.ValidationMode }
 
-        bindsStream,bindsDataset,bindsStreamDataset,bindsTrigger,bindsDatasetTrigger=getBindCombination(run,hltConfig)
+        bindsCombination=getBindCombination(run,hltConfig)
 
         try:
             myThread.transaction.begin()
             updateRunDAO.execute(bindsUpdateRun, conn = myThread.transaction.conn, transaction = True)
-            insertStreamDAO.execute(bindsStream, conn = myThread.transaction.conn, transaction = True)
-            insertDatasetDAO.execute(bindsDataset, conn = myThread.transaction.conn, transaction = True)
-            insertStreamDatasetDAO.execute(bindsStreamDataset, conn = myThread.transaction.conn, transaction = True)
-            insertTriggerDAO.execute(bindsTrigger, conn = myThread.transaction.conn, transaction = True)
-            insertDatasetTriggerDAO.execute(bindsDatasetTrigger, conn = myThread.transaction.conn, transaction = True)
+            for mapping in ['Stream','Dataset','StreamDataset','Trigger','DatasetTrigger']:
+                insertDAO[mapping].execute(bindsCombination[mapping], conn = myThread.transaction.conn, transaction = True)
         except Exception as ex:
             logging.exception(ex)
             myThread.transaction.rollback()
