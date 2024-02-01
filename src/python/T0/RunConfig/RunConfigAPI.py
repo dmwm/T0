@@ -52,6 +52,35 @@ def extractConfigParameter(configParameter, era, run):
         return configParameter['default']
     else:
         return configParameter
+    
+def getBindCombination(run,hltConfig):
+    bindsStream = []
+    bindsDataset = []
+    bindsStreamDataset = []
+    bindsTrigger = []
+    bindsDatasetTrigger = []
+    for stream, datasetDict in list(hltConfig['mapping'].items()):
+        bindsStream.append( { 'STREAM' : stream } )
+        for dataset, paths in list(datasetDict.items()):
+
+            if dataset == "Unassigned path":
+
+                if run < 317512:
+                    pass
+                else:
+                    raise RuntimeError("Problem in configureRun() : Unassigned path in HLT menu !")
+
+            else:
+                bindsDataset.append( { 'PRIMDS' : dataset } )
+                bindsStreamDataset.append( { 'RUN' : run,
+                                                'PRIMDS' : dataset,
+                                                'STREAM' : stream } )
+                for path in paths:
+                    bindsTrigger.append( { 'TRIG' : path } )
+                    bindsDatasetTrigger.append( { 'RUN' : run,
+                                                    'TRIG' : path,
+                                                    'PRIMDS' : dataset } )
+    return bindsStream,bindsDataset,bindsStreamDataset,bindsTrigger,bindsDatasetTrigger
 
 def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
     """
@@ -108,33 +137,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
                            'DBHOST' : tier0Config.Global.DropboxHost,
                            'VALIDMODE' : tier0Config.Global.ValidationMode }
 
-        bindsStream = []
-        bindsDataset = []
-        bindsStreamDataset = []
-        bindsTrigger = []
-        bindsDatasetTrigger = []
-
-        for stream, datasetDict in list(hltConfig['mapping'].items()):
-            bindsStream.append( { 'STREAM' : stream } )
-            for dataset, paths in list(datasetDict.items()):
-
-                if dataset == "Unassigned path":
-
-                    if run < 317512:
-                        pass
-                    else:
-                        raise RuntimeError("Problem in configureRun() : Unassigned path in HLT menu !")
-
-                else:
-                    bindsDataset.append( { 'PRIMDS' : dataset } )
-                    bindsStreamDataset.append( { 'RUN' : run,
-                                                 'PRIMDS' : dataset,
-                                                 'STREAM' : stream } )
-                    for path in paths:
-                        bindsTrigger.append( { 'TRIG' : path } )
-                        bindsDatasetTrigger.append( { 'RUN' : run,
-                                                      'TRIG' : path,
-                                                      'PRIMDS' : dataset } )
+        bindsStream,bindsDataset,bindsStreamDataset,bindsTrigger,bindsDatasetTrigger=getBindCombination(run,hltConfig)
 
         try:
             myThread.transaction.begin()
