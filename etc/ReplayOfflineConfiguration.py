@@ -106,7 +106,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_2_3"
+    'default': "CMSSW_13_2_6"
 }
 
 # Configure ScramArch
@@ -134,8 +134,8 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "132X_dataRun3_Express_SiStripLA_v1"
-promptrecoGlobalTag = "132X_dataRun3_Prompt_SiStripLA_v1"
+expressGlobalTag = "132X_dataRun3_Express_v4"
+promptrecoGlobalTag = "132X_dataRun3_Prompt_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -457,7 +457,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
- 
+
 DATASETS = ["Cosmics"]
 
 for dataset in DATASETS:
@@ -520,7 +520,7 @@ DATASETS = ["ParkingSingleMuon","ParkingSingleMuon0","ParkingSingleMuon1","Parki
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
+               do_reco=True,
                scenario=ppScenario)
 
 DATASETS = ["ParkingDoubleMuonLowMass0","ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
@@ -588,7 +588,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                aod_to_disk=False,
-               dqm_sequences=["@common", "@jetmet"],
+               dqm_sequences=["@common"],
                scenario=ppScenario)
 
 DATASETS = ["EmptyBX"]
@@ -709,7 +709,6 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                physics_skims=["EXONoBPTXSkim", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
-
 
 DATASETS = ["SingleMuon"]
 
@@ -938,7 +937,7 @@ DATASETS = ["HLTPhysics", "HLTPhysics0", "HLTPhysics1",
             "HLTPhysics11", "HLTPhysics12", "HLTPhysics13",
             "HLTPhysics14", "HLTPhysics15", "HLTPhysics16",
             "HLTPhysics17", "HLTPhysics18", "HLTPhysics19"]
-            
+
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -951,7 +950,7 @@ for dataset in DATASETS:
                alca_producers=["TkAlMinBias"],
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
-               
+
 DATASETS = ["SpecialHLTPhysics", "SpecialHLTPhysics0", "SpecialHLTPhysics1",
             "SpecialHLTPhysics2", "SpecialHLTPhysics3", "SpecialHLTPhysics4",
             "SpecialHLTPhysics5", "SpecialHLTPhysics6", "SpecialHLTPhysics7",
@@ -1032,7 +1031,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
                timePerEvent=1,
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias"],
                scenario=ppScenario)
@@ -1084,13 +1083,13 @@ DATASETS += ["ZeroBiasPD01", "ZeroBiasPD02", "ZeroBiasPD03",
 
 DATASETS += ["ZeroBiasNonColliding"]
 
-DATASETS += ["SpecialZeroBias", "SpecialZeroBias0", "SpecialZeroBias1",
-				"SpecialZeroBias2", "SpecialZeroBias3", "SpecialZeroBias4",
-				"SpecialZeroBias5", "SpecialZeroBias6", "SpecialZeroBias7",
-				"SpecialZeroBias8", "SpecialZeroBias9", "SpecialZeroBias10",
-            	"SpecialZeroBias11", "SpecialZeroBias12", "SpecialZeroBias13",
-            	"SpecialZeroBias14", "SpecialZeroBias15", "SpecialZeroBias16",
-             	"SpecialZeroBias17", "SpecialZeroBias18", "SpecialZeroBias19"]
+DATASETS += ["SpecialZeroBias", "SpecialZeroBias0", "SpecialZeroBias1", 
+	     "SpecialZeroBias2", "SpecialZeroBias3", "SpecialZeroBias4", 
+	     "SpecialZeroBias5", "SpecialZeroBias6", "SpecialZeroBias7",
+	     "SpecialZeroBias8", "SpecialZeroBias9", "SpecialZeroBias10",
+	     "SpecialZeroBias11", "SpecialZeroBias12", "SpecialZeroBias13",
+	     "SpecialZeroBias14", "SpecialZeroBias15", "SpecialZeroBias16",
+	     "SpecialZeroBias17", "SpecialZeroBias18", "SpecialZeroBias19"]
 
 DATASETS += ["PPRefZeroBias0", "PPRefZeroBias1", "PPRefZeroBias2",
              "PPRefZeroBias3", "PPRefZeroBias4", "PPRefZeroBias5", "PPRefZeroBias6",
@@ -1105,7 +1104,7 @@ for dataset in DATASETS:
                raw_to_disk=True,
                write_reco=False,
                write_dqm=True,
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet", "@ctpps"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@ctpps"],
                alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias", "HcalCalIsolatedBunchSelector"],
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=3.5,
@@ -1135,7 +1134,6 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
                scenario=ppScenario)
-
 
 DATASETS = ["ParkingDoubleElectronLowMass0","ParkingDoubleElectronLowMass1","ParkingDoubleElectronLowMass2",
             "ParkingDoubleElectronLowMass3","ParkingDoubleElectronLowMass4","ParkingDoubleElectronLowMass5",
@@ -1204,19 +1202,6 @@ for dataset in DATASETS:
                alca_producers=["PPSCalMaxTracks"],
                dqm_sequences=["@none"],
                scenario=alcaPPSScenario)
-
-#####################
-### HI TESTS 2018 ###
-#####################
-
-DATASETS = ["HITestFull", "HITestReduced"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_dqm=True,
-               dqm_sequences=["@common"],
-               scenario=hiTestppScenario)
 
 ######################
 ### RAW' TEST 2023 ###
