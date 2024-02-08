@@ -56,6 +56,7 @@ def injectNewData(dbInterfaceStorageManager,
 
     getNewDataDAO = daoFactoryStorageManager(classname = "StorageManager.GetNewData")
     getRunInfoDAO = daoFactoryHltConf(classname = "StorageManager.GetRunInfo")
+    getRunSetup = daoFactoryStorageManager(classname = "StorageManager.GetRunSetup")
     insertRunDAO = daoFactory(classname = "RunConfig.InsertRun")
     insertStreamDAO = daoFactory(classname = "RunConfig.InsertStream")
     insertCMSSWVersionDAO = daoFactory(classname = "RunConfig.InsertCMSSWVersion")
@@ -96,6 +97,7 @@ def injectNewData(dbInterfaceStorageManager,
     bindRunStreamCMSSW = []
     for run in sorted(list(newRuns)):
         (hltkey, cmssw) = getRunInfoDAO.execute(run = run, transaction = False)
+        setupLabel = getRunSetup.execute(run = run, transaction = False)
         logging.debug("StorageManagerAPI: run = %d, hltkey = %s, cmssw = %s", run, hltkey, cmssw)
         if hltkey and cmssw:
             cmssw = '_'.join(cmssw.split('_')[0:4]) # only consider base release
