@@ -221,6 +221,18 @@ def getCustodialSite(datasetConfig,bindsStorageNode,isExpress=True):
             
     return custodialSites,nonCustodialSites,bindsStorageNode
 
+def joinComma(skims):
+    """
+    _joinComma_
+    
+    Simple function to join list with comma to string else return None.
+    
+    """
+    if len(skims)> 0:
+        return ",".join(skims)
+    else:
+        return None
+
 def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
     """
     _configureRunStream_
@@ -390,12 +402,11 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                             'deleteFromSource' : True,
                                             'datasetLifetime' : streamConfig.Express.datasetLifetime } )
 
-            alcaSkim = None
+            alcaSkim = joinComma(streamConfig.Express.AlcaSkims)
             if len(streamConfig.Express.AlcaSkims) > 0:
                 outputModuleDetails.append( { 'dataTier' : "ALCARECO",
                                               'eventContent' : "ALCARECO",
                                               'primaryDataset' : specialDataset } )
-                alcaSkim = ",".join(streamConfig.Express.AlcaSkims)
 
                 numPromptCalibProd = 0
                 for producer in streamConfig.Express.AlcaSkims:
@@ -407,9 +418,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                                'STREAM' : stream,
                                                'NUM_PRODUCER' : numPromptCalibProd }
 
-            dqmSeq = None
-            if len(streamConfig.Express.DqmSequences) > 0:
-                dqmSeq = ",".join(streamConfig.Express.DqmSequences)
+            dqmSeq = joinComma(streamConfig.Express.DqmSequences)
 
             streamConfig.Express.CMSSWVersion = streamConfig.VersionOverride.get(onlineVersion, onlineVersion)
 
@@ -744,7 +753,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         # should we do anything for local runs ?
         pass
     return
-
+    
 def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
     """
     _releasePromptReco_
@@ -833,18 +842,12 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                            'SCENARIO' : datasetConfig.Scenario } )
 
             bindsCMSSWVersion.append( { 'VERSION' : datasetConfig.CMSSWVersion } )
+    
+            alcaSkim = joinComma(datasetConfig.AlcaSkims)
+            
+            physicsSkim = joinComma(datasetConfig.PhysicsSkims)
 
-            alcaSkim = None
-            if len(datasetConfig.AlcaSkims) > 0:
-                alcaSkim = ",".join(datasetConfig.AlcaSkims)
-
-            physicsSkim = None
-            if len(datasetConfig.PhysicsSkims) > 0:
-                physicsSkim = ",".join(datasetConfig.PhysicsSkims)
-
-            dqmSeq = None
-            if len(datasetConfig.DqmSequences) > 0:
-                dqmSeq = ",".join(datasetConfig.DqmSequences)
+            dqmSeq = joinComma(datasetConfig.DqmSequences)
 
             datasetConfig.ScramArch = tier0Config.Global.ScramArches.get(datasetConfig.CMSSWVersion,
                                                                          tier0Config.Global.DefaultScramArch)
