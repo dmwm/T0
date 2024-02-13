@@ -36,7 +36,7 @@ setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
 # 367102 - Collisions 2023 - 1200b - 0.5h long - all components IN
-setInjectRuns(tier0Config, [369998, 372704])
+setInjectRuns(tier0Config, [369998, 375832])
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
@@ -106,13 +106,14 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_2_6"
+    'default': "CMSSW_13_3_2_patch1"
 }
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "el8_amd64_gcc11")
 setScramArch(tier0Config, "CMSSW_12_4_9", "el8_amd64_gcc10")
 setScramArch(tier0Config, "CMSSW_12_3_0", "cs8_amd64_gcc10")
+setScramArch(tier0Config, "CMSSW_13_3_2_patch1", "el8_amd64_gcc12")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3_2023"
@@ -134,8 +135,8 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "132X_dataRun3_Express_v4"
-promptrecoGlobalTag = "132X_dataRun3_Prompt_v3"
+expressGlobalTag = "133X_dataRun3_Express_v2"
+promptrecoGlobalTag = "133X_dataRun3_Prompt_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -1236,7 +1237,6 @@ ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
-
 ###################################
 ### currently inactive settings ###
 ###################################
