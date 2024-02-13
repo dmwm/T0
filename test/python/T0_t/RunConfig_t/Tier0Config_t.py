@@ -1,12 +1,35 @@
 import unittest
 import T0.RunConfig.Tier0Config as tier0config
+from T0.RunConfig import RunConfigAPI
 
 
 class TestRetrieveStreamConfig(unittest.TestCase):
 
     def setUp(self):
         self.config = tier0config.createTier0Config()
+        self.hltconfig = None
 
+    def test_getBindCombination(self):
+        # Check keys for bindCombinations.
+        if self.hltconfig is None:
+            self.hltconfig={'mapping':{'stream1':{'dataset1':['path1','path2']},'stream2':{'dataset2':['path3','path4']}}}
+        bindsCombination=RunConfigAPI.getBindCombination(176161,self.hltconfig)
+        
+        for mapping in ['Stream','Dataset','StreamDataset','Trigger','DatasetTrigger']:
+            with self.subTest(mapping=mapping):
+                self.assertIn(mapping,bindsCombination)
+                self.assertNotEqual(bindsCombination[mapping],[])
+                
+        self.assertIn(bindsCombination['Stream'][0],'STREAM')
+        self.assertIn(bindsCombination['Dataset'][0],'PRIMDS')
+        self.assertIn(bindsCombination['StreamDataset'][0],'RUN')
+        self.assertIn(bindsCombination['StreamDataset'][0],'PRIMDS')
+        self.assertIn(bindsCombination['StreamDataset'][0],'STREAM')
+        self.assertIn(bindsCombination['Trigger'][0],'TRIG')
+        self.assertIn(bindsCombination['DatasetTrigger'][0],'RUN')
+        self.assertIn(bindsCombination['DatasetTrigger'][0],'TRIG')
+        self.assertIn(bindsCombination['DatasetTrigger'][0],'PRIMDS')
+        
     def test_createTier0Config(self):
         # Check some key values in the Global section
         self.assertEqual(self.config.Global.ProcessingSite, "T2_CH_CERN")

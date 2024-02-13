@@ -76,7 +76,7 @@ def getBindCombination(run,hltConfig):
                 if run < 317512:
                     pass
                 else:
-                    raise RuntimeError("Problem in configureRun() : Unassigned path in HLT menu !")
+                    raise RuntimeError("Problem in getBindCombination() : Unassigned path in HLT menu !")
 
             else:
                 bindsDataset.append( { 'PRIMDS' : dataset } )
