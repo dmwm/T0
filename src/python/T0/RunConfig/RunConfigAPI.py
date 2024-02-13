@@ -187,6 +187,40 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
 
     return
 
+def getCustodialSite(datasetConfig,bindsStorageNode,isExpress=True):
+    """
+     _configureRunStream_
+     
+     Subfunction of configureRunStream.
+     
+     return custodialSites, nonCustodialSites and appended bindsStorage of streamConfig.Express or datasetConfig.
+
+    """
+    custodialSites = []
+    nonCustodialSites = []
+    if datasetConfig.ArchivalNode:
+        bindsStorageNode.append( { 'NODE' : datasetConfig.ArchivalNode } )
+        custodialSites.append(datasetConfig.ArchivalNode)
+    if datasetConfig.TapeNode:
+        bindsStorageNode.append( { 'NODE' : datasetConfig.TapeNode } )
+        custodialSites.append(datasetConfig.TapeNode)
+        if not isExpress and datasetConfig.RAWTapeNode:
+            bindsStorageNode.append( { 'NODE' : datasetConfig.RAWTapeNode } ) ## duplicated?
+            custodialSites.append(datasetConfig.RAWTapeNode)
+        else:
+            custodialSites.append(datasetConfig.TapeNode)
+    if datasetConfig.DiskNode:
+        bindsStorageNode.append( { 'NODE' : datasetConfig.DiskNode } )
+        nonCustodialSites.append(datasetConfig.DiskNode)
+        if not isExpress and datasetConfig.RAWtoDisk:
+            nonCustodialSites.append(datasetConfig.DiskNode)
+        else:
+            nonCustodialSites.append(datasetConfig.DiskNode)
+    if not isExpress and datasetConfig.DiskNodeReco:
+        bindsStorageNode.append( { 'NODE' : datasetConfig.DiskNodeReco } )
+            
+    return custodialSites,nonCustodialSites,bindsStorageNode
+
 def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
     """
     _configureRunStream_
@@ -346,17 +380,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                             'DISK_NODE' :  streamConfig.Express.DiskNode,
                                             'DISK_NODE_RECO' : None } )
 
-                custodialSites = []
-                nonCustodialSites = []
-                if streamConfig.Express.ArchivalNode:
-                    bindsStorageNode.append( { 'NODE' : streamConfig.Express.ArchivalNode } )
-                    custodialSites.append(streamConfig.Express.ArchivalNode)
-                if streamConfig.Express.TapeNode:
-                    bindsStorageNode.append( { 'NODE' : streamConfig.Express.TapeNode } )
-                    custodialSites.append(streamConfig.Express.TapeNode)
-                if streamConfig.Express.DiskNode:
-                    bindsStorageNode.append( { 'NODE' : streamConfig.Express.DiskNode } )
-                    nonCustodialSites.append(streamConfig.Express.DiskNode)
+                custodialSites, nonCustodialSites, bindsStorageNode = getCustodialSite(streamConfig.Express,bindsStorageNode,isExpress=True)
 
                 if len(custodialSites) > 0 or len(nonCustodialSites) > 0:
                     subscriptions.append( { 'custodialSites' : custodialSites,
@@ -464,24 +488,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                                 'DISK_NODE' : datasetConfig.DiskNode,
                                                 'DISK_NODE_RECO' : datasetConfig.DiskNodeReco } )
 
-                custodialSites = []
-                nonCustodialSites = []
-                if datasetConfig.ArchivalNode:
-                    bindsStorageNode.append( { 'NODE' : datasetConfig.ArchivalNode } )
-                    custodialSites.append(datasetConfig.ArchivalNode)
-                if datasetConfig.TapeNode:
-                    bindsStorageNode.append( { 'NODE' : datasetConfig.TapeNode } )
-                    if datasetConfig.RAWTapeNode:
-                        bindsStorageNode.append( { 'NODE' : datasetConfig.RAWTapeNode } )
-                        custodialSites.append(datasetConfig.RAWTapeNode)
-                    else:
-                        custodialSites.append(datasetConfig.TapeNode)
-                if datasetConfig.DiskNode:
-                    bindsStorageNode.append( { 'NODE' : datasetConfig.DiskNode } )
-                    if datasetConfig.RAWtoDisk:
-                        nonCustodialSites.append(datasetConfig.DiskNode)
-                if datasetConfig.DiskNodeReco:
-                    bindsStorageNode.append( { 'NODE' : datasetConfig.DiskNodeReco } )
+                custodialSites, nonCustodialSites, bindsStorageNode = getCustodialSite(datasetConfig,bindsStorageNode,isExpress=False)
 
                 if len(custodialSites) > 0 or len(nonCustodialSites) > 0:
                     subscriptions.append( { 'custodialSites' : custodialSites,
@@ -522,15 +529,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                                 'DISK_NODE' : streamConfig.Express.DiskNode,
                                                 'DISK_NODE_RECO' : None } )
 
-                    custodialSites = []
-                    nonCustodialSites = []
-                    if streamConfig.Express.ArchivalNode:
-                        custodialSites.append(streamConfig.Express.ArchivalNode)
-                    if streamConfig.Express.TapeNode:
-                        custodialSites.append(streamConfig.Express.TapeNode)
-                    if streamConfig.Express.DiskNode:
-                        nonCustodialSites.append(streamConfig.Express.DiskNode)
-
+                    custodialSites, nonCustodialSites, __dummy = getCustodialSite(streamConfig.Express,bindsStorageNode,isExpress=True)
+                    
                     if len(custodialSites) > 0 or len(nonCustodialSites) > 0:
                         subscriptions.append( { 'custodialSites' : custodialSites,
                                                 'nonCustodialSites' : nonCustodialSites,
