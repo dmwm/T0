@@ -442,9 +442,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             streamConfig.Express.GlobalTag = extractConfigParameter(streamConfig.Express.GlobalTag, runInfo['acq_era'], run)
             streamConfig.Express.ProcessingVersion = extractConfigParameter(streamConfig.Express.ProcessingVersion, runInfo['acq_era'], run)
 
-            write_tiers = ','.join(streamConfig.Express.DataTiers)
-            if not write_tiers:
-                write_tiers = None
+            write_tiers = joinComma(streamConfig.Express.DataTiers)
 
             bindsExpressConfig = { 'RUN' : run,
                                    'STREAM' : stream,
@@ -552,21 +550,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         # finally create WMSpec
         #
         outputs = {}
-        
-        if streamConfig.ProcessingStyle in [ 'Bulk', 'Express' ]:
-            
-            specArguments = {}
-            
-            specArguments['Requestor'] = "Tier0"
-            specArguments['RequestorDN'] = "Tier0"
-            specArguments['RequestDate'] = []
-            specArguments['RequestTransition'] = []
-            specArguments['RequestStatus'] = REQUEST_START_STATE
-            specArguments['RunNumber'] = run
-            specArguments['PriorityTransition'] = []
-            specArguments['AcquisitionEra'] = runInfo['acq_era']
-            specArguments['Outputs'] = outputModuleDetails
-            specArguments['ValidStatus'] = "VALID"
+        specArguments = {}
         
         if streamConfig.ProcessingStyle == "Bulk":
 
@@ -577,36 +561,13 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                     tier0Config.Global.AcquisitionEra, tier0Config.Global.DeploymentID, streamConfig.Repack.ProcessingVersion)
             else:
                 workflowName = "Repack_Run%d_Stream%s" % (run, stream)
-
-            specArguments['Memory'] = streamConfig.Repack.MaxMemory
-            specArguments['RequestName'] = workflowName
-            specArguments['RequestString'] = workflowName
+            
+            specArguments = getRepackSpecArguments(streamConfig.Repack,workflowName,runInfo)
+            
+            specArguments['Outputs'] = outputModuleDetails
+            specArguments['RunNumber'] = run
+            
             specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority + 5000
-
-            specArguments['CMSSWVersion'] = streamConfig.Repack.CMSSWVersion
-            specArguments['ScramArch'] = streamConfig.Repack.ScramArch
-            specArguments['ProcessingVersion'] = streamConfig.Repack.ProcessingVersion
-
-            specArguments['MaxSizeSingleLumi'] = streamConfig.Repack.MaxSizeSingleLumi
-            specArguments['MaxSizeMultiLumi'] = streamConfig.Repack.MaxSizeMultiLumi
-            specArguments['MinInputSize'] = streamConfig.Repack.MinInputSize
-            specArguments['MaxInputSize'] = streamConfig.Repack.MaxInputSize
-            specArguments['MaxEdmSize'] = streamConfig.Repack.MaxEdmSize
-            specArguments['MaxOverSize'] = streamConfig.Repack.MaxOverSize
-            specArguments['MaxInputEvents'] = streamConfig.Repack.MaxInputEvents
-            specArguments['MaxInputFiles'] = streamConfig.Repack.MaxInputFiles
-            specArguments['MaxLatency'] = streamConfig.Repack.MaxLatency
-
-            # parameters for repack direct to merge stageout
-            specArguments['MinMergeSize'] = streamConfig.Repack.MinInputSize
-            specArguments['MaxMergeEvents'] = streamConfig.Repack.MaxInputEvents
-
-            specArguments['UnmergedLFNBase'] = "/store/unmerged/%s" % runInfo['bulk_data_type']
-            if runInfo['backfill']:
-                specArguments['MergedLFNBase'] = "/store/backfill/%s/%s" % (runInfo['backfill'],
-                                                                            runInfo['bulk_data_type'])
-            else:
-                specArguments['MergedLFNBase'] = "/store/%s" % runInfo['bulk_data_type']
 
             blockCloseDelay = streamConfig.Repack.BlockCloseDelay
 
@@ -620,54 +581,19 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             else:
                 workflowName = "Express_Run%d_Stream%s" % (run, stream)
 
-            specArguments['TimePerEvent'] = streamConfig.Express.TimePerEvent
-            specArguments['SizePerEvent'] = streamConfig.Express.SizePerEvent
-
-            specArguments['Memory'] = streamConfig.Express.MaxMemoryperCore
-            if streamConfig.Express.Multicore:
-                specArguments['Multicore'] = streamConfig.Express.Multicore
-                specArguments['Memory'] += (streamConfig.Express.Multicore - 1) * streamConfig.Express.MaxMemoryperCore
-
-            specArguments['RequestName'] = workflowName
-            specArguments['RequestString'] = workflowName
+            specArguments = getExpressSpecArguments(streamConfig.Express,workflowName,runInfo)
+            
+            specArguments['Outputs'] = outputModuleDetails
+            specArguments['RunNumber'] = run
+            
             specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority + 10000
 
-            specArguments['ProcessingString'] = "Express"
-            specArguments['ProcessingVersion'] = streamConfig.Express.ProcessingVersion
-            specArguments['Scenario'] = streamConfig.Express.Scenario
-
-            specArguments['CMSSWVersion'] = streamConfig.Express.CMSSWVersion
-            specArguments['ScramArch'] = streamConfig.Express.ScramArch
-            specArguments['RecoCMSSWVersion'] = streamConfig.Express.RecoCMSSWVersion
-            specArguments['RecoScramArch'] = streamConfig.Express.RecoScramArch
-
-            specArguments['GlobalTag'] = streamConfig.Express.GlobalTag
             specArguments['GlobalTagTransaction'] = "Express_%d" % run
-            specArguments['GlobalTagConnect'] = streamConfig.Express.GlobalTagConnect
-
-            specArguments['MaxInputRate'] = streamConfig.Express.MaxInputRate
-            specArguments['MaxInputEvents'] = streamConfig.Express.MaxInputEvents
-            specArguments['MaxInputSize'] = streamConfig.Express.MaxInputSize
-            specArguments['MaxInputFiles'] = streamConfig.Express.MaxInputFiles
-            specArguments['MaxLatency'] = streamConfig.Express.MaxLatency
-            specArguments['AlcaSkims'] = streamConfig.Express.AlcaSkims
-            specArguments['DQMSequences'] = streamConfig.Express.DqmSequences
-            specArguments['AlcaHarvestTimeout'] = runInfo['ah_timeout']
-            specArguments['AlcaHarvestCondLFNBase'] = runInfo['ah_cond_lfnbase']
-            specArguments['AlcaHarvestLumiURL'] = runInfo['ah_lumi_url']
+            
             specArguments['DQMUploadProxy'] = dqmUploadProxy
-            specArguments['DQMUploadUrl'] = runInfo['dqmuploadurl']
+
             specArguments['StreamName'] = stream
             specArguments['SpecialDataset'] = specialDataset
-
-            specArguments['UnmergedLFNBase'] = "/store/unmerged/%s" % streamConfig.Express.DataType
-            if runInfo['backfill']:
-                specArguments['MergedLFNBase'] = "/store/backfill/%s/%s" % (runInfo['backfill'],
-                                                                            streamConfig.Express.DataType)
-            else:
-                specArguments['MergedLFNBase'] = "/store/%s" % streamConfig.Express.DataType
-
-            specArguments['PeriodicHarvestInterval'] = streamConfig.Express.PeriodicHarvestInterval
 
             blockCloseDelay = streamConfig.Express.BlockCloseDelay
 
@@ -753,6 +679,154 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         # should we do anything for local runs ?
         pass
     return
+
+def getSpecArguments(runInfo):
+    """
+    _getSpecArguments_
+    
+    Base specArguments of Tier0
+    """
+    
+    specArguments = {}
+    
+    specArguments['Requestor'] = "Tier0"
+    specArguments['RequestorDN'] = "Tier0"
+    specArguments['RequestDate'] = []
+    specArguments['RequestTransition'] = []
+    specArguments['RequestStatus'] = REQUEST_START_STATE
+    specArguments['PriorityTransition'] = []
+    specArguments['AcquisitionEra'] = runInfo['acq_era']
+    specArguments['ValidStatus'] = "VALID"
+    
+    return specArguments
+
+def getRepackSpecArguments(Repack,workflowName,runInfo):
+    specArguments = getSpecArguments(runInfo)
+    
+    specArguments['Memory'] = Repack.MaxMemory
+    specArguments['RequestName'] = workflowName
+    specArguments['RequestString'] = workflowName
+
+    specArguments['CMSSWVersion'] = Repack.CMSSWVersion
+    specArguments['ScramArch'] = Repack.ScramArch
+    specArguments['ProcessingVersion'] = Repack.ProcessingVersion
+
+    specArguments['MaxSizeSingleLumi'] = Repack.MaxSizeSingleLumi
+    specArguments['MaxSizeMultiLumi'] = Repack.MaxSizeMultiLumi
+    specArguments['MinInputSize'] = Repack.MinInputSize
+    specArguments['MaxInputSize'] = Repack.MaxInputSize
+    specArguments['MaxEdmSize'] = Repack.MaxEdmSize
+    specArguments['MaxOverSize'] = Repack.MaxOverSize
+    specArguments['MaxInputEvents'] = Repack.MaxInputEvents
+    specArguments['MaxInputFiles'] = Repack.MaxInputFiles
+    specArguments['MaxLatency'] = Repack.MaxLatency
+    
+    # parameters for repack direct to merge stageout
+    specArguments['MinMergeSize'] = Repack.MinInputSize
+    specArguments['MaxMergeEvents'] = Repack.MaxInputEvents
+    
+    specArguments['UnmergedLFNBase'] = "/store/unmerged/%s" % runInfo['bulk_data_type']
+    if runInfo['backfill']:
+        specArguments['MergedLFNBase'] = "/store/backfill/%s/%s" % (runInfo['backfill'],
+                                                                    runInfo['bulk_data_type'])
+    else:
+        specArguments['MergedLFNBase'] = "/store/%s" % runInfo['bulk_data_type']
+    
+    return specArguments
+    
+def getExpressSpecArguments(Express,workflowName,runInfo):
+    specArguments = getSpecArguments(runInfo)
+    
+    specArguments['TimePerEvent'] = Express.TimePerEvent
+    specArguments['SizePerEvent'] = Express.SizePerEvent
+
+    specArguments['Memory'] = Express.MaxMemoryperCore
+    if Express.Multicore:
+        specArguments['Multicore'] = Express.Multicore
+        specArguments['Memory'] += (Express.Multicore - 1) * Express.MaxMemoryperCore
+
+    specArguments['RequestName'] = workflowName
+    specArguments['RequestString'] = workflowName
+    specArguments['ProcessingString'] = "Express"
+    specArguments['ProcessingVersion'] = Express.ProcessingVersion
+    specArguments['Scenario'] = Express.Scenario
+
+    specArguments['CMSSWVersion'] = Express.CMSSWVersion
+    specArguments['ScramArch'] = Express.ScramArch
+    specArguments['RecoCMSSWVersion'] = Express.RecoCMSSWVersion
+    specArguments['RecoScramArch'] = Express.RecoScramArch
+
+    specArguments['GlobalTag'] = Express.GlobalTag
+    specArguments['GlobalTagConnect'] = Express.GlobalTagConnect
+
+    specArguments['MaxInputRate'] = Express.MaxInputRate
+    specArguments['MaxInputEvents'] = Express.MaxInputEvents
+    specArguments['MaxInputSize'] = Express.MaxInputSize
+    specArguments['MaxInputFiles'] = Express.MaxInputFiles
+    specArguments['MaxLatency'] = Express.MaxLatency
+    specArguments['AlcaSkims'] = Express.AlcaSkims
+    specArguments['DQMSequences'] = Express.DqmSequences
+    specArguments['AlcaHarvestTimeout'] = runInfo['ah_timeout']
+    specArguments['AlcaHarvestCondLFNBase'] = runInfo['ah_cond_lfnbase']
+    specArguments['AlcaHarvestLumiURL'] = runInfo['ah_lumi_url']
+    
+    specArguments['DQMUploadUrl'] = runInfo['dqmuploadurl']
+    specArguments['UnmergedLFNBase'] = "/store/unmerged/%s" % Express.DataType
+    if runInfo['backfill']:
+        specArguments['MergedLFNBase'] = "/store/backfill/%s/%s" % (runInfo['backfill'],
+                                                                    Express.DataType)
+    else:
+        specArguments['MergedLFNBase'] = "/store/%s" % Express.DataType
+
+    specArguments['PeriodicHarvestInterval'] = Express.PeriodicHarvestInterval
+    
+    return specArguments
+
+def getPromptRecoSpecArguments(datasetConfig,workflowName,runInfo):
+    specArguments = getSpecArguments(runInfo)
+    
+    specArguments['TimePerEvent'] = datasetConfig.TimePerEvent
+    specArguments['SizePerEvent'] = datasetConfig.SizePerEvent
+
+    specArguments['Memory'] = datasetConfig.MaxMemoryperCore
+    if datasetConfig.Multicore:
+        specArguments['Multicore'] = datasetConfig.Multicore
+        specArguments['Memory'] += (datasetConfig.Multicore - 1) * datasetConfig.MaxMemoryperCore
+
+    specArguments['RequestName'] = workflowName
+    specArguments['RequestString'] = workflowName
+    
+    specArguments['CMSSWVersion'] = datasetConfig.CMSSWVersion
+    specArguments['ScramArch'] = datasetConfig.ScramArch
+
+    specArguments['SplittingAlgo'] = "EventAwareLumiBased"
+    specArguments['EventsPerJob'] = datasetConfig.RecoSplit
+
+    specArguments['RobustMerge'] = False
+
+    specArguments['ProcessingString'] = "PromptReco"
+    specArguments['ProcessingVersion'] = datasetConfig.ProcessingVersion
+    specArguments['Scenario'] = datasetConfig.Scenario
+
+    specArguments['GlobalTag'] = datasetConfig.GlobalTag
+    specArguments['GlobalTagConnect'] = datasetConfig.GlobalTagConnect
+    
+    specArguments['AlcaSkims'] = datasetConfig.AlcaSkims
+    specArguments['PhysicsSkims'] = datasetConfig.PhysicsSkims
+    specArguments['DQMSequences'] = datasetConfig.DqmSequences
+
+    specArguments['UnmergedLFNBase'] = "/store/unmerged/%s" % runInfo['bulk_data_type']
+    if runInfo['backfill']:
+        specArguments['MergedLFNBase'] = "/store/backfill/%s/%s" % (runInfo['backfill'],
+                                                                    runInfo['bulk_data_type'])
+    else:
+        specArguments['MergedLFNBase'] = "/store/%s" % runInfo['bulk_data_type']
+
+    specArguments['EnableHarvesting'] = "True"
+    
+    specArguments['DQMUploadUrl'] = runInfo['dqmuploadurl']
+    
+    return specArguments
     
 def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
     """
@@ -993,63 +1067,12 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 else:
                     workflowName = "PromptReco_Run%d_%s" % (run, dataset)
 
-                specArguments = {}
-
-                specArguments['TimePerEvent'] = datasetConfig.TimePerEvent
-                specArguments['SizePerEvent'] = datasetConfig.SizePerEvent
-
-                specArguments['Memory'] = datasetConfig.MaxMemoryperCore
-                if datasetConfig.Multicore:
-                    specArguments['Multicore'] = datasetConfig.Multicore
-                    specArguments['Memory'] += (datasetConfig.Multicore - 1) * datasetConfig.MaxMemoryperCore
-
-                specArguments['Requestor'] = "Tier0"
-                specArguments['RequestName'] = workflowName
-                specArguments['RequestString'] = workflowName
-                specArguments['RequestorDN'] = "Tier0"
-                specArguments['RequestDate'] = []
-                specArguments['RequestTransition'] = []
-                specArguments['RequestStatus'] = REQUEST_START_STATE
+                specArguments=getPromptRecoSpecArguments(datasetConfig,workflowName,runInfo)
                 specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority
-                specArguments['PriorityTransition'] = []
-
-                specArguments['AcquisitionEra'] = runInfo['acq_era']
-                specArguments['CMSSWVersion'] = datasetConfig.CMSSWVersion
-                specArguments['ScramArch'] = datasetConfig.ScramArch
-
                 specArguments['RunNumber'] = run
-
-                specArguments['SplittingAlgo'] = "EventAwareLumiBased"
-                specArguments['EventsPerJob'] = datasetConfig.RecoSplit
-
-                specArguments['RobustMerge'] = False
-
-                specArguments['ProcessingString'] = "PromptReco"
-                specArguments['ProcessingVersion'] = datasetConfig.ProcessingVersion
-                specArguments['Scenario'] = datasetConfig.Scenario
-
-                specArguments['GlobalTag'] = datasetConfig.GlobalTag
-                specArguments['GlobalTagConnect'] = datasetConfig.GlobalTagConnect
-
                 specArguments['InputDataset'] = "/%s/%s-%s/RAW" % (dataset, runInfo['acq_era'], repackProcVer)
-
                 specArguments['WriteTiers'] = writeTiers
-                specArguments['AlcaSkims'] = datasetConfig.AlcaSkims
-                specArguments['PhysicsSkims'] = datasetConfig.PhysicsSkims
-                specArguments['DQMSequences'] = datasetConfig.DqmSequences
-
-                specArguments['UnmergedLFNBase'] = "/store/unmerged/%s" % runInfo['bulk_data_type']
-                if runInfo['backfill']:
-                    specArguments['MergedLFNBase'] = "/store/backfill/%s/%s" % (runInfo['backfill'],
-                                                                                runInfo['bulk_data_type'])
-                else:
-                    specArguments['MergedLFNBase'] = "/store/%s" % runInfo['bulk_data_type']
-
-                specArguments['ValidStatus'] = "VALID"
-
-                specArguments['EnableHarvesting'] = "True"
                 specArguments['DQMUploadProxy'] = dqmUploadProxy
-                specArguments['DQMUploadUrl'] = runInfo['dqmuploadurl']
 
                 factory = PromptRecoWorkloadFactory()
                 wmSpec = factory.factoryWorkloadConstruction(workflowName, specArguments)
