@@ -204,20 +204,25 @@ def getCustodialSite(datasetConfig,bindsStorageNode,isExpress=True):
     if datasetConfig.TapeNode:
         bindsStorageNode.append( { 'NODE' : datasetConfig.TapeNode } )
         custodialSites.append(datasetConfig.TapeNode)
-        if not isExpress and datasetConfig.RAWTapeNode:
-            bindsStorageNode.append( { 'NODE' : datasetConfig.RAWTapeNode } ) ## duplicated?
-            custodialSites.append(datasetConfig.RAWTapeNode)
+        if not isExpress:
+            if datasetConfig.RAWTapeNode:
+                bindsStorageNode.append( { 'NODE' : datasetConfig.RAWTapeNode } ) ## duplicated?
+                custodialSites.append(datasetConfig.RAWTapeNode)
+            else:
+                custodialSites.append(datasetConfig.TapeNode)
         else:
             custodialSites.append(datasetConfig.TapeNode)
     if datasetConfig.DiskNode:
         bindsStorageNode.append( { 'NODE' : datasetConfig.DiskNode } )
         nonCustodialSites.append(datasetConfig.DiskNode)
-        if not isExpress and datasetConfig.RAWtoDisk:
-            nonCustodialSites.append(datasetConfig.DiskNode)
+        if not isExpress:
+            if datasetConfig.RAWtoDisk:
+                nonCustodialSites.append(datasetConfig.DiskNode)
         else:
             nonCustodialSites.append(datasetConfig.DiskNode)
-    if not isExpress and datasetConfig.DiskNodeReco:
-        bindsStorageNode.append( { 'NODE' : datasetConfig.DiskNodeReco } )
+    if not isExpress:
+        if datasetConfig.DiskNodeReco:
+            bindsStorageNode.append( { 'NODE' : datasetConfig.DiskNodeReco } )
             
     return custodialSites,nonCustodialSites,bindsStorageNode
 
