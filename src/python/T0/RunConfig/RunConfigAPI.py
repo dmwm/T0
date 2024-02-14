@@ -680,7 +680,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         pass
     return
 
-def getSpecArguments(runInfo):
+def getSpecArguments(workflowName,runInfo):
     """
     _getSpecArguments_
     
@@ -689,6 +689,8 @@ def getSpecArguments(runInfo):
     
     specArguments = {}
     
+    specArguments['RequestName'] = workflowName
+    specArguments['RequestString'] = workflowName
     specArguments['Requestor'] = "Tier0"
     specArguments['RequestorDN'] = "Tier0"
     specArguments['RequestDate'] = []
@@ -701,11 +703,9 @@ def getSpecArguments(runInfo):
     return specArguments
 
 def getRepackSpecArguments(Repack,workflowName,runInfo):
-    specArguments = getSpecArguments(runInfo)
+    specArguments = getSpecArguments(workflowName,runInfo)
     
     specArguments['Memory'] = Repack.MaxMemory
-    specArguments['RequestName'] = workflowName
-    specArguments['RequestString'] = workflowName
 
     specArguments['CMSSWVersion'] = Repack.CMSSWVersion
     specArguments['ScramArch'] = Repack.ScramArch
@@ -735,7 +735,7 @@ def getRepackSpecArguments(Repack,workflowName,runInfo):
     return specArguments
     
 def getExpressSpecArguments(Express,workflowName,runInfo):
-    specArguments = getSpecArguments(runInfo)
+    specArguments = getSpecArguments(workflowName,runInfo)
     
     specArguments['TimePerEvent'] = Express.TimePerEvent
     specArguments['SizePerEvent'] = Express.SizePerEvent
@@ -745,8 +745,6 @@ def getExpressSpecArguments(Express,workflowName,runInfo):
         specArguments['Multicore'] = Express.Multicore
         specArguments['Memory'] += (Express.Multicore - 1) * Express.MaxMemoryperCore
 
-    specArguments['RequestName'] = workflowName
-    specArguments['RequestString'] = workflowName
     specArguments['ProcessingString'] = "Express"
     specArguments['ProcessingVersion'] = Express.ProcessingVersion
     specArguments['Scenario'] = Express.Scenario
@@ -783,7 +781,7 @@ def getExpressSpecArguments(Express,workflowName,runInfo):
     return specArguments
 
 def getPromptRecoSpecArguments(datasetConfig,workflowName,runInfo):
-    specArguments = getSpecArguments(runInfo)
+    specArguments = getSpecArguments(workflowName,runInfo)
     
     specArguments['TimePerEvent'] = datasetConfig.TimePerEvent
     specArguments['SizePerEvent'] = datasetConfig.SizePerEvent
@@ -792,9 +790,6 @@ def getPromptRecoSpecArguments(datasetConfig,workflowName,runInfo):
     if datasetConfig.Multicore:
         specArguments['Multicore'] = datasetConfig.Multicore
         specArguments['Memory'] += (datasetConfig.Multicore - 1) * datasetConfig.MaxMemoryperCore
-
-    specArguments['RequestName'] = workflowName
-    specArguments['RequestString'] = workflowName
     
     specArguments['CMSSWVersion'] = datasetConfig.CMSSWVersion
     specArguments['ScramArch'] = datasetConfig.ScramArch
