@@ -1001,24 +1001,24 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                         description['nonCustodialSites']=[diskNode]
                         description['isSkim']=False
                         description['dataTier']=dataTier
-                        subscriptions.append( description )
+                        subscriptions.append( description.copy() )
                         
                     description['nonCustodialSites']=[phedexConfig['disk_node']] if phedexConfig['disk_node'] else []
                     description['isSkim']=True
                     for dataTier in skimDataTiers:
                         description['dataTier']=dataTier
-                        subscriptions.append( description )
+                        subscriptions.append( description.copy() )
                         
                     del description['nonCustodialSites']
                     description['isSkim']=False
                     for dataTier in tapeDataTiers - diskDataTiers:
                         description['dataTier']=dataTier
-                        subscriptions.append( description )
+                        subscriptions.append( description.copy() )
 
                     description['isSkim']=True
                     for dataTier in alcaDataTiers:
                         description['dataTier']=dataTier
-                        subscriptions.append(  description )
+                        subscriptions.append( description.copy() )
                     
                     del description['cutodialSites']
                     description['isSkim']=False
@@ -1031,14 +1031,14 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                             
                         description['nonCustodialSites'] = [diskNode]
                         description['dataTier']=dataTier
-                        subscriptions.append( description )
+                        subscriptions.append( description.copy() )
 
                 elif phedexConfig['archival_node'] != None:
                     description['cutodialSites'] = [phedexConfig['archival_node']]
 
                     for dataTier in tapeDataTiers | diskDataTiers | skimDataTiers | alcaDataTiers:
                         description['dataTier']=dataTier
-                        subscriptions.append( description )
+                        subscriptions.append( description.copy() )
 
             writeTiers = []
             if datasetConfig.WriteRECO:
