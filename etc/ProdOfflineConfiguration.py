@@ -9,6 +9,7 @@ from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
 from T0.RunConfig.Tier0Config import setDefaultScramArch
+from T0.RunConfig.Tier0Config import setScramArch
 from T0.RunConfig.Tier0Config import setBaseRequestPriority
 from T0.RunConfig.Tier0Config import setBackfill
 from T0.RunConfig.Tier0Config import setBulkDataType
@@ -95,13 +96,13 @@ setPromptCalibrationConfig(tier0Config,
 #maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_2_6"
+    'default': "CMSSW_13_3_2_patch1"
     #'acqEra': {'Run2023E': "CMSSW_13_2_2"},
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "el8_amd64_gcc11")
+setDefaultScramArch(tier0Config, "el8_amd64_gcc12")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3_2023"
@@ -130,12 +131,12 @@ expressProcVersion = {
 
 # Defaults for GlobalTag
 expressGlobalTag = {
-    'default': "132X_dataRun3_Express_v4",
+    'default': "133X_dataRun3_Express_v2",
     #'acqEra': {'Run2023E': "132X_dataRun3_Express_v3"},
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Express_v3"}
 }
 promptrecoGlobalTag = {
-    'default': "132X_dataRun3_Prompt_v3",
+    'default': "133X_dataRun3_Prompt_v2",
     #'acqEra': {'Run2023E': "132X_dataRun3_Prompt_v2"},
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Prompt_v2"}
 }
@@ -147,7 +148,7 @@ globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 numberOfCores = 8
 
 # Splitting parameters for PromptReco
-defaultRecoSplitting = 750 * numberOfCores # reduced from 3000
+defaultRecoSplitting = 750 * numberOfCores
 hiRecoSplitting = 200 * numberOfCores
 alcarawSplitting = 20000 * numberOfCores
 
