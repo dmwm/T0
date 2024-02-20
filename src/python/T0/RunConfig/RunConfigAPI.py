@@ -949,32 +949,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
 
                 phedexConfig = phedexConfigs[dataset]
 
-                tapeDataTiers = set()
-                diskDataTiers = set()
-                skimDataTiers = set()
-                alcaDataTiers = set()
-
-                if datasetConfig.WriteRECO:
-                    diskDataTiers.add("RECO")
-                if datasetConfig.WriteAOD:
-                    tapeDataTiers.add("AOD")
-                    if datasetConfig.AODtoDisk:
-                        diskDataTiers.add("AOD")
-                if datasetConfig.WriteMINIAOD:
-                    tapeDataTiers.add("MINIAOD")
-                    diskDataTiers.add("MINIAOD")
-                if datasetConfig.WriteNANOAOD:
-                    tapeDataTiers.add("NANOAOD")
-                    diskDataTiers.add("NANOAOD")
-                if datasetConfig.WriteDQM:
-                    tapeDataTiers.add(tier0Config.Global.DQMDataTier)
-                if len(datasetConfig.PhysicsSkims) > 0:
-                    skimDataTiers.add("RAW-RECO")
-                    skimDataTiers.add("USER")
-                    skimDataTiers.add("RECO")
-                    skimDataTiers.add("AOD")
-                if len(datasetConfig.AlcaSkims) > 0:
-                    alcaDataTiers.add("ALCARECO")
+                tapeDataTiers, diskDataTiers, skimDataTiers, alcaDataTiers = getDataTiers(datasetConfig,tier0Config)
 
                 # do things different based on whether we have TapeNode/DiskNode, only TapeNode or ArchivalNode
                 description={'priority' : "high",
@@ -1125,6 +1100,35 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
             myThread.transaction.commit()
 
     return
+
+def getDataTiers(datasetConfig,tier0Config):
+    tapeDataTiers = set()
+    diskDataTiers = set()
+    skimDataTiers = set()
+    alcaDataTiers = set()
+    if datasetConfig.WriteRECO:
+        diskDataTiers.add("RECO")
+    if datasetConfig.WriteAOD:
+        tapeDataTiers.add("AOD")
+        if datasetConfig.AODtoDisk:
+            diskDataTiers.add("AOD")
+    if datasetConfig.WriteMINIAOD:
+        tapeDataTiers.add("MINIAOD")
+        diskDataTiers.add("MINIAOD")
+    if datasetConfig.WriteNANOAOD:
+        tapeDataTiers.add("NANOAOD")
+        diskDataTiers.add("NANOAOD")
+    if datasetConfig.WriteDQM:
+        tapeDataTiers.add(tier0Config.Global.DQMDataTier)
+    if len(datasetConfig.PhysicsSkims) > 0:
+        skimDataTiers.add("RAW-RECO")
+        skimDataTiers.add("USER")
+        skimDataTiers.add("RECO")
+        skimDataTiers.add("AOD")
+    if len(datasetConfig.AlcaSkims) > 0:
+        alcaDataTiers.add("ALCARECO")
+    
+    return tapeDataTiers, diskDataTiers, skimDataTiers, alcaDataTiers
 
 def setStorageSite(tier0Config, wmSpec, storagesite):
     """
