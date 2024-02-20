@@ -510,13 +510,6 @@ for dataset in DATASETS:
                timePerEvent=1,
                scenario=ppScenario)
 
-DATASETS = ["ReservedDoubleMuonLowMass"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               scenario=ppScenario)
-
 DATASETS = ["ParkingSingleMuon","ParkingSingleMuon0","ParkingSingleMuon1","ParkingSingleMuon2"]
 
 for dataset in DATASETS:
@@ -533,7 +526,7 @@ for dataset in DATASETS:
                write_dqm=True,
                dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
-               tape_node=None,
+               physics_skims=["ReserveDMu"],
                scenario=ppScenario)
 
 DATASETS = ["ParkingDoubleMuonLowMass4","ParkingDoubleMuonLowMass5",
@@ -545,6 +538,7 @@ for dataset in DATASETS:
                write_dqm=True,
                dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
+               physics_skims=["ReserveDMu"],
                scenario=ppScenario)
 
 DATASETS = ["MuonShower"]

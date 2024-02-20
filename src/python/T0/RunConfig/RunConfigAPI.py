@@ -888,6 +888,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 if datasetConfig.WriteDQM:
                     tapeDataTiers.add(tier0Config.Global.DQMDataTier)
                 if len(datasetConfig.PhysicsSkims) > 0:
+                    skimDataTiers.add("RAW")
                     skimDataTiers.add("RAW-RECO")
                     skimDataTiers.add("USER")
                     skimDataTiers.add("RECO")
