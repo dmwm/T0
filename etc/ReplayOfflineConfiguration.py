@@ -36,7 +36,7 @@ setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
 # 367102 - Collisions 2023 - 1200b - 0.5h long - all components IN
-setInjectRuns(tier0Config, [369998, 359688, 375832])
+setInjectRuns(tier0Config, [369998, 375832, 376727])
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
