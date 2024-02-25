@@ -13,15 +13,12 @@ class GetRunSetup(DBFormatter):
 
     def execute(self, run, conn = None, transaction = False):
 
-        setupLabel = None
-
         binds = { 'RUN' : run }
 
         sql = """SELECT SETUPLABEL FROM CMS_STOMGR.RUNS
                  WHERE CMS_STOMGR.RUNS.RUNNUMBER = :RUN
                  """
-
         results = self.dbi.processData(sql, binds, conn = conn,
-                                       transaction = transaction)[0].fetchall()
+                                       transaction = transaction)
 
-        return setupLabel
+        return self.formatOne(results)[0]

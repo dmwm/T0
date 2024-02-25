@@ -25,7 +25,8 @@ class GetRunInfo(DBFormatter):
                         run.ah_lumi_url AS ah_lumi_url,
                         run.cond_timeout AS cond_timeout,
                         run.db_host AS db_host,
-                        run.valid_mode AS valid_mode
+                        run.valid_mode AS valid_mode,
+                        run.setup_label as setup_label
                  FROM run
                  WHERE run.run_id = :RUN
                  """

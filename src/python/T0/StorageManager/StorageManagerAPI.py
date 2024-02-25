@@ -103,7 +103,8 @@ def injectNewData(dbInterfaceStorageManager,
             cmssw = '_'.join(cmssw.split('_')[0:4]) # only consider base release
             cmsswVersions.add(cmssw)
             bindRunHltKey.append( { 'RUN': run,
-                                    'HLTKEY': hltkey } )
+                                    'HLTKEY': hltkey,
+                                    'SETUP_LABEL': setupLabel } )
             for stream in newRunStreams[run]:
                 streams.add(stream)
                 bindRunStreamCMSSW.append( { 'RUN': run,
