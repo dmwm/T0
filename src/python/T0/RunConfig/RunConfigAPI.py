@@ -70,12 +70,18 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
                             logger = logging,
                             dbinterface = myThread.dbi)
 
+    # DAO to get run info. In particular, setup label
+    getRunInfoDAO = daoFactory(classname = "RunConfig.GetRunInfo")
+
     # dao to update global run settings
     updateRunDAO = daoFactory(classname = "RunConfig.UpdateRun")
 
     # workaround to make unit test work without HLTConfDatabase
     if hltConfig == None and referenceHltConfig != None:
         hltConfig = referenceHltConfig
+
+    # Get run info
+    runInfo = getRunInfoDAO.execute(run, transaction = False)[0]
 
     # treat centralDAQ or miniDAQ runs (have an HLT key) different from local runs
     if hltConfig != None:
@@ -97,7 +103,6 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
 
         bindsUpdateRun = { 'RUN' : run,
                            'PROCESS' : hltConfig['process'],
-                           'ACQERA' : tier0Config.Global.AcquisitionEra,
                            'BACKFILL' : tier0Config.Global.Backfill,
                            'BULKDATATYPE' : tier0Config.Global.BulkDataType,
                            'DQMUPLOADURL' : tier0Config.Global.DQMUploadUrl,
@@ -107,6 +112,12 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
                            'CONDTIMEOUT' : tier0Config.Global.ConditionUploadTimeout,
                            'DBHOST' : tier0Config.Global.DropboxHost,
                            'VALIDMODE' : tier0Config.Global.ValidationMode }
+
+        # Use different acquisition era for emulated data
+        if runInfo['setup_label'] == 'Emulation':
+            bindsUpdateRun['ACQERA'] = tier0Config.Global.EmulationAcquisitionEra
+        else:
+            bindsUpdateRun['ACQERA'] = tier0Config.Global.AcquisitionEra
 
         bindsStream = []
         bindsDataset = []

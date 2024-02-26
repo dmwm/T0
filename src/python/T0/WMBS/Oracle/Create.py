@@ -114,6 +114,7 @@ class Create(DBCreator):
                  status             int           default 1 not null,
                  express_released   int           default 0 not null,
                  hltkey             varchar2(255) not null,
+                 setup_label        varchar2(255) not null,
                  start_time         int           default 0 not null,
                  stop_time          int           default 0 not null,
                  close_time         int           default 0 not null,

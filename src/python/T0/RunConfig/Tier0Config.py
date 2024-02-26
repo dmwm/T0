@@ -35,6 +35,8 @@ Tier0Configuration - Global configuration object
 | |       |
 | |       |--> AcquisitionEra - The acquisition era for the run
 | |       |
+| |       |--> EmulationAcquisitionEra - The acquisition era for emulated runs
+| |       |
 | |       |--> Backfill - The backfill mode, can be None, 1 or 2
 | |       |
 | |       |--> ProcessingSite - Main (CERN) site where processing is done.
@@ -608,6 +610,16 @@ def setAcquisitionEra(config, acquisitionEra):
     """
     config.Global.AcquisitionEra = acquisitionEra
     return
+
+def setEmulationAcquisitionEra(config, emulationAcquisitionEra):
+    """
+    _setEmulationAcquisitionEra_
+
+    Set the acquisition era for emulated data.
+    """
+    config.Global.EmulationAcquisitionEra = emulationAcquisitionEra
+    return
+
 
 def setScramArch(config, cmssw, arch):
     """
