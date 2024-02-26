@@ -32,10 +32,10 @@ from T0.RunConfig.Tier0Config import setStorageSite
 tier0Config = createTier0Config()
 
 # Set the verstion configuration (not used at the moment)
-setConfigVersion(tier0Config, "replace with real version")
+setConfigVersion(tier0Config, "3.1.2")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 9999999)
+setInjectMinRun(tier0Config, 376261)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
@@ -98,13 +98,17 @@ setPromptCalibrationConfig(tier0Config,
 #maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_3_2_patch1"
+    'default': "CMSSW_13_3_3"
     #'acqEra': {'Run2023E': "CMSSW_13_2_2"},
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "el8_amd64_gcc12")
+setDefaultScramArch(tier0Config, "el8_amd64_gcc11")
+setScramArch(tier0Config, "CMSSW_13_3_2_patch1", "el8_amd64_gcc12")
+setScramArch(tier0Config, "CMSSW_13_3_2", "el8_amd64_gcc12")
+setScramArch(tier0Config, "CMSSW_13_3_0", "el8_amd64_gcc12")
+setScramArch(tier0Config, "CMSSW_13_3_3", "el8_amd64_gcc12")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3_2023"
