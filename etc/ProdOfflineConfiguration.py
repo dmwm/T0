@@ -8,6 +8,7 @@ from __future__ import print_function
 from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
+from T0.RunConfig.Tier0Config import setEmulationAcquisitionEra
 from T0.RunConfig.Tier0Config import setDefaultScramArch
 from T0.RunConfig.Tier0Config import setBaseRequestPriority
 from T0.RunConfig.Tier0Config import setBackfill
@@ -56,6 +57,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Processing site (where jobs run)
 #  PhEDEx locations
 setAcquisitionEra(tier0Config, "Commissioning2024")
+setEmulationAcquisitionEra(tier0Config, "Emulation2024")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -1395,6 +1397,7 @@ for dataset in DATASETS:
                archival_node=None,
                tape_node=None,
                disk_node="T0_CH_CERN_Disk",
+               dataset_lifetime=15*24*3600,
                scenario=ppScenario)
 
 #######################
