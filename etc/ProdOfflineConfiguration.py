@@ -8,7 +8,9 @@ from __future__ import print_function
 from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
+from T0.RunConfig.Tier0Config import setEmulationAcquisitionEra
 from T0.RunConfig.Tier0Config import setDefaultScramArch
+from T0.RunConfig.Tier0Config import setScramArch
 from T0.RunConfig.Tier0Config import setBaseRequestPriority
 from T0.RunConfig.Tier0Config import setBackfill
 from T0.RunConfig.Tier0Config import setBulkDataType
@@ -30,10 +32,10 @@ from T0.RunConfig.Tier0Config import setStorageSite
 tier0Config = createTier0Config()
 
 # Set the verstion configuration (not used at the moment)
-setConfigVersion(tier0Config, "replace with real version")
+setConfigVersion(tier0Config, "3.1.2")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 9999999)
+setInjectMinRun(tier0Config, 376261)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
@@ -56,6 +58,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Processing site (where jobs run)
 #  PhEDEx locations
 setAcquisitionEra(tier0Config, "Commissioning2024")
+setEmulationAcquisitionEra(tier0Config, "Emulation2024")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -95,13 +98,16 @@ setPromptCalibrationConfig(tier0Config,
 #maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_2_6"
+    'default': "CMSSW_13_3_3"
     #'acqEra': {'Run2023E': "CMSSW_13_2_2"},
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "el8_amd64_gcc11")
+setDefaultScramArch(tier0Config, "el8_amd64_gcc12")
+#setScramArch(tier0Config, "CMSSW_13_3_2_patch1", "el8_amd64_gcc12")
+#setScramArch(tier0Config, "CMSSW_13_3_2", "el8_amd64_gcc12")
+#setScramArch(tier0Config, "CMSSW_13_3_0", "el8_amd64_gcc12")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3_2023"
@@ -130,12 +136,12 @@ expressProcVersion = {
 
 # Defaults for GlobalTag
 expressGlobalTag = {
-    'default': "132X_dataRun3_Express_v4",
+    'default': "133X_dataRun3_Express_v2",
     #'acqEra': {'Run2023E': "132X_dataRun3_Express_v3"},
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Express_v3"}
 }
 promptrecoGlobalTag = {
-    'default': "132X_dataRun3_Prompt_v3",
+    'default': "133X_dataRun3_Prompt_v2",
     #'acqEra': {'Run2023E': "132X_dataRun3_Prompt_v2"},
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Prompt_v2"}
 }
@@ -147,7 +153,7 @@ globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 numberOfCores = 8
 
 # Splitting parameters for PromptReco
-defaultRecoSplitting = 750 * numberOfCores # reduced from 3000
+defaultRecoSplitting = 750 * numberOfCores
 hiRecoSplitting = 200 * numberOfCores
 alcarawSplitting = 20000 * numberOfCores
 
@@ -1148,7 +1154,7 @@ for dataset in DATASETS:
                write_dqm=True,
                tape_node="T1_US_FNAL_MSS",
                disk_node="T1_US_FNAL_Disk",
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
                timePerEvent=1,
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias"],
                scenario=ppScenario)
@@ -1221,7 +1227,7 @@ for dataset in DATASETS:
                raw_to_disk=True,
                write_reco=False,
                write_dqm=True,
-               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@L1TMon", "@hcal", "@muon", "@jetmet", "@ctpps"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@ctpps"],
                alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias", "HcalCalIsolatedBunchSelector"],
                physics_skims=["LogError", "LogErrorMonitor"],
                siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN"],
@@ -1349,19 +1355,6 @@ for dataset in DATASETS:
                dqm_sequences=["@none"],
                scenario=alcaPPSScenario)
 
-#####################
-### HI TESTS 2018 ###
-#####################
-
-DATASETS = ["HITestFull", "HITestReduced"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_dqm=True,
-               dqm_sequences=["@common"],
-               scenario=hiTestppScenario)
-
 ######################
 ### RAW' TEST 2023 ###
 ######################
@@ -1379,6 +1372,24 @@ for dataset in DATASETS:
                timePerEvent=12,
                sizePerEvent=4000,
                scenario=hiRawPrimeScenario)
+
+######################
+###    DAQ TEST    ###
+######################
+
+DATASETS = ["D01", "D02", "D03", "D04", "D05", "D06", "D07", "D08", "D09", "D10",
+	   "D11", "D12", "D13", "D14", "D15", "D16", "D17", "D18", "D19", "D20",
+	   "D21", "D22", "D23", "D24", "D25", "D26", "D27", "D28", "D29", "D30",
+	   "D31", "D32", "D33", "D34", "D35", "D36", "D37", "D38", "Parking"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               archival_node=None,
+               tape_node=None,
+               disk_node="T0_CH_CERN_Disk",
+               dataset_lifetime=15*24*3600,
+               scenario=ppScenario)
 
 #######################
 ### ignored streams ###

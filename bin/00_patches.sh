@@ -35,3 +35,6 @@ curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4862.patch | patc
 
 #Adds setInjectLimit() that allows limiting the number of lumisections used in the replay
 curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4850.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+
+#Fix error in Cleanup jobs
+curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11896.patch | patch -d $DEPLOY_DIR/current/sw/slc7_amd64_gcc630/cms/t0/3.1.2/ -p 1
