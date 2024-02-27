@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "T0"
-version = "3.1.0"
+version = "0.0.0"
 description = "This package contains the code that is involved in the Tier 0 agent when its deployed"
 readme = "README.md"
 requires-python = ">=3.7"
