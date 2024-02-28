@@ -53,13 +53,12 @@ def extractConfigParameter(configParameter, era, run):
     else:
         return configParameter
     
-def getBindCombination(run,hltConfig):
+def parseHLTConfig(run,hltConfig):
     """
-    _getBindCombination_
+    _parseHLTConfig_
     
-    Subfunction of configureRun.
-    
-    Bind combination of stream/dataset/trigger mapping.
+    Uses HLT configuration to create stream/dataset/trigger mapping. 
+    The mapping is returned in the form of binds to be written into T0AST
     
     """
     bindsStream = []
