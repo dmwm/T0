@@ -7,11 +7,11 @@ class TestRetrieveStreamConfig(unittest.TestCase):
         self.config = tier0config.createTier0Config()
         self.hltconfig = None
         
-    def test_getBindCombination(self):
+    def test_parseHLTConfig(self):
         # Check keys for bindCombinations.
         if self.hltconfig is None:
             self.hltconfig={'mapping':{'stream1':{'dataset1':['path1','path2']},'stream2':{'dataset2':['path3','path4']}}}
-        bindsCombination=RunConfigAPI.getBindCombination(176161,self.hltconfig)
+        bindsCombination=RunConfigAPI.parseHLTConfig(176161,self.hltconfig)
         
         for mapping in ['Stream','Dataset','StreamDataset','Trigger','DatasetTrigger']:
             with self.subTest(mapping=mapping):

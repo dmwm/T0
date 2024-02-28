@@ -75,7 +75,7 @@ def parseHLTConfig(run,hltConfig):
                 if run < 317512:
                     pass
                 else:
-                    raise RuntimeError("Problem in getBindCombination() : Unassigned path in HLT menu !")
+                    raise RuntimeError("Problem in parseHLTConfig() : Unassigned path in HLT menu !")
 
             else:
                 bindsDataset.append( { 'PRIMDS' : dataset } )
@@ -158,7 +158,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         else:
             bindsUpdateRun['ACQERA'] = tier0Config.Global.AcquisitionEra
 
-        bindsCombination=getBindCombination(run,hltConfig)
+        bindsCombination=parseHLTConfig(run,hltConfig)
 
         try:
             myThread.transaction.begin()
