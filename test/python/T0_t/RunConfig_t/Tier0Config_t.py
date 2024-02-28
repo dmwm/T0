@@ -6,7 +6,7 @@ class TestRetrieveStreamConfig(unittest.TestCase):
 
     def setUp(self):
         self.config = tier0config.createTier0Config()
-        
+
     def test_createTier0Config(self):
         # Check some key values in the Global section
         self.assertEqual(self.config.Global.ProcessingSite, "T2_CH_CERN")

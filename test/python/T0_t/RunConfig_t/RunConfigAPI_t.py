@@ -1,3 +1,5 @@
+import unittest
+import T0.RunConfig.Tier0Config as tier0config
 from T0.RunConfig import RunConfigAPI
 
 
@@ -68,3 +70,6 @@ class TestRetrieveStreamConfig(unittest.TestCase):
         self.assertIn(bindsStorageNode,{"Node":"ArchivalNode"})
         self.assertIn(custodialSites,"ArchivalNode")
         self.assertIn(nonCustodialSites,"DiskNode")
+
+if __name__ == '__main__':
+    unittest.main()
