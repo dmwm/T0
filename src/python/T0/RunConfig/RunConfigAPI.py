@@ -127,7 +127,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
     # treat centralDAQ or miniDAQ runs (have an HLT key) different from local runs
     if hltConfig != None:
 
-        # write stream/dataset/trigger mapping
+        # Create DAOs to insert stream/dataset/trigger mapping
         insertDAO={}
         for mapping in ['Stream','Dataset','StreamDataset','Trigger','DatasetTrigger']:
             insertDAO[mapping] = daoFactory(classname = f"RunConfig.Insert{mapping}")
