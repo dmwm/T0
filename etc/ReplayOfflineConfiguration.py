@@ -36,7 +36,7 @@ setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
 # 367102 - Collisions 2023 - 1200b - 0.5h long - all components IN
-setInjectRuns(tier0Config, [369998, 375832])
+setInjectRuns(tier0Config, [369998, 375832, 376727])
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
@@ -106,7 +106,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_3_2_patch1"
+    'default': "CMSSW_13_3_3"
 }
 
 # Configure ScramArch
@@ -114,6 +114,7 @@ setDefaultScramArch(tier0Config, "el8_amd64_gcc11")
 setScramArch(tier0Config, "CMSSW_12_4_9", "el8_amd64_gcc10")
 setScramArch(tier0Config, "CMSSW_12_3_0", "cs8_amd64_gcc10")
 setScramArch(tier0Config, "CMSSW_13_3_2_patch1", "el8_amd64_gcc12")
+setScramArch(tier0Config, "CMSSW_13_3_3", "el8_amd64_gcc12")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3_2023"
