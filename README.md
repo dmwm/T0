@@ -1,2 +1,1 @@
-This is a test for the Tier 0 PyPi package
-
+Welcome to the CMS Tier 0 Repository!
