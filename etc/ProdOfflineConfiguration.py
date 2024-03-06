@@ -32,10 +32,10 @@ from T0.RunConfig.Tier0Config import setStorageSite
 tier0Config = createTier0Config()
 
 # Set the verstion configuration (not used at the moment)
-setConfigVersion(tier0Config, "3.1.2")
+setConfigVersion(tier0Config, "3.1.5")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 376261)
+setInjectMinRun(tier0Config, 9999999)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
@@ -98,7 +98,7 @@ setPromptCalibrationConfig(tier0Config,
 #maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_3_3"
+    'default': "CMSSW_14_0_1"
     #'acqEra': {'Run2023E': "CMSSW_13_2_2"},
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
@@ -136,12 +136,12 @@ expressProcVersion = {
 
 # Defaults for GlobalTag
 expressGlobalTag = {
-    'default': "133X_dataRun3_Express_v2",
+    'default': "140X_dataRun3_Express_v2",
     #'acqEra': {'Run2023E': "132X_dataRun3_Express_v3"},
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Express_v3"}
 }
 promptrecoGlobalTag = {
-    'default': "133X_dataRun3_Prompt_v2",
+    'default': "140X_dataRun3_Prompt_v2",
     #'acqEra': {'Run2023E': "132X_dataRun3_Prompt_v2"},
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Prompt_v2"}
 }
@@ -219,9 +219,11 @@ addExpressConfig(tier0Config, "Express",
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
                                  "TkAlMinBias", "SiPixelCalZeroBias", "SiPixelCalSingleMuon", "SiPixelCalSingleMuonTight",
+                                 "TkAlZMuMu",
                                  "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
                                  "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel",
-                                 "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff", "PromptCalibProdSiPixelAliHG"
+                                 "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff", "PromptCalibProdSiPixelAliHG",
+                                 "PromptCalibProdSiPixelAliHGComb"
                                 ],
                  dqm_sequences=["@standardDQMExpress"],
                  reco_version=defaultCMSSWVersion,
@@ -1061,7 +1063,7 @@ for dataset in DATASETS:
                write_miniaod=True,
                write_aod=True,
                dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
-               alca_producers=["TkAlMinBias"],
+               alca_producers=["TkAlMinBias", "TkAlV0s"],
                physics_skims=["LogError", "LogErrorMonitor"],
                disk_node="T1_IT_CNAF_Disk",
                tape_node="T1_IT_CNAF_MSS",

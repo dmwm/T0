@@ -36,7 +36,7 @@ setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
 # 367102 - Collisions 2023 - 1200b - 0.5h long - all components IN
-setInjectRuns(tier0Config, [369998, 375832, 376727])
+setInjectRuns(tier0Config, [369998, 365537, 375832])
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
@@ -63,7 +63,7 @@ addSiteConfig(tier0Config, "EOS_PILOT",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Tier0_REPLAY_2023")
+setAcquisitionEra(tier0Config, "Tier0_REPLAY_2024")
 setBaseRequestPriority(tier0Config, 260000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
@@ -106,15 +106,15 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_3_3"
+    'default': "CMSSW_14_0_1"
 }
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "el8_amd64_gcc11")
 setScramArch(tier0Config, "CMSSW_12_4_9", "el8_amd64_gcc10")
 setScramArch(tier0Config, "CMSSW_12_3_0", "cs8_amd64_gcc10")
-setScramArch(tier0Config, "CMSSW_13_3_2_patch1", "el8_amd64_gcc12")
-setScramArch(tier0Config, "CMSSW_13_3_3", "el8_amd64_gcc12")
+setScramArch(tier0Config, "CMSSW_14_0_1", "el8_amd64_gcc12")
+
 
 # Configure scenarios
 ppScenario = "ppEra_Run3_2023"
@@ -136,8 +136,8 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "133X_dataRun3_Express_v2"
-promptrecoGlobalTag = "133X_dataRun3_Prompt_v2"
+expressGlobalTag = "140X_dataRun3_Express_v2"
+promptrecoGlobalTag = "140X_dataRun3_Prompt_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -210,9 +210,11 @@ addExpressConfig(tier0Config, "Express",
                  write_dqm=True,
                  alca_producers=["SiStripPCLHistos", "SiStripCalZeroBias", "SiStripCalMinBias", "SiStripCalMinBiasAAG",
                                  "TkAlMinBias", "SiPixelCalZeroBias", "SiPixelCalSingleMuon", "SiPixelCalSingleMuonTight",
+                                 "TkAlZMuMu",
                                  "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
                                  "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel",
-                                 "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff", "PromptCalibProdSiPixelAliHG"
+                                 "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff", "PromptCalibProdSiPixelAliHG",
+                                 "PromptCalibProdSiPixelAliHGComb"
                                 ],
                  dqm_sequences=["@standardDQMExpress"],
                  reco_version=defaultCMSSWVersion,
@@ -949,7 +951,7 @@ for dataset in DATASETS:
                write_miniaod=True,
                write_aod=True,
                dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
-               alca_producers=["TkAlMinBias"],
+               alca_producers=["TkAlMinBias", "TkAlV0s"],
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
