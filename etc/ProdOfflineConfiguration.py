@@ -8,6 +8,7 @@ from __future__ import print_function
 from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
+from T0.RunConfig.Tier0Config import setEmulationAcquisitionEra
 from T0.RunConfig.Tier0Config import setDefaultScramArch
 from T0.RunConfig.Tier0Config import setScramArch
 from T0.RunConfig.Tier0Config import setBaseRequestPriority
@@ -30,11 +31,11 @@ from T0.RunConfig.Tier0Config import setStorageSite
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
 
-# Set the version configuration (not used at the moment)
-setConfigVersion(tier0Config, "replace with real version")
+# Set the verstion configuration (not used at the moment)
+setConfigVersion(tier0Config, "3.1.5")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 9999999)
+setInjectMinRun(tier0Config, 376261)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
@@ -57,6 +58,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Processing site (where jobs run)
 #  PhEDEx locations
 setAcquisitionEra(tier0Config, "Commissioning2024")
+setEmulationAcquisitionEra(tier0Config, "Emulation2024")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -103,6 +105,9 @@ defaultCMSSWVersion = {
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "el8_amd64_gcc12")
+#setScramArch(tier0Config, "CMSSW_13_3_2_patch1", "el8_amd64_gcc12")
+#setScramArch(tier0Config, "CMSSW_13_3_2", "el8_amd64_gcc12")
+#setScramArch(tier0Config, "CMSSW_13_3_0", "el8_amd64_gcc12")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3_2023"
@@ -1369,6 +1374,24 @@ for dataset in DATASETS:
                timePerEvent=12,
                sizePerEvent=4000,
                scenario=hiRawPrimeScenario)
+
+######################
+###    DAQ TEST    ###
+######################
+
+DATASETS = ["D01", "D02", "D03", "D04", "D05", "D06", "D07", "D08", "D09", "D10",
+	   "D11", "D12", "D13", "D14", "D15", "D16", "D17", "D18", "D19", "D20",
+	   "D21", "D22", "D23", "D24", "D25", "D26", "D27", "D28", "D29", "D30",
+	   "D31", "D32", "D33", "D34", "D35", "D36", "D37", "D38", "Parking"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               archival_node=None,
+               tape_node=None,
+               disk_node="T0_CH_CERN_Disk",
+               dataset_lifetime=15*24*3600,
+               scenario=ppScenario)
 
 #######################
 ### ignored streams ###

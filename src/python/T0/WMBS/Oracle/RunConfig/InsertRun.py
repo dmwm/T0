@@ -12,9 +12,10 @@ class InsertRun(DBFormatter):
     def execute(self, binds, conn = None, transaction = False):
 
         sql = """INSERT INTO run
-                 (RUN_ID, HLTKEY)
+                 (RUN_ID, HLTKEY, SETUP_LABEL)
                  SELECT :RUN,
-                        :HLTKEY
+                        :HLTKEY,
+                        :SETUP_LABEL
                  FROM DUAL
                  WHERE NOT EXISTS (
                    SELECT * FROM run WHERE run_id = :RUN

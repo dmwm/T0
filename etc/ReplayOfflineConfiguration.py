@@ -115,6 +115,7 @@ setScramArch(tier0Config, "CMSSW_12_4_9", "el8_amd64_gcc10")
 setScramArch(tier0Config, "CMSSW_12_3_0", "cs8_amd64_gcc10")
 setScramArch(tier0Config, "CMSSW_14_0_1", "el8_amd64_gcc12")
 
+
 # Configure scenarios
 ppScenario = "ppEra_Run3_2023"
 ppScenarioB0T = "ppEra_Run3"
