@@ -7,7 +7,7 @@ name = "T0"
 version = "0.0.0"
 description = "This package contains the code that is involved in the Tier 0 agent when its deployed"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 license = {file = "LICENSE"}
 keywords = ["T0"]
 authors = [
