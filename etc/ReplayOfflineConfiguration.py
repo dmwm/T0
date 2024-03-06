@@ -63,7 +63,7 @@ addSiteConfig(tier0Config, "EOS_PILOT",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Tier0_REPLAY_2023")
+setAcquisitionEra(tier0Config, "Tier0_REPLAY_2024")
 setBaseRequestPriority(tier0Config, 260000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
