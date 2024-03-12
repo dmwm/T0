@@ -20,15 +20,15 @@ class TestRetrieveStreamConfig(unittest.TestCase):
                 self.assertIn(mapping,bindsCombination)
                 self.assertNotEqual(bindsCombination[mapping],[])
                 
-        self.assertIn(bindsCombination['Stream'][0],'STREAM')
-        self.assertIn(bindsCombination['Dataset'][0],'PRIMDS')
-        self.assertIn(bindsCombination['StreamDataset'][0],'RUN')
-        self.assertIn(bindsCombination['StreamDataset'][0],'PRIMDS')
-        self.assertIn(bindsCombination['StreamDataset'][0],'STREAM')
-        self.assertIn(bindsCombination['Trigger'][0],'TRIG')
-        self.assertIn(bindsCombination['DatasetTrigger'][0],'RUN')
-        self.assertIn(bindsCombination['DatasetTrigger'][0],'TRIG')
-        self.assertIn(bindsCombination['DatasetTrigger'][0],'PRIMDS')    
+        self.assertIn('STREAM',bindsCombination['Stream'][0])
+        self.assertIn('PRIMDS',bindsCombination['Dataset'][0])
+        self.assertIn('RUN',bindsCombination['StreamDataset'][0])
+        self.assertIn('PRIMDS',bindsCombination['StreamDataset'][0])
+        self.assertIn('STREAM',bindsCombination['StreamDataset'][0])
+        self.assertIn('TRIG',bindsCombination['Trigger'][0])
+        self.assertIn('RUN',bindsCombination['DatasetTrigger'][0])
+        self.assertIn('TRIG',bindsCombination['DatasetTrigger'][0])
+        self.assertIn('PRIMDS',bindsCombination['DatasetTrigger'][0])
         
     def test_getCustodialSite(self):
         datasetName = "NewDataset"
@@ -67,9 +67,9 @@ class TestRetrieveStreamConfig(unittest.TestCase):
         datasetConfig = tier0config.retrieveDatasetConfig(self.config, datasetName)
         bindsStorageNode = []
         custodialSites,nonCustodialSites,bindsStorageNode = RunConfigAPI.getCustodialSite(datasetConfig,bindsStorageNode,isExpress=False)
-        self.assertIn(bindsStorageNode,{"Node":"ArchivalNode"})
-        self.assertIn(custodialSites,"ArchivalNode")
-        self.assertIn(nonCustodialSites,"DiskNode")
+        self.assertIn({"Node":"ArchivalNode"},bindsStorageNode)
+        self.assertIn("ArchivalNode",custodialSites)
+        self.assertIn("DiskNode",nonCustodialSites)
 
 if __name__ == '__main__':
     unittest.main()
