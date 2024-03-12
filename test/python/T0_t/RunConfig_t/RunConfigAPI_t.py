@@ -67,7 +67,7 @@ class TestRetrieveStreamConfig(unittest.TestCase):
         datasetConfig = tier0config.retrieveDatasetConfig(self.config, datasetName)
         bindsStorageNode = []
         custodialSites,nonCustodialSites,bindsStorageNode = RunConfigAPI.getCustodialSite(datasetConfig,bindsStorageNode,isExpress=False)
-        self.assertIn({"Node":"ArchivalNode"},bindsStorageNode)
+        self.assertIn({"NODE":"ArchivalNode"},bindsStorageNode)
         self.assertIn("ArchivalNode",custodialSites)
         self.assertIn("DiskNode",nonCustodialSites)
 

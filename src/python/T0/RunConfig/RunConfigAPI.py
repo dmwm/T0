@@ -718,6 +718,11 @@ def getSpecArguments(workflowName,runInfo):
     return specArguments
 
 def getRepackSpecArguments(Repack,workflowName,runInfo):
+    """
+    _getRepackSpecArguments_
+    
+    Repack specArguments Baseed on getSpecArguments
+    """
     specArguments = getSpecArguments(workflowName,runInfo)
     
     specArguments['Memory'] = Repack.MaxMemory
@@ -750,6 +755,11 @@ def getRepackSpecArguments(Repack,workflowName,runInfo):
     return specArguments
     
 def getExpressSpecArguments(Express,workflowName,runInfo):
+    """
+    _getExpressSpecArguments_
+    
+    Express specArguments Baseed on getSpecArguments
+    """
     specArguments = getSpecArguments(workflowName,runInfo)
     
     specArguments['TimePerEvent'] = Express.TimePerEvent
@@ -796,6 +806,11 @@ def getExpressSpecArguments(Express,workflowName,runInfo):
     return specArguments
 
 def getPromptRecoSpecArguments(datasetConfig,workflowName,runInfo):
+    """
+    _getPromptRecoArguments_
+    
+    PromptReco specArguments Baseed on getSpecArguments
+    """
     specArguments = getSpecArguments(workflowName,runInfo)
     
     specArguments['TimePerEvent'] = datasetConfig.TimePerEvent
@@ -1112,6 +1127,14 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
     return
 
 def getDataTiers(datasetConfig,tier0Config):
+    """
+    _getDataTiers_
+    
+    :param datasetConfig: Dataset configuration
+    :param tier0Config: Tier0 configuration
+    
+    Sets for tapeDataTiers, diskDataTiers, skimDataTiers, alcaDataTiers
+    """
     tapeDataTiers = set()
     diskDataTiers = set()
     skimDataTiers = set()
