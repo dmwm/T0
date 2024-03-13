@@ -611,7 +611,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                scenario=ppScenario)
 
-DATASETS = ["JetMET", "JetMET0", "JetMET1"]
+DATASETS = ["JetMET"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -624,6 +624,21 @@ for dataset in DATASETS:
                sizePerEvent=2250, # copied from JetHT - should be checked
                scenario=ppScenario)
 
+DATASETS = ["JetMET0", "JetMET1"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               alca_producers=["HcalCalIsoTrkProducerFilter", "TkAlJetHT", "HcalCalNoise"],
+               dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
+               physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", 
+                              "EXODisappTrk", "LogError", "LogErrorMonitor", 
+                              "TeVJet"],
+               timePerEvent=5.7,  # copied from JetHT - should be checked
+               sizePerEvent=2250, # copied from JetHT - should be checked
+               scenario=ppScenario)
+    
 DATASETS = ["PPRefHardProbes0", "PPRefHardProbes1", "PPRefHardProbes2"]
 
 for dataset in DATASETS:
@@ -670,8 +685,8 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                physics_skims=["TopMuEG", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
-
-DATASETS = ["Muon", "Muon0", "Muon1"]
+    
+DATASETS = ["Muon"]
 DATASETS += ["PPRefSingleMuon0", "PPRefSingleMuon1", "PPRefSingleMuon2"]
 
 for dataset in DATASETS:
@@ -684,6 +699,22 @@ for dataset in DATASETS:
                                "TkAlZMuMu", "TkAlDiMuonAndVertex"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
                physics_skims=["ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
+               scenario=ppScenario)
+    
+DATASETS = ["Muon0", "Muon1"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               alca_producers=["TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu",
+                               "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
+                               "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
+                               "TkAlZMuMu", "TkAlDiMuonAndVertex"],
+               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
+               physics_skims=["ZMu", "EXODisappTrk", "LogError", 
+                              "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon", 
+                              "MUOJME"],
                scenario=ppScenario)
 
 DATASETS = ["PPRefDoubleMuon0", "PPRefDoubleMuon1", "PPRefDoubleMuon2", "PPRefDoubleMuon3"]
@@ -725,7 +756,7 @@ for dataset in DATASETS:
                physics_skims=["ZMu", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["EGamma", "EGamma0", "EGamma1"]
+DATASETS = ["EGamma"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -735,6 +766,20 @@ for dataset in DATASETS:
                                "HcalCalIsoTrkProducerFilter", "EcalESAlign"],
                dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
                physics_skims=["ZElectron","WElectron", "EXOMONOPOLE", "EXODisappTrk", "IsoPhotonEB", "LogError", "LogErrorMonitor"],
+               scenario=ppScenario)
+
+DATASETS = ["EGamma0", "EGamma1"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym",
+                               "HcalCalIsoTrkProducerFilter", "EcalESAlign"],
+               dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
+               physics_skims=["ZElectron","WElectron", "EXOMONOPOLE", 
+                              "EXODisappTrk", "IsoPhotonEB", "LogError", 
+                              "LogErrorMonitor", "EGMJME"],
                scenario=ppScenario)
 
 DATASETS = ["Tau"]
