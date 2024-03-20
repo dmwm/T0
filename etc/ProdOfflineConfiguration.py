@@ -98,7 +98,7 @@ setPromptCalibrationConfig(tier0Config,
 #maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_1"
+    'default': "CMSSW_14_0_2"
     #'acqEra': {'Run2023E': "CMSSW_13_2_2"},
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
@@ -110,7 +110,7 @@ setDefaultScramArch(tier0Config, "el8_amd64_gcc12")
 #setScramArch(tier0Config, "CMSSW_13_3_0", "el8_amd64_gcc12")
 
 # Configure scenarios
-ppScenario = "ppEra_Run3_2023"
+ppScenario = "ppEra_Run3"
 ppScenarioB0T = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
 hcalnzsScenario = "hcalnzsEra_Run3"
