@@ -155,7 +155,7 @@ sed -i "s+config.DBS3Upload.uploaderName = 'WMAgent'+config.DBS3Upload.uploaderN
 #
 # needed for conditions upload
 #
-echo "config.Tier0Feeder.serviceProxy = '/data/certs/serviceproxy-vocms001.pem'" >> ./config/tier0/config.py
+echo "config.Tier0Feeder.serviceProxy = '/data/certs/robot-proxy-vocms001.pem'" >> ./config/tier0/config.py
 
 #
 # password for dropbox upload
