@@ -24,6 +24,7 @@ from T0.RunConfig.Tier0Config import addRepackConfig
 from T0.RunConfig.Tier0Config import addExpressConfig
 from T0.RunConfig.Tier0Config import setInjectMinRun
 from T0.RunConfig.Tier0Config import setInjectMaxRun
+from T0.RunConfig.Tier0Config import setInjectRuns
 from T0.RunConfig.Tier0Config import setStreamerPNN
 from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setStorageSite
@@ -34,11 +35,28 @@ tier0Config = createTier0Config()
 # Set the verstion configuration (not used at the moment)
 setConfigVersion(tier0Config, "3.1.5")
 
-# Set the min run number:
-setInjectMinRun(tier0Config, 9999999)
 
-# Set the max run number:
-setInjectMaxRun(tier0Config, 9999999)
+#Runs affected by AcqEra error
+setInjectRuns(tier0Config, [378238,
+                            378236,
+                            378235,
+                            378234,
+                            378231,
+                            378230,
+                            378229,
+                            378228,
+                            378225,
+                            378223,
+                            378221,
+                            378216,
+                            378215,
+                            378213,
+                            378212,
+                            378211,
+                            378210,
+                            378209,
+                            378205])
+
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -1407,6 +1425,13 @@ ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
 
+ignoreStream(tier0Config, "Express")
+ignoreStream(tier0Config, "ExpressCosmics")
+ignoreStream(tier0Config, "HLTMonitor")
+ignoreStream(tier0Config, "Calibration")
+ignoreStream(tier0Config, "ExpressAlignment")
+ignoreStream(tier0Config, "ALCALumiPixelsCountsExpress")
+ignoreStream(tier0Config, "ALCAPPSExpress")
 ###################################
 ### currently inactive settings ###
 ###################################
