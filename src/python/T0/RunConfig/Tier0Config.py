@@ -95,6 +95,8 @@ Tier0Configuration - Global configuration object
 |             |     |
 |             |     |--> ProcessingVersion - processing version
 |             |     |
+|             |     |--> DataTier - Output data tier for repacking the strea,
+|             |     |
 |             |     |--> MaxSizeSingleLumi - max size of single lumi before we break
 |             |     |                        it up into multiple repack jobs
 |             |     |
@@ -929,6 +931,10 @@ def addRepackConfig(config, streamName, **options):
     else:
         streamConfig.Repack.MaxMemory = options.get("maxMemory", 2000)
 
+    if hasattr(streamConfig.Repack, "DataTier"):
+        streamConfig.Repack.DataTier = options.get("dataTier", streamConfig.Repack.DataTier)
+    else:
+        streamConfig.Repack.DataTier = options.get("dataTier", "RAW")
     return
 
 def addExpressConfig(config, streamName, **options):

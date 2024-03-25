@@ -215,7 +215,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
     # treat centralDAQ or miniDAQ runs (have an HLT key) different from local runs
     if runInfo['hltkey'] != None:
 
-        # streams not explicitely configured are repacked
+        # streams not explicitly configured are repacked
         if stream not in list(tier0Config.Streams.dictionary_().keys()):
             addRepackConfig(tier0Config, stream)
 
@@ -449,8 +449,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 selectEvents.append("%s:%s" % (path, runInfo['process']))
 
             if streamConfig.ProcessingStyle == "Bulk":
-
-                outputModuleDetails.append( { 'dataTier' : "RAW",
+                dataTier = streamConfig.Repack.DataTier
+                outputModuleDetails.append( { 'dataTier' : dataTier,
                                               'eventContent' : "ALL",
                                               'selectEvents' : selectEvents,
                                               'primaryDataset' : dataset } )
@@ -489,7 +489,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                             'priority' : "high",
                                             'primaryDataset' : dataset,
                                             'deleteFromSource' : True,
-                                            'dataTier' : "RAW",
+                                            'dataTier' : dataTier,
                                             'datasetLifetime' : datasetConfig.datasetLifetime } )
 
                 #
@@ -500,7 +500,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                             'priority' : "high",
                                             'primaryDataset' : "%s-Error" % dataset,
                                             'deleteFromSource' : True,
-                                            'dataTier' : "RAW",
+                                            'dataTier' : dataTier,
                                             'datasetLifetime' : datasetConfig.datasetLifetime } )
 
 
