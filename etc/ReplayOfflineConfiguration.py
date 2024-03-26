@@ -38,8 +38,10 @@ setConfigVersion(tier0Config, "replace with real version")
 # 369998 - Collisions 2023 - 1800b - 1h long - ALL components in
 # 365537 - Splashes 2023 - 2h40 long - CSC, CTPPS, CTPPS_TOT, DT, GEM, PIXEL, RPC, TRACKER OUT
 # 375832 - Cosmics 3.8T 2023 - 3h long - CTPPS, CTPPS_TOT OUT
+# 378343 - Cosmics 3.8T 2024 - 1h long - CTPPS, CTPPS_TOT, L1SCOUT OUT
+# 378238 - 900GeV 2024 SB run - ~3h long - L1SCOUT out
 
-setInjectRuns(tier0Config, [369998, 365537, 375832])
+setInjectRuns(tier0Config, [369998, 378343, 378238])
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
@@ -109,7 +111,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_2"
+    'default': "CMSSW_14_0_3"
 }
 
 # Configure ScramArch
@@ -118,7 +120,7 @@ setScramArch(tier0Config, "CMSSW_12_4_9", "el8_amd64_gcc10")
 setScramArch(tier0Config, "CMSSW_12_3_0", "cs8_amd64_gcc10")
 setScramArch(tier0Config, "CMSSW_14_0_1", "el8_amd64_gcc12")
 setScramArch(tier0Config, "CMSSW_14_0_2", "el8_amd64_gcc12")
-
+setScramArch(tier0Config, "CMSSW_14_0_3", "el8_amd64_gcc12")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3"
@@ -623,7 +625,7 @@ for dataset in DATASETS:
                write_dqm=True,
                alca_producers=["HcalCalIsoTrkProducerFilter", "TkAlJetHT", "HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
-               physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "LogError", "LogErrorMonitor"],
+               physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor"],
                timePerEvent=5.7,  # copied from JetHT - should be checked
                sizePerEvent=2250, # copied from JetHT - should be checked
                scenario=ppScenario)
@@ -676,7 +678,20 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 DATASETS = ["Muon", "Muon0", "Muon1"]
-DATASETS += ["PPRefSingleMuon0", "PPRefSingleMuon1", "PPRefSingleMuon2"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               alca_producers=["TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu",
+                               "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
+                               "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
+                               "TkAlZMuMu", "TkAlDiMuonAndVertex"],
+               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
+               physics_skims=["MUOJME", "ZMu", "EXODisappTrk", "EXOCSCCluster", "EXODisappMuon", "LogError", "LogErrorMonitor"],
+               scenario=ppScenario)
+
+DATASETS = ["PPRefSingleMuon0", "PPRefSingleMuon1", "PPRefSingleMuon2"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -738,7 +753,7 @@ for dataset in DATASETS:
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym",
                                "HcalCalIsoTrkProducerFilter", "EcalESAlign"],
                dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
-               physics_skims=["ZElectron","WElectron", "EXOMONOPOLE", "EXODisappTrk", "IsoPhotonEB", "LogError", "LogErrorMonitor"],
+               physics_skims=["ZElectron","WElectron", "EGMJME", "EXOMONOPOLE", "EXODisappTrk", "IsoPhotonEB", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
 DATASETS = ["Tau"]
