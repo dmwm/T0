@@ -41,7 +41,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 378343 - Cosmics 3.8T 2024 - 1h long - CTPPS, CTPPS_TOT, L1SCOUT OUT
 # 378238 - 900GeV 2024 SB run - ~3h long - L1SCOUT out
 
-setInjectRuns(tier0Config, [369998, 378343, 378238])
+setInjectRuns(tier0Config, [369998, 375832])
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
