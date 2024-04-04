@@ -41,7 +41,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 378343 - Cosmics 3.8T 2024 - 1h long - CTPPS, CTPPS_TOT, L1SCOUT OUT
 # 378238 - 900GeV 2024 SB run - ~3h long - L1SCOUT out
 
-setInjectRuns(tier0Config, [369998, 378343, 378238])
+setInjectRuns(tier0Config, [369998, 375832])
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
@@ -111,16 +111,14 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_3"
+    'default': "CMSSW_14_0_4"
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "el8_amd64_gcc11")
+setDefaultScramArch(tier0Config, "el8_amd64_gcc12")
 setScramArch(tier0Config, "CMSSW_12_4_9", "el8_amd64_gcc10")
 setScramArch(tier0Config, "CMSSW_12_3_0", "cs8_amd64_gcc10")
-setScramArch(tier0Config, "CMSSW_14_0_1", "el8_amd64_gcc12")
-setScramArch(tier0Config, "CMSSW_14_0_2", "el8_amd64_gcc12")
-setScramArch(tier0Config, "CMSSW_14_0_3", "el8_amd64_gcc12")
+setScramArch(tier0Config, "CMSSW_13_0_9", "el8_amd64_gcc11")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3"
