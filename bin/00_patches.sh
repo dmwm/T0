@@ -11,3 +11,10 @@ curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4921.patch | patc
 
 #Fix cmsRun logs
 curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11933.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+
+#Repack data tiers
+curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4926.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+
+#L1SCOUT support in WMCore
+curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11930.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11951.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
