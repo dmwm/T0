@@ -1106,7 +1106,11 @@ DATASETS += ["SpecialZeroBias", "SpecialZeroBias0", "SpecialZeroBias1",
 	     "SpecialZeroBias8", "SpecialZeroBias9", "SpecialZeroBias10",
 	     "SpecialZeroBias11", "SpecialZeroBias12", "SpecialZeroBias13",
 	     "SpecialZeroBias14", "SpecialZeroBias15", "SpecialZeroBias16",
-	     "SpecialZeroBias17", "SpecialZeroBias18", "SpecialZeroBias19"]
+	     "SpecialZeroBias17", "SpecialZeroBias18", "SpecialZeroBias19",
+	     "SpecialZeroBias20", "SpecialZeroBias21", "SpecialZeroBias22",
+	     "SpecialZeroBias23", "SpecialZeroBias24", "SpecialZeroBias25",
+	     "SpecialZeroBias26", "SpecialZeroBias27", "SpecialZeroBias28",
+	     "SpecialZeroBias29", "SpecialZeroBias30", "SpecialZeroBias31"]
 
 DATASETS += ["PPRefZeroBias0", "PPRefZeroBias1", "PPRefZeroBias2",
              "PPRefZeroBias3", "PPRefZeroBias4", "PPRefZeroBias5", "PPRefZeroBias6",
