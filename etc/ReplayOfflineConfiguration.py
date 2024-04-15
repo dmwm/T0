@@ -36,12 +36,10 @@ setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
 # 369998 - Collisions 2023 - 1800b - 1h long - ALL components in
-# 365537 - Splashes 2023 - 2h40 long - CSC, CTPPS, CTPPS_TOT, DT, GEM, PIXEL, RPC, TRACKER OUT
-# 375832 - Cosmics 3.8T 2023 - 3h long - CTPPS, CTPPS_TOT OUT
-# 378343 - Cosmics 3.8T 2024 - 1h long - CTPPS, CTPPS_TOT, L1SCOUT OUT
-# 378238 - 900GeV 2024 SB run - ~3h long - L1SCOUT out
+# 379070 - Cosmics 3.8T 2024 - 3h long - ALL components in
+# 378993 - 2024 13.6TeV Collisions run - 12b - 1h long - ALL components in
 
-setInjectRuns(tier0Config, [369998, 375832])
+setInjectRuns(tier0Config, [369998, 379070, 378993])
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
@@ -111,7 +109,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_4"
+    'default': "CMSSW_14_0_5_patch1"
 }
 
 # Configure ScramArch
@@ -140,7 +138,7 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "140X_dataRun3_Express_v2"
+expressGlobalTag = "140X_dataRun3_Express_v3"
 promptrecoGlobalTag = "140X_dataRun3_Prompt_v2"
 
 # Mandatory for CondDBv2
