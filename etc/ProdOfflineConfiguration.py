@@ -98,8 +98,8 @@ setPromptCalibrationConfig(tier0Config,
 # maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_4"
-    #'acqEra': {'Run2023E': "CMSSW_13_2_2"},
+    'default': "CMSSW_14_0_5_patch1",
+    'acqEra': {'Run2024B': "CMSSW_14_0_4"}
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
 
@@ -136,8 +136,8 @@ expressProcVersion = {
 
 # Defaults for GlobalTag
 expressGlobalTag = {
-    'default': "140X_dataRun3_Express_v2",
-    #'acqEra': {'Run2023E': "132X_dataRun3_Express_v3"},
+    'default': "140X_dataRun3_Express_v3",
+    'acqEra': {'Run2024B': "140X_dataRun3_Express_v2"}
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Express_v3"}
 }
 promptrecoGlobalTag = {
