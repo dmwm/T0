@@ -20,6 +20,7 @@ from T0.RunConfig.Tier0Config import setDQMUploadUrl
 from T0.RunConfig.Tier0Config import setPromptCalibrationConfig
 from T0.RunConfig.Tier0Config import setConfigVersion
 from T0.RunConfig.Tier0Config import ignoreStream
+from T0.RunConfig.Tier0Config import specifyStreams
 from T0.RunConfig.Tier0Config import addRepackConfig
 from T0.RunConfig.Tier0Config import addExpressConfig
 from T0.RunConfig.Tier0Config import setInjectMinRun
@@ -182,6 +183,22 @@ addRepackConfig(tier0Config, "Default",
                 maxLatency=24 * 3600,
                 blockCloseDelay=24 * 3600,
                 maxMemory=2000,
+                versionOverride=repackVersionOverride)
+
+addRepackConfig(tier0Config, "ScoutingPF",
+                proc_ver=1,
+                maxSizeSingleLumi=24 * 1024 * 1024 * 1024,
+                maxSizeMultiLumi=8 * 1024 * 1024 * 1024,
+                minInputSize=2.1 * 1024 * 1024 * 1024,
+                maxInputSize=4 * 1024 * 1024 * 1024,
+                maxEdmSize=24 * 1024 * 1024 * 1024,
+                maxOverSize=8 * 1024 * 1024 * 1024,
+                maxInputEvents=3 * 1000 * 1000,
+                maxInputFiles=1000,
+                maxLatency=2 * 3600,
+                blockCloseDelay=1200,
+                maxMemory=2000,
+                dataTier="HLTSCOUT",
                 versionOverride=repackVersionOverride)
 
 addDataset(tier0Config, "Default",
@@ -1381,6 +1398,12 @@ for dataset in DATASETS:
                disk_node="T0_CH_CERN_Disk",
                dataset_lifetime=15*24*3600,
                scenario=ppScenario)
+
+#########################
+### specified streams ###
+#########################
+
+specifyStreams(tier0Config, "ScoutingPF")
 
 #######################
 ### ignored streams ###
