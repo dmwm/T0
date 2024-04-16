@@ -179,6 +179,11 @@ addRepackConfig(tier0Config, "Default",
                 maxMemory=2000,
                 versionOverride=repackVersionOverride)
 
+addRepackConfig(tier0Config, "ScoutingPF",
+                proc_ver=1, # Should remain 1. Changing it can cause several issues.
+                dataTier="HLTSCOUT",
+                versionOverride=repackVersionOverride)
+
 addDataset(tier0Config, "Default",
            do_reco=False,
            write_reco=False, write_aod=True, write_miniaod=True, write_nanoaod=True, write_dqm=False,
