@@ -98,8 +98,8 @@ setPromptCalibrationConfig(tier0Config,
 # maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_4"
-    #'acqEra': {'Run2023E': "CMSSW_13_2_2"},
+    'default': "CMSSW_14_0_5_patch1",
+    'acqEra': {'Run2024B': "CMSSW_14_0_4"}
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
 
@@ -136,8 +136,8 @@ expressProcVersion = {
 
 # Defaults for GlobalTag
 expressGlobalTag = {
-    'default': "140X_dataRun3_Express_v2",
-    #'acqEra': {'Run2023E': "132X_dataRun3_Express_v3"},
+    'default': "140X_dataRun3_Express_v3",
+    'acqEra': {'Run2024B': "140X_dataRun3_Express_v2"}
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Express_v3"}
 }
 promptrecoGlobalTag = {
@@ -1203,7 +1203,11 @@ DATASETS += ["SpecialZeroBias", "SpecialZeroBias0", "SpecialZeroBias1",
 	     "SpecialZeroBias8", "SpecialZeroBias9", "SpecialZeroBias10",
 	     "SpecialZeroBias11", "SpecialZeroBias12", "SpecialZeroBias13",
 	     "SpecialZeroBias14", "SpecialZeroBias15", "SpecialZeroBias16",
-	     "SpecialZeroBias17", "SpecialZeroBias18", "SpecialZeroBias19"]
+	     "SpecialZeroBias17", "SpecialZeroBias18", "SpecialZeroBias19",
+	     "SpecialZeroBias20", "SpecialZeroBias21", "SpecialZeroBias22",
+	     "SpecialZeroBias23", "SpecialZeroBias24", "SpecialZeroBias25",
+	     "SpecialZeroBias26", "SpecialZeroBias27", "SpecialZeroBias28",
+	     "SpecialZeroBias29", "SpecialZeroBias30", "SpecialZeroBias31"]
 
 DATASETS += ["PPRefZeroBias0", "PPRefZeroBias1", "PPRefZeroBias2",
              "PPRefZeroBias3", "PPRefZeroBias4", "PPRefZeroBias5", "PPRefZeroBias6",
@@ -1219,7 +1223,8 @@ for dataset in DATASETS:
                write_reco=False,
                write_dqm=True,
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@ctpps"],
-               alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias", "HcalCalIsolatedBunchSelector"],
+               alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias", "LumiPixelsMinBias",
+                               "HcalCalIsolatedBunchSelector"],
                physics_skims=["LogError", "LogErrorMonitor"],
                siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN"],
                timePerEvent=3.5,
