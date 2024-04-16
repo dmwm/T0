@@ -25,6 +25,7 @@ from T0.RunConfig.Tier0Config import addRepackConfig
 from T0.RunConfig.Tier0Config import addExpressConfig
 from T0.RunConfig.Tier0Config import setInjectMinRun
 from T0.RunConfig.Tier0Config import setInjectMaxRun
+from T0.RunConfig.Tier0Config import setInjectRuns
 from T0.RunConfig.Tier0Config import setStreamerPNN
 from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setStorageSite
@@ -35,11 +36,14 @@ tier0Config = createTier0Config()
 # Set the verstion configuration (not used at the moment)
 setConfigVersion(tier0Config, "3.1.5")
 
+# Set inject runs:
+setInjectRuns(tier0Config, [378765])
+
 # Set the min run number:
-setInjectMinRun(tier0Config, 9999999)
+#setInjectMinRun(tier0Config, 9999999)
 
 # Set the max run number:
-setInjectMaxRun(tier0Config, 9999999)
+#setInjectMaxRun(tier0Config, 9999999)
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -58,7 +62,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2024C")
+setAcquisitionEra(tier0Config, "Run2024A")
 setEmulationAcquisitionEra(tier0Config, "Emulation2024")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
@@ -1272,8 +1276,8 @@ DATASETS = ["ScoutingPFRun3"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
-               tape_node="T1_UK_RAL_MSS",
-               disk_node="T1_UK_RAL_Disk",
+               tape_node="T1_US_FNAL_MSS",
+               disk_node="T1_US_FNAL_Disk",
                scenario=ppScenario)
 
 DATASETS = ["ParkingDoubleElectronLowMass","ParkingDoubleElectronLowMass0"]
