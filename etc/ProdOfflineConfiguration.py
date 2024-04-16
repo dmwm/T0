@@ -184,6 +184,11 @@ addRepackConfig(tier0Config, "Default",
                 maxMemory=2000,
                 versionOverride=repackVersionOverride)
 
+addRepackConfig(tier0Config, "ScoutingPF",
+                proc_ver=1, # Should remain 1. Changing it can cause several issues.
+                dataTier="HLTSCOUT",
+                versionOverride=repackVersionOverride)
+
 addDataset(tier0Config, "Default",
            do_reco=False,
            write_reco=False, write_aod=True, write_miniaod=True, write_nanoaod=True, write_dqm=False,
@@ -1260,8 +1265,8 @@ DATASETS = ["ScoutingPFRun3"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
-               tape_node="T1_UK_RAL_MSS",
-               disk_node="T1_UK_RAL_Disk",
+               tape_node="T1_US_FNAL_MSS",
+               disk_node="T1_US_FNAL_Disk",
                scenario=ppScenario)
 
 DATASETS = ["ParkingDoubleElectronLowMass","ParkingDoubleElectronLowMass0"]
