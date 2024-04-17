@@ -37,7 +37,24 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "3.1.5")
 
 # Set inject runs:
-setInjectRuns(tier0Config, [378765])
+setInjectRuns(tier0Config, [378765,
+                            378918,
+                            378919,
+                            378920,
+                            378927,
+                            378929,
+                            378937,
+                            378938,
+                            378940,
+                            378944,
+                            378946,
+                            378956,
+                            378765,
+                            378959,
+                            378960,
+                            378961,
+                            378962,
+                            378968])
 
 # Set the min run number:
 #setInjectMinRun(tier0Config, 9999999)
