@@ -37,24 +37,26 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "3.1.5")
 
 # Set inject runs:
-setInjectRuns(tier0Config, [378765,
-                            378918,
-                            378919,
-                            378920,
-                            378927,
-                            378929,
-                            378937,
-                            378938,
-                            378940,
-                            378944,
-                            378946,
-                            378956,
-                            378765,
-                            378959,
-                            378960,
-                            378961,
-                            378962,
-                            378968])
+setInjectRuns(tier0Config, [378765, 378918, 378919, 378920, 378927, 
+                            378929, 378937, 378938, 378940, 378944,
+                            378946, 378956, 378765, 378959, 378960,
+                            378961, 378962, 378968, 
+                            
+                            378981, 378985, 378993, 378994, 378995,
+                            378996, 378997, 378998, 378999, 379000,
+                            379001, 379002, 379003, 379004, 379005,
+                            379006, 379007, 379008, 379009, 379010,
+                            379011, 379012, 379028, 379029, 379031,
+                            379058, 379064, 379065, 379075, 379142,
+                            379146, 379154, 379160, 379162, 379163,
+                            379166, 379168, 379169, 379170, 379171,
+                            379178, 379197, 379237, 379238, 379243,
+                            379247, 379252, 379253, 379311, 379315,
+                            379316, 379317, 379318, 379337, 379338,
+                            379349, 379350, 379355, 379356, 379357,
+                            379367, 379391])
+
+#####
 
 # Set the min run number:
 #setInjectMinRun(tier0Config, 9999999)
@@ -79,7 +81,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2024A")
+setAcquisitionEra(tier0Config, "Run2024B")
 setEmulationAcquisitionEra(tier0Config, "Emulation2024")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
