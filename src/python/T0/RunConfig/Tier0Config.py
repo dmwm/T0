@@ -71,13 +71,23 @@ Tier0Configuration - Global configuration object
 | |       |--> ValidationMode - Whether or not we upload conditions for immediate use
 | |       |                     in PromptReco or just for validation checks.
 | |       |
-| |       |--> ScramArches - Dictionary containig CMSSW release and corresponding ScramArch
+| |       |--> ScramArches - Dictionary containing CMSSW release and corresponding ScramArch
 | |       |
 | |       |--> DefaultScramArch - Default ScramArch if nothing else is specified for release
 | |       |
 | |       |--> BaseRequestPriority - Base for request priorities for PromptReco/Repack/Express
 | |       |
 | |       |--> DeploymentID - Unique identifier for every T0 Agent deployment
+| |       |
+| |       |--> extraStreamDatasetMap - Additional mapping to be applied on top of HLT menu. Unspecified
+| |       |                            path, means no event selection for this stream-dataset pair.
+| |       |                          mapping = {
+| |                                                 Stream0: {"Dataset": Dataset0}, 
+| |                                                 Stream1: {"Dataset": Dataset1
+| |                                                           "Path": Path1},
+| |                                                 Stream1: {"Dataset": Dataset2
+| |                                                           "Path": Path2},
+| |                                            }
 | |
 | |
 | |--> Streams - Configuration parameters that belong to a particular stream
@@ -293,6 +303,8 @@ def createTier0Config():
     tier0Config.Global.EnableUniqueWorkflowName = False
 
     tier0Config.Global.DeploymentID = 1
+    
+    tier0Config.Global.extraStreamDatasetMap = None
 
     return tier0Config
 
@@ -697,6 +709,35 @@ def setOverrideCatalog(config, overrideCatalog):
     Set the catalog to use in case override is necessary.
     """
     config.Global.overrideCatalog = overrideCatalog
+    return
+
+def setExtraStreamDatasetMap(config, mapping):
+    """
+    _setExtraStreamDatasetMap_
+
+    Adds extra entries to HLT stream dataset mapping
+    """
+    
+    mapDict={}
+
+    for stream, description in list(mapping.items()):
+        dataset=description["Dataset"]
+        # Create dictionary for new streams
+        if stream not in mapDict:
+            mapDict[stream] = {}
+
+        # Add new datasets to stream
+        if dataset not in mapDict[stream]:
+            mapDict[stream][dataset] = []
+
+        # If defined, add path for event selection. "All" otherwise.
+        if "Path" in description:
+            mapDict[stream][dataset].append(description["Path"])
+        else:
+            mapDict[stream][dataset].append("All")
+
+
+    config.Global.extraStreamDatasetMap = mapDict
     return
 
 

@@ -446,7 +446,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             selectEvents = []
             for path in sorted(paths):
-                selectEvents.append("%s:%s" % (path, runInfo['process']))
+                if path != "All":
+                    selectEvents.append("%s:%s" % (path, runInfo['process']))
 
             if streamConfig.ProcessingStyle == "Bulk":
                 dataTier = streamConfig.Repack.DataTier

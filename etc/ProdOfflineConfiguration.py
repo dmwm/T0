@@ -168,6 +168,12 @@ expressVersionOverride = {
     "CMSSW_12_6_3" : "CMSSW_12_6_4"
 }
 
+# Additional Stream-Dataset mapping
+setExtraStreamDatasetMap(tier0Config,{
+                                        "L1Scouting": {"Dataset":"L1Scouting"}
+                                    }
+                         )
+
 #set default repack settings for bulk streams
 addRepackConfig(tier0Config, "Default",
                 proc_ver=1, # Should remain 1. Changing it can cause several issues.
@@ -1255,6 +1261,11 @@ for dataset in DATASETS:
 ########################################################
 ### Parking and Scouting PDs                         ###
 ########################################################
+
+DATASETS = ["L1Scouting"]
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False)
 
 DATASETS = ["ScoutingPFRun3"]
 for dataset in DATASETS:
