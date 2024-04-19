@@ -40,8 +40,7 @@ setConfigVersion(tier0Config, "3.1.5")
 setInjectRuns(tier0Config, [378765, 378918, 378919, 378920, 378927, 
                             378929, 378937, 378938, 378940, 378944,
                             378946, 378956, 378959, 378960, 378961, 
-                            378962, 378968, 
-                            
+                            378962, 378968,                   
                             378981, 378985, 378993, 378994, 378995,
                             378996, 378997, 378998, 378999, 379000,
                             379001, 379002, 379003, 379004, 379005,
@@ -54,7 +53,10 @@ setInjectRuns(tier0Config, [378765, 378918, 378919, 378920, 378927,
                             379247, 379252, 379253, 379311, 379315,
                             379316, 379317, 379318, 379337, 379338,
                             379349, 379350, 379355, 379356, 379357,
-                            379367, 379391])
+                            379367, 379391,
+                            379413, 379415, 379416, 379420, 379425,
+                            379433, 379441, 379442, 379454, 379456,
+                            379466, 379470, 379487])
 
 #####
 
@@ -81,7 +83,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2024B")
+setAcquisitionEra(tier0Config, "Run2024C")
 setEmulationAcquisitionEra(tier0Config, "Emulation2024")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
