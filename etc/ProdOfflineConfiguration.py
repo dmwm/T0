@@ -27,6 +27,8 @@ from T0.RunConfig.Tier0Config import setInjectMaxRun
 from T0.RunConfig.Tier0Config import setStreamerPNN
 from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setStorageSite
+from T0.RunConfig.Tier0Config import setExtraStreamDatasetMap
+
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -57,7 +59,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2024C")
+setAcquisitionEra(tier0Config, "Run2024D")
 setEmulationAcquisitionEra(tier0Config, "Emulation2024")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
@@ -98,8 +100,8 @@ setPromptCalibrationConfig(tier0Config,
 # maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_5_patch1",
-    'acqEra': {'Run2024B': "CMSSW_14_0_4"}
+    'default': "CMSSW_14_0_6_patch1",
+    #'acqEra': {'Run2024B': "CMSSW_14_0_4"}
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
 
@@ -168,6 +170,13 @@ expressVersionOverride = {
     "CMSSW_12_6_3" : "CMSSW_12_6_4"
 }
 
+# Additional Repack mappings
+#    L1Scouting stream
+setExtraStreamDatasetMap(tier0Config,{
+                                        "L1Scouting": {"Dataset":"L1Scouting"}
+                                    }
+                         )
+
 #set default repack settings for bulk streams
 addRepackConfig(tier0Config, "Default",
                 proc_ver=1, # Should remain 1. Changing it can cause several issues.
@@ -188,6 +197,12 @@ addRepackConfig(tier0Config, "ScoutingPF",
                 proc_ver=1, # Should remain 1. Changing it can cause several issues.
                 dataTier="HLTSCOUT",
                 versionOverride=repackVersionOverride)
+
+addRepackConfig(tier0Config, "L1Scouting",
+                proc_ver=1, # Should remain 1. Changing it can cause several issues.
+                dataTier="L1SCOUT",
+                versionOverride=repackVersionOverride)
+
 
 addDataset(tier0Config, "Default",
            do_reco=False,
@@ -1407,6 +1422,8 @@ ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
+ignoreStream(tier0Config, "L1ScoutingSelection")
+
 
 ###################################
 ### currently inactive settings ###
