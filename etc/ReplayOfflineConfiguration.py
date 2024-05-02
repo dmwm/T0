@@ -110,7 +110,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_5_patch1"
+    'default': "CMSSW_14_0_6_patch1"
 }
 
 # Configure ScramArch
@@ -184,6 +184,11 @@ addRepackConfig(tier0Config, "Default",
                 maxLatency=2 * 3600,
                 blockCloseDelay=1200,
                 maxMemory=2000,
+                versionOverride=repackVersionOverride)
+
+addRepackConfig(tier0Config, "ScoutingPF",
+                proc_ver=1, # Should remain 1. Changing it can cause several issues.
+                dataTier="HLTSCOUT",
                 versionOverride=repackVersionOverride)
 
 addDataset(tier0Config, "Default",
