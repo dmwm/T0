@@ -170,6 +170,7 @@ expressVersionOverride = {
     "CMSSW_12_6_3" : "CMSSW_12_6_4"
 }
 
+
 # Additional Repack mappings
 #    L1Scouting stream
 setExtraStreamDatasetMap(tier0Config,{
@@ -1275,6 +1276,11 @@ for dataset in DATASETS:
 ########################################################
 ### Parking and Scouting PDs                         ###
 ########################################################
+
+DATASETS = ["L1Scouting"]
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False)
 
 DATASETS = ["ScoutingPFRun3"]
 for dataset in DATASETS:

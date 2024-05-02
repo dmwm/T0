@@ -27,6 +27,7 @@ from T0.RunConfig.Tier0Config import setStreamerPNN
 from T0.RunConfig.Tier0Config import setEnableUniqueWorkflowName
 from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setStorageSite
+from T0.RunConfig.Tier0Config import setExtraStreamDatasetMap
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -162,6 +163,12 @@ repackVersionOverride = {
 expressVersionOverride = {
     "CMSSW_12_6_3" : "CMSSW_12_6_4"
 }
+
+# Additional Stream-Dataset mapping
+setExtraStreamDatasetMap(tier0Config,{
+                                        "L1Scouting": {"Dataset":"L1Scouting"}
+                                    }
+                         )
 
 #set default repack settings for bulk streams
 addRepackConfig(tier0Config, "Default",
@@ -1155,6 +1162,11 @@ for dataset in DATASETS:
 ########################################################
 ### Parking and Scouting PDs                         ###
 ########################################################
+
+DATASETS = ["L1Scouting"]
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False)
 
 DATASETS = ["ScoutingPFRun3"]
 for dataset in DATASETS:

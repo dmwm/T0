@@ -199,6 +199,10 @@ class Tier0FeederPoller(BaseWorkerThread):
                     # retrieve HLT configuration and make sure it's usable
                     try:
                         hltConfig = self.getHLTConfigDAO.execute(hltkey, transaction = False)
+                        # If defined, add additional mapping entries
+                        if tier0Config.Global.extraStreamDatasetMap:
+                            hltConfig['mapping'].update(tier0Config.Global.extraStreamDatasetMap)
+                            logging.debug("Modified Mapping: %s", hltConfig)
                         if hltConfig['process'] == None or len(hltConfig['mapping']) == 0:
                             raise RuntimeError("HLTConfDB query returned no process or mapping")
                     except:
