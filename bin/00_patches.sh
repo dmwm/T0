@@ -19,3 +19,6 @@ curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4926.patch | patc
 curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11930.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
 curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11951.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
 curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11952.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+
+#Add extra mapping for repack
+curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4945.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
