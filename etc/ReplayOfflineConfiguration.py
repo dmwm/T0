@@ -166,7 +166,8 @@ expressVersionOverride = {
 
 # Additional Stream-Dataset mapping
 setExtraStreamDatasetMap(tier0Config,{
-                                        "L1Scouting": {"Dataset":"L1Scouting"}
+                                        "L1Scouting": {"Dataset":"L1Scouting"},
+                                        "L1ScoutingSelection": {"Dataset":"L1ScoutingSelection"}
                                     }
                          )
 
@@ -189,6 +190,11 @@ addRepackConfig(tier0Config, "Default",
 addRepackConfig(tier0Config, "ScoutingPF",
                 proc_ver=1, # Should remain 1. Changing it can cause several issues.
                 dataTier="HLTSCOUT",
+                versionOverride=repackVersionOverride)
+
+addRepackConfig(tier0Config, "L1ScoutingSelection",
+                proc_ver=1, # Should remain 1. Changing it can cause several issues.
+                dataTier="L1SCOUT",
                 versionOverride=repackVersionOverride)
 
 addDataset(tier0Config, "Default",
@@ -1164,6 +1170,11 @@ for dataset in DATASETS:
 ########################################################
 
 DATASETS = ["L1Scouting"]
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False)
+
+DATASETS = ["L1ScoutingSelection"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False)
