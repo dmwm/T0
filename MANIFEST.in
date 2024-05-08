@@ -1,2 +1,4 @@
+graft bin
+graft etc
 include requirements.txt
 include LICENSE
