@@ -1,4 +1,7 @@
-graft bin
-graft etc
+include setup_build.py
+include setup_dependencies.py
+recursive-include bin *
+recursive-include etc *
 include requirements.txt
 include LICENSE
+include NOTICE
