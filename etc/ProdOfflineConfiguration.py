@@ -59,7 +59,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2024D")
+setAcquisitionEra(tier0Config, "Run2024E")
 setEmulationAcquisitionEra(tier0Config, "Emulation2024")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
@@ -101,7 +101,7 @@ setPromptCalibrationConfig(tier0Config,
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
     'default': "CMSSW_14_0_6_patch1",
-    #'acqEra': {'Run2024B': "CMSSW_14_0_4"}
+    'acqEra': {'Run2024D': "CMSSW_14_0_6_patch1"}
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
 
