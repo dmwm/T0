@@ -1253,7 +1253,7 @@ for dataset in DATASETS:
                                "HcalCalIsolatedBunchSelector"],
                physics_skims=["LogError", "LogErrorMonitor"],
                siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN"],
-               timePerEvent=3.5,
+               timePerEvent=1,
                sizePerEvent=1500,
                tape_node="T1_ES_PIC_MSS",
                disk_node="T1_ES_PIC_Disk",
