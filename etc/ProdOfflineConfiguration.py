@@ -1282,12 +1282,7 @@ for dataset in DATASETS:
 ### Parking and Scouting PDs                         ###
 ########################################################
 
-DATASETS = ["L1Scouting"]
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=False)
-
-DATASETS = ["L1ScoutingSelection"]
+DATASETS = ["L1Scouting","L1ScoutingSelection"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False)
