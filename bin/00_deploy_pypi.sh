@@ -41,11 +41,6 @@ echo "Installing T0"
 sleep 3
 pip install T0==$TIER0_VERSION
 
-echo "Adding environment variables useful for T0"
-sleep 3
-echo "export config=$WMA_CONFIG_DIR" >> $WMA_ENV_FILE
-echo "export install=$WMA_INSTALL_DIR" >> $WMA_ENV_FILE
-
 #############################################
 ### THIS STEP SHOULD HAPPEN AUTOMATICALLY ###
 #############################################
@@ -61,7 +56,13 @@ cp $KEY $DEPLOY_DIR/certs/servicekey.pem
 
 echo "Deployment finished. Now deactivating environment"
 sleep 3
+
+echo "activating additional environment variables"
+source $WMA_ENV_FILE
+
 deactivate
+
+cd $BASE_DIR
 
 
 

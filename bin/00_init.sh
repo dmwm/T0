@@ -8,7 +8,9 @@ source $DEPLOY_DIR/bin/activate
 
 echo "Cleaning T0AST database"
 sleep 3
-manage clean-oracle
+#We use old script meanwhile issue with clean-oracle command is solved
+bash /data/tier0/00_wipe_t0ast.sh
+#manage clean-oracle
 
 echo "Now initializing"
 sleep 3
