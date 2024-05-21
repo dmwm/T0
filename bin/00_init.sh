@@ -1,6 +1,6 @@
 #!/bin/bash 
 
-DEPLOY_DIR=/data/tier0/WMAgent
+DEPLOY_DIR=/data/tier0/WMAgent.venv3
 cd $DEPLOY_DIR
 echo "Activating WMAgent virtual environment"
 sleep 3

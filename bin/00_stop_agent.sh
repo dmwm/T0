@@ -2,7 +2,7 @@
 
 echo "Activating WMAgent environment"
 sleep 3
-WMAGENT_DIR=/data/tier0/WMAgent.venv3/current
+WMAGENT_DIR=/data/tier0/WMAgent.venv3
 cd $WMAGENT_DIR
 source $WMAGENT_DIR/bin/activate
 

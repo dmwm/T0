@@ -9,7 +9,7 @@ COUCH_TAG=3.2.2
 TIER0_VERSION=3.2.0
 
 BASE_DIR=/data/tier0
-DEPLOY_DIR=$BASE_DIR/WMAgent
+DEPLOY_DIR=$BASE_DIR/WMAgent.venv3
 
 WMAGENT_SECRETS=$BASE_DIR/admin/WMAgent.secrets.replay
 CERT=/data/certs/robot-cert-cmst0.pem
