@@ -74,8 +74,9 @@ def clearDeployment (userInput='n'):
     if userInput == 'Y':
         resetCouch()
         wipeT0ast(userInput=userInput)
-        os.system('rm -rf $WMA_CURRENT_DIR')
-        os.system('rm -rf /data/tier0/admin/Specs')
+        os.system('rm -rf $WMA_CONFIG_DIR/*')
+        os.system('rm -rf $WMA_INSTALL_DIR/*')
+        os.system('rm -rf /data/tier0/admin/Specs/*')
     else:
         os.system('echo "Not performing anything"')
         os.system('sleep 2')
@@ -119,18 +120,18 @@ def main(argv=None):
             if option == "--clear-oracle":
                 os.system('echo "This will clear T0AST database"')
                 os.system('sleep 3')
-                os.system('Are you sure you wish to proceed? (Y/n)')
+                os.system('echo "Are you sure you wish to proceed? (Y/n)"')
                 userInput = input()
                 wipeT0ast(userInput=userInput)
 
             if option == "--clear-deployment":
                 os.system('echo "This will clear T0AST database"')
                 os.system('sleep 3')
-                os.system('This will remove /data/tier0/admin/Specs')
+                os.system('echo "This will remove /data/tier0/admin/Specs"')
                 os.system('sleep 3')
-                os.system('This will reset couchdb container')
+                os.system('echo "This will reset couchdb container"')
                 os.system('sleep 3')
-                os.system('Are you sure you wish to proceed? (Y/n)')
+                os.system('echo "Are you sure you wish to proceed? (Y/n)"')
                 userInput = input()
                 clearDeployment(userInput=userInput)
 
