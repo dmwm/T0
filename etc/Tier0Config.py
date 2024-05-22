@@ -4,7 +4,7 @@ config.Tier0Feeder.namespace = "T0Component.Tier0Feeder.Tier0Feeder"
 config.Tier0Feeder.componentDir = config.General.workDir + "/Tier0Feeder"
 config.Tier0Feeder.pollInterval = 30
 config.Tier0Feeder.tier0ConfigFile = "TIER0_CONFIG_FILE"
-config.Tier0Feeder.specDirectory = "TIER0_SPEC_DIR"
+config.Tier0Feeder.specDirectory = "/data/tier0/admin/Specs"
 config.Tier0Feeder.requestDBName = "t0_request_local"
 config.Tier0Feeder.serviceProxy = '/data/certs/robot-proxy-vocms001.pem'
 
@@ -48,7 +48,6 @@ config.DBS3Upload.datasetType = 'VALID'
 config.DBSInterface.primaryDatasetType = "data"
 
 config.AnalyticsDataCollector.pluginName = "Tier0Plugin"
-
 
 config.AgentStatusWatcher.t1SitesCores = 12.5
 config.AgentStatusWatcher.pendingSlotsTaskPercent = 30
