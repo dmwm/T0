@@ -74,7 +74,7 @@ def clearDeployment (userInput='n'):
     if userInput == 'Y':
         resetCouch()
         wipeT0ast(userInput=userInput)
-        os.system('rm -rf $WMA_CONFIG_DIR/*')
+        os.system('rm -rf $WMA_CONFIG_DIR/.init*')
         os.system('rm -rf $WMA_INSTALL_DIR/*')
         os.system('rm -rf /data/tier0/admin/Specs/*')
     else:
