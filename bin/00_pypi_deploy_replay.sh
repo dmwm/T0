@@ -1,23 +1,49 @@
 #!/bin/bash 
 
+BASE_DIR=/data/tier0
 DEPLOY_DIR=/data/tier0/WMAgent.venv3
+TIER0_VERSION=3.2.0
+CONFIGURATION_FILE='/data/tier0/admin/ReplayOfflineConfiguration.py'
+WMAGENT_SECRETS=$BASE_DIR/admin/WMAgent.secrets.replay
+CERT=/data/certs/robot-cert-cmst0.pem
+KEY=/data/certs/robot-key-cmst0.pem
+
 cd $DEPLOY_DIR
-echo "Activating WMAgent virtual environment"
+
+echo "Activating virtual environment"
 sleep 3
 source $DEPLOY_DIR/bin/activate
 
-echo "Cleaning T0AST database"
+
+echo "Installing T0"
 sleep 3
-#We use old script meanwhile issue with clean-oracle command is solved
-bash /data/tier0/00_wipe_t0ast.sh
-#manage clean-oracle
+pip install T0==$TIER0_VERSION
+
+###########################
+
+echo "Setting up secrets file"
+sleep 3
+cp $WMAGENT_SECRETS $DEPLOY_DIR/admin/wmagent/WMAgent.secrets
+
+echo "Setting up certificate and key"
+sleep 3
+cp $CERT $DEPLOY_DIR/certs/servicecert.pem
+cp $KEY $DEPLOY_DIR/certs/servicekey.pem
+
+echo "Deployment finished. Now deactivating environment"
+sleep 3
+
+echo "activating additional environment variables"
+source $WMA_ENV_FILE
+
+###########################
 
 echo "Now initializing"
 sleep 3
 bash $DEPLOY_DIR/init.sh
 
 echo "Now populating resource control"
-
+sleep 3
 
 #Setting for T0_CH_CERN_Disk
 manage execute-agent wmagent-resource-control --site-name=T2_CH_CERN --cms-name=T2_CH_CERN --pnn=T0_CH_CERN_Disk --ce-name=T2_CH_CERN --pending-slots=20000 --running-slots=20000 --plugin=SimpleCondorPlugin
@@ -48,8 +74,8 @@ manage execute-agent wmagent-resource-control --site-name=T2_CH_CERN_P5 --task-t
 
 echo "Modifying config file"
 sleep 3
-sed -i 's+TIER0_CONFIG_FILE+/data/tier0/admin/ProdOfflineConfiguration.py+' $config/config.py
-sed -i 's+TIER0_SPEC_DIR+/data/tier0/admin/Specs+' $config/config.py
+sed -i 's+TIER0_CONFIG_FILE+'"$CONFIGURATION_FILE"'+' "$config/config.py"
+
 sed -i "s+config.Agent.contact = 'cms-comp-ops-workflow-team@cern.ch'+config.Agent.contact = 'cms-tier0-operations@cern.ch'+" $config/config.py
 sed -i "s+'team1,team2,cmsdataops'+'tier0production'+g" $config/config.py
 
@@ -83,4 +109,12 @@ fi
 
 echo 'config.Tier0Feeder.dropboxuser = "'$DROPBOX_USER'"' >> $config/config.py
 echo 'config.Tier0Feeder.dropboxpass = "'$DROPBOX_PASS'"' >> $config/config.py
+
+
+sleep 3
+echo "You are now in the WMAgent environment"
+
+sleep 3
+echo "Deployment finished"
+
 
