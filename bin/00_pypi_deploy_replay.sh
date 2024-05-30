@@ -80,6 +80,9 @@ source $WMA_ENV_FILE
 
 ###########################
 
+### This step is temporary. Tier0Config file is already in /data/tier0
+cp $BASE_DIR/Tier0Config.py $DEPLOY_DIR/etc/Tier0Config.py
+
 echo "Now initializing"
 sleep 3
 bash $DEPLOY_DIR/init.sh
