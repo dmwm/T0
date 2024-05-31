@@ -8,19 +8,20 @@ read confirm_clearing
 
 if [ "$confirm_clearing" != "Y" ]
 then
-	echo "Not performing changes"
+    echo "Not performing changes"
     sleep 2
     echo "Exiting"
-	exit
+    exit
 fi
+
+WMAGENT_TAG=2.3.4rc4
+TIER0_VERSION=3.2.0
+COUCH_TAG=3.2.2
 
 BASE_DIR=/data/tier0
 DEPLOY_DIR=$BASE_DIR/WMAgent.venv3
 SPEC_DIR=$BASE_DIR/admin/Specs
-
-WMAGENT_TAG=2.3.3
-TIER0_VERSION=3.2.0
-COUCH_TAG=3.2.2
+CURRENT_DIR=$DEPLOY_DIR/srv/wmagent/$WMAGENT_TAG
 
 CONFIGURATION_FILE='/data/tier0/admin/ProdOfflineConfiguration.py'
 WMAGENT_SECRETS=$BASE_DIR/admin/WMAgent.secrets.prod
@@ -35,34 +36,23 @@ cd $BASE_DIR
 
 echo "Removing deploy directory"
 sleep 3
-rm -rf $DEPLOY_DIR
+rm -rfv $DEPLOY_DIR
 
 echo "Clearing Specs directory"
 sleep 3
-rm -rf $SPEC_DIR
+rm -rfv $SPEC_DIR/*
 
 echo "Clearing Oracle Database"
 sleep 3
-bash /data/tier0/00_wipe_t0ast.sh
+bash $BASE_DIR/00_wipe_t0ast.sh
 
 echo "Installing new wmagent"
 echo "WMAgent version $WMAGENT_TAG"
 sleep 3
 
-./deploy-wmagent-venv.sh -t $WMAGENT_TAG -d $DEPLOY_DIR -y -s
+bash $BASE_DIR/deploy-wmagent-venv.sh -t $WMAGENT_TAG -d $DEPLOY_DIR -y
 
-echo "Activating environment"
-sleep 3
-cd $DEPLOY_DIR
-
-source $DEPLOY_DIR/bin/activate
-echo "Installing T0 code"
-sleep 3
-pip install T0==$TIER0_VERSION
-
-
-###########################
-
+#######################################################################
 echo "Setting up secrets file"
 sleep 3
 cp $WMAGENT_SECRETS $DEPLOY_DIR/admin/wmagent/WMAgent.secrets
@@ -71,21 +61,52 @@ echo "Setting up certificate and key"
 sleep 3
 cp $CERT $DEPLOY_DIR/certs/servicecert.pem
 cp $KEY $DEPLOY_DIR/certs/servicekey.pem
+#######################################################################
 
-echo "Deployment finished. Now deactivating environment"
+echo "Activating environment"
 sleep 3
+cd $DEPLOY_DIR
+source $DEPLOY_DIR/bin/activate
+echo "Installing T0 code"
+sleep 3
+pip install T0==$TIER0_VERSION
 
-echo "activating additional environment variables"
-source $WMA_ENV_FILE
+echo "Now creating important T0 related environment variables"
+sleep 2
+echo "WMCORE_CACHE_DIR=/tmp/cmst0"
+echo "install=$CURRENT_DIR/install"
+echo "config=$CURRENT_DIR/config"
+echo "manage=manage"
+sleep 1
+### The WMCoreVenvVars is a function in the $DEPLOY_DIR/bin/activate file
+declare -A WMCoreVenvVars
+WMCoreVenvVars[WMCORE_CACHE_DIR]=/tmp/$(whoami)
+WMCoreVenvVars[install]=$CURRENT_DIR/install
+WMCoreVenvVars[config]=$CURRENT_DIR/config
+WMCoreVenvVars[manage]=manage
+_WMCoreVenvSet ${!WMCoreVenvVars[@]}
+
+sleep 1
+echo "variables created successfully"
+sleep 1
+
+#export install=$CURRENT_DIR/install
+#export config=$CURRENT_DIR/config
+#export manage=manage
+
+#echo "activating additional environment variables"
+#source $WMA_ENV_FILE
+
+cp $BASE_DIR/Tier0Config.py $DEPLOY_DIR/etc/Tier0Config.py
 
 ###########################
 
 echo "Now initializing"
-sleep 3
+sleep 2
 bash $DEPLOY_DIR/init.sh
 
 echo "Now populating resource control"
-sleep 3
+sleep 2
 
 #Setting for T0_CH_CERN_Disk
 manage execute-agent wmagent-resource-control --site-name=T2_CH_CERN --cms-name=T2_CH_CERN --pnn=T0_CH_CERN_Disk --ce-name=T2_CH_CERN --pending-slots=20000 --running-slots=20000 --plugin=SimpleCondorPlugin
@@ -152,8 +173,9 @@ fi
 echo 'config.Tier0Feeder.dropboxuser = "'$DROPBOX_USER'"' >> $config/config.py
 echo 'config.Tier0Feeder.dropboxpass = "'$DROPBOX_PASS'"' >> $config/config.py
 
-sleep 3
+
+sleep 1
 echo "You are now in the WMAgent environment"
 
-sleep 3
+sleep 1
 echo "Deployment finished"
