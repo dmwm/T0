@@ -6,7 +6,7 @@ config.Tier0Feeder.pollInterval = 30
 config.Tier0Feeder.tier0ConfigFile = "TIER0_CONFIG_FILE"
 config.Tier0Feeder.specDirectory = "/data/tier0/admin/Specs"
 config.Tier0Feeder.requestDBName = "t0_request_local"
-config.Tier0Feeder.serviceProxy = '/data/certs/robot-proxy-vocms001.pem'
+config.Tier0Feeder.serviceProxy = '/data/tier0/WMAgent.venv3/certs/myproxy.pem'
 
 config.JobAccountant.pollInterval = 30
 config.JobAccountant.maxAllowedRepackOutputSize = 24 * 1024 * 1024 * 1024

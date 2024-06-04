@@ -27,6 +27,7 @@ CONFIGURATION_FILE='/data/tier0/admin/ProdOfflineConfiguration.py'
 WMAGENT_SECRETS=$BASE_DIR/admin/WMAgent.secrets.prod
 CERT=/data/certs/robot-cert-cmst0.pem
 KEY=/data/certs/robot-key-cmst0.pem
+PROXY=/data/certs/robot-proxy-vocms001.pem
 
 echo "Resetting couchdb for new deployment"
 sleep 3
@@ -50,21 +51,22 @@ echo "Installing new wmagent"
 echo "WMAgent version $WMAGENT_TAG"
 sleep 3
 
-bash $BASE_DIR/deploy-wmagent-venv.sh -t $WMAGENT_TAG -d $DEPLOY_DIR -y
+bash $BASE_DIR/deploy-wmagent-venv.sh -t $WMAGENT_TAG -d $DEPLOY_DIR -y -s
 
 #######################################################################
 echo "Setting up secrets file"
-sleep 3
-cp $WMAGENT_SECRETS $DEPLOY_DIR/admin/wmagent/WMAgent.secrets
+sleep 1
+ln -s $WMAGENT_SECRETS $DEPLOY_DIR/admin/wmagent/WMAgent.secrets
 
 echo "Setting up certificate and key"
-sleep 3
-cp $CERT $DEPLOY_DIR/certs/servicecert.pem
-cp $KEY $DEPLOY_DIR/certs/servicekey.pem
+sleep 1
+ln -s $CERT $DEPLOY_DIR/certs/servicecert.pem
+ln -s $KEY $DEPLOY_DIR/certs/servicekey.pem
+ln -s $PROXY $DEPLOY_DIR/certs/myproxy.pem
 #######################################################################
 
 echo "Activating environment"
-sleep 3
+sleep 2
 cd $DEPLOY_DIR
 source $DEPLOY_DIR/bin/activate
 echo "Installing T0 code"
