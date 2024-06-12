@@ -199,6 +199,11 @@ addRepackConfig(tier0Config, "L1ScoutingSelection",
                 dataTier="L1SCOUT",
                 versionOverride=repackVersionOverride)
 
+addRepackConfig(tier0Config, "L1Scouting",
+                proc_ver=1, # Should remain 1. Changing it can cause several issues.
+                dataTier="L1SCOUT",
+                versionOverride=repackVersionOverride)
+
 addDataset(tier0Config, "Default",
            do_reco=False,
            write_reco=False, write_aod=True, write_miniaod=True, write_nanoaod=True, write_dqm=False,
