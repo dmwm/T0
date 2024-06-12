@@ -40,7 +40,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 379070 - Cosmics 3.8T 2024 - 3h long - ALL components in
 # 378993 - 2024 13.6TeV Collisions run - 12b - 1h long - ALL components in
 
-setInjectRuns(tier0Config, [369998, 379070, 378993])
+setInjectRuns(tier0Config, [379070, 380128, 381549])
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
@@ -111,7 +111,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_6_patch1"
+    'default': "CMSSW_14_0_9"
 }
 
 # Configure ScramArch
@@ -141,7 +141,7 @@ alcarawProcVersion = dt
 
 # Defaults for GlobalTag
 expressGlobalTag = "140X_dataRun3_Express_v3"
-promptrecoGlobalTag = "140X_dataRun3_Prompt_v2"
+promptrecoGlobalTag = "140X_dataRun3_Prompt_v4"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -157,14 +157,15 @@ alcarawSplitting = 20000 * numberOfCores
 #
 # Setup repack and express mappings
 #
+
 repackVersionOverride = {
-    "CMSSW_12_6_3" : "CMSSW_12_6_4"
+    "CMSSW_14_0_7_HLTTest" : "CMSSW_14_0_9",
+    "CMSSW_14_0_7" : "CMSSW_14_0_9"
 }
-
 expressVersionOverride = {
-    "CMSSW_12_6_3" : "CMSSW_12_6_4"
+    "CMSSW_14_0_7_HLTTest" : "CMSSW_14_0_9",
+    "CMSSW_14_0_7" : "CMSSW_14_0_9"
 }
-
 # Additional Stream-Dataset mapping
 setExtraStreamDatasetMap(tier0Config,{
                                         "L1Scouting": {"Dataset":"L1Scouting"},
