@@ -14,8 +14,8 @@ then
     exit
 fi
 
-WMAGENT_TAG=2.3.4rc4
-TIER0_VERSION=3.2.0
+WMAGENT_TAG=2.3.4rc10
+TIER0_VERSION=3.2.1
 COUCH_TAG=3.2.2
 
 BASE_DIR=/data/tier0
@@ -37,11 +37,11 @@ cd $BASE_DIR
 
 echo "Removing deploy directory"
 sleep 3
-rm -rfv $DEPLOY_DIR
+rm -rf $DEPLOY_DIR
 
 echo "Clearing Specs directory"
 sleep 3
-rm -rfv $SPEC_DIR/*
+rm -rf $SPEC_DIR/*
 
 echo "Clearing Oracle Database"
 sleep 3
@@ -51,7 +51,7 @@ echo "Installing new wmagent"
 echo "WMAgent version $WMAGENT_TAG"
 sleep 3
 
-bash $BASE_DIR/deploy-wmagent-venv.sh -t $WMAGENT_TAG -d $DEPLOY_DIR -y -s
+bash $BASE_DIR/deploy-wmagent-venv.sh -t $WMAGENT_TAG -d $DEPLOY_DIR -y
 
 #######################################################################
 echo "Setting up secrets file"
@@ -139,30 +139,54 @@ manage execute-agent wmagent-resource-control --site-name=T2_CH_CERN_P5 --task-t
 
 echo "Modifying config file"
 sleep 3
+#####
 sed -i 's+TIER0_CONFIG_FILE+'"$CONFIGURATION_FILE"'+' "$config/config.py"
+#####
+sed -i "s+config.Agent.teamName = 'REPLACE_TEAM_NAME'+config.Agent.teamName = '"$TEAMNAME"'+" "$config/config.py"
+#####
+sed -i "s+config.Agent.contact = 'cms-comp-ops-workflow-team@cern.ch'+config.Agent.contact = 'cms-tier0-operations@cern.ch'+" "$config/config.py"
+#####
+sed -i "s+'team1,team2,cmsdataops'+'tier0production'+g" "$config/config.py"
+#####
+sed -i "s+config.RucioInjector.containerDiskRuleParams.*+config.RucioInjector.containerDiskRuleParams = {}+" "$config/config.py"
+#####
+echo "config.RucioInjector.blockRuleParams = {}" >> $config/config.py
+#####
+sed -i "s+config.RucioInjector.metaDIDProject.*+config.RucioInjector.metaDIDProject = 'Tier0'+" "$config/config.py"
+#####
+echo "config.RucioInjector.blockDeletionDelayHours = 168" >> $config/config.py
+#####
+##### NOT IN REPLAY #####
+echo "config.RucioInjector.blockDeletionDelayHours = 168" >> $config/config.py
+echo 'config.BossAir.pluginNames = ["SimpleCondorPlugin"]' >> $config/config.py
+echo 'config.JobAccountant.maxAllowedRepackOutputSize = 24 * 1024 * 1024 * 1024' >> $config/config.py
+echo "config.AgentStatusWatcher.runningExpressPercent = 25" >> $config/config.py
+echo "config.AgentStatusWatcher.runningRepackPercent = 10" >> $config/config.py
+echo 'config.TaskArchiver.archiveDelayHours = 2190' >> $config.py
+##### NOT IN REPLAY #####
+#####
+echo "config.DBS3Upload.datasetType = 'VALID'" >> $config/config.py
+#####
+echo "config.Tier0Feeder.serviceProxy = '$DEPLOY_DIR/certs/myproxy.pem'" >> $config/config.py
+#####
+echo 'config.TaskArchiver.dashBoardUrl = "http://dashb-luminosity.cern.ch/dashboard/request.py/putluminositydata"' >> $config/config.py
+#####
+sed -i "s+config.DBS3Upload.uploaderName = 'WMAgent'+config.DBS3Upload.uploaderName = 'T0Prod'+g" "$config/config.py"
+#####
+sed -i "s/config.ErrorHandler.maxFailTime.*/config.ErrorHandler.maxFailTime=601200/g" "$config/config.py"
+#####
 
-sed -i "s+config.Agent.contact = 'cms-comp-ops-workflow-team@cern.ch'+config.Agent.contact = 'cms-tier0-operations@cern.ch'+" $config/config.py
-sed -i "s+'team1,team2,cmsdataops'+'tier0production'+g" $config/config.py
-
-
-# Twiking Rucio configuration
-sed -i "s+config.RucioInjector.containerDiskRuleParams.*+config.RucioInjector.containerDiskRuleParams = {}+" $config/config.py
-sed -i "s+config.RucioInjector.metaDIDProject.*+config.RucioInjector.metaDIDProject = 'Tier0'+" $config/config.py
-
-sed -i "s+config.DBS3Upload.uploaderName = 'WMAgent'+config.DBS3Upload.uploaderName = 'T0Prod'+g" $config/config.py
 
 #
 # Enable AgentStatusWatcher - site status automatic updated
 #
-sed -i "s+config.AgentStatusWatcher.ignoreDisks.*+config.AgentStatusWatcher.ignoreDisks = [ '/cvmfs/cvmfs-config.cern.ch', '/cvmfs/cms.cern.ch', '/eos/cms', '/cvmfs/cms-ib.cern.ch', '/cvmfs/patatrack.cern.ch' ]+" $config/config.py
+sed -i "s+config.AgentStatusWatcher.ignoreDisks.*+config.AgentStatusWatcher.ignoreDisks = [ '/cvmfs/cvmfs-config.cern.ch', '/cvmfs/cms.cern.ch', '/eos/cms', '/cvmfs/cms-ib.cern.ch', '/cvmfs/patatrack.cern.ch' ]+" "$config/config.py"
 
-
-#Overwrite ErrorHandler to avoid jobs going to ensure T0 jobs can always be retried
-sed -i "s/config.ErrorHandler.maxFailTime.*/config.ErrorHandler.maxFailTime=601200/g" $config/config.py
 
 #
 # password for dropbox upload
 #
+
 
 DROPBOX_USER=`cat $WMA_SECRETS_FILE | grep DROPBOX_USER | sed s/DROPBOX_USER=//`
 DROPBOX_PASS=`cat $WMA_SECRETS_FILE | grep DROPBOX_PASS | sed s/DROPBOX_PASS=//`
