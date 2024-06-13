@@ -144,7 +144,7 @@ expressGlobalTag = {
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Express_v3"}
 }
 promptrecoGlobalTag = {
-    'default': "140X_dataRun3_Prompt_v2",
+    'default': "140X_dataRun3_Prompt_v4",
     #'acqEra': {'Run2023E': "132X_dataRun3_Prompt_v2"},
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Prompt_v2"}
 }
