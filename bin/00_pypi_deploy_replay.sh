@@ -14,7 +14,7 @@ then
     exit
 fi
 
-WMAGENT_TAG=2.3.4rc10
+WMAGENT_TAG=2.3.4rc11
 TIER0_VERSION=3.2.1
 COUCH_TAG=3.2.2
 
@@ -29,6 +29,7 @@ CERT=/data/certs/robot-cert-cmst0.pem
 KEY=/data/certs/robot-key-cmst0.pem
 PROXY=/data/certs/robot-proxy-vocms001.pem
 
+WMA_VENV_DEPLOY_SCRIPT=https://raw.githubusercontent.com/dmwm/WMCore/$WMAGENT_TAG/deploy/deploy-wmagent-venv.sh
 echo "Resetting couchdb for new deployment"
 sleep 3
 bash $BASE_DIR/00_reset_couch.sh -t $COUCH_TAG
@@ -37,11 +38,11 @@ cd $BASE_DIR
 
 echo "Removing deploy directory"
 sleep 3
-rm -rfv $DEPLOY_DIR
+rm -rf $DEPLOY_DIR
 
 echo "Clearing Specs directory"
 sleep 3
-rm -rfv $SPEC_DIR/*
+rm -rf $SPEC_DIR/*
 
 echo "Clearing Oracle Database"
 sleep 3
@@ -50,6 +51,11 @@ bash $BASE_DIR/00_wipe_t0ast.sh
 echo "Installing new wmagent"
 echo "WMAgent version $WMAGENT_TAG"
 sleep 3
+
+rm $BASE_DIR/deploy-wmagent-venv.sh
+wget $WMA_VENV_DEPLOY_SCRIPT -O $BASE_DIR/deploy-wmagent-venv.sh
+sed -i 's|\$WMA_CERTS_DIR/myproxy.pem|\$WMA_CERTS_DIR/robot-proxy-vocms001.pem|g' $BASE_DIR/deploy-wmagent-venv.sh
+#bash $BASE_DIR/deploy-wmagent-venv.sh -t $WMAGENT_TAG -d $DEPLOY_DIR -y -s
 
 bash $BASE_DIR/deploy-wmagent-venv.sh -t $WMAGENT_TAG -d $DEPLOY_DIR -y
 
@@ -60,6 +66,7 @@ ln -s $WMAGENT_SECRETS $DEPLOY_DIR/admin/wmagent/WMAgent.secrets
 
 echo "Setting up certificate and key"
 sleep 1
+rm $DEPLOY_DIR/certs/*
 ln -s $CERT $DEPLOY_DIR/certs/servicecert.pem
 ln -s $KEY $DEPLOY_DIR/certs/servicekey.pem
 ln -s $PROXY $DEPLOY_DIR/certs/myproxy.pem

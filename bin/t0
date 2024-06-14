@@ -106,19 +106,19 @@ def main(argv=None):
             if option in ("-h", "--help"):
                 raise Usage(help_message)
             
-            if option == "update-t0":
+            if option == "--update-t0":
                 updateT0()
 
-            if option == "update-wmcore":
+            if option == "--update-wmcore":
                 updateWMCore()
 
-            if option == "start-agent":
+            if option == "--start-agent":
                 start()
 
-            if option == "stop-agent":
+            if option == "--stop-agent":
                 stop()
 
-            if option == "clear-deployment":
+            if option == "--clear-deployment":
                 os.system('echo "This will clear T0AST database"')
                 os.system('sleep 3')
                 os.system('echo "This will remove /data/tier0/admin/Specs"')
