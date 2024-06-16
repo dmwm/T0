@@ -16,6 +16,7 @@ fi
 
 WMAGENT_TAG=2.3.4rc11
 TIER0_VERSION=3.2.2
+
 COUCH_TAG=3.2.2
 
 BASE_DIR=/data/tier0
@@ -34,15 +35,18 @@ echo "Resetting couchdb for new deployment"
 sleep 3
 bash $BASE_DIR/00_pypi_reset_couch.sh -t $COUCH_TAG
 
+
 cd $BASE_DIR
 
 echo "Removing deploy directory"
 sleep 3
+
 rm -rf $DEPLOY_DIR
 
 echo "Clearing Specs directory"
 sleep 3
 rm -rf $SPEC_DIR/*
+
 
 echo "Clearing Oracle Database"
 sleep 3
@@ -59,6 +63,7 @@ sed -i 's|\$WMA_CERTS_DIR/myproxy.pem|\$WMA_CERTS_DIR/robot-proxy-vocms001.pem|g
 
 bash $BASE_DIR/deploy-wmagent-venv.sh -t $WMAGENT_TAG -d $DEPLOY_DIR -y
 
+
 #######################################################################
 echo "Setting up secrets file"
 sleep 1
@@ -66,7 +71,9 @@ ln -s $WMAGENT_SECRETS $DEPLOY_DIR/admin/wmagent/WMAgent.secrets
 
 echo "Setting up certificate and key"
 sleep 1
+
 rm $DEPLOY_DIR/certs/*
+
 ln -s $CERT $DEPLOY_DIR/certs/servicecert.pem
 ln -s $KEY $DEPLOY_DIR/certs/servicekey.pem
 ln -s $PROXY $DEPLOY_DIR/certs/myproxy.pem
@@ -86,7 +93,6 @@ chmod +x $DEPLOY_DIR/bin/t0
 echo "Applying patches"
 bash $BASE_DIR/00_pypi_patches.sh
 
-
 echo "Now creating important T0 related environment variables"
 sleep 2
 echo "WMCORE_CACHE_DIR=/tmp/cmst0"
@@ -105,6 +111,7 @@ sleep 1
 echo "variables created successfully"
 sleep 1
 
+
 ###########################
 
 echo "Now initializing"
@@ -113,6 +120,7 @@ bash $DEPLOY_DIR/init.sh
 
 echo "Now populating resource control"
 sleep 3
+
 bash $DEPLOY_DIR/bin/00_pypi_resource_control.sh
 
 echo "Modifying config file"
@@ -166,7 +174,6 @@ sed -i "s/config.ErrorHandler.maxRetries.*/config.ErrorHandler.maxRetries={'defa
 #
 sed -i "s+config.AgentStatusWatcher.ignoreDisks.*+config.AgentStatusWatcher.ignoreDisks = [ '/cvmfs/cvmfs-config.cern.ch', '/cvmfs/cms.cern.ch', '/eos/cms', '/cvmfs/cms-ib.cern.ch', '/cvmfs/patatrack.cern.ch' ]+" "$config/config.py"
 
-
 #
 # password for dropbox upload
 #
@@ -188,6 +195,7 @@ echo "You are now in the WMAgent environment"
 
 sleep 1
 echo "Deployment finished"
+
 
 cd $BASE_DIR
 

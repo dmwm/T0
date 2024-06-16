@@ -56,6 +56,7 @@ def resetCouch ():
     """
     os.system('bash /data/tier0/00_pypi_reset_couch.sh')
 
+
 def wipeT0ast (userInput='n'):
     """
     _wipeT0ast_
@@ -96,6 +97,7 @@ def addProcessingSite(site=None):
     """
     command_1 = "manage execute-agent wmagent-resource-control --site-name={} --cms-name={} --pnn={} --ce-name={} --pending-slots=20000 --running-slots=20000 --plugin=SimpleCondorPlugin".format(site, site, site, site)
     command_2 = "manage execute-agent wmagent-resource-control --site-name={} --task-type=Processing --pending-slots=10000 --running-slots=10000".format(site)
+
 def main(argv=None):
     if argv is None:
         argv = sys.argv
@@ -103,7 +105,9 @@ def main(argv=None):
     try:
         try:
             opts, args = getopt.getopt(argv[1:], "h",
+
             ["help", "update-t0", "update-wmcore", "start-agent", "stop-agent", "clear-deployment", "resource-control" ])
+
 
         except getopt.error as msg:
             raise Usage(msg)
@@ -113,6 +117,7 @@ def main(argv=None):
             if option in ("-h", "--help"):
                 raise Usage(help_message)
             
+
             if option == "--update-t0":
                 updateT0()
 
@@ -126,6 +131,7 @@ def main(argv=None):
                 stop()
 
             if option == "--clear-deployment":
+
                 os.system('echo "This will clear T0AST database"')
                 os.system('sleep 3')
                 os.system('echo "This will remove /data/tier0/admin/Specs"')
@@ -139,6 +145,7 @@ def main(argv=None):
             if option == "--resource-control":
                 site = value
                 addProcessingSite(site)
+
 
     except Usage as err:
         print(sys.argv[0].split("/")[-1] + ": " + str(err.msg), file=sys.stderr)
