@@ -15,6 +15,7 @@ Tier0Configuration - Global configuration object
 | | |        |                                    SITE,SUBSITE,STORAGE_SITE,VOLUME,PROTOCOL
 | | |        |
 | | |        |--> SiteLocalConfig - Path to this site's site local config file
+| | |        |--> SiteLocalRucioConfig - Path to this site's local Rucio storage json file
 | | |
 | | |--> Global - Configuration parameters that do not belong to a particular
 | |       |       stream or dataset and can be applied to an entire run.
@@ -750,6 +751,16 @@ def setSiteLocalConfig(config, siteLocalConfig):
     config.Global.siteLocalConfig = siteLocalConfig
     return
 
+def setSiteLocalRucioConfig(config, siteLocalRucioConfig):
+    """
+    _setSiteLocalRucioConfig_
+
+    Set the site local Rucio config file to use in case override is necessary.
+    """
+    config.Global.siteLocalRucioConfig = siteLocalRucioConfig
+    return
+
+
 def setBulkDataType(config, type):
     """
     _setBulkDataType_
@@ -1080,6 +1091,12 @@ def addSiteConfig(config, siteName, **options):
         siteConfig.SiteLocalConfig = options.get("siteLocalConfig", siteConfig.SiteLocalConfig)
     else:
         siteConfig.SiteLocalConfig = options.get("siteLocalConfig", "/cvmfs/cms.cern.ch/SITECONF/local/JobConfig/site-local-config.xml")
+
+    if hasattr(siteConfig, "SiteLocalRucioConfig"):
+        siteConfig.SiteLocalRucioConfig = options.get("siteLocalRucioConfig", siteConfig.SiteLocalRucioConfig)
+    else:
+        siteConfig.SiteLocalRucioConfig = options.get("siteLocalRucioConfig", "/cvmfs/cms.cern.ch/SITECONF/local/storage.json")
+
 
     return
 
