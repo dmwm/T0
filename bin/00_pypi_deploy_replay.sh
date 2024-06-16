@@ -80,6 +80,13 @@ echo "Installing T0 code"
 sleep 3
 pip install T0==$TIER0_VERSION
 
+chmod +x $DEPLOY_DIR/bin/00*
+chmod +x $DEPLOY_DIR/bin/t0
+
+echo "Applying patches"
+bash $BASE_DIR/00_pypi_patches.sh
+
+
 echo "Now creating important T0 related environment variables"
 sleep 2
 echo "WMCORE_CACHE_DIR=/tmp/cmst0"
@@ -97,8 +104,6 @@ _WMCoreVenvSet ${!WMCoreVenvVars[@]}
 sleep 1
 echo "variables created successfully"
 sleep 1
-
-cp $BASE_DIR/Tier0Config.py $DEPLOY_DIR/etc/Tier0Config.py
 
 ###########################
 
@@ -183,3 +188,6 @@ echo "You are now in the WMAgent environment"
 
 sleep 1
 echo "Deployment finished"
+
+cd $BASE_DIR
+
