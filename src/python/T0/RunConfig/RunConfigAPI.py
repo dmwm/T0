@@ -1136,6 +1136,7 @@ def setStorageSite(tier0Config, wmSpec, storagesite):
     """
     site = retrieveSiteConfig(tier0Config, storagesite)
     wmSpec.setTaskEnvironmentVariables({'WMAGENT_SITE_CONFIG_OVERRIDE':site.SiteLocalConfig})
+    wmSpec.setTaskEnvironmentVariables({'WMAGENT_RUCIO_CATALOG_OVERRIDE':site.SiteLocalRucioConfig})
     setWMSpecOverrideCatalog(wmSpec, site)
     for task in wmSpec.getAllTasks():
         for stepName in task.listAllStepNames():

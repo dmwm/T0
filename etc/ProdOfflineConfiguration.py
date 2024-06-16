@@ -49,7 +49,8 @@ streamerPNN = "T0_CH_CERN_Disk"
 
 addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
                 siteLocalConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/JobConfig/site-local-config.xml",
-                overrideCatalog="T2_CH_CERN,,T0_CH_CERN,CERN_EOS_T0,XRootD"
+                overrideCatalog="T2_CH_CERN,,T0_CH_CERN,CERN_EOS_T0,XRootD",
+                siteLocalRucioConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/storage.json",
                 )
 
 # Set global parameters:
@@ -59,7 +60,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2024D")
+setAcquisitionEra(tier0Config, "Run2024E")
 setEmulationAcquisitionEra(tier0Config, "Emulation2024")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
@@ -100,8 +101,8 @@ setPromptCalibrationConfig(tier0Config,
 # maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_6_patch1",
-    #'acqEra': {'Run2024B': "CMSSW_14_0_4"}
+    'default': "CMSSW_14_0_7",
+    'acqEra': {'Run2024D': "CMSSW_14_0_6_patch1"}
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
 
@@ -1253,7 +1254,7 @@ for dataset in DATASETS:
                                "HcalCalIsolatedBunchSelector"],
                physics_skims=["LogError", "LogErrorMonitor"],
                siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN"],
-               timePerEvent=3.5,
+               timePerEvent=1,
                sizePerEvent=1500,
                tape_node="T1_ES_PIC_MSS",
                disk_node="T1_ES_PIC_Disk",
@@ -1282,12 +1283,7 @@ for dataset in DATASETS:
 ### Parking and Scouting PDs                         ###
 ########################################################
 
-DATASETS = ["L1Scouting"]
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=False)
-
-DATASETS = ["L1ScoutingSelection"]
+DATASETS = ["L1Scouting","L1ScoutingSelection"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False)

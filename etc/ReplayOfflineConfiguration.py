@@ -36,11 +36,10 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-# 369998 - Collisions 2023 - 1800b - 1h long - ALL components in
 # 379070 - Cosmics 3.8T 2024 - 3h long - ALL components in
-# 378993 - 2024 13.6TeV Collisions run - 12b - 1h long - ALL components in
+# 380128 - 2024 13.6 TeV Collision run - 2340b - 2.5h long - ALL components in
 
-setInjectRuns(tier0Config, [369998, 379070, 378993])
+setInjectRuns(tier0Config, [379070, 380128])
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
@@ -52,7 +51,8 @@ streamerPNN = "T0_CH_CERN_Disk"
 
 addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
                 siteLocalConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/JobConfig/site-local-config.xml",
-                overrideCatalog="T2_CH_CERN,,T0_CH_CERN,CERN_EOS_T0,XRootD"
+                overrideCatalog="T2_CH_CERN,,T0_CH_CERN,CERN_EOS_T0,XRootD",
+                siteLocalRucioConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/storage.json",
                 )
 
 addSiteConfig(tier0Config, "EOS_PILOT",
@@ -110,7 +110,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_6_patch1"
+    'default': "CMSSW_14_0_8"
 }
 
 # Configure ScramArch
