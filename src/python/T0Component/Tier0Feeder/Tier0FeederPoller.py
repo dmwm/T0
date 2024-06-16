@@ -35,6 +35,7 @@ from T0.RunConfig.Tier0Config import setDeploymentId
 class Tier0FeederPoller(BaseWorkerThread):
 
     def __init__(self, config):
+        logging.info("This is a DUMMY patch for testing purposes")
         """
         _init_
 
