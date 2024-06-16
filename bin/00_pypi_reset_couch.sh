@@ -21,9 +21,9 @@ fi
 
 echo "Running new couch container"
 if [ -z "$COUCH_TAG" ]; then
-    bash $COUCH_DIR/couchdb-docker-run.sh
+    bash $COUCH_DIR/couchdb-docker-run.sh -p
 else
-    bash $COUCH_DIR/couchdb-docker-run.sh -t $COUCH_TAG
+    bash $COUCH_DIR/couchdb-docker-run.sh -t $COUCH_TAG -p
 fi
 
 
