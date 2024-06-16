@@ -15,7 +15,7 @@ then
 fi
 
 WMAGENT_TAG=2.3.4rc11
-TIER0_VERSION=3.2.1
+TIER0_VERSION=3.2.2
 COUCH_TAG=3.2.2
 
 BASE_DIR=/data/tier0
@@ -32,7 +32,7 @@ PROXY=/data/certs/robot-proxy-vocms001.pem
 WMA_VENV_DEPLOY_SCRIPT=https://raw.githubusercontent.com/dmwm/WMCore/$WMAGENT_TAG/deploy/deploy-wmagent-venv.sh
 echo "Resetting couchdb for new deployment"
 sleep 3
-bash $BASE_DIR/00_reset_couch.sh -t $COUCH_TAG
+bash $BASE_DIR/00_pypi_reset_couch.sh -t $COUCH_TAG
 
 cd $BASE_DIR
 

@@ -32,7 +32,7 @@ PROXY=/data/certs/robot-proxy-vocms001.pem
 WMA_VENV_DEPLOY_SCRIPT=https://raw.githubusercontent.com/dmwm/WMCore/$WMAGENT_TAG/deploy/deploy-wmagent-venv.sh
 echo "Resetting couchdb for new deployment"
 sleep 3
-bash $BASE_DIR/00_reset_couch.sh -t $COUCH_TAG
+bash $BASE_DIR/00_pypi_reset_couch.sh -t $COUCH_TAG
 
 cd $BASE_DIR
 
@@ -99,13 +99,6 @@ _WMCoreVenvSet ${!WMCoreVenvVars[@]}
 sleep 1
 echo "variables created successfully"
 sleep 1
-
-#export install=$CURRENT_DIR/install
-#export config=$CURRENT_DIR/config
-#export manage=manage
-
-#echo "activating additional environment variables"
-#source $WMA_ENV_FILE
 
 cp $BASE_DIR/Tier0Config.py $DEPLOY_DIR/etc/Tier0Config.py
 
