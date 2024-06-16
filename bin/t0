@@ -54,7 +54,7 @@ def resetCouch ():
     _resetCouch_
     Cleans couchdb relevant directories and starts a new container
     """
-    os.system('bash /data/tier0/00_reset_couch.sh')
+    os.system('bash /data/tier0/00_pypi_reset_couch.sh')
 
 def wipeT0ast (userInput='n'):
     """
