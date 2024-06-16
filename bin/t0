@@ -89,6 +89,13 @@ def init ():
     """
     os.system('bash $WMA_DEPLOY_DIR/init.sh')
 
+def addProcessingSite(site=None):
+    """
+    _resourceControl_
+    Adds site to the resource control
+    """
+    command_1 = "manage execute-agent wmagent-resource-control --site-name={} --cms-name={} --pnn={} --ce-name={} --pending-slots=20000 --running-slots=20000 --plugin=SimpleCondorPlugin".format(site, site, site, site)
+    command_2 = "manage execute-agent wmagent-resource-control --site-name={} --task-type=Processing --pending-slots=10000 --running-slots=10000".format(site)
 def main(argv=None):
     if argv is None:
         argv = sys.argv
@@ -96,7 +103,7 @@ def main(argv=None):
     try:
         try:
             opts, args = getopt.getopt(argv[1:], "h",
-            ["help", "update-t0", "update-wmcore", "start-agent", "stop-agent", "clear-deployment" ])
+            ["help", "update-t0", "update-wmcore", "start-agent", "stop-agent", "clear-deployment", "resource-control" ])
 
         except getopt.error as msg:
             raise Usage(msg)
@@ -128,6 +135,10 @@ def main(argv=None):
                 os.system('echo "Are you sure you wish to proceed? (Y/n)"')
                 userInput = input()
                 clearDeployment(userInput=userInput)
+
+            if option == "--resource-control":
+                site = value
+                addProcessingSite(site)
 
     except Usage as err:
         print(sys.argv[0].split("/")[-1] + ": " + str(err.msg), file=sys.stderr)
