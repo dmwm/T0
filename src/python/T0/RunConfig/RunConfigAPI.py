@@ -52,6 +52,47 @@ def extractConfigParameter(configParameter, era, run):
         return configParameter['default']
     else:
         return configParameter
+    
+def parseHLTConfig(run,hltConfig):
+    """
+    _parseHLTConfig_
+    
+    Uses HLT configuration to create stream/dataset/trigger mapping. 
+    The mapping is returned in the form of binds to be written into T0AST
+    
+    """
+    bindsStream = []
+    bindsDataset = []
+    bindsStreamDataset = []
+    bindsTrigger = []
+    bindsDatasetTrigger = []
+    for stream, datasetDict in list(hltConfig['mapping'].items()):
+        bindsStream.append( { 'STREAM' : stream } )
+        for dataset, paths in list(datasetDict.items()):
+
+            if dataset == "Unassigned path":
+
+                if run < 317512:
+                    pass
+                else:
+                    raise RuntimeError("Problem in parseHLTConfig() : Unassigned path in HLT menu !")
+
+            else:
+                bindsDataset.append( { 'PRIMDS' : dataset } )
+                bindsStreamDataset.append( { 'RUN' : run,
+                                                'PRIMDS' : dataset,
+                                                'STREAM' : stream } )
+                for path in paths:
+                    bindsTrigger.append( { 'TRIG' : path } )
+                    bindsDatasetTrigger.append( { 'RUN' : run,
+                                                    'TRIG' : path,
+                                                    'PRIMDS' : dataset } )
+    bindsCombination={ "Stream":bindsStream,
+                      "Dataset":bindsDataset,
+                      "StreamDataset":bindsStreamDataset,
+                      "Trigger":bindsTrigger,
+                      "DatasetTrigger":bindsDatasetTrigger }
+    return bindsCombination
 
 def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
     """
@@ -86,12 +127,10 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
     # treat centralDAQ or miniDAQ runs (have an HLT key) different from local runs
     if hltConfig != None:
 
-        # write stream/dataset/trigger mapping
-        insertStreamDAO = daoFactory(classname = "RunConfig.InsertStream")
-        insertDatasetDAO = daoFactory(classname = "RunConfig.InsertPrimaryDataset")
-        insertStreamDatasetDAO = daoFactory(classname = "RunConfig.InsertStreamDataset")
-        insertTriggerDAO = daoFactory(classname = "RunConfig.InsertTrigger")
-        insertDatasetTriggerDAO = daoFactory(classname = "RunConfig.InsertDatasetTrigger")
+        # Create DAOs to insert stream/dataset/trigger mapping
+        insertDAO={}
+        for mapping in ['Stream','Dataset','StreamDataset','Trigger','DatasetTrigger']:
+            insertDAO[mapping] = daoFactory(classname = f"RunConfig.Insert{mapping}")
 
         # partition AlcaHarvest upload by year
         if tier0Config.Global.AlcaHarvestCondLFNBase:
@@ -119,42 +158,13 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         else:
             bindsUpdateRun['ACQERA'] = tier0Config.Global.AcquisitionEra
 
-        bindsStream = []
-        bindsDataset = []
-        bindsStreamDataset = []
-        bindsTrigger = []
-        bindsDatasetTrigger = []
-
-        for stream, datasetDict in list(hltConfig['mapping'].items()):
-            bindsStream.append( { 'STREAM' : stream } )
-            for dataset, paths in list(datasetDict.items()):
-
-                if dataset == "Unassigned path":
-
-                    if run < 317512:
-                        pass
-                    else:
-                        raise RuntimeError("Problem in configureRun() : Unassigned path in HLT menu !")
-
-                else:
-                    bindsDataset.append( { 'PRIMDS' : dataset } )
-                    bindsStreamDataset.append( { 'RUN' : run,
-                                                 'PRIMDS' : dataset,
-                                                 'STREAM' : stream } )
-                    for path in paths:
-                        bindsTrigger.append( { 'TRIG' : path } )
-                        bindsDatasetTrigger.append( { 'RUN' : run,
-                                                      'TRIG' : path,
-                                                      'PRIMDS' : dataset } )
+        bindsCombination=parseHLTConfig(run,hltConfig)
 
         try:
             myThread.transaction.begin()
             updateRunDAO.execute(bindsUpdateRun, conn = myThread.transaction.conn, transaction = True)
-            insertStreamDAO.execute(bindsStream, conn = myThread.transaction.conn, transaction = True)
-            insertDatasetDAO.execute(bindsDataset, conn = myThread.transaction.conn, transaction = True)
-            insertStreamDatasetDAO.execute(bindsStreamDataset, conn = myThread.transaction.conn, transaction = True)
-            insertTriggerDAO.execute(bindsTrigger, conn = myThread.transaction.conn, transaction = True)
-            insertDatasetTriggerDAO.execute(bindsDatasetTrigger, conn = myThread.transaction.conn, transaction = True)
+            for mapping in ['Stream','Dataset','StreamDataset','Trigger','DatasetTrigger']:
+                insertDAO[mapping].execute(bindsCombination[mapping], conn = myThread.transaction.conn, transaction = True)
         except Exception as ex:
             logging.exception(ex)
             myThread.transaction.rollback()
@@ -186,6 +196,57 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
             myThread.transaction.commit()
 
     return
+
+def getCustodialSite(datasetConfig,bindsStorageNode,isExpress=True):
+    """
+     _configureRunStream_
+     
+     Subfunction of configureRunStream.
+     
+     return custodialSites, nonCustodialSites and appended bindsStorage of streamConfig.Express or datasetConfig.
+
+    """
+    custodialSites = []
+    nonCustodialSites = []
+    if datasetConfig.ArchivalNode:
+        bindsStorageNode.append( { 'NODE' : datasetConfig.ArchivalNode } )
+        custodialSites.append(datasetConfig.ArchivalNode)
+    if datasetConfig.TapeNode:
+        bindsStorageNode.append( { 'NODE' : datasetConfig.TapeNode } )
+        custodialSites.append(datasetConfig.TapeNode)
+        if not isExpress:
+            if datasetConfig.RAWTapeNode:
+                bindsStorageNode.append( { 'NODE' : datasetConfig.RAWTapeNode } ) ## duplicated?
+                custodialSites.append(datasetConfig.RAWTapeNode)
+            else:
+                custodialSites.append(datasetConfig.TapeNode)
+        else:
+            custodialSites.append(datasetConfig.TapeNode)
+    if datasetConfig.DiskNode:
+        bindsStorageNode.append( { 'NODE' : datasetConfig.DiskNode } )
+        nonCustodialSites.append(datasetConfig.DiskNode)
+        if not isExpress:
+            if datasetConfig.RAWtoDisk:
+                nonCustodialSites.append(datasetConfig.DiskNode)
+        else:
+            nonCustodialSites.append(datasetConfig.DiskNode)
+    if not isExpress:
+        if datasetConfig.DiskNodeReco:
+            bindsStorageNode.append( { 'NODE' : datasetConfig.DiskNodeReco } )
+            
+    return custodialSites,nonCustodialSites,bindsStorageNode
+
+def joinComma(skims):
+    """
+    _joinComma_
+    
+    Simple function to join list with comma to string else return None.
+    
+    """
+    if len(skims)> 0:
+        return ",".join(skims)
+    else:
+        return None
 
 def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
     """
@@ -346,17 +407,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                             'DISK_NODE' :  streamConfig.Express.DiskNode,
                                             'DISK_NODE_RECO' : None } )
 
-                custodialSites = []
-                nonCustodialSites = []
-                if streamConfig.Express.ArchivalNode:
-                    bindsStorageNode.append( { 'NODE' : streamConfig.Express.ArchivalNode } )
-                    custodialSites.append(streamConfig.Express.ArchivalNode)
-                if streamConfig.Express.TapeNode:
-                    bindsStorageNode.append( { 'NODE' : streamConfig.Express.TapeNode } )
-                    custodialSites.append(streamConfig.Express.TapeNode)
-                if streamConfig.Express.DiskNode:
-                    bindsStorageNode.append( { 'NODE' : streamConfig.Express.DiskNode } )
-                    nonCustodialSites.append(streamConfig.Express.DiskNode)
+                custodialSites, nonCustodialSites, bindsStorageNode = getCustodialSite(streamConfig.Express,bindsStorageNode,isExpress=True)
 
                 if len(custodialSites) > 0 or len(nonCustodialSites) > 0:
                     subscriptions.append( { 'custodialSites' : custodialSites,
@@ -366,12 +417,11 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                             'deleteFromSource' : True,
                                             'datasetLifetime' : streamConfig.Express.datasetLifetime } )
 
-            alcaSkim = None
+            alcaSkim = joinComma(streamConfig.Express.AlcaSkims)
             if len(streamConfig.Express.AlcaSkims) > 0:
                 outputModuleDetails.append( { 'dataTier' : "ALCARECO",
                                               'eventContent' : "ALCARECO",
                                               'primaryDataset' : specialDataset } )
-                alcaSkim = ",".join(streamConfig.Express.AlcaSkims)
 
                 numPromptCalibProd = 0
                 for producer in streamConfig.Express.AlcaSkims:
@@ -383,9 +433,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                                'STREAM' : stream,
                                                'NUM_PRODUCER' : numPromptCalibProd }
 
-            dqmSeq = None
-            if len(streamConfig.Express.DqmSequences) > 0:
-                dqmSeq = ",".join(streamConfig.Express.DqmSequences)
+            dqmSeq = joinComma(streamConfig.Express.DqmSequences)
 
             streamConfig.Express.CMSSWVersion = streamConfig.VersionOverride.get(onlineVersion, onlineVersion)
 
@@ -409,9 +457,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             streamConfig.Express.GlobalTag = extractConfigParameter(streamConfig.Express.GlobalTag, runInfo['acq_era'], run)
             streamConfig.Express.ProcessingVersion = extractConfigParameter(streamConfig.Express.ProcessingVersion, runInfo['acq_era'], run)
 
-            write_tiers = ','.join(streamConfig.Express.DataTiers)
-            if not write_tiers:
-                write_tiers = None
+            write_tiers = joinComma(streamConfig.Express.DataTiers)
 
             bindsExpressConfig = { 'RUN' : run,
                                    'STREAM' : stream,
@@ -465,24 +511,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                                 'DISK_NODE' : datasetConfig.DiskNode,
                                                 'DISK_NODE_RECO' : datasetConfig.DiskNodeReco } )
 
-                custodialSites = []
-                nonCustodialSites = []
-                if datasetConfig.ArchivalNode:
-                    bindsStorageNode.append( { 'NODE' : datasetConfig.ArchivalNode } )
-                    custodialSites.append(datasetConfig.ArchivalNode)
-                if datasetConfig.TapeNode:
-                    bindsStorageNode.append( { 'NODE' : datasetConfig.TapeNode } )
-                    if datasetConfig.RAWTapeNode:
-                        bindsStorageNode.append( { 'NODE' : datasetConfig.RAWTapeNode } )
-                        custodialSites.append(datasetConfig.RAWTapeNode)
-                    else:
-                        custodialSites.append(datasetConfig.TapeNode)
-                if datasetConfig.DiskNode:
-                    bindsStorageNode.append( { 'NODE' : datasetConfig.DiskNode } )
-                    if datasetConfig.RAWtoDisk:
-                        nonCustodialSites.append(datasetConfig.DiskNode)
-                if datasetConfig.DiskNodeReco:
-                    bindsStorageNode.append( { 'NODE' : datasetConfig.DiskNodeReco } )
+                custodialSites, nonCustodialSites, bindsStorageNode = getCustodialSite(datasetConfig,bindsStorageNode,isExpress=False)
 
                 if len(custodialSites) > 0 or len(nonCustodialSites) > 0:
                     subscriptions.append( { 'custodialSites' : custodialSites,
@@ -523,15 +552,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                                 'DISK_NODE' : streamConfig.Express.DiskNode,
                                                 'DISK_NODE_RECO' : None } )
 
-                    custodialSites = []
-                    nonCustodialSites = []
-                    if streamConfig.Express.ArchivalNode:
-                        custodialSites.append(streamConfig.Express.ArchivalNode)
-                    if streamConfig.Express.TapeNode:
-                        custodialSites.append(streamConfig.Express.TapeNode)
-                    if streamConfig.Express.DiskNode:
-                        nonCustodialSites.append(streamConfig.Express.DiskNode)
-
+                    custodialSites, nonCustodialSites, __dummy = getCustodialSite(streamConfig.Express,bindsStorageNode,isExpress=True)
+                    
                     if len(custodialSites) > 0 or len(nonCustodialSites) > 0:
                         subscriptions.append( { 'custodialSites' : custodialSites,
                                                 'nonCustodialSites' : nonCustodialSites,
@@ -544,6 +566,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         # finally create WMSpec
         #
         outputs = {}
+        specArguments = {}
+        
         if streamConfig.ProcessingStyle == "Bulk":
 
             taskName = "Repack"
@@ -553,44 +577,13 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                     tier0Config.Global.AcquisitionEra, tier0Config.Global.DeploymentID, streamConfig.Repack.ProcessingVersion)
             else:
                 workflowName = "Repack_Run%d_Stream%s" % (run, stream)
-
-            specArguments = {}
-
-            specArguments['Memory'] = streamConfig.Repack.MaxMemory
-            specArguments['Requestor'] = "Tier0"
-            specArguments['RequestName'] = workflowName
-            specArguments['RequestString'] = workflowName
-            specArguments['RequestorDN'] = "Tier0"
-            specArguments['RequestDate'] = []
-            specArguments['RequestTransition'] = []
-            specArguments['RequestStatus'] = REQUEST_START_STATE
+            
+            specArguments = getRepackSpecArguments(streamConfig.Repack,workflowName,runInfo)
+            
+            specArguments['Outputs'] = outputModuleDetails
+            specArguments['RunNumber'] = run
+            
             specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority + 5000
-            specArguments['PriorityTransition'] = []
-
-            specArguments['CMSSWVersion'] = streamConfig.Repack.CMSSWVersion
-            specArguments['ScramArch'] = streamConfig.Repack.ScramArch
-            specArguments['ProcessingVersion'] = streamConfig.Repack.ProcessingVersion
-
-            specArguments['MaxSizeSingleLumi'] = streamConfig.Repack.MaxSizeSingleLumi
-            specArguments['MaxSizeMultiLumi'] = streamConfig.Repack.MaxSizeMultiLumi
-            specArguments['MinInputSize'] = streamConfig.Repack.MinInputSize
-            specArguments['MaxInputSize'] = streamConfig.Repack.MaxInputSize
-            specArguments['MaxEdmSize'] = streamConfig.Repack.MaxEdmSize
-            specArguments['MaxOverSize'] = streamConfig.Repack.MaxOverSize
-            specArguments['MaxInputEvents'] = streamConfig.Repack.MaxInputEvents
-            specArguments['MaxInputFiles'] = streamConfig.Repack.MaxInputFiles
-            specArguments['MaxLatency'] = streamConfig.Repack.MaxLatency
-
-            # parameters for repack direct to merge stageout
-            specArguments['MinMergeSize'] = streamConfig.Repack.MinInputSize
-            specArguments['MaxMergeEvents'] = streamConfig.Repack.MaxInputEvents
-
-            specArguments['UnmergedLFNBase'] = "/store/unmerged/%s" % runInfo['bulk_data_type']
-            if runInfo['backfill']:
-                specArguments['MergedLFNBase'] = "/store/backfill/%s/%s" % (runInfo['backfill'],
-                                                                            runInfo['bulk_data_type'])
-            else:
-                specArguments['MergedLFNBase'] = "/store/%s" % runInfo['bulk_data_type']
 
             blockCloseDelay = streamConfig.Repack.BlockCloseDelay
 
@@ -604,71 +597,21 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             else:
                 workflowName = "Express_Run%d_Stream%s" % (run, stream)
 
-            specArguments = {}
-
-            specArguments['TimePerEvent'] = streamConfig.Express.TimePerEvent
-            specArguments['SizePerEvent'] = streamConfig.Express.SizePerEvent
-
-            specArguments['Memory'] = streamConfig.Express.MaxMemoryperCore
-            if streamConfig.Express.Multicore:
-                specArguments['Multicore'] = streamConfig.Express.Multicore
-                specArguments['Memory'] += (streamConfig.Express.Multicore - 1) * streamConfig.Express.MaxMemoryperCore
-
-            specArguments['Requestor'] = "Tier0"
-            specArguments['RequestName'] = workflowName
-            specArguments['RequestString'] = workflowName
-            specArguments['RequestorDN'] = "Tier0"
-            specArguments['RequestDate'] = []
-            specArguments['RequestTransition'] = []
-            specArguments['RequestStatus'] = REQUEST_START_STATE
+            specArguments = getExpressSpecArguments(streamConfig.Express,workflowName,runInfo)
+            
+            specArguments['Outputs'] = outputModuleDetails
+            specArguments['RunNumber'] = run
+            
             specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority + 10000
-            specArguments['PriorityTransition'] = []
 
-            specArguments['ProcessingString'] = "Express"
-            specArguments['ProcessingVersion'] = streamConfig.Express.ProcessingVersion
-            specArguments['Scenario'] = streamConfig.Express.Scenario
-
-            specArguments['CMSSWVersion'] = streamConfig.Express.CMSSWVersion
-            specArguments['ScramArch'] = streamConfig.Express.ScramArch
-            specArguments['RecoCMSSWVersion'] = streamConfig.Express.RecoCMSSWVersion
-            specArguments['RecoScramArch'] = streamConfig.Express.RecoScramArch
-
-            specArguments['GlobalTag'] = streamConfig.Express.GlobalTag
             specArguments['GlobalTagTransaction'] = "Express_%d" % run
-            specArguments['GlobalTagConnect'] = streamConfig.Express.GlobalTagConnect
-
-            specArguments['MaxInputRate'] = streamConfig.Express.MaxInputRate
-            specArguments['MaxInputEvents'] = streamConfig.Express.MaxInputEvents
-            specArguments['MaxInputSize'] = streamConfig.Express.MaxInputSize
-            specArguments['MaxInputFiles'] = streamConfig.Express.MaxInputFiles
-            specArguments['MaxLatency'] = streamConfig.Express.MaxLatency
-            specArguments['AlcaSkims'] = streamConfig.Express.AlcaSkims
-            specArguments['DQMSequences'] = streamConfig.Express.DqmSequences
-            specArguments['AlcaHarvestTimeout'] = runInfo['ah_timeout']
-            specArguments['AlcaHarvestCondLFNBase'] = runInfo['ah_cond_lfnbase']
-            specArguments['AlcaHarvestLumiURL'] = runInfo['ah_lumi_url']
+            
             specArguments['DQMUploadProxy'] = dqmUploadProxy
-            specArguments['DQMUploadUrl'] = runInfo['dqmuploadurl']
+
             specArguments['StreamName'] = stream
             specArguments['SpecialDataset'] = specialDataset
 
-            specArguments['UnmergedLFNBase'] = "/store/unmerged/%s" % streamConfig.Express.DataType
-            if runInfo['backfill']:
-                specArguments['MergedLFNBase'] = "/store/backfill/%s/%s" % (runInfo['backfill'],
-                                                                            streamConfig.Express.DataType)
-            else:
-                specArguments['MergedLFNBase'] = "/store/%s" % streamConfig.Express.DataType
-
-            specArguments['PeriodicHarvestInterval'] = streamConfig.Express.PeriodicHarvestInterval
-
             blockCloseDelay = streamConfig.Express.BlockCloseDelay
-
-        if streamConfig.ProcessingStyle in [ 'Bulk', 'Express' ]:
-
-            specArguments['RunNumber'] = run
-            specArguments['AcquisitionEra'] = runInfo['acq_era']
-            specArguments['Outputs'] = outputModuleDetails
-            specArguments['ValidStatus'] = "VALID"
 
         if streamConfig.ProcessingStyle == "Bulk":
             factory = RepackWorkloadFactory()
@@ -753,6 +696,164 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         pass
     return
 
+def getSpecArguments(workflowName,runInfo):
+    """
+    _getSpecArguments_
+    
+    Base specArguments of Tier0
+    """
+    
+    specArguments = {}
+    
+    specArguments['RequestName'] = workflowName
+    specArguments['RequestString'] = workflowName
+    specArguments['Requestor'] = "Tier0"
+    specArguments['RequestorDN'] = "Tier0"
+    specArguments['RequestDate'] = []
+    specArguments['RequestTransition'] = []
+    specArguments['RequestStatus'] = REQUEST_START_STATE
+    specArguments['PriorityTransition'] = []
+    specArguments['AcquisitionEra'] = runInfo['acq_era']
+    specArguments['ValidStatus'] = "VALID"
+    
+    return specArguments
+
+def getRepackSpecArguments(Repack,workflowName,runInfo):
+    """
+    _getRepackSpecArguments_
+    
+    Repack specArguments Baseed on getSpecArguments
+    """
+    specArguments = getSpecArguments(workflowName,runInfo)
+    
+    specArguments['Memory'] = Repack.MaxMemory
+
+    specArguments['CMSSWVersion'] = Repack.CMSSWVersion
+    specArguments['ScramArch'] = Repack.ScramArch
+    specArguments['ProcessingVersion'] = Repack.ProcessingVersion
+
+    specArguments['MaxSizeSingleLumi'] = Repack.MaxSizeSingleLumi
+    specArguments['MaxSizeMultiLumi'] = Repack.MaxSizeMultiLumi
+    specArguments['MinInputSize'] = Repack.MinInputSize
+    specArguments['MaxInputSize'] = Repack.MaxInputSize
+    specArguments['MaxEdmSize'] = Repack.MaxEdmSize
+    specArguments['MaxOverSize'] = Repack.MaxOverSize
+    specArguments['MaxInputEvents'] = Repack.MaxInputEvents
+    specArguments['MaxInputFiles'] = Repack.MaxInputFiles
+    specArguments['MaxLatency'] = Repack.MaxLatency
+    
+    # parameters for repack direct to merge stageout
+    specArguments['MinMergeSize'] = Repack.MinInputSize
+    specArguments['MaxMergeEvents'] = Repack.MaxInputEvents
+    
+    specArguments['UnmergedLFNBase'] = "/store/unmerged/%s" % runInfo['bulk_data_type']
+    if runInfo['backfill']:
+        specArguments['MergedLFNBase'] = "/store/backfill/%s/%s" % (runInfo['backfill'],
+                                                                    runInfo['bulk_data_type'])
+    else:
+        specArguments['MergedLFNBase'] = "/store/%s" % runInfo['bulk_data_type']
+    
+    return specArguments
+    
+def getExpressSpecArguments(Express,workflowName,runInfo):
+    """
+    _getExpressSpecArguments_
+    
+    Express specArguments Baseed on getSpecArguments
+    """
+    specArguments = getSpecArguments(workflowName,runInfo)
+    
+    specArguments['TimePerEvent'] = Express.TimePerEvent
+    specArguments['SizePerEvent'] = Express.SizePerEvent
+
+    specArguments['Memory'] = Express.MaxMemoryperCore
+    if Express.Multicore:
+        specArguments['Multicore'] = Express.Multicore
+        specArguments['Memory'] += (Express.Multicore - 1) * Express.MaxMemoryperCore
+
+    specArguments['ProcessingString'] = "Express"
+    specArguments['ProcessingVersion'] = Express.ProcessingVersion
+    specArguments['Scenario'] = Express.Scenario
+
+    specArguments['CMSSWVersion'] = Express.CMSSWVersion
+    specArguments['ScramArch'] = Express.ScramArch
+    specArguments['RecoCMSSWVersion'] = Express.RecoCMSSWVersion
+    specArguments['RecoScramArch'] = Express.RecoScramArch
+
+    specArguments['GlobalTag'] = Express.GlobalTag
+    specArguments['GlobalTagConnect'] = Express.GlobalTagConnect
+
+    specArguments['MaxInputRate'] = Express.MaxInputRate
+    specArguments['MaxInputEvents'] = Express.MaxInputEvents
+    specArguments['MaxInputSize'] = Express.MaxInputSize
+    specArguments['MaxInputFiles'] = Express.MaxInputFiles
+    specArguments['MaxLatency'] = Express.MaxLatency
+    specArguments['AlcaSkims'] = Express.AlcaSkims
+    specArguments['DQMSequences'] = Express.DqmSequences
+    specArguments['AlcaHarvestTimeout'] = runInfo['ah_timeout']
+    specArguments['AlcaHarvestCondLFNBase'] = runInfo['ah_cond_lfnbase']
+    specArguments['AlcaHarvestLumiURL'] = runInfo['ah_lumi_url']
+    
+    specArguments['DQMUploadUrl'] = runInfo['dqmuploadurl']
+    specArguments['UnmergedLFNBase'] = "/store/unmerged/%s" % Express.DataType
+    if runInfo['backfill']:
+        specArguments['MergedLFNBase'] = "/store/backfill/%s/%s" % (runInfo['backfill'],
+                                                                    Express.DataType)
+    else:
+        specArguments['MergedLFNBase'] = "/store/%s" % Express.DataType
+
+    specArguments['PeriodicHarvestInterval'] = Express.PeriodicHarvestInterval
+    
+    return specArguments
+
+def getPromptRecoSpecArguments(datasetConfig,workflowName,runInfo):
+    """
+    _getPromptRecoArguments_
+    
+    PromptReco specArguments Baseed on getSpecArguments
+    """
+    specArguments = getSpecArguments(workflowName,runInfo)
+    
+    specArguments['TimePerEvent'] = datasetConfig.TimePerEvent
+    specArguments['SizePerEvent'] = datasetConfig.SizePerEvent
+
+    specArguments['Memory'] = datasetConfig.MaxMemoryperCore
+    if datasetConfig.Multicore:
+        specArguments['Multicore'] = datasetConfig.Multicore
+        specArguments['Memory'] += (datasetConfig.Multicore - 1) * datasetConfig.MaxMemoryperCore
+    
+    specArguments['CMSSWVersion'] = datasetConfig.CMSSWVersion
+    specArguments['ScramArch'] = datasetConfig.ScramArch
+
+    specArguments['SplittingAlgo'] = "EventAwareLumiBased"
+    specArguments['EventsPerJob'] = datasetConfig.RecoSplit
+
+    specArguments['RobustMerge'] = False
+
+    specArguments['ProcessingString'] = "PromptReco"
+    specArguments['ProcessingVersion'] = datasetConfig.ProcessingVersion
+    specArguments['Scenario'] = datasetConfig.Scenario
+
+    specArguments['GlobalTag'] = datasetConfig.GlobalTag
+    specArguments['GlobalTagConnect'] = datasetConfig.GlobalTagConnect
+    
+    specArguments['AlcaSkims'] = datasetConfig.AlcaSkims
+    specArguments['PhysicsSkims'] = datasetConfig.PhysicsSkims
+    specArguments['DQMSequences'] = datasetConfig.DqmSequences
+
+    specArguments['UnmergedLFNBase'] = "/store/unmerged/%s" % runInfo['bulk_data_type']
+    if runInfo['backfill']:
+        specArguments['MergedLFNBase'] = "/store/backfill/%s/%s" % (runInfo['backfill'],
+                                                                    runInfo['bulk_data_type'])
+    else:
+        specArguments['MergedLFNBase'] = "/store/%s" % runInfo['bulk_data_type']
+
+    specArguments['EnableHarvesting'] = "True"
+    
+    specArguments['DQMUploadUrl'] = runInfo['dqmuploadurl']
+    
+    return specArguments
+    
 def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
     """
     _releasePromptReco_
@@ -841,18 +942,12 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                            'SCENARIO' : datasetConfig.Scenario } )
 
             bindsCMSSWVersion.append( { 'VERSION' : datasetConfig.CMSSWVersion } )
+    
+            alcaSkim = joinComma(datasetConfig.AlcaSkims)
+            
+            physicsSkim = joinComma(datasetConfig.PhysicsSkims)
 
-            alcaSkim = None
-            if len(datasetConfig.AlcaSkims) > 0:
-                alcaSkim = ",".join(datasetConfig.AlcaSkims)
-
-            physicsSkim = None
-            if len(datasetConfig.PhysicsSkims) > 0:
-                physicsSkim = ",".join(datasetConfig.PhysicsSkims)
-
-            dqmSeq = None
-            if len(datasetConfig.DqmSequences) > 0:
-                dqmSeq = ",".join(datasetConfig.DqmSequences)
+            dqmSeq = joinComma(datasetConfig.DqmSequences)
 
             datasetConfig.ScramArch = tier0Config.Global.ScramArches.get(datasetConfig.CMSSWVersion,
                                                                          tier0Config.Global.DefaultScramArch)
@@ -880,35 +975,19 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
 
                 phedexConfig = phedexConfigs[dataset]
 
-                tapeDataTiers = set()
-                diskDataTiers = set()
-                skimDataTiers = set()
-                alcaDataTiers = set()
-
-                if datasetConfig.WriteRECO:
-                    diskDataTiers.add("RECO")
-                if datasetConfig.WriteAOD:
-                    tapeDataTiers.add("AOD")
-                    if datasetConfig.AODtoDisk:
-                        diskDataTiers.add("AOD")
-                if datasetConfig.WriteMINIAOD:
-                    tapeDataTiers.add("MINIAOD")
-                    diskDataTiers.add("MINIAOD")
-                if datasetConfig.WriteNANOAOD:
-                    tapeDataTiers.add("NANOAOD")
-                    diskDataTiers.add("NANOAOD")
-                if datasetConfig.WriteDQM:
-                    tapeDataTiers.add(tier0Config.Global.DQMDataTier)
-                if len(datasetConfig.PhysicsSkims) > 0:
-                    skimDataTiers.add("RAW-RECO")
-                    skimDataTiers.add("USER")
-                    skimDataTiers.add("RECO")
-                    skimDataTiers.add("AOD")
-                if len(datasetConfig.AlcaSkims) > 0:
-                    alcaDataTiers.add("ALCARECO")
+                tapeDataTiers, diskDataTiers, skimDataTiers, alcaDataTiers = getDataTiers(datasetConfig,tier0Config)
 
                 # do things different based on whether we have TapeNode/DiskNode, only TapeNode or ArchivalNode
+                description={'priority' : "high",
+                             'primaryDataset' : dataset,
+                             'deleteFromSource' : True,
+                             'datasetLifetime' : datasetConfig.datasetLifetime,
+                            }
+            
                 if phedexConfig['tape_node'] != None:
+
+                    description['cutodialSites'] = [phedexConfig['tape_node']]
+                    description['useSkim'] =  True
 
                     if phedexConfig['disk_node'] == None:
                         diskDataTiers = set()
@@ -919,74 +998,48 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                             diskNode = phedexConfig['disk_node_reco']
                         else:
                             diskNode = phedexConfig['disk_node']
-
-                        subscriptions.append( { 'custodialSites' : [phedexConfig['tape_node']],
-                                                'nonCustodialSites' : [diskNode],
-                                                'priority' : "high",
-                                                'primaryDataset' : dataset,
-                                                'useSkim' : True,
-                                                'isSkim' : False,
-                                                'deleteFromSource' : True,
-                                                'dataTier' : dataTier,
-                                                'datasetLifetime' : datasetConfig.datasetLifetime } )
-
+                        
+                        description['nonCustodialSites']=[diskNode]
+                        description['isSkim']=False
+                        description['dataTier']=dataTier
+                        subscriptions.append( description.copy() )
+                        
+                    description['nonCustodialSites']=[phedexConfig['disk_node']] if phedexConfig['disk_node'] else []
+                    description['isSkim']=True
                     for dataTier in skimDataTiers:
-                        subscriptions.append( { 'custodialSites' : [phedexConfig['tape_node']],
-                                                'nonCustodialSites' : [phedexConfig['disk_node']] if phedexConfig['disk_node'] else [],
-                                                'priority' : "high",
-                                                'primaryDataset' : dataset,
-                                                'useSkim' : True,
-                                                'isSkim' : True,
-                                                'deleteFromSource' : True,
-                                                'dataTier' : dataTier,
-                                                'datasetLifetime' : datasetConfig.datasetLifetime } )
-
+                        description['dataTier']=dataTier
+                        subscriptions.append( description.copy() )
+                        
+                    del description['nonCustodialSites']
+                    description['isSkim']=False
                     for dataTier in tapeDataTiers - diskDataTiers:
-                        subscriptions.append( { 'custodialSites' : [phedexConfig['tape_node']],
-                                                'priority' : "high",
-                                                'primaryDataset' : dataset,
-                                                'useSkim' : True,
-                                                'isSkim' : False,
-                                                'deleteFromSource' : True,
-                                                'dataTier' : dataTier,
-                                                'datasetLifetime' : datasetConfig.datasetLifetime } )
+                        description['dataTier']=dataTier
+                        subscriptions.append( description.copy() )
 
+                    description['isSkim']=True
                     for dataTier in alcaDataTiers:
-                        subscriptions.append( { 'custodialSites' : [phedexConfig['tape_node']],
-                                                'priority' : "high",
-                                                'primaryDataset' : dataset,
-                                                'useSkim' : True,
-                                                'isSkim' : True,
-                                                'deleteFromSource' : True,
-                                                'dataTier' : dataTier,
-                                                'datasetLifetime' : datasetConfig.datasetLifetime } )
-
+                        description['dataTier']=dataTier
+                        subscriptions.append( description.copy() )
+                    
+                    del description['cutodialSites']
+                    description['isSkim']=False
                     for dataTier in diskDataTiers - tapeDataTiers:
-
+                        
                         if dataTier == "RECO" and phedexConfig['disk_node_reco']:
                             diskNode = phedexConfig['disk_node_reco']
                         else:
                             diskNode = phedexConfig['disk_node']
-
-                        subscriptions.append( { 'nonCustodialSites' : [diskNode],
-                                                'priority' : "high",
-                                                'primaryDataset' : dataset,
-                                                'useSkim' : True,
-                                                'isSkim' : False,
-                                                'deleteFromSource' : True,
-                                                'dataTier' : dataTier,
-                                                'datasetLifetime' : datasetConfig.datasetLifetime } )
+                            
+                        description['nonCustodialSites'] = [diskNode]
+                        description['dataTier']=dataTier
+                        subscriptions.append( description.copy() )
 
                 elif phedexConfig['archival_node'] != None:
+                    description['cutodialSites'] = [phedexConfig['archival_node']]
 
                     for dataTier in tapeDataTiers | diskDataTiers | skimDataTiers | alcaDataTiers:
-
-                        subscriptions.append( { 'custodialSites' : [phedexConfig['archival_node']],
-                                                'priority' : "high",
-                                                'primaryDataset' : dataset,
-                                                'deleteFromSource' : True,
-                                                'dataTier' : dataTier,
-                                                'datasetLifetime' : datasetConfig.datasetLifetime } )
+                        description['dataTier']=dataTier
+                        subscriptions.append( description.copy() )
 
             writeTiers = []
             if datasetConfig.WriteRECO:
@@ -1015,63 +1068,12 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 else:
                     workflowName = "PromptReco_Run%d_%s" % (run, dataset)
 
-                specArguments = {}
-
-                specArguments['TimePerEvent'] = datasetConfig.TimePerEvent
-                specArguments['SizePerEvent'] = datasetConfig.SizePerEvent
-
-                specArguments['Memory'] = datasetConfig.MaxMemoryperCore
-                if datasetConfig.Multicore:
-                    specArguments['Multicore'] = datasetConfig.Multicore
-                    specArguments['Memory'] += (datasetConfig.Multicore - 1) * datasetConfig.MaxMemoryperCore
-
-                specArguments['Requestor'] = "Tier0"
-                specArguments['RequestName'] = workflowName
-                specArguments['RequestString'] = workflowName
-                specArguments['RequestorDN'] = "Tier0"
-                specArguments['RequestDate'] = []
-                specArguments['RequestTransition'] = []
-                specArguments['RequestStatus'] = REQUEST_START_STATE
+                specArguments=getPromptRecoSpecArguments(datasetConfig,workflowName,runInfo)
                 specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority
-                specArguments['PriorityTransition'] = []
-
-                specArguments['AcquisitionEra'] = runInfo['acq_era']
-                specArguments['CMSSWVersion'] = datasetConfig.CMSSWVersion
-                specArguments['ScramArch'] = datasetConfig.ScramArch
-
                 specArguments['RunNumber'] = run
-
-                specArguments['SplittingAlgo'] = "EventAwareLumiBased"
-                specArguments['EventsPerJob'] = datasetConfig.RecoSplit
-
-                specArguments['RobustMerge'] = False
-
-                specArguments['ProcessingString'] = "PromptReco"
-                specArguments['ProcessingVersion'] = datasetConfig.ProcessingVersion
-                specArguments['Scenario'] = datasetConfig.Scenario
-
-                specArguments['GlobalTag'] = datasetConfig.GlobalTag
-                specArguments['GlobalTagConnect'] = datasetConfig.GlobalTagConnect
-
                 specArguments['InputDataset'] = "/%s/%s-%s/RAW" % (dataset, runInfo['acq_era'], repackProcVer)
-
                 specArguments['WriteTiers'] = writeTiers
-                specArguments['AlcaSkims'] = datasetConfig.AlcaSkims
-                specArguments['PhysicsSkims'] = datasetConfig.PhysicsSkims
-                specArguments['DQMSequences'] = datasetConfig.DqmSequences
-
-                specArguments['UnmergedLFNBase'] = "/store/unmerged/%s" % runInfo['bulk_data_type']
-                if runInfo['backfill']:
-                    specArguments['MergedLFNBase'] = "/store/backfill/%s/%s" % (runInfo['backfill'],
-                                                                                runInfo['bulk_data_type'])
-                else:
-                    specArguments['MergedLFNBase'] = "/store/%s" % runInfo['bulk_data_type']
-
-                specArguments['ValidStatus'] = "VALID"
-
-                specArguments['EnableHarvesting'] = "True"
                 specArguments['DQMUploadProxy'] = dqmUploadProxy
-                specArguments['DQMUploadUrl'] = runInfo['dqmuploadurl']
 
                 factory = PromptRecoWorkloadFactory()
                 wmSpec = factory.factoryWorkloadConstruction(workflowName, specArguments)
@@ -1124,6 +1126,43 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
             myThread.transaction.commit()
 
     return
+
+def getDataTiers(datasetConfig,tier0Config):
+    """
+    _getDataTiers_
+    
+    :param datasetConfig: Dataset configuration
+    :param tier0Config: Tier0 configuration
+    
+    Sets for tapeDataTiers, diskDataTiers, skimDataTiers, alcaDataTiers
+    """
+    tapeDataTiers = set()
+    diskDataTiers = set()
+    skimDataTiers = set()
+    alcaDataTiers = set()
+    if datasetConfig.WriteRECO:
+        diskDataTiers.add("RECO")
+    if datasetConfig.WriteAOD:
+        tapeDataTiers.add("AOD")
+        if datasetConfig.AODtoDisk:
+            diskDataTiers.add("AOD")
+    if datasetConfig.WriteMINIAOD:
+        tapeDataTiers.add("MINIAOD")
+        diskDataTiers.add("MINIAOD")
+    if datasetConfig.WriteNANOAOD:
+        tapeDataTiers.add("NANOAOD")
+        diskDataTiers.add("NANOAOD")
+    if datasetConfig.WriteDQM:
+        tapeDataTiers.add(tier0Config.Global.DQMDataTier)
+    if len(datasetConfig.PhysicsSkims) > 0:
+        skimDataTiers.add("RAW-RECO")
+        skimDataTiers.add("USER")
+        skimDataTiers.add("RECO")
+        skimDataTiers.add("AOD")
+    if len(datasetConfig.AlcaSkims) > 0:
+        alcaDataTiers.add("ALCARECO")
+    
+    return tapeDataTiers, diskDataTiers, skimDataTiers, alcaDataTiers
 
 def setStorageSite(tier0Config, wmSpec, storagesite):
     """
