@@ -1,8 +1,9 @@
 # Reusable workflow to setup a specific T0 component for pip
 
 on:
-  release:
-    types: [published]
+  push:
+    paths:
+      - 'src/python/T0/__init__.py'
 
 jobs:
   build_and_publish_from_template:
