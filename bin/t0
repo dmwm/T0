@@ -96,6 +96,27 @@ def addProcessingSite(site=None):
     """
     command_1 = "manage execute-agent wmagent-resource-control --site-name={} --cms-name={} --pnn={} --ce-name={} --pending-slots=20000 --running-slots=20000 --plugin=SimpleCondorPlugin".format(site, site, site, site)
     command_2 = "manage execute-agent wmagent-resource-control --site-name={} --task-type=Processing --pending-slots=10000 --running-slots=10000".format(site)
+    os.system(command_1)
+    os.system(command_2)
+
+def modifyCodeFile(file=None):
+    """
+    Simplifies the modification of the agent code
+    Goes to the site-packages directory and looks for file to modify, if given
+    """
+    deployDir = os.getenv('WMA_DEPLOY_DIR')
+    packagePath = os.path.join(deployDir, 'lib/python3.9/site-packages')
+    os.chdir(packagePath)
+
+    findFile = 'find . -name {}'.format(file)
+    with os.popen(findFile) as stream:
+        filePath = stream.read().strip()
+    filePath = os.path.join(packagePath, filePath[2:])
+    os.system('echo "Now modifying {}"'.format(filePath))
+    os.system('sleep 3')
+    os.system('vim {}'.format(filePath))
+    os.system('echo "Done"')
+
 def main(argv=None):
     if argv is None:
         argv = sys.argv
@@ -103,7 +124,7 @@ def main(argv=None):
     try:
         try:
             opts, args = getopt.getopt(argv[1:], "h",
-            ["help", "update-t0", "update-wmcore", "start-agent", "stop-agent", "clear-deployment", "resource-control" ])
+            ["help", "update-t0", "update-wmcore", "start-agent", "stop-agent", "clear-deployment", "resource-control=", "edit-code="])
 
         except getopt.error as msg:
             raise Usage(msg)
@@ -139,6 +160,13 @@ def main(argv=None):
             if option == "--resource-control":
                 site = value
                 addProcessingSite(site)
+
+            if option == "--edit-code":
+                if len(value) > 0:
+                    modifyCodeFile(value)
+                else:
+                    os.system('echo "Please provide a file to modify"')
+                    os.system('echo "t0 --edit-code={file}"')
 
     except Usage as err:
         print(sys.argv[0].split("/")[-1] + ": " + str(err.msg), file=sys.stderr)
