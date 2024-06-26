@@ -6,12 +6,12 @@ import traceback
 import os
 
 help_message = '''
-- t0 --update-t0=<version> : Uninstalls current T0 to install sepcified T0 version
-- t0 --start-agent : Starts the agent
-- t0 --stop-agent : Stops the agent
-- t0 --clear-deployment : Start a new deployment without re-installing the software
-- t0 --resource-control=<site> : Adds input site to resource control only for processing jobs
-- t0 --edit-code=<file> : Looks for input file within site-packages directory and opens it for edit using vim
+- t0 --update-t0=<version>          : Uninstalls current T0 to install sepcified T0 version
+- t0 --start-agent                  : Starts the agent
+- t0 --stop-agent                   : Stops the agent
+- t0 --clear-deployment             : Start a new deployment without re-installing the software
+- t0 --resource-control=<site>      : Adds input site to resource control only for processing jobs
+- t0 --edit-code=<file>             : Looks for input file within site-packages directory and opens it for edit using vim
 '''
 
 
