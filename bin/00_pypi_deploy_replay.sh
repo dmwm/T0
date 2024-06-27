@@ -15,7 +15,7 @@ then
 fi
 
 WMAGENT_TAG=2.3.4rc11
-TIER0_VERSION=3.2.2
+TIER0_VERSION=3.2.3
 COUCH_TAG=3.2.2
 
 BASE_DIR=/data/tier0
@@ -82,6 +82,7 @@ pip install T0==$TIER0_VERSION
 
 chmod +x $DEPLOY_DIR/bin/00*
 chmod +x $DEPLOY_DIR/bin/t0
+chmod +x $DEPLOY_DIR/etc/Tier0Config.py
 
 echo "Applying patches"
 bash $BASE_DIR/00_pypi_patches.sh
