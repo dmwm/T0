@@ -96,6 +96,7 @@ echo "manage=manage"
 sleep 1
 ### The WMCoreVenvVars is a function in the $DEPLOY_DIR/bin/activate file
 declare -A WMCoreVenvVars
+WMCoreVenvVars[TEAM]=$TEAMNAME
 WMCoreVenvVars[WMCORE_CACHE_DIR]=/tmp/$(whoami)
 WMCoreVenvVars[install]=$CURRENT_DIR/install
 WMCoreVenvVars[config]=$CURRENT_DIR/config
