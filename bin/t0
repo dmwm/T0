@@ -45,9 +45,18 @@ def updateT0 (version):
     _updateT0_
     Updates the T0 version
     """
-    print("Updating T0")
+    deployDir = os.getenv('WMA_DEPLOY_DIR')
+    os.system('echo "Stopping the agent"')
+    os.system('sleep 3')
+    stop()
+    os.system('echo "Now updating T0"')
+    os.system('sleep 2')
     os.system('pip uninstall -y T0')
     os.system('pip install T0=={}'.format(version))
+    os.system('chmod +x {}/bin/t0'.format(deployDir))
+    os.system('chmod +x {}/etc/Tier0Config.py'.format(deployDir))
+    start()
+    os.system('echo "Done"')
 
 def updateWMCore ():
     """
@@ -76,21 +85,38 @@ def wipeT0ast (userInput='n'):
     else:
         os.system('echo "Not wiping T0AST"')
 
+def tweakConfig (teamname):
+    """
+    _tweakConfig_
+    Modifies config.py file according to type of agent: replay or prod
+    """
+    if teamname == 'Tier0Replay':
+        os.system('bash /data/tier0/00_pypi_tweak_replay_config.sh')
+    elif teamname == 'Tier0Production':
+        os.system('bash /data/tier0/00_pypi_tweak_prod_config.sh')
+    else:
+        os.system('echo "Something is not right with the TEAM provided: {}"'.format(teamname))
+
 def clearDeployment (userInput='n'):
     """
     _clearDeployment_
     Avoid re-deploying from scratch when unnecessary
     """
-    if userInput == 'Y':
-        resetCouch()
-        wipeT0ast(userInput=userInput)
-        os.system('rm -rf $WMA_CONFIG_DIR/.init*')
-        os.system('rm -rf $WMA_INSTALL_DIR/*')
-        os.system('rm -rf /data/tier0/admin/Specs/*')
-        init()
-    else:
+    if userInput != 'Y':
         os.system('echo "Not performing anything"')
-        os.system('sleep 2')
+        return
+    teamname = os.getenv('TEAM')
+    print(teamname)
+    stop()
+    os.system('condor_rm -all')
+    resetCouch()
+    wipeT0ast(userInput=userInput)
+    os.system('rm -rf $WMA_CONFIG_DIR/.init*')
+    os.system('rm -rf $WMA_INSTALL_DIR/*')
+    os.system('rm -rf /data/tier0/admin/Specs/*')
+    init()
+    tweakConfig(teamname)
+    os.system('echo "Done. Agent is ready to start"')
 
 def init ():
     """

@@ -1,4 +1,5 @@
 #!/bin/bash
+
 CONFIGURATION_FILE=/data/tier0/admin/ReplayOfflineConfiguration.py
 sed -i 's+TIER0_CONFIG_FILE+'"$CONFIGURATION_FILE"'+' "$config/config.py"
 sed -i "s+config.Agent.teamName = 'REPLACE_TEAM_NAME'+config.Agent.teamName = '"$TEAMNAME"'+" "$config/config.py"

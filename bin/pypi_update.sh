@@ -16,6 +16,8 @@ declare -A PYPI_DEPLOYMENT_SCRIPTS=(
     [00_pypi_patches.sh]=https://raw.githubusercontent.com/dmwm/T0/master/bin/00_pypi_patches.sh
     [00_pypi_deploy_replay.sh]=https://raw.githubusercontent.com/dmwm/T0/master/bin/00_pypi_deploy_replay.sh
     [00_pypi_deploy_prod.sh]=https://raw.githubusercontent.com/dmwm/T0/master/bin/00_pypi_deploy_prod.sh
+    [00_pypi_tweak_replay_config.sh]=https://raw.githubusercontent.com/dmwm/T0/master/bin/00_pypi_tweak_replay_config.sh
+    [00_pypi_tweak_prod_config.sh]=https://raw.githubusercontent.com/dmwm/T0/master/bin/00_pypi_tweak_prod_config.sh
 )
 
 for SCRIPT in "${!PYPI_DEPLOYMENT_SCRIPTS[@]}"; do
