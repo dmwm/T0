@@ -46,16 +46,17 @@ def updateT0 (version):
     Updates the T0 version
     """
     deployDir = os.getenv('WMA_DEPLOY_DIR')
-    os.system('echo "Stopping the agent"')
-    os.system('sleep 3')
-    stop()
+    os.system('echo "Stopping Tier0Feeder"')
+    os.system('sleep 1')
+    os.system('manage execute-agent wmcoreD --shutdown --components Tier0Feeder')
     os.system('echo "Now updating T0"')
     os.system('sleep 2')
     os.system('pip uninstall -y T0')
     os.system('pip install T0=={}'.format(version))
     os.system('chmod +x {}/bin/t0'.format(deployDir))
     os.system('chmod +x {}/etc/Tier0Config.py'.format(deployDir))
-    start()
+    os.system('echo "Restarting Tier0Feeder"')
+    os.system('manage execute-agent wmcoreD --restart --components Tier0Feeder')
     os.system('echo "Done"')
 
 def updateWMCore ():
