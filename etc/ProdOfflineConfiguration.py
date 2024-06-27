@@ -34,7 +34,7 @@ from T0.RunConfig.Tier0Config import setExtraStreamDatasetMap
 tier0Config = createTier0Config()
 
 # Set the verstion configuration (not used at the moment)
-setConfigVersion(tier0Config, "3.1.5")
+setConfigVersion(tier0Config, "3.2.1")
 
 # Set the min run number:
 setInjectMinRun(tier0Config, 9999999)
@@ -60,7 +60,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2024E")
+setAcquisitionEra(tier0Config, "Run2024F")
 setEmulationAcquisitionEra(tier0Config, "Emulation2024")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
@@ -101,8 +101,8 @@ setPromptCalibrationConfig(tier0Config,
 # maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_7",
-    'acqEra': {'Run2024D': "CMSSW_14_0_6_patch1"}
+    'default': "CMSSW_14_0_9"
+    #'acqEra': {'Run2024D': "CMSSW_14_0_6_patch1"}
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
 
@@ -139,12 +139,12 @@ expressProcVersion = {
 
 # Defaults for GlobalTag
 expressGlobalTag = {
-    'default': "140X_dataRun3_Express_v3",
-    'acqEra': {'Run2024B': "140X_dataRun3_Express_v2"}
+    'default': "140X_dataRun3_Express_v3"
+    #'acqEra': {'Run2024B': "140X_dataRun3_Express_v2"}
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Express_v3"}
 }
 promptrecoGlobalTag = {
-    'default': "140X_dataRun3_Prompt_v2",
+    'default': "140X_dataRun3_Prompt_v4",
     #'acqEra': {'Run2023E': "132X_dataRun3_Prompt_v2"},
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Prompt_v2"}
 }
@@ -1081,7 +1081,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
                alca_producers=["TkAlMinBias", "TkAlV0s"],
                physics_skims=["LogError", "LogErrorMonitor"],
-               disk_node="T1_IT_CNAF_Disk",
+               disk_node="T2_CH_CERN",
                tape_node="T1_IT_CNAF_MSS",
                scenario=ppScenario)
 
@@ -1108,6 +1108,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
                alca_producers=["TkAlMinBias","LumiPixelsMinBias"],
                physics_skims=["LogError", "LogErrorMonitor"],
+	       disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
 DATASETS = ["EphemeralHLTPhysics0","EphemeralHLTPhysics1", "EphemeralHLTPhysics2", "EphemeralHLTPhysics3",
@@ -1152,6 +1153,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
                alca_producers=["TkAlMinBias","LumiPixelsMinBias"],
                physics_skims=["LogError", "LogErrorMonitor"],
+	       disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
 ########################################################
@@ -1257,7 +1259,7 @@ for dataset in DATASETS:
                timePerEvent=1,
                sizePerEvent=1500,
                tape_node="T1_ES_PIC_MSS",
-               disk_node="T1_ES_PIC_Disk",
+               disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
 DATASETS = ["EphemeralZeroBias0", "EphemeralZeroBias1", "EphemeralZeroBias2", "EphemeralZeroBias3",
