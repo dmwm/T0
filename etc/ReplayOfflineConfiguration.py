@@ -186,17 +186,17 @@ addRepackConfig(tier0Config, "Default",
                 versionOverride=repackVersionOverride)
 
 addRepackConfig(tier0Config, "ScoutingPF",
-                proc_ver=1, # Should remain 1. Changing it can cause several issues.
+                proc_ver=defaultProcVersion, 
                 dataTier="HLTSCOUT",
                 versionOverride=repackVersionOverride)
 
 addRepackConfig(tier0Config, "L1ScoutingSelection",
-                proc_ver=1, # Should remain 1. Changing it can cause several issues.
+                proc_ver=defaultProcVersion,
                 dataTier="L1SCOUT",
                 versionOverride=repackVersionOverride)
 
 addRepackConfig(tier0Config, "L1Scouting",
-                proc_ver=1, # Should remain 1. Changing it can cause several issues.
+                proc_ver=defaultProcVersion,
                 dataTier="L1SCOUT",
                 versionOverride=repackVersionOverride)
 
