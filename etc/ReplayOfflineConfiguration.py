@@ -36,10 +36,10 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
-# 379070 - Cosmics 3.8T 2024 - 3h long - ALL components in
-# 380128 - 2024 13.6 TeV Collision run - 2340b - 2.5h long - ALL components in
+# 382726  Cosmics, 4 hours
+# 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
 
-setInjectRuns(tier0Config, [379070, 380128])
+setInjectRuns(tier0Config, [382686, 382726])
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
@@ -91,7 +91,7 @@ defaultRecoTimeout = 10 * 60
 defaultRecoLockTimeout = 5 * 60
 
 # DQM Server
-setDQMUploadUrl(tier0Config, "https://cmsweb.cern.ch/dqm/dev;https://cmsweb-testbed.cern.ch/dqm/offline-test")
+setDQMUploadUrl(tier0Config, "https://cmsweb.cern.ch/dqm/dev")
 
 # PCL parameters
 setPromptCalibrationConfig(tier0Config,
@@ -110,7 +110,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_8"
+    'default': "CMSSW_14_0_11"
 }
 
 # Configure ScramArch
@@ -140,7 +140,7 @@ alcarawProcVersion = dt
 
 # Defaults for GlobalTag
 expressGlobalTag = "140X_dataRun3_Express_v3"
-promptrecoGlobalTag = "140X_dataRun3_Prompt_v2"
+promptrecoGlobalTag = "140X_dataRun3_Prompt_v4"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -157,11 +157,9 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_12_6_3" : "CMSSW_12_6_4"
 }
 
 expressVersionOverride = {
-    "CMSSW_12_6_3" : "CMSSW_12_6_4"
 }
 
 # Additional Stream-Dataset mapping
@@ -188,12 +186,17 @@ addRepackConfig(tier0Config, "Default",
                 versionOverride=repackVersionOverride)
 
 addRepackConfig(tier0Config, "ScoutingPF",
-                proc_ver=1, # Should remain 1. Changing it can cause several issues.
+                proc_ver=defaultProcVersion, 
                 dataTier="HLTSCOUT",
                 versionOverride=repackVersionOverride)
 
 addRepackConfig(tier0Config, "L1ScoutingSelection",
-                proc_ver=1, # Should remain 1. Changing it can cause several issues.
+                proc_ver=defaultProcVersion,
+                dataTier="L1SCOUT",
+                versionOverride=repackVersionOverride)
+
+addRepackConfig(tier0Config, "L1Scouting",
+                proc_ver=defaultProcVersion,
                 dataTier="L1SCOUT",
                 versionOverride=repackVersionOverride)
 
