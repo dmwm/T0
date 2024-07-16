@@ -135,6 +135,8 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         # partition AlcaHarvest upload by year
         if tier0Config.Global.AlcaHarvestCondLFNBase:
             alcaHarvestCondLFNBase = os.path.join(tier0Config.Global.AlcaHarvestCondLFNBase, str(datetime.now().year))
+        else:
+            alcaHarvestCondLFNBase = "None"
         if tier0Config.Global.AlcaHarvestLumiURL:
             alcaHarvestLumiURL = rootUrlJoin(tier0Config.Global.AlcaHarvestLumiURL, str(datetime.now().year))
             if not alcaHarvestLumiURL:
@@ -611,6 +613,9 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['SpecialDataset'] = specialDataset
 
             blockCloseDelay = streamConfig.Express.BlockCloseDelay
+        else:
+            taskName = "None"
+            blockCloseDelay = None
 
         if streamConfig.ProcessingStyle == "Bulk":
             factory = RepackWorkloadFactory()
