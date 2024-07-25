@@ -34,7 +34,7 @@ from T0.RunConfig.Tier0Config import setExtraStreamDatasetMap
 tier0Config = createTier0Config()
 
 # Set the verstion configuration (not used at the moment)
-setConfigVersion(tier0Config, "3.2.1")
+setConfigVersion(tier0Config, "3.2.3")
 
 # Set the min run number:
 setInjectMinRun(tier0Config, 9999999)
@@ -60,7 +60,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2024F")
+setAcquisitionEra(tier0Config, "Run2024G")
 setEmulationAcquisitionEra(tier0Config, "Emulation2024")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
@@ -101,7 +101,7 @@ setPromptCalibrationConfig(tier0Config,
 # maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_11"
+    'default': "CMSSW_14_0_12"
     #'acqEra': {'Run2024D': "CMSSW_14_0_6_patch1"}
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
@@ -569,7 +569,10 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
-DATASETS = ["ParkingSingleMuon1","ParkingSingleMuon2","ParkingSingleMuon3","ParkingSingleMuon4","ParkingSingleMuon5","ParkingSingleMuon6","ParkingSingleMuon7"]
+DATASETS = ["ParkingSingleMuon1","ParkingSingleMuon2","ParkingSingleMuon3",
+            "ParkingSingleMuon4","ParkingSingleMuon5","ParkingSingleMuon6",
+            "ParkingSingleMuon7","ParkingSingleMuon8","ParkingSingleMuon9",
+            "ParkingSingleMuon10","ParkingSingleMuon11"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -693,7 +696,7 @@ for dataset in DATASETS:
                disk_node="T1_US_FNAL_Disk", # JetHT was in "T1_UK_RAL_Disk", MET was in "T1_DE_KIT_Disk"
                alca_producers=["HcalCalIsoTrkProducerFilter", "TkAlJetHT", "HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
-               physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor"],
+               physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor", "EXOMONOPOLE"],
                timePerEvent=5.7,  # copied from JetHT - should be checked
                sizePerEvent=2250, # copied from JetHT - should be checked
                scenario=ppScenario)
