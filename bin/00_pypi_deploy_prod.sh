@@ -69,8 +69,8 @@ sleep 1
 rm $DEPLOY_DIR/certs/*
 ln -s $CERT $DEPLOY_DIR/certs/servicecert.pem
 ln -s $KEY $DEPLOY_DIR/certs/servicekey.pem
-#ln -s $PROXY $DEPLOY_DIR/certs/myproxy.pem
-ln -s $WMA_CERT_DIR/myproxy.pem $WMA_CERT_DIR/robot-proxy-vocms001.pem 
+ln -s $PROXY $DEPLOY_DIR/certs/myproxy.pem
+ 
 #######################################################################
 
 echo "Activating environment"
