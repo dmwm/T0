@@ -117,7 +117,7 @@ bash $DEPLOY_DIR/init.sh
 
 echo "Now populating resource control"
 sleep 2
-bash $DEPLY_DIR/bin/00_pypi_resource_control.sh
+bash $DEPLOY_DIR/bin/00_pypi_resource_control.sh
 
 echo "Modifying config file"
 sleep 3
