@@ -34,7 +34,7 @@ from T0.RunConfig.Tier0Config import setExtraStreamDatasetMap
 tier0Config = createTier0Config()
 
 # Set the verstion configuration (not used at the moment)
-setConfigVersion(tier0Config, "3.2.1")
+setConfigVersion(tier0Config, "3.2.3")
 
 # Set the min run number:
 setInjectMinRun(tier0Config, 9999999)
@@ -60,7 +60,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2024F")
+setAcquisitionEra(tier0Config, "Run2024G")
 setEmulationAcquisitionEra(tier0Config, "Emulation2024")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
@@ -101,8 +101,8 @@ setPromptCalibrationConfig(tier0Config,
 # maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_11"
-    #'acqEra': {'Run2024D': "CMSSW_14_0_6_patch1"}
+    'default': "CMSSW_14_0_12"
+    'acqEra': {'Run2024F': "CMSSW_14_0_11"}
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
 
@@ -225,7 +225,7 @@ addDataset(tier0Config, "Default",
            archival_node="T0_CH_CERN_MSS",
            tape_node="T1_US_FNAL_MSS",
            disk_node="T1_US_FNAL_Disk",
-           siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN"],
+           siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN", "T1_UK_RAL", "T1_DE_KIT", "T1_FR_CCIN2P3", "T1_ES_PIC", "T1_IT_CNAF"],
            raw_to_disk=False,
            aod_to_disk=True,
            blockCloseDelay=24 * 3600,
@@ -569,7 +569,10 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
-DATASETS = ["ParkingSingleMuon1","ParkingSingleMuon2","ParkingSingleMuon3","ParkingSingleMuon4","ParkingSingleMuon5","ParkingSingleMuon6","ParkingSingleMuon7"]
+DATASETS = ["ParkingSingleMuon1","ParkingSingleMuon2","ParkingSingleMuon3",
+            "ParkingSingleMuon4","ParkingSingleMuon5","ParkingSingleMuon6",
+            "ParkingSingleMuon7","ParkingSingleMuon8","ParkingSingleMuon9",
+            "ParkingSingleMuon10","ParkingSingleMuon11"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
