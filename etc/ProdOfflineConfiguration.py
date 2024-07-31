@@ -225,7 +225,7 @@ addDataset(tier0Config, "Default",
            archival_node="T0_CH_CERN_MSS",
            tape_node="T1_US_FNAL_MSS",
            disk_node="T1_US_FNAL_Disk",
-           siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN", "T1_UK_RAL", "T1_DE_KIT", "T1_FR_CCIN2P3", "T1_ES_PIC", "T1_IT_CNAF"],
+           siteWhitelist = ["T2_CH_CERN", "T1_UK_RAL", "T1_DE_KIT", "T1_FR_CCIN2P3", "T1_ES_PIC", "T1_IT_CNAF"],
            raw_to_disk=False,
            aod_to_disk=True,
            blockCloseDelay=24 * 3600,
@@ -697,6 +697,7 @@ for dataset in DATASETS:
                alca_producers=["HcalCalIsoTrkProducerFilter", "TkAlJetHT", "HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
                physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor"],
+               siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN", "T1_UK_RAL", "T1_DE_KIT", "T1_FR_CCIN2P3", "T1_ES_PIC", "T1_IT_CNAF"],
                timePerEvent=5.7,  # copied from JetHT - should be checked
                sizePerEvent=2250, # copied from JetHT - should be checked
                scenario=ppScenario)
