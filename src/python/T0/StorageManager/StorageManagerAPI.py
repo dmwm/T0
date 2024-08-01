@@ -48,6 +48,7 @@ def injectNewData(dbInterfaceStorageManager,
                                    logger = logging,
                                    dbinterface = dbInterfaceHltConf)
 
+    insertFileStatusDAO = None
     if dbInterfaceSMNotify:
         daoFactorySMNotify = DAOFactory(package = "T0.WMBS",
                                         logger = logging,
