@@ -101,7 +101,7 @@ setPromptCalibrationConfig(tier0Config,
 # maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_12",
+    'default': "CMSSW_14_0_13",
     'acqEra': {'Run2024F': "CMSSW_14_0_11"},
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
@@ -696,7 +696,7 @@ for dataset in DATASETS:
                disk_node="T1_US_FNAL_Disk", # JetHT was in "T1_UK_RAL_Disk", MET was in "T1_DE_KIT_Disk"
                alca_producers=["HcalCalIsoTrkProducerFilter", "TkAlJetHT", "HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
-               physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor"],
+               physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor", "EXOMONOPOLE"],
                siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN", "T1_UK_RAL", "T1_DE_KIT", "T1_FR_CCIN2P3", "T1_ES_PIC", "T1_IT_CNAF"],
                timePerEvent=5.7,  # copied from JetHT - should be checked
                sizePerEvent=2250, # copied from JetHT - should be checked
