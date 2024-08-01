@@ -94,6 +94,8 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         insertDatasetTriggerDAO = daoFactory(classname = "RunConfig.InsertDatasetTrigger")
 
         # partition AlcaHarvest upload by year
+        alcaHarvestCondLFNBase = None
+        alcaHarvestLumiURL = None
         if tier0Config.Global.AlcaHarvestCondLFNBase:
             alcaHarvestCondLFNBase = os.path.join(tier0Config.Global.AlcaHarvestCondLFNBase, str(datetime.now().year))
         if tier0Config.Global.AlcaHarvestLumiURL:
@@ -544,6 +546,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         # finally create WMSpec
         #
         outputs = {}
+        blockCloseDelay = None
+        taskName = None
         if streamConfig.ProcessingStyle == "Bulk":
 
             taskName = "Repack"
