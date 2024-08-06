@@ -225,7 +225,7 @@ addDataset(tier0Config, "Default",
            archival_node="T0_CH_CERN_MSS",
            tape_node="T1_US_FNAL_MSS",
            disk_node="T1_US_FNAL_Disk",
-           siteWhitelist = ["T2_CH_CERN", "T1_UK_RAL", "T1_DE_KIT", "T1_FR_CCIN2P3", "T1_ES_PIC", "T1_IT_CNAF"],
+           siteWhitelist = ["T2_CH_CERN", "T1_UK_RAL", "T1_DE_KIT", "T1_FR_CCIN2P3", "T1_ES_PIC", "T1_IT_CNAF", "T2_CH_CERN_P5"],
            raw_to_disk=False,
            aod_to_disk=True,
            blockCloseDelay=24 * 3600,
@@ -563,7 +563,6 @@ DATASETS = ["ParkingSingleMuon","ParkingSingleMuon0"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
-               siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN"],
                archival_node=None,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
@@ -578,7 +577,6 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                aod_to_disk=False,
-               siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN"],
                archival_node=None,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
@@ -592,7 +590,6 @@ for dataset in DATASETS:
                write_dqm=True,
                dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
-               siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN"],
                archival_node=None,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
@@ -609,7 +606,6 @@ for dataset in DATASETS:
                aod_to_disk=False,
                dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
-               siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN"],
                archival_node=None,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
@@ -697,7 +693,6 @@ for dataset in DATASETS:
                alca_producers=["HcalCalIsoTrkProducerFilter", "TkAlJetHT", "HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
                physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor", "EXOMONOPOLE"],
-               siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN", "T1_UK_RAL", "T1_DE_KIT", "T1_FR_CCIN2P3", "T1_ES_PIC", "T1_IT_CNAF"],
                timePerEvent=5.7,  # copied from JetHT - should be checked
                sizePerEvent=2250, # copied from JetHT - should be checked
                scenario=ppScenario)
@@ -1129,7 +1124,6 @@ for dataset in DATASETS:
                write_dqm=False,
                write_aod=False,
                archival_node=None,
-               siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN"],
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
@@ -1259,7 +1253,6 @@ for dataset in DATASETS:
                alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias", "LumiPixelsMinBias",
                                "HcalCalIsolatedBunchSelector"],
                physics_skims=["LogError", "LogErrorMonitor"],
-               siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN"],
                timePerEvent=1,
                sizePerEvent=1500,
                tape_node="T1_ES_PIC_MSS",
@@ -1280,7 +1273,6 @@ for dataset in DATASETS:
                write_dqm=False,
                write_aod=False,
                archival_node=None,
-               siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN"],
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
@@ -1309,7 +1301,6 @@ for dataset in DATASETS:
                write_dqm=True,
                dqm_sequences=["@common"],
                archival_node=None,
-               siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN"],
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
@@ -1324,7 +1315,6 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                archival_node=None,
                aod_to_disk=False,
-               siteWhitelist = ["T2_CH_CERN_P5", "T2_CH_CERN"],
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
