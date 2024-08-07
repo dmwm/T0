@@ -34,6 +34,9 @@ jobs:
         run: python setup.py clean sdist
         
       - name: Upload to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
           python -m twine upload --repository pypi dist/*
       
