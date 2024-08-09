@@ -29,7 +29,12 @@ WMAGENT_SECRETS=$BASE_DIR/admin/WMAgent.secrets.prod
 CERT=/data/certs/robot-cert-cmst0.pem
 KEY=/data/certs/robot-key-cmst0.pem
 PROXY=/data/certs/robot-proxy-vocms001.pem
+RUCIO_CONFIG=$DEPLOY_DIR/etc/rucio.cfg
+RUCIO_HOST=$(grep '^RUCIO_HOST=' $WMAGENT_SECRETS | cut -d'=' -f2)
+RUCIO_AUTH=$(grep '^RUCIO_AUTH=' $WMAGENT_SECRETS | cut -d'=' -f2)
+RUCIO_ACCOUNT=$(grep '^RUCIO_ACCOUNT=' $WMAGENT_SECRETS | cut -d'=' -f2)
 WMA_VENV_DEPLOY_SCRIPT=https://raw.githubusercontent.com/dmwm/WMCore/$WMAGENT_TAG/deploy/deploy-wmagent-venv.sh
+
 echo "Resetting couchdb for new deployment"
 sleep 3
 bash $BASE_DIR/00_pypi_reset_couch.sh -t $COUCH_TAG
@@ -181,6 +186,14 @@ fi
 echo 'config.Tier0Feeder.dropboxuser = "'$DROPBOX_USER'"' >> $config/config.py
 echo 'config.Tier0Feeder.dropboxpass = "'$DROPBOX_PASS'"' >> $config/config.py
 
+sleep 1
+echo "Modifying rucio.cfg"
+sleep 1
+
+sed -i "s+rucio_host = RUCIO_HOST_OVERWRITE+rucio_host = ${RUCIO_HOST}+" "$RUCIO_CONFIG"
+sed -i "s+auth_host = RUCIO_AUTH_OVERWRITE+auth_host = ${RUCIO_AUTH}+" "$RUCIO_CONFIG"
+echo -e "\n" >> $RUCIO_CONFIG
+echo "account = $RUCIO_ACCOUNT" >> "$RUCIO_CONFIG"
 
 sleep 1
 echo "You are now in the WMAgent environment"

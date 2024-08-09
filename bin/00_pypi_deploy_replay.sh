@@ -1,6 +1,7 @@
 #!/bin/bash 
 
 confirm_clearing=""
+
 echo "This will clear the oracle database, couchdb, and important agent directories"
 sleep 5
 echo "Are you sure you wish to continue? (Y/n)"
@@ -15,7 +16,7 @@ then
 fi
 
 WMAGENT_TAG=2.3.4rc11
-TIER0_VERSION=3.2.3
+TIER0_VERSION=3.2.4rc1
 COUCH_TAG=3.2.2
 
 BASE_DIR=/data/tier0
@@ -28,8 +29,12 @@ WMAGENT_SECRETS=$BASE_DIR/admin/WMAgent.secrets.replay
 CERT=/data/certs/robot-cert-cmst0.pem
 KEY=/data/certs/robot-key-cmst0.pem
 PROXY=/data/certs/robot-proxy-vocms001.pem
-
+RUCIO_CONFIG=$DEPLOY_DIR/etc/rucio.cfg
+RUCIO_HOST=$(grep '^RUCIO_HOST=' $WMAGENT_SECRETS | cut -d'=' -f2)
+RUCIO_AUTH=$(grep '^RUCIO_AUTH=' $WMAGENT_SECRETS | cut -d'=' -f2)
+RUCIO_ACCOUNT=$(grep '^RUCIO_ACCOUNT=' $WMAGENT_SECRETS | cut -d'=' -f2)
 WMA_VENV_DEPLOY_SCRIPT=https://raw.githubusercontent.com/dmwm/WMCore/$WMAGENT_TAG/deploy/deploy-wmagent-venv.sh
+
 echo "Resetting couchdb for new deployment"
 sleep 3
 bash $BASE_DIR/00_pypi_reset_couch.sh -t $COUCH_TAG
@@ -96,6 +101,7 @@ echo "config=$CURRENT_DIR/config"
 echo "manage=manage"
 sleep 1
 ### The WMCoreVenvVars is a function in the $DEPLOY_DIR/bin/activate file
+
 declare -A WMCoreVenvVars
 WMCoreVenvVars[TEAM]=$TEAMNAME
 WMCoreVenvVars[WMCORE_CACHE_DIR]=/tmp/$(whoami)
@@ -184,6 +190,14 @@ fi
 echo 'config.Tier0Feeder.dropboxuser = "'$DROPBOX_USER'"' >> $config/config.py
 echo 'config.Tier0Feeder.dropboxpass = "'$DROPBOX_PASS'"' >> $config/config.py
 
+sleep 1
+echo "Modifying rucio.cfg"
+sleep 1
+
+sed -i "s+rucio_host = RUCIO_HOST_OVERWRITE+rucio_host = ${RUCIO_HOST}+" "$RUCIO_CONFIG"
+sed -i "s+auth_host = RUCIO_AUTH_OVERWRITE+auth_host = ${RUCIO_AUTH}+" "$RUCIO_CONFIG"
+echo -e "\n" >> $RUCIO_CONFIG
+echo "account = $RUCIO_ACCOUNT" >> "$RUCIO_CONFIG"
 
 sleep 1
 echo "You are now in the WMAgent environment"
