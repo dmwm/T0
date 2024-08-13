@@ -2,7 +2,22 @@
 
 confirm_clearing=""
 
-echo "This will clear the oracle database, couchdb, and important agent directories"
+echo "You are about to deploy production. Please name the node you intend to deploy (include .cern.ch : vocms001.cern.ch)"
+read HOST
+
+echo -e "\n"
+if [ "$HOST" != "$(hostname)" ] 
+then
+    sleep 1
+    echo "Your answer was $HOST"
+    sleep 1
+    echo "Your current host is $(hostname)"
+    sleep 1
+    echo "Please ensure you are in the node you want to deploy. Exiting without making changes"
+    exit
+fi
+
+echo "This will clear the oracle database, couchdb, and important agent directories assosiated to $(hostname)"
 sleep 5
 echo "Are you sure you wish to continue? (Y/n)"
 read confirm_clearing
@@ -15,7 +30,7 @@ then
     exit
 fi
 
-WMAGENT_TAG=2.3.4rc11
+WMAGENT_TAG=2.3.4
 TIER0_VERSION=3.2.3
 COUCH_TAG=3.2.2
 
