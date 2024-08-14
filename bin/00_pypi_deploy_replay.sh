@@ -67,6 +67,8 @@ bash $BASE_DIR/deploy-wmagent-venv.sh -t $WMAGENT_TAG -d $DEPLOY_DIR -y
 #######################################################################
 echo "Setting up secrets file"
 sleep 1
+
+rm $DEPLOY_DIR/admin/wmagent/WMAgent.secrets
 ln -s $WMAGENT_SECRETS $DEPLOY_DIR/admin/wmagent/WMAgent.secrets
 
 echo "Setting up certificate and key"
