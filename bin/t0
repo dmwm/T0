@@ -1,0 +1,211 @@
+#!/usr/bin/env python
+# encoding: utf-8
+import sys
+import getopt
+import traceback
+import os
+
+help_message = '''
+- t0 --update-t0=<version>          : Uninstalls current T0 to install sepcified T0 version
+-
+- t0 --start-agent                  : Starts the agent
+-
+- t0 --stop-agent                   : Stops the agent
+-
+- t0 --clear-deployment             : Start a new deployment without re-installing the software
+-
+- t0 --resource-control=<site>      : Adds input site to resource control only for processing jobs
+-
+- t0 --edit-code=<file>             : Looks for input file within site-packages directory and opens it for edit using vim
+'''
+
+class Usage(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+
+
+def start ():
+    """
+    _start_
+    starts the agent
+    """
+    print("Starting the agent")
+    os.system('manage start-agent')
+
+def stop ():
+    """
+    _stop_
+    stops the agent
+    """
+    print("Stopping the agent")
+    os.system('manage stop-agent')
+
+def updateT0 (version):
+    """
+    _updateT0_
+    Updates the T0 version
+    """
+    deployDir = os.getenv('WMA_DEPLOY_DIR')
+    os.system('echo "Stopping Tier0Feeder"')
+    os.system('sleep 1')
+    os.system('manage execute-agent wmcoreD --shutdown --components Tier0Feeder')
+    os.system('echo "Now updating T0"')
+    os.system('sleep 2')
+    os.system('pip uninstall -y T0')
+    os.system('pip install T0=={}'.format(version))
+    os.system('chmod +x {}/bin/t0'.format(deployDir))
+    os.system('chmod +x {}/etc/Tier0Config.py'.format(deployDir))
+    os.system('echo "Restarting Tier0Feeder"')
+    os.system('manage execute-agent wmcoreD --restart --components Tier0Feeder')
+    os.system('echo "Done"')
+
+def updateWMCore ():
+    """
+    _updateWMCore_
+    Updates the T0 version
+    """
+    return
+    print("Updating WMCore")
+    os.system('pip uninstall -y wmagent')
+    os.system('pip install wmagent')
+
+def resetCouch ():
+    """
+    _resetCouch_
+    Cleans couchdb relevant directories and starts a new container
+    """
+    os.system('bash /data/tier0/00_pypi_reset_couch.sh')
+
+def wipeT0ast (userInput='n'):
+    """
+    _wipeT0ast_
+    Cleans T0AST database
+    """
+    if userInput == 'Y':
+        os.system('bash /data/tier0/00_wipe_t0ast.sh')
+    else:
+        os.system('echo "Not wiping T0AST"')
+
+def tweakConfig (teamname):
+    """
+    _tweakConfig_
+    Modifies config.py file according to type of agent: replay or prod
+    """
+    if teamname == 'Tier0Replay':
+        os.system('bash /data/tier0/00_pypi_tweak_replay_config.sh')
+    elif teamname == 'Tier0Production':
+        os.system('bash /data/tier0/00_pypi_tweak_prod_config.sh')
+    else:
+        os.system('echo "Something is not right with the TEAM provided: {}"'.format(teamname))
+
+def clearDeployment (userInput='n'):
+    """
+    _clearDeployment_
+    Avoid re-deploying from scratch when unnecessary
+    """
+    if userInput != 'Y':
+        os.system('echo "Not performing anything"')
+        return
+    teamname = os.getenv('TEAM')
+    print(teamname)
+    stop()
+    os.system('condor_rm -all')
+    resetCouch()
+    wipeT0ast(userInput=userInput)
+    os.system('rm -rf $WMA_CONFIG_DIR/.init*')
+    os.system('rm -rf $WMA_INSTALL_DIR/*')
+    os.system('rm -rf /data/tier0/admin/Specs/*')
+    init()
+    tweakConfig(teamname)
+    os.system('echo "Done. Agent is ready to start"')
+
+def init ():
+    """
+    _init_
+    Runs the init.sh script
+    """
+    os.system('bash $WMA_DEPLOY_DIR/init.sh')
+
+def addProcessingSite(site=None):
+    """
+    _resourceControl_
+    Adds site to the resource control
+    """
+    command_1 = "manage execute-agent wmagent-resource-control --site-name={} --cms-name={} --pnn={} --ce-name={} --pending-slots=20000 --running-slots=20000 --plugin=SimpleCondorPlugin".format(site, site, site, site)
+    command_2 = "manage execute-agent wmagent-resource-control --site-name={} --task-type=Processing --pending-slots=10000 --running-slots=10000".format(site)
+    os.system(command_1)
+    os.system(command_2)
+
+def modifyCodeFile(file=None):
+    """
+    Simplifies the modification of the agent code
+    Goes to the site-packages directory and looks for file to modify, if given
+    """
+    deployDir = os.getenv('WMA_DEPLOY_DIR')
+    packagePath = os.path.join(deployDir, 'lib/python3.9/site-packages')
+    os.chdir(packagePath)
+
+    findFile = 'find . -name {}'.format(file)
+    with os.popen(findFile) as stream:
+        filePath = stream.read().strip()
+    filePath = os.path.join(packagePath, filePath[2:])
+    os.system('echo "Now modifying {}"'.format(filePath))
+    os.system('sleep 3')
+    os.system('vim {}'.format(filePath))
+    os.system('echo "Done"')
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv
+
+    try:
+        try:
+            opts, args = getopt.getopt(argv[1:], "h",
+            ["help", "update-t0=", "start-agent", "stop-agent", "clear-deployment", "resource-control=", "edit-code="])
+
+        except getopt.error as msg:
+            raise Usage(msg)
+
+        # option processing
+        for option, value in opts:
+            if option in ("-h", "--help"):
+                raise Usage(help_message)
+            
+            if option == "--update-t0":
+                updateT0(value)
+
+            if option == "--start-agent":
+                start()
+
+            if option == "--stop-agent":
+                stop()
+
+            if option == "--clear-deployment":
+                os.system('echo "This will clear T0AST database"')
+                os.system('sleep 3')
+                os.system('echo "This will remove /data/tier0/admin/Specs"')
+                os.system('sleep 3')
+                os.system('echo "This will reset couchdb container"')
+                os.system('sleep 3')
+                os.system('echo "Are you sure you wish to proceed? (Y/n)"')
+                userInput = input()
+                clearDeployment(userInput=userInput)
+
+            if option == "--resource-control":
+                site = value
+                addProcessingSite(site)
+
+            if option == "--edit-code":
+                if len(value) > 0:
+                    modifyCodeFile(value)
+                else:
+                    os.system('echo "Please provide a file to modify"')
+                    os.system('echo "t0 --edit-code={file}"')
+
+    except Usage as err:
+        print(sys.argv[0].split("/")[-1] + ": " + str(err.msg), file=sys.stderr)
+        print("\t for help use --help", file=sys.stderr)
+        return 2
+
+if __name__ == "__main__":
+    sys.exit(main())

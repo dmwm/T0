@@ -6,35 +6,19 @@
 BASE_DIR=/data/tier0
 DEPLOY_DIR=$BASE_DIR/srv/wmagent
 
-#Patches on top of 3.0.8
-# Adopt CMS_PATH and SITECONFIG_PATH to locate the site catalog
-#curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11481.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+#Emulated data handling
+curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4921.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
 
-# Add new CMSCouch exception for Request Entity Too Large
-#curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11502.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+#Fix cmsRun logs
+curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11933.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
 
-# Add new pp scenario
-#curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4813.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+#Repack data tiers
+curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4926.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
 
-#Adding support for writing nano aod
-#curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4827.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+#L1SCOUT support in WMCore
+curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11930.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11951.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
+curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11952.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
 
-
-#Include nanoaod support in Tier0FeederPoller
-curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4836.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
-
-#Patches on top of 3.1.0
-#Adding support for writing nano aod
-curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4827.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
-
-#Adding skipped streamer info into T0 Data Service
-curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4841.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
-
-#Add logic to handle override catalog
-curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4862.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
-
-#Adds setInjectLimit() that allows limiting the number of lumisections used in the replay
-curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4850.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3
-
-#Fix error in Cleanup jobs
-curl https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/11896.patch | patch -d $DEPLOY_DIR/current/sw/slc7_amd64_gcc630/cms/t0/3.1.2/ -p 1
+#Add extra mapping for repack
+curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4945.patch | patch -d $DEPLOY_DIR/current/apps/t0/lib/python3.8/site-packages/ -p 3

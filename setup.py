@@ -1,211 +1,126 @@
 #!/usr/bin/env python
-
 """
-Standard python setup.py file for T0 System.
-To build    : python setup.py build
-To install  : python setup.py install --prefix=<some dir>
-To clean    : python setup.py clean
-To run tests: python setup.py test
+Build, clean and test the t0 package.
 """
+from __future__ import print_function
 
-__author__ = "Valentin Kuznetsov"
-
-import sys
+import imp
 import os
-from unittest import TextTestRunner, TestLoader
-from glob import glob
-from os.path import splitext, basename, join as pjoin
-from distutils.core import setup
-from distutils.cmd import Command
-from distutils.command.install import INSTALL_SCHEMES
+import os.path
+from distutils.core import Command, setup
+from os.path import join as pjoin
 
-# add some path which will define the version,
-# e.g. it can be done in T0/__init__.py
-sys.path.append(os.path.join(os.getcwd(), 'src/python'))
-try:
-    from T0 import version as t0_version
-except:
-    t0_version = '1.0.0' # some default
+from setup_build import BuildCommand, InstallCommand, get_path_to_t0_root, list_packages, list_static_files
 
-required_python_version = '2.6'
-
-class TestCommand(Command):
-    """
-    Class to handle unit tests
-    """
-    user_options = [ ]
-
-    def initialize_options(self):
-        """Init method"""
-        self._dir = os.getcwd()
-
-    def finalize_options(self):
-        """Finalize method"""
-        pass
-
-    def run(self):
-        """
-        Finds all the tests modules in test/, and runs them.
-        """
-        # list of files to exclude,
-        # e.g. [pjoin(self._dir, 'test', 'exclude_t.py')]
-        exclude = []
-        # list of test files
-        testfiles = []
-        for tname in glob(pjoin(self._dir, 'test', '*_t.py')):
-            if  not tname.endswith('__init__.py') and \
-                tname not in exclude:
-                testfiles.append('.'.join(
-                    ['test', splitext(basename(tname))[0]])
-                )
-        testfiles.sort()
-        try:
-            tests = TestLoader().loadTestsFromNames(testfiles)
-        except:
-            print("\nFail to load unit tests", testfiles)
-            raise
-        test = TextTestRunner(verbosity = 2)
-        test.run(tests)
 
 class CleanCommand(Command):
-    """
-    Class which clean-up all pyc files
-    """
-    user_options = [ ]
+    description = "Clean up (delete) compiled files"
+    user_options = []
 
     def initialize_options(self):
-        """Init method"""
-        self._clean_me = [ ]
-        for root, dirs, files in os.walk('.'):
-            for fname in files:
-                if fname.endswith('.pyc'):
-                    self._clean_me.append(pjoin(root, fname))
+        self.cleanMes = []
+        for root, dummyDirs, files in os.walk('.'):
+            for f in files:
+                if f.endswith('.pyc'):
+                    self.cleanMes.append(pjoin(root, f))
 
     def finalize_options(self):
-        """Finalize method"""
         pass
 
     def run(self):
-        """Run method"""
-        for clean_me in self._clean_me:
+        for cleanMe in self.cleanMes:
             try:
-                os.unlink(clean_me)
-            except:
+                os.unlink(cleanMe)
+            except Exception:
                 pass
 
-def dirwalk(relativedir):
-    """
-    Walk a directory tree and look-up for __init__.py files.
-    If found yield those dirs. Code based on
-    http://code.activestate.com/recipes/105873-walk-a-directory-tree-using-a-generator/
-    """
-    idir = os.path.join(os.getcwd(), relativedir)
-    for fname in os.listdir(idir):
-        fullpath = os.path.join(idir, fname)
-        if  os.path.isdir(fullpath) and not os.path.islink(fullpath):
-            for subdir in dirwalk(fullpath):  # recurse into subdir
-                yield subdir
-        else:
-            initdir, initfile = os.path.split(fullpath)
-            if  initfile == '__init__.py':
-                yield initdir
 
-def find_packages(relativedir):
-    "Find list of packages in a given dir"
-    packages = [] 
-    for idir in dirwalk(relativedir):
-        package = idir.replace(os.getcwd() + '/', '')
-        package = package.replace(relativedir + '/', '')
-        package = package.replace('/', '.')
-        packages.append(package)
-    return packages
+class EnvCommand(Command):
+    description = "Configure the PYTHONPATH, DATABASE and PATH variables to" + \
+                  "some sensible defaults, if not already set. Call with -q when eval-ing," + \
+                  """ e.g.:
+                      eval `python setup.py -q env`
+                  """
 
-def datafiles(idir, recursive=True):
-    """Return list of data files in provided relative dir"""
-    files = []
-    if  idir[0] != '/':
-        idir = os.path.join(os.getcwd(), idir)
-    for dirname, dirnames, filenames in os.walk(idir):
-        if  dirname != idir:
-            continue
-        if  recursive:
-            for subdirname in dirnames:
-                files.append(os.path.join(dirname, subdirname))
-        for filename in filenames:
-            if  filename[-1] == '~':
-                continue
-            files.append(os.path.join(dirname, filename))
-    return files
+    user_options = []
 
-def install_prefix(idir=None):
-    "Return install prefix"
-    inst_prefix = sys.prefix
-    for arg in sys.argv:
-        if  arg.startswith('--prefix='):
-            inst_prefix = os.path.expandvars(arg.replace('--prefix=', ''))
-            break
-    if  idir:
-        return os.path.join(inst_prefix, idir)
-    return inst_prefix
+    def initialize_options(self):
+        pass
 
-def main():
-    "Main function"
-    version      = t0_version
-    name         = "T0"
-    description  = "CMS T0 System"
-    url          = \
-        "https://twiki.cern.ch/twiki/bin/viewauth/CMS/T0ASTDevelopmentPlan"
-    readme       = "T0 CMS system %s" % url
-    author       = "Dirk Hufnagel",
-    author_email = "Dirk.Hufnagel [at] cern.ch>",
-    keywords     = ["T0"]
-    package_dir  = \
-        {"T0": "src/python/T0", "T0Component": "src/python/T0Component"}
-    packages     = find_packages('src/python')
-    scriptfiles  = [] # list of scripts
-    data_files   = [] # list of tuples whose entries are (dir, [data_files])
-    data_files   = [(install_prefix('etc'), datafiles('etc', recursive=False)),
-                    (install_prefix('bin'), datafiles('bin', recursive=False))]
-    cms_license  = "CMS experiment software"
-    classifiers  = [
-        "Development Status :: 3 - Production/Beta",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: CMS/CERN Software License",
-        "Operating System :: MacOS :: MacOS X",
-        "Operating System :: Microsoft :: Windows",
-        "Operating System :: POSIX",
-        "Programming Language :: Python",
-        "Topic :: Database"
-    ]
+    def finalize_options(self):
+        pass
 
-    if  sys.version < required_python_version:
-        msg = "I'm sorry, but %s %s requires Python %s or later."
-        print(msg % (name, version, required_python_version))
-        sys.exit(1)
+    def run(self):
+        if not os.getenv('COUCHURL', False):
+            # Use the default localhost URL if none is configured.
+            print('export COUCHURL=http://localhost:5984')
+        here = get_path_to_t0_root()
 
-    # set default location for "data_files" to
-    # platform specific "site-packages" location
-    for scheme in list(INSTALL_SCHEMES.values()):
-        scheme['data'] = scheme['purelib']
+        tests = here + '/test/python'
+        source = here + '/src/python'
+        # Stuff we want on the path
+        exepth = [here + '/etc',
+                  here + '/bin']
 
-    setup(
-        name                 = name,
-        version              = version,
-        description          = description,
-        long_description     = readme,
-        keywords             = keywords,
-        packages             = packages,
-        package_dir          = package_dir,
-        data_files           = data_files,
-        scripts              = scriptfiles,
-        requires             = ['python (>=2.6)'],
-        classifiers          = classifiers,
-        cmdclass             = {'test': TestCommand, 'clean': CleanCommand},
-        author               = author,
-        author_email         = author_email,
-        url                  = url,
-        license              = cms_license,
-    )
+        pypath = os.getenv('PYTHONPATH', '').strip(':').split(':')
 
-if __name__ == "__main__":
-    main()
+        for pth in [tests, source]:
+            if pth not in pypath:
+                pypath.append(pth)
+
+        # We might want to add other executables to PATH
+        expath = os.getenv('PATH', '').split(':')
+        for pth in exepth:
+            if pth not in expath:
+                expath.append(pth)
+
+        print('export PYTHONPATH=%s' % ':'.join(pypath))
+        print('export PATH=%s' % ':'.join(expath))
+
+        # We want the t0 root set, too
+        print('export T0_ROOT=%s' % get_path_to_t0_root())
+        print('export T0BASE=$T0_ROOT')
+
+# The actual setup command, and the classes associated to the various options
+
+# Need all the packages we want to build by default, this will be overridden in sub-system builds.
+# Since it's a lot of code determine it by magic.
+DEFAULT_PACKAGES = list_packages(['src/python/T0',
+                                  'src/python/T0Component'
+                                 ])
+
+# Divine out the version of t0 from t0.__init__, which is bumped by
+# "bin/buildrelease.sh"
+
+# Obnoxiously, there's a dependency cycle when building packages. We'd like
+# to simply get the current t0 version by using
+# from t0 import __version__
+# But PYTHONPATH isn't set until after the package is built, so we can't
+# depend on the python module resolution behavior to load the version.
+# Instead, we use the imp module to load the source file directly by
+# filename.
+t0_root = get_path_to_t0_root()
+t0_package = imp.load_source('temp_module', os.path.join(t0_root,
+                                                            'src',
+                                                            'python',
+                                                            'T0',
+                                                            '__init__.py'))
+t0_version = t0_package.__version__
+
+setup(name='T0',
+      version=t0_version,
+      maintainer='CMS DMWM Group',
+      maintainer_email='cms-tier0-operations@cern.ch',
+      cmdclass={'deep_clean': CleanCommand,
+                'coverage': CoverageCommand,
+                'test': TestCommand,
+                'env': EnvCommand,
+                'build_system': BuildCommand,
+                'install_system': InstallCommand},
+      # base directory for all our packages
+      package_dir={'': 'src/python/'},  # % get_path_to_t0_root()},
+      packages=DEFAULT_PACKAGES,
+      data_files=list_static_files(),
+      url="https://github.com/dmwm/T0",
+      license="Apache License, Version 2.0"
+      )

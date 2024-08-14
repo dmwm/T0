@@ -133,6 +133,8 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
             insertDAO[mapping] = daoFactory(classname = f"RunConfig.Insert{mapping}")
 
         # partition AlcaHarvest upload by year
+        alcaHarvestCondLFNBase = None
+        alcaHarvestLumiURL = None
         if tier0Config.Global.AlcaHarvestCondLFNBase:
             alcaHarvestCondLFNBase = os.path.join(tier0Config.Global.AlcaHarvestCondLFNBase, str(datetime.now().year))
         else:
@@ -278,7 +280,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
     # treat centralDAQ or miniDAQ runs (have an HLT key) different from local runs
     if runInfo['hltkey'] != None:
 
-        # streams not explicitely configured are repacked
+        # streams not explicitly configured are repacked
         if stream not in list(tier0Config.Streams.dictionary_().keys()):
             addRepackConfig(tier0Config, stream)
 
@@ -494,11 +496,12 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             selectEvents = []
             for path in sorted(paths):
-                selectEvents.append("%s:%s" % (path, runInfo['process']))
+                if path != "All":
+                    selectEvents.append("%s:%s" % (path, runInfo['process']))
 
             if streamConfig.ProcessingStyle == "Bulk":
-
-                outputModuleDetails.append( { 'dataTier' : "RAW",
+                dataTier = streamConfig.Repack.DataTier
+                outputModuleDetails.append( { 'dataTier' : dataTier,
                                               'eventContent' : "ALL",
                                               'selectEvents' : selectEvents,
                                               'primaryDataset' : dataset } )
@@ -520,7 +523,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                             'priority' : "high",
                                             'primaryDataset' : dataset,
                                             'deleteFromSource' : True,
-                                            'dataTier' : "RAW",
+                                            'dataTier' : dataTier,
                                             'datasetLifetime' : datasetConfig.datasetLifetime } )
 
                 #
@@ -531,7 +534,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                             'priority' : "high",
                                             'primaryDataset' : "%s-Error" % dataset,
                                             'deleteFromSource' : True,
-                                            'dataTier' : "RAW",
+                                            'dataTier' : dataTier,
                                             'datasetLifetime' : datasetConfig.datasetLifetime } )
 
 
@@ -568,7 +571,9 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         #
         outputs = {}
         specArguments = {}
-        
+        blockCloseDelay = None
+        taskName = None
+
         if streamConfig.ProcessingStyle == "Bulk":
 
             taskName = "Repack"
@@ -1179,6 +1184,7 @@ def setStorageSite(tier0Config, wmSpec, storagesite):
     """
     site = retrieveSiteConfig(tier0Config, storagesite)
     wmSpec.setTaskEnvironmentVariables({'WMAGENT_SITE_CONFIG_OVERRIDE':site.SiteLocalConfig})
+    wmSpec.setTaskEnvironmentVariables({'WMAGENT_RUCIO_CATALOG_OVERRIDE':site.SiteLocalRucioConfig})
     setWMSpecOverrideCatalog(wmSpec, site)
     for task in wmSpec.getAllTasks():
         for stepName in task.listAllStepNames():

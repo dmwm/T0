@@ -15,6 +15,7 @@ Tier0Configuration - Global configuration object
 | | |        |                                    SITE,SUBSITE,STORAGE_SITE,VOLUME,PROTOCOL
 | | |        |
 | | |        |--> SiteLocalConfig - Path to this site's site local config file
+| | |        |--> SiteLocalRucioConfig - Path to this site's local Rucio storage json file
 | | |
 | | |--> Global - Configuration parameters that do not belong to a particular
 | |       |       stream or dataset and can be applied to an entire run.
@@ -71,13 +72,23 @@ Tier0Configuration - Global configuration object
 | |       |--> ValidationMode - Whether or not we upload conditions for immediate use
 | |       |                     in PromptReco or just for validation checks.
 | |       |
-| |       |--> ScramArches - Dictionary containig CMSSW release and corresponding ScramArch
+| |       |--> ScramArches - Dictionary containing CMSSW release and corresponding ScramArch
 | |       |
 | |       |--> DefaultScramArch - Default ScramArch if nothing else is specified for release
 | |       |
 | |       |--> BaseRequestPriority - Base for request priorities for PromptReco/Repack/Express
 | |       |
 | |       |--> DeploymentID - Unique identifier for every T0 Agent deployment
+| |       |
+| |       |--> extraStreamDatasetMap - Additional mapping to be applied on top of HLT menu. Unspecified
+| |       |                            path, means no event selection for this stream-dataset pair.
+| |       |                          mapping = {
+| |                                                 Stream0: {"Dataset": Dataset0}, 
+| |                                                 Stream1: {"Dataset": Dataset1
+| |                                                           "Path": Path1},
+| |                                                 Stream1: {"Dataset": Dataset2
+| |                                                           "Path": Path2},
+| |                                            }
 | |
 | |
 | |--> Streams - Configuration parameters that belong to a particular stream
@@ -94,6 +105,8 @@ Tier0Configuration - Global configuration object
 |             |--> Repack - Configuration section for bulk streams
 |             |     |
 |             |     |--> ProcessingVersion - processing version
+|             |     |
+|             |     |--> DataTier - Output data tier for repacking the strea,
 |             |     |
 |             |     |--> MaxSizeSingleLumi - max size of single lumi before we break
 |             |     |                        it up into multiple repack jobs
@@ -291,6 +304,8 @@ def createTier0Config():
     tier0Config.Global.EnableUniqueWorkflowName = False
 
     tier0Config.Global.DeploymentID = 1
+    
+    tier0Config.Global.extraStreamDatasetMap = None
 
     return tier0Config
 
@@ -697,6 +712,35 @@ def setOverrideCatalog(config, overrideCatalog):
     config.Global.overrideCatalog = overrideCatalog
     return
 
+def setExtraStreamDatasetMap(config, mapping):
+    """
+    _setExtraStreamDatasetMap_
+
+    Adds extra entries to HLT stream dataset mapping
+    """
+    
+    mapDict={}
+
+    for stream, description in list(mapping.items()):
+        dataset=description["Dataset"]
+        # Create dictionary for new streams
+        if stream not in mapDict:
+            mapDict[stream] = {}
+
+        # Add new datasets to stream
+        if dataset not in mapDict[stream]:
+            mapDict[stream][dataset] = []
+
+        # If defined, add path for event selection. "All" otherwise.
+        if "Path" in description:
+            mapDict[stream][dataset].append(description["Path"])
+        else:
+            mapDict[stream][dataset].append("All")
+
+
+    config.Global.extraStreamDatasetMap = mapDict
+    return
+
 
 def setSiteLocalConfig(config, siteLocalConfig):
     """
@@ -706,6 +750,16 @@ def setSiteLocalConfig(config, siteLocalConfig):
     """
     config.Global.siteLocalConfig = siteLocalConfig
     return
+
+def setSiteLocalRucioConfig(config, siteLocalRucioConfig):
+    """
+    _setSiteLocalRucioConfig_
+
+    Set the site local Rucio config file to use in case override is necessary.
+    """
+    config.Global.siteLocalRucioConfig = siteLocalRucioConfig
+    return
+
 
 def setBulkDataType(config, type):
     """
@@ -929,6 +983,10 @@ def addRepackConfig(config, streamName, **options):
     else:
         streamConfig.Repack.MaxMemory = options.get("maxMemory", 2000)
 
+    if hasattr(streamConfig.Repack, "DataTier"):
+        streamConfig.Repack.DataTier = options.get("dataTier", streamConfig.Repack.DataTier)
+    else:
+        streamConfig.Repack.DataTier = options.get("dataTier", "RAW")
     return
 
 def addExpressConfig(config, streamName, **options):
@@ -1033,6 +1091,12 @@ def addSiteConfig(config, siteName, **options):
         siteConfig.SiteLocalConfig = options.get("siteLocalConfig", siteConfig.SiteLocalConfig)
     else:
         siteConfig.SiteLocalConfig = options.get("siteLocalConfig", "/cvmfs/cms.cern.ch/SITECONF/local/JobConfig/site-local-config.xml")
+
+    if hasattr(siteConfig, "SiteLocalRucioConfig"):
+        siteConfig.SiteLocalRucioConfig = options.get("siteLocalRucioConfig", siteConfig.SiteLocalRucioConfig)
+    else:
+        siteConfig.SiteLocalRucioConfig = options.get("siteLocalRucioConfig", "/cvmfs/cms.cern.ch/SITECONF/local/storage.json")
+
 
     return
 

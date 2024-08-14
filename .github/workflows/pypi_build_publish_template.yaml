@@ -1,0 +1,42 @@
+# Reusable workflow to setup a specific T0 component for pip
+
+on:
+  push:
+    paths:
+      - 'src/python/T0/__init__.py'
+
+jobs:
+  build_and_publish_from_template:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup python 3.8
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.8"
+      - name: Upgrade pip3
+        run: |
+          python3 -m pip install --upgrade pip
+      - name: Update the setup script template with package name
+        run: |
+          sed "s/PACKAGE_TO_BUILD/${{ inputs.t0_component }}/" setup_template.py > setup.py
+      - name: Create requirements file
+        run: |
+          cp requirements.txt requirements.t0.txt
+          awk "/(${{ inputs.t0_component }}$)|(${{ inputs.t0_component }},)/ {print \$1}" requirements.t0.txt > requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade build
+          pip install setuptools wheel twine
+
+      - name: Build sdist
+        run: python setup.py clean sdist
+        
+      - name: Upload to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          python -m twine upload --repository pypi dist/*
+      
