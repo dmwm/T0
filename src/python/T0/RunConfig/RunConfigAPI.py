@@ -169,8 +169,11 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         try:
             myThread.transaction.begin()
             updateRunDAO.execute(bindsUpdateRun, conn = myThread.transaction.conn, transaction = True)
-            for mapping in ['Stream','Dataset','StreamDataset','Trigger','DatasetTrigger']:
-                insertDAO[mapping].execute(bindsCombination[mapping], conn = myThread.transaction.conn, transaction = True)
+            insertStreamDAO.execute(bindsCombination['Stream'], conn = myThread.transaction.conn, transaction = True)
+            insertDatasetDAO.execute(bindsCombination['Dataset'], conn = myThread.transaction.conn, transaction = True)
+            insertStreamDatasetDAO.execute(bindsCombination['StreamDataset'], conn = myThread.transaction.conn, transaction = True)
+            insertTriggerDAO.execute(bindsCombination['Trigger'], conn = myThread.transaction.conn, transaction = True)
+            insertDatasetTriggerDAO.execute(bindsCombination['DatasetTrigger'], conn = myThread.transaction.conn, transaction = True)
 
         except Exception as ex:
             logging.exception(ex)
