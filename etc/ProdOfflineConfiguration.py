@@ -1409,6 +1409,7 @@ DATASETS = ["D01", "D02", "D03", "D04", "D05", "D06", "D07", "D08", "D09", "D10"
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
+	       raw_to_disk=True,
                archival_node=None,
                tape_node=None,
                disk_node="T0_CH_CERN_Disk",
