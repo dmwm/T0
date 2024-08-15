@@ -127,10 +127,12 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
     # treat centralDAQ or miniDAQ runs (have an HLT key) different from local runs
     if hltConfig != None:
 
-        # Create DAOs to insert stream/dataset/trigger mapping
-        insertDAO={}
-        for mapping in ['Stream','Dataset','StreamDataset','Trigger','DatasetTrigger']:
-            insertDAO[mapping] = daoFactory(classname = f"RunConfig.Insert{mapping}")
+        # write stream/dataset/trigger mapping
+        insertStreamDAO = daoFactory(classname = "RunConfig.InsertStream")
+        insertDatasetDAO = daoFactory(classname = "RunConfig.InsertPrimaryDataset")
+        insertStreamDatasetDAO = daoFactory(classname = "RunConfig.InsertStreamDataset")
+        insertTriggerDAO = daoFactory(classname = "RunConfig.InsertTrigger")
+        insertDatasetTriggerDAO = daoFactory(classname = "RunConfig.InsertDatasetTrigger")
 
         # partition AlcaHarvest upload by year
         alcaHarvestCondLFNBase = None
@@ -167,12 +169,9 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         try:
             myThread.transaction.begin()
             updateRunDAO.execute(bindsUpdateRun, conn = myThread.transaction.conn, transaction = True)
-            # write stream/dataset/trigger mapping
-            insertStreamDAO = daoFactory(classname = "RunConfig.InsertStream")
-            insertDatasetDAO = daoFactory(classname = "RunConfig.InsertPrimaryDataset")
-            insertStreamDatasetDAO = daoFactory(classname = "RunConfig.InsertStreamDataset")
-            insertTriggerDAO = daoFactory(classname = "RunConfig.InsertTrigger")
-            insertDatasetTriggerDAO = daoFactory(classname = "RunConfig.InsertDatasetTrigger")
+            for mapping in ['Stream','Dataset','StreamDataset','Trigger','DatasetTrigger']:
+                insertDAO[mapping].execute(bindsCombination[mapping], conn = myThread.transaction.conn, transaction = True)
+
         except Exception as ex:
             logging.exception(ex)
             myThread.transaction.rollback()
