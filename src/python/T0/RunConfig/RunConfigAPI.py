@@ -1001,7 +1001,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
             
                 if phedexConfig['tape_node'] != None:
 
-                    description['cutodialSites'] = [phedexConfig['tape_node']]
+                    description['custodialSites'] = [phedexConfig['tape_node']]
                     description['useSkim'] =  True
 
                     if phedexConfig['disk_node'] == None:
@@ -1036,7 +1036,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                         description['dataTier']=dataTier
                         subscriptions.append( description.copy() )
                     
-                    del description['cutodialSites']
+                    del description['custodialSites']
                     description['isSkim']=False
                     for dataTier in diskDataTiers - tapeDataTiers:
                         
@@ -1050,7 +1050,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                         subscriptions.append( description.copy() )
 
                 elif phedexConfig['archival_node'] != None:
-                    description['cutodialSites'] = [phedexConfig['archival_node']]
+                    description['custodialSites'] = [phedexConfig['archival_node']]
 
                     for dataTier in tapeDataTiers | diskDataTiers | skimDataTiers | alcaDataTiers:
                         description['dataTier']=dataTier
