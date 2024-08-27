@@ -984,92 +984,18 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                       'SCRAM_ARCH' : datasetConfig.ScramArch,
                                       'MULTICORE' : datasetConfig.Multicore,
                                       'GLOBAL_TAG' : datasetConfig.GlobalTag } )
-
-            # check if the dataset has any phedex config
-            if dataset in phedexConfigs:
-
-                phedexConfig = phedexConfigs[dataset]
-
-                tapeDataTiers, diskDataTiers, skimDataTiers, alcaDataTiers = getDataTiers(datasetConfig,tier0Config)
-
-                # do things different based on whether we have TapeNode/DiskNode, only TapeNode or ArchivalNode
-                description={'priority' : "high",
-                             'primaryDataset' : dataset,
-                             'deleteFromSource' : True,
-                             'datasetLifetime' : datasetConfig.datasetLifetime,
-                            }
             
-                if phedexConfig['tape_node'] != None:
+            tapeDataTiers, diskDataTiers, skimDataTiers, alcaDataTiers = getDataTiers(datasetConfig,tier0Config)
+            # check if the dataset has any phedex config
 
-                    description['custodialSites'] = [phedexConfig['tape_node']]
-                    description['useSkim'] =  True
+            if dataset in phedexConfigs:
+                subscription=stackPhedexSubscriptions(subscriptions,dataset,phedexConfigs[dataset],tier0Config,datasetConfig)
 
-                    if phedexConfig['disk_node'] == None:
-                        diskDataTiers = set()
-
-                    for dataTier in tapeDataTiers & diskDataTiers:
-
-                        if dataTier == "RECO" and phedexConfig['disk_node_reco']:
-                            diskNode = phedexConfig['disk_node_reco']
-                        else:
-                            diskNode = phedexConfig['disk_node']
-                        
-                        description['nonCustodialSites']=[diskNode]
-                        description['isSkim']=False
-                        description['dataTier']=dataTier
-                        subscriptions.append( description.copy() )
-                        
-                    description['nonCustodialSites']=[phedexConfig['disk_node']] if phedexConfig['disk_node'] else []
-                    description['isSkim']=True
-                    for dataTier in skimDataTiers:
-                        description['dataTier']=dataTier
-                        subscriptions.append( description.copy() )
-                        
-                    del description['nonCustodialSites']
-                    description['isSkim']=False
-                    for dataTier in tapeDataTiers - diskDataTiers:
-                        description['dataTier']=dataTier
-                        subscriptions.append( description.copy() )
-
-                    description['isSkim']=True
-                    for dataTier in alcaDataTiers:
-                        description['dataTier']=dataTier
-                        subscriptions.append( description.copy() )
-                    
-                    del description['custodialSites']
-                    description['isSkim']=False
-                    for dataTier in diskDataTiers - tapeDataTiers:
-                        
-                        if dataTier == "RECO" and phedexConfig['disk_node_reco']:
-                            diskNode = phedexConfig['disk_node_reco']
-                        else:
-                            diskNode = phedexConfig['disk_node']
-                            
-                        description['nonCustodialSites'] = [diskNode]
-                        description['dataTier']=dataTier
-                        subscriptions.append( description.copy() )
-
-                elif phedexConfig['archival_node'] != None:
-                    description['custodialSites'] = [phedexConfig['archival_node']]
-
-                    for dataTier in tapeDataTiers | diskDataTiers | skimDataTiers | alcaDataTiers:
-                        description['dataTier']=dataTier
-                        subscriptions.append( description.copy() )
-
-            writeTiers = []
-            if datasetConfig.WriteRECO:
-                writeTiers.append("RECO")
-            if datasetConfig.WriteAOD:
-                writeTiers.append("AOD")
-            if datasetConfig.WriteMINIAOD:
-                writeTiers.append("MINIAOD")
-            if datasetConfig.WriteNANOAOD:
-                writeTiers.append("NANOAOD")
-            if datasetConfig.WriteDQM:
-                writeTiers.append(tier0Config.Global.DQMDataTier)
-            if len(datasetConfig.AlcaSkims) > 0:
-                writeTiers.append("ALCARECO")
-
+            writeTiers_unordered=list(alcaDataTiers|tapeDataTiers|diskDataTiers)
+            writeTiers=[]
+            for tier in ["RECO","AOD","MINIAOD","NANOAOD",tier0Config.Global.DQMDataTier,"ALCARECo"]:
+                if tier in writeTiers_unordered:
+                    writeTiers.append(tier)
             if datasetConfig.DoReco and len(writeTiers) > 0:
 
                 #
@@ -1142,6 +1068,85 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
 
     return
 
+def stackPhedexSubscriptions(subscriptions,dataset,phedexConfig,tier0Config,datasetConfig):
+    """
+    _stackPhedexSubscriptions_
+    
+    :param subscriptions: stackPhedexSubscriptions
+    :param dataset: dataset
+    :param phedexConfig: Phedex configuration
+    :param tier0Config: Tier0 configuration
+    :param datasetConfig: Dataset configuration
+    
+    Stacked list for subscription
+    """
+                
+    tapeDataTiers, diskDataTiers, skimDataTiers, alcaDataTiers = getDataTiers(datasetConfig,tier0Config)
+    # do things different based on whether we have TapeNode/DiskNode, only TapeNode or ArchivalNode
+    description={'priority' : "high",
+                    'primaryDataset' : dataset,
+                    'deleteFromSource' : True,
+                    'datasetLifetime' : datasetConfig.datasetLifetime,
+                }
+
+    if phedexConfig['tape_node'] != None:
+
+        description['custodialSites'] = [phedexConfig['tape_node']]
+        description['useSkim'] =  True
+
+        if phedexConfig['disk_node'] == None:
+            diskDataTiers = set()
+
+        for dataTier in tapeDataTiers & diskDataTiers:
+
+            if dataTier == "RECO" and phedexConfig['disk_node_reco']:
+                diskNode = phedexConfig['disk_node_reco']
+            else:
+                diskNode = phedexConfig['disk_node']
+            
+            description['nonCustodialSites']=[diskNode]
+            description['isSkim']=False
+            description['dataTier']=dataTier
+            subscriptions.append( description.copy() )
+            
+        description['nonCustodialSites']=[phedexConfig['disk_node']] if phedexConfig['disk_node'] else []
+        description['isSkim']=True
+        for dataTier in skimDataTiers:
+            description['dataTier']=dataTier
+            subscriptions.append( description.copy() )
+            
+        del description['nonCustodialSites']
+        description['isSkim']=False
+        for dataTier in tapeDataTiers - diskDataTiers:
+            description['dataTier']=dataTier
+            subscriptions.append( description.copy() )
+
+        description['isSkim']=True
+        for dataTier in alcaDataTiers:
+            description['dataTier']=dataTier
+            subscriptions.append( description.copy() )
+        
+        del description['custodialSites']
+        description['isSkim']=False
+        for dataTier in diskDataTiers - tapeDataTiers:
+            
+            if dataTier == "RECO" and phedexConfig['disk_node_reco']:
+                diskNode = phedexConfig['disk_node_reco']
+            else:
+                diskNode = phedexConfig['disk_node']
+                
+            description['nonCustodialSites'] = [diskNode]
+            description['dataTier']=dataTier
+            subscriptions.append( description.copy() )
+
+    elif phedexConfig['archival_node'] != None:
+        description['custodialSites'] = [phedexConfig['archival_node']]
+
+        for dataTier in tapeDataTiers | diskDataTiers | skimDataTiers | alcaDataTiers:
+            description['dataTier']=dataTier
+            subscriptions.append( description.copy() )
+    return subscriptions
+
 def getDataTiers(datasetConfig,tier0Config):
     """
     _getDataTiers_
@@ -1155,18 +1160,17 @@ def getDataTiers(datasetConfig,tier0Config):
     diskDataTiers = set()
     skimDataTiers = set()
     alcaDataTiers = set()
+    if datasetConfig.WriteMINIAOD:
+        tapeDataTiers.add("MINIAOD")
+    if datasetConfig.WriteNANOAOD:
+        tapeDataTiers.add("NANOAOD")
+    diskDataTiers=diskDataTiers|tapeDataTiers
     if datasetConfig.WriteRECO:
         diskDataTiers.add("RECO")
     if datasetConfig.WriteAOD:
         tapeDataTiers.add("AOD")
         if datasetConfig.AODtoDisk:
             diskDataTiers.add("AOD")
-    if datasetConfig.WriteMINIAOD:
-        tapeDataTiers.add("MINIAOD")
-        diskDataTiers.add("MINIAOD")
-    if datasetConfig.WriteNANOAOD:
-        tapeDataTiers.add("NANOAOD")
-        diskDataTiers.add("NANOAOD")
     if datasetConfig.WriteDQM:
         tapeDataTiers.add(tier0Config.Global.DQMDataTier)
     if len(datasetConfig.PhysicsSkims) > 0:
