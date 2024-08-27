@@ -613,10 +613,18 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['TimePerEvent'] = streamConfig.Express.TimePerEvent
             specArguments['SizePerEvent'] = streamConfig.Express.SizePerEvent
 
-            specArguments['Memory'] = streamConfig.Express.MaxMemoryperCore
-            if streamConfig.Express.Multicore:
-                specArguments['Multicore'] = streamConfig.Express.Multicore
-                specArguments['Memory'] += (streamConfig.Express.Multicore - 1) * streamConfig.Express.MaxMemoryperCore
+            if isinstance (streamConfig.Express.MaxMemoryperCore, dict):
+                specArguments['Memory'] = streamConfig.Express.MaxMemoryperCore
+                if streamConfig.Express.Multicore:
+                    specArguments['Multicore'] = streamConfig.Express.Multicore
+                    for key in specArguments['Memory']:
+                        specArguments['Memory'][key] += (streamConfig.Express.Multicore - 1) * specArguments['Memory'][key]
+                       
+            else:
+                specArguments['Memory'] = streamConfig.Express.MaxMemoryperCore
+                if streamConfig.Express.Multicore:
+                    specArguments['Multicore'] = streamConfig.Express.Multicore
+                    specArguments['Memory'] += (streamConfig.Express.Multicore - 1) * streamConfig.Express.MaxMemoryperCore
 
             specArguments['Requestor'] = "Tier0"
             specArguments['RequestName'] = workflowName
