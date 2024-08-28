@@ -972,7 +972,9 @@ for dataset in DATASETS:
 DATASETS = ["AlCaLumiPixelsCountsPrompt0", "AlCaLumiPixelsCountsPrompt1", "AlCaLumiPixelsCountsPrompt2", "AlCaLumiPixelsCountsPrompt3",
             "AlCaLumiPixelsCountsPrompt4", "AlCaLumiPixelsCountsPrompt5", "AlCaLumiPixelsCountsPrompt6", "AlCaLumiPixelsCountsPrompt7",
             "AlCaLumiPixelsCountsPrompt8", "AlCaLumiPixelsCountsPrompt9", "AlCaLumiPixelsCountsPrompt10", "AlCaLumiPixelsCountsPrompt11",
-            "AlCaLumiPixelsCountsPrompt12", "AlCaLumiPixelsCountsPrompt"]
+            "AlCaLumiPixelsCountsPrompt12", "AlCaLumiPixelsCountsPrompt",
+	    "AlCaLumiPixelsCountsPromptHighRate0", "AlCaLumiPixelsCountsPromptHighRate1", "AlCaLumiPixelsCountsPromptHighRate2", 
+	    "AlCaLumiPixelsCountsPromptHighRate3", "AlCaLumiPixelsCountsPromptHighRate4", "AlCaLumiPixelsCountsPromptHighRate5"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
