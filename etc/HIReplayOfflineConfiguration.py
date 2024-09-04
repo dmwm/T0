@@ -8,6 +8,7 @@ from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
 from T0.RunConfig.Tier0Config import setDefaultScramArch
+from T0.RunConfig.Tier0Config import setScramArch
 from T0.RunConfig.Tier0Config import setBaseRequestPriority
 from T0.RunConfig.Tier0Config import setBackfill
 from T0.RunConfig.Tier0Config import setBulkDataType
@@ -21,10 +22,12 @@ from T0.RunConfig.Tier0Config import specifyStreams
 from T0.RunConfig.Tier0Config import addRepackConfig
 from T0.RunConfig.Tier0Config import addExpressConfig
 from T0.RunConfig.Tier0Config import setInjectRuns
+from T0.RunConfig.Tier0Config import setInjectLimit
 from T0.RunConfig.Tier0Config import setStreamerPNN
 from T0.RunConfig.Tier0Config import setEnableUniqueWorkflowName
 from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setStorageSite
+from T0.RunConfig.Tier0Config import setExtraStreamDatasetMap
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -64,7 +67,7 @@ addSiteConfig(tier0Config, "EOS_PILOT",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Tier0_HIREPLAY_2023")
+setAcquisitionEra(tier0Config, "Tier0_HIREPLAY_2024")
 setBaseRequestPriority(tier0Config, 260000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "hidata")
@@ -107,7 +110,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_2_6_patch2"
+    'default': "CMSSW_14_1_0_pre7"
 }
 
 # Configure ScramArch
@@ -124,8 +127,13 @@ HIalcaTrackingOnlyScenario = "trackingOnlyEra_Run3_pp_on_PbPb"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
-hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
-hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
+
+#hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
+hiTestppScenario = "Run3_2024_UPC"
+
+#hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
+hiRawPrimeScenario = "Run3_pp_on_PbPb_2024"
+
 hiForwardScenario = "ppEra_Run3_2023_repacked"
 
 # Procesing version number replays
@@ -162,6 +170,13 @@ expressVersionOverride = {
 }
 
 #set default repack settings for bulk streams
+
+setExtraStreamDatasetMap(tier0Config,{
+                                        "L1Scouting": {"Dataset":"L1Scouting"},
+                                        "L1ScoutingSelection": {"Dataset":"L1ScoutingSelection"}
+                                    }
+                         )
+
 addRepackConfig(tier0Config, "Default",
                 proc_ver=defaultProcVersion,
                 maxSizeSingleLumi=24 * 1024 * 1024 * 1024,
@@ -175,6 +190,21 @@ addRepackConfig(tier0Config, "Default",
                 maxLatency=2 * 3600,
                 blockCloseDelay=1200,
                 maxMemory=2000,
+                versionOverride=repackVersionOverride)
+
+addRepackConfig(tier0Config, "ScoutingPF",
+                proc_ver=defaultProcVersion, 
+                dataTier="HLTSCOUT",
+                versionOverride=repackVersionOverride)
+
+addRepackConfig(tier0Config, "L1ScoutingSelection",
+                proc_ver=defaultProcVersion,
+                dataTier="L1SCOUT",
+                versionOverride=repackVersionOverride)
+
+addRepackConfig(tier0Config, "L1Scouting",
+                proc_ver=defaultProcVersion,
+                dataTier="L1SCOUT",
                 versionOverride=repackVersionOverride)
 
 addDataset(tier0Config, "Default",
