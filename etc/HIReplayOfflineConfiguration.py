@@ -42,7 +42,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 356005 - 2022 pp at 13.6 TeV (1h long, 600 bunches - ALL detectors included)
 # 359060 - 2022 cosmics - Oberved failures in Express (https://cms-talk.web.cern.ch/t/paused-jobs-for-express-run359045-streamexpress/15232)
 # 361694:361699,361779 - 2022 HI dry-run test runs
-setInjectRuns(tier0Config, [375820])
+setInjectRuns(tier0Config, [374951])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
