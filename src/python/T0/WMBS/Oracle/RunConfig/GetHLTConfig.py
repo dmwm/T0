@@ -12,7 +12,7 @@ from WMCore.Database.DBFormatter import DBFormatter
 
 class GetHLTConfig(DBFormatter):
 
-    def execute(self, hltkey, conn = None, transaction = False):
+    def execute(self, hltkey, tier0Config = None, isMainAgent = True, conn = None, transaction = False):
 
         sql = """SELECT distinct a.name AS stream,   
                                  b.name AS dataset,   
@@ -78,6 +78,11 @@ class GetHLTConfig(DBFormatter):
         for result in self.formatDict(results):
 
             stream = result['stream']
+            if isMainAgent and stream in tier0Config.Global.SecondaryAgentStreams:
+                continue
+            if not isMainAgent and stream not in tier0Config.Global.SecondaryAgentStreams:
+                continue
+                
             dataset = result['dataset']
             path = result['path']
             process = result['process']

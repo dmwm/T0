@@ -43,6 +43,7 @@ class Tier0FeederPoller(BaseWorkerThread):
 
         myThread = threading.currentThread()
 
+        self.isMainAgent = getattr(config.Tier0Feeder, "isMainAgent", True)
         self.daoFactory = DAOFactory(package = "T0.WMBS",
                                      logger = logging,
                                      dbinterface = myThread.dbi)
@@ -100,6 +101,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                       logger = logging,
                                                       dbinterface = dbInterfaceT0DataSvc)
 
+        
         #
         # Set deployment ID
         #
@@ -154,6 +156,7 @@ class Tier0FeederPoller(BaseWorkerThread):
             #
             # replays call data discovery only once (and ignore data status)
             #
+
             try:
                 if tier0Config.Global.InjectRuns == None:
                     StorageManagerAPI.injectNewData(self.dbInterfaceStorageManager,
@@ -161,7 +164,9 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                     self.dbInterfaceSMNotify,
                                                     streamerPNN = tier0Config.Global.StreamerPNN,
                                                     minRun = tier0Config.Global.InjectMinRun,
-                                                    maxRun = tier0Config.Global.InjectMaxRun)
+                                                    maxRun = tier0Config.Global.InjectMaxRun,
+                                                    isMainAgent = self.isMainAgent,
+                                                    secondaryAgentStreams = tier0Config.Global.SecondaryAgentStreams)
                 else:
                     injectRuns = set()
                     for injectRun in tier0Config.Global.InjectRuns:
@@ -173,7 +178,9 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                         self.dbInterfaceSMNotify,
                                                         streamerPNN = tier0Config.Global.StreamerPNN,
                                                         injectRun = injectRun,
-                                                        injectLimit= tier0Config.Global.InjectLimit)
+                                                        injectLimit= tier0Config.Global.InjectLimit,
+                                                        isMainAgent = self.isMainAgent, 
+                                                        secondaryAgentStreams = tier0Config.Global.SecondaryAgentStreams)
                         self.injectedRuns.add(injectRun)
             except:
                 # shouldn't happen, just a catch all insurance
@@ -198,10 +205,11 @@ class Tier0FeederPoller(BaseWorkerThread):
 
                     # retrieve HLT configuration and make sure it's usable
                     try:
-                        hltConfig = self.getHLTConfigDAO.execute(hltkey, transaction = False)
+                        hltConfig = self.getHLTConfigDAO.execute(hltkey, tier0Config=tier0Config, isMainAgent = self.isMainAgent, transaction = False)
                         # If defined, add additional mapping entries
                         if tier0Config.Global.extraStreamDatasetMap:
-                            hltConfig['mapping'].update(tier0Config.Global.extraStreamDatasetMap)
+                            extraStreamDatasetMap = self.resolveExtraStreamSecondaryStreamConflict(tier0Config)
+                            hltConfig['mapping'].update(extraStreamDatasetMap)
                             logging.debug("Modified Mapping: %s", hltConfig)
                         if hltConfig['process'] == None or len(hltConfig['mapping']) == 0:
                             raise RuntimeError("HLTConfDB query returned no process or mapping")
@@ -340,6 +348,24 @@ class Tier0FeederPoller(BaseWorkerThread):
         ConditionUploadAPI.uploadConditions(self.dropboxuser, self.dropboxpass, self.serviceProxy)
 
         return
+
+    def resolveExtraStreamSecondaryStreamConflict(self, tier0Config):
+        """
+        _resolveExtraStreamSecondaryStreamConflict_
+
+        If extraStream mapping has streams in SecondaryAgentStreams, should not consider stream in extra stream mapping
+        """
+        extraStreamDatasetMap = tier0Config.Global.extraStreamDatasetMap
+        secondaryAgentStreams = tier0Config.Global.SecondaryAgentStreams
+        streamsToFilter = []
+        for stream in tier0Config.Global.extraStreamDatasetMap.keys():
+            if self.isMainAgent and stream in secondaryAgentStreams:
+                streamsToFilter.append(stream)
+            if not self.isMainAgent and stream not in secondaryAgentStreams:
+                streamsToFilter.append(stream)
+        for stream in streamsToFilter:
+            del extraStreamDatasetMap[stream]
+        return extraStreamDatasetMap
 
     def feedCouchMonitoring(self):
         """

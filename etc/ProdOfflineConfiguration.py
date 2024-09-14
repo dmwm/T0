@@ -28,7 +28,7 @@ from T0.RunConfig.Tier0Config import setStreamerPNN
 from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setStorageSite
 from T0.RunConfig.Tier0Config import setExtraStreamDatasetMap
-
+from T0.RunConfig.Tier0Config import setSecondaryAgentStreams
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -41,6 +41,9 @@ setInjectMinRun(tier0Config, 9999999)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
+
+# Set streams to ignore by agent. These will not be injected
+setSecondaryAgentStreams(tier0Config, [])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"

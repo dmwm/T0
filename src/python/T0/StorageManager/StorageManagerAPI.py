@@ -19,7 +19,9 @@ def injectNewData(dbInterfaceStorageManager,
                   minRun = None,
                   maxRun = None,
                   injectRun = None,
-                  injectLimit = None):
+                  injectLimit = None,
+                  isMainAgent = True,
+                  secondaryAgentStreams = []):
     """
     _injectNewData_
 
@@ -72,7 +74,15 @@ def injectNewData(dbInterfaceStorageManager,
                                     transaction = False)
 
     # remove already processed files
-    newData[:] = [newFile for newFile in newData if newFile['p5_id'] not in knownStreamers]
+    # Filtering streams for Main and Secondary agents before injecting
+    # Note that every agent is Main by default
+    # Note that the secondaryAgentStreams works as a specifyStreams if the agent is secondary
+    if isMainAgent:
+        logging.info("This is a Main Agent. The following streams will not be injected: {}".format(secondaryAgentStreams))
+        newData[:] = [newFile for newFile in newData if newFile['p5_id'] not in knownStreamers and newFile['stream'] not in secondaryAgentStreams]
+    else:
+        logging.info("This is a Secondary Agent. Only the following streams will be injected: {}".format(secondaryAgentStreams))
+        newData[:] = [newFile for newFile in newData if newFile['p5_id'] not in knownStreamers and newFile['stream'] in secondaryAgentStreams]
 
     logging.debug("StoragemanagerAPI: found %d new files", len(newData))
 
@@ -87,6 +97,7 @@ def injectNewData(dbInterfaceStorageManager,
 
         if run not in newRunStreams:
             newRunStreams[run] = set()
+        
         if stream not in newRunStreams[run]:
             newRunStreams[run].add(stream)
 

@@ -286,6 +286,7 @@ def createTier0Config():
     tier0Config.Global.InjectMinRun = None
     tier0Config.Global.InjectMaxRun = None
     
+    tier0Config.Global.SecondaryAgentStreams = []
     tier0Config.Global.SpecifiedStreamNames = None
 
     tier0Config.Global.ScramArches = {}
@@ -857,6 +858,14 @@ def setInjectLimit(config, injectLimit):
     config.Global.InjectLimit = injectLimit
     return
 
+def setSecondaryAgentStreams(config, secondaryAgentStreams):
+    """
+    _setSecondaryAgentStreams_
+
+    Define which streams should not be injected by the agent (for dual agents)
+    """
+    config.Global.SecondaryAgentStreams = secondaryAgentStreams
+    return
 
 def setEnableUniqueWorkflowName(config):
     """
