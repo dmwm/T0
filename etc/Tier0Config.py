@@ -39,7 +39,7 @@ config.ErrorHandler.maxRetries = {"default" : 30, "Cleanup" : 2, "LogCollect" : 
 config.TaskArchiver.useReqMgrForCompletionCheck = False
 config.TaskArchiver.dashBoardUrl = "http://dashb-luminosity.cern.ch/dashboard/request.py/putluminositydata"
 config.TaskArchiver.logLevel = "DEBUG"
-config.TaskArchiver.archiveDelayHours = 2190
+config.TaskArchiver.archiveDelayHours = 720
 config.TaskArchiver.useWorkQueue = False
 
 config.DBS3Upload.primaryDatasetType = "data"
@@ -58,7 +58,6 @@ config.AgentStatusWatcher.enabled = False
 config.AgentStatusWatcher.onlySSB = False
 
 config.RucioInjector.blockRuleParams = {}
-config.RucioInjector.blockDeletionDelayHours = 168
 config.RucioInjector.useDsetReplicaDeep = True
 
 config.BossAir.pluginNames = ["SimpleCondorPlugin"]
