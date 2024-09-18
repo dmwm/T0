@@ -159,12 +159,11 @@ sed -i "s+config.RucioInjector.metaDIDProject.*+config.RucioInjector.metaDIDProj
 echo "config.RucioInjector.blockDeletionDelayHours = 168" >> $config/config.py
 #####
 ##### NOT IN REPLAY #####
-echo "config.RucioInjector.blockDeletionDelayHours = 168" >> $config/config.py
 echo 'config.BossAir.pluginNames = ["SimpleCondorPlugin"]' >> $config/config.py
 echo 'config.JobAccountant.maxAllowedRepackOutputSize = 24 * 1024 * 1024 * 1024' >> $config/config.py
 echo "config.AgentStatusWatcher.runningExpressPercent = 25" >> $config/config.py
 echo "config.AgentStatusWatcher.runningRepackPercent = 10" >> $config/config.py
-echo 'config.TaskArchiver.archiveDelayHours = 2190' >> $config.py
+echo 'config.TaskArchiver.archiveDelayHours = 720' >> $config.py
 ##### NOT IN REPLAY #####
 #####
 echo "config.DBS3Upload.datasetType = 'VALID'" >> $config/config.py

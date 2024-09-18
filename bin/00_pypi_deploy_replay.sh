@@ -150,7 +150,7 @@ echo "config.RucioInjector.blockDeletionDelayHours = 2" >> $config/config.py
 #echo 'config.JobAccountant.maxAllowedRepackOutputSize = 24 * 1024 * 1024 * 1024' >> ./config/tier0/config.py
 #echo "config.AgentStatusWatcher.runningExpressPercent = 25" >> ./config/tier0/config.py
 #echo "config.AgentStatusWatcher.runningRepackPercent = 10" >> ./config/tier0/config.py
-#echo 'config.TaskArchiver.archiveDelayHours = 2190' >> $config.py
+#echo 'config.TaskArchiver.archiveDelayHours = 720' >> $config.py
 ##### ONLY IN PROD #####
 #####
 echo "config.DBS3Upload.datasetType = 'VALID'" >> $config/config.py
