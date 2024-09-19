@@ -123,6 +123,7 @@ alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
+hltScoutingScenario = "hltScoutingEra_Run3_2024"
 
 # Defaults for processing version
 alcarawProcVersion = {
@@ -1291,10 +1292,10 @@ for dataset in DATASETS:
 DATASETS = ["ScoutingPFRun3"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
+               do_reco=True,
                tape_node="T1_US_FNAL_MSS",
                disk_node="T1_US_FNAL_Disk",
-               scenario=ppScenario)
+               scenario=hltScoutingScenario)
 
 DATASETS = ["ParkingDoubleElectronLowMass","ParkingDoubleElectronLowMass0"]
 for dataset in DATASETS:
