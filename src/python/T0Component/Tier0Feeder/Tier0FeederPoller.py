@@ -31,7 +31,6 @@ from T0.ConditionUpload import ConditionUploadAPI
 from T0.StorageManager import StorageManagerAPI
 from T0.RunConfig.Tier0Config import setDeploymentId
 
-
 class Tier0FeederPoller(BaseWorkerThread):
 
     def __init__(self, config):
@@ -205,11 +204,10 @@ class Tier0FeederPoller(BaseWorkerThread):
 
                     # retrieve HLT configuration and make sure it's usable
                     try:
-                        hltConfig = self.getHLTConfigDAO.execute(hltkey, tier0Config=tier0Config, isMainAgent = self.isMainAgent, transaction = False)
+                        hltConfig = self.getHLTConfigDAO.execute(hltkey, transaction = False)
                         # If defined, add additional mapping entries
                         if tier0Config.Global.extraStreamDatasetMap:
-                            extraStreamDatasetMap = self.resolveExtraStreamSecondaryStreamConflict(tier0Config)
-                            hltConfig['mapping'].update(extraStreamDatasetMap)
+                            hltConfig['mapping'].update(tier0Config.Global.extraStreamDatasetMap)
                             logging.debug("Modified Mapping: %s", hltConfig)
                         if hltConfig['process'] == None or len(hltConfig['mapping']) == 0:
                             raise RuntimeError("HLTConfDB query returned no process or mapping")
@@ -218,6 +216,9 @@ class Tier0FeederPoller(BaseWorkerThread):
                         continue
 
                 try:
+                    hltConfig['mapping'] = RunConfigAPI.filterStreams(isMainAgent = self.isMainAgent,
+                                                                      secondaryAgentStreams = tier0Config.Global.SecondaryAgentStreams,
+                                                                      hltStreamMapping = hltConfig['mapping'])
                     RunConfigAPI.configureRun(tier0Config, run, hltConfig)
                 except:
                     logging.exception("Can't configure for run %d" % (run))
@@ -348,24 +349,6 @@ class Tier0FeederPoller(BaseWorkerThread):
         ConditionUploadAPI.uploadConditions(self.dropboxuser, self.dropboxpass, self.serviceProxy)
 
         return
-
-    def resolveExtraStreamSecondaryStreamConflict(self, tier0Config):
-        """
-        _resolveExtraStreamSecondaryStreamConflict_
-
-        If extraStream mapping has streams in SecondaryAgentStreams, should not consider stream in extra stream mapping
-        """
-        extraStreamDatasetMap = tier0Config.Global.extraStreamDatasetMap
-        secondaryAgentStreams = tier0Config.Global.SecondaryAgentStreams
-        streamsToFilter = []
-        for stream in tier0Config.Global.extraStreamDatasetMap.keys():
-            if self.isMainAgent and stream in secondaryAgentStreams:
-                streamsToFilter.append(stream)
-            if not self.isMainAgent and stream not in secondaryAgentStreams:
-                streamsToFilter.append(stream)
-        for stream in streamsToFilter:
-            del extraStreamDatasetMap[stream]
-        return extraStreamDatasetMap
 
     def feedCouchMonitoring(self):
         """
