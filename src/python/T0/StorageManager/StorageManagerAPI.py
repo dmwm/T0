@@ -20,7 +20,7 @@ def injectNewData(dbInterfaceStorageManager,
                   maxRun = None,
                   injectRun = None,
                   injectLimit = None,
-                  AgentType = None):
+                  agentType = None):
     """
     _injectNewData_
 
@@ -80,7 +80,7 @@ def injectNewData(dbInterfaceStorageManager,
     newData[:] = [newFile for newFile in newData if newFile['p5_id'] not in knownStreamers]
     logging.debug("StoragemanagerAPI: found %d new files", len(newData))
 
-    if AgentType:
+    if agentType:
         newData = agentType.filterStreamerFiles(streamerFiles = newData)
     
     newRuns = set()
