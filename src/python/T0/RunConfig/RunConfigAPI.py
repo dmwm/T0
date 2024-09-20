@@ -53,39 +53,6 @@ def extractConfigParameter(configParameter, era, run):
     else:
         return configParameter
 
-def filterStreams(isMainAgent = True, secondaryAgentStreams = [], hltStreamMapping=None, streamers=None):
-    """
-    _filterStreams_
-
-    Used for main agents to filter out undesired streams
-    The returned value only has desired streams
-    
-    We have two sources of stream information that needs to update the T0AST DB
-    HLTConfig gets stream-dataset mapping 
-    StorageManager gets run-stream data from streamer files
-
-    hltConfig = {'process': ..., 'mapping': {stream_1: {}, stream_2: {}, stream_3: {}, ...}}
-
-    smData    = [{'run': 10, 'stream': stream_1}, {'run': 10, 'stream': stream_2}, ...}, 
-                    {'run': 11, 'stream': stream_1}, {'run': 11, 'stream': stream_2}, ...},
-                    {'run': 12, 'stream': stream_1}...
-                    ]
-    """
-    
-    if streamers and isMainAgent:
-        filteredData = [streamer for streamer in streamers if streamer['stream'] not in secondaryAgentStreams]
-
-    elif streamers and not isMainAgent:
-        filteredData = [streamer for streamer in streamers if streamer['stream'] in secondaryAgentStreams]
-
-    elif hltStreamMapping and isMainAgent:
-        filteredData = {stream: hltStreamMapping[stream] for stream in hltStreamMapping if stream not in secondaryAgentStreams}
-
-    elif hltStreamMapping and not isMainAgent:
-        filteredData = {stream: hltStreamMapping[stream] for stream in hltStreamMapping if stream in secondaryAgentStreams}
-    
-    return filteredData
-
 def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
     """
     _configureRun_
