@@ -9,7 +9,7 @@ import threading
 import time
 
 from WMCore.DAOFactory import DAOFactory
-from T0.RunConfig import RunConfigAPI
+
 knownStreamers = set()
 
 def injectNewData(dbInterfaceStorageManager,
@@ -20,8 +20,7 @@ def injectNewData(dbInterfaceStorageManager,
                   maxRun = None,
                   injectRun = None,
                   injectLimit = None,
-                  isMainAgent = True,
-                  secondaryAgentStreams = []):
+                  AgentType = None):
     """
     _injectNewData_
 
@@ -79,11 +78,11 @@ def injectNewData(dbInterfaceStorageManager,
     # Note that the secondaryAgentStreams works as a specifyStreams if the agent is secondary
 
     newData[:] = [newFile for newFile in newData if newFile['p5_id'] not in knownStreamers]
-    newData = RunConfigAPI.filterStreams(isMainAgent = isMainAgent,
-                            secondaryAgentStreams = secondaryAgentStreams, 
-                            streamers = newData)
     logging.debug("StoragemanagerAPI: found %d new files", len(newData))
 
+    if AgentType:
+        newData = agentType.filterStreamerFiles(streamerFiles = newData)
+    
     newRuns = set()
     newRunStreams = {}
     for newFile in newData:

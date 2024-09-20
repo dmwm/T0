@@ -20,6 +20,7 @@ import datetime
 from Utils.Timers import timeFunction
 from WMCore.WorkerThreads.BaseWorkerThread import BaseWorkerThread
 from WMCore.DAOFactory import DAOFactory
+from WMCore.WMFactory import WMFactory
 from WMCore.Database.DBFactory import DBFactory
 from WMCore.WMException import WMException
 from WMCore.Configuration import loadConfigurationFile
@@ -30,6 +31,9 @@ from T0.RunLumiCloseout import RunLumiCloseoutAPI
 from T0.ConditionUpload import ConditionUploadAPI
 from T0.StorageManager import StorageManagerAPI
 from T0.RunConfig.Tier0Config import setDeploymentId
+
+from T0Component.Tier0Feeder.MultipleAgents import MainAgent
+from T0Component.Tier0Feeder.MultipleAgents import HelperAgent
 
 class Tier0FeederPoller(BaseWorkerThread):
 
@@ -42,12 +46,20 @@ class Tier0FeederPoller(BaseWorkerThread):
 
         myThread = threading.currentThread()
 
-        self.isMainAgent = getattr(config.Tier0Feeder, "isMainAgent", True)
         self.daoFactory = DAOFactory(package = "T0.WMBS",
                                      logger = logging,
                                      dbinterface = myThread.dbi)
 
         self.tier0ConfigFile = config.Tier0Feeder.tier0ConfigFile
+        self.AgentRole = getattr(config.Tier0Feeder, "AgentRole", "MainAgent")
+
+        if self.AgentRole == "MainAgent":
+            self.AgentType = MainAgent(tier0Config)
+        elif self.AgentRole in tier0Config.Global.MultipleAgentStreams:
+            self.AgentType = HelperAgent(tier0Config, helperRole=self.AgentRole)
+        else:
+            self.AgentType = None
+
         self.specDirectory = config.Tier0Feeder.specDirectory
         self.dropboxuser = getattr(config.Tier0Feeder, "dropboxuser", None)
         self.dropboxpass = getattr(config.Tier0Feeder, "dropboxpass", None)
@@ -164,8 +176,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                     streamerPNN = tier0Config.Global.StreamerPNN,
                                                     minRun = tier0Config.Global.InjectMinRun,
                                                     maxRun = tier0Config.Global.InjectMaxRun,
-                                                    isMainAgent = self.isMainAgent,
-                                                    secondaryAgentStreams = tier0Config.Global.SecondaryAgentStreams)
+                                                    AgentType = self.AgentType)
                 else:
                     injectRuns = set()
                     for injectRun in tier0Config.Global.InjectRuns:
@@ -178,8 +189,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                         streamerPNN = tier0Config.Global.StreamerPNN,
                                                         injectRun = injectRun,
                                                         injectLimit= tier0Config.Global.InjectLimit,
-                                                        isMainAgent = self.isMainAgent, 
-                                                        secondaryAgentStreams = tier0Config.Global.SecondaryAgentStreams)
+                                                        AgentType = self.AgentType)
                         self.injectedRuns.add(injectRun)
             except:
                 # shouldn't happen, just a catch all insurance
@@ -216,9 +226,8 @@ class Tier0FeederPoller(BaseWorkerThread):
                         continue
 
                 try:
-                    hltConfig['mapping'] = RunConfigAPI.filterStreams(isMainAgent = self.isMainAgent,
-                                                                      secondaryAgentStreams = tier0Config.Global.SecondaryAgentStreams,
-                                                                      hltStreamMapping = hltConfig['mapping'])
+                    if self.AgentType:
+                        hltConfig = self.AgentType.filterHltConfigStreams(hltConfig)
                     RunConfigAPI.configureRun(tier0Config, run, hltConfig)
                 except:
                     logging.exception("Can't configure for run %d" % (run))
