@@ -8,7 +8,7 @@ class BaseAgent(object):
         object.__init__(self)
         self.multipleAgentStreams = tier0Config.Global.multipleAgentStreams
 
-    def filterStreamerFiles (self, streamerFiles, multipleAgentStreams = {}):
+    def filterStreamerFiles (self, streamerFiles):
         """
         _filterStreamerFiles_
 
@@ -16,7 +16,7 @@ class BaseAgent(object):
         """
         return 
 
-    def filterHltConfigStreams (self, hltConfig, multipleAgentStreams = {}):
+    def filterHltConfigStreams (self, hltConfig):
         """
         _filterHltConfigStreams_
 
