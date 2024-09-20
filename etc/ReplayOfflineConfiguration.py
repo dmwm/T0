@@ -46,10 +46,9 @@ setInjectRuns(tier0Config, [382686, 382726])
 #setInjectLimit(tier0Config, 10)
 
 # Define streams to ignore. These wont be injected
-setSecondaryAgentStreams(tier0Config, ["ScoutingPF", "L1ScoutingSelection", 
-                                       "L1Scouting", "Express", "Calibration",
-                                       "ExpressAlignment"
-                                       ])
+setMultipleAgentStreams(tier0Config, {'SecondAgent': ["ScoutingPF", "L1ScoutingSelection", "L1Scouting", "Express"],
+                                      'ThirdAgent' : ["Calibration", "HLTMonitor"]
+                                      })
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
