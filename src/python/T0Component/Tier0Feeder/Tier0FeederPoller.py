@@ -32,8 +32,8 @@ from T0.ConditionUpload import ConditionUploadAPI
 from T0.StorageManager import StorageManagerAPI
 from T0.RunConfig.Tier0Config import setDeploymentId
 
-from T0Component.Tier0Feeder.MultipleAgents import MainAgent
-from T0Component.Tier0Feeder.MultipleAgents import HelperAgent
+from T0Component.Tier0Feeder.MultipleAgents.MainAgent import MainAgent
+from T0Component.Tier0Feeder.MultipleAgents.HelperAgent import HelperAgent
 
 class Tier0FeederPoller(BaseWorkerThread):
 
@@ -51,14 +51,9 @@ class Tier0FeederPoller(BaseWorkerThread):
                                      dbinterface = myThread.dbi)
 
         self.tier0ConfigFile = config.Tier0Feeder.tier0ConfigFile
-        self.AgentRole = getattr(config.Tier0Feeder, "AgentRole", "MainAgent")
-
-        if self.AgentRole == "MainAgent":
-            self.AgentType = MainAgent(tier0Config)
-        elif self.AgentRole in tier0Config.Global.MultipleAgentStreams:
-            self.AgentType = HelperAgent(tier0Config, helperRole=self.AgentRole)
-        else:
-            self.AgentType = None
+        self.isMainAgent = getattr(config.Tier0Feeder, "isMainAgent", True)
+        if not self.isMainAgent:
+            self.agentRole = getattr(config.Tier0Feeder, "agentRole", None)
 
         self.specDirectory = config.Tier0Feeder.specDirectory
         self.dropboxuser = getattr(config.Tier0Feeder, "dropboxuser", None)
@@ -168,6 +163,12 @@ class Tier0FeederPoller(BaseWorkerThread):
             # replays call data discovery only once (and ignore data status)
             #
 
+            if self.isMainAgent:
+                self.agentType = MainAgent(tier0Config)
+            else:
+                self.agentType = HelperAgent(tier0Config, helperRole=self.agentRole)
+
+
             try:
                 if tier0Config.Global.InjectRuns == None:
                     StorageManagerAPI.injectNewData(self.dbInterfaceStorageManager,
@@ -176,7 +177,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                     streamerPNN = tier0Config.Global.StreamerPNN,
                                                     minRun = tier0Config.Global.InjectMinRun,
                                                     maxRun = tier0Config.Global.InjectMaxRun,
-                                                    AgentType = self.AgentType)
+                                                    agentType = self.agentType)
                 else:
                     injectRuns = set()
                     for injectRun in tier0Config.Global.InjectRuns:
@@ -189,7 +190,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                         streamerPNN = tier0Config.Global.StreamerPNN,
                                                         injectRun = injectRun,
                                                         injectLimit= tier0Config.Global.InjectLimit,
-                                                        AgentType = self.AgentType)
+                                                        agentType = self.agentType)
                         self.injectedRuns.add(injectRun)
             except:
                 # shouldn't happen, just a catch all insurance
@@ -226,8 +227,8 @@ class Tier0FeederPoller(BaseWorkerThread):
                         continue
 
                 try:
-                    if self.AgentType:
-                        hltConfig = self.AgentType.filterHltConfigStreams(hltConfig)
+                    if self.agentType:
+                        hltConfig = self.agentType.filterHltConfigStreams(hltConfig)
                     RunConfigAPI.configureRun(tier0Config, run, hltConfig)
                 except:
                     logging.exception("Can't configure for run %d" % (run))
