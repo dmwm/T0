@@ -51,9 +51,8 @@ class Tier0FeederPoller(BaseWorkerThread):
                                      dbinterface = myThread.dbi)
 
         self.tier0ConfigFile = config.Tier0Feeder.tier0ConfigFile
-        self.isMainAgent = getattr(config.Tier0Feeder, "isMainAgent", True)
-        if not self.isMainAgent:
-            self.agentRole = getattr(config.Tier0Feeder, "agentRole", None)
+
+        self.agentName = getattr(config.Tier0Feeder, "agentName", None)
 
         self.specDirectory = config.Tier0Feeder.specDirectory
         self.dropboxuser = getattr(config.Tier0Feeder, "dropboxuser", None)
@@ -163,10 +162,18 @@ class Tier0FeederPoller(BaseWorkerThread):
             # replays call data discovery only once (and ignore data status)
             #
 
-            if self.isMainAgent:
+            # If no helper agents are given in the configuration, 
+            # this is a main agent that will ignore no streams
+            if not tier0Config.Global.HelperAgentStreams:
+                logging.info("No HelperAgent provided. This is a MainAgent. Processing all streams")
+                self.agentName = "MainAgent"
+
+            # If HelperAgent is specified, but the name is not specified, 
+            # a HelperAgent is started and will not process anything
+            if self.agentName == "MainAgent":
                 self.agentType = MainAgent(tier0Config)
             else:
-                self.agentType = HelperAgent(tier0Config, helperRole=self.agentRole)
+                self.agentType = HelperAgent(tier0Config, helperName=self.agentName)
 
 
             try:
@@ -228,7 +235,7 @@ class Tier0FeederPoller(BaseWorkerThread):
 
                 try:
                     if self.agentType:
-                        hltConfig = self.agentType.filterHltConfigStreams(hltConfig)
+                        hltConfig['mapping'] = self.agentType.filterHltConfigStreams(hltConfig['mapping'])
                     RunConfigAPI.configureRun(tier0Config, run, hltConfig)
                 except:
                     logging.exception("Can't configure for run %d" % (run))

@@ -81,6 +81,7 @@ def injectNewData(dbInterfaceStorageManager,
     logging.debug("StoragemanagerAPI: found %d new files", len(newData))
 
     if agentType:
+        logging.info("Filtering streamer files for %s", agentType.name)
         newData = agentType.filterStreamerFiles(streamerFiles = newData)
     
     newRuns = set()
