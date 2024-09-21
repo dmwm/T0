@@ -28,7 +28,7 @@ from T0.RunConfig.Tier0Config import setEnableUniqueWorkflowName
 from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setStorageSite
 from T0.RunConfig.Tier0Config import setExtraStreamDatasetMap
-from T0.RunConfig.Tier0Config import setMultipleAgentStreams
+from T0.RunConfig.Tier0Config import setHelperAgentStreams
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -46,9 +46,9 @@ setInjectRuns(tier0Config, [382686, 382726])
 #setInjectLimit(tier0Config, 10)
 
 # Define streams to ignore. These wont be injected
-setMultipleAgentStreams(tier0Config, {'SecondAgent': ["ScoutingPF", "L1ScoutingSelection", "L1Scouting", "Express"],
-                                      'ThirdAgent' : ["Calibration", "HLTMonitor"]
-                                      })
+setHelperAgentStreams(tier0Config, {'SecondAgent': ["ScoutingPF", "L1ScoutingSelection", "L1Scouting", "Express"],
+                                    'ThirdAgent' : ["Calibration", "HLTMonitor"]
+                                    })
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
