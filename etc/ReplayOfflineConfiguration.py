@@ -1188,6 +1188,8 @@ DATASETS = ["ScoutingPFRun3"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
+               write_aod=False,
+               write_miniaod=False,
                scenario=hltScoutingScenario)
 
 DATASETS = ["ParkingDoubleElectronLowMass0","ParkingDoubleElectronLowMass1","ParkingDoubleElectronLowMass2",

@@ -1293,6 +1293,8 @@ DATASETS = ["ScoutingPFRun3"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
+               write_aod=False,
+               write_miniaod=False,
                tape_node="T1_US_FNAL_MSS",
                disk_node="T1_US_FNAL_Disk",
                scenario=hltScoutingScenario)
