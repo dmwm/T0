@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Is it a Master agent or not?
+# By default, yes
+AGENT_NAME=$1
+if [ -z "$AGENT_NAME" ]; then
+    echo "config.Tier0Feeder.agentName = \"MainAgent\"" >> "$config/config.py"
+else
+    echo "config.Tier0Feeder.agentName = \"$AGENT_NAME\"" >> "$config/config.py"
+fi
+
 CONFIGURATION_FILE=/data/tier0/admin/ProdOfflineConfiguration.py
 sed -i 's+TIER0_CONFIG_FILE+'"$CONFIGURATION_FILE"'+' "$config/config.py"
 sed -i "s+config.Agent.teamName = 'REPLACE_TEAM_NAME'+config.Agent.teamName = '"$TEAMNAME"'+" "$config/config.py"
@@ -38,3 +47,4 @@ fi
 
 echo 'config.Tier0Feeder.dropboxuser = "'$DROPBOX_USER'"' >> $config/config.py
 echo 'config.Tier0Feeder.dropboxpass = "'$DROPBOX_PASS'"' >> $config/config.py
+
