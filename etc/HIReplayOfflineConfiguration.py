@@ -25,6 +25,7 @@ from T0.RunConfig.Tier0Config import setStreamerPNN
 from T0.RunConfig.Tier0Config import setEnableUniqueWorkflowName
 from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setStorageSite
+from T0.RunConfig.Tier0Config import setHelperAgentStreams
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -41,6 +42,10 @@ setConfigVersion(tier0Config, "replace with real version")
 # 361694:361699,361779 - 2022 HI dry-run test runs
 setInjectRuns(tier0Config, [375820])
 
+# Define streams to ignore. These wont be injected by the MainAgent
+setHelperAgentStreams(tier0Config, {'SecondAgent': [],
+                                    'ThirdAgent' : []
+                                    })
 # Settings up sites
 processingSite = "T2_CH_CERN"
 storageSite = "T0_CH_CERN_Disk"
