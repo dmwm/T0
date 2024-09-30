@@ -42,7 +42,7 @@ setInjectMinRun(tier0Config, 9999999)
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
 
-# Set streams to ignore by agent. These will not be injected
+# Set streams to ignore by agent. These will not be injected by the MainAgent
 setHelperAgentStreams(tier0Config, {"SecondAgent" : [],
                                       "ThirdAgent" : []})
 
@@ -64,7 +64,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2024G")
+setAcquisitionEra(tier0Config, "Run2024H")
 setEmulationAcquisitionEra(tier0Config, "Emulation2024")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
@@ -105,7 +105,7 @@ setPromptCalibrationConfig(tier0Config,
 # maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_14",
+    'default': "CMSSW_14_0_16",
     #'acqEra': {'Run2024F': "CMSSW_14_0_11"},
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }

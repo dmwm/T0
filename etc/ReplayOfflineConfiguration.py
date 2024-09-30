@@ -45,9 +45,9 @@ setInjectRuns(tier0Config, [382686, 382726])
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
 
-# Define streams to ignore. These wont be injected
-setHelperAgentStreams(tier0Config, {'SecondAgent': ["ScoutingPF", "L1ScoutingSelection", "L1Scouting", "Express"],
-                                    'ThirdAgent' : ["Calibration", "HLTMonitor"]
+# Define streams to ignore. These wont be injected by the MainAgent
+setHelperAgentStreams(tier0Config, {'SecondAgent': [],
+                                    'ThirdAgent' : []
                                     })
 
 # Settings up sites
@@ -116,7 +116,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_15"
+    'default': "CMSSW_14_0_16"
 }
 
 # Configure ScramArch
