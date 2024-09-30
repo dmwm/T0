@@ -30,7 +30,6 @@ from T0.RunConfig.Tier0Config import setStorageSite
 from T0.RunConfig.Tier0Config import setExtraStreamDatasetMap
 from T0.RunConfig.Tier0Config import setHelperAgentStreams
 
-
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
 
@@ -42,6 +41,10 @@ setInjectMinRun(tier0Config, 9999999)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
+
+# Set streams to ignore by agent. These will not be injected by the MainAgent
+setHelperAgentStreams(tier0Config, {"SecondAgent" : [],
+                                      "ThirdAgent" : []})
 
 
 # Settings up sites
