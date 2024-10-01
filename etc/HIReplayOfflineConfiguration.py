@@ -137,7 +137,7 @@ alcaPPSScenario = "AlCaPPS_Run3"
 
 hiPpRefScenario = "ppEra_Run3_2024_ppRef"
 hiLightEventsScenario = "ppEra_Run3_2024_UPC"
-hiHeavyEventsScenario = "Run3_pp_on_PbPb_2024"
+hiHeavyEventsScenario = "ppEra_Run3_pp_on_PbPb_2024"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
 
 
@@ -149,8 +149,8 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "141X_dataRun3_Express_v2"
-promptrecoGlobalTag = "141X_dataRun3_Prompt_v2"
+expressGlobalTag = "141X_dataRun3_Express_v3"
+promptrecoGlobalTag = "141X_dataRun3_Prompt_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -1373,7 +1373,7 @@ for dataset in DATASETS:
                write_dqm=True,
                alca_producers=["TkAlMinBias"],
                dqm_sequences=["@common"],
-               scenario=hiTestppScenario)
+               scenario=hiLightEventsScenario)
 
 DATASETS = ["HIOnlineMonitor", "HITrackerNZS"]
 
@@ -1382,7 +1382,7 @@ for dataset in DATASETS:
                do_reco=False,
                aod_to_disk=False,
                raw_to_disk=False,
-               scenario=hiTestppScenario)
+               scenario=hiLightEventsScenario)
 
 DATASETS = ["HIEmptyBX"]
 
@@ -1393,7 +1393,7 @@ for dataset in DATASETS:
                raw_to_disk=False,
                aod_to_disk=False,
                dqm_sequences=["@common"],
-               scenario=hiTestppScenario)
+               scenario=hiLightEventsScenario)
 
 DATASETS = ["HITestRaw0", "HITestRaw1", "HITestRaw2", "HITestRaw3", "HITestRaw4", "HITestRaw5",
             "HITestRaw6", "HITestRaw7", "HITestRaw8", "HITestRaw9", "HITestRaw10", "HITestRaw11",
@@ -1410,7 +1410,7 @@ for dataset in DATASETS:
                                "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
-               scenario=hiTestppScenario)
+               scenario=hiLightEventsScenario)
 DATASETS = ["HIForward0", "HIForward1", "HIForward2",
 	    "HIForward3", "HIForward4", "HIForward5",
             "HIForward6", "HIForward7", "HIForward8",
