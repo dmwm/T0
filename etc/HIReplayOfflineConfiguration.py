@@ -136,9 +136,9 @@ alcaPPSScenario = "AlCaPPS_Run3"
 # Heavy Ion Scenarios 2024
 
 hiPpRefScenario = "ppEra_Run3_2024_ppRef"
-hiLightEventsScenario = "ppEra_Run3_2024_UPC"
-hiHeavyEventsScenario = "ppEra_Run3_pp_on_PbPb_2024"
-hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
+hiForwardScenario = "ppEra_Run3_2024_UPC"
+hiScenario = "ppEra_Run3_pp_on_PbPb_2024"
+hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2024"
 
 
 # Procesing version number replays
@@ -426,7 +426,7 @@ addExpressConfig(tier0Config, "ALCAPPSExpress",
 #####################
 
 addExpressConfig(tier0Config, "HIExpress",
-                 scenario=hiHeavyEventsScenario,
+                 scenario=hiScenario,
                  diskNode="T0_CH_CERN_Disk",
                  data_tiers=["FEVT"],
                  write_dqm=True,
@@ -481,7 +481,7 @@ addExpressConfig(tier0Config, "HIExpressRawPrime",
 
 addExpressConfig(tier0Config, "HIExpressAlignment",
                  #scenario=HIalcaTrackingOnlyScenario,
-                 scenario=hiHeavyEventsScenario,
+                 scenario=hiScenario,
                  data_tiers=["ALCARECO", "RAW"],
                  write_dqm=True,
                  alca_producers=["TkAlMinBias", "PromptCalibProdBeamSpotHP"],
@@ -507,7 +507,7 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  diskNode="T0_CH_CERN_Disk")
 
 addExpressConfig(tier0Config, "HIHLTMonitor",
-                 scenario=hiHeavyEventsScenario,
+                 scenario=hiScenario,
                  diskNode="T2_CH_CERN",
                  data_tiers=["FEVTHLTALL"],
                  write_dqm=True,
@@ -1373,7 +1373,7 @@ for dataset in DATASETS:
                write_dqm=True,
                alca_producers=["TkAlMinBias"],
                dqm_sequences=["@common"],
-               scenario=hiLightEventsScenario)
+               scenario=hiScenario)
 
 DATASETS = ["HIOnlineMonitor", "HITrackerNZS"]
 
@@ -1382,7 +1382,7 @@ for dataset in DATASETS:
                do_reco=False,
                aod_to_disk=False,
                raw_to_disk=False,
-               scenario=hiLightEventsScenario)
+               scenario=hiScenario)
 
 DATASETS = ["HIEmptyBX"]
 
@@ -1393,7 +1393,7 @@ for dataset in DATASETS:
                raw_to_disk=False,
                aod_to_disk=False,
                dqm_sequences=["@common"],
-               scenario=hiLightEventsScenario)
+               scenario=hiScenario)
 
 DATASETS = ["HITestRaw0", "HITestRaw1", "HITestRaw2", "HITestRaw3", "HITestRaw4", "HITestRaw5",
             "HITestRaw6", "HITestRaw7", "HITestRaw8", "HITestRaw9", "HITestRaw10", "HITestRaw11",
@@ -1410,7 +1410,7 @@ for dataset in DATASETS:
                                "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
-               scenario=hiLightEventsScenario)
+               scenario=hiScenario)
 DATASETS = ["HIForward0", "HIForward1", "HIForward2",
 	    "HIForward3", "HIForward4", "HIForward5",
             "HIForward6", "HIForward7", "HIForward8",
@@ -1431,7 +1431,7 @@ for dataset in DATASETS:
                                "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
-               scenario=hiLightEventsScenario)
+               scenario=hiForwardScenario)
     
 DATASETS = ["HIMinimumBias0", "HIMinimumBias1", "HIMinimumBias2", "HIMinimumBias3", 
             "HIMinimumBias4", "HIMinimumBias5", "HIMinimumBias6", "HIMinimumBias7",
@@ -1446,7 +1446,7 @@ for dataset in DATASETS:
                write_dqm=True,
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias"],
                dqm_sequences=["@commonSiStripZeroBias"],
-               scenario=hiLightEventsScenario)
+               scenario=hiScenario)
 
 DATASETS = ["HIEphemeralHLTPhysics"]
 
@@ -1457,7 +1457,7 @@ for dataset in DATASETS:
                write_dqm=True,
                disk_node="T2_US_Vanderbilt",
                dqm_sequences=["@commonSiStripZeroBias"],
-               scenario=hiLightEventsScenario)
+               scenario=hiScenario)
 
 DATASETS = ["HIEphemeralZeroBias0", "HIEphemeralZeroBias1"]
 
@@ -1469,7 +1469,7 @@ for dataset in DATASETS:
                timePerEvent=1,
                disk_node="T2_US_Vanderbilt",
                dqm_sequences=["@commonSiStripZeroBias"],
-               scenario=hiLightEventsScenario)
+               scenario=hiScenario)
 
 DATASETS = ["HITestRawPrime0", "HITestRawPrime1", "HITestRawPrime2", "HITestRawPrime3", "HITestRawPrime4",
             "HITestRawPrime5", "HITestRawPrime6", "HITestRawPrime7", "HITestRawPrime8", "HITestRawPrime9",
@@ -1533,7 +1533,7 @@ for dataset in DATASETS:
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
                alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias"],
                timePerEvent=1,
-               scenario=hiLightEventsScenario)
+               scenario=hiScenario)
 
 #######################
 ### ignored streams ###
