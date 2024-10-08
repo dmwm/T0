@@ -28,6 +28,7 @@ from T0.RunConfig.Tier0Config import setEnableUniqueWorkflowName
 from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setStorageSite
 from T0.RunConfig.Tier0Config import setExtraStreamDatasetMap
+from T0.RunConfig.Tier0Config import setHelperAgentStreams
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -43,6 +44,11 @@ setInjectRuns(tier0Config, [382686, 382726])
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
+
+# Define streams to ignore. These wont be injected by the MainAgent
+setHelperAgentStreams(tier0Config, {'SecondAgent': [],
+                                    'ThirdAgent' : []
+                                    })
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -110,7 +116,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_15"
+    'default': "CMSSW_14_0_16"
 }
 
 # Configure ScramArch
@@ -1017,9 +1023,9 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 DATASETS = ["EphemeralHLTPhysics0","EphemeralHLTPhysics1", "EphemeralHLTPhysics2", "EphemeralHLTPhysics3",
-            "EphemeralHLTPhysics4", "EphemeralHLTPhysics5", "EphemeralHLTPhysics6","EphemeralHLTPhysics7"
-            "EphemeralHLTPhysics8", "EphemeralHLTPhysics9","EphemeralHLTPhysics10","EphemeralHLTPhysics11"
-            "EphemeralHLTPhysics12","EphemeralHLTPhysics13","EphemeralHLTPhysics14","EphemeralHLTPhysics15"
+            "EphemeralHLTPhysics4", "EphemeralHLTPhysics5", "EphemeralHLTPhysics6","EphemeralHLTPhysics7",
+            "EphemeralHLTPhysics8", "EphemeralHLTPhysics9","EphemeralHLTPhysics10","EphemeralHLTPhysics11",
+            "EphemeralHLTPhysics12","EphemeralHLTPhysics13","EphemeralHLTPhysics14","EphemeralHLTPhysics15",
             "EphemeralHLTPhysics16","EphemeralHLTPhysics17","EphemeralHLTPhysics18","EphemeralHLTPhysics19"]
 
 for dataset in DATASETS:
@@ -1029,6 +1035,26 @@ for dataset in DATASETS:
                dqm_sequences=["@none"],
                write_dqm=False,
                scenario=ppScenario)
+
+## DAQ TRANSFER TEST PDs (fall 2024)
+DATASETS_DAQ_TFTEST = ["TestHLTPhysics0","TestHLTPhysics1", "TestHLTPhysics2", "TestHLTPhysics3",
+            "TestHLTPhysics4", "TestHLTPhysics5", "TestHLTPhysics6","TestHLTPhysics7",
+            "TestHLTPhysics8", "TestHLTPhysics9","TestHLTPhysics10","TestHLTPhysics11",
+            "TestHLTPhysics12", "TestHLTPhysics13","TestHLTPhysics14","TestHLTPhysics15",
+            "TestHLTPhysics16", "TestHLTPhysics17","TestHLTPhysics18","TestHLTPhysics19",
+            "TestHLTPhysics20", "TestHLTPhysics21","TestHLTPhysics22","TestHLTPhysics23",
+            "TestHLTPhysics24", "TestHLTPhysics25","TestHLTPhysics26","TestHLTPhysics27",
+            "TestHLTPhysics28", "TestHLTPhysics29","TestHLTPhysics30","TestHLTPhysics31",
+            "TestHLTPhysics32", "TestHLTPhysics33","TestHLTPhysics34","TestHLTPhysics35",
+            "TestHLTPhysics36", "TestHLTPhysics37","TestHLTPhysics38","TestHLTPhysics39"]
+
+for dataset in DATASETS_DAQ_TFTEST:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               raw_to_disk=False,
+               dqm_sequences=["@none"],
+               scenario=ppScenario)
+
 
 ########################################################
 ### SpecialRandom PDs                                ###

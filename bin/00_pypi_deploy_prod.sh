@@ -30,8 +30,8 @@ then
     exit
 fi
 
-WMAGENT_TAG=2.3.4
-TIER0_VERSION=3.2.3
+WMAGENT_TAG=2.3.5
+TIER0_VERSION=3.2.5
 COUCH_TAG=3.2.2
 
 BASE_DIR=/data/tier0
@@ -159,12 +159,11 @@ sed -i "s+config.RucioInjector.metaDIDProject.*+config.RucioInjector.metaDIDProj
 echo "config.RucioInjector.blockDeletionDelayHours = 168" >> $config/config.py
 #####
 ##### NOT IN REPLAY #####
-echo "config.RucioInjector.blockDeletionDelayHours = 168" >> $config/config.py
 echo 'config.BossAir.pluginNames = ["SimpleCondorPlugin"]' >> $config/config.py
 echo 'config.JobAccountant.maxAllowedRepackOutputSize = 24 * 1024 * 1024 * 1024' >> $config/config.py
 echo "config.AgentStatusWatcher.runningExpressPercent = 25" >> $config/config.py
 echo "config.AgentStatusWatcher.runningRepackPercent = 10" >> $config/config.py
-echo 'config.TaskArchiver.archiveDelayHours = 2190' >> $config.py
+echo 'config.TaskArchiver.archiveDelayHours = 720' >> $config.py
 ##### NOT IN REPLAY #####
 #####
 echo "config.DBS3Upload.datasetType = 'VALID'" >> $config/config.py

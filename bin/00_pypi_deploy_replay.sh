@@ -15,8 +15,8 @@ then
     exit
 fi
 
-WMAGENT_TAG=2.3.4rc11
-TIER0_VERSION=3.2.4rc1
+WMAGENT_TAG=2.3.5
+TIER0_VERSION=3.2.5
 COUCH_TAG=3.2.2
 
 BASE_DIR=/data/tier0
@@ -150,7 +150,7 @@ echo "config.RucioInjector.blockDeletionDelayHours = 2" >> $config/config.py
 #echo 'config.JobAccountant.maxAllowedRepackOutputSize = 24 * 1024 * 1024 * 1024' >> ./config/tier0/config.py
 #echo "config.AgentStatusWatcher.runningExpressPercent = 25" >> ./config/tier0/config.py
 #echo "config.AgentStatusWatcher.runningRepackPercent = 10" >> ./config/tier0/config.py
-#echo 'config.TaskArchiver.archiveDelayHours = 2190' >> $config.py
+#echo 'config.TaskArchiver.archiveDelayHours = 720' >> $config.py
 ##### ONLY IN PROD #####
 #####
 echo "config.DBS3Upload.datasetType = 'VALID'" >> $config/config.py
