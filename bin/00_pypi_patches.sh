@@ -11,8 +11,8 @@ DEPLOY_DIR=$BASE_DIR/WMAgent.venv3
 ##################
 
 #Dummy demonstrative Patch for new alma 9 agent
-#curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4961.patch | patch -d $WMA_DEPLOY_DIR/lib/python3.9/site-packages/ -p 3
-curl https://patch-diff.githubusercontent.com/raw/germanfgv/WMCore/pull/16.patch | patch -d $WMA_DEPLOY_DIR/lib/python3.9/site-packages/ -p 3
+#curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4961.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.9/site-packages/ -p 3
+curl https://patch-diff.githubusercontent.com/raw/germanfgv/WMCore/pull/16.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.9/site-packages/ -p 3
 
 
 ######################
