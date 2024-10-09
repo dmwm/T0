@@ -1214,7 +1214,7 @@ for dataset in DATASETS:
 DATASETS = ["ScoutingPFRun3"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
+               do_reco=True,
                write_aod=False,
                write_miniaod=False,
                scenario=hltScoutingScenario)
