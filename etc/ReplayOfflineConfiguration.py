@@ -136,6 +136,7 @@ alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
+hltScoutingScenario = "hltScoutingEra_Run3_2024"
 
 # Procesing version number replays
 # Taking Replay processing ID from the last 8 digits of the DeploymentID
@@ -1213,8 +1214,10 @@ for dataset in DATASETS:
 DATASETS = ["ScoutingPFRun3"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
-               scenario=ppScenario)
+               do_reco=True,
+               write_aod=False,
+               write_miniaod=False,
+               scenario=hltScoutingScenario)
 
 DATASETS = ["ParkingDoubleElectronLowMass0","ParkingDoubleElectronLowMass1","ParkingDoubleElectronLowMass2",
             "ParkingDoubleElectronLowMass3","ParkingDoubleElectronLowMass4","ParkingDoubleElectronLowMass5",
