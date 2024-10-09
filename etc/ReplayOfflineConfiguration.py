@@ -39,8 +39,9 @@ setConfigVersion(tier0Config, "replace with real version")
 # Set run number to replay
 # 382726  Cosmics, 4 hours
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
+# 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
 
-setInjectRuns(tier0Config, [382686, 382726])
+setInjectRuns(tier0Config, [382686, 382726, 386674])
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
@@ -116,7 +117,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_16"
+    'default': "CMSSW_14_0_18"
 }
 
 # Configure ScramArch
