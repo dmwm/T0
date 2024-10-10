@@ -42,11 +42,6 @@ setInjectMinRun(tier0Config, 9999999)
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
 
-# Set streams to ignore by agent. These will not be injected by the MainAgent
-setHelperAgentStreams(tier0Config, {"SecondAgent" : [],
-                                      "ThirdAgent" : []})
-
-
 # Settings up sites
 processingSite = "T2_CH_CERN"
 storageSite = "T0_CH_CERN_Disk"
@@ -565,7 +560,7 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 DATASETS = ["ParkingSingleMuon","ParkingSingleMuon0"]
-
+PARKING_PDS = DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -578,7 +573,7 @@ DATASETS = ["ParkingSingleMuon1","ParkingSingleMuon2","ParkingSingleMuon3",
             "ParkingSingleMuon4","ParkingSingleMuon5","ParkingSingleMuon6",
             "ParkingSingleMuon7","ParkingSingleMuon8","ParkingSingleMuon9",
             "ParkingSingleMuon10","ParkingSingleMuon11"]
-
+PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -589,7 +584,7 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 DATASETS = ["ParkingDoubleMuonLowMass0"]
-
+PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -604,7 +599,7 @@ for dataset in DATASETS:
 DATASETS = ["ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
             "ParkingDoubleMuonLowMass3","ParkingDoubleMuonLowMass4","ParkingDoubleMuonLowMass5",
             "ParkingDoubleMuonLowMass6","ParkingDoubleMuonLowMass7"]
-
+PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -645,7 +640,7 @@ DATASETS = ["ParkingHH", "ParkingVBF0",
             "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
             "ParkingVBF4", "ParkingVBF5", "ParkingVBF6",
             "ParkingVBF7"]
-
+PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -658,7 +653,7 @@ for dataset in DATASETS:
                scenario=ppScenario)
     
 DATASETS = ["ParkingLLP"]
-
+PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -1328,6 +1323,7 @@ for dataset in DATASETS:
                scenario=hltScoutingScenario)
 
 DATASETS = ["ParkingDoubleElectronLowMass","ParkingDoubleElectronLowMass0"]
+PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -1340,7 +1336,7 @@ for dataset in DATASETS:
 
 DATASETS = ["ParkingDoubleElectronLowMass1","ParkingDoubleElectronLowMass2",
             "ParkingDoubleElectronLowMass3","ParkingDoubleElectronLowMass4","ParkingDoubleElectronLowMass5"]
-
+PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -1466,7 +1462,8 @@ ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
 
 # Set streams to ignore by agent. These will not be injected
-setHelperAgentStreams(tier0Config, {"SecondAgent" : DATASETS_DAQ_TFTEST})
+SECOND_AGENT_PDS = PARKING_PDS + DATASETS_DAQ_TFTEST
+setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_PDS})
 
 ###################################
 ### currently inactive settings ###
