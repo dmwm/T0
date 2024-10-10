@@ -102,7 +102,7 @@ setPromptCalibrationConfig(tier0Config,
 # maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_16",
+    'default': "CMSSW_14_0_18",
     #'acqEra': {'Run2024F': "CMSSW_14_0_11"},
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
@@ -128,15 +128,15 @@ hltScoutingScenario = "hltScoutingEra_Run3_2024"
 
 # Defaults for processing version
 alcarawProcVersion = {
-    'default': 1
+    'default': 2
 }
 
 defaultProcVersionReco = {
-    'default': 1
+    'default': 2
 }
 
 expressProcVersion = {
-    'default': 1
+    'default': 2
 }
 
 # Defaults for GlobalTag
