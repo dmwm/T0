@@ -42,10 +42,6 @@ setInjectMinRun(tier0Config, 9999999)
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
 
-# Set streams to ignore by agent. These will not be injected by the MainAgent
-setHelperAgentStreams(tier0Config, {"SecondAgent" : [],
-                                      "ThirdAgent" : []})
-
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -65,7 +61,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2024H")
+setAcquisitionEra(tier0Config, "Run2024I")
 setEmulationAcquisitionEra(tier0Config, "Emulation2024")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
