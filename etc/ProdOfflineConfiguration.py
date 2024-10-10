@@ -42,10 +42,6 @@ setInjectMinRun(tier0Config, 9999999)
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
 
-# Set streams to ignore by agent. These will not be injected by the MainAgent
-setHelperAgentStreams(tier0Config, {"SecondAgent" : [],
-                                      "ThirdAgent" : []})
-
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -1465,7 +1461,7 @@ ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
 
-# Set streams to ignore by agent. These will not be injected
+# Set streams to ignore by MainAgent. These will not be injected
 setHelperAgentStreams(tier0Config, {"SecondAgent" : DATASETS_DAQ_TFTEST})
 
 ###################################
