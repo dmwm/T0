@@ -17,7 +17,6 @@ sed -i "s+'team1,team2,cmsdataops'+'tier0production'+g" "$config/config.py"
 sed -i "s+config.RucioInjector.containerDiskRuleParams.*+config.RucioInjector.containerDiskRuleParams = {}+" "$config/config.py"
 echo "config.RucioInjector.blockRuleParams = {}" >> $config/config.py
 sed -i "s+config.RucioInjector.metaDIDProject.*+config.RucioInjector.metaDIDProject = 'Tier0'+" "$config/config.py"
-echo "config.RucioInjector.blockDeletionDelayHours = 168" >> $config/config.py
 ##### NOT IN REPLAY #####
 echo "config.RucioInjector.blockDeletionDelayHours = 168" >> $config/config.py
 echo 'config.BossAir.pluginNames = ["SimpleCondorPlugin"]' >> $config/config.py
