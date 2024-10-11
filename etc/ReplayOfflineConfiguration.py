@@ -46,7 +46,7 @@ setInjectRuns(tier0Config, [382686, 386674])
 #setInjectLimit(tier0Config, 10)
 
 # Define streams to ignore. These wont be injected by the MainAgent
-setHelperAgentStreams(tier0Config, {'SecondAgent': [],
+setHelperAgentStreams(tier0Config, {'SecondAgent': ["Express"],
                                     'ThirdAgent' : []
                                     })
 
@@ -246,7 +246,7 @@ addExpressConfig(tier0Config, "Express",
                                  "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff", "PromptCalibProdSiPixelAliHG",
                                  "PromptCalibProdSiPixelAliHGComb"
                                 ],
-                 dqm_sequences=["@standardDQMExpress"],
+                 dqm_sequences=["@standardDQMExpress+cscMonitor"],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
                  global_tag_connect=globalTagConnect,

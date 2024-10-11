@@ -253,7 +253,7 @@ addExpressConfig(tier0Config, "Express",
                                  "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff", "PromptCalibProdSiPixelAliHG",
                                  "PromptCalibProdSiPixelAliHGComb"
                                 ],
-                 dqm_sequences=["@standardDQMExpress"],
+                 dqm_sequences=["@standardDQMExpress+cscMonitor"],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
                  global_tag_connect=globalTagConnect,
