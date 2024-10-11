@@ -42,11 +42,6 @@ setInjectMinRun(tier0Config, 9999999)
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
 
-# Set streams to ignore by agent. These will not be injected by the MainAgent
-setHelperAgentStreams(tier0Config, {"SecondAgent" : [],
-                                      "ThirdAgent" : []})
-
-
 # Settings up sites
 processingSite = "T2_CH_CERN"
 storageSite = "T0_CH_CERN_Disk"
@@ -65,7 +60,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2024H")
+setAcquisitionEra(tier0Config, "Run2024I")
 setEmulationAcquisitionEra(tier0Config, "Emulation2024")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
@@ -106,7 +101,7 @@ setPromptCalibrationConfig(tier0Config,
 # maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_16",
+    'default': "CMSSW_14_0_18",
     #'acqEra': {'Run2024F': "CMSSW_14_0_11"},
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
@@ -128,18 +123,19 @@ alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
+hltScoutingScenario = "hltScoutingEra_Run3_2024"
 
 # Defaults for processing version
 alcarawProcVersion = {
-    'default': 1
+    'default': 2
 }
 
 defaultProcVersionReco = {
-    'default': 1
+    'default': 2
 }
 
 expressProcVersion = {
-    'default': 1
+    'default': 2
 }
 
 # Defaults for GlobalTag
@@ -564,7 +560,7 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 DATASETS = ["ParkingSingleMuon","ParkingSingleMuon0"]
-
+PARKING_PDS = DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -577,7 +573,7 @@ DATASETS = ["ParkingSingleMuon1","ParkingSingleMuon2","ParkingSingleMuon3",
             "ParkingSingleMuon4","ParkingSingleMuon5","ParkingSingleMuon6",
             "ParkingSingleMuon7","ParkingSingleMuon8","ParkingSingleMuon9",
             "ParkingSingleMuon10","ParkingSingleMuon11"]
-
+PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -588,7 +584,7 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 DATASETS = ["ParkingDoubleMuonLowMass0"]
-
+PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -603,7 +599,7 @@ for dataset in DATASETS:
 DATASETS = ["ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
             "ParkingDoubleMuonLowMass3","ParkingDoubleMuonLowMass4","ParkingDoubleMuonLowMass5",
             "ParkingDoubleMuonLowMass6","ParkingDoubleMuonLowMass7"]
-
+PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -644,7 +640,7 @@ DATASETS = ["ParkingHH", "ParkingVBF0",
             "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
             "ParkingVBF4", "ParkingVBF5", "ParkingVBF6",
             "ParkingVBF7"]
-
+PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -657,7 +653,7 @@ for dataset in DATASETS:
                scenario=ppScenario)
     
 DATASETS = ["ParkingLLP"]
-
+PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -1319,12 +1315,15 @@ for dataset in DATASETS:
 DATASETS = ["ScoutingPFRun3"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
+               do_reco=True,
+               write_aod=False,
+               write_miniaod=False,
                tape_node="T1_US_FNAL_MSS",
                disk_node="T1_US_FNAL_Disk",
-               scenario=ppScenario)
+               scenario=hltScoutingScenario)
 
 DATASETS = ["ParkingDoubleElectronLowMass","ParkingDoubleElectronLowMass0"]
+PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -1337,7 +1336,7 @@ for dataset in DATASETS:
 
 DATASETS = ["ParkingDoubleElectronLowMass1","ParkingDoubleElectronLowMass2",
             "ParkingDoubleElectronLowMass3","ParkingDoubleElectronLowMass4","ParkingDoubleElectronLowMass5"]
-
+PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -1462,8 +1461,11 @@ ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
 
+
 # Set streams to ignore by agent. These will not be injected
-setHelperAgentStreams(tier0Config, {"SecondAgent" : DATASETS_DAQ_TFTEST})
+SECOND_AGENT_PDS = PARKING_PDS + DATASETS_DAQ_TFTEST
+setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_PDS})
+
 
 ###################################
 ### currently inactive settings ###
