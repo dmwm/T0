@@ -46,7 +46,7 @@ setInjectRuns(tier0Config, [382686, 386674])
 #setInjectLimit(tier0Config, 10)
 
 # Define streams to ignore. These wont be injected by the MainAgent
-setHelperAgentStreams(tier0Config, {'SecondAgent': [],
+setHelperAgentStreams(tier0Config, {'SecondAgent': ["Express"],
                                     'ThirdAgent' : []
                                     })
 
@@ -116,7 +116,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_18"
+    'default': "CMSSW_14_0_18_patch1"
 }
 
 # Configure ScramArch
