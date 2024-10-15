@@ -45,11 +45,6 @@ setInjectRuns(tier0Config, [382686, 386674])
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
 
-# Define streams to ignore. These wont be injected by the MainAgent
-setHelperAgentStreams(tier0Config, {'SecondAgent': [],
-                                    'ThirdAgent' : []
-                                    })
-
 # Settings up sites
 processingSite = "T2_CH_CERN"
 storageSite = "T0_CH_CERN_Disk"
@@ -116,7 +111,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_18"
+    'default': "CMSSW_14_0_18_patch1"
 }
 
 # Configure ScramArch
@@ -1308,6 +1303,11 @@ for dataset in DATASETS:
 #######################
 ### ignored streams ###
 #######################
+
+# Define streams to be ignored by MainAgent and processed by a HelperAgent if any.
+setHelperAgentStreams(tier0Config, {'SecondAgent': ["Express"],
+                                    'ThirdAgent' : []
+                                   })
 
 ignoreStream(tier0Config, "Error")
 ignoreStream(tier0Config, "HLTMON")
