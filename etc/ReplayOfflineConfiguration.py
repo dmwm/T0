@@ -45,11 +45,6 @@ setInjectRuns(tier0Config, [382686, 386674])
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
 
-# Define streams to ignore. These wont be injected by the MainAgent
-setHelperAgentStreams(tier0Config, {'SecondAgent': [],
-                                    'ThirdAgent' : []
-                                    })
-
 # Settings up sites
 processingSite = "T2_CH_CERN"
 storageSite = "T0_CH_CERN_Disk"
@@ -116,7 +111,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_18"
+    'default': "CMSSW_14_0_18_patch1"
 }
 
 # Configure ScramArch
@@ -136,6 +131,7 @@ alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
+hltScoutingScenario = "hltScoutingEra_Run3_2024"
 
 # Procesing version number replays
 # Taking Replay processing ID from the last 8 digits of the DeploymentID
@@ -1213,8 +1209,10 @@ for dataset in DATASETS:
 DATASETS = ["ScoutingPFRun3"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
-               scenario=ppScenario)
+               do_reco=True,
+               write_aod=False,
+               write_miniaod=False,
+               scenario=hltScoutingScenario)
 
 DATASETS = ["ParkingDoubleElectronLowMass0","ParkingDoubleElectronLowMass1","ParkingDoubleElectronLowMass2",
             "ParkingDoubleElectronLowMass3","ParkingDoubleElectronLowMass4","ParkingDoubleElectronLowMass5",
@@ -1305,6 +1303,11 @@ for dataset in DATASETS:
 #######################
 ### ignored streams ###
 #######################
+
+# Define streams to be ignored by MainAgent and processed by a HelperAgent if any.
+setHelperAgentStreams(tier0Config, {'SecondAgent': ["Express"],
+                                    'ThirdAgent' : []
+                                   })
 
 ignoreStream(tier0Config, "Error")
 ignoreStream(tier0Config, "HLTMON")
