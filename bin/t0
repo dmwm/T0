@@ -131,10 +131,8 @@ def addProcessingSite(site=None):
     _resourceControl_
     Adds site to the resource control
     """
-    command_1 = "manage execute-agent wmagent-resource-control --site-name={} --cms-name={} --pnn={} --ce-name={} --pending-slots=20000 --running-slots=20000 --plugin=SimpleCondorPlugin".format(site, site, site, site)
-    command_2 = "manage execute-agent wmagent-resource-control --site-name={} --task-type=Processing --pending-slots=10000 --running-slots=10000".format(site)
-    os.system(command_1)
-    os.system(command_2)
+    addSiteCmd = f"manage execute-agent wmagent-resource-control --pending-slots=10000 --running-slots=10000 --plugin=SimpleCondorPlugin --add-one-site {site}"
+    os.system(addSiteCmd)
 
 def modifyCodeFile(file=None):
     """
