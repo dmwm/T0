@@ -54,7 +54,7 @@ config.AgentStatusWatcher.pendingSlotsTaskPercent = 30
 config.AgentStatusWatcher.pendingSlotsSitePercent = 40
 config.AgentStatusWatcher.runningExpressPercent = 25
 config.AgentStatusWatcher.runningRepackPercent = 10
-config.AgentStatusWatcher.enabled = False
+config.AgentStatusWatcher.enabled = True
 config.AgentStatusWatcher.onlySSB = False
 
 config.RucioInjector.blockRuleParams = {}
