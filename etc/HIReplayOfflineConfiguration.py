@@ -43,7 +43,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 356005 - 2022 pp at 13.6 TeV (1h long, 600 bunches - ALL detectors included)
 # 359060 - 2022 cosmics - Oberved failures in Express (https://cms-talk.web.cern.ch/t/paused-jobs-for-express-run359045-streamexpress/15232)
 # 361694:361699,361779 - 2022 HI dry-run test runs
-setInjectRuns(tier0Config, [374951])
+setInjectRuns(tier0Config, [374951, 375549])
 
 # Define streams to ignore. These wont be injected by the MainAgent
 setHelperAgentStreams(tier0Config, {'SecondAgent': [],
@@ -115,15 +115,16 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_1_2"
+    'default': "CMSSW_14_1_3"
 }
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "el8_amd64_gcc12")
 setScramArch(tier0Config, "CMSSW_13_2_5", "el8_amd64_gcc11")
+setScramArch(tier0Config, "CMSSW_13_2_6", "el8_amd64_gcc11")
 
 # Configure scenarios
-ppScenario = "ppEra_Run3_2023"
+ppScenario = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
 hcalnzsScenario = "hcalnzsEra_Run3"
 HIhcalnzsScenario = "hcalnzsEra_Run3_pp_on_PbPb"
@@ -485,8 +486,7 @@ addExpressConfig(tier0Config, "HIExpressRawPrime",
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "HIExpressAlignment",
-                 #scenario=HIalcaTrackingOnlyScenario,
-                 scenario=hiScenario,
+                 scenario=HIalcaTrackingOnlyScenario,
                  data_tiers=["ALCARECO", "RAW"],
                  write_dqm=True,
                  alca_producers=["TkAlMinBias", "PromptCalibProdBeamSpotHP"],
