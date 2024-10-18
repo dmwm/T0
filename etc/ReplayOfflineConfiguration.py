@@ -119,7 +119,8 @@ setDefaultScramArch(tier0Config, "el8_amd64_gcc12")
 setScramArch(tier0Config, "CMSSW_12_4_9", "el8_amd64_gcc10")
 setScramArch(tier0Config, "CMSSW_12_3_0", "cs8_amd64_gcc10")
 setScramArch(tier0Config, "CMSSW_13_0_9", "el8_amd64_gcc11")
-
+setScramArch(tier0Config, "CMSSW_13_2_5", "el8_amd64_gcc11")
+setScramArch(tier0Config, "CMSSW_13_2_6", "el8_amd64_gcc11")
 # Configure scenarios
 ppScenario = "ppEra_Run3"
 ppScenarioB0T = "ppEra_Run3"
@@ -483,7 +484,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
-               physics_skims=["LogError", "LogErrorMonitor"],
+               #physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppRefScenario)
 
 DATASETS = ["Cosmics"]
@@ -497,7 +498,7 @@ for dataset in DATASETS:
                write_nanoaod=False,
                write_dqm=True,
                alca_producers=["SiStripCalCosmics", "SiPixelCalCosmics", "TkAlCosmics0T", "MuAlGlobalCosmics", "SiStripCalCosmicsNano"],
-               physics_skims=["CosmicSP", "CosmicTP", "LogError", "LogErrorMonitor"],
+               #physics_skims=["CosmicSP", "CosmicTP", "LogError", "LogErrorMonitor"],
                timePerEvent=0.5,
                sizePerEvent=155,
                scenario=cosmicsScenario)
@@ -509,7 +510,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
-               physics_skims=["EXODisplacedJet", "EXODelayedJet", "EXODTCluster", "LogError", "LogErrorMonitor", "EXOLLPJetHCAL"],
+               #physics_skims=["EXODisplacedJet", "EXODelayedJet", "EXODTCluster", "LogError", "LogErrorMonitor", "EXOLLPJetHCAL"],
                scenario=ppRefScenario)
 
 DATASETS = ["DoubleMuon"]
@@ -521,7 +522,7 @@ for dataset in DATASETS:
                write_dqm=True,
                alca_producers=["TkAlZMuMu", "MuAlCalIsolatedMu", "TkAlDiMuonAndVertex"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon"],
-               physics_skims=["LogError", "LogErrorMonitor"],
+               #physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppRefScenario)
 
 DATASETS = ["DoubleMuonLowPU"]
@@ -533,7 +534,7 @@ for dataset in DATASETS:
                write_dqm=True,
                alca_producers=["TkAlZMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon"],
-               physics_skims=["LogError", "LogErrorMonitor"],
+               #physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=1,
                scenario=ppRefScenario)
 
@@ -583,7 +584,7 @@ for dataset in DATASETS:
                write_aod=True,
                write_miniaod=True,
                write_nanoaod=True,
-               physics_skims=["EXOCSCCluster"],
+               #s=["EXOCSCCluster"],
                scenario=ppRefScenario)
 
 DATASETS = ["PPRefExotica"]
@@ -595,7 +596,7 @@ for dataset in DATASETS:
                write_aod=True,
                write_miniaod=True,
                write_nanoaod=True,
-               physics_skims=["EXOCSCCluster"],
+               #physics_skims=["EXOCSCCluster"],
                scenario=ppRefScenario)
 
 DATASETS = [ "ParkingLLP" ]
@@ -645,7 +646,7 @@ for dataset in DATASETS:
                write_dqm=True,
                alca_producers=["HcalCalIsoTrkProducerFilter", "TkAlJetHT", "HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
-               physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor", "EXOMONOPOLE"],
+               #physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor", "EXOMONOPOLE"],
                timePerEvent=5.7,  # copied from JetHT - should be checked
                sizePerEvent=2250, # copied from JetHT - should be checked
                scenario=ppRefScenario)
@@ -658,7 +659,7 @@ for dataset in DATASETS:
                write_dqm=True,
                alca_producers=["HcalCalIsoTrkProducerFilter", "TkAlJetHT", "HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
-               physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "LogError", "LogErrorMonitor"],
+               #physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "LogError", "LogErrorMonitor"],
                timePerEvent=5.7,
                sizePerEvent=2250,
                scenario=ppRefScenario)
@@ -671,7 +672,7 @@ for dataset in DATASETS:
                write_dqm=True,
                alca_producers=["HcalCalIsoTrkProducerFilter", "TkAlJetHT"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
-               physics_skims=["JetHTJetPlusHOFilter", "LogError", "LogErrorMonitor"],
+               #physics_skims=["JetHTJetPlusHOFilter", "LogError", "LogErrorMonitor"],
                timePerEvent=5.7,
                sizePerEvent=2250,
                scenario=ppRefScenario)
@@ -684,7 +685,7 @@ for dataset in DATASETS:
                write_dqm=True,
                alca_producers=["HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
-               physics_skims=["EXOHighMET", "LogError", "LogErrorMonitor"],
+               #physics_skims=["EXOHighMET", "LogError", "LogErrorMonitor"],
                scenario=ppRefScenario)
 
 DATASETS = ["MuonEG"]
@@ -694,7 +695,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
-               physics_skims=["TopMuEG", "LogError", "LogErrorMonitor"],
+               #physics_skims=["TopMuEG", "LogError", "LogErrorMonitor"],
                scenario=ppRefScenario)
 
 DATASETS = ["Muon", "Muon0", "Muon1"]
@@ -708,7 +709,7 @@ for dataset in DATASETS:
                                "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
                                "TkAlZMuMu", "TkAlDiMuonAndVertex"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
-               physics_skims=["MUOJME", "ZMu", "EXODisappTrk", "EXOCSCCluster", "EXODisappMuon", "LogError", "LogErrorMonitor"],
+               #physics_skims=["MUOJME", "ZMu", "EXODisappTrk", "EXOCSCCluster", "EXODisappMuon", "LogError", "LogErrorMonitor"],
                scenario=ppRefScenario)
 
 DATASETS = ["PPRefSingleMuon0", "PPRefSingleMuon1", "PPRefSingleMuon2"]
@@ -722,7 +723,7 @@ for dataset in DATASETS:
                                "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
                                "TkAlZMuMu", "TkAlDiMuonAndVertex"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
-               physics_skims=["ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
+               #physics_skims=["ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
                scenario=ppRefScenario)
 
 DATASETS = ["PPRefDoubleMuon0", "PPRefDoubleMuon1", "PPRefDoubleMuon2", "PPRefDoubleMuon3"]
@@ -736,7 +737,7 @@ for dataset in DATASETS:
                disk_node="T1_US_FNAL_Disk",
                alca_producers=["TkAlZMuMu", "TkAlDiMuonAndVertex", "TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
-               physics_skims=["ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
+               #physics_skims=["ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
                scenario=ppRefScenario)
 
 DATASETS = ["NoBPTX"]
@@ -748,7 +749,7 @@ for dataset in DATASETS:
                write_dqm=True,
                alca_producers=["TkAlCosmicsInCollisions"],
                dqm_sequences=["@common"],
-               physics_skims=["EXONoBPTXSkim", "LogError", "LogErrorMonitor"],
+               #physics_skims=["EXONoBPTXSkim", "LogError", "LogErrorMonitor"],
                scenario=ppRefScenario)
 
 DATASETS = ["SingleMuon"]
@@ -761,7 +762,7 @@ for dataset in DATASETS:
                                "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
                                "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon"],
-               physics_skims=["ZMu", "LogError", "LogErrorMonitor"],
+               #physics_skims=["ZMu", "LogError", "LogErrorMonitor"],
                scenario=ppRefScenario)
 
 DATASETS = ["EGamma", "EGamma0", "EGamma1"]
@@ -773,7 +774,7 @@ for dataset in DATASETS:
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym",
                                "HcalCalIsoTrkProducerFilter", "EcalESAlign"],
                dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
-               physics_skims=["ZElectron","WElectron", "EGMJME", "EXOMONOPOLE", "EXODisappTrk", "IsoPhotonEB", "LogError", "LogErrorMonitor"],
+               #physics_skims=["ZElectron","WElectron", "EGMJME", "EXOMONOPOLE", "EXODisappTrk", "IsoPhotonEB", "LogError", "LogErrorMonitor"],
                scenario=ppRefScenario)
 
 DATASETS = ["Tau"]
@@ -783,7 +784,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
-               physics_skims=["EXODisappTrk", "LogError", "LogErrorMonitor"],
+               #physics_skims=["EXODisappTrk", "LogError", "LogErrorMonitor"],
                scenario=ppRefScenario)
 
 #############################################
@@ -803,7 +804,7 @@ for dataset in DATASETS:
                write_dqm=True,
                alca_producers=["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk"],
                dqm_sequences=["@common", "@L1TMon", "@hcal"],
-               physics_skims=["EcalActivity", "LogError", "LogErrorMonitor"],
+               #physics_skims=["EcalActivity", "LogError", "LogErrorMonitor"],
                timePerEvent=12,
                sizePerEvent=4000,
                scenario=ppRefScenario)
@@ -819,7 +820,7 @@ for dataset in DATASETS:
                write_reco=False,
                dqm_sequences=["@common", "@L1TMon", "@hcal"],
                alca_producers=["HcalCalMinBias"],
-               physics_skims=["LogError", "LogErrorMonitor"],
+               #physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=4.2,
                sizePerEvent=1900,
                scenario=hcalnzsScenario)
@@ -991,7 +992,7 @@ for dataset in DATASETS:
                write_aod=True,
                dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
                alca_producers=["TkAlMinBias", "TkAlV0s"],
-               physics_skims=["LogError", "LogErrorMonitor"],
+               #physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppRefScenario)
 
 DATASETS = ["SpecialHLTPhysics", "SpecialHLTPhysics0", "SpecialHLTPhysics1",
@@ -1016,7 +1017,7 @@ for dataset in DATASETS:
                write_aod=True,
                dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
                alca_producers=["TkAlMinBias","LumiPixelsMinBias"],
-               physics_skims=["LogError", "LogErrorMonitor"],
+               #physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppRefScenario)
 
 DATASETS = ["EphemeralHLTPhysics0","EphemeralHLTPhysics1", "EphemeralHLTPhysics2", "EphemeralHLTPhysics3",
@@ -1075,7 +1076,7 @@ for dataset in DATASETS:
                write_aod=True,
                dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
                alca_producers=["TkAlMinBias","LumiPixelsMinBias"],
-               physics_skims=["LogError", "LogErrorMonitor"],
+               #physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppRefScenario)
 
 ########################################################
@@ -1174,7 +1175,7 @@ for dataset in DATASETS:
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@ctpps"],
                alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias", "LumiPixelsMinBias",
                                "HcalCalIsolatedBunchSelector"],
-               physics_skims=["LogError", "LogErrorMonitor"],
+               #physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=3.5,
                sizePerEvent=1500,
                scenario=ppRefScenario)
@@ -1296,7 +1297,7 @@ for dataset in DATASETS:
 	       write_nanoaod=False,
                alca_producers=["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk"],
                dqm_sequences=["@common", "@L1TMon", "@hcal"],
-               physics_skims=["EcalActivity", "LogError", "LogErrorMonitor"],
+               #physics_skims=["EcalActivity", "LogError", "LogErrorMonitor"],
                timePerEvent=12,
                sizePerEvent=4000,
                scenario=hiRawPrimeScenario)
