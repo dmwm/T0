@@ -477,6 +477,7 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
 ### Standard Physics PDs (2022) ###
 ###################################
 
+SECOND_AGENT_STREAMS = []
 DATASETS = ["BTagMu"]
 
 for dataset in DATASETS:
@@ -547,6 +548,8 @@ for dataset in DATASETS:
 
 DATASETS = ["ParkingSingleMuon","ParkingSingleMuon0","ParkingSingleMuon1","ParkingSingleMuon2"]
 
+SECOND_AGENT_STREAMS += DATASETS
+
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -554,7 +557,7 @@ for dataset in DATASETS:
 
 DATASETS = ["ParkingDoubleMuonLowMass0","ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
             "ParkingDoubleMuonLowMass3"]
-
+SECOND_AGENT_STREAMS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -566,7 +569,7 @@ for dataset in DATASETS:
 
 DATASETS = ["ParkingDoubleMuonLowMass4","ParkingDoubleMuonLowMass5",
             "ParkingDoubleMuonLowMass6","ParkingDoubleMuonLowMass7"]
-
+SECOND_AGENT_STREAMS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -612,6 +615,7 @@ DATASETS = ["ParkingHH", "ParkingVBF0",
             "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
             "ParkingVBF4", "ParkingVBF5", "ParkingVBF6",
             "ParkingVBF7"]
+SECOND_AGENT_STREAMS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -639,7 +643,7 @@ for dataset in DATASETS:
                scenario=ppRefScenario)
 
 DATASETS = ["JetMET", "JetMET0", "JetMET1"]
-
+SECOND_AGENT_STREAMS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -699,7 +703,7 @@ for dataset in DATASETS:
                scenario=ppRefScenario)
 
 DATASETS = ["Muon", "Muon0", "Muon1"]
-
+SECOND_AGENT_STREAMS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -766,7 +770,7 @@ for dataset in DATASETS:
                scenario=ppRefScenario)
 
 DATASETS = ["EGamma", "EGamma0", "EGamma1"]
-
+SECOND_AGENT_STREAMS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -1090,7 +1094,7 @@ DATASETS = ["MinimumBias", "MinimumBias0", "MinimumBias1", "MinimumBias2", "Mini
             "MinimumBias16", "MinimumBias17", "MinimumBias18", "MinimumBias19",
             "MinimumBias20"
            ]
-
+SECOND_AGENT_STREAMS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -1307,7 +1311,8 @@ for dataset in DATASETS:
 #######################
 
 # Define streams to be ignored by MainAgent and processed by a HelperAgent if any.
-setHelperAgentStreams(tier0Config, {'SecondAgent': [],
+SECOND_AGENT_STREAMS.append("Express")
+setHelperAgentStreams(tier0Config, {'SecondAgent': SECOND_AGENT_STREAMS,
                                     'ThirdAgent' : []
                                    })
 
