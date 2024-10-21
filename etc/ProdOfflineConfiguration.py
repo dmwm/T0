@@ -849,9 +849,6 @@ for dataset in DATASETS:
 
 DATASETS = ["Commissioning"]
 
-DATASETS += ["Commissioning1", "Commissioning2", "Commissioning3", "Commissioning4",
-             "CommissioningMuons", "CommissioningEGamma", "CommissioningTaus", "CommissioningSingleJet", "CommissioningDoubleJet"]
-
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
