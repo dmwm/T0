@@ -585,18 +585,6 @@ for dataset in DATASETS:
                physics_skims=["EXOCSCCluster"],
                scenario=ppScenario)
 
-DATASETS = ["PPRefExotica"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_reco=False,
-               write_aod=True,
-               write_miniaod=True,
-               write_nanoaod=True,
-               physics_skims=["EXOCSCCluster"],
-               scenario=ppScenario)
-
 DATASETS = [ "ParkingLLP" ]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -649,7 +637,7 @@ for dataset in DATASETS:
                sizePerEvent=2250, # copied from JetHT - should be checked
                scenario=ppScenario)
 
-DATASETS = ["PPRefHardProbes0", "PPRefHardProbes1", "PPRefHardProbes2"]
+DATASETS = ["PPRefHardProbes0", "PPRefHardProbes1", "PPRefHardProbes2", "PPRefHardProbes3", "PPRefHardProbes4"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -710,7 +698,7 @@ for dataset in DATASETS:
                physics_skims=["MUOJME", "ZMu", "EXODisappTrk", "EXOCSCCluster", "EXODisappMuon", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["PPRefSingleMuon0", "PPRefSingleMuon1", "PPRefSingleMuon2"]
+DATASETS = ["PPRefSingleMuon0", "PPRefSingleMuon1", "PPRefSingleMuon2", "PPRefSingleMuon3"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -793,8 +781,6 @@ DATASETS = ["Commissioning"]
 
 DATASETS += ["Commissioning1", "Commissioning2", "Commissioning3", "Commissioning4",
              "CommissioningMuons", "CommissioningEGamma", "CommissioningTaus", "CommissioningSingleJet", "CommissioningDoubleJet"]
-
-DATASETS += ["CommissioningZDC"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1157,12 +1143,12 @@ DATASETS += ["SpecialZeroBias", "SpecialZeroBias0", "SpecialZeroBias1",
 	     "SpecialZeroBias26", "SpecialZeroBias27", "SpecialZeroBias28",
 	     "SpecialZeroBias29", "SpecialZeroBias30", "SpecialZeroBias31"]
 
-DATASETS += ["PPRefZeroBias0", "PPRefZeroBias1", "PPRefZeroBias2",
-             "PPRefZeroBias3", "PPRefZeroBias4", "PPRefZeroBias5", "PPRefZeroBias6",
-             "PPRefZeroBias7", "PPRefZeroBias8", "PPRefZeroBias9", "PPRefZeroBias10",
-             "PPRefZeroBias11", "PPRefZeroBias12", "PPRefZeroBias13", "PPRefZeroBias14",
-             "PPRefZeroBias15", "PPRefZeroBias16", "PPRefZeroBias17", "PPRefZeroBias18",
-             "PPRefZeroBias19"]
+DATASETS += ["PPRefZeroBiasPlusForward0", "PPRefZeroBiasPlusForward1", "PPRefZeroBiasPlusForward2",
+             "PPRefZeroBiasPlusForward3", "PPRefZeroBiasPlusForward4", "PPRefZeroBiasPlusForward5", "PPRefZeroBiasPlusForward6",
+             "PPRefZeroBiasPlusForward7", "PPRefZeroBiasPlusForward8", "PPRefZeroBiasPlusForward9", "PPRefZeroBiasPlusForward10",
+             "PPRefZeroBiasPlusForward11", "PPRefZeroBiasPlusForward12", "PPRefZeroBiasPlusForward13", "PPRefZeroBiasPlusForward14",
+             "PPRefZeroBiasPlusForward15", "PPRefZeroBiasPlusForward16", "PPRefZeroBiasPlusForward17", "PPRefZeroBiasPlusForward18",
+             "PPRefZeroBiasPlusForward19"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1282,23 +1268,6 @@ for dataset in DATASETS:
                dqm_sequences=["@none"],
                scenario=alcaPPSScenario)
 
-######################
-### RAW' TEST 2023 ###
-######################
-
-DATASETS = ["CommissioningRawPrime"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_dqm=True,
-	       write_nanoaod=False,
-               alca_producers=["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk"],
-               dqm_sequences=["@common", "@L1TMon", "@hcal"],
-               physics_skims=["EcalActivity", "LogError", "LogErrorMonitor"],
-               timePerEvent=12,
-               sizePerEvent=4000,
-               scenario=hiRawPrimeScenario)
 
 #######################
 ### ignored streams ###
