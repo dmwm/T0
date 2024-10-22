@@ -1145,7 +1145,8 @@ DATASETS += ["PPRefZeroBiasPlusForward0", "PPRefZeroBiasPlusForward1", "PPRefZer
              "PPRefZeroBiasPlusForward7", "PPRefZeroBiasPlusForward8", "PPRefZeroBiasPlusForward9", "PPRefZeroBiasPlusForward10",
              "PPRefZeroBiasPlusForward11", "PPRefZeroBiasPlusForward12", "PPRefZeroBiasPlusForward13", "PPRefZeroBiasPlusForward14",
              "PPRefZeroBiasPlusForward15", "PPRefZeroBiasPlusForward16", "PPRefZeroBiasPlusForward17", "PPRefZeroBiasPlusForward18",
-             "PPRefZeroBiasPlusForward19"]
+             "PPRefZeroBiasPlusForward19", "PPRefZeroBiasPlusForward20", "PPRefZeroBiasPlusForward21", "PPRefZeroBiasPlusForward22",
+             "PPRefZeroBiasPlusForward23", "PPRefZeroBiasPlusForward24"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
