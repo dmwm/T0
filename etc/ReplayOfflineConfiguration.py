@@ -40,7 +40,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
 # 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
 
-setInjectRuns(tier0Config, [382686, 386674])
+setInjectRuns(tier0Config, [380128, 382686, 386925])
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
@@ -215,7 +215,7 @@ addDataset(tier0Config, "Default",
            global_tag_connect=globalTagConnect,
            #archival_node="T0_CH_CERN_MSS",
            tape_node="T0_CH_CERN_Disk",
-           disk_node="T0_CH_CERN_Disk",
+           disk_node="T2_US_Vanderbilt",
            #raw_to_disk=False,
            blockCloseDelay=1200,
            timePerEvent=5,
@@ -732,7 +732,7 @@ for dataset in DATASETS:
                write_reco=False,
                write_dqm=True,
                tape_node="T1_US_FNAL_MSS",
-               disk_node="T1_US_FNAL_Disk",
+               #disk_node="T1_US_FNAL_Disk",
                alca_producers=["TkAlZMuMu", "TkAlDiMuonAndVertex", "TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
                physics_skims=["ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
@@ -912,7 +912,7 @@ for dataset in DATASETS:
                do_reco=False,
                write_reco=False, write_aod=False, write_miniaod=False, write_dqm=False,
                write_nanoaod=False,
-               disk_node=None,
+               #disk_node=None,
                tape_node=None,
                reco_split=alcarawSplitting,
                proc_version=alcarawProcVersion,
@@ -928,7 +928,7 @@ for dataset in DATASETS:
                write_reco=False, write_aod=False, write_miniaod=False, write_dqm=False,
                write_nanoaod=False,
                raw_to_disk=True,
-               disk_node=None,
+               #disk_node=None,
                tape_node=None,
                reco_split=alcarawSplitting,
                proc_version=alcarawProcVersion,
@@ -944,7 +944,7 @@ for dataset in DATASETS:
                write_reco=False, write_aod=False, write_miniaod=False, write_dqm=False,
                write_nanoaod=False,
                raw_to_disk=True,
-               disk_node=None,
+               #disk_node=None,
                tape_node=None,
                reco_split=alcarawSplitting,
                proc_version=alcarawProcVersion,
