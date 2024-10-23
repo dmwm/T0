@@ -127,15 +127,15 @@ hltScoutingScenario = "hltScoutingEra_Run3_2024"
 
 # Defaults for processing version
 alcarawProcVersion = {
-    'default': 2
+    'default': 1
 }
 
 defaultProcVersionReco = {
-    'default': 2
+    'default': 1
 }
 
 expressProcVersion = {
-    'default': 2
+    'default': 1
 }
 
 # Defaults for GlobalTag
