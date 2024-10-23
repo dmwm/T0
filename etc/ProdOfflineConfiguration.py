@@ -113,7 +113,8 @@ setDefaultScramArch(tier0Config, "el8_amd64_gcc12")
 #setScramArch(tier0Config, "CMSSW_13_3_0", "el8_amd64_gcc12")
 
 # Configure scenarios
-ppScenario = "ppEra_Run3_2024_ppRef"
+ppScenario = "ppEra_Run3"
+ppRefScenario = "ppEra_Run3_2024_ppRef"
 ppScenarioB0T = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
 hcalnzsScenario = "hcalnzsEra_Run3"
@@ -704,7 +705,7 @@ for dataset in DATASETS:
                sizePerEvent=2250,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
-               scenario=ppScenario)
+               scenario=ppRefScenario)
 
 DATASETS = ["JetHT"]
 
@@ -799,7 +800,7 @@ for dataset in DATASETS:
                                "TkAlZMuMu", "TkAlDiMuonAndVertex"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
                physics_skims=["MUOJME", "ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
-               scenario=ppScenario)
+               scenario=ppRefScenario)
 
 DATASETS = ["PPRefDoubleMuon0", "PPRefDoubleMuon1", "PPRefDoubleMuon2", "PPRefDoubleMuon3"]
 
@@ -817,7 +818,7 @@ for dataset in DATASETS:
                alca_producers=["TkAlZMuMu", "TkAlDiMuonAndVertex", "TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
                physics_skims=["ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
-               scenario=ppScenario)
+               scenario=ppRefScenario)
 
 DATASETS = ["NoBPTX"]
 
@@ -1346,7 +1347,7 @@ for dataset in DATASETS:
                sizePerEvent=1500,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
-               scenario=ppScenario)
+               scenario=ppRefScenario)
 
 DATASETS = ["EphemeralZeroBias0", "EphemeralZeroBias1", "EphemeralZeroBias2", "EphemeralZeroBias3",
             "EphemeralZeroBias4", "EphemeralZeroBias5", "EphemeralZeroBias6", "EphemeralZeroBias7",
