@@ -697,7 +697,6 @@ for dataset in DATASETS:
                write_miniaod=True,
                write_nanoaod=False,
                write_dqm=True,
-               dqm_sequences=["@comm
                alca_producers=["HcalCalIsoTrkProducerFilter", "TkAlJetHT", "HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
                physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "LogError", "LogErrorMonitor"],
