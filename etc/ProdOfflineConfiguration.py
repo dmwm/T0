@@ -113,7 +113,7 @@ setDefaultScramArch(tier0Config, "el8_amd64_gcc12")
 #setScramArch(tier0Config, "CMSSW_13_3_0", "el8_amd64_gcc12")
 
 # Configure scenarios
-ppScenario = "ppEra_Run3"
+ppScenario = "ppEra_Run3_2024_ppRef"
 ppScenarioB0T = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
 hcalnzsScenario = "hcalnzsEra_Run3"
@@ -691,12 +691,20 @@ DATASETS = ["PPRefHardProbes0", "PPRefHardProbes1", "PPRefHardProbes2", "PPRefHa
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
+               raw_to_disk=False,
+               write_reco=False,
+               write_aod=False,
+               write_miniaod=True,
+               write_nanoaod=False,
                write_dqm=True,
+               dqm_sequences=["@comm
                alca_producers=["HcalCalIsoTrkProducerFilter", "TkAlJetHT", "HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
                physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "LogError", "LogErrorMonitor"],
                timePerEvent=5.7,
                sizePerEvent=2250,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_US_Vanderbilt",
                scenario=ppScenario)
 
 DATASETS = ["JetHT"]
@@ -757,7 +765,6 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 DATASETS = ["Muon1"]
-DATASETS += ["PPRefSingleMuon0", "PPRefSingleMuon1", "PPRefSingleMuon2", "PPRefSingleMuon3"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -774,15 +781,40 @@ for dataset in DATASETS:
                physics_skims=["MUOJME", "ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
                scenario=ppScenario)
 
+DATASETS = ["PPRefSingleMuon0", "PPRefSingleMuon1", "PPRefSingleMuon2", "PPRefSingleMuon3"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               raw_to_disk=False,
+               write_reco=False,
+               write_aod=False,
+               write_miniaod=True,
+               write_nanoaod=False,
+               write_dqm=True,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_US_Vanderbilt",
+               alca_producers=["TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu",
+                               "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
+                               "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
+                               "TkAlZMuMu", "TkAlDiMuonAndVertex"],
+               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
+               physics_skims=["MUOJME", "ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
+               scenario=ppScenario)
+
 DATASETS = ["PPRefDoubleMuon0", "PPRefDoubleMuon1", "PPRefDoubleMuon2", "PPRefDoubleMuon3"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
+               raw_to_disk=False,
                write_reco=False,
+               write_aod=False,
+               write_miniaod=True,
+               write_nanoaod=False,
                write_dqm=True,
-               tape_node="T1_US_FNAL_MSS",
-               disk_node="T1_US_FNAL_Disk",
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_US_Vanderbilt",
                alca_producers=["TkAlZMuMu", "TkAlDiMuonAndVertex", "TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
                physics_skims=["ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
@@ -1137,6 +1169,30 @@ for dataset in DATASETS_DAQ_TFTEST:
                scenario=ppScenario)
 
 
+## DAQ TRANSFER TEST PDs (during ppRef 2024)
+DATASETS_DAQ_TFTEST_ppRef = ["TestHLTPhysicsA0","TestHLTPhysicsA1", 
+    "TestHLTPhysicsA2", "TestHLTPhysicsA3", "TestHLTPhysicsA4", "TestHLTPhysicsA5", 
+    "TestHLTPhysicsA6", "TestHLTPhysicsA7", "TestHLTPhysicsA8", "TestHLTPhysicsA9", 
+    "TestHLTPhysicsB0", "TestHLTPhysicsB1", "TestHLTPhysicsB2", "TestHLTPhysicsB3", 
+    "TestHLTPhysicsB4", "TestHLTPhysicsB5", "TestHLTPhysicsB6", "TestHLTPhysicsB7", 
+    "TestHLTPhysicsB8", "TestHLTPhysicsB9", "TestHLTPhysicsC0", "TestHLTPhysicsC1", 
+    "TestHLTPhysicsC2", "TestHLTPhysicsC3", "TestHLTPhysicsC4", "TestHLTPhysicsC5", 
+    "TestHLTPhysicsC6", "TestHLTPhysicsC7", "TestHLTPhysicsC8", "TestHLTPhysicsC9", 
+    "TestHLTPhysicsD0", "TestHLTPhysicsD1", "TestHLTPhysicsD2", "TestHLTPhysicsD3", 
+    "TestHLTPhysicsD4", "TestHLTPhysicsD5", "TestHLTPhysicsD6", "TestHLTPhysicsD7", 
+    "TestHLTPhysicsD8", "TestHLTPhysicsD9"]
+
+for dataset in DATASETS_DAQ_TFTEST_ppRef:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               raw_to_disk=False,
+               dqm_sequences=["@none"],
+               archival_node=None,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_CH_CERN",
+               scenario=ppScenario)
+
+
 ########################################################
 ### SpecialRandom PDs                                  ###
 ########################################################
@@ -1245,14 +1301,6 @@ DATASETS += ["SpecialZeroBias", "SpecialZeroBias0", "SpecialZeroBias1",
 	     "SpecialZeroBias26", "SpecialZeroBias27", "SpecialZeroBias28",
 	     "SpecialZeroBias29", "SpecialZeroBias30", "SpecialZeroBias31"]
 
-DATASETS += ["PPRefZeroBiasPlusForward0", "PPRefZeroBiasPlusForward1", "PPRefZeroBiasPlusForward2",
-             "PPRefZeroBiasPlusForward3", "PPRefZeroBiasPlusForward4", "PPRefZeroBiasPlusForward5", "PPRefZeroBiasPlusForward6",
-             "PPRefZeroBiasPlusForward7", "PPRefZeroBiasPlusForward8", "PPRefZeroBiasPlusForward9", "PPRefZeroBiasPlusForward10",
-             "PPRefZeroBiasPlusForward11", "PPRefZeroBiasPlusForward12", "PPRefZeroBiasPlusForward13", "PPRefZeroBiasPlusForward14",
-             "PPRefZeroBiasPlusForward15", "PPRefZeroBiasPlusForward16", "PPRefZeroBiasPlusForward17", "PPRefZeroBiasPlusForward18",
-             "PPRefZeroBiasPlusForward19", "PPRefZeroBiasPlusForward20", "PPRefZeroBiasPlusForward21", "PPRefZeroBiasPlusForward22",
-             "PPRefZeroBiasPlusForward23", "PPRefZeroBiasPlusForward24"]
-
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -1267,6 +1315,38 @@ for dataset in DATASETS:
                sizePerEvent=1500,
                tape_node="T1_ES_PIC_MSS",
                disk_node="T2_CH_CERN",
+               scenario=ppScenario)
+
+## ppREF ZeroBiasPlusForward
+DATASETS = ["PPRefZeroBiasPlusForward0", "PPRefZeroBiasPlusForward1", "PPRefZeroBiasPlusForward2",
+             "PPRefZeroBiasPlusForward3", "PPRefZeroBiasPlusForward4", "PPRefZeroBiasPlusForward5", "PPRefZeroBiasPlusForward6",
+             "PPRefZeroBiasPlusForward7"]
+
+DATASETS_ppRef_ZBandFwd_secondAgent = ["PPRefZeroBiasPlusForward8", "PPRefZeroBiasPlusForward9", "PPRefZeroBiasPlusForward10",
+             "PPRefZeroBiasPlusForward11", "PPRefZeroBiasPlusForward12", "PPRefZeroBiasPlusForward13", "PPRefZeroBiasPlusForward14",
+             "PPRefZeroBiasPlusForward15", "PPRefZeroBiasPlusForward16", "PPRefZeroBiasPlusForward17", "PPRefZeroBiasPlusForward18",
+             "PPRefZeroBiasPlusForward19", "PPRefZeroBiasPlusForward20", "PPRefZeroBiasPlusForward21", "PPRefZeroBiasPlusForward22",
+             "PPRefZeroBiasPlusForward23", "PPRefZeroBiasPlusForward24"]
+
+DATASETS += DATASETS_secondAgent
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               raw_to_disk=False,
+               write_reco=False,
+               write_aod=False,
+               write_miniaod=True,
+               write_nanoaod=False,
+               write_dqm=True,
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@ctpps"],
+               alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias", "LumiPixelsMinBias",
+                               "HcalCalIsolatedBunchSelector"],
+               physics_skims=["LogError", "LogErrorMonitor"],
+               timePerEvent=1,
+               sizePerEvent=1500,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_US_Vanderbilt",
                scenario=ppScenario)
 
 DATASETS = ["EphemeralZeroBias0", "EphemeralZeroBias1", "EphemeralZeroBias2", "EphemeralZeroBias3",
@@ -1430,8 +1510,10 @@ ignoreStream(tier0Config, "DQMPPSRandom")
 
 
 # Set streams to ignore by agent. These will not be injected
-SECOND_AGENT_PDS = PARKING_PDS + DATASETS_DAQ_TFTEST
-setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_PDS})
+SECOND_AGENT_PDS = DATASETS_ppRef_ZBandFwd_secondAgent
+THIRD_AGENT_PDS = DATASETS_DAQ_TFTEST + DATASETS_DAQ_TFTEST_ppRef
+setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_PDS,
+                                    "ThirdAgent" : THIRD_AGENT_PDS})
 
 
 ###################################
