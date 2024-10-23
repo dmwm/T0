@@ -1328,7 +1328,7 @@ DATASETS_ppRef_ZBandFwd_secondAgent = ["PPRefZeroBiasPlusForward8", "PPRefZeroBi
              "PPRefZeroBiasPlusForward19", "PPRefZeroBiasPlusForward20", "PPRefZeroBiasPlusForward21", "PPRefZeroBiasPlusForward22",
              "PPRefZeroBiasPlusForward23", "PPRefZeroBiasPlusForward24"]
 
-DATASETS += DATASETS_secondAgent
+DATASETS += DATASETS_ppRef_ZBandFwd_secondAgent
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
