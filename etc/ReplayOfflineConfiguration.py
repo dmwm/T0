@@ -111,7 +111,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_18_patch1"
+    'default': "CMSSW_14_1_3"
 }
 
 # Configure ScramArch
@@ -122,6 +122,7 @@ setScramArch(tier0Config, "CMSSW_13_0_9", "el8_amd64_gcc11")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3"
+ppRefScenario = "ppEra_Run3_2024_ppRef"
 ppScenarioB0T = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
 hcalnzsScenario = "hcalnzsEra_Run3"
@@ -648,7 +649,7 @@ for dataset in DATASETS:
                physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "LogError", "LogErrorMonitor"],
                timePerEvent=5.7,
                sizePerEvent=2250,
-               scenario=ppScenario)
+               scenario=ppRefScenario)
 
 DATASETS = ["JetHT"]
 
@@ -710,7 +711,7 @@ for dataset in DATASETS:
                                "TkAlZMuMu", "TkAlDiMuonAndVertex"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
                physics_skims=["ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
-               scenario=ppScenario)
+               scenario=ppRefScenario)
 
 DATASETS = ["PPRefDoubleMuon0", "PPRefDoubleMuon1", "PPRefDoubleMuon2", "PPRefDoubleMuon3"]
 
@@ -724,7 +725,7 @@ for dataset in DATASETS:
                alca_producers=["TkAlZMuMu", "TkAlDiMuonAndVertex", "TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
                physics_skims=["ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
-               scenario=ppScenario)
+               scenario=ppRefScenario)
 
 DATASETS = ["NoBPTX"]
 
@@ -1160,7 +1161,7 @@ for dataset in DATASETS:
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=3.5,
                sizePerEvent=1500,
-               scenario=ppScenario)
+               scenario=ppRefScenario)
 
 DATASETS = ["EphemeralZeroBias0", "EphemeralZeroBias1", "EphemeralZeroBias2", "EphemeralZeroBias3",
             "EphemeralZeroBias4", "EphemeralZeroBias5", "EphemeralZeroBias6", "EphemeralZeroBias7",
