@@ -155,6 +155,9 @@ defaultRecoSplitting = 750 * numberOfCores
 hiRecoSplitting = 200 * numberOfCores
 alcarawSplitting = 20000 * numberOfCores
 
+# Replay Dataset lifetime
+replayDatasetLifetime = 7*24*3600
+
 #
 # Setup repack and express mappings
 #
@@ -201,7 +204,7 @@ addDataset(tier0Config, "Default",
            timePerEvent=5,
            sizePerEvent=1500,
            maxMemoryperCore=2000,
-           dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
+           dataset_lifetime=replayDatasetLifetime,
            scenario=ppScenario)
 
 #############################
@@ -235,7 +238,7 @@ addExpressConfig(tier0Config, "Express",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  maxMemoryperCore=2000,
-                 dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
+                 dataset_lifetime=replayDatasetLifetime,
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "ExpressCosmics",
@@ -262,7 +265,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  timePerEvent=4, #I have to get some stats to set this properly
                  sizePerEvent=1700, #I have to get some stats to set this properly
                  maxMemoryperCore=2000,
-                 dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
+                 dataset_lifetime=replayDatasetLifetime,
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "HLTMonitor",
@@ -287,7 +290,7 @@ addExpressConfig(tier0Config, "HLTMonitor",
                  timePerEvent=4, #I have to get some stats to set this properly
                  sizePerEvent=1700, #I have to get some stats to set this properly
                  maxMemoryperCore=2000,
-                 dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
+                 dataset_lifetime=replayDatasetLifetime,
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "Calibration",
@@ -312,7 +315,7 @@ addExpressConfig(tier0Config, "Calibration",
                  versionOverride=expressVersionOverride,
                  maxMemoryperCore=2000,
                  dataType="hidata",
-                 dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
+                 dataset_lifetime=replayDatasetLifetime,
                  diskNode="T0_CH_CERN_Disk")
 
 addExpressConfig(tier0Config, "ExpressAlignment",
@@ -337,7 +340,7 @@ addExpressConfig(tier0Config, "ExpressAlignment",
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
                  maxMemoryperCore=2000,
-                 dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
+                 dataset_lifetime=replayDatasetLifetime,
                  diskNode="T0_CH_CERN_Disk")
 
 addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
@@ -362,7 +365,7 @@ addExpressConfig(tier0Config, "ALCALumiPixelsCountsExpress",
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
                  maxMemoryperCore=2000,
-                 dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
+                 dataset_lifetime=replayDatasetLifetime,
                  diskNode="T0_CH_CERN_Disk")
 
 addExpressConfig(tier0Config, "ALCAPPSExpress",
@@ -387,7 +390,7 @@ addExpressConfig(tier0Config, "ALCAPPSExpress",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  maxMemoryperCore=2000,
-                 dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
+                 dataset_lifetime=replayDatasetLifetime,
                  diskNode="T0_CH_CERN_Disk",
                  versionOverride=expressVersionOverride)
 
@@ -422,7 +425,7 @@ addExpressConfig(tier0Config, "HIExpress",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  maxMemoryperCore=2000,
-                 dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
+                 dataset_lifetime=replayDatasetLifetime,
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "HIExpressRawPrime",
@@ -472,7 +475,7 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  sizePerEvent=1700,
                  versionOverride=expressVersionOverride,
                  maxMemoryperCore=2000,
-                 dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
+                 dataset_lifetime=replayDatasetLifetime,
                  diskNode="T0_CH_CERN_Disk")
 
 addExpressConfig(tier0Config, "HIHLTMonitor",
@@ -496,7 +499,7 @@ addExpressConfig(tier0Config, "HIHLTMonitor",
                  blockCloseDelay=1200,
                  timePerEvent=4,
                  sizePerEvent=1700,
-                 dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
+                 dataset_lifetime=replayDatasetLifetime,
                  versionOverride=expressVersionOverride)
 
 ###################################
