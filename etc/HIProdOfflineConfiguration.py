@@ -38,11 +38,6 @@ setInjectMinRun(tier0Config, 9999999)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
-
-# Define streams to ignore. These wont be injected by the MainAgent
-setHelperAgentStreams(tier0Config, {'SecondAgent': [],
-                                    'ThirdAgent' : []
-                                    })
                                     
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -61,7 +56,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "HIRun2023A")
+setAcquisitionEra(tier0Config, "HIRun2024A")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "hidata")
@@ -107,36 +102,39 @@ defaultCMSSWVersion = {
 setDefaultScramArch(tier0Config, "el8_amd64_gcc11")
 
 # Configure scenarios
-ppScenario = "ppEra_Run3_2023"
+ppScenario = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
 hcalnzsScenario = "hcalnzsEra_Run3"
 HIhcalnzsScenario = "hcalnzsEra_Run3_pp_on_PbPb"
-hiScenario = "ppEra_Run3_pp_on_PbPb_2023"
 alcaTrackingOnlyScenario = "trackingOnlyEra_Run3"
 HIalcaTrackingOnlyScenario = "trackingOnlyEra_Run3_pp_on_PbPb"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
-hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
-hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
-hiForwardScenario = "ppEra_Run3_2023_repacked"
+ppRefScenario = "ppEra_Run3_2024_ppRef"
+
+# Heavy Ion Scenarios 2024
+
+hiForwardScenario = "ppEra_Run3_2024_UPC"
+hiScenario = "ppEra_Run3_pp_on_PbPb_2024"
+hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2024"
 
 # Defaults for processing version
 alcarawProcVersion = {
-    'default': "2",
+    'default': "1",
 }
 
 defaultProcVersionReco = {
-    'default': "2",
+    'default': "1",
 }
 
 expressProcVersion = {
-    'default': "2",
+    'default': "1",
 }
 
 # Defaults for GlobalTag
-expressGlobalTag = "132X_dataRun3_Express_v4"
-promptrecoGlobalTag = "132X_dataRun3_Prompt_v4"
+expressGlobalTag = "141X_dataRun3_Express_v3"
+promptrecoGlobalTag = "141X_dataRun3_Prompt_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -395,7 +393,7 @@ addExpressConfig(tier0Config, "ALCAPPSExpress",
 #####################
 
 addExpressConfig(tier0Config, "HIExpress",
-                 scenario=hiTestppScenario,
+                 scenario=hiScenario,
                  diskNode="T2_CH_CERN",
                  data_tiers=["FEVT"],
                  write_dqm=True,
@@ -475,7 +473,7 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  diskNode="T2_CH_CERN")
 
 addExpressConfig(tier0Config, "HIHLTMonitor",
-                 scenario=hiTestppScenario,
+                 scenario=hiScenario,
                  diskNode="T2_CH_CERN",
                  data_tiers=["FEVTHLTALL"],
                  write_dqm=True,
@@ -1432,7 +1430,7 @@ for dataset in DATASETS:
                disk_node="T2_US_Vanderbilt",
                alca_producers=["TkAlMinBias"],
                dqm_sequences=["@common"],
-               scenario=hiTestppScenario)
+               scenario=hiScenario)
 
 DATASETS = ["HIOnlineMonitor", "HITrackerNZS"]
 
@@ -1442,7 +1440,7 @@ for dataset in DATASETS:
                aod_to_disk=False,
                raw_to_disk=False,
                disk_node="T2_US_Vanderbilt",
-               scenario=hiTestppScenario)
+               scenario=hiScenario)
 
 DATASETS = ["HIEmptyBX"]
 
@@ -1454,7 +1452,7 @@ for dataset in DATASETS:
                aod_to_disk=False,
                disk_node="T2_US_Vanderbilt",
                dqm_sequences=["@common"],
-               scenario=hiTestppScenario)
+               scenario=hiScenario)
 
 DATASETS = ["HITestRaw0", "HITestRaw1", "HITestRaw2", "HITestRaw3", "HITestRaw4", "HITestRaw5",
             "HITestRaw6", "HITestRaw7", "HITestRaw8", "HITestRaw9", "HITestRaw10", "HITestRaw11",
@@ -1472,7 +1470,7 @@ for dataset in DATASETS:
                                "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
-               scenario=hiTestppScenario)
+               scenario=hiScenario)
 
 
 DATASETS = ["HIForward0"]
@@ -1529,7 +1527,7 @@ for dataset in DATASETS:
                disk_node="T2_US_Vanderbilt",
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias"],
                dqm_sequences=["@commonSiStripZeroBias"],
-               scenario=hiTestppScenario)
+               scenario=hiScenario)
     
 DATASETS = ["HIMinimumBias1", "HIMinimumBias2", "HIMinimumBias3", 
             "HIMinimumBias4", "HIMinimumBias5", "HIMinimumBias6", "HIMinimumBias7",
@@ -1545,7 +1543,7 @@ for dataset in DATASETS:
                disk_node="T2_US_Vanderbilt",
                alca_producers=["SiStripCalZeroBias"],
                dqm_sequences=["@commonSiStripZeroBias"],
-               scenario=hiTestppScenario)
+               scenario=hiScenario)
 
 DATASETS = ["HIEphemeralHLTPhysics"]
 
@@ -1556,7 +1554,7 @@ for dataset in DATASETS:
                write_dqm=True,
                disk_node="T2_US_Vanderbilt",
                dqm_sequences=["@commonSiStripZeroBias"],
-               scenario=hiTestppScenario)
+               scenario=hiScenario)
 
 DATASETS = ["HIEphemeralZeroBias0", "HIEphemeralZeroBias1"]
 
@@ -1568,7 +1566,7 @@ for dataset in DATASETS:
                timePerEvent=1,
                disk_node="T2_US_Vanderbilt",
                dqm_sequences=["@commonSiStripZeroBias"],
-               scenario=hiTestppScenario)
+               scenario=hiScenario)
 
 DATASETS = ["HITestRawPrime0", "HITestRawPrime1", "HITestRawPrime2", "HITestRawPrime3", "HITestRawPrime4",
             "HITestRawPrime5", "HITestRawPrime6", "HITestRawPrime7", "HITestRawPrime8", "HITestRawPrime9",
@@ -1672,8 +1670,13 @@ for dataset in DATASETS:
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
                alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias"],
                timePerEvent=1,
-               scenario=hiForwardScenario)
+               scenario=hiScenario)
 
+# Define streams to ignore. These wont be injected by the MainAgent
+setHelperAgentStreams(tier0Config, {'SecondAgent': [],
+                                    'ThirdAgent' : []
+                                    })
+                                    
 #######################
 ### ignored streams ###
 #######################
