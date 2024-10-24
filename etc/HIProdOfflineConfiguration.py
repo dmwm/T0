@@ -882,16 +882,11 @@ for dataset in DATASETS:
 
 DATASETS = ["Commissioning"]
 
-DATASETS += ["Commissioning1", "Commissioning2", "Commissioning3", "Commissioning4",
-             "CommissioningMuons", "CommissioningEGamma", "CommissioningTaus", "CommissioningSingleJet", "CommissioningDoubleJet"]
-
-DATASETS += ["CommissioningZDC"]
-
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               alca_producers=["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk"],
+               alca_producers=["HcalCalIsoTrk"],
                dqm_sequences=["@common", "@L1TMon", "@hcal"],
                physics_skims=["EcalActivity", "LogError", "LogErrorMonitor"],
                timePerEvent=12,
