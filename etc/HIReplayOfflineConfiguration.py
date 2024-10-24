@@ -8,6 +8,7 @@ from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
 from T0.RunConfig.Tier0Config import setDefaultScramArch
+from T0.RunConfig.Tier0Config import setScramArch
 from T0.RunConfig.Tier0Config import setBaseRequestPriority
 from T0.RunConfig.Tier0Config import setBackfill
 from T0.RunConfig.Tier0Config import setBulkDataType
@@ -21,10 +22,12 @@ from T0.RunConfig.Tier0Config import specifyStreams
 from T0.RunConfig.Tier0Config import addRepackConfig
 from T0.RunConfig.Tier0Config import addExpressConfig
 from T0.RunConfig.Tier0Config import setInjectRuns
+from T0.RunConfig.Tier0Config import setInjectLimit
 from T0.RunConfig.Tier0Config import setStreamerPNN
 from T0.RunConfig.Tier0Config import setEnableUniqueWorkflowName
 from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setStorageSite
+from T0.RunConfig.Tier0Config import setExtraStreamDatasetMap
 from T0.RunConfig.Tier0Config import setHelperAgentStreams
 
 # Create the Tier0 configuration object
@@ -40,12 +43,8 @@ setConfigVersion(tier0Config, "replace with real version")
 # 356005 - 2022 pp at 13.6 TeV (1h long, 600 bunches - ALL detectors included)
 # 359060 - 2022 cosmics - Oberved failures in Express (https://cms-talk.web.cern.ch/t/paused-jobs-for-express-run359045-streamexpress/15232)
 # 361694:361699,361779 - 2022 HI dry-run test runs
-setInjectRuns(tier0Config, [375820])
+setInjectRuns(tier0Config, [374951, 375549])
 
-# Define streams to ignore. These wont be injected by the MainAgent
-setHelperAgentStreams(tier0Config, {'SecondAgent': [],
-                                    'ThirdAgent' : []
-                                    })
 # Settings up sites
 processingSite = "T2_CH_CERN"
 storageSite = "T0_CH_CERN_Disk"
@@ -69,7 +68,7 @@ addSiteConfig(tier0Config, "EOS_PILOT",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Tier0_HIREPLAY_2023")
+setAcquisitionEra(tier0Config, "Tier0_HIREPLAY_2024")
 setBaseRequestPriority(tier0Config, 260000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "hidata")
@@ -112,14 +111,16 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_13_2_6_patch2"
+    'default': "CMSSW_14_1_3"
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "el8_amd64_gcc11")
+setDefaultScramArch(tier0Config, "el8_amd64_gcc12")
+setScramArch(tier0Config, "CMSSW_13_2_5", "el8_amd64_gcc11")
+setScramArch(tier0Config, "CMSSW_13_2_6", "el8_amd64_gcc11")
 
 # Configure scenarios
-ppScenario = "ppEra_Run3_2023"
+ppScenario = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
 hcalnzsScenario = "hcalnzsEra_Run3"
 HIhcalnzsScenario = "hcalnzsEra_Run3_pp_on_PbPb"
@@ -129,9 +130,14 @@ HIalcaTrackingOnlyScenario = "trackingOnlyEra_Run3_pp_on_PbPb"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
-hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
-hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
-hiForwardScenario = "ppEra_Run3_2023_repacked"
+ppRefScenario = "ppEra_Run3_2024_ppRef"
+
+# Heavy Ion Scenarios 2024
+
+hiForwardScenario = "ppEra_Run3_2024_UPC"
+hiScenario = "ppEra_Run3_pp_on_PbPb_2024"
+hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2024"
+
 
 # Procesing version number replays
 # Taking Replay processing ID from the last 8 digits of the DeploymentID
@@ -141,8 +147,8 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "132X_dataRun3_Express_v4"
-promptrecoGlobalTag = "132X_dataRun3_Prompt_v4"
+expressGlobalTag = "141X_dataRun3_Express_v3"
+promptrecoGlobalTag = "141X_dataRun3_Prompt_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -167,6 +173,13 @@ expressVersionOverride = {
 }
 
 #set default repack settings for bulk streams
+
+setExtraStreamDatasetMap(tier0Config,{
+                                        "L1Scouting": {"Dataset":"L1Scouting"},
+                                        "L1ScoutingSelection": {"Dataset":"L1ScoutingSelection"}
+                                    }
+                         )
+
 addRepackConfig(tier0Config, "Default",
                 proc_ver=defaultProcVersion,
                 maxSizeSingleLumi=24 * 1024 * 1024 * 1024,
@@ -180,6 +193,21 @@ addRepackConfig(tier0Config, "Default",
                 maxLatency=2 * 3600,
                 blockCloseDelay=1200,
                 maxMemory=2000,
+                versionOverride=repackVersionOverride)
+
+addRepackConfig(tier0Config, "ScoutingPF",
+                proc_ver=defaultProcVersion, 
+                dataTier="HLTSCOUT",
+                versionOverride=repackVersionOverride)
+
+addRepackConfig(tier0Config, "L1ScoutingSelection",
+                proc_ver=defaultProcVersion,
+                dataTier="L1SCOUT",
+                versionOverride=repackVersionOverride)
+
+addRepackConfig(tier0Config, "L1Scouting",
+                proc_ver=defaultProcVersion,
+                dataTier="L1SCOUT",
                 versionOverride=repackVersionOverride)
 
 addDataset(tier0Config, "Default",
@@ -396,7 +424,7 @@ addExpressConfig(tier0Config, "ALCAPPSExpress",
 #####################
 
 addExpressConfig(tier0Config, "HIExpress",
-                 scenario=hiTestppScenario,
+                 scenario=hiScenario,
                  diskNode="T0_CH_CERN_Disk",
                  data_tiers=["FEVT"],
                  write_dqm=True,
@@ -476,7 +504,7 @@ addExpressConfig(tier0Config, "HIExpressAlignment",
                  diskNode="T0_CH_CERN_Disk")
 
 addExpressConfig(tier0Config, "HIHLTMonitor",
-                 scenario=hiTestppScenario,
+                 scenario=hiScenario,
                  diskNode="T2_CH_CERN",
                  data_tiers=["FEVTHLTALL"],
                  write_dqm=True,
@@ -1342,7 +1370,7 @@ for dataset in DATASETS:
                write_dqm=True,
                alca_producers=["TkAlMinBias"],
                dqm_sequences=["@common"],
-               scenario=hiTestppScenario)
+               scenario=hiScenario)
 
 DATASETS = ["HIOnlineMonitor", "HITrackerNZS"]
 
@@ -1351,7 +1379,7 @@ for dataset in DATASETS:
                do_reco=False,
                aod_to_disk=False,
                raw_to_disk=False,
-               scenario=hiTestppScenario)
+               scenario=hiScenario)
 
 DATASETS = ["HIEmptyBX"]
 
@@ -1362,7 +1390,7 @@ for dataset in DATASETS:
                raw_to_disk=False,
                aod_to_disk=False,
                dqm_sequences=["@common"],
-               scenario=hiTestppScenario)
+               scenario=hiScenario)
 
 DATASETS = ["HITestRaw0", "HITestRaw1", "HITestRaw2", "HITestRaw3", "HITestRaw4", "HITestRaw5",
             "HITestRaw6", "HITestRaw7", "HITestRaw8", "HITestRaw9", "HITestRaw10", "HITestRaw11",
@@ -1379,7 +1407,7 @@ for dataset in DATASETS:
                                "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
-               scenario=hiTestppScenario)
+               scenario=hiScenario)
 DATASETS = ["HIForward0", "HIForward1", "HIForward2",
 	    "HIForward3", "HIForward4", "HIForward5",
             "HIForward6", "HIForward7", "HIForward8",
@@ -1415,7 +1443,7 @@ for dataset in DATASETS:
                write_dqm=True,
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias"],
                dqm_sequences=["@commonSiStripZeroBias"],
-               scenario=hiTestppScenario)
+               scenario=hiScenario)
 
 DATASETS = ["HIEphemeralHLTPhysics"]
 
@@ -1426,7 +1454,7 @@ for dataset in DATASETS:
                write_dqm=True,
                disk_node="T2_US_Vanderbilt",
                dqm_sequences=["@commonSiStripZeroBias"],
-               scenario=hiTestppScenario)
+               scenario=hiScenario)
 
 DATASETS = ["HIEphemeralZeroBias0", "HIEphemeralZeroBias1"]
 
@@ -1438,7 +1466,7 @@ for dataset in DATASETS:
                timePerEvent=1,
                disk_node="T2_US_Vanderbilt",
                dqm_sequences=["@commonSiStripZeroBias"],
-               scenario=hiTestppScenario)
+               scenario=hiScenario)
 
 DATASETS = ["HITestRawPrime0", "HITestRawPrime1", "HITestRawPrime2", "HITestRawPrime3", "HITestRawPrime4",
             "HITestRawPrime5", "HITestRawPrime6", "HITestRawPrime7", "HITestRawPrime8", "HITestRawPrime9",
@@ -1502,8 +1530,13 @@ for dataset in DATASETS:
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
                alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias"],
                timePerEvent=1,
-               scenario=hiForwardScenario)
+               scenario=hiScenario)
 
+# Define streams to ignore. These wont be injected by the MainAgent
+setHelperAgentStreams(tier0Config, {'SecondAgent': [],
+                                    'ThirdAgent' : []
+                                    })
+                                    
 #######################
 ### ignored streams ###
 #######################
