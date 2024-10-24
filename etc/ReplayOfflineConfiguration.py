@@ -111,7 +111,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_0_18_patch1"
+    'default': "CMSSW_14_1_3"
 }
 
 # Configure ScramArch
@@ -122,6 +122,7 @@ setScramArch(tier0Config, "CMSSW_13_0_9", "el8_amd64_gcc11")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3"
+ppRefScenario = "ppEra_Run3_2024_ppRef"
 ppScenarioB0T = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
 hcalnzsScenario = "hcalnzsEra_Run3"
@@ -141,8 +142,8 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "140X_dataRun3_Express_v3"
-promptrecoGlobalTag = "140X_dataRun3_Prompt_v4"
+expressGlobalTag = "141X_dataRun3_Express_v3"
+promptrecoGlobalTag = "141X_dataRun3_Prompt_v3"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -588,18 +589,6 @@ for dataset in DATASETS:
                physics_skims=["EXOCSCCluster"],
                scenario=ppScenario)
 
-DATASETS = ["PPRefExotica"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_reco=False,
-               write_aod=True,
-               write_miniaod=True,
-               write_nanoaod=True,
-               physics_skims=["EXOCSCCluster"],
-               scenario=ppScenario)
-
 DATASETS = [ "ParkingLLP" ]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -652,7 +641,7 @@ for dataset in DATASETS:
                sizePerEvent=2250, # copied from JetHT - should be checked
                scenario=ppScenario)
 
-DATASETS = ["PPRefHardProbes0", "PPRefHardProbes1", "PPRefHardProbes2"]
+DATASETS = ["PPRefHardProbes0", "PPRefHardProbes1", "PPRefHardProbes2", "PPRefHardProbes3", "PPRefHardProbes4"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -663,7 +652,7 @@ for dataset in DATASETS:
                physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "LogError", "LogErrorMonitor"],
                timePerEvent=5.7,
                sizePerEvent=2250,
-               scenario=ppScenario)
+               scenario=ppRefScenario)
 
 DATASETS = ["JetHT"]
 
@@ -713,7 +702,7 @@ for dataset in DATASETS:
                physics_skims=["MUOJME", "ZMu", "EXODisappTrk", "EXOCSCCluster", "EXODisappMuon", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["PPRefSingleMuon0", "PPRefSingleMuon1", "PPRefSingleMuon2"]
+DATASETS = ["PPRefSingleMuon0", "PPRefSingleMuon1", "PPRefSingleMuon2", "PPRefSingleMuon3"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -725,7 +714,7 @@ for dataset in DATASETS:
                                "TkAlZMuMu", "TkAlDiMuonAndVertex"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
                physics_skims=["ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
-               scenario=ppScenario)
+               scenario=ppRefScenario)
 
 DATASETS = ["PPRefDoubleMuon0", "PPRefDoubleMuon1", "PPRefDoubleMuon2", "PPRefDoubleMuon3"]
 
@@ -739,7 +728,7 @@ for dataset in DATASETS:
                alca_producers=["TkAlZMuMu", "TkAlDiMuonAndVertex", "TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
                physics_skims=["ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
-               scenario=ppScenario)
+               scenario=ppRefScenario)
 
 DATASETS = ["NoBPTX"]
 
@@ -793,11 +782,6 @@ for dataset in DATASETS:
 #############################################
 
 DATASETS = ["Commissioning"]
-
-DATASETS += ["Commissioning1", "Commissioning2", "Commissioning3", "Commissioning4",
-             "CommissioningMuons", "CommissioningEGamma", "CommissioningTaus", "CommissioningSingleJet", "CommissioningDoubleJet"]
-
-DATASETS += ["CommissioningZDC"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1160,12 +1144,13 @@ DATASETS += ["SpecialZeroBias", "SpecialZeroBias0", "SpecialZeroBias1",
 	     "SpecialZeroBias26", "SpecialZeroBias27", "SpecialZeroBias28",
 	     "SpecialZeroBias29", "SpecialZeroBias30", "SpecialZeroBias31"]
 
-DATASETS += ["PPRefZeroBias0", "PPRefZeroBias1", "PPRefZeroBias2",
-             "PPRefZeroBias3", "PPRefZeroBias4", "PPRefZeroBias5", "PPRefZeroBias6",
-             "PPRefZeroBias7", "PPRefZeroBias8", "PPRefZeroBias9", "PPRefZeroBias10",
-             "PPRefZeroBias11", "PPRefZeroBias12", "PPRefZeroBias13", "PPRefZeroBias14",
-             "PPRefZeroBias15", "PPRefZeroBias16", "PPRefZeroBias17", "PPRefZeroBias18",
-             "PPRefZeroBias19"]
+DATASETS += ["PPRefZeroBiasPlusForward0", "PPRefZeroBiasPlusForward1", "PPRefZeroBiasPlusForward2",
+             "PPRefZeroBiasPlusForward3", "PPRefZeroBiasPlusForward4", "PPRefZeroBiasPlusForward5", "PPRefZeroBiasPlusForward6",
+             "PPRefZeroBiasPlusForward7", "PPRefZeroBiasPlusForward8", "PPRefZeroBiasPlusForward9", "PPRefZeroBiasPlusForward10",
+             "PPRefZeroBiasPlusForward11", "PPRefZeroBiasPlusForward12", "PPRefZeroBiasPlusForward13", "PPRefZeroBiasPlusForward14",
+             "PPRefZeroBiasPlusForward15", "PPRefZeroBiasPlusForward16", "PPRefZeroBiasPlusForward17", "PPRefZeroBiasPlusForward18",
+             "PPRefZeroBiasPlusForward19", "PPRefZeroBiasPlusForward20", "PPRefZeroBiasPlusForward21", "PPRefZeroBiasPlusForward22",
+             "PPRefZeroBiasPlusForward23", "PPRefZeroBiasPlusForward24"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1179,7 +1164,7 @@ for dataset in DATASETS:
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=3.5,
                sizePerEvent=1500,
-               scenario=ppScenario)
+               scenario=ppRefScenario)
 
 DATASETS = ["EphemeralZeroBias0", "EphemeralZeroBias1", "EphemeralZeroBias2", "EphemeralZeroBias3",
             "EphemeralZeroBias4", "EphemeralZeroBias5", "EphemeralZeroBias6", "EphemeralZeroBias7",
@@ -1285,23 +1270,6 @@ for dataset in DATASETS:
                dqm_sequences=["@none"],
                scenario=alcaPPSScenario)
 
-######################
-### RAW' TEST 2023 ###
-######################
-
-DATASETS = ["CommissioningRawPrime"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_dqm=True,
-	       write_nanoaod=False,
-               alca_producers=["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk"],
-               dqm_sequences=["@common", "@L1TMon", "@hcal"],
-               physics_skims=["EcalActivity", "LogError", "LogErrorMonitor"],
-               timePerEvent=12,
-               sizePerEvent=4000,
-               scenario=hiRawPrimeScenario)
 
 #######################
 ### ignored streams ###
