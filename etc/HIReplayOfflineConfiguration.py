@@ -130,14 +130,10 @@ HIalcaTrackingOnlyScenario = "trackingOnlyEra_Run3_pp_on_PbPb"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
-
-#hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
-#hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
-
+ppRefScenario = "ppEra_Run3_2024_ppRef"
 
 # Heavy Ion Scenarios 2024
 
-hiPpRefScenario = "ppEra_Run3_2024_ppRef"
 hiForwardScenario = "ppEra_Run3_2024_UPC"
 hiScenario = "ppEra_Run3_pp_on_PbPb_2024"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2024"
