@@ -38,11 +38,6 @@ setInjectMinRun(tier0Config, 9999999)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
-
-# Define streams to ignore. These wont be injected by the MainAgent
-setHelperAgentStreams(tier0Config, {'SecondAgent': [],
-                                    'ThirdAgent' : []
-                                    })
                                     
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -1674,6 +1669,11 @@ for dataset in DATASETS:
                timePerEvent=1,
                scenario=hiForwardScenario)
 
+# Define streams to ignore. These wont be injected by the MainAgent
+setHelperAgentStreams(tier0Config, {'SecondAgent': [],
+                                    'ThirdAgent' : []
+                                    })
+                                    
 #######################
 ### ignored streams ###
 #######################
