@@ -124,6 +124,7 @@ HIalcaTrackingOnlyScenario = "trackingOnlyEra_Run3_pp_on_PbPb"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
+hltScoutingScenario = "hltScoutingEra_Run3_2024"
 ppRefScenario = "ppEra_Run3_2024_ppRef"
 
 # Heavy Ion Scenarios 2024
