@@ -1840,6 +1840,7 @@ for dataset in DATASETS:
                scenario=hiRawPrimeScenario)
 
 DATASETS = ["HIZeroBias0", "HIZeroBias1", "HIZeroBias2"]
+HIStreams += ["PhysicsHIZeroBiasRAW0", "PhysicsHIZeroBiasRAW2", "PhysicsHIZeroBiasRAW2"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
