@@ -1792,9 +1792,34 @@ for dataset in DATASETS:
 DATASETS = ["HIPhysicsRawPrime2", "HIPhysicsRawPrime3", 
               "HIPhysicsRawPrime4", "HIPhysicsRawPrime5", "HIPhysicsRawPrime6", "HIPhysicsRawPrime7", 
               "HIPhysicsRawPrime8", "HIPhysicsRawPrime9", "HIPhysicsRawPrime10", "HIPhysicsRawPrime11", 
+              "HIPhysicsRawPrime12", "HIPhysicsRawPrime13", "HIPhysicsRawPrime14"] 
+
+HIRawPrimeStreams_reco_true = ["PhysicsHIPhysicsRawPrime0", "PhysicsHIPhysicsRawPrime1", "PhysicsHIPhysicsRawPrime2", "PhysicsHIPhysicsRawPrime3",
+                               "PhysicsHIPhysicsRawPrime4", "PhysicsHIPhysicsRawPrime5", "PhysicsHIPhysicsRawPrime6", "PhysicsHIPhysicsRawPrime7", 
+                               "PhysicsHIPhysicsRawPrime8", "PhysicsHIPhysicsRawPrime9", "PhysicsHIPhysicsRawPrime10", "PhysicsHIPhysicsRawPrime11",
+                               "PhysicsHIPhysicsRawPrime12", "PhysicsHIPhysicsRawPrime13", "PhysicsHIPhysicsRawPrime14"]
+                                       
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               raw_to_disk=False,
+               aod_to_disk=False,
+               timePerEvent=3,
+               write_nanoaod=False,
+               write_dqm=False,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_US_Vanderbilt",
+               alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
+                               "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
+                               "SiStripCalZeroBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
+                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
+               dqm_sequences=["@none"],
+               physics_skims=["PbPbEMu", "PbPbZEE", "PbPbZMM", "LogError", "LogErrorMonitor"],
+               scenario=hiRawPrimeScenario)
+
+DATASETS = [ "HIPhysicsRawPrime15", 
               "HIPhysicsRawPrime16", "HIPhysicsRawPrime17", "HIPhysicsRawPrime18", "HIPhysicsRawPrime19", 
               "HIPhysicsRawPrime20", "HIPhysicsRawPrime21", "HIPhysicsRawPrime22", "HIPhysicsRawPrime23", 
-              "HIPhysicsRawPrime12", "HIPhysicsRawPrime13", "HIPhysicsRawPrime14", "HIPhysicsRawPrime15", 
               "HIPhysicsRawPrime24", "HIPhysicsRawPrime25", "HIPhysicsRawPrime26", "HIPhysicsRawPrime27", 
               "HIPhysicsRawPrime28", "HIPhysicsRawPrime29", "HIPhysicsRawPrime30", "HIPhysicsRawPrime31", 
               "HIPhysicsRawPrime32", "HIPhysicsRawPrime33", "HIPhysicsRawPrime34", "HIPhysicsRawPrime35", 
@@ -1805,25 +1830,25 @@ DATASETS = ["HIPhysicsRawPrime2", "HIPhysicsRawPrime3",
               "HIPhysicsRawPrime52", "HIPhysicsRawPrime53", "HIPhysicsRawPrime54", "HIPhysicsRawPrime55", 
               "HIPhysicsRawPrime56", "HIPhysicsRawPrime57", "HIPhysicsRawPrime58", "HIPhysicsRawPrime59"]
 
-HIStreams += ["PhysicsHIPhysicsRawPrime0", "PhysicsHIPhysicsRawPrime1", "PhysicsHIPhysicsRawPrime2", "PhysicsHIPhysicsRawPrime3", 
-              "PhysicsHIPhysicsRawPrime8", "PhysicsHIPhysicsRawPrime9", "PhysicsHIPhysicsRawPrime10", "PhysicsHIPhysicsRawPrime11", 
-              "PhysicsHIPhysicsRawPrime16", "PhysicsHIPhysicsRawPrime17", "PhysicsHIPhysicsRawPrime18", "PhysicsHIPhysicsRawPrime19", 
-              "PhysicsHIPhysicsRawPrime4", "PhysicsHIPhysicsRawPrime5", "PhysicsHIPhysicsRawPrime6", "PhysicsHIPhysicsRawPrime7", 
-              "PhysicsHIPhysicsRawPrime20", "PhysicsHIPhysicsRawPrime21", "PhysicsHIPhysicsRawPrime22", "PhysicsHIPhysicsRawPrime23", 
-              "PhysicsHIPhysicsRawPrime12", "PhysicsHIPhysicsRawPrime13", "PhysicsHIPhysicsRawPrime14", "PhysicsHIPhysicsRawPrime15", 
-              "PhysicsHIPhysicsRawPrime24", "PhysicsHIPhysicsRawPrime25", "PhysicsHIPhysicsRawPrime26", "PhysicsHIPhysicsRawPrime27", 
-              "PhysicsHIPhysicsRawPrime28", "PhysicsHIPhysicsRawPrime29", "PhysicsHIPhysicsRawPrime30", "PhysicsHIPhysicsRawPrime31", 
-              "PhysicsHIPhysicsRawPrime32", "PhysicsHIPhysicsRawPrime33", "PhysicsHIPhysicsRawPrime34", "PhysicsHIPhysicsRawPrime35", 
-              "PhysicsHIPhysicsRawPrime36", "PhysicsHIPhysicsRawPrime37", "PhysicsHIPhysicsRawPrime38", "PhysicsHIPhysicsRawPrime39", 
-              "PhysicsHIPhysicsRawPrime40", "PhysicsHIPhysicsRawPrime41", "PhysicsHIPhysicsRawPrime42", "PhysicsHIPhysicsRawPrime43", 
-              "PhysicsHIPhysicsRawPrime44", "PhysicsHIPhysicsRawPrime45", "PhysicsHIPhysicsRawPrime46", "PhysicsHIPhysicsRawPrime47", 
-              "PhysicsHIPhysicsRawPrime48", "PhysicsHIPhysicsRawPrime49", "PhysicsHIPhysicsRawPrime50", "PhysicsHIPhysicsRawPrime51", 
-              "PhysicsHIPhysicsRawPrime52", "PhysicsHIPhysicsRawPrime53", "PhysicsHIPhysicsRawPrime54", "PhysicsHIPhysicsRawPrime55", 
-              "PhysicsHIPhysicsRawPrime56", "PhysicsHIPhysicsRawPrime57", "PhysicsHIPhysicsRawPrime58", "PhysicsHIPhysicsRawPrime59"]
+
+HIRawPrimeStreams_reco_to_stop = ["PhysicsHIPhysicsRawPrime15", 
+                                  "PhysicsHIPhysicsRawPrime16", "PhysicsHIPhysicsRawPrime17", "PhysicsHIPhysicsRawPrime18", "PhysicsHIPhysicsRawPrime19", 
+                                  "PhysicsHIPhysicsRawPrime20", "PhysicsHIPhysicsRawPrime21", "PhysicsHIPhysicsRawPrime22", "PhysicsHIPhysicsRawPrime23", 
+                                  "PhysicsHIPhysicsRawPrime24", "PhysicsHIPhysicsRawPrime25", "PhysicsHIPhysicsRawPrime26", "PhysicsHIPhysicsRawPrime27", 
+                                  "PhysicsHIPhysicsRawPrime28", "PhysicsHIPhysicsRawPrime29", "PhysicsHIPhysicsRawPrime30", "PhysicsHIPhysicsRawPrime31", 
+                                  "PhysicsHIPhysicsRawPrime32", "PhysicsHIPhysicsRawPrime33", "PhysicsHIPhysicsRawPrime34", "PhysicsHIPhysicsRawPrime35", 
+                                  "PhysicsHIPhysicsRawPrime36", "PhysicsHIPhysicsRawPrime37", "PhysicsHIPhysicsRawPrime38", "PhysicsHIPhysicsRawPrime39", 
+                                  "PhysicsHIPhysicsRawPrime40", "PhysicsHIPhysicsRawPrime41", "PhysicsHIPhysicsRawPrime42", "PhysicsHIPhysicsRawPrime43", 
+                                  "PhysicsHIPhysicsRawPrime44", "PhysicsHIPhysicsRawPrime45", "PhysicsHIPhysicsRawPrime46", "PhysicsHIPhysicsRawPrime47", 
+                                  "PhysicsHIPhysicsRawPrime48", "PhysicsHIPhysicsRawPrime49", "PhysicsHIPhysicsRawPrime50", "PhysicsHIPhysicsRawPrime51", 
+                                  "PhysicsHIPhysicsRawPrime52", "PhysicsHIPhysicsRawPrime53", "PhysicsHIPhysicsRawPrime54", "PhysicsHIPhysicsRawPrime55", 
+                                  "PhysicsHIPhysicsRawPrime56", "PhysicsHIPhysicsRawPrime57", "PhysicsHIPhysicsRawPrime58", "PhysicsHIPhysicsRawPrime59"]
+
+HIStreams += HIRawPrimeStreams_reco_to_stop
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=True,
+               do_reco=True, #To be changed to False in HIRun2024B
                raw_to_disk=False,
                aod_to_disk=False,
                timePerEvent=3,
