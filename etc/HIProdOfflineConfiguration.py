@@ -440,7 +440,7 @@ addExpressConfig(tier0Config, "ALCAPPSExpress",
 #####################
 ### HI Tests 2024 ###
 #####################
-HIStreams = ["HIExpress", "HIExpressRawPrime", "HIExpressAlignment", "HIHLTMonitor"]
+StreamsHIExpress = ["HIExpress", "HIExpressRawPrime", "HIExpressAlignment", "HIHLTMonitor"]
 
 addExpressConfig(tier0Config, "HIExpress",
                  scenario=hiScenario,
@@ -1521,7 +1521,8 @@ for dataset in DATASETS:
 #####################
 
 DATASETS = ["HIHcalNZS"]
-HIStreams += ["PhysicsHICommissioning"]
+StreamsHICommissioning = ["PhysicsHICommissioning"]
+
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -1551,7 +1552,8 @@ for dataset in DATASETS:
                scenario=hiScenario)
 
 DATASETS = ["HIOnlineMonitor", "HITrackerNZS"]
-HIStreams += ["HIDQM", "PhysicsHITrackerNZS"]
+StreamsHIOnlineMonitor = ["HIDQM"]
+StreamsHITrackerNZS = ["PhysicsHITrackerNZS"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1627,7 +1629,7 @@ DATASETS = ["HIForward1", "HIForward2",
             "HIForward12", "HIForward13", "HIForward14",
             "HIForward15", "HIForward16", "HIForward17",
             "HIForward18", "HIForward19"]
-HIStreams += ["PhysicsHIForward0", "PhysicsHIForward1", "PhysicsHIForward2", "PhysicsHIForward3", "PhysicsHIForward4", 
+StreamsHIForward += ["PhysicsHIForward0", "PhysicsHIForward1", "PhysicsHIForward2", "PhysicsHIForward3", "PhysicsHIForward4", 
               "PhysicsHIForward5", "PhysicsHIForward6", "PhysicsHIForward7", "PhysicsHIForward8", "PhysicsHIForward9", 
               "PhysicsHIForward10", "PhysicsHIForward11", "PhysicsHIForward12", "PhysicsHIForward13", "PhysicsHIForward14", 
               "PhysicsHIForward15", "PhysicsHIForward16", "PhysicsHIForward17", "PhysicsHIForward18", "PhysicsHIForward19"]
@@ -1671,7 +1673,7 @@ DATASETS = ["HIMinimumBias1", "HIMinimumBias2", "HIMinimumBias3",
             "HIMinimumBias12", "HIMinimumBias13", "HIMinimumBias14", "HIMinimumBias15",
             "HIMinimumBias16", "HIMinimumBias17", "HIMinimumBias18", "HIMinimumBias19"]
 
-HIStreams += ["PhysicsHIMinimumBias0", "PhysicsHIMinimumBias1", "PhysicsHIMinimumBias2", "PhysicsHIMinimumBias3", "PhysicsHIMinimumBias4", 
+StreamsHIMinimumBias += ["PhysicsHIMinimumBias0", "PhysicsHIMinimumBias1", "PhysicsHIMinimumBias2", "PhysicsHIMinimumBias3", "PhysicsHIMinimumBias4", 
               "PhysicsHIMinimumBias5", "PhysicsHIMinimumBias6", "PhysicsHIMinimumBias7", "PhysicsHIMinimumBias8", "PhysicsHIMinimumBias9", 
               "PhysicsHIMinimumBias10", "PhysicsHIMinimumBias11", "PhysicsHIMinimumBias12", "PhysicsHIMinimumBias13", "PhysicsHIMinimumBias14", 
               "PhysicsHIMinimumBias15", "PhysicsHIMinimumBias16", "PhysicsHIMinimumBias17", "PhysicsHIMinimumBias18", "PhysicsHIMinimumBias19"]
@@ -1689,7 +1691,7 @@ for dataset in DATASETS:
                scenario=hiScenario)
 
 DATASETS = ["HIEphemeralHLTPhysics"]
-HIStreams += ["PhysicsHIHLTPhysics"]
+StreamsHIEphemeralHLTPhysics = ["PhysicsHIHLTPhysics"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1703,7 +1705,7 @@ for dataset in DATASETS:
                scenario=hiScenario)
 
 DATASETS = ["HIEphemeralZeroBias0", "HIEphemeralZeroBias1"]
-HIStreams += ["PhysicsHIZeroBias"]
+StreamsHIEphemeralZeroBias = ["PhysicsHIZeroBias"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1794,7 +1796,7 @@ DATASETS = ["HIPhysicsRawPrime2", "HIPhysicsRawPrime3",
               "HIPhysicsRawPrime8", "HIPhysicsRawPrime9", "HIPhysicsRawPrime10", "HIPhysicsRawPrime11", 
               "HIPhysicsRawPrime12", "HIPhysicsRawPrime13", "HIPhysicsRawPrime14"] 
 
-HIRawPrimeStreams_reco_true = ["PhysicsHIPhysicsRawPrime0", "PhysicsHIPhysicsRawPrime1", "PhysicsHIPhysicsRawPrime2", "PhysicsHIPhysicsRawPrime3",
+StreamsHIRawPrime_reco_true = ["PhysicsHIPhysicsRawPrime0", "PhysicsHIPhysicsRawPrime1", "PhysicsHIPhysicsRawPrime2", "PhysicsHIPhysicsRawPrime3",
                                "PhysicsHIPhysicsRawPrime4", "PhysicsHIPhysicsRawPrime5", "PhysicsHIPhysicsRawPrime6", "PhysicsHIPhysicsRawPrime7", 
                                "PhysicsHIPhysicsRawPrime8", "PhysicsHIPhysicsRawPrime9", "PhysicsHIPhysicsRawPrime10", "PhysicsHIPhysicsRawPrime11",
                                "PhysicsHIPhysicsRawPrime12", "PhysicsHIPhysicsRawPrime13", "PhysicsHIPhysicsRawPrime14"]
@@ -1831,7 +1833,7 @@ DATASETS = [ "HIPhysicsRawPrime15",
               "HIPhysicsRawPrime56", "HIPhysicsRawPrime57", "HIPhysicsRawPrime58", "HIPhysicsRawPrime59"]
 
 
-HIRawPrimeStreams_reco_to_stop = ["PhysicsHIPhysicsRawPrime15", 
+StreamsHIRawPrime_reco_to_stop = ["PhysicsHIPhysicsRawPrime15", 
                                   "PhysicsHIPhysicsRawPrime16", "PhysicsHIPhysicsRawPrime17", "PhysicsHIPhysicsRawPrime18", "PhysicsHIPhysicsRawPrime19", 
                                   "PhysicsHIPhysicsRawPrime20", "PhysicsHIPhysicsRawPrime21", "PhysicsHIPhysicsRawPrime22", "PhysicsHIPhysicsRawPrime23", 
                                   "PhysicsHIPhysicsRawPrime24", "PhysicsHIPhysicsRawPrime25", "PhysicsHIPhysicsRawPrime26", "PhysicsHIPhysicsRawPrime27", 
@@ -1844,7 +1846,6 @@ HIRawPrimeStreams_reco_to_stop = ["PhysicsHIPhysicsRawPrime15",
                                   "PhysicsHIPhysicsRawPrime52", "PhysicsHIPhysicsRawPrime53", "PhysicsHIPhysicsRawPrime54", "PhysicsHIPhysicsRawPrime55", 
                                   "PhysicsHIPhysicsRawPrime56", "PhysicsHIPhysicsRawPrime57", "PhysicsHIPhysicsRawPrime58", "PhysicsHIPhysicsRawPrime59"]
 
-HIStreams += HIRawPrimeStreams_reco_to_stop
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1865,7 +1866,7 @@ for dataset in DATASETS:
                scenario=hiRawPrimeScenario)
 
 DATASETS = ["HIZeroBias0", "HIZeroBias1", "HIZeroBias2"]
-
+StreamsHIZeroBias = ["PhysicsHIZeroBiasRAW0", "PhysicsHIZeroBiasRAW1", "PhysicsHIZeroBiasRAW2"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -1897,8 +1898,8 @@ ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
 
 # Set streams to ignore by agent. These will not be injected
-SECOND_AGENT_STREAMS = STREAMS_ppRef_ZBandFwd_secondAgent
-THIRD_AGENT_STREAMS = STREAMS_DAQ_TFTEST + STREAMS_DAQ_TFTEST_ppRef + HIStreams
+SECOND_AGENT_STREAMS = StreamsHIRawPrime_reco_to_stop
+THIRD_AGENT_STREAMS = []
 setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
                                     "ThirdAgent" : THIRD_AGENT_STREAMS})
 
