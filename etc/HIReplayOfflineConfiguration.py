@@ -34,16 +34,12 @@ from T0.RunConfig.Tier0Config import setHelperAgentStreams
 tier0Config = createTier0Config()
 
 # Set the verstion configuration (not used at the moment)
-setConfigVersion(tier0Config, "replace with real version")
+setConfigVersion(tier0Config, "3.2.3")
 
 # Set run number to replay
-# 352929 - 2022 pp at 900 GeV
-# 355189 - 2022 cosmics
-# 355559 - 2022 pp at 13.6 TeV (1h long, 300 bunches)
-# 356005 - 2022 pp at 13.6 TeV (1h long, 600 bunches - ALL detectors included)
-# 359060 - 2022 cosmics - Oberved failures in Express (https://cms-talk.web.cern.ch/t/paused-jobs-for-express-run359045-streamexpress/15232)
-# 361694:361699,361779 - 2022 HI dry-run test runs
-setInjectRuns(tier0Config, [374951, 375549])
+# 375549:    HI 2023 107 TB
+# 387456:    Test HI 2024 with memory problems 3.1 TB
+setInjectRuns(tier0Config, [375549, 387456])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -158,6 +154,7 @@ numberOfCores = 8
 
 # Splitting parameters for PromptReco
 defaultRecoSplitting = 750 * numberOfCores
+forwardRecoSplitting = 2000 * numberOfCores
 hiRecoSplitting = 200 * numberOfCores
 alcarawSplitting = 20000 * numberOfCores
 
@@ -1570,6 +1567,7 @@ for dataset in DATASETS:
                                "SiStripCalZeroBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
+               reco_split=forwardRecoSplitting,
                scenario=hiForwardScenario)
 
 DATASETS = ["HIMinimumBias0"]
