@@ -37,9 +37,9 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "3.2.3")
 
 # Set run number to replay
-# 375549:    HI 2023 107 TB
+# 374951:    HI 2023 3.8 TB
 # 387456:    Test HI 2024 with memory problems 3.1 TB
-setInjectRuns(tier0Config, [375549, 387456])
+setInjectRuns(tier0Config, [374951, 387456])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
