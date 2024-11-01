@@ -113,7 +113,8 @@ setDefaultScramArch(tier0Config, "el8_amd64_gcc12")
 #setScramArch(tier0Config, "CMSSW_13_3_0", "el8_amd64_gcc12")
 
 # Configure scenarios
-ppScenario = "ppEra_Run3"
+#ppScenario = "ppEra_Run3"
+ppScenario = "ppEra_Run3_2024_ppRef"
 ppRefScenario = "ppEra_Run3_2024_ppRef"
 ppScenarioB0T = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
@@ -125,6 +126,12 @@ alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
 hltScoutingScenario = "hltScoutingEra_Run3_2024"
+
+# Heavy Ion Scenarios 2024
+
+hiForwardScenario = "ppEra_Run3_2024_UPC"
+hiScenario = "ppEra_Run3_pp_on_PbPb_2024"
+hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2024"
 
 # Defaults for processing version
 alcarawProcVersion = {
@@ -1158,6 +1165,8 @@ DATASETS_DAQ_TFTEST = ["TestHLTPhysics0","TestHLTPhysics1", "TestHLTPhysics2", "
             "TestHLTPhysics32", "TestHLTPhysics33","TestHLTPhysics34","TestHLTPhysics35",
             "TestHLTPhysics36", "TestHLTPhysics37","TestHLTPhysics38","TestHLTPhysics39"]
 
+STREAMS_DAQ_TFTEST = DATASETS_DAQ_TFTEST
+
 for dataset in DATASETS_DAQ_TFTEST:
     addDataset(tier0Config, dataset,
                do_reco=False,
@@ -1181,6 +1190,8 @@ DATASETS_DAQ_TFTEST_ppRef = ["TestHLTPhysicsA0","TestHLTPhysicsA1",
     "TestHLTPhysicsD0", "TestHLTPhysicsD1", "TestHLTPhysicsD2", "TestHLTPhysicsD3", 
     "TestHLTPhysicsD4", "TestHLTPhysicsD5", "TestHLTPhysicsD6", "TestHLTPhysicsD7", 
     "TestHLTPhysicsD8", "TestHLTPhysicsD9"]
+
+STREAMS_DAQ_TFTEST_ppRef = DATASETS_DAQ_TFTEST_ppRef
 
 for dataset in DATASETS_DAQ_TFTEST_ppRef:
     addDataset(tier0Config, dataset,
@@ -1329,6 +1340,12 @@ DATASETS_ppRef_ZBandFwd_secondAgent = ["PPRefZeroBiasPlusForward8", "PPRefZeroBi
              "PPRefZeroBiasPlusForward23", "PPRefZeroBiasPlusForward24"]
 
 DATASETS += DATASETS_ppRef_ZBandFwd_secondAgent
+STREAMS_ppRef_ZBandFwd_secondAgent = ["PhysicsPPRefZeroBiasPlusForward8", "PhysicsPPRefZeroBiasPlusForward9", "PhysicsPPRefZeroBiasPlusForward10",
+                                      "PhysicsPPRefZeroBiasPlusForward11", "PhysicsPPRefZeroBiasPlusForward12", "PhysicsPPRefZeroBiasPlusForward13",
+                                      "PhysicsPPRefZeroBiasPlusForward14", "PhysicsPPRefZeroBiasPlusForward15", "PhysicsPPRefZeroBiasPlusForward16",
+                                      "PhysicsPPRefZeroBiasPlusForward17", "PhysicsPPRefZeroBiasPlusForward18", "PhysicsPPRefZeroBiasPlusForward19",
+                                      "PhysicsPPRefZeroBiasPlusForward20", "PhysicsPPRefZeroBiasPlusForward21", "PhysicsPPRefZeroBiasPlusForward22",
+                                      "PhysicsPPRefZeroBiasPlusForward23", "PhysicsPPRefZeroBiasPlusForward24"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1510,10 +1527,10 @@ ignoreStream(tier0Config, "DQMPPSRandom")
 
 
 # Set streams to ignore by agent. These will not be injected
-SECOND_AGENT_PDS = DATASETS_ppRef_ZBandFwd_secondAgent
-THIRD_AGENT_PDS = DATASETS_DAQ_TFTEST + DATASETS_DAQ_TFTEST_ppRef
-setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_PDS,
-                                    "ThirdAgent" : THIRD_AGENT_PDS})
+SECOND_AGENT_STREAMS = STREAMS_ppRef_ZBandFwd_secondAgent
+THIRD_AGENT_STREAMS = STREAMS_DAQ_TFTEST + STREAMS_DAQ_TFTEST_ppRef
+setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
+                                    "ThirdAgent" : THIRD_AGENT_STREAMS})
 
 
 ###################################
