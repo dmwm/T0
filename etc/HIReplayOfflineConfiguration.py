@@ -107,12 +107,13 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_1_4_patch4"
+    'default': "CMSSW_14_1_4_patch5"
 }
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "el8_amd64_gcc12")
-
+setScramArch(tier0Config, "CMSSW_13_2_5", "el8_amd64_gcc11")
+setScramArch(tier0Config, "CMSSW_13_2_6", "el8_amd64_gcc11")
 # Configure scenarios
 #ppScenario = "ppEra_Run3"
 ppScenario = "ppEra_Run3_2024_ppRef"
