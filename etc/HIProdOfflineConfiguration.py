@@ -64,7 +64,7 @@ setAcquisitionEra(tier0Config, "HIRun2024A")
 setEmulationAcquisitionEra(tier0Config, "Emulation2024")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
-setBulkDataType(tier0Config, "data")
+setBulkDataType(tier0Config, "hidata")
 setProcessingSite(tier0Config, processingSite)
 setStreamerPNN(tier0Config, streamerPNN)
 setStorageSite(tier0Config, storageSite)
@@ -355,7 +355,7 @@ addExpressConfig(tier0Config, "Calibration",
                  versionOverride=expressVersionOverride,
                  maxMemoryperCore=2000,
                  archivalNode="T0_CH_CERN_MSS",
-                 dataType="data",
+                 dataType="hidata",
                  dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
                  tape_node="T0_CH_CERN_MSS")
 
