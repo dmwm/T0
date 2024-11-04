@@ -1630,10 +1630,11 @@ DATASETS = ["HIForward1", "HIForward2",
             "HIForward12", "HIForward13", "HIForward14",
             "HIForward15", "HIForward16", "HIForward17",
             "HIForward18", "HIForward19"]
-StreamsHIForward = ["PhysicsHIForward0", "PhysicsHIForward1", "PhysicsHIForward2", "PhysicsHIForward3", "PhysicsHIForward4", 
-              "PhysicsHIForward5", "PhysicsHIForward6", "PhysicsHIForward7", "PhysicsHIForward8", "PhysicsHIForward9", 
-              "PhysicsHIForward10", "PhysicsHIForward11", "PhysicsHIForward12", "PhysicsHIForward13", "PhysicsHIForward14", 
-              "PhysicsHIForward15", "PhysicsHIForward16", "PhysicsHIForward17", "PhysicsHIForward18", "PhysicsHIForward19"]
+
+StreamsHIForward_SecondAgent = ["PhysicsHIForward0", "PhysicsHIForward1", "PhysicsHIForward2", "PhysicsHIForward3", "PhysicsHIForward4", 
+                                "PhysicsHIForward5", "PhysicsHIForward6", "PhysicsHIForward7", "PhysicsHIForward8", "PhysicsHIForward9", 
+                                "PhysicsHIForward10", "PhysicsHIForward11", "PhysicsHIForward12", "PhysicsHIForward13", "PhysicsHIForward14", 
+                                "PhysicsHIForward15", "PhysicsHIForward16", "PhysicsHIForward17", "PhysicsHIForward18", "PhysicsHIForward19"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1721,6 +1722,29 @@ for dataset in DATASETS:
                dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiScenario)
 
+
+#########################
+### HIPhysicsRawPrime ###
+#########################
+
+StreamsHIRawPrime_MainAgent = [ "PhysicsHIPhysicsRawPrime0", "PhysicsHIPhysicsRawPrime1", "PhysicsHIPhysicsRawPrime2", "PhysicsHIPhysicsRawPrime3",
+                                "PhysicsHIPhysicsRawPrime4", "PhysicsHIPhysicsRawPrime5", "PhysicsHIPhysicsRawPrime6", "PhysicsHIPhysicsRawPrime7", 
+                                "PhysicsHIPhysicsRawPrime8", "PhysicsHIPhysicsRawPrime9", "PhysicsHIPhysicsRawPrime10", "PhysicsHIPhysicsRawPrime11",
+                                "PhysicsHIPhysicsRawPrime12", "PhysicsHIPhysicsRawPrime13", "PhysicsHIPhysicsRawPrime14","PhysicsHIPhysicsRawPrime15", 
+                                "PhysicsHIPhysicsRawPrime16", "PhysicsHIPhysicsRawPrime17", "PhysicsHIPhysicsRawPrime18", "PhysicsHIPhysicsRawPrime19", 
+                                "PhysicsHIPhysicsRawPrime20", "PhysicsHIPhysicsRawPrime21", "PhysicsHIPhysicsRawPrime22", "PhysicsHIPhysicsRawPrime23", 
+                                "PhysicsHIPhysicsRawPrime24", "PhysicsHIPhysicsRawPrime25", "PhysicsHIPhysicsRawPrime26", "PhysicsHIPhysicsRawPrime27", 
+                                "PhysicsHIPhysicsRawPrime28", "PhysicsHIPhysicsRawPrime29",]
+
+StreamsHIRawPrime_SecondAgent = [ "PhysicsHIPhysicsRawPrime30", "PhysicsHIPhysicsRawPrime31", 
+                                  "PhysicsHIPhysicsRawPrime32", "PhysicsHIPhysicsRawPrime33", "PhysicsHIPhysicsRawPrime34", "PhysicsHIPhysicsRawPrime35", 
+                                  "PhysicsHIPhysicsRawPrime36", "PhysicsHIPhysicsRawPrime37", "PhysicsHIPhysicsRawPrime38", "PhysicsHIPhysicsRawPrime39", 
+                                  "PhysicsHIPhysicsRawPrime40", "PhysicsHIPhysicsRawPrime41", "PhysicsHIPhysicsRawPrime42", "PhysicsHIPhysicsRawPrime43", 
+                                  "PhysicsHIPhysicsRawPrime44", "PhysicsHIPhysicsRawPrime45", "PhysicsHIPhysicsRawPrime46", "PhysicsHIPhysicsRawPrime47", 
+                                  "PhysicsHIPhysicsRawPrime48", "PhysicsHIPhysicsRawPrime49", "PhysicsHIPhysicsRawPrime50", "PhysicsHIPhysicsRawPrime51", 
+                                  "PhysicsHIPhysicsRawPrime52", "PhysicsHIPhysicsRawPrime53", "PhysicsHIPhysicsRawPrime54", "PhysicsHIPhysicsRawPrime55", 
+                                  "PhysicsHIPhysicsRawPrime56", "PhysicsHIPhysicsRawPrime57", "PhysicsHIPhysicsRawPrime58", "PhysicsHIPhysicsRawPrime59"]
+
 DATASETS = ["HITestRawPrime0", "HITestRawPrime1", "HITestRawPrime2", "HITestRawPrime3", "HITestRawPrime4",
             "HITestRawPrime5", "HITestRawPrime6", "HITestRawPrime7", "HITestRawPrime8", "HITestRawPrime9",
             "HITestRawPrime10", "HITestRawPrime11", "HITestRawPrime12", "HITestRawPrime13", "HITestRawPrime14",
@@ -1797,11 +1821,6 @@ DATASETS = ["HIPhysicsRawPrime2", "HIPhysicsRawPrime3",
               "HIPhysicsRawPrime4", "HIPhysicsRawPrime5", "HIPhysicsRawPrime6", "HIPhysicsRawPrime7", 
               "HIPhysicsRawPrime8", "HIPhysicsRawPrime9", "HIPhysicsRawPrime10", "HIPhysicsRawPrime11", 
               "HIPhysicsRawPrime12", "HIPhysicsRawPrime13", "HIPhysicsRawPrime14"] 
-
-StreamsHIRawPrime_MainAgent = ["PhysicsHIPhysicsRawPrime0", "PhysicsHIPhysicsRawPrime1", "PhysicsHIPhysicsRawPrime2", "PhysicsHIPhysicsRawPrime3",
-                               "PhysicsHIPhysicsRawPrime4", "PhysicsHIPhysicsRawPrime5", "PhysicsHIPhysicsRawPrime6", "PhysicsHIPhysicsRawPrime7", 
-                               "PhysicsHIPhysicsRawPrime8", "PhysicsHIPhysicsRawPrime9", "PhysicsHIPhysicsRawPrime10", "PhysicsHIPhysicsRawPrime11",
-                               "PhysicsHIPhysicsRawPrime12", "PhysicsHIPhysicsRawPrime13", "PhysicsHIPhysicsRawPrime14"]
                                        
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1834,24 +1853,9 @@ DATASETS = [ "HIPhysicsRawPrime15",
               "HIPhysicsRawPrime52", "HIPhysicsRawPrime53", "HIPhysicsRawPrime54", "HIPhysicsRawPrime55", 
               "HIPhysicsRawPrime56", "HIPhysicsRawPrime57", "HIPhysicsRawPrime58", "HIPhysicsRawPrime59"]
 
-
-StreamsHIRawPrime_SecondAgent = ["PhysicsHIPhysicsRawPrime15", 
-                                  "PhysicsHIPhysicsRawPrime16", "PhysicsHIPhysicsRawPrime17", "PhysicsHIPhysicsRawPrime18", "PhysicsHIPhysicsRawPrime19", 
-                                  "PhysicsHIPhysicsRawPrime20", "PhysicsHIPhysicsRawPrime21", "PhysicsHIPhysicsRawPrime22", "PhysicsHIPhysicsRawPrime23", 
-                                  "PhysicsHIPhysicsRawPrime24", "PhysicsHIPhysicsRawPrime25", "PhysicsHIPhysicsRawPrime26", "PhysicsHIPhysicsRawPrime27", 
-                                  "PhysicsHIPhysicsRawPrime28", "PhysicsHIPhysicsRawPrime29", "PhysicsHIPhysicsRawPrime30", "PhysicsHIPhysicsRawPrime31", 
-                                  "PhysicsHIPhysicsRawPrime32", "PhysicsHIPhysicsRawPrime33", "PhysicsHIPhysicsRawPrime34", "PhysicsHIPhysicsRawPrime35", 
-                                  "PhysicsHIPhysicsRawPrime36", "PhysicsHIPhysicsRawPrime37", "PhysicsHIPhysicsRawPrime38", "PhysicsHIPhysicsRawPrime39", 
-                                  "PhysicsHIPhysicsRawPrime40", "PhysicsHIPhysicsRawPrime41", "PhysicsHIPhysicsRawPrime42", "PhysicsHIPhysicsRawPrime43", 
-                                  "PhysicsHIPhysicsRawPrime44", "PhysicsHIPhysicsRawPrime45", "PhysicsHIPhysicsRawPrime46", "PhysicsHIPhysicsRawPrime47", 
-                                  "PhysicsHIPhysicsRawPrime48", "PhysicsHIPhysicsRawPrime49", "PhysicsHIPhysicsRawPrime50", "PhysicsHIPhysicsRawPrime51", 
-                                  "PhysicsHIPhysicsRawPrime52", "PhysicsHIPhysicsRawPrime53", "PhysicsHIPhysicsRawPrime54", "PhysicsHIPhysicsRawPrime55", 
-                                  "PhysicsHIPhysicsRawPrime56", "PhysicsHIPhysicsRawPrime57", "PhysicsHIPhysicsRawPrime58", "PhysicsHIPhysicsRawPrime59"]
-
-
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=True, #To be changed to False in HIRun2024B
+               do_reco=False, #To be changed to False in HIRun2024B
                raw_to_disk=False,
                aod_to_disk=False,
                timePerEvent=3,
@@ -1900,7 +1904,7 @@ ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
 
 # Set streams to ignore by agent. These will not be injected
-SECOND_AGENT_STREAMS = StreamsHIRawPrime_SecondAgent + STREAMS_ppRef_ZBandFwd_secondAgent
+SECOND_AGENT_STREAMS = StreamsHIRawPrime_SecondAgent + StreamsHIForward_SecondAgent + STREAMS_ppRef_ZBandFwd_secondAgent
 THIRD_AGENT_STREAMS = STREAMS_DAQ_TFTEST + STREAMS_DAQ_TFTEST_ppRef
 setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
                                     "ThirdAgent" : THIRD_AGENT_STREAMS})
