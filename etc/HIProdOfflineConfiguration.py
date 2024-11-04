@@ -1898,8 +1898,8 @@ ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
 
 # Set streams to ignore by agent. These will not be injected
-SECOND_AGENT_STREAMS = StreamsHIRawPrime_SecondAgent
-THIRD_AGENT_STREAMS = []
+SECOND_AGENT_STREAMS = StreamsHIRawPrime_SecondAgent + STREAMS_ppRef_ZBandFwd_secondAgent
+THIRD_AGENT_STREAMS = STREAMS_DAQ_TFTEST + STREAMS_DAQ_TFTEST_ppRef
 setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
                                     "ThirdAgent" : THIRD_AGENT_STREAMS})
 
