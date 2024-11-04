@@ -1629,7 +1629,7 @@ DATASETS = ["HIForward1", "HIForward2",
             "HIForward12", "HIForward13", "HIForward14",
             "HIForward15", "HIForward16", "HIForward17",
             "HIForward18", "HIForward19"]
-StreamsHIForward += ["PhysicsHIForward0", "PhysicsHIForward1", "PhysicsHIForward2", "PhysicsHIForward3", "PhysicsHIForward4", 
+StreamsHIForward = ["PhysicsHIForward0", "PhysicsHIForward1", "PhysicsHIForward2", "PhysicsHIForward3", "PhysicsHIForward4", 
               "PhysicsHIForward5", "PhysicsHIForward6", "PhysicsHIForward7", "PhysicsHIForward8", "PhysicsHIForward9", 
               "PhysicsHIForward10", "PhysicsHIForward11", "PhysicsHIForward12", "PhysicsHIForward13", "PhysicsHIForward14", 
               "PhysicsHIForward15", "PhysicsHIForward16", "PhysicsHIForward17", "PhysicsHIForward18", "PhysicsHIForward19"]
@@ -1673,7 +1673,7 @@ DATASETS = ["HIMinimumBias1", "HIMinimumBias2", "HIMinimumBias3",
             "HIMinimumBias12", "HIMinimumBias13", "HIMinimumBias14", "HIMinimumBias15",
             "HIMinimumBias16", "HIMinimumBias17", "HIMinimumBias18", "HIMinimumBias19"]
 
-StreamsHIMinimumBias += ["PhysicsHIMinimumBias0", "PhysicsHIMinimumBias1", "PhysicsHIMinimumBias2", "PhysicsHIMinimumBias3", "PhysicsHIMinimumBias4", 
+StreamsHIMinimumBias = ["PhysicsHIMinimumBias0", "PhysicsHIMinimumBias1", "PhysicsHIMinimumBias2", "PhysicsHIMinimumBias3", "PhysicsHIMinimumBias4", 
               "PhysicsHIMinimumBias5", "PhysicsHIMinimumBias6", "PhysicsHIMinimumBias7", "PhysicsHIMinimumBias8", "PhysicsHIMinimumBias9", 
               "PhysicsHIMinimumBias10", "PhysicsHIMinimumBias11", "PhysicsHIMinimumBias12", "PhysicsHIMinimumBias13", "PhysicsHIMinimumBias14", 
               "PhysicsHIMinimumBias15", "PhysicsHIMinimumBias16", "PhysicsHIMinimumBias17", "PhysicsHIMinimumBias18", "PhysicsHIMinimumBias19"]
