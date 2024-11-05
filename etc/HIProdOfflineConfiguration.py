@@ -166,7 +166,7 @@ numberOfCores = 8
 
 # Splitting parameters for PromptReco
 defaultRecoSplitting = 750 * numberOfCores
-forwardRecoSplitting = 2000 * numberOfCores
+forwardRecoSplitting = 9000 * numberOfCores # 0.6ev/core/s * 4h = 9000ev/core
 hiRecoSplitting = 200 * numberOfCores
 alcarawSplitting = 20000 * numberOfCores
 
@@ -1605,7 +1605,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                #reco_delay=defaultRecoTimeout*100,
-               timePerEvent=1,
+               timePerEvent=0.2,
                raw_to_disk=False,
                aod_to_disk=True,
                write_nanoaod=False,
@@ -1640,7 +1640,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                #reco_delay=defaultRecoTimeout*100,
-               timePerEvent=1,
+               timePerEvent=0.2,
                raw_to_disk=False,
                aod_to_disk=True,
                write_nanoaod=False,
