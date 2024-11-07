@@ -15,8 +15,8 @@ then
     exit
 fi
 
-WMAGENT_TAG=2.3.5
-TIER0_VERSION=3.2.5
+WMAGENT_TAG=2.3.7.1
+TIER0_VERSION=3.2.6
 COUCH_TAG=3.2.2
 
 BASE_DIR=/data/tier0
@@ -36,26 +36,26 @@ RUCIO_ACCOUNT=$(grep '^RUCIO_ACCOUNT=' $WMAGENT_SECRETS | cut -d'=' -f2)
 WMA_VENV_DEPLOY_SCRIPT=https://raw.githubusercontent.com/dmwm/WMCore/$WMAGENT_TAG/deploy/deploy-wmagent-venv.sh
 
 echo "Resetting couchdb for new deployment"
-sleep 3
+sleep 1
 bash $BASE_DIR/00_pypi_reset_couch.sh -t $COUCH_TAG
 
 cd $BASE_DIR
 
 echo "Removing deploy directory"
-sleep 3
+sleep 1
 rm -rf $DEPLOY_DIR
 
 echo "Clearing Specs directory"
-sleep 3
+sleep 1
 rm -rf $SPEC_DIR/*
 
 echo "Clearing Oracle Database"
-sleep 3
+sleep 1
 bash $BASE_DIR/00_wipe_t0ast.sh
 
 echo "Installing new wmagent"
 echo "WMAgent version $WMAGENT_TAG"
-sleep 3
+sleep 1
 
 rm $BASE_DIR/deploy-wmagent-venv.sh
 wget $WMA_VENV_DEPLOY_SCRIPT -O $BASE_DIR/deploy-wmagent-venv.sh
@@ -80,11 +80,11 @@ ln -s $PROXY $DEPLOY_DIR/certs/myproxy.pem
 #######################################################################
 
 echo "Activating environment"
-sleep 2
+sleep 1
 cd $DEPLOY_DIR
 source $DEPLOY_DIR/bin/activate
 echo "Installing T0 code"
-sleep 3
+sleep 1
 pip install T0==$TIER0_VERSION
 
 chmod +x $DEPLOY_DIR/bin/00*
@@ -96,13 +96,29 @@ bash $BASE_DIR/00_pypi_patches.sh
 
 
 echo "Now creating important T0 related environment variables"
-sleep 2
+sleep 1
 echo "WMCORE_CACHE_DIR=/tmp/cmst0"
 echo "install=$CURRENT_DIR/install"
 echo "config=$CURRENT_DIR/config"
 echo "manage=manage"
+
 sleep 1
+echo "Now initializing"
+sleep 1
+
+bash $DEPLOY_DIR/init.sh
+
+echo "fixing proxy"
+rm -rf $DEPLOY_DIR/certs/myproxy.pem
+ln -s $PROXY $DEPLOY_DIR/certs/myproxy.pem
+ln -s $PROXY $DEPLOY_DIR/certs/robot-proxy-vocms001.pem
+
 ### The WMCoreVenvVars is a function in the $DEPLOY_DIR/bin/activate file
+
+echo "Adding useful environment variables"
+sleep 1
+source $DEPLOY_DIR/bin/manage-common.sh
+_load_wmasecrets
 
 declare -A WMCoreVenvVars
 WMCoreVenvVars[TEAM]=$TEAMNAME
@@ -117,16 +133,12 @@ sleep 1
 
 ###########################
 
-echo "Now initializing"
-sleep 3
-bash $DEPLOY_DIR/init.sh
-
 echo "Now populating resource control"
-sleep 3
+sleep 1
 bash $DEPLOY_DIR/bin/00_pypi_resource_control.sh
 
 echo "Modifying config file"
-sleep 3
+sleep 1
 #####
 sed -i 's+TIER0_CONFIG_FILE+'"$CONFIGURATION_FILE"'+' "$config/config.py"
 #####
@@ -191,6 +203,7 @@ fi
 
 echo 'config.Tier0Feeder.dropboxuser = "'$DROPBOX_USER'"' >> $config/config.py
 echo 'config.Tier0Feeder.dropboxpass = "'$DROPBOX_PASS'"' >> $config/config.py
+echo 'config.Tier0Feeder.agentName = "MainAgent"' >> $config/config.py
 
 sleep 1
 echo "Modifying rucio.cfg"
