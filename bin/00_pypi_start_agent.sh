@@ -1,5 +1,5 @@
 #!/bin/bash
 
 echo "Starting the agent"
-sleep 2
+sleep 1
 manage start-agent
