@@ -30,8 +30,8 @@ then
     exit
 fi
 
-WMAGENT_TAG=2.3.5
-TIER0_VERSION=3.2.5
+WMAGENT_TAG=2.3.7.1
+TIER0_VERSION=3.2.6
 COUCH_TAG=3.2.2
 
 BASE_DIR=/data/tier0
@@ -89,7 +89,6 @@ sleep 1
 rm $DEPLOY_DIR/certs/*
 ln -s $CERT $DEPLOY_DIR/certs/servicecert.pem
 ln -s $KEY $DEPLOY_DIR/certs/servicekey.pem
-ln -s $PROXY $DEPLOY_DIR/certs/myproxy.pem
  
 #######################################################################
 
@@ -116,6 +115,23 @@ echo "install=$CURRENT_DIR/install"
 echo "config=$CURRENT_DIR/config"
 echo "manage=manage"
 sleep 1
+
+
+echo "Now initializing"
+sleep 2
+bash $DEPLOY_DIR/init.sh
+
+echo "Fixing proxy"
+sleep 1
+
+rm $DEPLOY_DIR/certs/myproxy.pem
+ln -s $PROXY $DEPLOY_DIR/certs/robot-proxy-vocms001.pem
+ln -s $PROXY $DEPLOY_DIR/certs/myproxy.pem
+
+echo "Adding useful environment variables"
+sleep 1
+source $DEPLOY_DIR/bin/manage-common.sh
+_load_wmasecrets
 ### The WMCoreVenvVars is a function in the $DEPLOY_DIR/bin/activate file
 declare -A WMCoreVenvVars
 WMCoreVenvVars[TEAM]=$TEAMNAME
@@ -128,12 +144,6 @@ _WMCoreVenvSet ${!WMCoreVenvVars[@]}
 sleep 1
 echo "variables created successfully"
 sleep 1
-
-
-
-echo "Now initializing"
-sleep 2
-bash $DEPLOY_DIR/init.sh
 
 echo "Now populating resource control"
 sleep 2
