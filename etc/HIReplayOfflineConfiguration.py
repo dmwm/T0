@@ -1767,6 +1767,8 @@ ignoreStream(tier0Config, "streamHLTRates")
 ignoreStream(tier0Config, "streamL1Rates")
 ignoreStream(tier0Config, "streamDQMRates")
 
+specifyStreams(tier0Config, ["PhysicsHIMinimumBias0", "PhysicsHIMinimumBias1", "PhysicsHIMinimumBias2", "PhysicsHIMinimumBias3"])
+
 ###################################
 ### currently inactive settings ###
 ###################################
