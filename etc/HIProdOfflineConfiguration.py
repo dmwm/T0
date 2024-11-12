@@ -1817,30 +1817,10 @@ for dataset in DATASETS:
                scenario=hiRawPrimeScenario)
     
 
-DATASETS = ["HIPhysicsRawPrime2", "HIPhysicsRawPrime3", 
+DATASETS = [  "HIPhysicsRawPrime2", "HIPhysicsRawPrime3", 
               "HIPhysicsRawPrime4", "HIPhysicsRawPrime5", "HIPhysicsRawPrime6", "HIPhysicsRawPrime7", 
               "HIPhysicsRawPrime8", "HIPhysicsRawPrime9", "HIPhysicsRawPrime10", "HIPhysicsRawPrime11", 
-              "HIPhysicsRawPrime12", "HIPhysicsRawPrime13", "HIPhysicsRawPrime14"] 
-                                       
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               raw_to_disk=False,
-               aod_to_disk=False,
-               timePerEvent=3,
-               write_nanoaod=False,
-               write_dqm=False,
-               tape_node="T0_CH_CERN_MSS",
-               disk_node="T2_US_Vanderbilt",
-               alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
-                               "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
-                               "SiStripCalZeroBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
-                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
-               dqm_sequences=["@none"],
-               physics_skims=["PbPbEMu", "PbPbZEE", "PbPbZMu", "PbPbHighPtJets", "LogError", "LogErrorMonitor"],
-               scenario=hiRawPrimeScenario)
-
-DATASETS = [ "HIPhysicsRawPrime15", 
+              "HIPhysicsRawPrime12", "HIPhysicsRawPrime13", "HIPhysicsRawPrime14", "HIPhysicsRawPrime15", 
               "HIPhysicsRawPrime16", "HIPhysicsRawPrime17", "HIPhysicsRawPrime18", "HIPhysicsRawPrime19", 
               "HIPhysicsRawPrime20", "HIPhysicsRawPrime21", "HIPhysicsRawPrime22", "HIPhysicsRawPrime23", 
               "HIPhysicsRawPrime24", "HIPhysicsRawPrime25", "HIPhysicsRawPrime26", "HIPhysicsRawPrime27", 
@@ -1852,10 +1832,10 @@ DATASETS = [ "HIPhysicsRawPrime15",
               "HIPhysicsRawPrime48", "HIPhysicsRawPrime49", "HIPhysicsRawPrime50", "HIPhysicsRawPrime51", 
               "HIPhysicsRawPrime52", "HIPhysicsRawPrime53", "HIPhysicsRawPrime54", "HIPhysicsRawPrime55", 
               "HIPhysicsRawPrime56", "HIPhysicsRawPrime57", "HIPhysicsRawPrime58", "HIPhysicsRawPrime59"]
-
+                                  
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False, #To be changed to False in HIRun2024B
+               do_reco=True,
                raw_to_disk=False,
                aod_to_disk=False,
                timePerEvent=3,
