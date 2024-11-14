@@ -1666,7 +1666,7 @@ for dataset in DATASETS:
                write_dqm=True,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
-               alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias"],
+               alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias", "TkAlV0s"],
                dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiScenario)
     
@@ -1689,7 +1689,7 @@ for dataset in DATASETS:
                write_dqm=True,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
-               alca_producers=["SiStripCalZeroBias"],
+               alca_producers=["SiStripCalZeroBias", "TkAlV0s"],
                dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiScenario)
 

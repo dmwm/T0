@@ -39,7 +39,7 @@ setConfigVersion(tier0Config, "3.2.3")
 # Set run number to replay
 # 374951:    HI 2023 3.8 TB
 # 387456:    Test HI 2024 with memory problems 3.1 TB
-setInjectRuns(tier0Config, [374951, 387456])
+setInjectRuns(tier0Config, [387963])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -1580,7 +1580,7 @@ for dataset in DATASETS:
                raw_to_disk=False,
                write_nanoaod=False,
                write_dqm=True,
-               alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias"],
+               alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias", "TkAlV0s"],
                dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiScenario)
     
@@ -1596,7 +1596,7 @@ for dataset in DATASETS:
                raw_to_disk=False,
                write_nanoaod=False,
                write_dqm=True,
-               alca_producers=["SiStripCalZeroBias"],
+               alca_producers=["SiStripCalZeroBias", "TkAlV0s"],
                dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiScenario)
 
