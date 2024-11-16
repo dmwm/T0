@@ -1616,7 +1616,7 @@ for dataset in DATASETS:
                                "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
                                "SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
                                "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
-                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
+                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated", "TkAlV0s"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
                physics_skims=["UPCMonopole", "LogError", "LogErrorMonitor"],
                reco_split=forwardRecoSplitting,
@@ -1650,7 +1650,7 @@ for dataset in DATASETS:
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
                                "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
                                "SiStripCalZeroBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
-                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
+                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated", "TkAlV0s"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
                physics_skims=["UPCMonopole", "LogError", "LogErrorMonitor"],
                reco_split=forwardRecoSplitting,
@@ -1666,7 +1666,7 @@ for dataset in DATASETS:
                write_dqm=True,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
-               alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias", "TkAlV0s"],
+               alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias"],
                dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiScenario)
     
@@ -1689,7 +1689,7 @@ for dataset in DATASETS:
                write_dqm=True,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
-               alca_producers=["SiStripCalZeroBias", "TkAlV0s"],
+               alca_producers=["SiStripCalZeroBias"],
                dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiScenario)
 
