@@ -101,7 +101,7 @@ setPromptCalibrationConfig(tier0Config,
 # maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_1_4_patch5",
+    'default': "CMSSW_14_1_5_patch1",
     'acqEra': {'Run2024J': "CMSSW_14_1_4_patch1"},
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
@@ -748,7 +748,7 @@ for dataset in DATASETS:
                write_nanoaod=False,
                write_dqm=True,
                alca_producers=["HcalCalIsoTrkProducerFilter", "TkAlJetHT", "HcalCalNoise"],
-               dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
+               dqm_sequences=["@common", "@jetmet", "@egamma", "@L1TMon", "@hcal"],
                physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "LogError", "LogErrorMonitor"],
                timePerEvent=5.7,
                sizePerEvent=2250,
@@ -1616,7 +1616,7 @@ for dataset in DATASETS:
                                "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
                                "SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
                                "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
-                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
+                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated", "TkAlV0s"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
                physics_skims=["UPCMonopole", "LogError", "LogErrorMonitor"],
                reco_split=forwardRecoSplitting,
@@ -1650,7 +1650,7 @@ for dataset in DATASETS:
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
                                "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
                                "SiStripCalZeroBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
-                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
+                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated", "TkAlV0s"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
                physics_skims=["UPCMonopole", "LogError", "LogErrorMonitor"],
                reco_split=forwardRecoSplitting,
@@ -1666,7 +1666,7 @@ for dataset in DATASETS:
                write_dqm=True,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
-               alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias", "TkAlV0s"],
+               alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias"],
                dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiScenario)
     
@@ -1689,7 +1689,7 @@ for dataset in DATASETS:
                write_dqm=True,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
-               alca_producers=["SiStripCalZeroBias", "TkAlV0s"],
+               alca_producers=["SiStripCalZeroBias"],
                dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiScenario)
 
