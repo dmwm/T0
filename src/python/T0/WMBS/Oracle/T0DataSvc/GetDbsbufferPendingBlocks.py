@@ -1,24 +1,22 @@
 """
-_GetDbsbufferBlocks_
+_GetDbsbufferPendingBlocks_
 
-Oracle implementation of GetDbsbufferBlocks
+Oracle implementation of GetDbsbufferPendingBlocks
 
-Returns all blocks and dbs status with their corresponding dataset and acquisition era
+Returns count of dbs blocks with status different than InDBS by acquisition era
 
 """
 
 from WMCore.Database.DBFormatter import DBFormatter
 
-class GetDbsbufferBlocks(DBFormatter):
+class GetDbsbufferPendingBlocks(DBFormatter):
 
     def execute(self, conn = None, transaction = False):
 
-        sql = """SELECT dbsbuffer_block.blockname as block,
-                        dbsbuffer_dataset.acquisition_era as acq_era,
-                        dbsbuffer_block.status as status 
+        sql = """SELECT dbsbuffer_dataset.acquisition_era as acq_era, COUNT(dbsbuffer_block.blockname) as pending_blocks
                  FROM dbsbuffer_block
                  INNER JOIN dbsbuffer_dataset ON dbsbuffer_dataset.id = dbsbuffer_block.dataset_id
-                 WHERE checkForZeroState(dbsbuffer_block.in_datasvc) = 0
+                 WHERE dbsbuffer_block.status NOT LIKE 'InDBS'
                  """
 
         results = self.dbi.processData(sql, binds = {}, conn = conn,
