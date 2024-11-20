@@ -135,15 +135,15 @@ hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2024"
 
 # Defaults for processing version
 alcarawProcVersion = {
-    'default': 1
+    'default': 2
 }
 
 defaultProcVersionReco = {
-    'default': 1
+    'default': 2
 }
 
 expressProcVersion = {
-    'default': 1
+    'default': 2
 }
 
 # Defaults for GlobalTag
@@ -1734,7 +1734,7 @@ StreamsHIRawPrime_MainAgent = [ "PhysicsHIPhysicsRawPrime0", "PhysicsHIPhysicsRa
                                 "PhysicsHIPhysicsRawPrime16", "PhysicsHIPhysicsRawPrime17", "PhysicsHIPhysicsRawPrime18", "PhysicsHIPhysicsRawPrime19", 
                                 "PhysicsHIPhysicsRawPrime20", "PhysicsHIPhysicsRawPrime21", "PhysicsHIPhysicsRawPrime22", "PhysicsHIPhysicsRawPrime23", 
                                 "PhysicsHIPhysicsRawPrime24", "PhysicsHIPhysicsRawPrime25", "PhysicsHIPhysicsRawPrime26", "PhysicsHIPhysicsRawPrime27", 
-                                "PhysicsHIPhysicsRawPrime28", "PhysicsHIPhysicsRawPrime29",]
+                                "PhysicsHIPhysicsRawPrime28", "PhysicsHIPhysicsRawPrime29"]
 
 StreamsHIRawPrime_SecondAgent = [ "PhysicsHIPhysicsRawPrime30", "PhysicsHIPhysicsRawPrime31", 
                                   "PhysicsHIPhysicsRawPrime32", "PhysicsHIPhysicsRawPrime33", "PhysicsHIPhysicsRawPrime34", "PhysicsHIPhysicsRawPrime35", 
@@ -1819,20 +1819,9 @@ for dataset in DATASETS:
 
 DATASETS = [  "HIPhysicsRawPrime2", "HIPhysicsRawPrime3", 
               "HIPhysicsRawPrime4", "HIPhysicsRawPrime5", "HIPhysicsRawPrime6", "HIPhysicsRawPrime7", 
-              "HIPhysicsRawPrime8", "HIPhysicsRawPrime9", "HIPhysicsRawPrime10", "HIPhysicsRawPrime11", 
-              "HIPhysicsRawPrime12", "HIPhysicsRawPrime13", "HIPhysicsRawPrime14", "HIPhysicsRawPrime15", 
-              "HIPhysicsRawPrime16", "HIPhysicsRawPrime17", "HIPhysicsRawPrime18", "HIPhysicsRawPrime19", 
-              "HIPhysicsRawPrime20", "HIPhysicsRawPrime21", "HIPhysicsRawPrime22", "HIPhysicsRawPrime23", 
-              "HIPhysicsRawPrime24", "HIPhysicsRawPrime25", "HIPhysicsRawPrime26", "HIPhysicsRawPrime27", 
-              "HIPhysicsRawPrime28", "HIPhysicsRawPrime29", "HIPhysicsRawPrime30", "HIPhysicsRawPrime31", 
-              "HIPhysicsRawPrime32", "HIPhysicsRawPrime33", "HIPhysicsRawPrime34", "HIPhysicsRawPrime35", 
-              "HIPhysicsRawPrime36", "HIPhysicsRawPrime37", "HIPhysicsRawPrime38", "HIPhysicsRawPrime39", 
-              "HIPhysicsRawPrime40", "HIPhysicsRawPrime41", "HIPhysicsRawPrime42", "HIPhysicsRawPrime43", 
-              "HIPhysicsRawPrime44", "HIPhysicsRawPrime45", "HIPhysicsRawPrime46", "HIPhysicsRawPrime47", 
-              "HIPhysicsRawPrime48", "HIPhysicsRawPrime49", "HIPhysicsRawPrime50", "HIPhysicsRawPrime51", 
-              "HIPhysicsRawPrime52", "HIPhysicsRawPrime53", "HIPhysicsRawPrime54", "HIPhysicsRawPrime55", 
-              "HIPhysicsRawPrime56", "HIPhysicsRawPrime57", "HIPhysicsRawPrime58", "HIPhysicsRawPrime59"]
-                                  
+              "HIPhysicsRawPrime8", "HIPhysicsRawPrime9", "HIPhysicsRawPrime10", "HIPhysicsRawPrime11"]
+ 
+                                 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -1846,6 +1835,37 @@ for dataset in DATASETS:
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
                                "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
                                "SiStripCalZeroBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
+                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
+               dqm_sequences=["@none"],
+               physics_skims=["PbPbEMu", "PbPbZEE", "PbPbZMu", "PbPbHighPtJets", "LogError", "LogErrorMonitor"],
+               scenario=hiRawPrimeScenario)
+
+DATASETS = [  "HIPhysicsRawPrime12", "HIPhysicsRawPrime13", "HIPhysicsRawPrime14", "HIPhysicsRawPrime15",
+              "HIPhysicsRawPrime16", "HIPhysicsRawPrime17", "HIPhysicsRawPrime18", "HIPhysicsRawPrime19",
+              "HIPhysicsRawPrime20", "HIPhysicsRawPrime21", "HIPhysicsRawPrime22", "HIPhysicsRawPrime23",
+              "HIPhysicsRawPrime24", "HIPhysicsRawPrime25", "HIPhysicsRawPrime26", "HIPhysicsRawPrime27",
+              "HIPhysicsRawPrime28", "HIPhysicsRawPrime29", "HIPhysicsRawPrime30", "HIPhysicsRawPrime31",
+              "HIPhysicsRawPrime32", "HIPhysicsRawPrime33", "HIPhysicsRawPrime34", "HIPhysicsRawPrime35",
+              "HIPhysicsRawPrime36", "HIPhysicsRawPrime37", "HIPhysicsRawPrime38", "HIPhysicsRawPrime39",
+              "HIPhysicsRawPrime40", "HIPhysicsRawPrime41", "HIPhysicsRawPrime42", "HIPhysicsRawPrime43",
+              "HIPhysicsRawPrime44", "HIPhysicsRawPrime45", "HIPhysicsRawPrime46", "HIPhysicsRawPrime47",
+              "HIPhysicsRawPrime48", "HIPhysicsRawPrime49", "HIPhysicsRawPrime50", "HIPhysicsRawPrime51",
+              "HIPhysicsRawPrime52", "HIPhysicsRawPrime53", "HIPhysicsRawPrime54", "HIPhysicsRawPrime55",
+              "HIPhysicsRawPrime56", "HIPhysicsRawPrime57", "HIPhysicsRawPrime58", "HIPhysicsRawPrime59"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               raw_to_disk=False,
+               aod_to_disk=False,
+               timePerEvent=3,
+               write_nanoaod=False,
+               write_dqm=False,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_US_Vanderbilt",
+               alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "MuAlCalIsolatedMu",
+                               "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
+                               "SiStripCalZeroBias", "HcalCalIsolatedBunchSelector", "HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@none"],
                physics_skims=["PbPbEMu", "PbPbZEE", "PbPbZMu", "PbPbHighPtJets", "LogError", "LogErrorMonitor"],
