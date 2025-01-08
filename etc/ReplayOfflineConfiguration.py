@@ -40,19 +40,25 @@ setConfigVersion(tier0Config, "replace with real version")
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
 # 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
 
-setInjectRuns(tier0Config, [382686, 386674])
+setInjectRuns(tier0Config, [382726])
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
-storageSite = "T0_CH_CERN_Disk"
-streamerPNN = "T0_CH_CERN_Disk"
+storageSite = "T0_CH_CERN_Pilot"
+streamerPNN = "T0_CH_CERN_Pilot"
 
 addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
                 siteLocalConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/JobConfig/site-local-config.xml",
                 overrideCatalog="T2_CH_CERN,,T0_CH_CERN,CERN_EOS_T0,XRootD",
+                siteLocalRucioConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/storage.json",
+                )
+
+addSiteConfig(tier0Config, "T0_CH_CERN_Pilot",
+                siteLocalConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/JobConfig/site-local-config.xml",
+                overrideCatalog="T2_CH_CERN,,T0_CH_CERN,EOS_PILOT,XRootD",
                 siteLocalRucioConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/storage.json",
                 )
 
@@ -1276,7 +1282,7 @@ for dataset in DATASETS:
 #######################
 
 # Define streams to be ignored by MainAgent and processed by a HelperAgent if any.
-setHelperAgentStreams(tier0Config, {'SecondAgent': ["Express"],
+setHelperAgentStreams(tier0Config, {'SecondAgent': ["PhysicsCommissioning"],
                                     'ThirdAgent' : []
                                    })
 
