@@ -40,7 +40,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
 # 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
 
-setInjectRuns(tier0Config, [382686, 386674])
+setInjectRuns(tier0Config, [386925]) # 386925: Collisions
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
@@ -61,6 +61,18 @@ addSiteConfig(tier0Config, "EOS_PILOT",
                 overrideCatalog="trivialcatalog_file:/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/PhEDEx/storage_EOS_PILOT.xml?protocol=eos"
                 )
 
+### Settings up sites for eos pilot
+
+#processingSite = "T2_CH_CERN"
+#storageSite = "T0_CH_CERN_Pilot"
+#streamerPNN = "T0_CH_CERN_Pilot"
+#addSiteConfig(tier0Config, "T0_CH_CERN_Pilot",
+#                siteLocalConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/JobConfig/site-local-config_EOS_PILOT.xml",
+#                overrideCatalog="T2_CH_CERN,,T0_CH_CERN,EOS_PILOT,XRootD",
+#                siteLocalRucioConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/storage.json",
+#                )
+
+
 # Set global parameters:
 #  Acquisition era
 #  BaseRequestPriority
@@ -68,7 +80,7 @@ addSiteConfig(tier0Config, "EOS_PILOT",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Tier0_REPLAY_2024")
+setAcquisitionEra(tier0Config, "Tier0_REPLAY_2025")
 setBaseRequestPriority(tier0Config, 260000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
@@ -111,7 +123,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_1_3"
+    'default': "CMSSW_15_0_0_pre1"
 }
 
 # Configure ScramArch
@@ -142,8 +154,8 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "141X_dataRun3_Express_v3"
-promptrecoGlobalTag = "141X_dataRun3_Prompt_v3"
+expressGlobalTag = "150X_dataRun3_Express_150XReplay_v1"
+promptrecoGlobalTag = "150X_dataRun3_Prompt_150XReplay_v1"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -296,7 +308,7 @@ addExpressConfig(tier0Config, "HLTMonitor",
                  diskNode="T0_CH_CERN_Disk",
                  data_tiers=["FEVTHLTALL"],
                  write_dqm=True,
-                 alca_producers=[],
+                 alca_producers=["TkAlHLTTracks", "TkAlHLTTracksZMuMu", "PromptCalibProdSiPixelAliHLTHGC"],
                  dqm_sequences=["@HLTMon"],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
