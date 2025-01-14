@@ -618,6 +618,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 specArguments['Multicore'] = streamConfig.Express.Multicore
                 specArguments['Memory'] += (streamConfig.Express.Multicore - 1) * streamConfig.Express.MaxMemoryperCore
 
+            specArguments['MergeTaskMemory'] = streamConfig.Express.mergeTaskMemory
             specArguments['Requestor'] = "Tier0"
             specArguments['RequestName'] = workflowName
             specArguments['RequestString'] = workflowName

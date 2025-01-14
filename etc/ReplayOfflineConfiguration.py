@@ -255,6 +255,7 @@ addExpressConfig(tier0Config, "Express",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  maxMemoryperCore=2000,
+                 mergeTaskMemory=3.0 # Value in GiB, later changed to MiB in WMCore function addRuntimeMonitors()
                  dataset_lifetime=14*24*3600,#lifetime for container rules. Default 14 days
                  versionOverride=expressVersionOverride)
 
