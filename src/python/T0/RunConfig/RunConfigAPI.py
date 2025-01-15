@@ -1063,7 +1063,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 specArguments['AlcaSkims'] = datasetConfig.AlcaSkims
                 specArguments['PhysicsSkims'] = datasetConfig.PhysicsSkims
                 specArguments['DQMSequences'] = datasetConfig.DqmSequences
-
+                specArguments['NanoFlavours'] = datasetConfig.NanoFlavours
                 specArguments['UnmergedLFNBase'] = "/store/unmerged/%s" % runInfo['bulk_data_type']
                 if runInfo['backfill']:
                     specArguments['MergedLFNBase'] = "/store/backfill/%s/%s" % (runInfo['backfill'],
