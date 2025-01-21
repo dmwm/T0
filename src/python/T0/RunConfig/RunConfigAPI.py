@@ -858,6 +858,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
             if len(datasetConfig.DqmSequences) > 0:
                 dqmSeq = ",".join(datasetConfig.DqmSequences)
 
+            nanoFlavours = None
             if len(datasetConfig.NanoFlavours) > 0:
                 nanoFlavours = ",".join(datasetConfig.NanoFlavours)
 
