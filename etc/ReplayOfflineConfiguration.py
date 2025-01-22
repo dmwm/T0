@@ -123,7 +123,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_0_0_pre1"
+    'default': "CMSSW_14_1_5_patch1"
 }
 
 # Configure ScramArch
@@ -155,8 +155,8 @@ alcarawProcVersion = dt
 
 # Defaults for GlobalTag
 
-expressGlobalTag = "150X_dataRun3_Express_v1"
-promptrecoGlobalTag = "150X_dataRun3_Prompt_v1"
+expressGlobalTag = "141X_dataRun3_Express_v3"
+promptrecoGlobalTag = "141X_dataRun3_Express_v3"
 
 
 # Mandatory for CondDBv2
@@ -310,7 +310,7 @@ addExpressConfig(tier0Config, "HLTMonitor",
                  diskNode="T0_CH_CERN_Disk",
                  data_tiers=["FEVTHLTALL"],
                  write_dqm=True,
-                 alca_producers=["TkAlHLTTracks", "TkAlHLTTracksZMuMu", "PromptCalibProdSiPixelAliHLTHGC"],
+                 alca_producers=[],
                  dqm_sequences=["@HLTMon"],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
