@@ -45,10 +45,6 @@ def injectNewData(dbInterfaceStorageManager,
                                           logger = logging,
                                           dbinterface = dbInterfaceStorageManager)
 
-    daoFactoryHltConf = DAOFactory(package = "T0.WMBS",
-                                   logger = logging,
-                                   dbinterface = dbInterfaceHltConf)
-
     insertFileStatusDAO = None
     if dbInterfaceSMNotify:
         daoFactorySMNotify = DAOFactory(package = "T0.WMBS",
@@ -57,7 +53,7 @@ def injectNewData(dbInterfaceStorageManager,
         insertFileStatusDAO = daoFactorySMNotify(classname = "SMNotification.InsertOfflineFileStatus")
 
     getNewDataDAO = daoFactoryStorageManager(classname = "StorageManager.GetNewData")
-    getRunInfoDAO = daoFactoryHltConf(classname = "StorageManager.GetRunInfo")
+    getRunInfoDAO = daoFactoryStorageManager(classname = "StorageManager.GetRunInfo")
     getRunSetup = daoFactoryStorageManager(classname = "StorageManager.GetRunSetup")
     insertRunDAO = daoFactory(classname = "RunConfig.InsertRun")
     insertStreamDAO = daoFactory(classname = "RunConfig.InsertStream")
