@@ -24,6 +24,7 @@ class GetRecoConfig(DBFormatter):
                         reco_config.proc_version,
                         reco_config.alca_skim,
                         reco_config.dqm_seq,
+                        reco_config.nano_flavour,
                         cmssw_version.name,
                         reco_config.scram_arch,
                         reco_config.multicore,
@@ -69,10 +70,11 @@ class GetRecoConfig(DBFormatter):
             resultDict[primds]['proc_ver'] = result[8]
             resultDict[primds]['alca_skim'] = result[9]
             resultDict[primds]['dqm_seq'] = result[10]
-            resultDict[primds]['cmssw'] = result[11]
-            resultDict[primds]['scram_arch'] = result[12]
-            resultDict[primds]['multicore'] = result[13]
-            resultDict[primds]['global_tag'] = result[14]
-            resultDict[primds]['scenario'] = result[15]
+            resultDict[primds]['nano_flavour'] = result[11]
+            resultDict[primds]['cmssw'] = result[12]
+            resultDict[primds]['scram_arch'] = result[13]
+            resultDict[primds]['multicore'] = result[14]
+            resultDict[primds]['global_tag'] = result[15]
+            resultDict[primds]['scenario'] = result[16]
 
         return resultDict
