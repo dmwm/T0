@@ -605,6 +605,7 @@ def addDataset(config, datasetName, **settings):
     datasetConfig.AlcaSkims = settings.get("alca_producers", [])
     datasetConfig.PhysicsSkims = settings.get("physics_skims", [])
     datasetConfig.DqmSequences = settings.get("dqm_sequences", [])
+    datasetConfig.RawSkims = settings.get("raw_skims", [])
 
     if hasattr(datasetConfig, "MaxMemoryperCore"):
         datasetConfig.MaxMemoryperCore = settings.get("maxMemoryperCore", datasetConfig.MaxMemoryperCore)

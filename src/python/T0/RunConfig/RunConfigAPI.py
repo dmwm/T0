@@ -316,7 +316,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                   'MAX_EVENTS' : streamConfig.Repack.MaxInputEvents,
                                   'MAX_FILES' : streamConfig.Repack.MaxInputFiles,
                                   'CMSSW' : streamConfig.Repack.CMSSWVersion,
-                                  'SCRAM_ARCH' : streamConfig.Repack.ScramArch }
+                                  'SCRAM_ARCH' : streamConfig.Repack.ScramArch
+                                }
 
         elif streamConfig.ProcessingStyle == "Express":
 
@@ -458,6 +459,16 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                               'selectEvents' : selectEvents,
                                               'primaryDataset' : dataset } )
 
+                if datasetConfig.RawSkims:
+                    for rawSkim in datasetConfig.RawSkims:
+                        primaryDataset = "%s-%s" % (dataset, rawSkim)
+                        outputModuleDetails.append( { 'dataTier' : dataTier,
+                                                      'eventContent' : "ALL",
+                                                      'selectEvents' : selectEvents,
+                                                      'rawSkims' : rawSkim,
+                                                      'primaryDataset' : primaryDataset } )
+
+
                 if datasetConfig.ArchivalNode or datasetConfig.TapeNode or datasetConfig.DiskNode or datasetConfig.DiskNodeReco:
 
                     bindsPhEDExConfig.append( { 'RUN' : run,
@@ -559,7 +570,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 workflowName = "Repack_Run%d_Stream%s" % (run, stream)
 
             specArguments = {}
-
             specArguments['Memory'] = streamConfig.Repack.MaxMemory
             specArguments['Requestor'] = "Tier0"
             specArguments['RequestName'] = workflowName
