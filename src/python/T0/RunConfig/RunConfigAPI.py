@@ -130,7 +130,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         for stream, datasetDict in list(hltConfig['mapping'].items()):
             bindsStream.append( { 'STREAM' : stream } )
             for dataset, paths in list(datasetDict.items()):
-
+                datasetConfig = retrieveDatasetConfig(tier0Config, dataset)
                 if dataset == "Unassigned path":
 
                     if run < 317512:
@@ -139,6 +139,20 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
                         raise RuntimeError("Problem in configureRun() : Unassigned path in HLT menu !")
 
                 else:
+                    #RAW skim support
+                    if datasetConfig.RawSkims:
+                        for rawSkim in datasetConfig.RawSkims:
+                            primaryDataset = "%s%s" % (dataset, rawSkim)
+                            bindsDataset.append( { 'PRIMDS' : primaryDataset } )
+                            bindsStreamDataset.append( { 'RUN' : run,
+                                                         'PRIMDS' : primaryDataset,
+                                                         'STREAM' : stream } )                      
+                            for path in paths:
+                                bindsTrigger.append( { 'TRIG' : path } )
+                                bindsDatasetTrigger.append( { 'RUN' : run,
+                                                              'TRIG' : path,
+                                                              'PRIMDS' : primaryDataset } )
+
                     bindsDataset.append( { 'PRIMDS' : dataset } )
                     bindsStreamDataset.append( { 'RUN' : run,
                                                  'PRIMDS' : dataset,
@@ -461,7 +475,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
                 if datasetConfig.RawSkims:
                     for rawSkim in datasetConfig.RawSkims:
-                        primaryDataset = "%s-%s" % (dataset, rawSkim)
+                        primaryDataset = "%s%s" % (dataset, rawSkim)
                         outputModuleDetails.append( { 'dataTier' : dataTier,
                                                       'eventContent' : "ALL",
                                                       'selectEvents' : selectEvents,
