@@ -19,6 +19,7 @@ from WMCore.WMBS.Fileset import Fileset
 
 from WMCore.ReqMgr.DataStructs.RequestStatus import REQUEST_START_STATE
 
+from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import retrieveDatasetConfig
 from T0.RunConfig.Tier0Config import retrieveSiteConfig
 from T0.RunConfig.Tier0Config import addRepackConfig
@@ -131,6 +132,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
             bindsStream.append( { 'STREAM' : stream } )
             for dataset, paths in list(datasetDict.items()):
                 datasetConfig = retrieveDatasetConfig(tier0Config, dataset)
+
                 if dataset == "Unassigned path":
 
                     if run < 317512:
@@ -146,7 +148,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
                             bindsDataset.append( { 'PRIMDS' : primaryDataset } )
                             bindsStreamDataset.append( { 'RUN' : run,
                                                          'PRIMDS' : primaryDataset,
-                                                         'STREAM' : stream } )                      
+                                                         'STREAM' : stream } )                    
                             for path in paths:
                                 bindsTrigger.append( { 'TRIG' : path } )
                                 bindsDatasetTrigger.append( { 'RUN' : run,
@@ -468,21 +470,20 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             if streamConfig.ProcessingStyle == "Bulk":
                 dataTier = streamConfig.Repack.DataTier
+                for rawSkim in datasetConfig.RawSkims:
+                    primaryDataset = "%s%s" % (dataset, rawSkim)
+                    outputModuleDetails.append( { 'dataTier' : dataTier,
+                                                  'eventContent' : "ALL",
+                                                  'selectEvents' : selectEvents,
+                                                  'primaryDataset' : primaryDataset,
+                                                  'rawSkim' : rawSkim } )
+
                 outputModuleDetails.append( { 'dataTier' : dataTier,
                                               'eventContent' : "ALL",
                                               'selectEvents' : selectEvents,
-                                              'primaryDataset' : dataset } )
-
-                if datasetConfig.RawSkims:
-                    for rawSkim in datasetConfig.RawSkims:
-                        primaryDataset = "%s%s" % (dataset, rawSkim)
-                        outputModuleDetails.append( { 'dataTier' : dataTier,
-                                                      'eventContent' : "ALL",
-                                                      'selectEvents' : selectEvents,
-                                                      'rawSkims' : rawSkim,
-                                                      'primaryDataset' : primaryDataset } )
-
-
+                                              'primaryDataset' : dataset,
+                                              'rawSkim' : None } )
+                                              
                 if datasetConfig.ArchivalNode or datasetConfig.TapeNode or datasetConfig.DiskNode or datasetConfig.DiskNodeReco:
 
                     bindsPhEDExConfig.append( { 'RUN' : run,
