@@ -29,6 +29,7 @@ from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setStorageSite
 from T0.RunConfig.Tier0Config import setExtraStreamDatasetMap
 from T0.RunConfig.Tier0Config import setHelperAgentStreams
+from T0.RunConfig.Tier0Config import addRawSkimDataset
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -40,7 +41,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
 # 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
 
-setInjectRuns(tier0Config, [386925]) # 386925: Collisions
+setInjectRuns(tier0Config, [382686])
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
@@ -60,18 +61,6 @@ addSiteConfig(tier0Config, "EOS_PILOT",
                 siteLocalConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/JobConfig/site-local-config_EOS_PILOT.xml",
                 overrideCatalog="trivialcatalog_file:/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/PhEDEx/storage_EOS_PILOT.xml?protocol=eos"
                 )
-
-### Settings up sites for eos pilot
-
-#processingSite = "T2_CH_CERN"
-#storageSite = "T0_CH_CERN_Pilot"
-#streamerPNN = "T0_CH_CERN_Pilot"
-#addSiteConfig(tier0Config, "T0_CH_CERN_Pilot",
-#                siteLocalConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/JobConfig/site-local-config_EOS_PILOT.xml",
-#                overrideCatalog="T2_CH_CERN,,T0_CH_CERN,EOS_PILOT,XRootD",
-#                siteLocalRucioConfig="/cvmfs/cms.cern.ch/SITECONF/T0_CH_CERN/storage.json",
-#                )
-
 
 # Set global parameters:
 #  Acquisition era
@@ -123,7 +112,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_1_5_patch1"
+    'default': "CMSSW_15_0_0_pre2"
 }
 
 # Configure ScramArch
@@ -133,7 +122,7 @@ setScramArch(tier0Config, "CMSSW_12_3_0", "cs8_amd64_gcc10")
 setScramArch(tier0Config, "CMSSW_13_0_9", "el8_amd64_gcc11")
 
 # Configure scenarios
-ppScenario = "ppEra_Run3"
+ppScenario = "ppEra_Run3_2024"
 ppRefScenario = "ppEra_Run3_2024_ppRef"
 ppScenarioB0T = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
@@ -154,10 +143,8 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-
-expressGlobalTag = "141X_dataRun3_Express_v3"
-promptrecoGlobalTag = "141X_dataRun3_Express_v3"
-
+expressGlobalTag = "150X_dataRun3_Express_v1"
+promptrecoGlobalTag = "150X_dataRun3_Prompt_v1"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -235,6 +222,7 @@ addDataset(tier0Config, "Default",
            tape_node="T0_CH_CERN_Disk",
            disk_node="T0_CH_CERN_Disk",
            #raw_to_disk=False,
+           #nano_flavours=['@PHYS+@L1+@Scout'],
            blockCloseDelay=1200,
            timePerEvent=5,
            sizePerEvent=1500,
@@ -568,7 +556,22 @@ for dataset in DATASETS:
                do_reco=True,
                scenario=ppScenario)
 
-DATASETS = ["ParkingDoubleMuonLowMass0","ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
+DATASETS = ["ParkingDoubleMuonLowMass0"]
+rawSkimDatasetConfig = {"rawSkimOne": {"do_reco": True}, "rawSkimTwo": {"do_reco": True, "write_dqm": False}}
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               dqm_sequences=["@common", "@muon", "@heavyFlavor"],
+               alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
+               tape_node=None,
+               rawSkims=list(rawSkimDatasetConfig), 
+               scenario=ppScenario)
+    for rawSkim in rawSkimDatasetConfig:
+        rawSkimDataset = "%s%s" % (dataset, rawSkim)
+        addRawSkimDataset(tier0Config, rawSkimDataset, rawSkimDatasetConfig[rawSkim])
+
+DATASETS = ["ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
             "ParkingDoubleMuonLowMass3"]
 
 for dataset in DATASETS:
@@ -708,12 +711,14 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
+               multicore=16,
                alca_producers=["TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu",
                                "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
                                "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
                                "TkAlZMuMu", "TkAlDiMuonAndVertex"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
                physics_skims=["MUOJME", "ZMu", "EXODisappTrk", "EXOCSCCluster", "EXODisappMuon", "LogError", "LogErrorMonitor"],
+               #nano_flavours=['@PHYS',  '@MUPOG'],
                scenario=ppScenario)
 
 DATASETS = ["PPRefSingleMuon0", "PPRefSingleMuon1", "PPRefSingleMuon2", "PPRefSingleMuon3"]
@@ -1214,6 +1219,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_aod=False,
                write_miniaod=False,
+               nano_flavours=['@PHYS', '@L1', '@Scout'],
                scenario=hltScoutingScenario)
 
 DATASETS = ["ParkingDoubleElectronLowMass0","ParkingDoubleElectronLowMass1","ParkingDoubleElectronLowMass2",
@@ -1251,6 +1257,7 @@ for dataset in DATASETS:
                do_reco=True,
                dqm_sequences=["@common"],
                write_reco=False, write_aod=False, write_miniaod=True, write_dqm=True,
+               #nano_flavours=['@PHYS', '@L1', '@Scout'],
                scenario=ppScenario)
 
 DATASETS = ["ScoutingCaloCommissioning", "ScoutingCaloHT", "ScoutingCaloMuon",
@@ -1290,7 +1297,7 @@ for dataset in DATASETS:
 #######################
 
 # Define streams to be ignored by MainAgent and processed by a HelperAgent if any.
-setHelperAgentStreams(tier0Config, {'SecondAgent': ["Express"],
+setHelperAgentStreams(tier0Config, {'SecondAgent': ['ParkingDoubleMuonLowMass0'],
                                     'ThirdAgent' : []
                                    })
 
