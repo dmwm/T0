@@ -33,4 +33,5 @@ curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/5036.patch | patc
 
 bash $WMA_DEPLOY_DIR/bin/patchComponent.sh 12058 
 
-bash $WMA_DEPLOY_DIR/bin/patchComponent.sh 12235
+# Nano Flavours
+#bash $WMA_DEPLOY_DIR/bin/patchComponent.sh 12235
