@@ -40,7 +40,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
 # 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
 
-setInjectRuns(tier0Config, [386925]) # 386925: Collisions
+setInjectRuns(tier0Config, [382726]) # 386925: Collisions
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
@@ -123,7 +123,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_1_5_patch1"
+    'default': "CMSSW_14_2_2"
 }
 
 # Configure ScramArch
@@ -155,8 +155,8 @@ alcarawProcVersion = dt
 
 # Defaults for GlobalTag
 
-expressGlobalTag = "141X_dataRun3_Express_v3"
-promptrecoGlobalTag = "141X_dataRun3_Express_v3"
+expressGlobalTag = "141X_dataRun3_Express_v4"
+promptrecoGlobalTag = "141X_dataRun3_Prompt_v4"
 
 
 # Mandatory for CondDBv2
@@ -1290,7 +1290,7 @@ for dataset in DATASETS:
 #######################
 
 # Define streams to be ignored by MainAgent and processed by a HelperAgent if any.
-setHelperAgentStreams(tier0Config, {'SecondAgent': ["Express"],
+setHelperAgentStreams(tier0Config, {'SecondAgent': [],
                                     'ThirdAgent' : []
                                    })
 
