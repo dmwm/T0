@@ -7,10 +7,8 @@ while getopts ":t:" opt; do
     esac
 done
 
-echo "Removing old couchdb information"
 sleep 3
 COUCH_DIR=/data/CMSKubernetes/docker/pypi/wmagent-couchdb
-rm -rf /data/dockerMount/srv/couchdb/*
 cd $COUCH_DIR
 
 echo "Killing any existing couchdb container"
