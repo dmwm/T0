@@ -15,7 +15,7 @@ then
     exit
 fi
 
-WMAGENT_TAG=2.3.7.1
+WMAGENT_TAG=2.3.9.2
 TIER0_VERSION=3.2.6
 COUCH_TAG=3.2.2
 
@@ -37,6 +37,7 @@ WMA_VENV_DEPLOY_SCRIPT=https://raw.githubusercontent.com/dmwm/WMCore/$WMAGENT_TA
 
 echo "Resetting couchdb for new deployment"
 sleep 1
+rm -rf /data/dockerMount/srv/couchdb/*
 bash $BASE_DIR/00_pypi_reset_couch.sh -t $COUCH_TAG
 
 cd $BASE_DIR
@@ -135,7 +136,7 @@ sleep 1
 
 echo "Now populating resource control"
 sleep 1
-bash $DEPLOY_DIR/bin/00_pypi_resource_control.sh
+bash $BASE_DIR/00_pypi_resource_control.sh
 
 echo "Modifying config file"
 sleep 1

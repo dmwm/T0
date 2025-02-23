@@ -12,8 +12,17 @@ DEPLOY_DIR=$BASE_DIR/WMAgent.venv3
 
 #Dummy demonstrative Patch for new alma 9 agent
 #curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4961.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.9/site-packages/ -p 3
-curl https://patch-diff.githubusercontent.com/raw/germanfgv/WMCore/pull/16.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.9/site-packages/ -p 3
+#curl https://patch-diff.githubusercontent.com/raw/germanfgv/WMCore/pull/16.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.9/site-packages/ -p 3
 
+#Nano Flavours
+#curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/5031.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.9/site-packages/ -p 3
+
+#Raw skims
+#curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/5037.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.9/site-packages/ -p 3
+
+# HLT DB change and Addition of scenario
+curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/5035.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.9/site-packages/ -p 3
+curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/5036.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.9/site-packages/ -p 3
 
 ######################
 ### WMCore patches ###
@@ -22,4 +31,7 @@ curl https://patch-diff.githubusercontent.com/raw/germanfgv/WMCore/pull/16.patch
 # On top of 2.3.5
 ## xrdcp exit code capture by Andrea Piccineli
 
-bash $WMA_DEPLOY_DIR/bin/patchComponent.sh 12058  
+bash $WMA_DEPLOY_DIR/bin/patchComponent.sh 12058 
+
+# Nano Flavours
+#bash $WMA_DEPLOY_DIR/bin/patchComponent.sh 12235
