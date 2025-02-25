@@ -60,8 +60,8 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2024J")
-setEmulationAcquisitionEra(tier0Config, "Emulation2024")
+setAcquisitionEra(tier0Config, "Commissioning2025")
+setEmulationAcquisitionEra(tier0Config, "Emulation2025")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "data")
@@ -101,7 +101,7 @@ setPromptCalibrationConfig(tier0Config,
 # maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_1_3",
+    'default': "CMSSW_14_2_2",
     #'acqEra': {'Run2024F': "CMSSW_14_0_11"},
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
@@ -114,7 +114,7 @@ setDefaultScramArch(tier0Config, "el8_amd64_gcc12")
 
 # Configure scenarios
 #ppScenario = "ppEra_Run3"
-ppScenario = "ppEra_Run3_2024_ppRef"
+ppScenario = "ppEra_Run3_2024"
 ppRefScenario = "ppEra_Run3_2024_ppRef"
 ppScenarioB0T = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
@@ -132,6 +132,8 @@ hltScoutingScenario = "hltScoutingEra_Run3_2024"
 hiForwardScenario = "ppEra_Run3_2024_UPC"
 hiScenario = "ppEra_Run3_pp_on_PbPb_2024"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2024"
+HIhcalnzsScenario = "hcalnzsEra_Run3_pp_on_PbPb"
+HIalcaTrackingOnlyScenario = "trackingOnlyEra_Run3_pp_on_PbPb"
 
 # Defaults for processing version
 alcarawProcVersion = {
@@ -148,12 +150,12 @@ expressProcVersion = {
 
 # Defaults for GlobalTag
 expressGlobalTag = {
-    'default': "141X_dataRun3_Express_v3"
+    'default': "141X_dataRun3_Express_v4"
     #'acqEra': {'Run2024B': "140X_dataRun3_Express_v2"}
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Express_v3"}
 }
 promptrecoGlobalTag = {
-    'default': "141X_dataRun3_Prompt_v3",
+    'default': "141X_dataRun3_Prompt_v4",
     #'acqEra': {'Run2023E': "132X_dataRun3_Prompt_v2"},
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Prompt_v2"}
 }
@@ -166,6 +168,7 @@ numberOfCores = 8
 
 # Splitting parameters for PromptReco
 defaultRecoSplitting = 750 * numberOfCores
+forwardRecoSplitting = 9000 * numberOfCores # 0.6ev/core/s * 4h = 9000ev/core
 hiRecoSplitting = 200 * numberOfCores
 alcarawSplitting = 20000 * numberOfCores
 
@@ -232,9 +235,9 @@ addDataset(tier0Config, "Default",
            global_tag=promptrecoGlobalTag,
            global_tag_connect=globalTagConnect,
            archival_node="T0_CH_CERN_MSS",
-           tape_node="T1_US_FNAL_MSS",
-           disk_node="T1_US_FNAL_Disk",
-           siteWhitelist = ["T2_CH_CERN", "T1_UK_RAL", "T1_DE_KIT", "T1_FR_CCIN2P3", "T1_ES_PIC", "T1_IT_CNAF", "T2_CH_CERN_P5"],
+           tape_node="T1_US_FNAL_MSS", ### or T0_CH_CERN_MSS ?
+           disk_node="T1_US_FNAL_Disk", ### or None ?
+           #siteWhitelist = ["T2_CH_CERN", "T1_UK_RAL", "T1_DE_KIT", "T1_FR_CCIN2P3", "T1_ES_PIC", "T1_IT_CNAF", "T2_CH_CERN_P5"],
            raw_to_disk=False,
            aod_to_disk=True,
            blockCloseDelay=24 * 3600,
@@ -356,7 +359,7 @@ addExpressConfig(tier0Config, "Calibration",
                  archivalNode="T0_CH_CERN_MSS",
                  dataType="data",
                  dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
-                 tape_node="T1_US_FNAL_MSS")
+                 tape_node="T1_US_FNAL_MSS") ### Review
 
 addExpressConfig(tier0Config, "ExpressAlignment",
                  scenario=alcaTrackingOnlyScenario,
