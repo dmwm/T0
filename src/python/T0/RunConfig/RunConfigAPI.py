@@ -53,6 +53,18 @@ def extractConfigParameter(configParameter, era, run):
     else:
         return configParameter
 
+def isRawSkimDataset(datasetConfig):
+    """
+    _isRawSkimDataset_
+    Used to determine if the dataset in question is a raw skim dataset or not
+    Returns True if it is a raw skim dataset
+    Returns false otherwise
+    """
+    if datasetConfig.RawSkim:
+        return True
+    else:
+        return False
+
 def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
     """
     _configureRun_
@@ -131,6 +143,9 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
             bindsStream.append( { 'STREAM' : stream } )
             for dataset, paths in list(datasetDict.items()):
 
+                datasetConfig = retrieveDatasetConfig(tier0Config, dataset) # This should never be a raw skim, raw skim datasets are not in hlt config
+                rawSkimDatasets = getattr(datasetConfig, "RawSkimDatasets", []) # We need to inject raw skim datasets anyhow, so we ask the datasets for their raw skim childs
+
                 if dataset == "Unassigned path":
 
                     if run < 317512:
@@ -139,15 +154,28 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
                         raise RuntimeError("Problem in configureRun() : Unassigned path in HLT menu !")
 
                 else:
+
+                    for rawSkimDataset in rawSkimDatasets:
+
+                        bindsDataset.append( { 'PRIMDS' : rawSkimDataset } )
+                        bindsStreamDataset.append( { 'RUN' : run,
+                                                      'PRIMDS' : rawSkimDataset,
+                                                      'STREAM' : stream } )
+                        for path in paths:
+                            bindsTrigger.append( { 'TRIG' : path } )
+                            bindsDatasetTrigger.append( { 'RUN' : run,
+                                                          'TRIG' : path,
+                                                          'PRIMDS' : rawSkimDataset } )
+
                     bindsDataset.append( { 'PRIMDS' : dataset } )
                     bindsStreamDataset.append( { 'RUN' : run,
-                                                 'PRIMDS' : dataset,
-                                                 'STREAM' : stream } )
+                                                    'PRIMDS' : dataset,
+                                                    'STREAM' : stream } )
                     for path in paths:
                         bindsTrigger.append( { 'TRIG' : path } )
                         bindsDatasetTrigger.append( { 'RUN' : run,
-                                                      'TRIG' : path,
-                                                      'PRIMDS' : dataset } )
+                                                        'TRIG' : path,
+                                                        'PRIMDS' : dataset } )
 
         try:
             myThread.transaction.begin()
@@ -453,10 +481,13 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             if streamConfig.ProcessingStyle == "Bulk":
                 dataTier = streamConfig.Repack.DataTier
+                datasetConfig = retrieveDatasetConfig(tier0Config, dataset) # Here, the returned config can belong to a raw skim dataset because it was already injected
+
                 outputModuleDetails.append( { 'dataTier' : dataTier,
                                               'eventContent' : "ALL",
                                               'selectEvents' : selectEvents,
-                                              'primaryDataset' : dataset } )
+                                              'primaryDataset' : dataset,
+                                              'rawSkim' : getattr(datasetConfig, "RawSkim", None)} ) # Only raw skim datasets should have the RawSkim attribute
 
                 if datasetConfig.ArchivalNode or datasetConfig.TapeNode or datasetConfig.DiskNode or datasetConfig.DiskNodeReco:
 
@@ -584,6 +615,9 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['MaxInputEvents'] = streamConfig.Repack.MaxInputEvents
             specArguments['MaxInputFiles'] = streamConfig.Repack.MaxInputFiles
             specArguments['MaxLatency'] = streamConfig.Repack.MaxLatency
+
+            # Repack uses GT after RawSkim feature addition
+            specArguments['GlobalTag'] = streamConfig.Repack.GlobalTag
 
             # parameters for repack direct to merge stageout
             specArguments['MinMergeSize'] = streamConfig.Repack.MinInputSize

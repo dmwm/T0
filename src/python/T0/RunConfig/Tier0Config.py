@@ -378,7 +378,7 @@ def deleteSiteConfig(config, siteName):
 
     return
 
-def retrieveDatasetConfig(config, datasetName, fromAddDataset = False):
+def retrieveDatasetConfig(config, datasetName, defaultDataset = "Default", fromAddDataset = False):
     """
     _retrieveDatasetConfig_
     
@@ -388,8 +388,11 @@ def retrieveDatasetConfig(config, datasetName, fromAddDataset = False):
     datasetConfig = getattr(config.Datasets, datasetName, None)
 
     if datasetConfig == None:
-        defaultInstance = getattr(config.Datasets, "Default", None)
-        if defaultInstance == None:
+        defaultInstance = getattr(config.Datasets, defaultDataset, None)
+        if defaultInstance == None and defaultDataset != "Default":
+            msg = "Tier0Config.addDataset : is %s a raw skim dataset? please make sure the parent dataset is defined" % datasetName
+            raise RuntimeError(msg)
+        elif defaultInstance == None and defaultDataset == "Default":
             datasetConfig = config.Datasets.section_(datasetName)
         else:
             datasetConfig = copy.deepcopy(defaultInstance)
@@ -444,7 +447,25 @@ def addDataset(config, datasetName, **settings):
                                (defaults to False)
       blockCloseDelay - block closing timeout in hours
     """
-    datasetConfig = retrieveDatasetConfig(config, datasetName, True)
+
+    if "-" in datasetName:
+
+        datasetNameList = datasetName.split("-")
+        parentDataset = datasetNameList[0]
+        rawSkim = datasetNameList[1]
+        parentDatasetConfig = retrieveDatasetConfig(config, parentDataset, False) # We use parent dataset config to add some attributes in case it has raw skim children
+        datasetConfig = retrieveDatasetConfig(config, datasetName, parentDataset, True)
+
+        if hasattr(parentDatasetConfig, "RawSkimDatasets") and isinstance(parentDatasetConfig.RawSkimDatasets, list):
+            parentDatasetConfig.RawSkimDatasets.append(datasetName)
+        else:
+            parentDatasetConfig.RawSkimDatasets = [datasetName]
+
+        datasetConfig.ParentDataset = parentDatasetConfig.Name # Raw Skim datasets have access to their parent dataset name
+        datasetConfig.RawSkim = rawSkim                        # Raw Skim datasets have a Raw Skim attribute to know which raw skim they represent
+
+    else:
+        datasetConfig = retrieveDatasetConfig(config, datasetName, "Default", True)
 
     #
     # first the mandatory paramters
@@ -928,6 +949,12 @@ def addRepackConfig(config, streamName, **options):
         streamConfig.VersionOverride = options.get("versionOverride", {})
 
     streamConfig.section_("Repack")
+
+    if 'global_tag' in options:
+        streamConfig.Repack.GlobalTag = options['global_tag']
+    if not hasattr(streamConfig.Repack, "GlobalTag") or not (isinstance(streamConfig.Repack.GlobalTag, str) or isinstance(streamConfig.Repack.GlobalTag, dict)):
+        msg = "Tier0Config.addRepackConfig : no valid global_tag defined for stream %s or Default" % streamName
+        raise RuntimeError(msg)
 
     if hasattr(streamConfig.Repack, "ProcessingVersion"):
         streamConfig.Repack.ProcessingVersion = options.get("proc_ver", streamConfig.Repack.ProcessingVersion)
