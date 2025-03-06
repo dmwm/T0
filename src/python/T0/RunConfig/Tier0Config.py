@@ -386,6 +386,10 @@ def retrieveDatasetConfig(config, datasetName, fromAddDataset = False):
     particular dataset is not defined return the default configuration.
     """
     datasetConfig = getattr(config.Datasets, datasetName, None)
+    if datasetConfig != None:
+        if hasattr(datasetConfig, "ParentDataset"):
+            rawSkimDatasetConfig = getattr(config.Datasets, datasetName, None)
+            return rawSkimDatasetConfig
 
     if datasetConfig == None:
         defaultInstance = getattr(config.Datasets, "Default", None)
@@ -396,6 +400,7 @@ def retrieveDatasetConfig(config, datasetName, fromAddDataset = False):
             datasetConfig._internal_name = datasetName
             datasetConfig.Name = datasetName
             setattr(config.Datasets, datasetName, datasetConfig)
+
     elif fromAddDataset:
         # don't allow multiple addDataset calls for the same dataset
         msg = "Tier0Config.addDataset : multiple addDataset calls for dataset %s not allowed" % datasetName
@@ -444,7 +449,8 @@ def addDataset(config, datasetName, **settings):
                                (defaults to False)
       blockCloseDelay - block closing timeout in hours
     """
-    datasetConfig = retrieveDatasetConfig(config, datasetName, True)
+
+    datasetConfig = retrieveDatasetConfig(config, datasetName, fromAddDataset=True)
 
     #
     # first the mandatory paramters
@@ -585,6 +591,258 @@ def addDataset(config, datasetName, **settings):
         datasetConfig.Multicore = settings.get('multicore', datasetConfig.Multicore)
     else:
         datasetConfig.Multicore = settings.get('multicore', None)
+
+    #
+    # optional parameter, Default rule is still used
+    #
+    if hasattr(datasetConfig, "BlockCloseDelay"):
+        datasetConfig.BlockCloseDelay = settings.get("blockCloseDelay", datasetConfig.BlockCloseDelay)
+    else:
+        datasetConfig.BlockCloseDelay = settings.get("blockCloseDelay", 24 * 3600)
+
+    if hasattr(datasetConfig, "SiteWhitelist"):
+        datasetConfig.SiteWhitelist = settings.get("siteWhitelist", datasetConfig.SiteWhitelist)
+    else:
+        datasetConfig.SiteWhitelist = settings.get("siteWhitelist", [ config.Global.ProcessingSite ])
+
+    #
+    # finally some parameters for which Default isn't used
+    #
+    datasetConfig.AlcaSkims = settings.get("alca_producers", [])
+    datasetConfig.PhysicsSkims = settings.get("physics_skims", [])
+    datasetConfig.DqmSequences = settings.get("dqm_sequences", [])
+    datasetConfig.RawSkim = settings.get("raw_skim", [])
+
+    if hasattr(datasetConfig, "MaxMemoryperCore"):
+        datasetConfig.MaxMemoryperCore = settings.get("maxMemoryperCore", datasetConfig.MaxMemoryperCore)
+    else:
+        datasetConfig.MaxMemoryperCore = settings.get("maxMemoryperCore", 2000)
+
+    if hasattr(datasetConfig, "datasetLifetime"):
+        datasetConfig.datasetLifetime = settings.get("dataset_lifetime", datasetConfig.datasetLifetime)
+    else:
+        datasetConfig.datasetLifetime = settings.get("dataset_lifetime", 0)
+
+    return
+
+def retrieveRawSkimDatasetConfig(config, rawSkim, parentDataset, fromAddDataset = False):
+    """
+    _retrieveRawSkimDatasetConfig_
+    
+    Lookup the configuration for the given dataset.  If the configuration for a
+    particular dataset is not defined return the default configuration.
+    """
+    datasetName = "%s-%s" % (parentDataset, rawSkim)
+    datasetConfig = getattr(config.Datasets, datasetName, None)
+    if datasetConfig == None:
+        defaultInstance = getattr(config.Datasets, parentDataset, None)
+        if defaultInstance == None: 
+            # In theory, this should never happen
+            # In any case, can't define raw skim dataset if parent dataset is not defined    
+            msg = "Tier0Config.addDataset : parent dataset %s not defined for raw skim dataset %s" % (parentDataset, datasetName)
+            raise RuntimeError(msg)
+        else:
+            datasetConfig = copy.deepcopy(defaultInstance)
+            datasetConfig._internal_name = datasetName
+            datasetConfig.Name = datasetName
+            setattr(config.Datasets, datasetName, datasetConfig)         
+
+    elif fromAddDataset:
+        # don't allow multiple addDataset calls for the same dataset
+        msg = "Tier0Config.addDataset : multiple addDataset calls for dataset %s not allowed" % datasetName
+        raise RuntimeError(msg)
+    return datasetConfig
+
+def addRawSkimDataset(config, rawSkim, parentDataset, **settings):
+    """
+    _addRawSkimDataset_
+
+    Add a raw skim dataset to the configuration using settings from either
+    explictely define parameters or using the ones from the
+    respective parent dataset (not all parameters can be overridden).
+
+    The following keys may be passed
+      scenario - the processing scenario
+      do_reco - whether we run PromptReco at all
+      reco_delay - time to wait for PromptReco release
+      reco_delay_offset - time shift before PromptReco release
+                          when that release is locked in
+      proc_version - processing version for all outputs
+      cmssw_version - framework version
+      global_tag - the global tag to use
+      global_tag_connect - connect straing for global tag
+      reco_split - number of events to process per reco job
+      raw_to_disk - whether to subscribe RAW data to disk
+      aod_to_disk - whether to subscribe AOD data to disk
+      write_reco - whether the reco jobs writes RECO output
+      write_aod - whether the reco job writes AOD output
+      write_miniaod - whether the reco job writes MINIAOD output
+      write_nanoaod - whether the reco job writes NANOAOD output
+      write_dqm - whether the reco job writes DQM output
+      archival_node - PhEDEx archival node for this dataset
+                      (defaults to None)
+      alca_producers - alca producers for reco, be be split
+                       out into separate sampls in alca skimming
+                       (defaults to empty list)
+      dqm_sequences - dqm sequences used for reco
+                      (defaults to empty list) 
+      custodial_node - PhEDEx custodial node for this dataset
+      custodial_priority - priority for the custodial subscription
+                           (defaults to high)
+      custodial_auto_approve - auto-approve the custodial subscription
+                               (defaults to False)
+      blockCloseDelay - block closing timeout in hours
+    """
+
+    datasetConfig = retrieveRawSkimDatasetConfig(config, rawSkim, parentDataset, fromAddDataset=True)
+
+    #
+    # first the mandatory paramters
+    #
+    # they can either be set for Default or directly for the dataset
+    #
+
+    datasetConfig.ParentDataset = parentDataset
+
+    if 'scenario' in settings:
+        datasetConfig.Scenario = settings['scenario']
+    if not hasattr(datasetConfig, "Scenario") or not (isinstance(datasetConfig.Scenario, str) or isinstance(datasetConfig.Scenario, dict)):
+        msg = "Tier0Config.addDataset : no valid scenario defined for dataset %s or Default" % datasetName
+        raise RuntimeError(msg)
+
+    if 'do_reco' in settings:
+        datasetConfig.DoReco = settings['do_reco']
+    if not hasattr(datasetConfig, "DoReco") or not isinstance(datasetConfig.DoReco, bool):
+        msg = "Tier0Config.addDataset : no valid do_reco defined for dataset %s or Default" % datasetName
+        raise RuntimeError(msg)
+
+    if 'reco_delay' in settings:
+        datasetConfig.RecoDelay = settings['reco_delay']
+    if not hasattr(datasetConfig, "RecoDelay") or not isinstance(datasetConfig.RecoDelay, int):
+        msg = "Tier0Config.addDataset : no valid reco_delay defined for dataset %s or Default" % datasetName
+        raise RuntimeError(msg)
+
+    if 'reco_delay_offset' in settings:
+        datasetConfig.RecoDelayOffset = settings['reco_delay_offset']
+    if not hasattr(datasetConfig, "RecoDelayOffset") or not isinstance(datasetConfig.RecoDelayOffset, int):
+        msg = "Tier0Config.addDataset : no valid reco_delay_offset defined for dataset %s or Default" % datasetName
+        raise RuntimeError(msg)
+
+    if 'proc_version' in settings:
+        datasetConfig.ProcessingVersion = settings['proc_version']
+    if not hasattr(datasetConfig, "ProcessingVersion") or not (isinstance(datasetConfig.ProcessingVersion, int) or isinstance(datasetConfig.ProcessingVersion, dict)):
+        msg = "Tier0Config.addDataset : no valid proc_version defined for dataset %s or Default" % datasetName
+        raise RuntimeError(msg)
+
+    if 'cmssw_version' in settings:
+        datasetConfig.CMSSWVersion = settings['cmssw_version']
+    if not hasattr(datasetConfig, "CMSSWVersion") or not (isinstance(datasetConfig.CMSSWVersion, str) or isinstance(datasetConfig.CMSSWVersion, dict)):
+        msg = "Tier0Config.addDataset : no valid cmssw_version defined for dataset %s or Default" % datasetName
+        raise RuntimeError(msg)
+
+    if 'global_tag' in settings:
+        datasetConfig.GlobalTag = settings['global_tag']
+    if not hasattr(datasetConfig, "GlobalTag") or not (isinstance(datasetConfig.GlobalTag, str) or isinstance(datasetConfig.GlobalTag, dict)):
+        msg = "Tier0Config.addDataset : no valid global_tag defined for dataset %s or Default" % datasetName
+        raise RuntimeError(msg)
+
+    if 'reco_split' in settings:
+        datasetConfig.RecoSplit = settings['reco_split']
+    if not hasattr(datasetConfig, "RecoSplit") or not isinstance(datasetConfig.RecoSplit, int):
+        msg = "Tier0Config.addDataset : no valid reco_split defined for dataset %s or Default" % datasetName
+        raise RuntimeError(msg)
+
+    if 'write_reco' in settings:
+        datasetConfig.WriteRECO = settings['write_reco']
+    if not hasattr(datasetConfig, "WriteRECO") or not isinstance(datasetConfig.WriteRECO, bool):
+        msg = "Tier0Config.addDataset : no valid write_reco defined for dataset %s or Default" % datasetName
+        raise RuntimeError(msg)
+
+    if 'write_aod' in settings:
+        datasetConfig.WriteAOD = settings['write_aod']
+    if not hasattr(datasetConfig, "WriteAOD") or not isinstance(datasetConfig.WriteAOD, bool):
+        msg = "Tier0Config.addDataset : no valid write_aod defined for dataset %s or Default" % datasetName
+        raise RuntimeError(msg)
+
+    if 'write_miniaod' in settings:
+        datasetConfig.WriteMINIAOD = settings['write_miniaod']
+    if not hasattr(datasetConfig, "WriteMINIAOD") or not isinstance(datasetConfig.WriteMINIAOD, bool):
+        msg = "Tier0Config.addDataset : no valid write_miniaod defined for dataset %s or Default" % datasetName
+        raise RuntimeError(msg)
+    
+    if 'write_nanoaod' in settings:
+        datasetConfig.WriteNANOAOD = settings['write_nanoaod']
+    elif not hasattr(datasetConfig, "WriteNANOAOD"):
+        msg = "Tier0Config.addDataset : no write_nanoaod defined for dataset %s or Default" % datasetName
+        raise RuntimeError(msg)
+
+    if 'write_dqm' in settings:
+        datasetConfig.WriteDQM = settings['write_dqm']
+    if not hasattr(datasetConfig, "WriteDQM") or not isinstance(datasetConfig.WriteDQM, bool):
+        msg = "Tier0Config.addDataset : no valid write_dqm defined for dataset %s or Default" % datasetName
+        raise RuntimeError(msg)
+
+    if 'timePerEvent' in settings:
+        datasetConfig.TimePerEvent = settings['timePerEvent']
+    if not hasattr(datasetConfig, "TimePerEvent") or not (isinstance(datasetConfig.TimePerEvent, int) or isinstance(datasetConfig.TimePerEvent, float)):
+        msg = "Tier0Config.addDataset : no valid timePerEvent defined for dataset %s or Default" % datasetName
+        raise RuntimeError(msg)
+
+    if 'sizePerEvent' in settings:
+        datasetConfig.SizePerEvent = settings['sizePerEvent']
+    if not hasattr(datasetConfig, "SizePerEvent") or not (isinstance(datasetConfig.SizePerEvent, int) or isinstance(datasetConfig.SizePerEvent, float)):
+        msg = "Tier0Config.addDataset : no valid sizePerEvent defined for dataset %s or Default" % datasetName
+        raise RuntimeError(msg)
+
+    if hasattr(datasetConfig, "GlobalTagConnect"):
+        datasetConfig.GlobalTagConnect = settings.get('global_tag_connect', datasetConfig.GlobalTagConnect)
+    else:
+        datasetConfig.GlobalTagConnect = settings.get('global_tag_connect', None)
+
+    if hasattr(datasetConfig, "ArchivalNode"):
+        datasetConfig.ArchivalNode = settings.get('archival_node', datasetConfig.ArchivalNode)
+    else:
+        datasetConfig.ArchivalNode = settings.get('archival_node', None)
+
+    if hasattr(datasetConfig, "TapeNode"):
+        datasetConfig.TapeNode = settings.get('tape_node', datasetConfig.TapeNode)
+    else:
+        datasetConfig.TapeNode = settings.get('tape_node', None)
+
+    if hasattr(datasetConfig, "RAWTapeNode"):
+        datasetConfig.RAWTapeNode = settings.get('raw_tape_node', datasetConfig.RAWTapeNode)
+    else:
+        datasetConfig.RAWTapeNode = settings.get('raw_tape_node', None)
+
+    if hasattr(datasetConfig, "DiskNode"):
+        datasetConfig.DiskNode = settings.get('disk_node', datasetConfig.DiskNode)
+    else:
+        datasetConfig.DiskNode = settings.get('disk_node', None)
+
+    if hasattr(datasetConfig, "DiskNodeReco"):
+        datasetConfig.DiskNodeReco = settings.get('disk_node_reco', datasetConfig.DiskNodeReco)
+    else:
+        datasetConfig.DiskNodeReco = settings.get('disk_node_reco', None)
+
+    if hasattr(datasetConfig, "RAWtoDisk"):
+        datasetConfig.RAWtoDisk = settings.get('raw_to_disk', datasetConfig.RAWtoDisk)
+    else:
+        datasetConfig.RAWtoDisk = settings.get('raw_to_disk', True)
+
+    if hasattr(datasetConfig, "AODtoDisk"):
+        datasetConfig.AODtoDisk = settings.get('aod_to_disk', datasetConfig.AODtoDisk)
+    else:
+        datasetConfig.AODtoDisk = settings.get('aod_to_disk', True)
+
+    if hasattr(datasetConfig, "Multicore"):
+        datasetConfig.Multicore = settings.get('multicore', datasetConfig.Multicore)
+    else:
+        datasetConfig.Multicore = settings.get('multicore', None)
+
+    if hasattr(datasetConfig, "RawSkim") and isinstance(datasetConfig.RawSkim, list):
+        datasetConfig.RawSkim = settings.get('raw_skim', rawSkim)
+    else:
+        datasetConfig.RawSkim = settings.get('raw_skim', None)
 
     #
     # optional parameter, Default rule is still used
@@ -928,6 +1186,12 @@ def addRepackConfig(config, streamName, **options):
         streamConfig.VersionOverride = options.get("versionOverride", {})
 
     streamConfig.section_("Repack")
+
+    if 'global_tag' in options:
+        streamConfig.Repack.GlobalTag = options['global_tag']
+    if not hasattr(streamConfig.Repack, "GlobalTag") or not (isinstance(streamConfig.Repack.GlobalTag, str) or isinstance(streamConfig.Repack.GlobalTag, dict)):
+        msg = "Tier0Config.addRepackConfig : no valid global_tag defined for stream %s or Default" % streamName
+        raise RuntimeError(msg)
 
     if hasattr(streamConfig.Repack, "ProcessingVersion"):
         streamConfig.Repack.ProcessingVersion = options.get("proc_ver", streamConfig.Repack.ProcessingVersion)

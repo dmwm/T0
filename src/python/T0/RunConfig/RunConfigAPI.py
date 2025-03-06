@@ -19,6 +19,7 @@ from WMCore.WMBS.Fileset import Fileset
 
 from WMCore.ReqMgr.DataStructs.RequestStatus import REQUEST_START_STATE
 
+from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import retrieveDatasetConfig
 from T0.RunConfig.Tier0Config import retrieveSiteConfig
 from T0.RunConfig.Tier0Config import addRepackConfig
@@ -130,6 +131,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         for stream, datasetDict in list(hltConfig['mapping'].items()):
             bindsStream.append( { 'STREAM' : stream } )
             for dataset, paths in list(datasetDict.items()):
+                datasetConfig = retrieveDatasetConfig(tier0Config, dataset)
 
                 if dataset == "Unassigned path":
 
@@ -139,6 +141,22 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
                         raise RuntimeError("Problem in configureRun() : Unassigned path in HLT menu !")
 
                 else:
+                    # RAW skim support
+                    # Uses datasets in hlt config, not the ones in the configuration file
+                    # This means that we cant access raw skim datasets, so we use regular datasets
+                    if isinstance(datasetConfig.RawSkim, list):
+                        for rawSkim in datasetConfig.RawSkim:
+                            primaryDataset = "%s-%s" % (dataset, rawSkim)
+                            bindsDataset.append( { 'PRIMDS' : primaryDataset } )
+                            bindsStreamDataset.append( { 'RUN' : run,
+                                                         'PRIMDS' : primaryDataset,
+                                                         'STREAM' : stream } )                    
+                            for path in paths:
+                                bindsTrigger.append( { 'TRIG' : path } )
+                                bindsDatasetTrigger.append( { 'RUN' : run,
+                                                              'TRIG' : path,
+                                                              'PRIMDS' : primaryDataset } )
+
                     bindsDataset.append( { 'PRIMDS' : dataset } )
                     bindsStreamDataset.append( { 'RUN' : run,
                                                  'PRIMDS' : dataset,
@@ -316,7 +334,8 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                                   'MAX_EVENTS' : streamConfig.Repack.MaxInputEvents,
                                   'MAX_FILES' : streamConfig.Repack.MaxInputFiles,
                                   'CMSSW' : streamConfig.Repack.CMSSWVersion,
-                                  'SCRAM_ARCH' : streamConfig.Repack.ScramArch }
+                                  'SCRAM_ARCH' : streamConfig.Repack.ScramArch
+                                }
 
         elif streamConfig.ProcessingStyle == "Express":
 
@@ -453,11 +472,20 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             if streamConfig.ProcessingStyle == "Bulk":
                 dataTier = streamConfig.Repack.DataTier
-                outputModuleDetails.append( { 'dataTier' : dataTier,
-                                              'eventContent' : "ALL",
-                                              'selectEvents' : selectEvents,
-                                              'primaryDataset' : dataset } )
-
+                if hasattr(datasetConfig, "ParentDataset"):
+                    outputModuleDetails.append( { 'dataTier' : dataTier,
+                                                  'eventContent' : "ALL",
+                                                  'selectEvents' : selectEvents,
+                                                  'primaryDataset' : dataset,
+                                                  'parentDataset' : datasetConfig.ParentDataset,
+                                                  'rawSkim' : datasetConfig.RawSkim } )
+                else:
+                    outputModuleDetails.append( { 'dataTier' : dataTier,
+                                                  'eventContent' : "ALL",
+                                                  'selectEvents' : selectEvents,
+                                                  'primaryDataset' : dataset
+                                                } )
+                                              
                 if datasetConfig.ArchivalNode or datasetConfig.TapeNode or datasetConfig.DiskNode or datasetConfig.DiskNodeReco:
 
                     bindsPhEDExConfig.append( { 'RUN' : run,
@@ -559,7 +587,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
                 workflowName = "Repack_Run%d_Stream%s" % (run, stream)
 
             specArguments = {}
-
             specArguments['Memory'] = streamConfig.Repack.MaxMemory
             specArguments['Requestor'] = "Tier0"
             specArguments['RequestName'] = workflowName
@@ -590,6 +617,9 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['MaxMergeEvents'] = streamConfig.Repack.MaxInputEvents
 
             specArguments['UnmergedLFNBase'] = "/store/unmerged/%s" % runInfo['bulk_data_type']
+
+            # Global tag required for raw skims. We simply load it for all repack
+            specArguments['GlobalTag'] = streamConfig.Repack.GlobalTag
             if runInfo['backfill']:
                 specArguments['MergedLFNBase'] = "/store/backfill/%s/%s" % (runInfo['backfill'],
                                                                             runInfo['bulk_data_type'])
