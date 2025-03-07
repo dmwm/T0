@@ -5,6 +5,7 @@ Processing configuration for the Tier0 - Replay version
 from __future__ import print_function
 
 from T0.RunConfig.Tier0Config import addDataset
+from T0.RunConfig.Tier0Config import addRawSkimDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
 from T0.RunConfig.Tier0Config import setDefaultScramArch
@@ -157,6 +158,7 @@ alcarawProcVersion = dt
 
 expressGlobalTag = "141X_dataRun3_Express_v4"
 promptrecoGlobalTag = "141X_dataRun3_Prompt_v4"
+repackGlobalTag = "141X_dataRun3_Prompt_v4"
 
 
 # Mandatory for CondDBv2
@@ -192,6 +194,7 @@ setExtraStreamDatasetMap(tier0Config,{
 #set default repack settings for bulk streams
 addRepackConfig(tier0Config, "Default",
                 proc_ver=defaultProcVersion,
+                global_tag=repackGlobalTag,
                 maxSizeSingleLumi=24 * 1024 * 1024 * 1024,
                 maxSizeMultiLumi=8 * 1024 * 1024 * 1024,
                 minInputSize=2.1 * 1024 * 1024 * 1024,
@@ -568,7 +571,22 @@ for dataset in DATASETS:
                do_reco=True,
                scenario=ppScenario)
 
-DATASETS = ["ParkingDoubleMuonLowMass0","ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
+DATASETS = ["ParkingDoubleMuonLowMass0"]
+RawSkims = {"ReserveDMu0": {"write_dqm" : False}, "ReserveDMu1": {}}
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               dqm_sequences=["@common", "@muon", "@heavyFlavor"],
+               alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
+               tape_node=None,
+               raw_skim=list(RawSkims),
+               scenario=ppScenario)
+
+    for rawSkim in list(RawSkims):
+        addRawSkimDataset(config=tier0Config, rawSkim=rawSkim, parentDataset=dataset, **RawSkims[rawSkim])
+
+DATASETS = ["ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
             "ParkingDoubleMuonLowMass3"]
 
 for dataset in DATASETS:
