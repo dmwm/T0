@@ -332,7 +332,7 @@ addExpressConfig(tier0Config, "HLTMonitor",
                  dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
                  versionOverride=expressVersionOverride)
 
-addExpressConfig(tier0Config, "CosmicsHLTMonitor",
+addExpressConfig(tier0Config, "CosmicHLTMonitor",
                  scenario=cosmicsScenario,
                  diskNode="T2_CH_CERN",
                  data_tiers=["FEVTHLTALL"],
