@@ -40,7 +40,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
 # 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
 
-setInjectRuns(tier0Config, [382686]) # 386925: Collisions
+setInjectRuns(tier0Config, [382726,382686]) # 382726: Cosmics, 382686: Collisions
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
