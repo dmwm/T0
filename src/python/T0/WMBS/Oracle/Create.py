@@ -947,7 +947,8 @@ class Create(DBCreator):
                            54 : "ppEra_Run3_pp_on_PbPb_2024",
                            55 : "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2024",
                            56 : "ppEra_Run3_2024_ppRef",
-                           57 : "ppEra_Run3_2024"
+                           57 : "ppEra_Run3_2024",
+                           58 : "ppEra_Run3_2025"
 
                          }
         for id, name in list(eventScenarios.items()):
