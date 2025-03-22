@@ -338,6 +338,7 @@ class Create(DBCreator):
                  alca_skim      varchar2(700),
                  physics_skim   varchar2(700),
                  dqm_seq        varchar2(700),
+                 nano_flavour   varchar2(50),
                  primary key (run_id, primds_id)
                ) ORGANIZATION INDEX"""
 
