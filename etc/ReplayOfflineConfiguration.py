@@ -40,7 +40,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
 # 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
 
-setInjectRuns(tier0Config, [382686, 389831]) # 382726: 2024 Cosmics, 382686: Collisions, 389831: 2025 Cosmics
+setInjectRuns(tier0Config, [386925, 389831]) # 382726: 2024 Cosmics, 382686: Collisions, 389831: 2025 Cosmics
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
@@ -1138,14 +1138,6 @@ for dataset in DATASETS:
                timePerEvent=1,
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias"],
                scenario=ppScenario)
-
-DATASETS = ["SpecialMinimumBias0", "SpecialMinimumBias1"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=False,
-               alca_producers=["TkAlMinBias"]
-               )
 
 ########################################################
 ### ZeroBias PDs                                     ###
