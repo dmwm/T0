@@ -101,7 +101,7 @@ setPromptCalibrationConfig(tier0Config,
 # maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_0_2",
+    'default': "CMSSW_15_0_3",
     #'acqEra': {'Run2024F': "CMSSW_14_0_11"},
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
@@ -313,6 +313,31 @@ addExpressConfig(tier0Config, "HLTMonitor",
                  data_tiers=["FEVTHLTALL"],
                  write_dqm=True,
                  alca_producers=["TkAlHLTTracks", "TkAlHLTTracksZMuMu", "PromptCalibProdSiPixelAliHLTHGC"],
+                 dqm_sequences=["@HLTMon"],
+                 reco_version=defaultCMSSWVersion,
+                 multicore=numberOfCores,
+                 global_tag_connect=globalTagConnect,
+                 global_tag=expressGlobalTag,
+                 proc_ver=expressProcVersion,
+                 maxInputRate=23 * 1000,
+                 maxInputEvents=400,
+                 maxInputSize=2 * 1024 * 1024 * 1024,
+                 maxInputFiles=15,
+                 maxLatency=15 * 23,
+                 periodicHarvestInterval=20 * 60,
+                 blockCloseDelay=1200,
+                 timePerEvent=4, #I have to get some stats to set this properly
+                 sizePerEvent=1700, #I have to get some stats to set this properly
+                 maxMemoryperCore=2000,
+                 dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
+                 versionOverride=expressVersionOverride)
+
+addExpressConfig(tier0Config, "CosmicHLTMonitor",
+                 scenario=cosmicsScenario,
+                 diskNode="T2_CH_CERN",
+                 data_tiers=["FEVTHLTALL"],
+                 write_dqm=True,
+                 alca_producers=[],
                  dqm_sequences=["@HLTMon"],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
