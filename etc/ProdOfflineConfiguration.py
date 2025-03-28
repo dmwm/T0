@@ -162,7 +162,7 @@ promptrecoGlobalTag = {
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 
 # Multicore settings
-numberOfCores = 8
+numberOfCores = 16
 
 # Splitting parameters for PromptReco
 defaultRecoSplitting = 750 * numberOfCores
@@ -1493,7 +1493,7 @@ DATASETS = ["ScoutingPFMonitor"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
-               dqm_sequences=["@common"],
+               dqm_sequences=["@common", "@hltScouting"],
                write_reco=False, write_aod=False, write_miniaod=True, write_dqm=True,
                tape_node="T1_US_FNAL_MSS",
                scenario=ppScenario)
