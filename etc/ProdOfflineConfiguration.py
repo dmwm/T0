@@ -551,21 +551,6 @@ for dataset in DATASETS:
                sizePerEvent=155,
                scenario=cosmicsScenario)
 
-DATASETS = ["CosmicsHLTMonitor"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_reco=False,
-               write_aod=True,
-               write_miniaod=False,
-               write_nanoaod=False,
-               write_dqm=True,
-               dqm_sequences=["@HLTMon"],
-               timePerEvent=0.5,
-               sizePerEvent=155,
-               scenario=cosmicsScenario)
-
 DATASETS = ["DisplacedJet"]
 
 for dataset in DATASETS:
