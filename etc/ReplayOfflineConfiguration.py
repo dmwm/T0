@@ -1118,7 +1118,7 @@ DATASETS = ["SpecialMinimumBias0", "SpecialMinimumBias1"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
+               do_reco=True,
                alca_producers=["TkAlMinBias"]
                )
                
