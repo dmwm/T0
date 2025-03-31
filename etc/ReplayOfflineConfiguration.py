@@ -40,7 +40,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
 # 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
 
-setInjectRuns(tier0Config, [382726,382686]) # 382726: Cosmics, 382686: Collisions
+setInjectRuns(tier0Config, [386925, 389831]) # 382726: 2024 Cosmics, 382686: Collisions, 389831: 2025 Cosmics
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
@@ -123,7 +123,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_0_2"
+    'default': "CMSSW_15_0_3"
 }
 
 # Configure ScramArch
@@ -330,6 +330,31 @@ addExpressConfig(tier0Config, "HLTMonitor",
                  dataset_lifetime=replayDatasetLifetime,#lifetime for container rules. Default 14 days
                  versionOverride=expressVersionOverride)
 
+addExpressConfig(tier0Config, "CosmicHLTMonitor",
+                 scenario=cosmicsScenario,
+                 diskNode="T0_CH_CERN_Disk",
+                 data_tiers=["FEVTHLTALL"],
+                 write_dqm=True,
+                 alca_producers=[],
+                 dqm_sequences=["@HLTMon"],
+                 reco_version=defaultCMSSWVersion,
+                 multicore=numberOfCores,
+                 global_tag_connect=globalTagConnect,
+                 global_tag=expressGlobalTag,
+                 proc_ver=expressProcVersion,
+                 maxInputRate=23 * 1000,
+                 maxInputEvents=400,
+                 maxInputSize=2 * 1024 * 1024 * 1024,
+                 maxInputFiles=15,
+                 maxLatency=15 * 23,
+                 periodicHarvestInterval=20 * 60,
+                 blockCloseDelay=1200,
+                 timePerEvent=4, #I have to get some stats to set this properly
+                 sizePerEvent=1700, #I have to get some stats to set this properly
+                 maxMemoryperCore=2000,
+                 dataset_lifetime=replayDatasetLifetime,#lifetime for container rules. Default 14 days
+                 versionOverride=expressVersionOverride)
+
 addExpressConfig(tier0Config, "Calibration",
                  scenario=alcaTestEnableScenario,
                  data_tiers=["RAW"],
@@ -515,21 +540,6 @@ for dataset in DATASETS:
                write_dqm=True,
                alca_producers=["SiStripCalCosmics", "SiPixelCalCosmics", "TkAlCosmics0T", "MuAlGlobalCosmics", "SiStripCalCosmicsNano"],
                physics_skims=["CosmicSP", "CosmicTP", "LogError", "LogErrorMonitor"],
-               timePerEvent=0.5,
-               sizePerEvent=155,
-               scenario=cosmicsScenario)
-
-DATASETS = ["CosmicsHLTMonitor"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_reco=False,
-               write_aod=True,
-               write_miniaod=False,
-               write_nanoaod=False,
-               write_dqm=True,
-               dqm_sequences=["@HLTMon"],
                timePerEvent=0.5,
                sizePerEvent=155,
                scenario=cosmicsScenario)
