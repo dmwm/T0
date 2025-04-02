@@ -858,6 +858,10 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
             if len(datasetConfig.DqmSequences) > 0:
                 dqmSeq = ",".join(datasetConfig.DqmSequences)
 
+            nanoFlavours = None
+            if len(datasetConfig.NanoFlavours) > 0:
+                nanoFlavours = ",".join(datasetConfig.NanoFlavours)
+
             datasetConfig.ScramArch = tier0Config.Global.ScramArches.get(datasetConfig.CMSSWVersion,
                                                                          tier0Config.Global.DefaultScramArch)
 
@@ -874,6 +878,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                       'ALCA_SKIM' : alcaSkim,
                                       'PHYSICS_SKIM' : physicsSkim,
                                       'DQM_SEQ' : dqmSeq,
+                                      'NANO_FLAVOUR' : nanoFlavours,
                                       'CMSSW' : datasetConfig.CMSSWVersion,
                                       'SCRAM_ARCH' : datasetConfig.ScramArch,
                                       'MULTICORE' : datasetConfig.Multicore,
@@ -1063,7 +1068,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 specArguments['AlcaSkims'] = datasetConfig.AlcaSkims
                 specArguments['PhysicsSkims'] = datasetConfig.PhysicsSkims
                 specArguments['DQMSequences'] = datasetConfig.DqmSequences
-
+                specArguments['NanoFlavours'] = datasetConfig.NanoFlavours
                 specArguments['UnmergedLFNBase'] = "/store/unmerged/%s" % runInfo['bulk_data_type']
                 if runInfo['backfill']:
                     specArguments['MergedLFNBase'] = "/store/backfill/%s/%s" % (runInfo['backfill'],
