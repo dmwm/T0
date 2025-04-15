@@ -29,6 +29,7 @@ from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setStorageSite
 from T0.RunConfig.Tier0Config import setExtraStreamDatasetMap
 from T0.RunConfig.Tier0Config import setHelperAgentStreams
+from T0.RunConfig.Tier0Config import setCustomRequestTimeout
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
@@ -60,6 +61,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
+setCustomRequestTimeout(tier0Config, 540)
 setAcquisitionEra(tier0Config, "Run2025A")
 setEmulationAcquisitionEra(tier0Config, "Emulation2025")
 setBaseRequestPriority(tier0Config, 251000)
