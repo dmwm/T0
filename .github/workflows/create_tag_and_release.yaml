@@ -2,6 +2,8 @@ name: Tag and Release on Version Change
 
 on:
   push:
+    branches:
+      - master
     paths:
       - 'src/python/T0/__init__.py'
 
