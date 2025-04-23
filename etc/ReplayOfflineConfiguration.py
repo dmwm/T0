@@ -5,7 +5,6 @@ Processing configuration for the Tier0 - Replay version
 from __future__ import print_function
 
 from T0.RunConfig.Tier0Config import addDataset
-from T0.RunConfig.Tier0Config import addRawSkimDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
 from T0.RunConfig.Tier0Config import setDefaultScramArch
