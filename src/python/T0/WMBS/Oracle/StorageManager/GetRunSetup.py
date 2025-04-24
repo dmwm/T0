@@ -19,6 +19,7 @@ class GetRunSetup(DBFormatter):
                  WHERE CMS_STOMGR.RUNS.RUNNUMBER = :RUN
                  """
         results = self.dbi.processData(sql, binds, conn = conn,
-                                       transaction = transaction)
+                                       transaction = transaction)[0].fetchall()
 
-        return self.formatOne(results)[0]
+        if len(results) > 0:
+            setupLabel = results[0][0]
