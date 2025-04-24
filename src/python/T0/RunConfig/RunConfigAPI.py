@@ -638,7 +638,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['RecoScramArch'] = streamConfig.Express.RecoScramArch
 
             specArguments['GlobalTag'] = streamConfig.Express.GlobalTag
-            specArguments['GlobalTagTransaction'] = "Express_%d" % run
             specArguments['GlobalTagConnect'] = streamConfig.Express.GlobalTagConnect
 
             specArguments['MaxInputRate'] = streamConfig.Express.MaxInputRate
