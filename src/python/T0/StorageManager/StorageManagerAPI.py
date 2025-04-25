@@ -104,7 +104,10 @@ def injectNewData(dbInterfaceStorageManager,
     for run in sorted(list(newRuns)):
         (hltkey, cmssw) = getRunInfoDAO.execute(run = run, transaction = False)
         setupLabel = getRunSetup.execute(run = run, transaction = False)
-        logging.debug("StorageManagerAPI: run = %d, hltkey = %s, cmssw = %s", run, hltkey, cmssw)
+        if not setupLabel:
+            logging.warning(f"Cannot retrieve setup label for run {run}, use default Data")
+            setupLabel = "Data" # set default setupLabel to data
+        logging.debug("StorageManagerAPI: run = %d, hltkey = %s, cmssw = %s, setupLabel = %s", run, hltkey, cmssw, setupLabel)
         if hltkey and cmssw:
             cmssw = '_'.join(cmssw.split('_')[0:4]) # only consider base release
             cmsswVersions.add(cmssw)
