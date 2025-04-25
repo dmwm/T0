@@ -606,7 +606,8 @@ for dataset in DATASETS:
 DATASETS = ["ParkingSingleMuon1","ParkingSingleMuon2","ParkingSingleMuon3",
             "ParkingSingleMuon4","ParkingSingleMuon5","ParkingSingleMuon6",
             "ParkingSingleMuon7","ParkingSingleMuon8","ParkingSingleMuon9",
-            "ParkingSingleMuon10","ParkingSingleMuon11"]
+            "ParkingSingleMuon10","ParkingSingleMuon11", "ParkingSingleMuon12",
+            "ParkingSingleMuon13","ParkingSingleMuon14","ParkingSingleMuon15"]
 PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
