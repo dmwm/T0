@@ -598,6 +598,15 @@ for dataset in DATASETS:
                do_reco=True,
                scenario=ppScenario)
 
+DATASETS = ["ParkingAnomalyDetection"]
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               aod_to_disk=False,
+               archival_node=None,
+               tape_node=None,
+               scenario=ppScenario)
+    
 DATASETS = ["ParkingDoubleMuonLowMass0","ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
             "ParkingDoubleMuonLowMass3"]
 

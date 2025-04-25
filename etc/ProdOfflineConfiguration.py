@@ -617,7 +617,17 @@ for dataset in DATASETS:
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
-
+    
+DATASETS = ["ParkingAnomalyDetection"]
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               aod_to_disk=False,
+               archival_node=None,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_CH_CERN",
+               scenario=ppScenario)
+    
 DATASETS = ["ParkingDoubleMuonLowMass0"]
 PARKING_PDS += DATASETS
 for dataset in DATASETS:
