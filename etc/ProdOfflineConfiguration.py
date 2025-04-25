@@ -882,7 +882,7 @@ for dataset in DATASETS:
                physics_skims=["ZMu", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["EGamma", "EGamma0", "EGamma1"]
+DATASETS = ["EGamma", "EGamma0", "EGamma1", "Egamma2", "EGamma3"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
