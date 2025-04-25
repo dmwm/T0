@@ -629,13 +629,14 @@ for dataset in DATASETS:
                physics_skims=["EXOCSCCluster"],
                scenario=ppScenario)
 
-DATASETS = [ "ParkingLLP" ]
+DATASETS = ["ParkingLLP0", "ParkingLLP1"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
                aod_to_disk=False,
                dqm_sequences=["@common", "@jetmet"],
+               physics_skims=["EXODelayedJet", "EXODTCluster", "EXOLLPJetHCAL"],
                scenario=ppScenario)
 
 DATASETS = ["ParkingHH0", "ParkingHH1", "ParkingVBF0",

@@ -674,7 +674,7 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
     
-DATASETS = ["ParkingLLP"]
+DATASETS = ["ParkingLLP0", "ParkingLLP1"]
 PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -682,6 +682,7 @@ for dataset in DATASETS:
                write_dqm=True,
                aod_to_disk=False,
                dqm_sequences=["@common", "@jetmet"],
+               physics_skims=["EXODelayedJet", "EXODTCluster", "EXOLLPJetHCAL"],
                archival_node=None,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
