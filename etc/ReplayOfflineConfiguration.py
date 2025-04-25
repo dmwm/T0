@@ -638,7 +638,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common", "@jetmet"],
                scenario=ppScenario)
 
-DATASETS = ["ParkingHH", "ParkingVBF0",
+DATASETS = ["ParkingHH0", "ParkingHH1", "ParkingVBF0",
             "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
             "ParkingVBF4", "ParkingVBF5", "ParkingVBF6",
             "ParkingVBF7"]
