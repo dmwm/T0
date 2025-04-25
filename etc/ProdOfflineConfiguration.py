@@ -657,6 +657,15 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
+DATASETS = ["EmittanceScan0", "EmittanceScan1", "EmittanceScan2", 
+            "EmittanceScan3", "EmittanceScan4", "EmittanceScan5"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               aod_to_disk=False,
+               scenario=ppScenario)
+    
 DATASETS = ["MuonShower"]
 
 for dataset in DATASETS:

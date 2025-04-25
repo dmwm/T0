@@ -630,6 +630,17 @@ for dataset in DATASETS:
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                scenario=ppScenario)
 
+DATASETS = ["EmittanceScan0", "EmittanceScan1", "EmittanceScan2", 
+            "EmittanceScan3", "EmittanceScan4", "EmittanceScan5"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               aod_to_disk=False,
+               archival_node=None,
+               tape_node=None,
+               scenario=ppScenario)
+    
 DATASETS = ["MuonShower"]
 
 for dataset in DATASETS:
