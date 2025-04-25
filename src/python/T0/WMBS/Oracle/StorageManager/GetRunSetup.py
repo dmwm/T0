@@ -21,5 +21,7 @@ class GetRunSetup(DBFormatter):
         results = self.dbi.processData(sql, binds, conn = conn,
                                        transaction = transaction)[0].fetchall()
 
+        setupLabel = None
         if len(results) > 0:
             setupLabel = results[0][0]
+        return setupLabel
