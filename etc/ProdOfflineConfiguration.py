@@ -606,7 +606,8 @@ for dataset in DATASETS:
 DATASETS = ["ParkingSingleMuon1","ParkingSingleMuon2","ParkingSingleMuon3",
             "ParkingSingleMuon4","ParkingSingleMuon5","ParkingSingleMuon6",
             "ParkingSingleMuon7","ParkingSingleMuon8","ParkingSingleMuon9",
-            "ParkingSingleMuon10","ParkingSingleMuon11"]
+            "ParkingSingleMuon10","ParkingSingleMuon11", "ParkingSingleMuon12",
+            "ParkingSingleMuon13","ParkingSingleMuon14","ParkingSingleMuon15"]
 PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -616,7 +617,17 @@ for dataset in DATASETS:
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
-
+    
+DATASETS = ["ParkingAnomalyDetection"]
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               aod_to_disk=False,
+               archival_node=None,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_CH_CERN",
+               scenario=ppScenario)
+    
 DATASETS = ["ParkingDoubleMuonLowMass0"]
 PARKING_PDS += DATASETS
 for dataset in DATASETS:
@@ -646,6 +657,15 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
+DATASETS = ["EmittanceScan0", "EmittanceScan1", "EmittanceScan2", 
+            "EmittanceScan3", "EmittanceScan4", "EmittanceScan5"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               aod_to_disk=False,
+               scenario=ppScenario)
+    
 DATASETS = ["MuonShower"]
 
 for dataset in DATASETS:
@@ -658,7 +678,7 @@ for dataset in DATASETS:
                physics_skims=["EXOCSCCluster"],
                scenario=ppScenario)
 
-DATASETS = ["ParkingHH", "ParkingVBF0",
+DATASETS = ["ParkingHH0", "ParkingHH1", "ParkingVBF0",
             "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
             "ParkingVBF4", "ParkingVBF5", "ParkingVBF6",
             "ParkingVBF7"]
@@ -674,7 +694,7 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
     
-DATASETS = ["ParkingLLP"]
+DATASETS = ["ParkingLLP0", "ParkingLLP1"]
 PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -682,6 +702,7 @@ for dataset in DATASETS:
                write_dqm=True,
                aod_to_disk=False,
                dqm_sequences=["@common", "@jetmet"],
+               physics_skims=["EXODelayedJet", "EXODTCluster", "EXOLLPJetHCAL"],
                archival_node=None,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
@@ -705,7 +726,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                scenario=ppScenario)
 
-DATASETS = ["JetMET", "JetMET0", "JetMET1"]
+DATASETS = ["JetMET0", "JetMET1"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -715,7 +736,7 @@ for dataset in DATASETS:
                disk_node="T1_US_FNAL_Disk", # JetHT was in "T1_UK_RAL_Disk", MET was in "T1_DE_KIT_Disk"
                alca_producers=["TkAlJetHT", "HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
-               physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor", "EXOMONOPOLE"],
+               physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor", "EXOMONOPOLE", "EXODisplacedJet"],
                timePerEvent=5.7,  # copied from JetHT - should be checked
                sizePerEvent=2250, # copied from JetHT - should be checked
                scenario=ppScenario)
@@ -882,7 +903,7 @@ for dataset in DATASETS:
                physics_skims=["ZMu", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["EGamma", "EGamma0", "EGamma1"]
+DATASETS = ["EGamma", "EGamma0", "EGamma1", "EGamma2", "EGamma3"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,

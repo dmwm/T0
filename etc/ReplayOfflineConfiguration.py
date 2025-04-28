@@ -587,13 +587,26 @@ for dataset in DATASETS:
                do_reco=True,
                scenario=ppScenario)
 
-DATASETS = ["ParkingSingleMuon","ParkingSingleMuon0","ParkingSingleMuon1","ParkingSingleMuon2"]
+DATASETS = ["ParkingSingleMuon0","ParkingSingleMuon1","ParkingSingleMuon2","ParkingSingleMuon3",
+            "ParkingSingleMuon4","ParkingSingleMuon5","ParkingSingleMuon6",
+            "ParkingSingleMuon7","ParkingSingleMuon8","ParkingSingleMuon9",
+            "ParkingSingleMuon10","ParkingSingleMuon11", "ParkingSingleMuon12",
+            "ParkingSingleMuon13","ParkingSingleMuon14","ParkingSingleMuon15"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                scenario=ppScenario)
 
+DATASETS = ["ParkingAnomalyDetection"]
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               aod_to_disk=False,
+               archival_node=None,
+               tape_node=None,
+               scenario=ppScenario)
+    
 DATASETS = ["ParkingDoubleMuonLowMass0","ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
             "ParkingDoubleMuonLowMass3"]
 
@@ -617,6 +630,17 @@ for dataset in DATASETS:
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                scenario=ppScenario)
 
+DATASETS = ["EmittanceScan0", "EmittanceScan1", "EmittanceScan2", 
+            "EmittanceScan3", "EmittanceScan4", "EmittanceScan5"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               aod_to_disk=False,
+               archival_node=None,
+               tape_node=None,
+               scenario=ppScenario)
+    
 DATASETS = ["MuonShower"]
 
 for dataset in DATASETS:
@@ -629,16 +653,17 @@ for dataset in DATASETS:
                physics_skims=["EXOCSCCluster"],
                scenario=ppScenario)
 
-DATASETS = [ "ParkingLLP" ]
+DATASETS = ["ParkingLLP0", "ParkingLLP1"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
                aod_to_disk=False,
                dqm_sequences=["@common", "@jetmet"],
+               physics_skims=["EXODelayedJet", "EXODTCluster", "EXOLLPJetHCAL"],
                scenario=ppScenario)
 
-DATASETS = ["ParkingHH", "ParkingVBF0",
+DATASETS = ["ParkingHH0", "ParkingHH1", "ParkingVBF0",
             "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
             "ParkingVBF4", "ParkingVBF5", "ParkingVBF6",
             "ParkingVBF7"]
@@ -668,7 +693,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                scenario=ppScenario)
 
-DATASETS = ["JetMET", "JetMET0", "JetMET1"]
+DATASETS = ["JetMET0", "JetMET1"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -676,7 +701,7 @@ for dataset in DATASETS:
                write_dqm=True,
                alca_producers=["TkAlJetHT", "HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
-               physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor", "EXOMONOPOLE"],
+               physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor", "EXOMONOPOLE", "EXODisplacedJet"],
                timePerEvent=5.7,  # copied from JetHT - should be checked
                sizePerEvent=2250, # copied from JetHT - should be checked
                scenario=ppScenario)
@@ -795,7 +820,7 @@ for dataset in DATASETS:
                physics_skims=["ZMu", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["EGamma", "EGamma0", "EGamma1"]
+DATASETS = ["EGamma", "EGamma0", "EGamma1", "EGamma2", "EGamma3"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
