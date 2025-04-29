@@ -56,17 +56,21 @@ def extractConfigParameter(configParameter, era, run):
 def getAcquisitionEra(tier0Config, run):
     """
     _getAcquisitionEra_
-
     Determines the acquisition era based on the current run
     """
     if isinstance(tier0Config.Global.AcquisitionEra, dict):
-        if run <= tier0Config.Global.AcquisitionEra['maxRunPreviousEra']:
-            acqEra = tier0Config.Global.AcquisitionEra['previousEra']
+        if 'maxRun' in tier0Config.Global.AcquisitionEra:
+            thresholdRuns = list(tier0Config.Global.AcquisitionEra['maxRun'])
+            caseRun = max[thresholdRuns]
+        
+        if run <= caseRun:
+            acqEra = tier0Config.Global.AcquisitionEra['maxRun'][caseRun]
         else:
-            acqEra = tier0Config.Global.AcquisitionEra['newEra']  
+            acqEra = tier0Config.Global.AcquisitionEra['default']
+            
     else:
         acqEra = tier0Config.Global.AcquisitionEra
-    
+
     return acqEra
 
 def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
@@ -134,10 +138,8 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         # Use different acquisition era for emulated data
         if runInfo['setup_label'] == 'Emulation':
             bindsUpdateRun['ACQERA'] = tier0Config.Global.EmulationAcquisitionEra
-
         else:
-            bindsUpdateRun['ACQERA'] = getAcquisitionEra(tier0Config, run)
-
+            bindsUpdateRun['ACQERA'] = tier0Config.Global.AcquisitionEra
 
         bindsStream = []
         bindsDataset = []
@@ -566,13 +568,13 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         outputs = {}
         blockCloseDelay = None
         taskName = None
-        acqEra = getAcquisitionEra(tier0Config, run)
         if streamConfig.ProcessingStyle == "Bulk":
 
             taskName = "Repack"
+
             if tier0Config.Global.EnableUniqueWorkflowName:
                 workflowName = "Repack_Run%d_Stream%s_%s_ID%d_v%s" % (run, stream,
-                    acqEra, tier0Config.Global.DeploymentID, streamConfig.Repack.ProcessingVersion)
+                    tier0Config.Global.AcquisitionEra, tier0Config.Global.DeploymentID, streamConfig.Repack.ProcessingVersion)
             else:
                 workflowName = "Repack_Run%d_Stream%s" % (run, stream)
 
@@ -622,7 +624,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             if tier0Config.Global.EnableUniqueWorkflowName:
                 workflowName = "Express_Run%d_Stream%s_%s_ID%d_v%s" % (run, stream,
-                    acqEra, tier0Config.Global.DeploymentID, streamConfig.Express.ProcessingVersion)
+                    tier0Config.Global.AcquisitionEra, tier0Config.Global.DeploymentID, streamConfig.Express.ProcessingVersion)
             else:
                 workflowName = "Express_Run%d_Stream%s" % (run, stream)
 
@@ -656,7 +658,6 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['RecoScramArch'] = streamConfig.Express.RecoScramArch
 
             specArguments['GlobalTag'] = streamConfig.Express.GlobalTag
-            specArguments['GlobalTagTransaction'] = "Express_%d" % run
             specArguments['GlobalTagConnect'] = streamConfig.Express.GlobalTagConnect
 
             specArguments['MaxInputRate'] = streamConfig.Express.MaxInputRate
@@ -843,7 +844,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
         # retrieve phedex configs for run
         getPhEDExConfigDAO = daoFactory(classname = "RunConfig.GetPhEDExConfig")
         phedexConfigs = getPhEDExConfigDAO.execute(run, transaction = False)
-        
+
         for (dataset, fileset, repackProcVer) in recoRelease[run]:
 
             bindsReleasePromptReco.append( { 'RUN' : run,
@@ -876,6 +877,10 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
             if len(datasetConfig.DqmSequences) > 0:
                 dqmSeq = ",".join(datasetConfig.DqmSequences)
 
+            nanoFlavours = None
+            if len(datasetConfig.NanoFlavours) > 0:
+                nanoFlavours = ",".join(datasetConfig.NanoFlavours)
+
             datasetConfig.ScramArch = tier0Config.Global.ScramArches.get(datasetConfig.CMSSWVersion,
                                                                          tier0Config.Global.DefaultScramArch)
 
@@ -892,6 +897,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                                       'ALCA_SKIM' : alcaSkim,
                                       'PHYSICS_SKIM' : physicsSkim,
                                       'DQM_SEQ' : dqmSeq,
+                                      'NANO_FLAVOUR' : nanoFlavours,
                                       'CMSSW' : datasetConfig.CMSSWVersion,
                                       'SCRAM_ARCH' : datasetConfig.ScramArch,
                                       'MULTICORE' : datasetConfig.Multicore,
@@ -1032,9 +1038,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 taskName = "Reco"
 
                 if tier0Config.Global.EnableUniqueWorkflowName:
-                    acqEra = getAcquisitionEra(tier0Config, run)
                     workflowName = "PromptReco_Run%d_%s_%s_ID%d_v%s" % (run, dataset,
-                        acqEra, tier0Config.Global.DeploymentID, datasetConfig.ProcessingVersion)
+                        tier0Config.Global.AcquisitionEra, tier0Config.Global.DeploymentID, datasetConfig.ProcessingVersion)
                 else:
                     workflowName = "PromptReco_Run%d_%s" % (run, dataset)
 
@@ -1082,7 +1087,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 specArguments['AlcaSkims'] = datasetConfig.AlcaSkims
                 specArguments['PhysicsSkims'] = datasetConfig.PhysicsSkims
                 specArguments['DQMSequences'] = datasetConfig.DqmSequences
-
+                specArguments['NanoFlavours'] = datasetConfig.NanoFlavours
                 specArguments['UnmergedLFNBase'] = "/store/unmerged/%s" % runInfo['bulk_data_type']
                 if runInfo['backfill']:
                     specArguments['MergedLFNBase'] = "/store/backfill/%s/%s" % (runInfo['backfill'],
