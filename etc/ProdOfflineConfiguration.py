@@ -642,7 +642,7 @@ RAWSKIM_DATASETS = ["ParkingDoubleMuonLowMass0-ReserveDMu", "ParkingDoubleMuonLo
                     "ParkingDoubleMuonLowMass6-ReserveDMu", "ParkingDoubleMuonLowMass7-ReserveDMu"]
 for rawSkimDataset in RAWSKIM_DATASETS:
     addDataset(tier0Config, rawSkimDataset,
-               do_reco=True,
+               do_reco=False,
                write_dqm=True,
                archival_node=None,
                tape_node="T1_US_FNAL_MSS",
