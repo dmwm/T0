@@ -1452,6 +1452,7 @@ DATASETS = ["ScoutingPFRun3"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
+               reco_delay=100*defaultRecoTimeout,
                write_aod=False,
                write_miniaod=False,
                tape_node="T1_US_FNAL_MSS",
@@ -1508,6 +1509,7 @@ DATASETS = ["ScoutingPFMonitor"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
+               reco_delay=100*defaultRecoTimeout,
                dqm_sequences=["@common", "@hltScouting"],
                write_reco=False, write_aod=False, write_miniaod=True, write_dqm=True,
                tape_node="T1_US_FNAL_MSS",
@@ -1585,7 +1587,7 @@ ignoreStream(tier0Config, "DQMPPSRandom")
 #SECOND_AGENT_STREAMS = STREAMS_ppRef_ZBandFwd_secondAgent
 #THIRD_AGENT_STREAMS = STREAMS_DAQ_TFTEST + STREAMS_DAQ_TFTEST_ppRef
 
-SECOND_AGENT_STREAMS = []
+SECOND_AGENT_STREAMS = ['ParkingDoubleMuonLowMass0', 'ScoutingPF']
 THIRD_AGENT_STREAMS = []
 setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
                                     "ThirdAgent" : THIRD_AGENT_STREAMS})
