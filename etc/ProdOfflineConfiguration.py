@@ -1462,6 +1462,11 @@ DATASETS = ["D01", "D02", "D03", "D04", "D05", "D06", "D07", "D08", "D09", "D10"
 	   "D21", "D22", "D23", "D24", "D25", "D26", "D27", "D28", "D29", "D30",
 	   "D31", "D32", "D33", "D34", "D35", "D36", "D37", "D38", "Parking"]
 
+DATASETS += ["TD01", "TD02", "TD03", "TD04", "TD05", "TD06", "TD07", "TD08", "TD09", "TD10",
+	   "TD11", "TD12", "TD13", "TD14", "TD15", "TD16", "TD17", "TD18", "TD19", "TD20",
+	   "TD21", "TD22", "TD23", "TD24", "TD25", "TD26", "TD27", "TD28", "TD29", "TD30",
+	   "TD31", "TD32", "TD33", "TD34", "TD35", "TD36", "TD37"]
+
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
