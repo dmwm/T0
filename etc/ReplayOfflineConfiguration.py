@@ -556,18 +556,6 @@ for dataset in DATASETS:
                physics_skims=["EXODisplacedJet", "EXODelayedJet", "EXODTCluster", "LogError", "LogErrorMonitor", "EXOLLPJetHCAL"],
                scenario=ppScenario)
 
-DATASETS = ["DoubleMuon"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_reco=False,
-               write_dqm=True,
-               alca_producers=["TkAlZMuMu", "MuAlCalIsolatedMu", "TkAlDiMuonAndVertex"],
-               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon"],
-               physics_skims=["LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
-
 DATASETS = ["DoubleMuonLowPU"]
 
 for dataset in DATASETS:
@@ -732,30 +720,6 @@ for dataset in DATASETS:
                sizePerEvent=2250,
                scenario=ppRefScenario)
 
-DATASETS = ["JetHT"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_dqm=True,
-               alca_producers=["HcalCalIsoTrkProducerFilter", "TkAlJetHT"],
-               dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
-               physics_skims=["JetHTJetPlusHOFilter", "LogError", "LogErrorMonitor"],
-               timePerEvent=5.7,
-               sizePerEvent=2250,
-               scenario=ppScenario)
-
-DATASETS = ["MET"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_dqm=True,
-               alca_producers=["HcalCalNoise"],
-               dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
-               physics_skims=["EXOHighMET", "LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
-
 DATASETS = ["MuonEG"]
 
 for dataset in DATASETS:
@@ -766,7 +730,7 @@ for dataset in DATASETS:
                physics_skims=["TopMuEG", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["Muon", "Muon0", "Muon1"]
+DATASETS = ["Muon0", "Muon1"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -820,20 +784,7 @@ for dataset in DATASETS:
                physics_skims=["EXONoBPTXSkim", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["SingleMuon"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_dqm=True,
-               alca_producers=["TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu",
-                               "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
-                               "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight"],
-               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon"],
-               physics_skims=["ZMu", "LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
-
-DATASETS = ["EGamma", "EGamma0", "EGamma1", "EGamma2", "EGamma3"]
+DATASETS = ["EGamma0", "EGamma1", "EGamma2", "EGamma3"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1037,13 +988,7 @@ for dataset in DATASETS:
 ### HLTPhysics PDs                                   ###
 ########################################################
 
-DATASETS = ["HLTPhysics", "HLTPhysics0", "HLTPhysics1",
-            "HLTPhysics2", "HLTPhysics3", "HLTPhysics4",
-            "HLTPhysics5", "HLTPhysics6", "HLTPhysics7",
-            "HLTPhysics8", "HLTPhysics9", "HLTPhysics10",
-            "HLTPhysics11", "HLTPhysics12", "HLTPhysics13",
-            "HLTPhysics14", "HLTPhysics15", "HLTPhysics16",
-            "HLTPhysics17", "HLTPhysics18", "HLTPhysics19"]
+DATASETS = ["HLTPhysics"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1288,32 +1233,11 @@ for dataset in DATASETS:
                write_miniaod=False,
                scenario=hltScoutingScenario)
 
-DATASETS = ["ParkingDoubleElectronLowMass0","ParkingDoubleElectronLowMass1","ParkingDoubleElectronLowMass2",
-            "ParkingDoubleElectronLowMass3","ParkingDoubleElectronLowMass4","ParkingDoubleElectronLowMass5",
-            "ParkingDoubleElectronLowMass"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_dqm=True,
-               dqm_sequences=["@common"],
-               tape_node=None,
-               scenario=ppScenario)
-
 DATASETS = ["RPCMonitor"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
-               scenario=ppScenario)
-
-DATASETS = ["ScoutingMonitor"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               dqm_sequences=["@common"],
-               write_reco=False, write_aod=False, write_miniaod=True, write_dqm=True,
                scenario=ppScenario)
 
 DATASETS = ["ScoutingPFMonitor"]
