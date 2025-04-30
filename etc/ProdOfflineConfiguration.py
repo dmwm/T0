@@ -157,6 +157,9 @@ promptrecoGlobalTag = {
     #'acqEra': {'Run2023E': "132X_dataRun3_Prompt_v2"},
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Prompt_v2"}
 }
+repackGlobalTag = {
+    'default': "150X_dataRun3_Prompt_v1"
+}
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -203,6 +206,7 @@ addRepackConfig(tier0Config, "Default",
                 maxLatency=1 * 3600,
                 blockCloseDelay=24 * 3600,
                 maxMemory=2000,
+                global_tag=repackGlobalTag,
                 versionOverride=repackVersionOverride)
 
 addRepackConfig(tier0Config, "ScoutingPF",
@@ -640,6 +644,7 @@ for dataset in DATASETS:
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
+    
 
 DATASETS = ["ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
             "ParkingDoubleMuonLowMass3","ParkingDoubleMuonLowMass4","ParkingDoubleMuonLowMass5",
@@ -657,6 +662,18 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
+RAWSKIM_DATASETS = ["ParkingDoubleMuonLowMass0-ReserveDMu", "ParkingDoubleMuonLowMass1-ReserveDMu",
+                    "ParkingDoubleMuonLowMass2-ReserveDMu", "ParkingDoubleMuonLowMass3-ReserveDMu",
+                    "ParkingDoubleMuonLowMass4-ReserveDMu", "ParkingDoubleMuonLowMass5-ReserveDMu",
+                    "ParkingDoubleMuonLowMass6-ReserveDMu", "ParkingDoubleMuonLowMass7-ReserveDMu"]
+for rawSkimDataset in RAWSKIM_DATASETS:
+    addDataset(tier0Config, rawSkimDataset,
+               do_reco=True,
+               write_dqm=True,
+               archival_node=None,
+               tape_node="T1_US_FNAL_MSS",
+               scenario=ppScenario)
+    
 DATASETS = ["EmittanceScan0", "EmittanceScan1", "EmittanceScan2", 
             "EmittanceScan3", "EmittanceScan4", "EmittanceScan5"]
 
@@ -1586,7 +1603,7 @@ ignoreStream(tier0Config, "DQMPPSRandom")
 #SECOND_AGENT_STREAMS = STREAMS_ppRef_ZBandFwd_secondAgent
 #THIRD_AGENT_STREAMS = STREAMS_DAQ_TFTEST + STREAMS_DAQ_TFTEST_ppRef
 
-SECOND_AGENT_STREAMS = ['ParkingDoubleMuonLowMass0']
+SECOND_AGENT_STREAMS = ['ParkingDoubleMuonLowMass0', 'ParkingDoubleMuonLowMass1', 'ParkingDoubleMuonLowMass2', 'ParkingDoubleMuonLowMass3']
 THIRD_AGENT_STREAMS = []
 setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
                                     "ThirdAgent" : THIRD_AGENT_STREAMS})

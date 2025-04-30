@@ -157,7 +157,7 @@ alcarawProcVersion = dt
 
 expressGlobalTag = "150X_dataRun3_Express_v1"
 promptrecoGlobalTag = "150X_dataRun3_Prompt_v1"
-
+repackGlobalTag = "150X_dataRun3_Prompt_v1"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -203,6 +203,7 @@ addRepackConfig(tier0Config, "Default",
                 maxLatency=2 * 3600,
                 blockCloseDelay=1200,
                 maxMemory=2000,
+                global_tag=repackGlobalTag,
                 versionOverride=repackVersionOverride)
 
 addRepackConfig(tier0Config, "ScoutingPF",
@@ -609,7 +610,7 @@ for dataset in DATASETS:
     
 DATASETS = ["ParkingDoubleMuonLowMass0","ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
             "ParkingDoubleMuonLowMass3"]
-
+    
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -630,6 +631,18 @@ for dataset in DATASETS:
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                scenario=ppScenario)
 
+RAWSKIM_DATASETS = ["ParkingDoubleMuonLowMass0-ReserveDMu", "ParkingDoubleMuonLowMass1-ReserveDMu",
+                    "ParkingDoubleMuonLowMass2-ReserveDMu", "ParkingDoubleMuonLowMass3-ReserveDMu",
+                    "ParkingDoubleMuonLowMass4-ReserveDMu", "ParkingDoubleMuonLowMass5-ReserveDMu",
+                    "ParkingDoubleMuonLowMass6-ReserveDMu", "ParkingDoubleMuonLowMass7-ReserveDMu"]
+for rawSkimDataset in RAWSKIM_DATASETS:
+    addDataset(tier0Config, rawSkimDataset,
+               do_reco=True,
+               write_dqm=True,
+               archival_node=None,
+               tape_node=None,
+               scenario=ppScenario)
+    
 DATASETS = ["EmittanceScan0", "EmittanceScan1", "EmittanceScan2", 
             "EmittanceScan3", "EmittanceScan4", "EmittanceScan5"]
 
