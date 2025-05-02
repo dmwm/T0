@@ -155,8 +155,10 @@ alcarawProcVersion = dt
 
 # Defaults for GlobalTag
 
-expressGlobalTag = "150X_dataRun3_Express_v1"
-promptrecoGlobalTag = "150X_dataRun3_Prompt_v1"
+
+expressGlobalTag = "141X_dataRun3_Express_v4"
+promptrecoGlobalTag = "141X_dataRun3_Prompt_v4"
+repackGlobalTag = "141X_dataRun3_Prompt_v4"
 
 
 # Mandatory for CondDBv2
@@ -192,6 +194,7 @@ setExtraStreamDatasetMap(tier0Config,{
 #set default repack settings for bulk streams
 addRepackConfig(tier0Config, "Default",
                 proc_ver=defaultProcVersion,
+                global_tag=repackGlobalTag,
                 maxSizeSingleLumi=24 * 1024 * 1024 * 1024,
                 maxSizeMultiLumi=8 * 1024 * 1024 * 1024,
                 minInputSize=2.1 * 1024 * 1024 * 1024,
@@ -598,6 +601,7 @@ for dataset in DATASETS:
                do_reco=True,
                scenario=ppScenario)
 
+
 DATASETS = ["ParkingAnomalyDetection"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -621,7 +625,7 @@ for dataset in DATASETS:
 
 DATASETS = ["ParkingDoubleMuonLowMass4","ParkingDoubleMuonLowMass5",
             "ParkingDoubleMuonLowMass6","ParkingDoubleMuonLowMass7"]
-
+    
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -629,7 +633,15 @@ for dataset in DATASETS:
                dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                scenario=ppScenario)
-
+    
+RAWSKIM_DATASETS = ["ParkingDoubleMuonLowMass0-ReserveDMu"]
+for rawSkimDataset in RAWSKIM_DATASETS:
+    addDataset(tier0Config, rawSkimDataset,
+               do_reco=False,
+               write_dqm=True,
+               tape_node=None,
+               scenario=ppScenario)
+    
 DATASETS = ["EmittanceScan0", "EmittanceScan1", "EmittanceScan2", 
             "EmittanceScan3", "EmittanceScan4", "EmittanceScan5"]
 
