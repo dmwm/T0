@@ -635,18 +635,6 @@ for dataset in DATASETS:
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
-
-RAWSKIM_DATASETS = ["ParkingDoubleMuonLowMass0-ReserveDMu", "ParkingDoubleMuonLowMass1-ReserveDMu",
-                    "ParkingDoubleMuonLowMass2-ReserveDMu", "ParkingDoubleMuonLowMass3-ReserveDMu",
-                    "ParkingDoubleMuonLowMass4-ReserveDMu", "ParkingDoubleMuonLowMass5-ReserveDMu",
-                    "ParkingDoubleMuonLowMass6-ReserveDMu", "ParkingDoubleMuonLowMass7-ReserveDMu"]
-for rawSkimDataset in RAWSKIM_DATASETS:
-    addDataset(tier0Config, rawSkimDataset,
-               do_reco=False,
-               write_dqm=True,
-               archival_node=None,
-               tape_node="T1_US_FNAL_MSS",
-               scenario=ppScenario)
     
 DATASETS = ["EmittanceScan0", "EmittanceScan1", "EmittanceScan2", 
             "EmittanceScan3", "EmittanceScan4", "EmittanceScan5"]
@@ -1475,6 +1463,26 @@ for dataset in DATASETS:
                disk_node="T0_CH_CERN_Disk",
                dataset_lifetime=15*24*3600,
                scenario=ppScenario)
+
+#####################################
+### RAW Skim / Secondary Datasets ###
+#####################################
+
+### Enabling raw skim datasets REQUIRES era change ###
+
+#RAWSKIM_DATASETS = ["ParkingDoubleMuonLowMass0-ReserveDMu", "ParkingDoubleMuonLowMass1-ReserveDMu",
+#                    "ParkingDoubleMuonLowMass2-ReserveDMu", "ParkingDoubleMuonLowMass3-ReserveDMu",
+#                    "ParkingDoubleMuonLowMass4-ReserveDMu", "ParkingDoubleMuonLowMass5-ReserveDMu",
+#                    "ParkingDoubleMuonLowMass6-ReserveDMu", "ParkingDoubleMuonLowMass7-ReserveDMu"]
+#for rawSkimDataset in RAWSKIM_DATASETS:
+#    addDataset(tier0Config, rawSkimDataset,
+#               do_reco=False,
+#               write_dqm=True,
+#               archival_node=None,
+#               tape_node="T1_US_FNAL_MSS",
+#               scenario=ppScenario)
+
+
 
 #######################
 ### ignored streams ###
