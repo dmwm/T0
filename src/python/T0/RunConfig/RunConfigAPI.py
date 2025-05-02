@@ -53,18 +53,6 @@ def extractConfigParameter(configParameter, era, run):
     else:
         return configParameter
 
-def isRawSkimDataset(datasetConfig):
-    """
-    _isRawSkimDataset_
-    Used to determine if the dataset in question is a raw skim dataset or not
-    Returns True if it is a raw skim dataset
-    Returns false otherwise
-    """
-    if datasetConfig.RawSkim:
-        return True
-    else:
-        return False
-
 def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
     """
     _configureRun_
