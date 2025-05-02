@@ -649,6 +649,15 @@ def setAcquisitionEra(config, acquisitionEra):
     config.Global.AcquisitionEra = acquisitionEra
     return
 
+def setCustomRequestTimeout(config, customRequestTimeout):
+    """
+    _setCustomRequestTimeout_
+
+    Allow T0 to modify the request timeout in case of networking delays
+    """
+    config.Global.CustomRequestTimeout = customRequestTimeout
+    return
+
 def setEmulationAcquisitionEra(config, emulationAcquisitionEra):
     """
     _setEmulationAcquisitionEra_

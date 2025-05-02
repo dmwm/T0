@@ -603,6 +603,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['MaxInputEvents'] = streamConfig.Repack.MaxInputEvents
             specArguments['MaxInputFiles'] = streamConfig.Repack.MaxInputFiles
             specArguments['MaxLatency'] = streamConfig.Repack.MaxLatency
+            specArguments['CustomRequestTimeout'] = tier0Config.Global.CustomRequestTimeout
 
             # Repack uses GT after RawSkim feature addition
             specArguments['GlobalTag'] = streamConfig.Repack.GlobalTag
@@ -1102,6 +1103,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 specArguments['EnableHarvesting'] = "True"
                 specArguments['DQMUploadProxy'] = dqmUploadProxy
                 specArguments['DQMUploadUrl'] = runInfo['dqmuploadurl']
+                specArguments['CustomRequestTimeout'] = tier0Config.Global.CustomRequestTimeout
 
                 factory = PromptRecoWorkloadFactory()
                 wmSpec = factory.factoryWorkloadConstruction(workflowName, specArguments)
