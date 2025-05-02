@@ -40,7 +40,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
 # 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
 
-setInjectRuns(tier0Config, [382726]) # 386925: Collisions
+setInjectRuns(tier0Config, [386925, 390094, 390951]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
@@ -123,7 +123,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_2_2"
+    'default': "CMSSW_15_0_5"
 }
 
 # Configure ScramArch
@@ -133,7 +133,7 @@ setScramArch(tier0Config, "CMSSW_12_3_0", "cs8_amd64_gcc10")
 setScramArch(tier0Config, "CMSSW_13_0_9", "el8_amd64_gcc11")
 
 # Configure scenarios
-ppScenario = "ppEra_Run3"
+ppScenario = "ppEra_Run3_2025"
 ppRefScenario = "ppEra_Run3_2024_ppRef"
 ppScenarioB0T = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
@@ -155,6 +155,7 @@ alcarawProcVersion = dt
 
 # Defaults for GlobalTag
 
+
 expressGlobalTag = "141X_dataRun3_Express_v4"
 promptrecoGlobalTag = "141X_dataRun3_Prompt_v4"
 repackGlobalTag = "141X_dataRun3_Prompt_v4"
@@ -164,7 +165,7 @@ repackGlobalTag = "141X_dataRun3_Prompt_v4"
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 
 # Multicore settings
-numberOfCores = 8
+numberOfCores =16
 
 # Splitting parameters for PromptReco
 defaultRecoSplitting = 750 * numberOfCores
@@ -237,6 +238,7 @@ addDataset(tier0Config, "Default",
            tape_node="T0_CH_CERN_Disk",
            disk_node="T0_CH_CERN_Disk",
            #raw_to_disk=False,
+           nano_flavours=['@PHYS', '@L1'],
            blockCloseDelay=1200,
            timePerEvent=5,
            sizePerEvent=1500,
@@ -309,6 +311,31 @@ addExpressConfig(tier0Config, "ExpressCosmics",
 
 addExpressConfig(tier0Config, "HLTMonitor",
                  scenario=ppScenario,
+                 diskNode="T0_CH_CERN_Disk",
+                 data_tiers=["FEVTHLTALL"],
+                 write_dqm=True,
+                 alca_producers=["TkAlHLTTracks", "TkAlHLTTracksZMuMu", "PromptCalibProdSiPixelAliHLTHGC"],
+                 dqm_sequences=["@HLTMon"],
+                 reco_version=defaultCMSSWVersion,
+                 multicore=numberOfCores,
+                 global_tag_connect=globalTagConnect,
+                 global_tag=expressGlobalTag,
+                 proc_ver=expressProcVersion,
+                 maxInputRate=23 * 1000,
+                 maxInputEvents=400,
+                 maxInputSize=2 * 1024 * 1024 * 1024,
+                 maxInputFiles=15,
+                 maxLatency=15 * 23,
+                 periodicHarvestInterval=20 * 60,
+                 blockCloseDelay=1200,
+                 timePerEvent=4, #I have to get some stats to set this properly
+                 sizePerEvent=1700, #I have to get some stats to set this properly
+                 maxMemoryperCore=2000,
+                 dataset_lifetime=replayDatasetLifetime,#lifetime for container rules. Default 14 days
+                 versionOverride=expressVersionOverride)
+
+addExpressConfig(tier0Config, "CosmicHLTMonitor",
+                 scenario=cosmicsScenario,
                  diskNode="T0_CH_CERN_Disk",
                  data_tiers=["FEVTHLTALL"],
                  write_dqm=True,
@@ -563,34 +590,28 @@ for dataset in DATASETS:
                do_reco=True,
                scenario=ppScenario)
 
-DATASETS = ["ParkingSingleMuon","ParkingSingleMuon0","ParkingSingleMuon1","ParkingSingleMuon2"]
+DATASETS = ["ParkingSingleMuon0","ParkingSingleMuon1","ParkingSingleMuon2","ParkingSingleMuon3",
+            "ParkingSingleMuon4","ParkingSingleMuon5","ParkingSingleMuon6",
+            "ParkingSingleMuon7","ParkingSingleMuon8","ParkingSingleMuon9",
+            "ParkingSingleMuon10","ParkingSingleMuon11", "ParkingSingleMuon12",
+            "ParkingSingleMuon13","ParkingSingleMuon14","ParkingSingleMuon15"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                scenario=ppScenario)
 
-DATASETS = ["ParkingDoubleMuonLowMass0"]
+
+DATASETS = ["ParkingAnomalyDetection"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
-               write_dqm=True,
-               dqm_sequences=["@common", "@muon", "@heavyFlavor"],
-               alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
+               aod_to_disk=False,
+               archival_node=None,
                tape_node=None,
                scenario=ppScenario)
-
-
-RAWSKIM_DATASETS = ["ParkingDoubleMuonLowMass0-ReserveDMu"]
-for rawSkimDataset in RAWSKIM_DATASETS:
-    addDataset(tier0Config, rawSkimDataset,
-               do_reco=True,
-               write_dqm=True,
-               tape_node=None,
-               scenario=ppScenario)
-
-
-DATASETS = ["ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
+    
+DATASETS = ["ParkingDoubleMuonLowMass0","ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
             "ParkingDoubleMuonLowMass3"]
 
 for dataset in DATASETS:
@@ -604,7 +625,7 @@ for dataset in DATASETS:
 
 DATASETS = ["ParkingDoubleMuonLowMass4","ParkingDoubleMuonLowMass5",
             "ParkingDoubleMuonLowMass6","ParkingDoubleMuonLowMass7"]
-
+    
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -612,7 +633,26 @@ for dataset in DATASETS:
                dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                scenario=ppScenario)
+    
+RAWSKIM_DATASETS = ["ParkingDoubleMuonLowMass0-ReserveDMu"]
+for rawSkimDataset in RAWSKIM_DATASETS:
+    addDataset(tier0Config, rawSkimDataset,
+               do_reco=False,
+               write_dqm=True,
+               tape_node=None,
+               scenario=ppScenario)
+    
+DATASETS = ["EmittanceScan0", "EmittanceScan1", "EmittanceScan2", 
+            "EmittanceScan3", "EmittanceScan4", "EmittanceScan5"]
 
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               aod_to_disk=False,
+               archival_node=None,
+               tape_node=None,
+               scenario=ppScenario)
+    
 DATASETS = ["MuonShower"]
 
 for dataset in DATASETS:
@@ -625,16 +665,17 @@ for dataset in DATASETS:
                physics_skims=["EXOCSCCluster"],
                scenario=ppScenario)
 
-DATASETS = [ "ParkingLLP" ]
+DATASETS = ["ParkingLLP0", "ParkingLLP1"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
                aod_to_disk=False,
                dqm_sequences=["@common", "@jetmet"],
+               physics_skims=["EXODelayedJet", "EXODTCluster", "EXOLLPJetHCAL"],
                scenario=ppScenario)
 
-DATASETS = ["ParkingHH", "ParkingVBF0",
+DATASETS = ["ParkingHH0", "ParkingHH1", "ParkingVBF0",
             "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
             "ParkingVBF4", "ParkingVBF5", "ParkingVBF6",
             "ParkingVBF7"]
@@ -664,15 +705,15 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                scenario=ppScenario)
 
-DATASETS = ["JetMET", "JetMET0", "JetMET1"]
+DATASETS = ["JetMET0", "JetMET1"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               alca_producers=["HcalCalIsoTrkProducerFilter", "TkAlJetHT", "HcalCalNoise"],
+               alca_producers=["TkAlJetHT", "HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
-               physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor", "EXOMONOPOLE"],
+               physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor", "EXOMONOPOLE", "EXODisplacedJet"],
                timePerEvent=5.7,  # copied from JetHT - should be checked
                sizePerEvent=2250, # copied from JetHT - should be checked
                scenario=ppScenario)
@@ -791,7 +832,7 @@ for dataset in DATASETS:
                physics_skims=["ZMu", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["EGamma", "EGamma0", "EGamma1"]
+DATASETS = ["EGamma", "EGamma0", "EGamma1", "EGamma2", "EGamma3"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1121,6 +1162,14 @@ for dataset in DATASETS:
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias"],
                scenario=ppScenario)
 
+DATASETS = ["SpecialMinimumBias0", "SpecialMinimumBias1", "SpecialMinimumBias2", "SpecialMinimumBias3"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               alca_producers=["TkAlMinBias"]
+               )
+               
 ########################################################
 ### ZeroBias PDs                                     ###
 ########################################################
@@ -1271,7 +1320,7 @@ DATASETS = ["ScoutingPFMonitor"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
-               dqm_sequences=["@common"],
+               dqm_sequences=["@common", "@hltScouting"],
                write_reco=False, write_aod=False, write_miniaod=True, write_dqm=True,
                scenario=ppScenario)
 

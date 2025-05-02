@@ -338,6 +338,7 @@ class Create(DBCreator):
                  alca_skim      varchar2(700),
                  physics_skim   varchar2(700),
                  dqm_seq        varchar2(700),
+                 nano_flavour   varchar2(50),
                  primary key (run_id, primds_id)
                ) ORGANIZATION INDEX"""
 
@@ -947,7 +948,8 @@ class Create(DBCreator):
                            54 : "ppEra_Run3_pp_on_PbPb_2024",
                            55 : "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2024",
                            56 : "ppEra_Run3_2024_ppRef",
-                           57 : "ppEra_Run3_2024"
+                           57 : "ppEra_Run3_2024",
+                           58 : "ppEra_Run3_2025"
 
                          }
         for id, name in list(eventScenarios.items()):
