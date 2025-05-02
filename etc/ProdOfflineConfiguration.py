@@ -1095,7 +1095,6 @@ for dataset in DATASETS:
                alca_producers=["TkAlMinBias", "TkAlV0s"],
                physics_skims=["LogError", "LogErrorMonitor"],
                disk_node="T2_CH_CERN",
-               tape_node="T1_IT_CNAF_MSS",
                scenario=ppScenario)
 
 DATASETS = ["SpecialHLTPhysics", "SpecialHLTPhysics0", "SpecialHLTPhysics1",
