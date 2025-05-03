@@ -1505,7 +1505,7 @@ ignoreStream(tier0Config, "DQMPPSRandom")
 #SECOND_AGENT_STREAMS = STREAMS_ppRef_ZBandFwd_secondAgent
 #THIRD_AGENT_STREAMS = STREAMS_DAQ_TFTEST + STREAMS_DAQ_TFTEST_ppRef
 
-SECOND_AGENT_STREAMS = ['ParkingDoubleMuonLowMass0', 'ParkingDoubleMuonLowMass1', 'ParkingDoubleMuonLowMass2', 'ParkingDoubleMuonLowMass3']
+SECOND_AGENT_STREAMS = []
 THIRD_AGENT_STREAMS = []
 setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
                                     "ThirdAgent" : THIRD_AGENT_STREAMS})
