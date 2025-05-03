@@ -40,7 +40,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
 # 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
 
-setInjectRuns(tier0Config, [386925, 390094]) # 382726: 2024 Cosmics, 382686: Collisions, 389831: 2025 Cosmics
+setInjectRuns(tier0Config, [386925, 390094, 390951]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
@@ -123,7 +123,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_0_4_patch3"
+    'default': "CMSSW_15_0_5"
 }
 
 # Configure ScramArch
@@ -154,6 +154,7 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
+
 
 expressGlobalTag = "150X_dataRun3_Express_v1"
 promptrecoGlobalTag = "150X_dataRun3_Prompt_v1"
@@ -192,6 +193,7 @@ setExtraStreamDatasetMap(tier0Config,{
 #set default repack settings for bulk streams
 addRepackConfig(tier0Config, "Default",
                 proc_ver=defaultProcVersion,
+                global_tag=repackGlobalTag,
                 maxSizeSingleLumi=24 * 1024 * 1024 * 1024,
                 maxSizeMultiLumi=8 * 1024 * 1024 * 1024,
                 minInputSize=2.1 * 1024 * 1024 * 1024,
@@ -587,6 +589,7 @@ for dataset in DATASETS:
                do_reco=True,
                scenario=ppScenario)
 
+
 DATASETS = ["ParkingAnomalyDetection"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -610,7 +613,7 @@ for dataset in DATASETS:
 
 DATASETS = ["ParkingDoubleMuonLowMass4","ParkingDoubleMuonLowMass5",
             "ParkingDoubleMuonLowMass6","ParkingDoubleMuonLowMass7"]
-
+    
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
