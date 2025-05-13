@@ -21,6 +21,7 @@ class InsertRecoConfigs(DBFormatter):
                               alca_skim = :ALCA_SKIM,
                               physics_skim = :PHYSICS_SKIM,
                               dqm_seq = :DQM_SEQ,
+                              nano_flavour = :NANO_FLAVOUR,
                               global_tag = :GLOBAL_TAG,
                               scenario = :SCENARIO,
                               proc_version = :PROC_VERSION,
@@ -32,11 +33,11 @@ class InsertRecoConfigs(DBFormatter):
                               write_nanoaod = :WRITE_NANOAOD
                  WHEN NOT MATCHED THEN
                    INSERT (run, primds, cmssw, scram_arch, alca_skim,
-                           physics_skim, dqm_seq, global_tag, scenario, proc_version,
+                           physics_skim, dqm_seq, nano_flavour, global_tag, scenario, proc_version,
                            multicore, write_reco, write_dqm,
                            write_aod, write_miniaod, write_nanoaod)
                    VALUES (:RUN, :PRIMDS, :CMSSW, :SCRAM_ARCH, :ALCA_SKIM,
-                           :PHYSICS_SKIM, :DQM_SEQ, :GLOBAL_TAG, :SCENARIO, :PROC_VERSION,
+                           :PHYSICS_SKIM, :DQM_SEQ, :NANO_FLAVOUR, :GLOBAL_TAG, :SCENARIO, :PROC_VERSION,
                            :MULTICORE, :WRITE_RECO, :WRITE_DQM,
                            :WRITE_AOD, :WRITE_MINIAOD, :WRITE_NANOAOD)
                  """

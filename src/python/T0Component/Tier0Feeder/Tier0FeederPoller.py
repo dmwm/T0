@@ -578,6 +578,7 @@ class Tier0FeederPoller(BaseWorkerThread):
                                       'ALCA_SKIM' : config['alca_skim'],
                                       'PHYSICS_SKIM' : config['physics_skim'],
                                       'DQM_SEQ' : config['dqm_seq'],
+                                      'NANO_FLAVOUR' : config['nano_flavour'],
                                       'GLOBAL_TAG' : config['global_tag'][:50],
                                       'SCENARIO' : config['scenario'],
                                       'PROC_VERSION' : config['proc_version'],
