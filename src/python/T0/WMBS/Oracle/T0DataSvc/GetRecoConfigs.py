@@ -20,6 +20,7 @@ class GetRecoConfigs(DBFormatter):
                         reco_config.alca_skim AS alca_skim,
                         reco_config.physics_skim AS physics_skim,
                         reco_config.dqm_seq AS dqm_seq,
+                        reco_config.nano_flavour AS nano_flavour,
                         reco_config.global_tag AS global_tag,
                         event_scenario.name AS scenario,
                         reco_config.proc_version AS proc_version,
