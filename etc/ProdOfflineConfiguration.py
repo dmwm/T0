@@ -101,7 +101,7 @@ setPromptCalibrationConfig(tier0Config,
 # maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_0_5",
+    'default': "CMSSW_15_0_6",
     #'acqEra': {'Run2024F': "CMSSW_14_0_11"},
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
@@ -126,6 +126,8 @@ alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
 hltScoutingScenario = "hltScoutingEra_Run3_2024"
+AlCaHcalIsoTrkScenario = "AlCaHcalIsoTrk_Run3"
+
 
 # Heavy Ion Scenarios 2024
 
@@ -1063,6 +1065,16 @@ for dataset in DATASETS:
                alca_producers=["EcalCalPi0Calib", "EcalCalEtaCalib"],
                scenario=ppScenario)
 
+DATASETS = ["AlCaHcalIsoTrk"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               raw_to_disk=True,
+               disk_node="T2_CH_CERN",
+               alca_producers=["HcalCalIsoTrkFromAlCaRaw"],
+               scenario=AlCaHcalIsoTrkScenario)
+    
 ########################################################
 ### HLTPhysics PDs                                   ###
 ########################################################
@@ -1436,7 +1448,6 @@ for dataset in DATASETS:
                alca_producers=["PPSCalMaxTracks"],
                dqm_sequences=["@none"],
                scenario=alcaPPSScenario)
-
 
 ######################
 ###    DAQ TEST    ###
