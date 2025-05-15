@@ -607,6 +607,7 @@ for dataset in DATASETS:
                write_dqm=True,
                dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
+               nano_flavours=["@PHYS", "@L1", "@BPH"],
                tape_node=None,
                scenario=ppScenario)
 
@@ -619,6 +620,7 @@ for dataset in DATASETS:
                write_dqm=True,
                dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
+               nano_flavours=["@PHYS", "@L1", "@BPH"],
                scenario=ppScenario)
     
 DATASETS = ["EmittanceScan0", "EmittanceScan1", "EmittanceScan2", 
