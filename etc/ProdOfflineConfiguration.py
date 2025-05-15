@@ -157,7 +157,7 @@ promptrecoGlobalTag = {
     #'acqEra': {'Run2023E': "132X_dataRun3_Prompt_v2"},
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Prompt_v2"}
 }
-repackGlobalTag = "150X_dataRun3_Prompt_v1"
+repackGlobalTag = "150X_dataRun3_Prompt_v1_ParkingDoubleMuonLowMass_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"

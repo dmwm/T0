@@ -158,7 +158,7 @@ alcarawProcVersion = dt
 
 expressGlobalTag = "150X_dataRun3_Express_v1"
 promptrecoGlobalTag = "150X_dataRun3_Prompt_v1"
-repackGlobalTag = "150X_dataRun3_Prompt_v1"
+repackGlobalTag = "150X_dataRun3_Prompt_v1_ParkingDoubleMuonLowMass_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -205,7 +205,6 @@ addRepackConfig(tier0Config, "Default",
                 maxLatency=2 * 3600,
                 blockCloseDelay=1200,
                 maxMemory=2000,
-                global_tag=repackGlobalTag,
                 versionOverride=repackVersionOverride)
 
 addRepackConfig(tier0Config, "ScoutingPF",
