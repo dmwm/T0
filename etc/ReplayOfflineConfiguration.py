@@ -1276,17 +1276,17 @@ for dataset in DATASETS:
 ### RAW Skim / Secondary Datasets ###
 #####################################
 
-#RAWSKIM_DATASETS = ["ParkingDoubleMuonLowMass0-ReserveDMu", "ParkingDoubleMuonLowMass1-ReserveDMu",
-#                    "ParkingDoubleMuonLowMass2-ReserveDMu", "ParkingDoubleMuonLowMass3-ReserveDMu",
-#                    "ParkingDoubleMuonLowMass4-ReserveDMu", "ParkingDoubleMuonLowMass5-ReserveDMu",
-#                    "ParkingDoubleMuonLowMass6-ReserveDMu", "ParkingDoubleMuonLowMass7-ReserveDMu"]
-#for rawSkimDataset in RAWSKIM_DATASETS:
-#    addDataset(tier0Config, rawSkimDataset,
-#               do_reco=False,
-#               write_dqm=True,
-#               archival_node=None,
-#               tape_node=None,
-#               scenario=ppScenario)
+RAWSKIM_DATASETS = ["ParkingDoubleMuonLowMass0-ReserveDMu", "ParkingDoubleMuonLowMass1-ReserveDMu",
+                    "ParkingDoubleMuonLowMass2-ReserveDMu", "ParkingDoubleMuonLowMass3-ReserveDMu",
+                    "ParkingDoubleMuonLowMass4-ReserveDMu", "ParkingDoubleMuonLowMass5-ReserveDMu",
+                    "ParkingDoubleMuonLowMass6-ReserveDMu", "ParkingDoubleMuonLowMass7-ReserveDMu"]
+for rawSkimDataset in RAWSKIM_DATASETS:
+    addDataset(tier0Config, rawSkimDataset,
+               do_reco=False,
+               write_dqm=True,
+               archival_node=None,
+               tape_node=None,
+               scenario=ppScenario)
 
 #######################
 ### ignored streams ###
