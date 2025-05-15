@@ -163,7 +163,7 @@ repackGlobalTag = "150X_dataRun3_Prompt_v1_ParkingDoubleMuonLowMass_v2"
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 
 # Multicore settings
-numberOfCores = 16
+numberOfCores = 8
 
 # Splitting parameters for PromptReco
 defaultRecoSplitting = 750 * numberOfCores
