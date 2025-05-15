@@ -1403,7 +1403,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common", "@hltScouting"],
                write_reco=False, write_aod=False, write_miniaod=True, write_dqm=True,
                tape_node="T1_US_FNAL_MSS",
-               nano_flavours=['@PHYS', '@L1', '@Scout'],
+               nano_flavours=['@PHYS', '@L1', '@ScoutMonitor'],
                scenario=ppScenario)
 
 DATASETS = ["ScoutingCaloCommissioning", "ScoutingCaloHT", "ScoutingCaloMuon",

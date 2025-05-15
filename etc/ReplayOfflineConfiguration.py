@@ -1236,7 +1236,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                dqm_sequences=["@common", "@hltScouting"],
-               nano_flavours=['@PHYS', '@L1', '@Scout'],
+               nano_flavours=['@PHYS', '@L1', '@ScoutMonitor'],
                write_reco=False, write_aod=False, write_miniaod=True, write_dqm=True,
                scenario=ppScenario)
 

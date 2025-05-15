@@ -950,7 +950,8 @@ class Create(DBCreator):
                            56 : "ppEra_Run3_2024_ppRef",
                            57 : "ppEra_Run3_2024",
                            58 : "ppEra_Run3_2025",
-                           59 : "AlCaHcalIsoTrk_Run3"
+                           59 : "AlCaHcalIsoTrk_Run3",
+                           60 : "hltScoutingEra_Run3_2025"
 
                          }
         for id, name in list(eventScenarios.items()):
