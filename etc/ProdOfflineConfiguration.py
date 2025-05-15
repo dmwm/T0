@@ -125,7 +125,7 @@ alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
-hltScoutingScenario = "hltScoutingEra_Run3_2024"
+hltScoutingScenario = "hltScoutingEra_Run3_2025"
 
 # Heavy Ion Scenarios 2024
 
