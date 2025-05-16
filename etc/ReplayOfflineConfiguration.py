@@ -40,7 +40,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
 # 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
 
-setInjectRuns(tier0Config, [390094, 391950]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
+setInjectRuns(tier0Config, [391949]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
@@ -144,7 +144,7 @@ alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
-hltScoutingScenario = "hltScoutingEra_Run3_2024"
+hltScoutingScenario = "hltScoutingEra_Run3_2025"
 AlCaHcalIsoTrkScenario = "AlCaHcalIsoTrk_Run3"
 
 # Procesing version number replays
@@ -159,13 +159,13 @@ alcarawProcVersion = dt
 
 expressGlobalTag = "150X_dataRun3_Express_v1"
 promptrecoGlobalTag = "150X_dataRun3_Prompt_v1"
-repackGlobalTag = "150X_dataRun3_Prompt_v1"
+repackGlobalTag = "150X_dataRun3_Prompt_v1_ParkingDoubleMuonLowMass_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 
 # Multicore settings
-numberOfCores =16
+numberOfCores = 8
 
 # Splitting parameters for PromptReco
 defaultRecoSplitting = 750 * numberOfCores
@@ -206,11 +206,12 @@ addRepackConfig(tier0Config, "Default",
                 maxLatency=2 * 3600,
                 blockCloseDelay=1200,
                 maxMemory=2000,
-                global_tag=repackGlobalTag,
                 versionOverride=repackVersionOverride)
 
+# Stream PhysicsScoutingPFMonitor --> PD ScoutingPFMonitor --> Repacked to RAW
+# Stream ScoutingPF --> PD ScoutingPF_Run3 --> Repacked to HLTSCOUT
 addRepackConfig(tier0Config, "ScoutingPF",
-                proc_ver=defaultProcVersion, 
+                proc_ver=defaultProcVersion,
                 dataTier="HLTSCOUT",
                 versionOverride=repackVersionOverride)
 
@@ -609,6 +610,7 @@ for dataset in DATASETS:
                write_dqm=True,
                dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
+               nano_flavours=["@PHYS", "@L1", "@BPH"],
                tape_node=None,
                scenario=ppScenario)
 
@@ -621,6 +623,7 @@ for dataset in DATASETS:
                write_dqm=True,
                dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
+               nano_flavours=["@PHYS", "@L1", "@BPH"],
                scenario=ppScenario)
     
 DATASETS = ["EmittanceScan0", "EmittanceScan1", "EmittanceScan2", 
@@ -1225,7 +1228,8 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False)
 
-DATASETS = ["ScoutingPFRun3"]
+DATASETS = ["ScoutingPFRun3"] # From stream ScoutingPF --> Repacked to HLTSCOUT
+
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -1240,13 +1244,13 @@ for dataset in DATASETS:
                do_reco=False,
                scenario=ppScenario)
 
-DATASETS = ["ScoutingPFMonitor"]
+DATASETS = ["ScoutingPFMonitor"] # From Stream PhysicsScoutingPFMonitor --> repacked to RAW
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                dqm_sequences=["@common", "@hltScouting"],
-               nano_flavours=['@PHYS', '@L1', '@Scout'],
+               nano_flavours=['@PHYS', '@L1', '@ScoutMonitor'],
                write_reco=False, write_aod=False, write_miniaod=True, write_dqm=True,
                scenario=ppScenario)
 
@@ -1285,17 +1289,17 @@ for dataset in DATASETS:
 ### RAW Skim / Secondary Datasets ###
 #####################################
 
-#RAWSKIM_DATASETS = ["ParkingDoubleMuonLowMass0-ReserveDMu", "ParkingDoubleMuonLowMass1-ReserveDMu",
-#                    "ParkingDoubleMuonLowMass2-ReserveDMu", "ParkingDoubleMuonLowMass3-ReserveDMu",
-#                    "ParkingDoubleMuonLowMass4-ReserveDMu", "ParkingDoubleMuonLowMass5-ReserveDMu",
-#                    "ParkingDoubleMuonLowMass6-ReserveDMu", "ParkingDoubleMuonLowMass7-ReserveDMu"]
-#for rawSkimDataset in RAWSKIM_DATASETS:
-#    addDataset(tier0Config, rawSkimDataset,
-#               do_reco=False,
-#               write_dqm=True,
-#               archival_node=None,
-#               tape_node=None,
-#               scenario=ppScenario)
+RAWSKIM_DATASETS = ["ParkingDoubleMuonLowMass0-ReserveDMu", "ParkingDoubleMuonLowMass1-ReserveDMu",
+                    "ParkingDoubleMuonLowMass2-ReserveDMu", "ParkingDoubleMuonLowMass3-ReserveDMu",
+                    "ParkingDoubleMuonLowMass4-ReserveDMu", "ParkingDoubleMuonLowMass5-ReserveDMu",
+                    "ParkingDoubleMuonLowMass6-ReserveDMu", "ParkingDoubleMuonLowMass7-ReserveDMu"]
+for rawSkimDataset in RAWSKIM_DATASETS:
+    addDataset(tier0Config, rawSkimDataset,
+               do_reco=False,
+               write_dqm=True,
+               archival_node=None,
+               tape_node=None,
+               scenario=ppScenario)
 
 #######################
 ### ignored streams ###

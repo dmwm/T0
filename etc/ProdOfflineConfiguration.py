@@ -60,7 +60,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2025B")
+setAcquisitionEra(tier0Config, "Run2025C")
 setEmulationAcquisitionEra(tier0Config, "Emulation2025")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
@@ -128,7 +128,6 @@ hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
 hltScoutingScenario = "hltScoutingEra_Run3_2024"
 AlCaHcalIsoTrkScenario = "AlCaHcalIsoTrk_Run3"
 
-
 # Heavy Ion Scenarios 2024
 
 hiForwardScenario = "ppEra_Run3_2024_UPC"
@@ -159,13 +158,13 @@ promptrecoGlobalTag = {
     #'acqEra': {'Run2023E': "132X_dataRun3_Prompt_v2"},
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Prompt_v2"}
 }
-repackGlobalTag = "150X_dataRun3_Prompt_v1"
+repackGlobalTag = "150X_dataRun3_Prompt_v1_ParkingDoubleMuonLowMass_v2"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 
 # Multicore settings
-numberOfCores = 16
+numberOfCores = 8
 
 # Splitting parameters for PromptReco
 defaultRecoSplitting = 750 * numberOfCores
@@ -176,7 +175,7 @@ alcarawSplitting = 20000 * numberOfCores
 # Setup repack and express mappings
 #
 repackVersionOverride = {
-    "CMSSW_12_6_3" : "CMSSW_12_6_4"
+    "CMSSW_15_0_5" : "CMSSW_15_0_6"
 }
 
 expressVersionOverride = {
@@ -209,6 +208,8 @@ addRepackConfig(tier0Config, "Default",
                 global_tag=repackGlobalTag,
                 versionOverride=repackVersionOverride)
 
+# Stream PhysicsScoutingPFMonitor --> PD ScoutingPFMonitor --> Repacked to RAW
+# Stream ScoutingPF --> PD ScoutingPF_Run3 --> Repacked to HLTSCOUT
 addRepackConfig(tier0Config, "ScoutingPF",
                 proc_ver=1, # Should remain 1. Changing it can cause several issues.
                 dataTier="HLTSCOUT",
@@ -614,6 +615,7 @@ for dataset in DATASETS:
                write_dqm=True,
                dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
+               nano_flavours=["@PHYS", "@L1", "@BPH"],
                archival_node=None,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
@@ -631,6 +633,7 @@ for dataset in DATASETS:
                aod_to_disk=False,
                dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
+               nano_flavours=["@PHYS", "@L1", "@BPH"],
                archival_node=None,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
@@ -1387,7 +1390,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False)
 
-DATASETS = ["ScoutingPFRun3"]
+DATASETS = ["ScoutingPFRun3"] # From stream ScoutingPF --> Repacked to HLTSCOUT
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -1406,16 +1409,16 @@ for dataset in DATASETS:
                disk_node="T1_DE_KIT_Disk",
                scenario=ppScenario)
 
-DATASETS = ["ScoutingPFMonitor"]
+DATASETS = ["ScoutingPFMonitor"] # From Stream PhysicsScoutingPFMonitor --> repacked to RAW
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
-               reco_delay=100*defaultRecoTimeout,
+               reco_delay=defaultRecoTimeout,
                dqm_sequences=["@common", "@hltScouting"],
                write_reco=False, write_aod=False, write_miniaod=True, write_dqm=True,
                tape_node="T1_US_FNAL_MSS",
-               nano_flavours=['@PHYS', '@L1', '@Scout'],
+               nano_flavours=['@PHYS', '@L1', '@ScoutMonitor'],
                scenario=ppScenario)
 
 DATASETS = ["ScoutingCaloCommissioning", "ScoutingCaloHT", "ScoutingCaloMuon",
@@ -1479,17 +1482,17 @@ for dataset in DATASETS:
 
 ### Enabling raw skim datasets REQUIRES era change ###
 
-#RAWSKIM_DATASETS = ["ParkingDoubleMuonLowMass0-ReserveDMu", "ParkingDoubleMuonLowMass1-ReserveDMu",
-#                    "ParkingDoubleMuonLowMass2-ReserveDMu", "ParkingDoubleMuonLowMass3-ReserveDMu",
-#                    "ParkingDoubleMuonLowMass4-ReserveDMu", "ParkingDoubleMuonLowMass5-ReserveDMu",
-#                    "ParkingDoubleMuonLowMass6-ReserveDMu", "ParkingDoubleMuonLowMass7-ReserveDMu"]
-#for rawSkimDataset in RAWSKIM_DATASETS:
-#    addDataset(tier0Config, rawSkimDataset,
-#               do_reco=False,
-#               write_dqm=True,
-#               archival_node=None,
-#               tape_node="T1_US_FNAL_MSS",
-#               scenario=ppScenario)
+RAWSKIM_DATASETS = ["ParkingDoubleMuonLowMass0-ReserveDMu", "ParkingDoubleMuonLowMass1-ReserveDMu",
+                    "ParkingDoubleMuonLowMass2-ReserveDMu", "ParkingDoubleMuonLowMass3-ReserveDMu",
+                    "ParkingDoubleMuonLowMass4-ReserveDMu", "ParkingDoubleMuonLowMass5-ReserveDMu",
+                    "ParkingDoubleMuonLowMass6-ReserveDMu", "ParkingDoubleMuonLowMass7-ReserveDMu"]
+for rawSkimDataset in RAWSKIM_DATASETS:
+    addDataset(tier0Config, rawSkimDataset,
+               do_reco=False,
+               write_dqm=True,
+               archival_node=None,
+               tape_node="T1_US_FNAL_MSS",
+               scenario=ppScenario)
 
 
 
@@ -1514,7 +1517,13 @@ ignoreStream(tier0Config, "DQMPPSRandom")
 #SECOND_AGENT_STREAMS = STREAMS_ppRef_ZBandFwd_secondAgent
 #THIRD_AGENT_STREAMS = STREAMS_DAQ_TFTEST + STREAMS_DAQ_TFTEST_ppRef
 
-SECOND_AGENT_STREAMS = []
+SECOND_AGENT_STREAMS = ["ParkingSingleMuon0", "ParkingSingleMuon1", "ParkingSingleMuon2",
+                        "ParkingSingleMuon3", "ParkingSingleMuon4", "ParkingSingleMuon5",
+                        "ParkingSingleMuon6", "ParkingSingleMuon7", "ParkingSingleMuon8",
+                        "ParkingSingleMuon9", "ParkingSingleMuon10", "ParkingSingleMuon11",
+                        "ParkingSingleMuon12", "ParkingSingleMuon13", "ParkingSingleMuon14",
+                        "ParkingSingleMuon15"]
+
 THIRD_AGENT_STREAMS = []
 setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
                                     "ThirdAgent" : THIRD_AGENT_STREAMS})
