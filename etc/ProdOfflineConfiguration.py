@@ -206,7 +206,7 @@ addRepackConfig(tier0Config, "Default",
                 maxMemory=2000,
                 global_tag=repackGlobalTag,
                 versionOverride=repackVersionOverride)
-                
+
 # Stream PhysicsScoutingPFMonitor --> PD ScoutingPFMonitor --> Repacked to RAW
 # Stream ScoutingPF --> PD ScoutingPF_Run3 --> Repacked to HLTSCOUT
 addRepackConfig(tier0Config, "ScoutingPF",
@@ -1403,7 +1403,7 @@ DATASETS = ["ScoutingPFMonitor"] # From Stream PhysicsScoutingPFMonitor --> repa
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
-               reco_delay=100*defaultRecoTimeout,
+               reco_delay=defaultRecoTimeout,
                dqm_sequences=["@common", "@hltScouting"],
                write_reco=False, write_aod=False, write_miniaod=True, write_dqm=True,
                tape_node="T1_US_FNAL_MSS",
