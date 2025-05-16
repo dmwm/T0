@@ -206,7 +206,9 @@ addRepackConfig(tier0Config, "Default",
                 maxMemory=2000,
                 global_tag=repackGlobalTag,
                 versionOverride=repackVersionOverride)
-
+                
+# Stream PhysicsScoutingPFMonitor --> PD ScoutingPFMonitor --> Repacked to RAW
+# Stream ScoutingPF --> PD ScoutingPF_Run3 --> Repacked to HLTSCOUT
 addRepackConfig(tier0Config, "ScoutingPF",
                 proc_ver=1, # Should remain 1. Changing it can cause several issues.
                 dataTier="HLTSCOUT",
@@ -1377,7 +1379,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False)
 
-DATASETS = ["ScoutingPFRun3"]
+DATASETS = ["ScoutingPFRun3"] # From stream ScoutingPF --> Repacked to HLTSCOUT
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -1396,7 +1398,7 @@ for dataset in DATASETS:
                disk_node="T1_DE_KIT_Disk",
                scenario=ppScenario)
 
-DATASETS = ["ScoutingPFMonitor"]
+DATASETS = ["ScoutingPFMonitor"] # From Stream PhysicsScoutingPFMonitor --> repacked to RAW
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1511,7 +1513,7 @@ SECOND_AGENT_STREAMS = ["ParkingSingleMuon0", "ParkingSingleMuon1", "ParkingSing
                         "ParkingSingleMuon9", "ParkingSingleMuon10", "ParkingSingleMuon11",
                         "ParkingSingleMuon12", "ParkingSingleMuon13", "ParkingSingleMuon14",
                         "ParkingSingleMuon15"]
-                        
+
 THIRD_AGENT_STREAMS = []
 setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
                                     "ThirdAgent" : THIRD_AGENT_STREAMS})

@@ -206,9 +206,11 @@ addRepackConfig(tier0Config, "Default",
                 blockCloseDelay=1200,
                 maxMemory=2000,
                 versionOverride=repackVersionOverride)
-
+                
+# Stream PhysicsScoutingPFMonitor --> PD ScoutingPFMonitor --> Repacked to RAW
+# Stream ScoutingPF --> PD ScoutingPF_Run3 --> Repacked to HLTSCOUT
 addRepackConfig(tier0Config, "ScoutingPF",
-                proc_ver=defaultProcVersion, 
+                proc_ver=defaultProcVersion,
                 dataTier="HLTSCOUT",
                 versionOverride=repackVersionOverride)
 
@@ -1217,7 +1219,8 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False)
 
-DATASETS = ["ScoutingPFRun3"]
+DATASETS = ["ScoutingPFRun3"] # From stream ScoutingPF --> Repacked to HLTSCOUT
+
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -1232,7 +1235,7 @@ for dataset in DATASETS:
                do_reco=False,
                scenario=ppScenario)
 
-DATASETS = ["ScoutingPFMonitor"]
+DATASETS = ["ScoutingPFMonitor"] # From Stream PhysicsScoutingPFMonitor --> repacked to RAW
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
