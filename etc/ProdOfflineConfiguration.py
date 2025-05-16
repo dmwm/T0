@@ -1067,6 +1067,17 @@ for dataset in DATASETS:
                alca_producers=["EcalCalPi0Calib", "EcalCalEtaCalib"],
                scenario=ppScenario)
 
+DATASETS = ["AlCaHcalIsoTrk"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               raw_to_disk=True,
+               reco_delay=10 * 24 * 3600,
+               disk_node="T2_CH_CERN",
+               alca_producers=["HcalCalIsoTrkFromAlCaRaw"],
+               scenario=AlCaHcalIsoTrkScenario)
+
 ########################################################
 ### HLTPhysics PDs                                   ###
 ########################################################

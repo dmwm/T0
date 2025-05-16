@@ -206,7 +206,7 @@ addRepackConfig(tier0Config, "Default",
                 blockCloseDelay=1200,
                 maxMemory=2000,
                 versionOverride=repackVersionOverride)
-                
+
 # Stream PhysicsScoutingPFMonitor --> PD ScoutingPFMonitor --> Repacked to RAW
 # Stream ScoutingPF --> PD ScoutingPF_Run3 --> Repacked to HLTSCOUT
 addRepackConfig(tier0Config, "ScoutingPF",
@@ -977,6 +977,14 @@ for dataset in DATASETS:
                do_reco=False,
                alca_producers=["EcalCalPi0Calib", "EcalCalEtaCalib"],
                scenario=ppScenario)
+
+DATASETS = ["AlCaHcalIsoTrk"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               alca_producers=["HcalCalIsoTrkFromAlCaRaw"],
+               scenario=AlCaHcalIsoTrkScenario)
 
 ########################################################
 ### HLTPhysics PDs                                   ###
