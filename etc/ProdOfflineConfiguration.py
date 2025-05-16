@@ -1069,7 +1069,7 @@ DATASETS = ["AlCaHcalIsoTrk"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
+               do_reco=True,
                raw_to_disk=True,
                disk_node="T2_CH_CERN",
                alca_producers=["HcalCalIsoTrkFromAlCaRaw"],
