@@ -145,6 +145,7 @@ alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
 hltScoutingScenario = "hltScoutingEra_Run3_2025"
+AlCaHcalIsoTrkScenario = "AlCaHcalIsoTrk_Run3"
 
 # Procesing version number replays
 # Taking Replay processing ID from the last 8 digits of the DeploymentID
@@ -982,10 +983,10 @@ DATASETS = ["AlCaHcalIsoTrk"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
+               do_reco=True,
                alca_producers=["HcalCalIsoTrkFromAlCaRaw"],
                scenario=AlCaHcalIsoTrkScenario)
-
+    
 ########################################################
 ### HLTPhysics PDs                                   ###
 ########################################################

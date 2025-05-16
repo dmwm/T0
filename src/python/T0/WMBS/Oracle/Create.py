@@ -952,7 +952,6 @@ class Create(DBCreator):
                            58 : "ppEra_Run3_2025",
                            59 : "AlCaHcalIsoTrk_Run3",
                            60 : "hltScoutingEra_Run3_2025"
-
                          }
         for id, name in list(eventScenarios.items()):
             sql = """INSERT INTO event_scenario

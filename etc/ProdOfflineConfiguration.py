@@ -125,7 +125,8 @@ alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
 hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
-hltScoutingScenario = "hltScoutingEra_Run3_2025"
+hltScoutingScenario = "hltScoutingEra_Run3_2024"
+AlCaHcalIsoTrkScenario = "AlCaHcalIsoTrk_Run3"
 
 # Heavy Ion Scenarios 2024
 
@@ -1071,13 +1072,12 @@ DATASETS = ["AlCaHcalIsoTrk"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
+               do_reco=True,
                raw_to_disk=True,
-               reco_delay=10 * 24 * 3600,
                disk_node="T2_CH_CERN",
                alca_producers=["HcalCalIsoTrkFromAlCaRaw"],
                scenario=AlCaHcalIsoTrkScenario)
-
+    
 ########################################################
 ### HLTPhysics PDs                                   ###
 ########################################################
@@ -1451,7 +1451,6 @@ for dataset in DATASETS:
                alca_producers=["PPSCalMaxTracks"],
                dqm_sequences=["@none"],
                scenario=alcaPPSScenario)
-
 
 ######################
 ###    DAQ TEST    ###
