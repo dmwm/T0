@@ -878,7 +878,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               alca_producers=["TkAlMinBias", "SiStripCalMinBias", "HcalCalIsoTrk"],
+               alca_producers=["TkAlMinBias", "SiStripCalMinBias"],
                dqm_sequences=["@common", "@L1TMon", "@hcal"],
                physics_skims=["EcalActivity", "LogError", "LogErrorMonitor"],
                timePerEvent=12,
