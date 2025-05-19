@@ -268,6 +268,7 @@ addExpressConfig(tier0Config, "Express",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  maxMemoryperCore=2000,
+                 mergeTaskMemory=3.0 * 1024,
                  dataset_lifetime=12*30*24*3600,#lifetime for container rules. Default 12 months
                  versionOverride=expressVersionOverride)
 
