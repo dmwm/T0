@@ -98,12 +98,12 @@ setPromptCalibrationConfig(tier0Config,
 #   'maxRun': {100000: Value3, 200000: Value4},
 #   'default': Value5 }
 
-# maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
+maxRunPreviousConfig = 392513 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_0_6",
+    'default': "CMSSW_15_0_6_patch1",
     #'acqEra': {'Run2024F': "CMSSW_14_0_11"},
-    #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
+    'maxRun': {maxRunPreviousConfig: "CMSSW_15_0_6"}
 }
 
 # Configure ScramArch
