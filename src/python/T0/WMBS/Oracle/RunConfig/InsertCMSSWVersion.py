@@ -22,8 +22,8 @@ class InsertCMSSWVersion(DBFormatter):
                    IF (cnt = 0)
                    THEN
                      INSERT INTO cmssw_version
-                     (ID, NAME)
-                     VALUES(cmssw_version_SEQ.nextval, :VERSION)
+                     (NAME)
+                     VALUES(:VERSION)
                      ;
                    END IF;
                  EXCEPTION

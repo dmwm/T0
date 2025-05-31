@@ -12,8 +12,8 @@ class InsertPrimaryDataset(DBFormatter):
     def execute(self, binds, conn = None, transaction = False):
 
         sql = """INSERT INTO primary_dataset
-                 (ID, NAME)
-                 SELECT primary_dataset_SEQ.nextval, :PRIMDS
+                 (NAME)
+                 SELECT :PRIMDS
                  FROM DUAL
                  WHERE NOT EXISTS (
                    SELECT * FROM primary_dataset
