@@ -1081,8 +1081,8 @@ class RunConfigTest(unittest.TestCase):
         """
         myThread = threading.currentThread()
 
-        myThread.dbi.processData("""INSERT INTO wmbs_pnns (id, pnn)
-                                    VALUES (wmbs_pnns_SEQ.nextval, '%s')
+        myThread.dbi.processData("""INSERT INTO wmbs_pnns (pnn)
+                                    VALUES ('%s')
                                     """ % pnn, transaction = False)
 
         return
