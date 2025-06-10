@@ -101,7 +101,7 @@ setPromptCalibrationConfig(tier0Config,
 maxRunPreviousConfig = 392513 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_0_6_patch1",
+    'default': "CMSSW_15_0_7",
     #'acqEra': {'Run2024F': "CMSSW_14_0_11"},
     'maxRun': {maxRunPreviousConfig: "CMSSW_15_0_6"}
 }
@@ -136,15 +136,15 @@ hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2024"
 
 # Defaults for processing version
 alcarawProcVersion = {
-    'default': 1
+    'default': 2
 }
 
 defaultProcVersionReco = {
-    'default': 1
+    'default': 2
 }
 
 expressProcVersion = {
-    'default': 1
+    'default': 2
 }
 
 # Defaults for GlobalTag
