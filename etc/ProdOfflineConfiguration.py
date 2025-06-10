@@ -60,7 +60,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2025D")
+setAcquisitionEra(tier0Config, "Run2025C")
 setEmulationAcquisitionEra(tier0Config, "Emulation2025")
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
@@ -136,15 +136,15 @@ hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2024"
 
 # Defaults for processing version
 alcarawProcVersion = {
-    'default': 1
+    'default': 2
 }
 
 defaultProcVersionReco = {
-    'default': 1
+    'default': 2
 }
 
 expressProcVersion = {
-    'default': 1
+    'default': 2
 }
 
 # Defaults for GlobalTag
