@@ -150,6 +150,7 @@ hltScoutingScenario = "hltScoutingEra_Run3_2025"
 AlCaHcalIsoTrkScenario = "AlCaHcalIsoTrk_Run3"
 OXYScenario = "Run3_2025_OXY"
 
+
 # Procesing version number replays
 # Taking Replay processing ID from the last 8 digits of the DeploymentID
 dt = int(open("/data/tier0/DeploymentID.txt","r").read()[4:])
@@ -160,7 +161,7 @@ alcarawProcVersion = dt
 # Defaults for GlobalTag
 
 
-expressGlobalTag = "150X_dataRun3_Express_v1"
+expressGlobalTag = "150X_dataRun3_Express_v2"
 promptrecoGlobalTag = "150X_dataRun3_Prompt_v1"
 repackGlobalTag = "150X_dataRun3_Prompt_v1_ParkingDoubleMuonLowMass_v2"
 
