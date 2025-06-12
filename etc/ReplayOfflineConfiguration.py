@@ -81,9 +81,10 @@ addSiteConfig(tier0Config, "EOS_PILOT",
 #  Processing site (where jobs run)
 #  PhEDEx locations
 
+maxRunPreviousEra = 392205
 acquisitionEra = {
     'default' : 'Tier0_REPLAY_2025D',
-    'maxRun' : {392205 : 'Tier0_REPLAY_2025C'}
+    'maxRun' : {maxRunPreviousEra : 'Tier0_REPLAY_2025C'}
 }
 setAcquisitionEra(tier0Config, acquisitionEra)
 setBaseRequestPriority(tier0Config, 260000)
