@@ -12,8 +12,8 @@ class InsertStorageNode(DBFormatter):
     def execute(self, binds, conn = None, transaction = False):
 
         sql = """INSERT INTO storage_node
-                 (ID, NAME)
-                 SELECT storage_node_SEQ.nextval, :NODE
+                 (NAME)
+                 SELECT :NODE
                  FROM DUAL
                  WHERE NOT EXISTS (
                    SELECT * FROM storage_node
