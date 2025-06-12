@@ -61,10 +61,10 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Processing site (where jobs run)
 #  PhEDEx locations
 
-maxRunPreviousEra = 390100
+#maxRunPreviousEra = 9999999
 acquisitionEra = {
-    'default' : 'Run2025D',
-    #'maxRun' : {maxRunPreviousEra : 'Run2025C'}
+    'default' : 'Run2025C',
+    #'maxRun' : {maxRunPreviousEra : 'Run2025B'}
 }
 setAcquisitionEra(tier0Config, acquisitionEra)
 setEmulationAcquisitionEra(tier0Config, "Emulation2025", repack=False)
