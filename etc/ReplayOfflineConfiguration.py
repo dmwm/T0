@@ -148,7 +148,7 @@ hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
 hltScoutingScenario = "hltScoutingEra_Run3_2025"
 AlCaHcalIsoTrkScenario = "AlCaHcalIsoTrk_Run3"
-OXYScenario = "Run3_2025_OXY"
+OXYScenario = "ppEra_Run3_2025_OXY"
 
 
 # Procesing version number replays
