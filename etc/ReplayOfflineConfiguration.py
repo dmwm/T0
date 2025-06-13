@@ -127,7 +127,7 @@ setPromptCalibrationConfig(
 #
 # { 'acqEra': {'Era1': Value1, 'Era2': Value2},
 #   'maxRun': {100000: Value3, 200000: Value4},
-#   'default': Value5 }
+#   'default': Value5 }///
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {"default": "CMSSW_15_0_8"}
