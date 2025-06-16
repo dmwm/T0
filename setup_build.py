@@ -1,5 +1,4 @@
 from __future__ import print_function
-import importlib
 from distutils.core import Command
 from distutils.command.build import build
 from distutils.command.install import install
@@ -7,21 +6,6 @@ from distutils.spawn import spawn
 import re, os, sys, os.path, shutil
 from glob import glob
 from setup_dependencies import dependencies
-
-def load_source(modname, filename):
-    """
-    This function is required as we move away from imp
-    imp is deprecated in python3.12
-    Further deails see https://docs.python.org/dev/whatsnew/3.12.html#imp
-    """
-    loader = importlib.machinery.SourceFileLoader(modname, filename)
-    spec = importlib.util.spec_from_file_location(modname, filename, loader=loader)
-    module = importlib.util.module_from_spec(spec)
-    # The module is always executed and not cached in sys.modules.
-    # Uncomment the following line to cache the module.
-    # sys.modules[module.__name__] = module
-    loader.exec_module(module)
-    return module
 
 def get_path_to_t0_root():
     """

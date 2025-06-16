@@ -4,12 +4,13 @@ Build, clean and test the t0 package.
 """
 from __future__ import print_function
 
-import importlib
+import imp
 import os
 import os.path
 from distutils.core import Command, setup
 from os.path import join as pjoin
-from setup_build import BuildCommand, InstallCommand, get_path_to_t0_root, list_packages, list_static_files, load_source
+
+from setup_build import BuildCommand, InstallCommand, get_path_to_t0_root, list_packages, list_static_files
 
 
 class CleanCommand(Command):
@@ -98,9 +99,8 @@ DEFAULT_PACKAGES = list_packages(['src/python/T0',
 # depend on the python module resolution behavior to load the version.
 # Instead, we use the imp module to load the source file directly by
 # filename.
-
 t0_root = get_path_to_t0_root()
-t0_package = load_source('temp_module', os.path.join(t0_root,
+t0_package = imp.load_source('temp_module', os.path.join(t0_root,
                                                             'src',
                                                             'python',
                                                             'T0',
