@@ -7,9 +7,9 @@
 from __future__ import print_function, division
 import os
 import sys
-import imp
+import importlib
 from setuptools import setup
-from setup_build import list_packages, list_static_files, get_path_to_t0_root
+from setup_build import list_packages, list_static_files, get_path_to_t0_root, load_source
 
 # Obnoxiously, there's a dependency cycle when building packages. We'd like
 # to simply get the current T0 version by using
@@ -19,7 +19,7 @@ from setup_build import list_packages, list_static_files, get_path_to_t0_root
 # Instead, we use the imp module to load the source file directly by
 # filename.
 t0_root = get_path_to_t0_root()
-t0_package = imp.load_source('temp_module', os.path.join(t0_root,
+t0_package = load_source('temp_module', os.path.join(t0_root,
                                                              'src',
                                                              'python',
                                                              'T0',
