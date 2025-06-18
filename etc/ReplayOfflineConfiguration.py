@@ -148,6 +148,8 @@ hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
 hltScoutingScenario = "hltScoutingEra_Run3_2025"
 AlCaHcalIsoTrkScenario = "AlCaHcalIsoTrk_Run3"
+OXYScenario = "ppEra_Run3_2025_OXY"
+
 
 # Procesing version number replays
 # Taking Replay processing ID from the last 8 digits of the DeploymentID
@@ -159,7 +161,7 @@ alcarawProcVersion = dt
 # Defaults for GlobalTag
 
 
-expressGlobalTag = "150X_dataRun3_Express_v1"
+expressGlobalTag = "150X_dataRun3_Express_v2"
 promptrecoGlobalTag = "150X_dataRun3_Prompt_v1"
 repackGlobalTag = "150X_dataRun3_Prompt_v1_ParkingDoubleMuonLowMass_v2"
 
@@ -282,7 +284,7 @@ addExpressConfig(tier0Config, "Express",
                  blockCloseDelay=1200,
                  timePerEvent=4,
                  sizePerEvent=1700,
-                 maxMemoryperCore=2000,
+                 maxMemoryperCore=100,
                  dataset_lifetime=7*24*3600,#lifetime for container rules. Default 14 days
                  versionOverride=expressVersionOverride)
 
@@ -610,9 +612,9 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common", "@muon", "@heavyFlavor"],
+               dqm_sequences=["@common", "@mun", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
-               nano_flavours=["@PHYS", "@L1", "@BPH"],
+               nano_flavours=["@PHYS", "@L1", "@B"],
                tape_node=None,
                scenario=ppScenario)
 
