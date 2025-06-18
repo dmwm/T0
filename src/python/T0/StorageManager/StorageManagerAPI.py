@@ -20,7 +20,8 @@ def injectNewData(dbInterfaceStorageManager,
                   maxRun = None,
                   injectRun = None,
                   injectLimit = None,
-                  agentType = None):
+                  agentType = None,
+                  emulationRepack = None):
     """
     _injectNewData_
 
@@ -107,6 +108,12 @@ def injectNewData(dbInterfaceStorageManager,
         if not setupLabel:
             logging.warning(f"Cannot retrieve setup label for run {run}, use default Data")
             setupLabel = "Data" # set default setupLabel to data
+
+        if setupLabel == "Emulation" and not emulationRepack:
+            newRuns.remove(run)
+            logging.info(f"Discard emulation run {run}")
+            continue
+
         logging.debug("StorageManagerAPI: run = %d, hltkey = %s, cmssw = %s, setupLabel = %s", run, hltkey, cmssw, setupLabel)
         if hltkey and cmssw:
             cmssw = '_'.join(cmssw.split('_')[0:4]) # only consider base release

@@ -184,7 +184,8 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                     streamerPNN = tier0Config.Global.StreamerPNN,
                                                     minRun = tier0Config.Global.InjectMinRun,
                                                     maxRun = tier0Config.Global.InjectMaxRun,
-                                                    agentType = self.agentType)
+                                                    agentType = self.agentType,
+                                                    emulationRepack = tier0Config.Global.EmulationRepack)
                 else:
                     injectRuns = set()
                     for injectRun in tier0Config.Global.InjectRuns:
@@ -197,7 +198,8 @@ class Tier0FeederPoller(BaseWorkerThread):
                                                         streamerPNN = tier0Config.Global.StreamerPNN,
                                                         injectRun = injectRun,
                                                         injectLimit= tier0Config.Global.InjectLimit,
-                                                        agentType = self.agentType)
+                                                        agentType = self.agentType,
+                                                        emulationRepack = tier0Config.Global.EmulationRepack)
                         self.injectedRuns.add(injectRun)
             except:
                 # shouldn't happen, just a catch all insurance

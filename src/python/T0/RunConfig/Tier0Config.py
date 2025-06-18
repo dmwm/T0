@@ -37,6 +37,7 @@ Tier0Configuration - Global configuration object
 | |       |--> AcquisitionEra - The acquisition era for the run
 | |       |
 | |       |--> EmulationAcquisitionEra - The acquisition era for emulated runs
+| |       |--> EmulationRepack - switch on/off repack for emulation runs
 | |       |
 | |       |--> Backfill - The backfill mode, can be None, 1 or 2
 | |       |
@@ -649,13 +650,14 @@ def setAcquisitionEra(config, acquisitionEra):
     config.Global.AcquisitionEra = acquisitionEra
     return
 
-def setEmulationAcquisitionEra(config, emulationAcquisitionEra):
+def setEmulationAcquisitionEra(config, emulationAcquisitionEra, repack):
     """
     _setEmulationAcquisitionEra_
 
     Set the acquisition era for emulated data.
     """
     config.Global.EmulationAcquisitionEra = emulationAcquisitionEra
+    config.Global.EmulationRepack = repack
     return
 
 
