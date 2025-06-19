@@ -60,7 +60,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2025C")
+setAcquisitionEra(tier0Config, "pORun2025A")
 setEmulationAcquisitionEra(tier0Config, "Emulation2025", repack=False)
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
@@ -1380,6 +1380,34 @@ for dataset in DATASETS:
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
+
+########################################################
+### Proton - Oxygen Datasets Here                    ###
+########################################################
+
+DATASETS = ["ProtonOxygenDataset1", "ProtonOxygenDataset2"]
+for dataset in DATASETS:
+    addDataset(tier0Config, "Default",
+                do_reco=True,
+                write_reco=False, 
+                write_aod=True, 
+                write_miniaod=True, 
+                write_nanoaod=True, 
+                write_dqm=False,
+                dqm_sequences=["ASK-EXPERTS"],
+                alca_producers=["ASK-EXPERTS"],
+                physics_skims=["ASK-EXPERTS"],
+                archival_node="T0_CH_CERN_MSS",
+                tape_node="T1_US_FNAL_MSS",
+                disk_node="T1_US_FNAL_Disk",
+                raw_to_disk=False,
+                aod_to_disk=True,
+                nano_flavours=['@PHYS', '@L1'],
+                scenario=OXYScenario)
+
+
+
+
 
 ########################################################
 ### Parking and Scouting PDs                         ###
