@@ -63,8 +63,10 @@ def getAcquisitionEra(tier0Config, run):
             thresholdRuns = list(tier0Config.Global.AcquisitionEra['maxRun'])
             caseRun = max(thresholdRuns)
         
-        if run <= caseRun:
-            acqEra = tier0Config.Global.AcquisitionEra['maxRun'][caseRun]
+            if run <= caseRun:
+                acqEra = tier0Config.Global.AcquisitionEra['maxRun'][caseRun]
+            else:
+                acqEra = tier0Config.Global.AcquisitionEra['default']
         else:
             acqEra = tier0Config.Global.AcquisitionEra['default']
             
