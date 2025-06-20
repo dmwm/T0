@@ -30,8 +30,8 @@ then
     exit
 fi
 
-WMAGENT_TAG=2.3.9.2
-TIER0_VERSION=3.2.9.1
+WMAGENT_TAG=2.4.0
+TIER0_VERSION=3.4.0
 COUCH_TAG=3.2.2
 
 BASE_DIR=/data/tier0
@@ -77,8 +77,8 @@ wget $WMA_VENV_DEPLOY_SCRIPT -O $BASE_DIR/deploy-wmagent-venv.sh
 sed -i 's|\$WMA_CERTS_DIR/myproxy.pem|\$WMA_CERTS_DIR/robot-proxy-vocms001.pem|g' $BASE_DIR/deploy-wmagent-venv.sh
 #bash $BASE_DIR/deploy-wmagent-venv.sh -t $WMAGENT_TAG -d $DEPLOY_DIR -y -s
 
-bash $BASE_DIR/deploy-wmagent-venv.sh -t $WMAGENT_TAG -d $DEPLOY_DIR -y
-
+#bash $BASE_DIR/deploy-wmagent-venv.sh -t $WMAGENT_TAG -d $DEPLOY_DIR -y
+bash $BASE_DIR/deploy-wmagent-venv.sh -t $WMAGENT_TAG -d $DEPLOY_DIR -p /usr/bin/python3.12 -y
 #######################################################################
 echo "Setting up secrets file"
 sleep 1
