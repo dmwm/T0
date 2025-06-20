@@ -41,7 +41,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
 # 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
 
-setInjectRuns(tier0Config, [392204]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
+setInjectRuns(tier0Config, [392204, 393274]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
@@ -81,7 +81,13 @@ addSiteConfig(tier0Config, "EOS_PILOT",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Tier0_REPLAY_2025")
+
+maxRunPreviousEra = 392206
+acquisitionEra = {
+    'default' : 'Tier0_REPLAY_2025',
+    #'maxRun' : {maxRunPreviousEra : 'Tier0_REPLAY_2025A'}
+}
+setAcquisitionEra(tier0Config, acquisitionEra)
 setEmulationAcquisitionEra(tier0Config, "Emulation2025", repack=False)
 setBaseRequestPriority(tier0Config, 260000)
 setBackfill(tier0Config, 1)
