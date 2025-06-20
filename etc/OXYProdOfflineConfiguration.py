@@ -1416,10 +1416,23 @@ for dataset in DATASETS:
 #################### SPECIAL RUNS ######################
 
 ########################################################
-### Proton - Oxygen Datasets Here                    ###
+### Special Oxygen and Neon Datasets Here            ###
 ########################################################
 
-DATASETS = ["ProtonOxygenDataset0", "ProtonOxygenDataset1"]
+DATASETS = ["IonPhysics0", "IonPhysics1", "IonPhysics2", "IonPhysics3", "IonPhysics4",
+            "IonPhysics5", "IonPhysics6", "IonPhysics7", "IonPhysics8", "IonPhysics9",
+            "IonPhysics10", "IonPhysics11", "IonPhysics12", "IonPhysics13", "IonPhysics14",
+            "IonPhysics15", "IonPhysics16", "IonPhysics17", "IonPhysics18", "IonPhysics19",
+            "IonPhysics20", "IonPhysics21", "IonPhysics22", "IonPhysics23", "IonPhysics24",
+            "IonPhysics25", "IonPhysics26", "IonPhysics27", "IonPhysics28", "IonPhysics29",
+            "IonPhysics30", "IonPhysics31", "IonPhysics32", "IonPhysics33", "IonPhysics34",
+            "IonPhysics35", "IonPhysics36", "IonPhysics37", "IonPhysics38", "IonPhysics39",
+            "IonPhysics40", "IonPhysics41", "IonPhysics42", "IonPhysics43", "IonPhysics44",
+            "IonPhysics45", "IonPhysics46", "IonPhysics47", "IonPhysics48", "IonPhysics49",
+            "IonPhysics50", "IonPhysics51", "IonPhysics52", "IonPhysics53", "IonPhysics54",
+            "IonPhysics55", "IonPhysics56", "IonPhysics57", "IonPhysics58", "IonPhysics59"
+]
+
 for dataset in DATASETS:
     addDataset(tier0Config, "Default",
                 do_reco=True,
@@ -1438,55 +1451,6 @@ for dataset in DATASETS:
                 aod_to_disk=True,
                 nano_flavours=['@PHYS', '@L1'],
                 scenario=OXYScenario)
-
-########################################################
-### Oxyden - Oxygen Datasets Here                    ###
-########################################################
-
-DATASETS = ["OxygenOxygenDataset0", "OxygenOxygenDataset1"]
-for dataset in DATASETS:
-    addDataset(tier0Config, "Default",
-                do_reco=True,
-                write_reco=False, 
-                write_aod=True, 
-                write_miniaod=True, 
-                write_nanoaod=True, 
-                write_dqm=False,
-                dqm_sequences=["ASK-EXPERTS"],
-                alca_producers=["ASK-EXPERTS"],
-                physics_skims=["ASK-EXPERTS"],
-                archival_node="T0_CH_CERN_MSS",
-                tape_node="T1_US_FNAL_MSS",
-                disk_node="T1_US_FNAL_Disk",
-                raw_to_disk=False,
-                aod_to_disk=True,
-                nano_flavours=['@PHYS', '@L1'],
-                scenario=OXYScenario)
-
-########################################################
-### Neon - Neon Datasets Here                    ###
-########################################################
-
-DATASETS = ["NeonNeonDataset0", "NeonNeonDataset1"]
-for dataset in DATASETS:
-    addDataset(tier0Config, "Default",
-                do_reco=True,
-                write_reco=False, 
-                write_aod=True, 
-                write_miniaod=True, 
-                write_nanoaod=True, 
-                write_dqm=False,
-                dqm_sequences=["ASK-EXPERTS"],
-                alca_producers=["ASK-EXPERTS"],
-                physics_skims=["ASK-EXPERTS"],
-                archival_node="T0_CH_CERN_MSS",
-                tape_node="T1_US_FNAL_MSS",
-                disk_node="T1_US_FNAL_Disk",
-                raw_to_disk=False,
-                aod_to_disk=True,
-                nano_flavours=['@PHYS', '@L1'],
-                scenario=OXYScenario)
-
 
 ########################################################
 
