@@ -29,18 +29,24 @@ from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setStorageSite
 from T0.RunConfig.Tier0Config import setExtraStreamDatasetMap
 from T0.RunConfig.Tier0Config import setHelperAgentStreams
-
+from T0.RunConfig.Tier0Config import setInjectRuns
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
 
 # Set the verstion configuration (not used at the moment)
 setConfigVersion(tier0Config, "3.2.3")
 
-# Set the min run number:
-setInjectMinRun(tier0Config, 9999999)
+# All runs to reprocess are: 
+# 392159, 392163, 392166, 392167, 392168, 
+# 392171, 392174, 392175, 392194, 392196, 
+# 392197, 392198, 392199, 392200, 392201, 392202, 
+# 392203, 392204, 392205, 392206, 392207, 
+# 392209, 392210, 392217, 392219, 392220, 
+# 392221, 392222, 392223, 392224, 392230, 392232, 
+# 392233, 392235, 392236, 392237, 392239, 392240, 392241
 
-# Set the max run number:
-setInjectMaxRun(tier0Config, 9999999)
+runs_to_reprocess = [392159, 392163, 392166, 392167, 392168, 392171, 392174]
+setInjectRuns(tier0Config, runs_to_reprocess)
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -1517,17 +1523,26 @@ ignoreStream(tier0Config, "DQMPPSRandom")
 #SECOND_AGENT_STREAMS = STREAMS_ppRef_ZBandFwd_secondAgent
 #THIRD_AGENT_STREAMS = STREAMS_DAQ_TFTEST + STREAMS_DAQ_TFTEST_ppRef
 
-SECOND_AGENT_STREAMS = ["ParkingSingleMuon0", "ParkingSingleMuon1", "ParkingSingleMuon2",
-                        "ParkingSingleMuon3", "ParkingSingleMuon4", "ParkingSingleMuon5",
-                        "ParkingSingleMuon6", "ParkingSingleMuon7", "ParkingSingleMuon8",
-                        "ParkingSingleMuon9", "ParkingSingleMuon10", "ParkingSingleMuon11",
-                        "ParkingSingleMuon12", "ParkingSingleMuon13", "ParkingSingleMuon14",
-                        "ParkingSingleMuon15"]
+THIRD_AGENT_STREAMS = [ 'ParkingSingleMuon0', 'ParkingSingleMuon1', 'ParkingSingleMuon2',
+                        'ParkingSingleMuon3', 'ParkingSingleMuon4', 'ParkingSingleMuon5',
+                        'ParkingSingleMuon6', 'ParkingSingleMuon7', 'ParkingSingleMuon8',
+                        'ParkingSingleMuon9', 'ParkingSingleMuon10', 'ParkingSingleMuon11',
+                        'ParkingSingleMuon12', 'ParkingSingleMuon13', 'ParkingSingleMuon14',
+                        'ParkingSingleMuon15',
+                        'ALCAHcalIsoTrk', 'ParkingAnomalyDetection', 
+                        'ParkingHH', 'ParkingLLP',
+                        'ParkingVBF0', 'ParkingVBF1', 'ParkingVBF2', 'ParkingVBF3',
+                        'PhysicsBTagMuEGTau', 
+                        'PhysicsEGamma0', 'PhysicsEGamma1', 'PhysicsEGamma2','PhysicsEGamma3',
+                        'PhysicsEmittanceScan0', 'PhysicsEmittanceScan1','PhysicsEmittanceScan2',
+                        'PhysicsHLTPhysics0', 'PhysicsHLTPhysics1', 'PhysicsHLTPhysics2', 'PhysicsHLTPhysics3',
+                        'PhysicsJetMET0', 'PhysicsJetMET1',
+                        'PhysicsMuon0', 'PhysicsMuon1',
+                        'PhysicsZeroBias0', 'PhysicsZeroBias1', 'PhysicsZeroBias2', 'PhysicsZeroBias3',
+                        'ScoutingPF'
+]
 
-THIRD_AGENT_STREAMS = []
-setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
-                                    "ThirdAgent" : THIRD_AGENT_STREAMS})
-
+setHelperAgentStreams(tier0Config, {"ThirdAgent" : THIRD_AGENT_STREAMS})
 
 ###################################
 ### currently inactive settings ###
