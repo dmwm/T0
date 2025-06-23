@@ -103,10 +103,12 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
             if not alcaHarvestLumiURL:
                 raise RuntimeError("Problem in configureRun() : Invalid AlcaHarvestLumiURL !")
 
+        # Select bulkData by run number   
+        bulkDataType = extractConfigParameter(tier0Config.Global.BulkDataType, runInfo['acq_era'], run)
         bindsUpdateRun = { 'RUN' : run,
                            'PROCESS' : hltConfig['process'],
                            'BACKFILL' : tier0Config.Global.Backfill,
-                           'BULKDATATYPE' : tier0Config.Global.BulkDataType,
+                           'BULKDATATYPE' : bulkDataType,
                            'DQMUPLOADURL' : tier0Config.Global.DQMUploadUrl,
                            'AHTIMEOUT' : tier0Config.Global.AlcaHarvestTimeout,
                            'AHCONDLFNBASE' : alcaHarvestCondLFNBase,

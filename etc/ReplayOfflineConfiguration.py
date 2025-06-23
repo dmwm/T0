@@ -85,7 +85,11 @@ setAcquisitionEra(tier0Config, "Tier0_REPLAY_2025")
 setEmulationAcquisitionEra(tier0Config, "Emulation2025", repack=False)
 setBaseRequestPriority(tier0Config, 260000)
 setBackfill(tier0Config, 1)
-setBulkDataType(tier0Config, "data")
+
+maxRunPreviousBulkData = 388621
+bulkData = { "default" : "data", "maxRun" : {maxRunPreviousBulkData : "hidata"}}
+
+setBulkDataType(tier0Config, bulkData)
 setProcessingSite(tier0Config, processingSite)
 setStreamerPNN(tier0Config, streamerPNN)
 setStorageSite(tier0Config, storageSite)
