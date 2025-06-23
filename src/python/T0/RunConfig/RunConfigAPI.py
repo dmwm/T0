@@ -53,6 +53,28 @@ def extractConfigParameter(configParameter, era, run):
     else:
         return configParameter
 
+def getAcquisitionEra(tier0Config, run):
+    """
+    _getAcquisitionEra_
+    Determines the acquisition era based on the current run
+    """
+    if isinstance(tier0Config.Global.AcquisitionEra, dict):
+        if 'maxRun' in tier0Config.Global.AcquisitionEra:
+            thresholdRuns = list(tier0Config.Global.AcquisitionEra['maxRun'])
+            caseRun = max(thresholdRuns)
+        
+            if run <= caseRun:
+                acqEra = tier0Config.Global.AcquisitionEra['maxRun'][caseRun]
+            else:
+                acqEra = tier0Config.Global.AcquisitionEra['default']
+        else:
+            acqEra = tier0Config.Global.AcquisitionEra['default']
+            
+    else:
+        acqEra = tier0Config.Global.AcquisitionEra
+
+    return acqEra
+
 def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
     """
     _configureRun_
@@ -119,7 +141,7 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         if runInfo['setup_label'] == 'Emulation':
             bindsUpdateRun['ACQERA'] = tier0Config.Global.EmulationAcquisitionEra
         else:
-            bindsUpdateRun['ACQERA'] = tier0Config.Global.AcquisitionEra
+            bindsUpdateRun['ACQERA'] = getAcquisitionEra(tier0Config, run)
 
         bindsStream = []
         bindsDataset = []
@@ -573,7 +595,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             if tier0Config.Global.EnableUniqueWorkflowName:
                 workflowName = "Repack_Run%d_Stream%s_%s_ID%d_v%s" % (run, stream,
-                    tier0Config.Global.AcquisitionEra, tier0Config.Global.DeploymentID, streamConfig.Repack.ProcessingVersion)
+                    getAcquisitionEra(tier0Config, run), tier0Config.Global.DeploymentID, streamConfig.Repack.ProcessingVersion)
             else:
                 workflowName = "Repack_Run%d_Stream%s" % (run, stream)
 
@@ -626,7 +648,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             if tier0Config.Global.EnableUniqueWorkflowName:
                 workflowName = "Express_Run%d_Stream%s_%s_ID%d_v%s" % (run, stream,
-                    tier0Config.Global.AcquisitionEra, tier0Config.Global.DeploymentID, streamConfig.Express.ProcessingVersion)
+                    getAcquisitionEra(tier0Config, run), tier0Config.Global.DeploymentID, streamConfig.Express.ProcessingVersion)
             else:
                 workflowName = "Express_Run%d_Stream%s" % (run, stream)
 
@@ -1041,7 +1063,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
 
                 if tier0Config.Global.EnableUniqueWorkflowName:
                     workflowName = "PromptReco_Run%d_%s_%s_ID%d_v%s" % (run, dataset,
-                        tier0Config.Global.AcquisitionEra, tier0Config.Global.DeploymentID, datasetConfig.ProcessingVersion)
+                        getAcquisitionEra(tier0Config, run), tier0Config.Global.DeploymentID, datasetConfig.ProcessingVersion)
                 else:
                     workflowName = "PromptReco_Run%d_%s" % (run, dataset)
 
