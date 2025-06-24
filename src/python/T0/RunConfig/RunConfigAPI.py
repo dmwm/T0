@@ -147,10 +147,8 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
         }
 
         # Use different acquisition era for emulated data
-        if runInfo['setup_label'] == 'Emulation':
-            bindsUpdateRun['ACQERA'] = tier0Config.Global.EmulationAcquisitionEra
-        else:
-            bindsUpdateRun['ACQERA'] = getAcquisitionEra(tier0Config, run)
+        bindsUpdateRun['ACQERA'] = era
+
 
         bindsStream = []
         bindsDataset = []
