@@ -1,4 +1,4 @@
-name: Simple Manual Trigger
+name: Test Pipeline for deploying replay
 
 on:
   workflow_dispatch:
