@@ -60,7 +60,53 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Run2025C")
+
+### Set Acquisition Era
+"""
+Any run under maxRunPreviousEra will take the latest acquisition era that is not default
+example:
+1. - All runs will be Run2025B
+
+maxRunPreviousEra = 9999999
+acquisitionEra = {
+    'default' : 'Run2025C',
+    'maxRun' : {maxRunPreviousEra : 'Run2025B'}
+}
+
+2. - Runs after run 100000 will be Run2025D
+   - Run 390900, which should fall under Run2025B, would fall under Run2025C 
+     because we only compare according to the maximum run inside the 'maxRun' dict
+
+maxRunPreviousEra = 391000
+maxRunEraB = 390950
+acquisitionEra = {
+    'default' : 'Run2025D',
+    'maxRun' : {maxRunPreviousEra : 'Run2025C'
+                maxRunEraB : 'Run2025B'}
+}
+
+All runs are assigned eras immediately at injection time, 
+so we can keep old eras in the configuration file without risk.
+
+i.e.
+
+maxRunPreviousEra = 393800
+maxRunRun2025B = 392158
+maxRunRun2025A = 391529
+acquisitionEra = {
+    'default' : 'Run2025D',
+    'maxRun' : {maxRunPreviousEra : 'Run2025C',
+                maxRunRun2025B : 'Run2025B',
+                maxRunRun2025A : 'Run2025A'
+                }
+}
+"""
+#maxRunPreviousEra = 1
+acquisitionEra = {
+    'default' : 'PORun2025A',
+    #'maxRun' : {maxRunPreviousEra : ''}
+}
+setAcquisitionEra(tier0Config, acquisitionEra)
 setEmulationAcquisitionEra(tier0Config, "Emulation2025", repack=False)
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
@@ -127,6 +173,7 @@ hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
 hltScoutingScenario = "hltScoutingEra_Run3_2025"
 AlCaHcalIsoTrkScenario = "AlCaHcalIsoTrk_Run3"
+OXYScenario = "ppEra_Run3_2025_OXY"
 
 # Heavy Ion Scenarios 2024
 
@@ -136,20 +183,20 @@ hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2024"
 
 # Defaults for processing version
 alcarawProcVersion = {
-    'default': 2
+    'default': 1
 }
 
 defaultProcVersionReco = {
-    'default': 2
+    'default': 1
 }
 
 expressProcVersion = {
-    'default': 2
+    'default': 1
 }
 
 # Defaults for GlobalTag
 expressGlobalTag = {
-    'default': "150X_dataRun3_Express_v1"
+    'default': "150X_dataRun3_Express_v2"
     #'acqEra': {'Run2024B': "140X_dataRun3_Express_v2"}
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Express_v3"}
 }
@@ -248,14 +295,14 @@ addDataset(tier0Config, "Default",
            sizePerEvent=1500,
            maxMemoryperCore=2000,
            dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
-           scenario=ppScenario)
+           scenario=OXYScenario)
 
 #############################
 ### Express configuration ###
 #############################
 
 addExpressConfig(tier0Config, "Express",
-                 scenario=ppScenario,
+                 scenario=OXYScenario,
                  diskNode="T2_CH_CERN",
                  data_tiers=["FEVT"],
                  write_dqm=True,
@@ -314,7 +361,7 @@ addExpressConfig(tier0Config, "ExpressCosmics",
                  versionOverride=expressVersionOverride)
 
 addExpressConfig(tier0Config, "HLTMonitor",
-                 scenario=ppScenario,
+                 scenario=OXYScenario,
                  diskNode="T2_CH_CERN",
                  data_tiers=["FEVTHLTALL"],
                  write_dqm=True,
@@ -467,6 +514,36 @@ addExpressConfig(tier0Config, "ALCAPPSExpress",
                  diskNode="T2_CH_CERN",
                  versionOverride=expressVersionOverride)
 
+###################################
+### Special Runs Express PDs    ###
+###################################
+
+addExpressConfig(tier0Config, "SpecialRunExpressStream",
+                 scenario=OXYScenario,
+                 diskNode="T0_CH_CERN_Disk",
+                 data_tiers=[], # --> FEVT, RAW, ALCARECO... ?
+                 write_dqm=True,
+                 alca_producers=[],
+                 dqm_sequences=[],
+                 reco_version=defaultCMSSWVersion,
+                 multicore=numberOfCores,
+                 global_tag_connect=globalTagConnect,
+                 global_tag=expressGlobalTag,
+                 proc_ver=expressProcVersion,
+                 maxInputRate=23 * 1000,
+                 maxInputEvents=400,
+                 maxInputSize=2 * 1024 * 1024 * 1024,
+                 maxInputFiles=15,
+                 maxLatency=15 * 23,
+                 periodicHarvestInterval=20 * 60,
+                 blockCloseDelay=1200,
+                 timePerEvent=4,
+                 sizePerEvent=1700,
+                 maxMemoryperCore=2000,
+                 dataset_lifetime=7*24*3600,#lifetime for container rules. Default 14 days
+                 versionOverride=expressVersionOverride)
+
+
 #####################
 ### HI Tests 2018 ###
 #####################
@@ -539,7 +616,7 @@ for dataset in DATASETS:
                tape_node="T1_ES_PIC_MSS",
                disk_node="T1_ES_PIC_Disk",
                physics_skims=["LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 DATASETS = ["Cosmics"]
 
@@ -570,7 +647,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon"],
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=1,
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 DATASETS = ["ParkingSingleMuon0"]
 PARKING_PDS = DATASETS
@@ -580,7 +657,7 @@ for dataset in DATASETS:
                archival_node=None,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 DATASETS = ["ParkingSingleMuon1","ParkingSingleMuon2","ParkingSingleMuon3",
             "ParkingSingleMuon4","ParkingSingleMuon5","ParkingSingleMuon6",
@@ -595,7 +672,7 @@ for dataset in DATASETS:
                archival_node=None,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
-               scenario=ppScenario)
+               scenario=OXYScenario)
     
 DATASETS = ["ParkingAnomalyDetection"]
 for dataset in DATASETS:
@@ -605,7 +682,7 @@ for dataset in DATASETS:
                archival_node=None,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
-               scenario=ppScenario)
+               scenario=OXYScenario)
     
 DATASETS = ["ParkingDoubleMuonLowMass0"]
 PARKING_PDS += DATASETS
@@ -619,7 +696,7 @@ for dataset in DATASETS:
                archival_node=None,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
-               scenario=ppScenario)
+               scenario=OXYScenario)
     
 
 DATASETS = ["ParkingDoubleMuonLowMass1","ParkingDoubleMuonLowMass2",
@@ -637,7 +714,7 @@ for dataset in DATASETS:
                archival_node=None,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
-               scenario=ppScenario)
+               scenario=OXYScenario)
     
 DATASETS = ["EmittanceScan0", "EmittanceScan1", "EmittanceScan2", 
             "EmittanceScan3", "EmittanceScan4", "EmittanceScan5"]
@@ -646,7 +723,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                aod_to_disk=False,
-               scenario=ppScenario)
+               scenario=OXYScenario)
     
 DATASETS = ["MuonShower"]
 
@@ -658,7 +735,7 @@ for dataset in DATASETS:
                write_miniaod=True,
                write_nanoaod=True,
                physics_skims=["EXOCSCCluster"],
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 DATASETS = ["ParkingHH0", "ParkingHH1", "ParkingVBF0",
             "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
@@ -674,7 +751,7 @@ for dataset in DATASETS:
                archival_node=None,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
-               scenario=ppScenario)
+               scenario=OXYScenario)
     
 DATASETS = ["ParkingLLP0", "ParkingLLP1"]
 PARKING_PDS += DATASETS
@@ -688,7 +765,7 @@ for dataset in DATASETS:
                archival_node=None,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
-               scenario=ppScenario)
+               scenario=OXYScenario)
     
 DATASETS = ["EmptyBX"]
 
@@ -697,7 +774,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 DATASETS = ["HighPtLowerPhotons", "HighPtPhoton30AndZ"]
 
@@ -706,7 +783,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 DATASETS = ["JetMET0", "JetMET1"]
 
@@ -721,7 +798,7 @@ for dataset in DATASETS:
                physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor", "EXOMONOPOLE", "EXODisplacedJet"],
                timePerEvent=5.7,  # copied from JetHT - should be checked
                sizePerEvent=2250, # copied from JetHT - should be checked
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 DATASETS = ["PPRefHardProbes0", "PPRefHardProbes1", "PPRefHardProbes2", "PPRefHardProbes3", "PPRefHardProbes4"]
 
@@ -753,7 +830,7 @@ for dataset in DATASETS:
                tape_node="T1_US_FNAL_MSS",
                disk_node="T1_US_FNAL_Disk",
                physics_skims=["TopMuEG", "LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 DATASETS = ["Muon0"]
 
@@ -770,7 +847,7 @@ for dataset in DATASETS:
                                "TkAlZMuMu", "TkAlDiMuonAndVertex"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
                physics_skims=["MUOJME", "ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 DATASETS = ["Muon1"]
 
@@ -787,7 +864,7 @@ for dataset in DATASETS:
                                "TkAlZMuMu", "TkAlDiMuonAndVertex"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
                physics_skims=["MUOJME", "ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 DATASETS = ["PPRefSingleMuon0", "PPRefSingleMuon1", "PPRefSingleMuon2", "PPRefSingleMuon3"]
 
@@ -840,7 +917,7 @@ for dataset in DATASETS:
                physics_skims=["EXONoBPTXSkim", "LogError", "LogErrorMonitor"],
                tape_node="T1_UK_RAL_MSS",
                disk_node="T1_UK_RAL_Disk",
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 DATASETS = ["EGamma0", "EGamma1", "EGamma2", "EGamma3"]
 
@@ -854,7 +931,7 @@ for dataset in DATASETS:
                                "HcalCalIsoTrkProducerFilter", "EcalESAlign"],
                dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
                physics_skims=["ZElectron", "WElectron", "EGMJME", "EXOMONOPOLE", "EXODisappTrk", "IsoPhotonEB", "LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 DATASETS = ["Tau"]
 
@@ -866,7 +943,7 @@ for dataset in DATASETS:
                tape_node="T1_DE_KIT_MSS",
                disk_node="T1_DE_KIT_Disk",
                physics_skims=["EXODisappTrk", "LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 #############################################
 ### Standard Commisioning PDs (2022)      ###
@@ -885,7 +962,7 @@ for dataset in DATASETS:
                sizePerEvent=4000,
                tape_node="T1_DE_KIT_MSS",
                disk_node="T1_DE_KIT_Disk",
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 DATASETS = ["HcalNZS"]
 
@@ -918,7 +995,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
                raw_to_disk=False,
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 DATASETS = ["L1Accept", "L1Accepts"]
 
@@ -932,7 +1009,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                tape_node="T1_ES_PIC_MSS",
                disk_node="T1_ES_PIC_Disk",
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 #############################################
 ### MiniDAQ                               ###
@@ -973,7 +1050,7 @@ DATASETS = ["AlCaLowPtJet"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 ########################################################
 ### Pilot Tests PDs                                  ###
@@ -1056,7 +1133,7 @@ for dataset in DATASETS:
                raw_to_disk=True,
                disk_node="T2_CH_CERN",
                alca_producers=["EcalCalPhiSym"],
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 DATASETS = ["AlCaP0"]
 
@@ -1066,7 +1143,7 @@ for dataset in DATASETS:
                raw_to_disk=True,
                disk_node="T2_CH_CERN",
                alca_producers=["EcalCalPi0Calib", "EcalCalEtaCalib"],
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 DATASETS = ["AlCaHcalIsoTrk"]
 
@@ -1096,7 +1173,7 @@ for dataset in DATASETS:
                alca_producers=["TkAlMinBias", "TkAlV0s"],
                physics_skims=["LogError", "LogErrorMonitor"],
                disk_node="T2_CH_CERN",
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 DATASETS = ["SpecialHLTPhysics", "SpecialHLTPhysics0", "SpecialHLTPhysics1",
             "SpecialHLTPhysics2", "SpecialHLTPhysics3", "SpecialHLTPhysics4",
@@ -1122,7 +1199,7 @@ for dataset in DATASETS:
                alca_producers=["TkAlMinBias","LumiPixelsMinBias"],
                physics_skims=["LogError", "LogErrorMonitor"],
                disk_node="T2_CH_CERN",
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 DATASETS = ["EphemeralHLTPhysics0","EphemeralHLTPhysics1", "EphemeralHLTPhysics2", "EphemeralHLTPhysics3",
             "EphemeralHLTPhysics4", "EphemeralHLTPhysics5", "EphemeralHLTPhysics6","EphemeralHLTPhysics7",
@@ -1140,7 +1217,7 @@ for dataset in DATASETS:
                archival_node=None,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 ## DAQ TRANSFER TEST PDs (fall 2024)
 DATASETS_DAQ_TFTEST = ["TestHLTPhysics0","TestHLTPhysics1", "TestHLTPhysics2", "TestHLTPhysics3",
@@ -1164,7 +1241,7 @@ for dataset in DATASETS_DAQ_TFTEST:
                archival_node=None,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 
 ## DAQ TRANSFER TEST PDs (during ppRef 2024)
@@ -1190,7 +1267,7 @@ for dataset in DATASETS_DAQ_TFTEST_ppRef:
                archival_node=None,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 
 ########################################################
@@ -1217,7 +1294,7 @@ for dataset in DATASETS:
                alca_producers=["TkAlMinBias","LumiPixelsMinBias"],
                physics_skims=["LogError", "LogErrorMonitor"],
 	       disk_node="T2_CH_CERN",
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 ########################################################
 ### MinimumBias PDs                                  ###
@@ -1240,7 +1317,7 @@ for dataset in DATASETS:
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet"],
                timePerEvent=1,
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias"],
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 DATASETS = ["SpecialMinimumBias0", "SpecialMinimumBias1", "SpecialMinimumBias2", "SpecialMinimumBias3"]
 
@@ -1323,7 +1400,7 @@ for dataset in DATASETS:
                sizePerEvent=1500,
                tape_node="T1_ES_PIC_MSS",
                disk_node="T2_CH_CERN",
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 ## ppREF ZeroBiasPlusForward
 DATASETS = ["PPRefZeroBiasPlusForward0", "PPRefZeroBiasPlusForward1", "PPRefZeroBiasPlusForward2",
@@ -1379,7 +1456,51 @@ for dataset in DATASETS:
                archival_node=None,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
-               scenario=ppScenario)
+               scenario=OXYScenario)
+
+
+#################### SPECIAL RUNS ######################
+
+########################################################
+### Special Oxygen and Neon Datasets Here            ###
+########################################################
+
+DATASETS = ["IonPhysics0", "IonPhysics1", "IonPhysics2", "IonPhysics3", "IonPhysics4",
+            "IonPhysics5", "IonPhysics6", "IonPhysics7", "IonPhysics8", "IonPhysics9",
+            "IonPhysics10", "IonPhysics11", "IonPhysics12", "IonPhysics13", "IonPhysics14",
+            "IonPhysics15", "IonPhysics16", "IonPhysics17", "IonPhysics18", "IonPhysics19",
+            "IonPhysics20", "IonPhysics21", "IonPhysics22", "IonPhysics23", "IonPhysics24",
+            "IonPhysics25", "IonPhysics26", "IonPhysics27", "IonPhysics28", "IonPhysics29",
+            "IonPhysics30", "IonPhysics31", "IonPhysics32", "IonPhysics33", "IonPhysics34",
+            "IonPhysics35", "IonPhysics36", "IonPhysics37", "IonPhysics38", "IonPhysics39",
+            "IonPhysics40", "IonPhysics41", "IonPhysics42", "IonPhysics43", "IonPhysics44",
+            "IonPhysics45", "IonPhysics46", "IonPhysics47", "IonPhysics48", "IonPhysics49",
+            "IonPhysics50", "IonPhysics51", "IonPhysics52", "IonPhysics53", "IonPhysics54",
+            "IonPhysics55", "IonPhysics56", "IonPhysics57", "IonPhysics58", "IonPhysics59"
+]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, "Default",
+                do_reco=True,
+                write_reco=False, 
+                write_aod=True, 
+                write_miniaod=True, 
+                write_nanoaod=True, 
+                write_dqm=False,
+                dqm_sequences=["ASK-EXPERTS"],
+                alca_producers=["ASK-EXPERTS"],
+                physics_skims=["ASK-EXPERTS"],
+                archival_node="T0_CH_CERN_MSS",
+                tape_node="T1_US_FNAL_MSS",
+                disk_node="T1_US_FNAL_Disk",
+                raw_to_disk=False,
+                aod_to_disk=True,
+                nano_flavours=['@PHYS', '@L1'],
+                scenario=OXYScenario)
+
+########################################################
+
+
 
 ########################################################
 ### Parking and Scouting PDs                         ###
@@ -1407,7 +1528,7 @@ for dataset in DATASETS:
                do_reco=False,
                tape_node="T1_DE_KIT_MSS",
                disk_node="T1_DE_KIT_Disk",
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 DATASETS = ["ScoutingPFMonitor"] # From Stream PhysicsScoutingPFMonitor --> repacked to RAW
 
@@ -1419,7 +1540,7 @@ for dataset in DATASETS:
                write_reco=False, write_aod=False, write_miniaod=True, write_dqm=True,
                tape_node="T1_US_FNAL_MSS",
                nano_flavours=['@PHYS', '@L1', '@ScoutMonitor'],
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 DATASETS = ["ScoutingCaloCommissioning", "ScoutingCaloHT", "ScoutingCaloMuon",
             "ScoutingPFCommissioning", "ScoutingPFHT", "ScoutingPFMuon"]
@@ -1427,7 +1548,7 @@ DATASETS = ["ScoutingCaloCommissioning", "ScoutingCaloHT", "ScoutingCaloMuon",
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 DATASETS = ["AlCaElectron", "VRRandom", "VRRandom0", "VRRandom1", "VRRandom2", "VRRandom3",
              "VRRandom4", "VRRandom5", "VRRandom6", "VRRandom7", "VRRandom8", "VRRandom9",
@@ -1437,7 +1558,7 @@ DATASETS = ["AlCaElectron", "VRRandom", "VRRandom0", "VRRandom1", "VRRandom2", "
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 # PPS 2022
 DATASETS = ["AlCaPPSPrompt"]
@@ -1474,7 +1595,7 @@ for dataset in DATASETS:
                tape_node=None,
                disk_node="T0_CH_CERN_Disk",
                dataset_lifetime=15*24*3600,
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 #####################################
 ### RAW Skim / Secondary Datasets ###
@@ -1492,7 +1613,7 @@ for rawSkimDataset in RAWSKIM_DATASETS:
                write_dqm=True,
                archival_node=None,
                tape_node="T1_US_FNAL_MSS",
-               scenario=ppScenario)
+               scenario=OXYScenario)
 
 
 
@@ -1525,8 +1646,8 @@ SECOND_AGENT_STREAMS = ["ParkingSingleMuon0", "ParkingSingleMuon1", "ParkingSing
                         "ParkingSingleMuon15"]
 
 THIRD_AGENT_STREAMS = []
-setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
-                                    "ThirdAgent" : THIRD_AGENT_STREAMS})
+setHelperAgentStreams(tier0Config, {"SecondAgent" : [],
+                                    "ThirdAgent" : []})
 
 
 ###################################
