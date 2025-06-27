@@ -7,6 +7,7 @@ from __future__ import print_function
 from T0.RunConfig.Tier0Config import addDataset
 from T0.RunConfig.Tier0Config import createTier0Config
 from T0.RunConfig.Tier0Config import setAcquisitionEra
+from T0.RunConfig.Tier0Config import setEmulationAcquisitionEra
 from T0.RunConfig.Tier0Config import setDefaultScramArch
 from T0.RunConfig.Tier0Config import setScramArch
 from T0.RunConfig.Tier0Config import setBaseRequestPriority
@@ -81,6 +82,7 @@ addSiteConfig(tier0Config, "EOS_PILOT",
 #  Processing site (where jobs run)
 #  PhEDEx locations
 setAcquisitionEra(tier0Config, "Tier0_OXYREPLAY_2025")
+setEmulationAcquisitionEra(tier0Config, "Emulation2025", repack=False)
 setBaseRequestPriority(tier0Config, 260000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "data")
@@ -123,7 +125,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_0_8"
+    'default': "CMSSW_15_0_9"
 }
 
 # Configure ScramArch
@@ -821,8 +823,6 @@ for dataset in DATASETS:
                do_reco=True,
                write_reco=False,
                write_dqm=True,
-               tape_node="T1_US_FNAL_MSS",
-               disk_node="T1_US_FNAL_Disk",
                alca_producers=["TkAlZMuMu", "TkAlDiMuonAndVertex", "TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
                physics_skims=["ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
@@ -1281,7 +1281,26 @@ for dataset in DATASETS:
 ### Special Oxygen and Neon Datasets Here            ###
 ########################################################
 
-DATASETS = ["IonPhysics0", "IonPhysics1", "IonPhysics2", "IonPhysics3", "IonPhysics4",
+DATASETS = ["IonPhysics0"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+                do_reco=True,
+                write_reco=False, 
+                write_aod=True, 
+                write_miniaod=True, 
+                write_nanoaod=True, 
+                write_dqm=True,
+                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet", "@egamma", "@L1TMon", "@hcal", "@ecal", "@ctpps"],
+                alca_producers=["TkAlMuonIsolated", "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight", "TkAlZMuMu", 
+                "TkAlDiMuonAndVertex", "TkAlJetHT", "TkAlJpsiMuMu", "TkAlUpsilonMuMu", "SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias"],
+                physics_skims=["LogError", "LogErrorMonitor"],
+                raw_to_disk=False,
+                aod_to_disk=True,
+                nano_flavours=['@PHYS', '@L1'],
+                scenario=OXYScenario)
+
+DATASETS = ["IonPhysics1", "IonPhysics2", "IonPhysics3", "IonPhysics4",
             "IonPhysics5", "IonPhysics6", "IonPhysics7", "IonPhysics8", "IonPhysics9",
             "IonPhysics10", "IonPhysics11", "IonPhysics12", "IonPhysics13", "IonPhysics14",
             "IonPhysics15", "IonPhysics16", "IonPhysics17", "IonPhysics18", "IonPhysics19",
@@ -1296,23 +1315,23 @@ DATASETS = ["IonPhysics0", "IonPhysics1", "IonPhysics2", "IonPhysics3", "IonPhys
 ]
 
 for dataset in DATASETS:
-    addDataset(tier0Config, "Default",
+    addDataset(tier0Config, dataset,
                 do_reco=True,
                 write_reco=False, 
                 write_aod=True, 
                 write_miniaod=True, 
                 write_nanoaod=True, 
                 write_dqm=False,
-                dqm_sequences=["ASK-EXPERTS"],
-                alca_producers=["ASK-EXPERTS"],
-                physics_skims=["ASK-EXPERTS"],
-                archival_node="T0_CH_CERN_MSS",
-                tape_node="T1_US_FNAL_MSS",
-                disk_node="T1_US_FNAL_Disk",
+                dqm_sequences=["@none"],
+                alca_producers=["TkAlMuonIsolated", "SiPixelCalSingleMuonTight", "TkAlZMuMu", 
+                "TkAlDiMuonAndVertex", "TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
+                physics_skims=["LogError", "LogErrorMonitor"],
                 raw_to_disk=False,
                 aod_to_disk=True,
                 nano_flavours=['@PHYS', '@L1'],
                 scenario=OXYScenario)
+
+
 
 ########################################################
 
