@@ -34,7 +34,7 @@ from T0.RunConfig.Tier0Config import setHelperAgentStreams
 tier0Config = createTier0Config()
 
 # Set the verstion configuration (not used at the moment)
-setConfigVersion(tier0Config, "3.2.3")
+setConfigVersion(tier0Config, "3.4.0")
 
 # Set the min run number:
 setInjectMinRun(tier0Config, 9999999)
@@ -103,7 +103,7 @@ acquisitionEra = {
 """
 #maxRunPreviousEra = 1
 acquisitionEra = {
-    'default' : 'PORun2025A',
+    'default' : 'pORun2025',
     #'maxRun' : {maxRunPreviousEra : ''}
 }
 setAcquisitionEra(tier0Config, acquisitionEra)
@@ -144,12 +144,9 @@ setPromptCalibrationConfig(tier0Config,
 #   'maxRun': {100000: Value3, 200000: Value4},
 #   'default': Value5 }
 
-maxRunPreviousConfig = 392513 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_0_8",
-    #'acqEra': {'Run2024F': "CMSSW_14_0_11"},
-    'maxRun': {maxRunPreviousConfig: "CMSSW_15_0_6"}
+    'default': "CMSSW_15_0_9",
 }
 
 # Configure ScramArch
@@ -514,35 +511,6 @@ addExpressConfig(tier0Config, "ALCAPPSExpress",
                  diskNode="T2_CH_CERN",
                  versionOverride=expressVersionOverride)
 
-###################################
-### Special Runs Express PDs    ###
-###################################
-
-addExpressConfig(tier0Config, "SpecialRunExpressStream",
-                 scenario=OXYScenario,
-                 diskNode="T0_CH_CERN_Disk",
-                 data_tiers=[], # --> FEVT, RAW, ALCARECO... ?
-                 write_dqm=True,
-                 alca_producers=[],
-                 dqm_sequences=[],
-                 reco_version=defaultCMSSWVersion,
-                 multicore=numberOfCores,
-                 global_tag_connect=globalTagConnect,
-                 global_tag=expressGlobalTag,
-                 proc_ver=expressProcVersion,
-                 maxInputRate=23 * 1000,
-                 maxInputEvents=400,
-                 maxInputSize=2 * 1024 * 1024 * 1024,
-                 maxInputFiles=15,
-                 maxLatency=15 * 23,
-                 periodicHarvestInterval=20 * 60,
-                 blockCloseDelay=1200,
-                 timePerEvent=4,
-                 sizePerEvent=1700,
-                 maxMemoryperCore=2000,
-                 dataset_lifetime=7*24*3600,#lifetime for container rules. Default 14 days
-                 versionOverride=expressVersionOverride)
-
 
 #####################
 ### HI Tests 2018 ###
@@ -613,8 +581,6 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
-               tape_node="T1_ES_PIC_MSS",
-               disk_node="T1_ES_PIC_Disk",
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=OXYScenario)
 
@@ -641,8 +607,6 @@ for dataset in DATASETS:
                do_reco=True,
                write_reco=False,
                write_dqm=True,
-               tape_node="T1_DE_KIT_MSS",
-               disk_node="T1_DE_KIT_Disk",
                alca_producers=["TkAlZMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon"],
                physics_skims=["LogError", "LogErrorMonitor"],
@@ -839,8 +803,6 @@ for dataset in DATASETS:
                do_reco=True,
                write_reco=False,
                write_dqm=True,
-               tape_node="T1_FR_CCIN2P3_MSS",  # SingleMon was in "T1_US_FNAL_MSS" , DoubleMuon was in "T1_DE_KIT_MSS"
-               disk_node="T1_FR_CCIN2P3_Disk", # SingleMon was in "T1_US_FNAL_Disk", DoubleMuon was in "T1_DE_KIT_Disk"
                alca_producers=["TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu",
                                "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
                                "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
@@ -915,8 +877,6 @@ for dataset in DATASETS:
                alca_producers=["TkAlCosmicsInCollisions"],
                dqm_sequences=["@common"],
                physics_skims=["EXONoBPTXSkim", "LogError", "LogErrorMonitor"],
-               tape_node="T1_UK_RAL_MSS",
-               disk_node="T1_UK_RAL_Disk",
                scenario=OXYScenario)
 
 DATASETS = ["EGamma0", "EGamma1", "EGamma2", "EGamma3"]
@@ -940,8 +900,6 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
-               tape_node="T1_DE_KIT_MSS",
-               disk_node="T1_DE_KIT_Disk",
                physics_skims=["EXODisappTrk", "LogError", "LogErrorMonitor"],
                scenario=OXYScenario)
 
@@ -960,8 +918,6 @@ for dataset in DATASETS:
                physics_skims=["EcalActivity", "LogError", "LogErrorMonitor"],
                timePerEvent=12,
                sizePerEvent=4000,
-               tape_node="T1_DE_KIT_MSS",
-               disk_node="T1_DE_KIT_Disk",
                scenario=OXYScenario)
 
 DATASETS = ["HcalNZS"]
@@ -1007,8 +963,6 @@ for dataset in DATASETS:
                write_miniaod=True,
                write_reco=False,
                dqm_sequences=["@common"],
-               tape_node="T1_ES_PIC_MSS",
-               disk_node="T1_ES_PIC_Disk",
                scenario=OXYScenario)
 
 #############################################
@@ -1293,7 +1247,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
                alca_producers=["TkAlMinBias","LumiPixelsMinBias"],
                physics_skims=["LogError", "LogErrorMonitor"],
-	       disk_node="T2_CH_CERN",
+               disk_node="T2_CH_CERN",
                scenario=OXYScenario)
 
 ########################################################
@@ -1398,7 +1352,6 @@ for dataset in DATASETS:
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=1,
                sizePerEvent=1500,
-               tape_node="T1_ES_PIC_MSS",
                disk_node="T2_CH_CERN",
                scenario=OXYScenario)
 
@@ -1465,7 +1418,29 @@ for dataset in DATASETS:
 ### Special Oxygen and Neon Datasets Here            ###
 ########################################################
 
-DATASETS = ["IonPhysics0", "IonPhysics1", "IonPhysics2", "IonPhysics3", "IonPhysics4",
+DATASETS = ["IonPhysics0"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+                do_reco=True,
+                write_reco=False, 
+                write_aod=True, 
+                write_miniaod=True, 
+                write_nanoaod=True, 
+                write_dqm=True,
+                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet", "@egamma", "@L1TMon", "@hcal", "@ecal", "@ctpps"],
+                alca_producers=["TkAlMuonIsolated", "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight", "TkAlZMuMu", 
+                "TkAlDiMuonAndVertex", "TkAlJetHT", "TkAlJpsiMuMu", "TkAlUpsilonMuMu", "SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias"],
+                physics_skims=["LogError", "LogErrorMonitor"],
+                archival_node="T0_CH_CERN_MSS",
+                tape_node="T1_US_FNAL_MSS",
+                disk_node="T1_US_FNAL_Disk",
+                raw_to_disk=False,
+                aod_to_disk=True,
+                nano_flavours=['@PHYS', '@L1'],
+                scenario=OXYScenario)
+
+DATASETS = ["IonPhysics1", "IonPhysics2", "IonPhysics3", "IonPhysics4",
             "IonPhysics5", "IonPhysics6", "IonPhysics7", "IonPhysics8", "IonPhysics9",
             "IonPhysics10", "IonPhysics11", "IonPhysics12", "IonPhysics13", "IonPhysics14",
             "IonPhysics15", "IonPhysics16", "IonPhysics17", "IonPhysics18", "IonPhysics19",
@@ -1480,16 +1455,17 @@ DATASETS = ["IonPhysics0", "IonPhysics1", "IonPhysics2", "IonPhysics3", "IonPhys
 ]
 
 for dataset in DATASETS:
-    addDataset(tier0Config, "Default",
+    addDataset(tier0Config, dataset,
                 do_reco=True,
                 write_reco=False, 
                 write_aod=True, 
                 write_miniaod=True, 
                 write_nanoaod=True, 
                 write_dqm=False,
-                dqm_sequences=["ASK-EXPERTS"],
-                alca_producers=["ASK-EXPERTS"],
-                physics_skims=["ASK-EXPERTS"],
+                dqm_sequences=["@none"],
+                alca_producers=["TkAlMuonIsolated", "SiPixelCalSingleMuonTight", "TkAlZMuMu", 
+                "TkAlDiMuonAndVertex", "TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
+                physics_skims=["LogError", "LogErrorMonitor"],
                 archival_node="T0_CH_CERN_MSS",
                 tape_node="T1_US_FNAL_MSS",
                 disk_node="T1_US_FNAL_Disk",
@@ -1526,8 +1502,6 @@ DATASETS = ["RPCMonitor"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
-               tape_node="T1_DE_KIT_MSS",
-               disk_node="T1_DE_KIT_Disk",
                scenario=OXYScenario)
 
 DATASETS = ["ScoutingPFMonitor"] # From Stream PhysicsScoutingPFMonitor --> repacked to RAW
