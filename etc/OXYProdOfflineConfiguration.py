@@ -146,7 +146,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_0_9",
+    'default': "CMSSW_15_0_9_patch3",
 }
 
 # Configure ScramArch
@@ -1431,7 +1431,7 @@ for dataset in DATASETS:
                 dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet", "@egamma", "@L1TMon", "@hcal", "@ecal", "@ctpps"],
                 alca_producers=["TkAlMuonIsolated", "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight", "TkAlZMuMu", 
                 "TkAlDiMuonAndVertex", "TkAlJetHT", "TkAlJpsiMuMu", "TkAlUpsilonMuMu", "SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias"],
-                physics_skims=["LogError", "LogErrorMonitor"],
+                physics_skims=["LogError", "LogErrorMonitor", "IonHighPtMuon", "IonDimuon"],
                 archival_node="T0_CH_CERN_MSS",
                 tape_node="T1_US_FNAL_MSS",
                 disk_node="T1_US_FNAL_Disk",
@@ -1465,7 +1465,7 @@ for dataset in DATASETS:
                 dqm_sequences=["@none"],
                 alca_producers=["TkAlMuonIsolated", "SiPixelCalSingleMuonTight", "TkAlZMuMu", 
                 "TkAlDiMuonAndVertex", "TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
-                physics_skims=["LogError", "LogErrorMonitor"],
+                physics_skims=["LogError", "LogErrorMonitor", "IonHighPtMuon", "IonDimuon"],
                 archival_node="T0_CH_CERN_MSS",
                 tape_node="T1_US_FNAL_MSS",
                 disk_node="T1_US_FNAL_Disk",
