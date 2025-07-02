@@ -82,7 +82,7 @@ addSiteConfig(tier0Config, "EOS_PILOT",
 #  Processing site (where jobs run)
 #  PhEDEx locations
 
-maxRunPreviousEra = 392206
+#maxRunPreviousEra = 392206
 acquisitionEra = {
     'default' : 'Tier0_REPLAY_2025',
     #'maxRun' : {maxRunPreviousEra : 'Tier0_REPLAY_2025A'}
@@ -92,9 +92,11 @@ setEmulationAcquisitionEra(tier0Config, "Emulation2025", repack=False)
 setBaseRequestPriority(tier0Config, 260000)
 setBackfill(tier0Config, 1)
 
-maxRunPreviousBulkData = 388621
-bulkData = { "default" : "data", "maxRun" : {maxRunPreviousBulkData : "hidata"}}
-
+#maxRunPreviousBulkData = 388621
+bulkData = { 
+	'default' : "data", 
+	#'maxRun' : {maxRunPreviousBulkData : "hidata"}
+}
 setBulkDataType(tier0Config, bulkData)
 setProcessingSite(tier0Config, processingSite)
 setStreamerPNN(tier0Config, streamerPNN)
