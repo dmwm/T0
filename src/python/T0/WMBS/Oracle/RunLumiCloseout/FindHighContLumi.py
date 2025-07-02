@@ -58,6 +58,7 @@ class FindHighContLumi(DBFormatter):
                        lumi_section_closed.run_id = run_stream_fileset_assoc.run_id AND
                        lumi_section_closed.stream_id = run_stream_fileset_assoc.stream_id
                    )
+                   WHERE current_lumi + 1 != next_lumi OR next_lumi IS NULL
                    GROUP BY run_id, stream_id
                  ) a
                  INNER JOIN stream ON
