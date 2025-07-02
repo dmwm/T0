@@ -58,7 +58,7 @@ class GetNewData(DBFormatter):
                 sql += " AND CMS_STOMGR.FILE_TRANSFER_STATUS.LS >= {min_lumi} AND CMS_STOMGR.FILE_TRANSFER_STATUS.LS <= {max_lumi}".format(
                     min_lumi=min_lumi, max_lumi=max_lumi)
             else:
-                # Backward compatibility: single number means upper limit
+                # single number means upper limit
                 sql += " AND CMS_STOMGR.FILE_TRANSFER_STATUS.LS < {injectLimit}".format(injectLimit=injectLimit)
 
         results = self.dbi.processData(sql, binds, conn = conn,
