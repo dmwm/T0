@@ -37,10 +37,7 @@ class FindHighContLumi(DBFormatter):
                  FROM (
                    SELECT run_id AS run_id,
                           stream_id AS stream_id,
-                          CASE
-                            WHEN MIN(min_lumi) = 1 THEN NVL(MIN(current_lumi),0)
-                            ELSE 0
-                          END AS lumi_id
+                            NVL(MAX(current_lumi),0) AS lumi_id
                    FROM (
                      SELECT run_stream_fileset_assoc.run_id AS run_id,
                             run_stream_fileset_assoc.stream_id AS stream_id,
