@@ -36,16 +36,30 @@ tier0Config = createTier0Config()
 
 # Set the verstion configuration (not used at the moment)
 setConfigVersion(tier0Config, "replace with real version")
+specifyStreams(tier0Config, [
+    "PhysicsIonPhysics0", "PhysicsIonPhysics1", "PhysicsIonPhysics2", "PhysicsIonPhysics3", "PhysicsIonPhysics4",
+    "PhysicsIonPhysics5", "PhysicsIonPhysics6", "PhysicsIonPhysics7", "PhysicsIonPhysics8", "PhysicsIonPhysics9",
+    "PhysicsIonPhysics10", "PhysicsIonPhysics11", "PhysicsIonPhysics12", "PhysicsIonPhysics13", "PhysicsIonPhysics14",
+    "PhysicsIonPhysics15", "PhysicsIonPhysics16", "PhysicsIonPhysics17", "PhysicsIonPhysics18", "PhysicsIonPhysics19",
+    "PhysicsIonPhysics20", "PhysicsIonPhysics21", "PhysicsIonPhysics22", "PhysicsIonPhysics23", "PhysicsIonPhysics24",
+    "PhysicsIonPhysics25", "PhysicsIonPhysics26", "PhysicsIonPhysics27", "PhysicsIonPhysics28", "PhysicsIonPhysics29",
+    "PhysicsIonPhysics30", "PhysicsIonPhysics31", "PhysicsIonPhysics32", "PhysicsIonPhysics33", "PhysicsIonPhysics34",
+    "PhysicsIonPhysics35", "PhysicsIonPhysics36", "PhysicsIonPhysics37", "PhysicsIonPhysics38", "PhysicsIonPhysics39",
+    "PhysicsIonPhysics40", "PhysicsIonPhysics41", "PhysicsIonPhysics42", "PhysicsIonPhysics43", "PhysicsIonPhysics44",
+    "PhysicsIonPhysics45", "PhysicsIonPhysics46", "PhysicsIonPhysics47", "PhysicsIonPhysics48", "PhysicsIonPhysics49",
+    "PhysicsIonPhysics50", "PhysicsIonPhysics51", "PhysicsIonPhysics52", "PhysicsIonPhysics53", "PhysicsIonPhysics54",
+    "PhysicsIonPhysics55", "PhysicsIonPhysics56", "PhysicsIonPhysics57", "PhysicsIonPhysics58", "PhysicsIonPhysics59"
+])
 
 # Set run number to replay
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
 # 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
 
-setInjectRuns(tier0Config, [392204]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
+setInjectRuns(tier0Config, [393952]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
-
+setInjectLimit(tier0Config, 50)
 # Settings up sites
 processingSite = "T2_CH_CERN"
 storageSite = "T0_CH_CERN_Disk"
@@ -125,7 +139,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_0_9"
+    'default': "CMSSW_15_0_9_patch3"
 }
 
 # Configure ScramArch
@@ -1294,7 +1308,7 @@ for dataset in DATASETS:
                 dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet", "@egamma", "@L1TMon", "@hcal", "@ecal", "@ctpps"],
                 alca_producers=["TkAlMuonIsolated", "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight", "TkAlZMuMu", 
                 "TkAlDiMuonAndVertex", "TkAlJetHT", "TkAlJpsiMuMu", "TkAlUpsilonMuMu", "SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias"],
-                physics_skims=["LogError", "LogErrorMonitor"],
+                physics_skims=["LogError", "LogErrorMonitor", "IonHighPtMuon", "IonDimuon"],
                 raw_to_disk=False,
                 aod_to_disk=True,
                 nano_flavours=['@PHYS', '@L1'],
@@ -1325,7 +1339,7 @@ for dataset in DATASETS:
                 dqm_sequences=["@none"],
                 alca_producers=["TkAlMuonIsolated", "SiPixelCalSingleMuonTight", "TkAlZMuMu", 
                 "TkAlDiMuonAndVertex", "TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
-                physics_skims=["LogError", "LogErrorMonitor"],
+                physics_skims=["LogError", "LogErrorMonitor", "IonHighPtMuon", "IonDimuon"],
                 raw_to_disk=False,
                 aod_to_disk=True,
                 nano_flavours=['@PHYS', '@L1'],
