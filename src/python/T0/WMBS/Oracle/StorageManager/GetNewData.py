@@ -55,8 +55,7 @@ class GetNewData(DBFormatter):
         if injectLimit:
             if isinstance(injectLimit, list) and len(injectLimit) == 2:
                 min_lumi, max_lumi = injectLimit
-                sql += " AND CMS_STOMGR.FILE_TRANSFER_STATUS.LS >= {min_lumi} AND CMS_STOMGR.FILE_TRANSFER_STATUS.LS <= {max_lumi}".format(
-                    min_lumi=min_lumi, max_lumi=max_lumi)
+                sql += " AND CMS_STOMGR.FILE_TRANSFER_STATUS.LS >= {min_lumi} AND CMS_STOMGR.FILE_TRANSFER_STATUS.LS <= {max_lumi}".format(min_lumi=min_lumi, max_lumi=max_lumi)
             else:
                 # single number means upper limit
                 sql += " AND CMS_STOMGR.FILE_TRANSFER_STATUS.LS < {injectLimit}".format(injectLimit=injectLimit)
