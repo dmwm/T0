@@ -80,8 +80,9 @@ class RepackMerge(JobFactory):
         # loop through lumis in order
         haveLumiHole = False
         filesByLumi = {}
+        minUsedLumi = min(availableFileLumiDict.keys()) 
         maxUsedLumi = max(usedLumis) if usedLumis else 0
-        for lumi in range(1, 1+max(maxUsedLumi,max(availableFileLumiDict.keys()))):
+        for lumi in range(minUsedLumi, 1+max(maxUsedLumi,max(availableFileLumiDict.keys()))):
 
             # lumi contains data => remember it for potential processing
             if lumi in availableFileLumiDict:
