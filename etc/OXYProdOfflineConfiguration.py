@@ -101,10 +101,10 @@ acquisitionEra = {
                 }
 }
 """
-#maxRunPreviousEra = 1
+#maxRunPreviousEra = to-be-defined
 acquisitionEra = {
-    'default' : 'pORun2025',
-    #'maxRun' : {maxRunPreviousEra : ''}
+    'default' : 'OORun2025',
+    #'maxRun' : {maxRunPreviousEra : 'pORun2025'}
 }
 setAcquisitionEra(tier0Config, acquisitionEra)
 setEmulationAcquisitionEra(tier0Config, "Emulation2025", repack=False)
