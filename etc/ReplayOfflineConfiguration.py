@@ -44,7 +44,7 @@ setConfigVersion(tier0Config, "replace with real version")
 setInjectRuns(tier0Config, [392204, 393274]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
 
 # Use this in order to limit the number of lumisections to process
-#setInjectLimit(tier0Config, 10)
+setInjectLimit(tier0Config, [1,5])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
