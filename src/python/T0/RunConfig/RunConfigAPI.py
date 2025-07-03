@@ -124,24 +124,31 @@ def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
             alcaHarvestLumiURL = rootUrlJoin(tier0Config.Global.AlcaHarvestLumiURL, str(datetime.now().year))
             if not alcaHarvestLumiURL:
                 raise RuntimeError("Problem in configureRun() : Invalid AlcaHarvestLumiURL !")
+        # Select bulkData by run number
+        # Use different acquisition era for emulated data
+        if runInfo["setup_label"] == "Emulation":
+            era = tier0Config.Global.EmulationAcquisitionEra
+        else:
+            era = getAcquisitionEra(tier0Config, run)
 
-        bindsUpdateRun = { 'RUN' : run,
-                           'PROCESS' : hltConfig['process'],
-                           'BACKFILL' : tier0Config.Global.Backfill,
-                           'BULKDATATYPE' : tier0Config.Global.BulkDataType,
-                           'DQMUPLOADURL' : tier0Config.Global.DQMUploadUrl,
-                           'AHTIMEOUT' : tier0Config.Global.AlcaHarvestTimeout,
-                           'AHCONDLFNBASE' : alcaHarvestCondLFNBase,
-                           'AHLUMIURL' : alcaHarvestLumiURL,
-                           'CONDTIMEOUT' : tier0Config.Global.ConditionUploadTimeout,
-                           'DBHOST' : tier0Config.Global.DropboxHost,
-                           'VALIDMODE' : tier0Config.Global.ValidationMode }
+        bulkDataType = extractConfigParameter(tier0Config.Global.BulkDataType, era, run)
+        bindsUpdateRun = {
+            "RUN": run,
+            "PROCESS": hltConfig["process"],
+            "BACKFILL": tier0Config.Global.Backfill,
+            "BULKDATATYPE": bulkDataType,
+            "DQMUPLOADURL": tier0Config.Global.DQMUploadUrl,
+            "AHTIMEOUT": tier0Config.Global.AlcaHarvestTimeout,
+            "AHCONDLFNBASE": alcaHarvestCondLFNBase,
+            "AHLUMIURL": alcaHarvestLumiURL,
+            "CONDTIMEOUT": tier0Config.Global.ConditionUploadTimeout,
+            "DBHOST": tier0Config.Global.DropboxHost,
+            "VALIDMODE": tier0Config.Global.ValidationMode,
+        }
 
         # Use different acquisition era for emulated data
-        if runInfo['setup_label'] == 'Emulation':
-            bindsUpdateRun['ACQERA'] = tier0Config.Global.EmulationAcquisitionEra
-        else:
-            bindsUpdateRun['ACQERA'] = getAcquisitionEra(tier0Config, run)
+        bindsUpdateRun['ACQERA'] = era
+
 
         bindsStream = []
         bindsDataset = []
