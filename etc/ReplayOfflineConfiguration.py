@@ -92,6 +92,16 @@ setEmulationAcquisitionEra(tier0Config, "Emulation2025", repack=False)
 setBaseRequestPriority(tier0Config, 260000)
 setBackfill(tier0Config, 1)
 
+# Basic Configuration:
+#  - The 'default' key sets the bulk data type for all runs unless overridden
+
+# Override Options (Choose ONE method):
+#   acqEra: Use acquisition era to specify data type (era-based configuration)
+#   maxRun: Use run thresholds to specify data type (run-based configuration)
+
+# IMPORTANT: You cannot use both acqEra and maxRun simultaneously
+# Choose either era-based OR run-based configuration, not both
+
 #maxRunPreviousBulkData = 388621
 bulkData = { 
 	'default' : "data", 
