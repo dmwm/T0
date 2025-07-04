@@ -74,6 +74,7 @@ def injectNewData(dbInterfaceStorageManager,
     # Note that every agent is Main by default
     # Note that the secondaryAgentStreams works as a specifyStreams if the agent is secondary
 
+    logging.info(" OHM DEBUG: newData = {}".format(newData))
     newData[:] = [newFile for newFile in newData if newFile['p5_id'] not in knownStreamers]
     logging.debug("StoragemanagerAPI: found %d new files", len(newData))
 
@@ -159,6 +160,7 @@ def injectNewData(dbInterfaceStorageManager,
             continue
 
         lumi = newFile['lumi']
+        logging.info("OHM DEBUG: lumi = {}".format(lumi))
         lumis.add((run,lumi))
 
         if newFile['filename'] == 'run289461_ls0020_streamExpressCosmics_StorageManager.dat':
