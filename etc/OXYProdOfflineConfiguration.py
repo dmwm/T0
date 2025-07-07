@@ -101,10 +101,10 @@ acquisitionEra = {
                 }
 }
 """
-maxRunPreviousEra = 394031
+maxRunPreviousEra = 394217
 acquisitionEra = {
-    'default' : 'OORun2025',
-    'maxRun' : {maxRunPreviousEra : 'pORun2025'}
+    'default' : 'NeNeRun2025',
+    'maxRun' : {maxRunPreviousEra : 'OORun2025'}
 }
 setAcquisitionEra(tier0Config, acquisitionEra)
 setEmulationAcquisitionEra(tier0Config, "Emulation2025", repack=False)
@@ -126,7 +126,8 @@ setBackfill(tier0Config, None)
 bulkData = { 
 	'default' : "hidata", 
 	'acqEra' : {'pORun2025': "data",
-                'OORun2025': "hidata"}
+                'OORun2025': "hidata",
+                'NeNeRun2025': "hidata"}
 }
 setBulkDataType(tier0Config, bulkData)
 setProcessingSite(tier0Config, processingSite)
