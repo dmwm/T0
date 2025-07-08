@@ -34,7 +34,7 @@ from T0.RunConfig.Tier0Config import setHelperAgentStreams
 tier0Config = createTier0Config()
 
 # Set the verstion configuration (not used at the moment)
-setConfigVersion(tier0Config, "3.2.3")
+setConfigVersion(tier0Config, "3.4.0")
 
 # Set the min run number:
 setInjectMinRun(tier0Config, 9999999)
@@ -101,16 +101,36 @@ acquisitionEra = {
                 }
 }
 """
-#maxRunPreviousEra = 1
+maxRunPreviousEra = 9999999
 acquisitionEra = {
-    'default' : 'Run2025C',
-    #'maxRun' : {maxRunPreviousEra : 'Run2025B'}
+    'default' : 'Run2025D',
+    #'maxRun' : {maxRunPreviousEra : 'NeNeRun2025'}
 }
 setAcquisitionEra(tier0Config, acquisitionEra)
 setEmulationAcquisitionEra(tier0Config, "Emulation2025", repack=False)
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
-setBulkDataType(tier0Config, "data")
+
+#
+# Basic Configuration:
+#  - The 'default' key sets the bulk data type for all runs unless overridden
+
+# Override Options (Choose ONE method):
+#   acqEra: Use acquisition era to specify data type (era-based configuration)
+#   maxRun: Use run thresholds to specify data type (run-based configuration)
+
+# IMPORTANT: You cannot use both acqEra and maxRun simultaneously
+# Choose either era-based OR run-based configuration, not both
+
+#maxRunPreviousBulkData = 388621
+bulkData = { 
+	'default' : "data", 
+	'acqEra' : {'Run2025D' : "data",
+                'pORun2025': "data",
+                'OORun2025': "hidata",
+                'NeNeRun2025': "hidata"}
+}
+setBulkDataType(tier0Config, bulkData)
 setProcessingSite(tier0Config, processingSite)
 setStreamerPNN(tier0Config, streamerPNN)
 setStorageSite(tier0Config, storageSite)
@@ -144,12 +164,9 @@ setPromptCalibrationConfig(tier0Config,
 #   'maxRun': {100000: Value3, 200000: Value4},
 #   'default': Value5 }
 
-maxRunPreviousConfig = 392513 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_0_8",
-    #'acqEra': {'Run2024F': "CMSSW_14_0_11"},
-    'maxRun': {maxRunPreviousConfig: "CMSSW_15_0_6"}
+    'default': "CMSSW_15_0_9_patch3",
 }
 
 # Configure ScramArch
@@ -173,6 +190,7 @@ hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
 hltScoutingScenario = "hltScoutingEra_Run3_2025"
 AlCaHcalIsoTrkScenario = "AlCaHcalIsoTrk_Run3"
+OXYScenario = "ppEra_Run3_2025_OXY"
 
 # Heavy Ion Scenarios 2024
 
@@ -182,20 +200,20 @@ hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2024"
 
 # Defaults for processing version
 alcarawProcVersion = {
-    'default': 2
+    'default': 1
 }
 
 defaultProcVersionReco = {
-    'default': 2
+    'default': 1
 }
 
 expressProcVersion = {
-    'default': 2
+    'default': 1
 }
 
 # Defaults for GlobalTag
 expressGlobalTag = {
-    'default': "150X_dataRun3_Express_v1"
+    'default': "150X_dataRun3_Express_v2"
     #'acqEra': {'Run2024B': "140X_dataRun3_Express_v2"}
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Express_v3"}
 }
@@ -513,6 +531,7 @@ addExpressConfig(tier0Config, "ALCAPPSExpress",
                  diskNode="T2_CH_CERN",
                  versionOverride=expressVersionOverride)
 
+
 #####################
 ### HI Tests 2018 ###
 #####################
@@ -582,8 +601,6 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
-               tape_node="T1_ES_PIC_MSS",
-               disk_node="T1_ES_PIC_Disk",
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -610,8 +627,6 @@ for dataset in DATASETS:
                do_reco=True,
                write_reco=False,
                write_dqm=True,
-               tape_node="T1_DE_KIT_MSS",
-               disk_node="T1_DE_KIT_Disk",
                alca_producers=["TkAlZMuMu", "MuAlCalIsolatedMu", "MuAlOverlaps", "MuAlZMuMu"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon"],
                physics_skims=["LogError", "LogErrorMonitor"],
@@ -808,8 +823,6 @@ for dataset in DATASETS:
                do_reco=True,
                write_reco=False,
                write_dqm=True,
-               tape_node="T1_FR_CCIN2P3_MSS",  # SingleMon was in "T1_US_FNAL_MSS" , DoubleMuon was in "T1_DE_KIT_MSS"
-               disk_node="T1_FR_CCIN2P3_Disk", # SingleMon was in "T1_US_FNAL_Disk", DoubleMuon was in "T1_DE_KIT_Disk"
                alca_producers=["TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu",
                                "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
                                "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
@@ -884,8 +897,6 @@ for dataset in DATASETS:
                alca_producers=["TkAlCosmicsInCollisions"],
                dqm_sequences=["@common"],
                physics_skims=["EXONoBPTXSkim", "LogError", "LogErrorMonitor"],
-               tape_node="T1_UK_RAL_MSS",
-               disk_node="T1_UK_RAL_Disk",
                scenario=ppScenario)
 
 DATASETS = ["EGamma0", "EGamma1", "EGamma2", "EGamma3"]
@@ -909,8 +920,6 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                dqm_sequences=["@common"],
-               tape_node="T1_DE_KIT_MSS",
-               disk_node="T1_DE_KIT_Disk",
                physics_skims=["EXODisappTrk", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -929,8 +938,6 @@ for dataset in DATASETS:
                physics_skims=["EcalActivity", "LogError", "LogErrorMonitor"],
                timePerEvent=12,
                sizePerEvent=4000,
-               tape_node="T1_DE_KIT_MSS",
-               disk_node="T1_DE_KIT_Disk",
                scenario=ppScenario)
 
 DATASETS = ["HcalNZS"]
@@ -976,8 +983,6 @@ for dataset in DATASETS:
                write_miniaod=True,
                write_reco=False,
                dqm_sequences=["@common"],
-               tape_node="T1_ES_PIC_MSS",
-               disk_node="T1_ES_PIC_Disk",
                scenario=ppScenario)
 
 #############################################
@@ -1262,7 +1267,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
                alca_producers=["TkAlMinBias","LumiPixelsMinBias"],
                physics_skims=["LogError", "LogErrorMonitor"],
-	       disk_node="T2_CH_CERN",
+               disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
 ########################################################
@@ -1367,7 +1372,6 @@ for dataset in DATASETS:
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=1,
                sizePerEvent=1500,
-               tape_node="T1_ES_PIC_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
@@ -1427,6 +1431,73 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
+
+#################### SPECIAL RUNS ######################
+
+########################################################
+### Special Oxygen and Neon Datasets Here            ###
+########################################################
+
+DATASETS = ["IonPhysics0"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+                do_reco=True,
+                write_reco=False, 
+                write_aod=True, 
+                write_miniaod=True, 
+                write_nanoaod=True, 
+                write_dqm=True,
+                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet", "@egamma", "@L1TMon", "@hcal", "@ecal", "@ctpps"],
+                alca_producers=["TkAlMuonIsolated", "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight", "TkAlZMuMu", 
+                "TkAlDiMuonAndVertex", "TkAlJetHT", "TkAlJpsiMuMu", "TkAlUpsilonMuMu", "SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias"],
+                physics_skims=["LogError", "LogErrorMonitor", "IonHighPtMuon", "IonDimuon"],
+                archival_node="T0_CH_CERN_MSS",
+                tape_node="T1_US_FNAL_MSS",
+                disk_node="T1_US_FNAL_Disk",
+                raw_to_disk=False,
+                aod_to_disk=True,
+                nano_flavours=['@PHYS', '@L1'],
+                scenario=ppScenario)
+
+DATASETS = ["IonPhysics1", "IonPhysics2", "IonPhysics3", "IonPhysics4",
+            "IonPhysics5", "IonPhysics6", "IonPhysics7", "IonPhysics8", "IonPhysics9",
+            "IonPhysics10", "IonPhysics11", "IonPhysics12", "IonPhysics13", "IonPhysics14",
+            "IonPhysics15", "IonPhysics16", "IonPhysics17", "IonPhysics18", "IonPhysics19",
+            "IonPhysics20", "IonPhysics21", "IonPhysics22", "IonPhysics23", "IonPhysics24",
+            "IonPhysics25", "IonPhysics26", "IonPhysics27", "IonPhysics28", "IonPhysics29",
+            "IonPhysics30", "IonPhysics31", "IonPhysics32", "IonPhysics33", "IonPhysics34",
+            "IonPhysics35", "IonPhysics36", "IonPhysics37", "IonPhysics38", "IonPhysics39",
+            "IonPhysics40", "IonPhysics41", "IonPhysics42", "IonPhysics43", "IonPhysics44",
+            "IonPhysics45", "IonPhysics46", "IonPhysics47", "IonPhysics48", "IonPhysics49",
+            "IonPhysics50", "IonPhysics51", "IonPhysics52", "IonPhysics53", "IonPhysics54",
+            "IonPhysics55", "IonPhysics56", "IonPhysics57", "IonPhysics58", "IonPhysics59"
+]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+                do_reco=True,
+                write_reco=False, 
+                write_aod=True, 
+                write_miniaod=True, 
+                write_nanoaod=True, 
+                write_dqm=False,
+                dqm_sequences=["@none"],
+                alca_producers=["TkAlMuonIsolated", "SiPixelCalSingleMuonTight", "TkAlZMuMu", 
+                "TkAlDiMuonAndVertex", "TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
+                physics_skims=["LogError", "LogErrorMonitor", "IonHighPtMuon", "IonDimuon"],
+                archival_node="T0_CH_CERN_MSS",
+                tape_node="T1_US_FNAL_MSS",
+                disk_node="T1_US_FNAL_Disk",
+                raw_to_disk=False,
+                aod_to_disk=True,
+                nano_flavours=['@PHYS', '@L1'],
+                scenario=ppScenario)
+
+########################################################
+
+
+
 ########################################################
 ### Parking and Scouting PDs                         ###
 ########################################################
@@ -1451,8 +1522,6 @@ DATASETS = ["RPCMonitor"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
-               tape_node="T1_DE_KIT_MSS",
-               disk_node="T1_DE_KIT_Disk",
                scenario=ppScenario)
 
 DATASETS = ["ScoutingPFMonitor"] # From Stream PhysicsScoutingPFMonitor --> repacked to RAW
@@ -1515,7 +1584,7 @@ DATASETS += ["TD01", "TD02", "TD03", "TD04", "TD05", "TD06", "TD07", "TD08", "TD
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
-	       raw_to_disk=True,
+	           raw_to_disk=True,
                archival_node=None,
                tape_node=None,
                disk_node="T0_CH_CERN_Disk",
@@ -1571,8 +1640,8 @@ SECOND_AGENT_STREAMS = ["ParkingSingleMuon0", "ParkingSingleMuon1", "ParkingSing
                         "ParkingSingleMuon15"]
 
 THIRD_AGENT_STREAMS = []
-setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
-                                    "ThirdAgent" : THIRD_AGENT_STREAMS})
+setHelperAgentStreams(tier0Config, {"SecondAgent" : [],
+                                    "ThirdAgent" : []})
 
 
 ###################################
@@ -1597,3 +1666,4 @@ setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
 
 if __name__ == '__main__':
     print(tier0Config)
+
