@@ -166,7 +166,9 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_0_9_patch3",
+    'default': "CMSSW_15_0_10",
+    #'acqEra': {'Run2024F': "CMSSW_14_0_11"},
+    #'maxRun': {maxRunPreviousConfig: "CMSSW_15_0_6"}
 }
 
 # Configure ScramArch
