@@ -217,7 +217,7 @@ expressProcVersion = {
 expressGlobalTag = {
     'default': "150X_dataRun3_Express_v2"
     #'acqEra': {'Run2024B': "140X_dataRun3_Express_v2"}
-    #'maxRun': {nn: "132X_dataRun3_Express_v3"}
+    #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Express_v3"}
 }
 promptrecoGlobalTag = {
     'default': "150X_dataRun3_Prompt_v1",
