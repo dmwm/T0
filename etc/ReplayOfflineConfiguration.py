@@ -43,8 +43,21 @@ setConfigVersion(tier0Config, "replace with real version")
 
 setInjectRuns(tier0Config, [392204, 393274]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
 
-# Use this in order to limit the number of lumisections to process
-#setInjectLimit(tier0Config, 10)
+# Use this function to limit the number of lumisections to process.
+#
+# - To specify the maximum number of lumisections, provide an integer:
+#   Example: setInjectLimit(tier0Config, 10)
+#
+# - To specify a range of lumisections, provide a list with the minimum and maximum values:
+#   Example: setInjectLimit(tier0Config, [50, 60])
+#
+# Important:
+# If a list is provided, the Tier0 algorithm will detect any missing lumisections ("holes")
+# and will not create the job for 2 hours by default.
+# It is recommended to reduce the maxLatency of the repack to 5 minutes (5 * 60)
+# so that the job will be created 5 minutes after a hole is detected.
+
+# setInjectLimit(tier0Config, [50, 100])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
