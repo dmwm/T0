@@ -62,45 +62,10 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  PhEDEx locations
 
 ### Set Acquisition Era
-"""
-Any run under maxRunPreviousEra will take the latest acquisition era that is not default
-example:
-1. - All runs will be Run2025B
+#
+#Any run under maxRunPreviousEra will take the corresponding acquisition era that is not default
+#Any run over maxRunPreviousEra will take the default era
 
-maxRunPreviousEra = 9999999
-acquisitionEra = {
-    'default' : 'Run2025C',
-    'maxRun' : {maxRunPreviousEra : 'Run2025B'}
-}
-
-2. - Runs after run 100000 will be Run2025D
-   - Run 390900, which should fall under Run2025B, would fall under Run2025C 
-     because we only compare according to the maximum run inside the 'maxRun' dict
-
-maxRunPreviousEra = 391000
-maxRunEraB = 390950
-acquisitionEra = {
-    'default' : 'Run2025D',
-    'maxRun' : {maxRunPreviousEra : 'Run2025C'
-                maxRunEraB : 'Run2025B'}
-}
-
-All runs are assigned eras immediately at injection time, 
-so we can keep old eras in the configuration file without risk.
-
-i.e.
-
-maxRunPreviousEra = 393800
-maxRunRun2025B = 392158
-maxRunRun2025A = 391529
-acquisitionEra = {
-    'default' : 'Run2025D',
-    'maxRun' : {maxRunPreviousEra : 'Run2025C',
-                maxRunRun2025B : 'Run2025B',
-                maxRunRun2025A : 'Run2025A'
-                }
-}
-"""
 maxRunPreviousEra = 9999999
 acquisitionEra = {
     'default' : 'Run2025D',
