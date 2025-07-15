@@ -1,0 +1,180 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
+"""
+This is the T0 agent configuration script.
+It sets the agent to:
+- Be replay or production agent
+- Be MainAgent or SecondAgent
+- Install T0 version
+- Tweak config.py
+- Populate resource control
+
+This script requires wmagent installed.
+"""
+import sys
+import getopt
+import traceback
+import os
+
+help_message = '''
+- t0 --update-t0=<version>          : Uninstalls current T0 to install sepcified T0 version
+-
+- t0 --start-agent                  : Starts the agent
+-
+- t0 --stop-agent                   : Stops the agent
+-
+- t0 --clear-deployment             : Start a new deployment without re-installing the software
+-
+- t0 --resource-control=<site>      : Adds input site to resource control only for processing jobs
+-
+- t0 --edit-code=<file>             : Looks for input file within site-packages directory and opens it for edit using vim
+'''
+
+class Usage(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+
+
+def tier0_install(version=None):
+    """
+    pip install T0
+    """
+    os.system('echo "now running tier0_install()"')
+    if version:
+        os.system('pip install T0=={}'.format(version))
+    else:
+        os.system('pip install T0')
+    return
+
+def add_T2_CH_CERN(running=20000, pending=20000):
+    """
+    Add T2_CH_CERN to the resource control
+    """
+    cmd_T2_CH_CERN = f'manage execute-agent wmagent-resource-control --site-name=T2_CH_CERN --cms-name=T2_CH_CERN --pnn=T0_CH_CERN_Disk --ce-name=T2_CH_CERN --pending-slots={pending} --running-slots={running} --plugin=SimpleCondorPlugin'
+    cmd_T0_CH_CERN_Disk = 'manage execute-agent wmagent-resource-control --site-name=T0_CH_CERN_Disk --cms-name=T0_CH_CERN_Disk --pnn=T2_CH_CERN --ce-name=T0_CH_CERN_Disk --pending-slots=20000 --running-slots=20000 --plugin=SimpleCondorPlugin'
+    os.system(cmd_T2_CH_CERN)
+    os.system(cmd_T0_CH_CERN_Disk)
+    return
+
+def task_resource_control(site=None, task=None, running=1000, pending=1000):
+    """
+    Set the number of slots for any desired task in any desired site
+    Site name and task name are required
+    """
+    cmd = f"manage execute-agent wmagent-resource-control --site-name={site} --task-type={task} --pending-slots={pending} --running-slots={running}" 
+    os.system(cmd)
+    return
+
+def addProcessingSite(site=None, running=10000, pending=10000):
+    """
+    _resourceControl_
+    Adds site to the resource control
+    """
+    addSiteCmd = f"manage execute-agent wmagent-resource-control --pending-slots={pending} --running-slots={running} --plugin=SimpleCondorPlugin --add-one-site {site}"
+    os.system(addSiteCmd)
+
+def add_T1_sites():
+    """
+    Enables all european T1 sites for processing jobs
+    """
+    addProcessingSite(site='T1_ES_PIC')
+    addProcessingSite(site='T1_FR_CCIN2P3')
+    addProcessingSite(site='T1_IT_CNAF')
+    addProcessingSite(site='T1_UK_RAL')
+    addProcessingSite(site='T1_DE_KIT')
+
+    return
+
+def add_resource_control():
+    """
+    Sets the default resource control
+    """
+    add_T2_CH_CERN()
+    task_resource_control(site="T2_CH_CERN", task="Processing", running=10000, pending=10000)
+    task_resource_control(site="T2_CH_CERN", task="Merge")
+    task_resource_control(site="T2_CH_CERN", task="Cleanup")
+    task_resource_control(site="T2_CH_CERN", task="LogCollect")
+    task_resource_control(site="T2_CH_CERN", task="Skim", running=1, pending=1)
+    task_resource_control(site="T2_CH_CERN", task="Production", running=1, pending=1)
+    task_resource_control(site="T2_CH_CERN", task="Harvesting")
+    task_resource_control(site="T2_CH_CERN", task="Express", running=3000, pending=3000)
+    task_resource_control(site="T2_CH_CERN", task="Repack", running=5000, pending=5000)
+
+    return
+
+def patch_t0_code(github_user="dmwm", patch=None):
+    """
+    patches the T0 code
+    """
+    if not patch:
+        os.system('echo "Please provide a patch"')
+        return
+    else:
+        os.system('echo "Patching T0 with patch {}/T0/pull/{}"'.format(github_user, patch))
+        cmd=f'curl https://patch-diff.githubusercontent.com/raw/{github_user}/T0/pull/{patch}.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.12/site-packages/ -p 3'
+        os.system(cmd)
+    
+    return
+
+def patch_wmcore_code(github_user="dmwm", patch=None):
+    """
+    patches the T0 code
+    """
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv
+
+    try:
+        try:
+            opts, args = getopt.getopt(argv[1:], "h",
+            ["help", "update-t0=", "start-agent", "stop-agent", "clear-deployment", "resource-control=", "edit-code="])
+
+        except getopt.error as msg:
+            raise Usage(msg)
+
+        # option processing
+        for option, value in opts:
+            if option in ("-h", "--help"):
+                raise Usage(help_message)
+            
+            if option == "--update-t0":
+                updateT0(value)
+
+            if option == "--start-agent":
+                start()
+
+            if option == "--stop-agent":
+                stop()
+
+            if option == "--clear-deployment":
+                os.system('echo "This will clear T0AST database"')
+                os.system('sleep 3')
+                os.system('echo "This will remove /data/tier0/admin/Specs"')
+                os.system('sleep 3')
+                os.system('echo "This will reset couchdb container"')
+                os.system('sleep 3')
+                os.system('echo "Are you sure you wish to proceed? (Y/n)"')
+                userInput = input()
+                clearDeployment(userInput=userInput)
+
+            if option == "--resource-control":
+                site = value
+                addProcessingSite(site)
+
+            if option == "--edit-code":
+                if len(value) > 0:
+                    modifyCodeFile(value)
+                else:
+                    os.system('echo "Please provide a file to modify"')
+                    os.system('echo "t0 --edit-code={file}"')
+
+    except Usage as err:
+        print(sys.argv[0].split("/")[-1] + ": " + str(err.msg), file=sys.stderr)
+        print("\t for help use --help", file=sys.stderr)
+        return 2
+
+if __name__ == "__main__":
+    sys.exit(main())
