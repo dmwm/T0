@@ -878,6 +878,7 @@ def setInjectLimit(config, injectLimit):
     _setInjectLimit_
 
     Set the limit of lumis to be injected into the Tier0 (for small functional test).
+    Can accept either a single number (for upper limit) or a list [min, max] for range.
     """
     config.Global.InjectLimit = injectLimit
     return
