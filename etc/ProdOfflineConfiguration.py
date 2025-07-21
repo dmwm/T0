@@ -205,6 +205,13 @@ alcarawSplitting = 20000 * numberOfCores
 #
 # Setup repack and express mappings
 #
+
+L1repackVersionOverride = {
+    "CMSSW_15_0_5" : "CMSSW_15_0_6",
+    "CMSSW_15_0_10" : "CMSSW_15_0_10_patch2",
+    "CMSSW_15_0_10_patch1" : "CMSSW_15_0_10_patch2"
+}
+
 repackVersionOverride = {
     "CMSSW_15_0_5" : "CMSSW_15_0_6"
 }
@@ -249,12 +256,12 @@ addRepackConfig(tier0Config, "ScoutingPF",
 addRepackConfig(tier0Config, "L1Scouting",
                 proc_ver=1, # Should remain 1. Changing it can cause several issues.
                 dataTier="L1SCOUT",
-                versionOverride=repackVersionOverride)
+                versionOverride=L1repackVersionOverride)
 
 addRepackConfig(tier0Config, "L1ScoutingSelection",
                 proc_ver=1, # Should remain 1. Changing it can cause several issues.
                 dataTier="L1SCOUT",
-                versionOverride=repackVersionOverride)
+                versionOverride=L1repackVersionOverride)
 
 addDataset(tier0Config, "Default",
            do_reco=False,
