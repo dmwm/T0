@@ -22,8 +22,8 @@ class InsertStream(DBFormatter):
                    IF (cnt = 0)
                    THEN
                      INSERT INTO stream
-                     (NAME)
-                     VALUES(:STREAM)
+                     (ID, NAME)
+                     VALUES(stream_SEQ.nextval, :STREAM)
                      ;
                    END IF;
                  EXCEPTION

@@ -12,8 +12,8 @@ class InsertTrigger(DBFormatter):
     def execute(self, binds, conn = None, transaction = False):
 
         sql = """INSERT INTO trigger_label
-                 (NAME)
-                 SELECT :TRIG
+                 (ID, NAME)
+                 SELECT trigger_label_SEQ.nextval, :TRIG
                  FROM DUAL
                  WHERE NOT EXISTS (
                    SELECT * FROM trigger_label
