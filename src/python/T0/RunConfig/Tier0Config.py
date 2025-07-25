@@ -662,7 +662,7 @@ def setEmulationAcquisitionEra(config, emulationAcquisitionEra, repack):
     config.Global.EmulationRepack = repack
     return
 
-ef setScenarios(config, scenarios):
+def setScenarios(config, scenarios):
     """
     _setScenarios_
     Dictionary with all the scenarios

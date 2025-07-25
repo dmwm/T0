@@ -17,7 +17,7 @@ class InsertEventScenarios(DBFormatter):
                     ) 
                  ON (EVENT_SCENARIO.NAME = :SCENARIO)
                  WHEN NOT MATCHED THEN
-                     INSERT (ID, NAME) VALUES (NEW_ID, :SCENARIO);
+                     INSERT (ID, NAME) VALUES (NEW_ID, :SCENARIO)
 
                  """
 

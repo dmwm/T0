@@ -287,7 +287,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         insertStreamDatasetDAO = daoFactory(classname = "RunConfig.InsertStreamDataset")
 
         # write stream configuration
-        insertEventScenarioDAO = self.daoFactory(classname = "RunConfig.InsertEventScenarios")
+        insertEventScenarioDAO = daoFactory(classname = "RunConfig.InsertEventScenarios")
         insertCMSSWVersionDAO = daoFactory(classname = "RunConfig.InsertCMSSWVersion")
         insertStreamStyleDAO = daoFactory(classname = "RunConfig.InsertStreamStyle")
         insertRepackConfigDAO = daoFactory(classname = "RunConfig.InsertRepackConfig")
@@ -372,9 +372,9 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             if streamConfig.Express.Scenario not in {d['SCENARIO'] for d in bindsScenario}:
                 bindsScenario.append({'SCENARIO' : streamConfig.Express.Scenario})
-                
+
             try:
-                insertEventScenarioDAO(bindsScenario, conn = myThread.transaction.conn, transaction = True)
+                insertEventScenarioDAO.execute(bindsScenario, conn = myThread.transaction.conn)
             except Exception as e:
                 logging.exception('Something went wrong adding the scenario to the event scenario table')
                 raise 
@@ -838,7 +838,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                             logger = logging,
                             dbinterface = myThread.dbi)
 
-    insertEventScenarioDAO = self.daoFactory(classname = "RunConfig.InsertEventScenarios")
+    insertEventScenarioDAO = daoFactory(classname = "RunConfig.InsertEventScenarios")
     findRecoReleaseDatasetsDAO = daoFactory(classname = "RunConfig.FindRecoReleaseDatasets")
     findRecoReleaseDAO = daoFactory(classname = "RunConfig.FindRecoRelease")
     insertDatasetScenarioDAO = daoFactory(classname = "RunConfig.InsertDatasetScenario")
@@ -907,7 +907,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 bindsScenario.append({'SCENARIO': datasetConfig.Scenario})
 
             try:
-                insertEventScenarioDAO(bindsScenario, conn = myThread.transaction.conn, transaction = True)
+                insertEventScenarioDAO.execute(bindsScenario, conn = myThread.transaction.conn, transaction = True)
             except Exception as e:
                 logging.exception('Something went wrong adding the scenario to the event scenario table')
                 raise 
