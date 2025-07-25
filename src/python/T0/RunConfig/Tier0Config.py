@@ -39,6 +39,8 @@ Tier0Configuration - Global configuration object
 | |       |--> EmulationAcquisitionEra - The acquisition era for emulated runs
 | |       |--> EmulationRepack - switch on/off repack for emulation runs
 | |       |
+| |       |--> Scenarios - processing scenarios 
+| |       |
 | |       |--> Backfill - The backfill mode, can be None, 1 or 2
 | |       |
 | |       |--> ProcessingSite - Main (CERN) site where processing is done.
@@ -660,6 +662,13 @@ def setEmulationAcquisitionEra(config, emulationAcquisitionEra, repack):
     config.Global.EmulationRepack = repack
     return
 
+ef setScenarios(config, scenarios):
+    """
+    _setScenarios_
+    Dictionary with all the scenarios
+    """
+    config.Global.Scenarios = scenarios
+    return
 
 def setScramArch(config, cmssw, arch):
     """
