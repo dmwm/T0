@@ -15,8 +15,8 @@ then
     exit
 fi
 
-WMAGENT_TAG=2.4.0
-TIER0_VERSION=3.4.0rc2
+WMAGENT_TAG=2.4.2rc7
+TIER0_VERSION=3.5.1
 COUCH_TAG=3.2.2
 
 BASE_DIR=/data/tier0

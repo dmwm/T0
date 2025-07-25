@@ -20,6 +20,9 @@ DEPLOY_DIR=$BASE_DIR/WMAgent.venv3
 #Raw skims
 #curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/5041.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.12/site-packages/ -p 3
 
+#Automatic Scenarios
+curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/5112.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.12/site-packages/ -p 3
+
 
 ######################
 ### WMCore patches ###
