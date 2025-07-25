@@ -30,6 +30,7 @@ from T0.RunConfig.Tier0Config import addSiteConfig
 from T0.RunConfig.Tier0Config import setStorageSite
 from T0.RunConfig.Tier0Config import setExtraStreamDatasetMap
 from T0.RunConfig.Tier0Config import setHelperAgentStreams
+from T0.RunConfig.Tier0Config import setScenarios
 
 # Create the Tier0 configuration object
 tier0Config = createTier0Config()
