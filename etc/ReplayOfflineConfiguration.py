@@ -57,10 +57,10 @@ setInjectRuns(tier0Config, [392204, 393274]) # 386925: 2024 Collisions, 390094: 
 # It is recommended to reduce the maxLatency of the repack to 5 minutes (5 * 60)
 # so that the job will be created 5 minutes after a hole is detected.
 
-# setInjectLimit(tier0Config, [50, 100])
-
+setInjectLimit(tier0Config, [50, 100])
+# T1_US_FNAL
 # Settings up sites
-processingSite = "T2_CH_CERN"
+processingSite = "T1_US_FNAL"
 storageSite = "T0_CH_CERN_Disk"
 streamerPNN = "T0_CH_CERN_Disk"
 
