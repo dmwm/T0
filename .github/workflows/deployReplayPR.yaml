@@ -10,6 +10,30 @@ jobs:
     runs-on: cmst0
     
     steps:
+    - name: Post deployment start comment
+      run: |
+        COMMENT="🚀 **Deployment Started**
+        
+        **Configuration:**
+        - Server: \`${REPLAY_OPTION}\`
+        - Config: \`${config_name}\`
+        - WMCore: \`${WMCORE_VERSION}\`
+        - T0: \`${T0_VERSION}\`
+        - Python: \`${PYTHON_VERSION}\`
+        - Patches: \`${PATCH_OPTION}\`
+        - Force Stop: \`${FORCE_STOP}\`
+        
+        **Deployment is now in progress...** ⏳
+        
+        [View workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+        
+        curl -X POST \
+          -H "Authorization: token ${{ github.token }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Content-Type: application/json" \
+          "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
+          -d "$(jq -n --arg body "$COMMENT" '{body: $body}')"
+          
     - name: Parse comment and get PR file URL
       id: parse
       run: |
@@ -143,7 +167,7 @@ jobs:
                 echo "Options:"
                 echo "1. Wait for jobs to complete naturally"
                 echo "2. Re-run this pipeline with 'force_stop: true' to override"
-                echo "3. Manually stop jobs with: condor_rm -all"
+                echo "3. Manually stop jobs with"
                 echo ""
                 echo "To check job status: condor_q"
                 echo "To monitor job progress: watch condor_q"
