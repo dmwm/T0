@@ -53,6 +53,7 @@ jobs:
         server: $(echo "${{ env.ALLOWED_SERVERS }}" | cut -d',' -f2)
         config: OXYReplayOfflineConfiguration.py
         wmcore: 2.4.3rc1
+        t0: 3.5.1
         patch: Patch
         patch_repo: Viphava/T0
         commit: 5081,5090
