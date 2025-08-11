@@ -53,7 +53,7 @@ jobs:
         /deploy-replay
         server: $(echo "${{ env.ALLOWED_SERVERS }}" | cut -d',' -f2)
         config: OXYReplayOfflineConfiguration.py
-        wmcore: 2.4.3rc1
+        wmcore: 2.4.2rc7
         t0: 3.5.1
         python: 3.12
         patch: Patch
