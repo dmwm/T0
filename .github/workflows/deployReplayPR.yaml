@@ -28,14 +28,15 @@ jobs:
         COMMENT="📋 **Deploy Replay - Default Parameters**
         
         **Current Default Values:**
-        - **Server:** \`${{ env.DEFAULT_SERVER }}\`
-        - **Config:** \`${{ env.DEFAULT_CONFIG }}\`
-        - **WMCore:** \`${{ env.DEFAULT_WMCORE }}\`
-        - **T0:** \`${{ env.DEFAULT_T0 }}\`
-        - **Python:** \`${{ env.DEFAULT_PYTHON }}\`
-        - **Patches:** \`${{ env.DEFAULT_PATCH }}\`
-        - **Patch_repo:** \`${{ env.DEFAULT_PATCH_REPO }}\`
-        - **Force Stop:** \`${{ env.DEFAULT_FORCE_STOP }}\`
+        - **server:** \`${{ env.DEFAULT_SERVER }}\`
+        - **config:** \`${{ env.DEFAULT_CONFIG }}\`
+        - **wmcore:** \`${{ env.DEFAULT_WMCORE }}\`
+        - **t0:** \`${{ env.DEFAULT_T0 }}\`
+        - **python:** \`${{ env.DEFAULT_PYTHON }}\`
+        - **patch:** \`${{ env.DEFAULT_PATCH }}\`
+        - **patch_repo:** \`${{ env.DEFAULT_PATCH_REPO }}\`
+        - **commit:** \`${{ env.DEFAULT_COMMIT }}\`
+        - **force_stop:** \`${{ env.DEFAULT_FORCE_STOP }}\`
         
         **Allowed Servers:**
         $(echo "${{ env.ALLOWED_SERVERS }}" | tr ',' '\n' | sed 's/^/        - `/' | sed 's/$/`/')
@@ -54,6 +55,7 @@ jobs:
         config: OXYReplayOfflineConfiguration.py
         wmcore: 2.4.3rc1
         t0: 3.5.1
+        python: 3.12
         patch: Patch
         patch_repo: Viphava/T0
         commit: 5081,5090
