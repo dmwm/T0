@@ -15,13 +15,47 @@ jobs:
       run: |
         comment="${{ github.event.comment.body }}"
         
-        replay=$(echo "$comment" | grep -E "^server:" | cut -d' ' -f2- | xargs || echo "vocms05011")
-        patch=$(echo "$comment" | grep -E "^patch:" | cut -d' ' -f2- | xargs || echo "No Patch")
-        commit=$(echo "$comment" | grep -E "^commit:" | cut -d' ' -f2- | xargs || echo "5081")
-        wmcore=$(echo "$comment" | grep -E "^wmcore:" | cut -d' ' -f2- | xargs || echo "2.4.2rc7")
-        t0=$(echo "$comment" | grep -E "^t0:" | cut -d' ' -f2- | xargs || echo "3.5.1")
-        python=$(echo "$comment" | grep -E "^python:" | cut -d' ' -f2- | xargs || echo "3.12")
-        force_stop=$(echo "$comment" | grep -E "^force_stop:" | cut -d' ' -f2- | xargs || echo "No")
+        replay=$(echo "$comment" | grep -E "^server:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
+        if [ -z "$replay" ]; then
+          replay="vocms05011"
+        fi
+        echo "Server: $replay"
+        
+        patch=$(echo "$comment" | grep -E "^patch:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
+        if [ -z "$patch" ]; then
+          patch="No Patch"
+        fi
+        echo "Patch: $patch"
+        
+        commit=$(echo "$comment" | grep -E "^commit:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
+        if [ -z "$commit" ]; then
+          commit="5081"
+        fi
+        echo "Commit: $commit"
+        
+        wmcore=$(echo "$comment" | grep -E "^wmcore:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
+        if [ -z "$wmcore" ]; then
+          wmcore="2.4.2rc7"
+        fi
+        echo "WMCore: $wmcore"
+        
+        t0=$(echo "$comment" | grep -E "^t0:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
+        if [ -z "$t0" ]; then
+          t0="3.5.1"
+        fi
+        echo "T0: $t0"
+        
+        python=$(echo "$comment" | grep -E "^python:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
+        if [ -z "$python" ]; then
+          python="3.12"
+        fi
+        echo "Python: $python"
+        
+        force_stop=$(echo "$comment" | grep -E "^force_stop:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
+        if [ -z "$force_stop" ]; then
+          force_stop="No"
+        fi
+        echo "Force Stop: $force_stop"
         
         pr_number="${{ github.event.issue.number }}"
         pr_info=$(curl -s -H "Authorization: token ${{ github.token }}" \
