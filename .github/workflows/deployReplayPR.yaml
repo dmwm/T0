@@ -1,5 +1,17 @@
 name: Pipeline for deploy the replay
 
+# GLOBAL CONFIGURATION - CHANGE VALUES HERE ONLY
+env:
+  DEFAULT_SERVER: "vocms05011"
+  DEFAULT_CONFIG: "ReplayOfflineConfiguration.py"
+  DEFAULT_WMCORE: "2.4.2rc7"
+  DEFAULT_T0: "3.5.1"
+  DEFAULT_PYTHON: "3.12"
+  DEFAULT_PATCH: "No Patch"
+  DEFAULT_FORCE_STOP: "No"
+  DEFAULT_COMMIT: "5081"
+  ALLOWED_SERVERS: "vocms05011,vocms047"
+
 on:
   issue_comment:
     types: [created]
@@ -15,17 +27,16 @@ jobs:
         COMMENT="📋 **Deploy Replay - Default Parameters**
         
         **Current Default Values:**
-        - **Server:** \`vocms05011\`
-        - **Config:** \`ReplayOfflineConfiguration.py\`
-        - **WMCore:** \`2.4.2rc7\`
-        - **T0:** \`3.5.1\`
-        - **Python:** \`3.12\`
-        - **Patches:** \`No Patch\`
-        - **Force Stop:** \`No\`
+        - **Server:** \`${{ env.DEFAULT_SERVER }}\`
+        - **Config:** \`${{ env.DEFAULT_CONFIG }}\`
+        - **WMCore:** \`${{ env.DEFAULT_WMCORE }}\`
+        - **T0:** \`${{ env.DEFAULT_T0 }}\`
+        - **Python:** \`${{ env.DEFAULT_PYTHON }}\`
+        - **Patches:** \`${{ env.DEFAULT_PATCH }}\`
+        - **Force Stop:** \`${{ env.DEFAULT_FORCE_STOP }}\`
         
         **Allowed Servers:**
-        - \`vocms05011\`
-        - \`vocms047\`
+$(echo "${{ env.ALLOWED_SERVERS }}" | tr ',' '\n' | sed 's/^/        - `/' | sed 's/$/`/')
         
         **Usage Examples:**
         
@@ -37,7 +48,7 @@ jobs:
         **Custom deployment:**
         \`\`\`
         /deploy-replay
-        server: vocms047
+        server: $(echo "${{ env.ALLOWED_SERVERS }}" | cut -d',' -f2)
         config: OXYReplayOfflineConfiguration.py
         wmcore: 2.4.3rc1
         patch: Patch
@@ -61,65 +72,67 @@ jobs:
           -H "Content-Type: application/json" \
           "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
           -d "$(jq -n --arg body "$COMMENT" '{body: $body}')"
+
   deploy-the-replay:
     if: github.event.issue.pull_request && contains(github.event.comment.body, '/deploy-replay')
     runs-on: cmst0
     
     steps:
-          
     - name: Parse comment and get PR file URL
       id: parse
       run: |
         comment="${{ github.event.comment.body }}"
         
+        # Use global defaults from workflow env
         replay=$(echo "$comment" | grep -E "^server:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
         if [ -z "$replay" ]; then
-          replay="vocms05011"
+          replay="${{ env.DEFAULT_SERVER }}"
         fi
         echo "Server: $replay"
         
         patch=$(echo "$comment" | grep -E "^patch:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
         if [ -z "$patch" ]; then
-          patch="No Patch"
+          patch="${{ env.DEFAULT_PATCH }}"
         fi
         echo "Patch: $patch"
         
         commit=$(echo "$comment" | grep -E "^commit:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
         if [ -z "$commit" ]; then
-          commit="5081"
+          commit="${{ env.DEFAULT_COMMIT }}"
         fi
         echo "Commit: $commit"
         
         wmcore=$(echo "$comment" | grep -E "^wmcore:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
         if [ -z "$wmcore" ]; then
-          wmcore="2.4.2rc7"
+          wmcore="${{ env.DEFAULT_WMCORE }}"
         fi
         echo "WMCore: $wmcore"
         
         t0=$(echo "$comment" | grep -E "^t0:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
         if [ -z "$t0" ]; then
-          t0="3.5.1"
+          t0="${{ env.DEFAULT_T0 }}"
         fi
         echo "T0: $t0"
         
         python=$(echo "$comment" | grep -E "^python:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
         if [ -z "$python" ]; then
-          python="3.12"
+          python="${{ env.DEFAULT_PYTHON }}"
         fi
         echo "Python: $python"
         
         force_stop=$(echo "$comment" | grep -E "^force_stop:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
         if [ -z "$force_stop" ]; then
-          force_stop="No"
+          force_stop="${{ env.DEFAULT_FORCE_STOP }}"
         fi
         echo "Force Stop: $force_stop"
 
         config_name=$(echo "$comment" | grep -E "^config:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
         if [ -z "$config_name" ]; then
-          config_name="ReplayOfflineConfiguration.py"
+          config_name="${{ env.DEFAULT_CONFIG }}"
         fi
         echo "Config File: $config_name"
         
+        # ... rest of PR file logic stays the same
         pr_number="${{ github.event.issue.number }}"
         pr_info=$(curl -s -H "Authorization: token ${{ github.token }}" \
           "${{ github.api_url }}/repos/${{ github.repository }}/pulls/$pr_number")
@@ -137,7 +150,6 @@ jobs:
           url="https://raw.githubusercontent.com/dmwm/T0/refs/heads/master/etc/ReplayOfflineConfiguration.py"
         fi
         
-        
         echo "REPLAY_OPTION=$replay" >> $GITHUB_ENV
         echo "PATCH_OPTION=$patch" >> $GITHUB_ENV
         echo "PATCH_URL=$commit" >> $GITHUB_ENV
@@ -147,44 +159,13 @@ jobs:
         echo "FORCE_STOP=$force_stop" >> $GITHUB_ENV
         echo "WGET_URL=$url" >> $GITHUB_ENV
 
-    - name: Authenticate with Kerberos
-      run: |
-        kinit cmst0@CERN.CH -k -t /home/cmsbld/cmst0.keytab
-        echo "Kerberos authentication successful"
-
-    - name: Post deployment start comment
-      run: |
-        COMMENT="🚀 **Deployment Started**
-        
-        **Configuration:**
-        - Server: \`${REPLAY_OPTION}\`
-        - Config: \`${WGET_URL}\`
-        - WMCore: \`${WMCORE_VERSION}\`
-        - T0: \`${T0_VERSION}\`
-        - Python: \`${PYTHON_VERSION}\`
-        - Patches: \`${PATCH_OPTION}\`
-        - Force Stop: \`${FORCE_STOP}\`
-        
-        **Deployment is now in progress...** ⏳
-        
-        [View workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
-        
-        curl -X POST \
-          -H "Authorization: token ${{ github.token }}" \
-          -H "Accept: application/vnd.github.v3+json" \
-          -H "Content-Type: application/json" \
-          "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
-          -d "$(jq -n --arg body "$COMMENT" '{body: $body}')"
-
     - name: Validate server whitelist
       run: |
-        ALLOWED_SERVERS=(
-          "vocms05011"
-          "vocms047" 
-        )
+        # Convert comma-separated list to array
+        IFS=',' read -ra ALLOWED_SERVERS <<< "${{ env.ALLOWED_SERVERS }}"
         
         echo "Checking if server '${REPLAY_OPTION}' is in whitelist..."
-        echo "Allowed servers: ${ALLOWED_SERVERS[*]}"
+        echo "Allowed servers: ${{ env.ALLOWED_SERVERS }}"
         
         SERVER_ALLOWED=false
         for allowed_server in "${ALLOWED_SERVERS[@]}"; do
@@ -195,9 +176,9 @@ jobs:
         done
         
         if [ "$SERVER_ALLOWED" = true ]; then
-          echo "Server '${REPLAY_OPTION}' is authorized for deployment"
+          echo "✅ Server '${REPLAY_OPTION}' is authorized for deployment"
         else
-          echo "ERROR: Server '${REPLAY_OPTION}' is not in the whitelist!"
+          echo "❌ ERROR: Server '${REPLAY_OPTION}' is not in the whitelist!"
           echo ""
           echo "Allowed servers:"
           for server in "${ALLOWED_SERVERS[@]}"; do
@@ -208,6 +189,7 @@ jobs:
           exit 1
         fi
 
+    # ... rest of your deployment steps remain the same
 
     - name: Step 1 - Check running jobs and clean environment
       run: |
