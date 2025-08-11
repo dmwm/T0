@@ -147,7 +147,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_0_10_patch1"
+    'default': "CMSSW_15_0_12_patch1"
 }
 
 # Configure ScramArch
