@@ -196,8 +196,7 @@ jobs:
         IFS=',' read -ra ALLOWED_SERVERS <<< "${{ env.ALLOWED_SERVERS }}"
         ALLOWED_SERVERS=()
         for server in "${ALLOWED_SERVERS_RAW[@]}"; do
-          # Trim leading and trailing whitespace
-          server=$(echo "$server" | xargs)
+          server=$(echo $server | tr -d ' ')  
           ALLOWED_SERVERS+=("$server")
         done
         
