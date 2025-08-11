@@ -102,7 +102,7 @@ jobs:
         
         **Configuration:**
         - Server: \`${REPLAY_OPTION}\`
-        - Config: \`${url}\`
+        - Config: \`${WGET_URL}\`
         - WMCore: \`${WMCORE_VERSION}\`
         - T0: \`${T0_VERSION}\`
         - Python: \`${PYTHON_VERSION}\`
