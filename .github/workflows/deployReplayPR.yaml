@@ -89,7 +89,7 @@ jobs:
         comment="${{ github.event.comment.body }}"
         
         # Use global defaults from workflow env
-        replay=$(echo "$comment" | grep -E "^server:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
+        replay=$(echo "$comment" | grep -E "^server:" | cut -d' ' -f2- | tr -d '\n\r' | xargs 2>/dev/null || true)
         if [ -z "$replay" ]; then
           replay="${{ env.DEFAULT_SERVER }}"
         fi
