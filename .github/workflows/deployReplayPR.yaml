@@ -5,6 +5,62 @@ on:
     types: [created]
 
 jobs:
+  show-defaults:
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '/check')
+    runs-on: cmst0
+    
+    steps:
+    - name: Post default parameters comment
+      run: |
+        COMMENT="📋 **Deploy Replay - Default Parameters**
+        
+        **Current Default Values:**
+        - **Server:** \`vocms05011\`
+        - **Config:** \`ReplayOfflineConfiguration.py\`
+        - **WMCore:** \`2.4.2rc7\`
+        - **T0:** \`3.5.1\`
+        - **Python:** \`3.12\`
+        - **Patches:** \`No Patch\`
+        - **Force Stop:** \`No\`
+        
+        **Allowed Servers:**
+        - \`vocms05011\`
+        - \`vocms047\`
+        
+        **Usage Examples:**
+        
+        **Basic deployment (all defaults):**
+        \`\`\`
+        /deploy-replay
+        \`\`\`
+        
+        **Custom deployment:**
+        \`\`\`
+        /deploy-replay
+        server: vocms047
+        config: OXYReplayOfflineConfiguration.py
+        wmcore: 2.4.3rc1
+        patch: Patch
+        commit: 5081,5090
+        force_stop: Yes
+        \`\`\`
+        
+        **Available Parameters:**
+        - \`server:\` - Target server for deployment
+        - \`config:\` - Configuration file name (from PR or master)
+        - \`wmcore:\` - WMCore version
+        - \`t0:\` - T0 version  
+        - \`python:\` - Python version
+        - \`patch:\` - Use \"Patch\" to enable patching
+        - \`commit:\` - Comma-separated PR numbers for patches
+        - \`force_stop:\` - Use \"Yes\" to force stop running jobs"
+        
+        curl -X POST \
+          -H "Authorization: token ${{ github.token }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Content-Type: application/json" \
+          "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
+          -d "$(jq -n --arg body "$COMMENT" '{body: $body}')"
   deploy-the-replay:
     if: github.event.issue.pull_request && contains(github.event.comment.body, '/deploy-replay')
     runs-on: cmst0
