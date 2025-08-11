@@ -356,6 +356,8 @@ jobs:
     #     echo "  Server: ${REPLAY_OPTION}"
     #     echo "  Status: Completed"
     #     echo "========================================="
+
+
     - name: Post success comment
       if: success()
       run: |
@@ -369,11 +371,9 @@ jobs:
         - Python: \`${PYTHON_VERSION}\`
         - Patches: \`${PATCH_OPTION}\`
         - Force Stop: \`${FORCE_STOP}\`
-
         
+        **Deployment completed successfully!** 🎉
         
-        **Deployment completed successfully!** 🎉"
-
         [View workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
         
         curl -X POST \
