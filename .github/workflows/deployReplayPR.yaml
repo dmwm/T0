@@ -120,6 +120,38 @@ jobs:
           "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
           -d "$(jq -n --arg body "$COMMENT" '{body: $body}')"
 
+    - name: Validate server whitelist
+      run: |
+        ALLOWED_SERVERS=(
+          "vocms05011"
+          "vocms047" 
+        )
+        
+        echo "Checking if server '${REPLAY_OPTION}' is in whitelist..."
+        echo "Allowed servers: ${ALLOWED_SERVERS[*]}"
+        
+        SERVER_ALLOWED=false
+        for allowed_server in "${ALLOWED_SERVERS[@]}"; do
+          if [ "${REPLAY_OPTION}" = "$allowed_server" ]; then
+            SERVER_ALLOWED=true
+            break
+          fi
+        done
+        
+        if [ "$SERVER_ALLOWED" = true ]; then
+          echo "Server '${REPLAY_OPTION}' is authorized for deployment"
+        else
+          echo "ERROR: Server '${REPLAY_OPTION}' is not in the whitelist!"
+          echo ""
+          echo "Allowed servers:"
+          for server in "${ALLOWED_SERVERS[@]}"; do
+            echo "  - $server"
+          done
+          echo ""
+          echo "Please use one of the approved servers."
+          exit 1
+        fi
+
 
     - name: Step 1 - Check running jobs and clean environment
       run: |
