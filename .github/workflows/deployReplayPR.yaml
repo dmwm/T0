@@ -61,7 +61,7 @@ jobs:
         pr_info=$(curl -s -H "Authorization: token ${{ github.token }}" \
           "${{ github.api_url }}/repos/${{ github.repository }}/pulls/$pr_number")
         
-        head_ref=$(echo "$pr_info" | jq -r '.head.ref')
+        head_sha=$(echo "$pr_info" | jq -r '.head.sha')
         head_repo=$(echo "$pr_info" | jq -r '.head.repo.full_name')
         
         pr_files=$(curl -s -H "Authorization: token ${{ github.token }}" \
