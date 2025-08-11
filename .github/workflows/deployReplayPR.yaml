@@ -54,6 +54,7 @@ jobs:
         config: OXYReplayOfflineConfiguration.py
         wmcore: 2.4.3rc1
         patch: Patch
+        patch_repo: Viphava/T0
         commit: 5081,5090
         force_stop: Yes
         \`\`\`
@@ -98,6 +99,12 @@ jobs:
           patch="${{ env.DEFAULT_PATCH }}"
         fi
         echo "Patch: $patch"
+
+        patch_repo=$(echo "$comment" | grep -E "^patch_repo:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
+        if [ -z "$patch_repo" ]; then
+          patch_repo="${{ env.DEFAULT_PATCH_REPO }}"
+        fi
+        echo "Patch Repository: $patch_repo"
         
         commit=$(echo "$comment" | grep -E "^commit:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
         if [ -z "$commit" ]; then
