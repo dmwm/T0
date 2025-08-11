@@ -95,49 +95,49 @@ jobs:
         fi
         echo "Server: $replay"
         
-        patch=$(echo "$comment" | grep -E "^patch:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
+        patch=$(echo "$comment" | grep -E "^patch:" | cut -d' ' -f2- | tr -d '\n\r' | xargs 2>/dev/null || true)
         if [ -z "$patch" ]; then
           patch="${{ env.DEFAULT_PATCH }}"
         fi
         echo "Patch: $patch"
 
-        patch_repo=$(echo "$comment" | grep -E "^patch_repo:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
+        patch_repo=$(echo "$comment" | grep -E "^patch_repo:" | cut -d' ' -f2- | tr -d '\n\r' | xargs 2>/dev/null || true)
         if [ -z "$patch_repo" ]; then
           patch_repo="${{ env.DEFAULT_PATCH_REPO }}"
         fi
         echo "Patch Repository: $patch_repo"
         
-        commit=$(echo "$comment" | grep -E "^commit:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
+        commit=$(echo "$comment" | grep -E "^commit:" | cut -d' ' -f2- | tr -d '\n\r' | xargs 2>/dev/null || true)
         if [ -z "$commit" ]; then
           commit="${{ env.DEFAULT_COMMIT }}"
         fi
         echo "Commit: $commit"
         
-        wmcore=$(echo "$comment" | grep -E "^wmcore:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
+        wmcore=$(echo "$comment" | grep -E "^wmcore:" | cut -d' ' -f2- | tr -d '\n\r' | xargs 2>/dev/null || true)
         if [ -z "$wmcore" ]; then
           wmcore="${{ env.DEFAULT_WMCORE }}"
         fi
         echo "WMCore: $wmcore"
         
-        t0=$(echo "$comment" | grep -E "^t0:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
+        t0=$(echo "$comment" | grep -E "^t0:" | cut -d' ' -f2- | tr -d '\n\r' | xargs 2>/dev/null || true)
         if [ -z "$t0" ]; then
           t0="${{ env.DEFAULT_T0 }}"
         fi
         echo "T0: $t0"
         
-        python=$(echo "$comment" | grep -E "^python:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
+        python=$(echo "$comment" | grep -E "^python:" | cut -d' ' -f2- | tr -d '\n\r' | xargs 2>/dev/null || true)
         if [ -z "$python" ]; then
           python="${{ env.DEFAULT_PYTHON }}"
         fi
         echo "Python: $python"
         
-        force_stop=$(echo "$comment" | grep -E "^force_stop:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
+        force_stop=$(echo "$comment" | grep -E "^force_stop:" | cut -d' ' -f2- | tr -d '\n\r' | xargs 2>/dev/null || true)
         if [ -z "$force_stop" ]; then
           force_stop="${{ env.DEFAULT_FORCE_STOP }}"
         fi
         echo "Force Stop: $force_stop"
 
-        config_name=$(echo "$comment" | grep -E "^config:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
+        config_name=$(echo "$comment" | grep -E "^config:" | cut -d' ' -f2- | tr -d '\n\r' | xargs 2>/dev/null || true)
         if [ -z "$config_name" ]; then
           config_name="${{ env.DEFAULT_CONFIG }}"
         fi
