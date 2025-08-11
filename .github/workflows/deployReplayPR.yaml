@@ -335,6 +335,8 @@ jobs:
         - Python: \`${PYTHON_VERSION}\`
         - Patches: \`${PATCH_OPTION}\`
         - Force Stop: \`${FORCE_STOP}\`
+
+        [View workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
         
         **Deployment completed successfully!** 🎉"
         
