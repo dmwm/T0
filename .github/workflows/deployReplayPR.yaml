@@ -444,7 +444,7 @@ jobs:
         elif [[ "${{ steps.check_jobs.outcome }}" == "failure" ]]; then
           FAILED_STEP="Job Environment Check"
           FAILURE_REASON="Running jobs found and force_stop not enabled"
-          FAILURE_DETAILS="There are active HTCondor jobs on server that must be stopped before deployment"
+          FAILURE_DETAILS="There are active HTCondor jobs on ${REPLAY_OPTION} that must be stopped before deployment"
 
         
         elif [[ "${{ steps.download_config.outcome }}" == "failure" ]]; then
