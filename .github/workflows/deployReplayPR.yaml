@@ -433,13 +433,9 @@ jobs:
         FAILURE_DETAILS=""
         TROUBLESHOOTING=""
         
-        # Check step outcomes to determine where failure occurred
-        if [[ "${{ steps.parse.outcome }}" == "failure" ]]; then
-          FAILED_STEP="Parameter Parsing"
-          FAILURE_REASON="Failed to parse comment or fetch PR information"
-          FAILURE_DETAILS="Could not extract parameters from comment or access GitHub API"
+
         
-        elif [[ "${{ steps.validate.outcome }}" == "failure" ]]; then
+        if [[ "${{ steps.validate.outcome }}" == "failure" ]]; then
           FAILED_STEP="Server Validation"
           FAILURE_REASON="Server '${REPLAY_OPTION}' is not in whitelist"
           FAILURE_DETAILS="Allowed servers: ${{ env.ALLOWED_SERVERS }}"
@@ -447,9 +443,8 @@ jobs:
         
         elif [[ "${{ steps.check_jobs.outcome }}" == "failure" ]]; then
           FAILED_STEP="Job Environment Check"
-          FAILURE_REASON="Failed to connect to server or check running jobs"
-          FAILURE_DETAILS="Cannot SSH to ${REPLAY_OPTION} or HTCondor commands failed"
-
+          FAILURE_REASON="Running jobs found and force_stop not enabled"
+          FAILURE_DETAILS="There are active HTCondor jobs on server that must be stopped before deployment"
 
         
         elif [[ "${{ steps.download_config.outcome }}" == "failure" ]]; then
