@@ -56,6 +56,12 @@ jobs:
           force_stop="No"
         fi
         echo "Force Stop: $force_stop"
+
+        config_file=$(echo "$comment" | grep -E "^config:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
+        if [ -z "$config_name" ]; then
+          config_name="ReplayOfflineConfiguration.py"
+        fi
+        echo "Config File: $config_name"
         
         pr_number="${{ github.event.issue.number }}"
         pr_info=$(curl -s -H "Authorization: token ${{ github.token }}" \
@@ -66,9 +72,7 @@ jobs:
         
         pr_files=$(curl -s -H "Authorization: token ${{ github.token }}" \
           "${{ github.api_url }}/repos/${{ github.repository }}/pulls/$pr_number/files")
-        
-        config_file=$(echo "$pr_files" | jq -r '.[] | select(.filename | contains("ReplayOfflineConfiguration.py")) | .filename' | head -1)
-        
+                
         if [ -n "$config_file" ]; then
           url="https://raw.githubusercontent.com/${head_repo}/${head_sha}/${config_file}"
         else
