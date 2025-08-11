@@ -10,7 +10,7 @@ env:
   DEFAULT_PATCH: "No Patch"
   DEFAULT_FORCE_STOP: "No"
   DEFAULT_COMMIT: "5081"
-  ALLOWED_SERVERS: "vocmsXXXXX, vocms047,  vocms05011"
+  ALLOWED_SERVERS: "vocms047, vocms05011"
 
 on:
   issue_comment:
