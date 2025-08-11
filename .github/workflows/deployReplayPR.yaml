@@ -291,10 +291,52 @@ jobs:
         echo "Pipeline execution finished successfully"
         STEP6
 
-    - name: Summary
+    # - name: Summary
+    #   run: |
+    #     echo "========================================="
+    #     echo "Deployment Summary:"
+    #     echo "  Server: ${REPLAY_OPTION}"
+    #     echo "  Status: Completed"
+    #     echo "========================================="
+
+    - name: Post success comment
+      if: success()
       run: |
-        echo "========================================="
-        echo "Deployment Summary:"
-        echo "  Server: ${REPLAY_OPTION}"
-        echo "  Status: Completed"
-        echo "========================================="
+        COMMENT="✅ **Deployment Successful**
+        
+        **Configuration:**
+        - Server: \`${REPLAY_OPTION}\`
+        - Config: \`${WGET_URL##*/}\`
+        - WMCore: \`${WMCORE_VERSION}\`
+        - T0: \`${T0_VERSION}\`
+        - Python: \`${PYTHON_VERSION}\`
+        - Patches: \`${PATCH_OPTION}\`
+        - Force Stop: \`${FORCE_STOP}\`
+        
+        **Deployment completed successfully!** 🎉
+        
+        Monitor: \`ssh cmst0@${REPLAY_OPTION}.cern.ch\`"
+        
+        curl -X POST \
+          -H "Authorization: token ${{ github.token }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
+          -d "{\"body\": \"$COMMENT\"}"
+
+    - name: Post failure comment
+      if: failure()
+      run: |
+        COMMENT="❌ **Deployment Failed**
+        
+        **Configuration:**
+        - Server: \`${REPLAY_OPTION:-"Not set"}\`
+        - Config: \`${WGET_URL##*/}\`
+        - Step: Check the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details
+        
+        **Please review the logs and try again.** 🔍"
+        
+        curl -X POST \
+          -H "Authorization: token ${{ github.token }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
+          -d "{\"body\": \"$COMMENT\"}"
