@@ -298,7 +298,6 @@ jobs:
     #     echo "  Server: ${REPLAY_OPTION}"
     #     echo "  Status: Completed"
     #     echo "========================================="
-
     - name: Post success comment
       if: success()
       run: |
@@ -313,15 +312,14 @@ jobs:
         - Patches: \`${PATCH_OPTION}\`
         - Force Stop: \`${FORCE_STOP}\`
         
-        **Deployment completed successfully!** 🎉
-        
-        Monitor: \`ssh cmst0@${REPLAY_OPTION}.cern.ch\`"
+        **Deployment completed successfully!** 🎉"
         
         curl -X POST \
           -H "Authorization: token ${{ github.token }}" \
           -H "Accept: application/vnd.github.v3+json" \
+          -H "Content-Type: application/json" \
           "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
-          -d "{\"body\": \"$COMMENT\"}"
+          -d "$(jq -n --arg body "$COMMENT" '{body: $body}')"
 
     - name: Post failure comment
       if: failure()
@@ -338,5 +336,6 @@ jobs:
         curl -X POST \
           -H "Authorization: token ${{ github.token }}" \
           -H "Accept: application/vnd.github.v3+json" \
+          -H "Content-Type: application/json" \
           "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
-          -d "{\"body\": \"$COMMENT\"}"
+          -d "$(jq -n --arg body "$COMMENT" '{body: $body}')"
