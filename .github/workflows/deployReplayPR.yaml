@@ -19,7 +19,7 @@ on:
 
 jobs:
   show-defaults:
-    if: github.event.issue.pull_request && contains(github.event.comment.body, '/check')
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '/info')
     runs-on: cmst0
     
     steps:
