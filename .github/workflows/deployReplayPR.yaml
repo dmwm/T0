@@ -162,6 +162,7 @@ jobs:
         echo "REPLAY_OPTION=$replay" >> $GITHUB_ENV
         echo "PATCH_OPTION=$patch" >> $GITHUB_ENV
         echo "PATCH_URL=$commit" >> $GITHUB_ENV
+        echo "PATCH_REPO=$patch_repo" >> $GITHUB_ENV
         echo "WMCORE_VERSION=$wmcore" >> $GITHUB_ENV
         echo "T0_VERSION=$t0" >> $GITHUB_ENV
         echo "PYTHON_VERSION=$python" >> $GITHUB_ENV
@@ -365,7 +366,7 @@ jobs:
           echo "Patches requested, applying..."
           
           ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch \
-            PATCH_URL="${PATCH_URL}" PYTHON_VERSION="${PYTHON_VERSION}" bash -s << 'STEP4'
+            PATCH_URL="${PATCH_URL}" PATCH_REPO="${PATCH_REPO}" PYTHON_VERSION="${PYTHON_VERSION}" bash -s << 'STEP4'
           source env.sh
           
           echo "About to execute patch logic..."
@@ -376,7 +377,7 @@ jobs:
               patch_num=$(echo $patch_num | tr -d ' ')
               echo "Applying patch PR #$patch_num"
               
-              curl -L "https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/${patch_num}.patch" | \
+              curl -L "https://patch-diff.githubusercontent.com/raw/${PATCH_REPO}/pull/${patch_num}.patch" | \
                   patch -f -d "/data/tier0/WMAgent.venv3/lib/python${PYTHON_VERSION}/site-packages/" -p 3
               
               if [ $? -eq 0 ]; then
