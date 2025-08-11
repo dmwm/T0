@@ -1,0 +1,261 @@
+name: Pipeline for deploy the replay
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  deploy-the-replay:
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '/deploy-replay')
+    runs-on: cmst0
+    
+    steps:
+    - name: Parse comment and get PR file URL
+      id: parse
+      run: |
+        comment="${{ github.event.comment.body }}"
+        
+        replay=$(echo "$comment" | grep -E "^server:" | cut -d' ' -f2- | xargs || echo "vocms05011")
+        patch=$(echo "$comment" | grep -E "^patch:" | cut -d' ' -f2- | xargs || echo "No Patch")
+        commit=$(echo "$comment" | grep -E "^commit:" | cut -d' ' -f2- | xargs || echo "5081")
+        wmcore=$(echo "$comment" | grep -E "^wmcore:" | cut -d' ' -f2- | xargs || echo "2.4.2rc7")
+        t0=$(echo "$comment" | grep -E "^t0:" | cut -d' ' -f2- | xargs || echo "3.5.1")
+        python=$(echo "$comment" | grep -E "^python:" | cut -d' ' -f2- | xargs || echo "3.12")
+        force_stop=$(echo "$comment" | grep -E "^force_stop:" | cut -d' ' -f2- | xargs || echo "No")
+        
+        pr_number="${{ github.event.issue.number }}"
+        pr_info=$(curl -s -H "Authorization: token ${{ github.token }}" \
+          "${{ github.api_url }}/repos/${{ github.repository }}/pulls/$pr_number")
+        
+        head_ref=$(echo "$pr_info" | jq -r '.head.ref')
+        head_repo=$(echo "$pr_info" | jq -r '.head.repo.full_name')
+        
+        pr_files=$(curl -s -H "Authorization: token ${{ github.token }}" \
+          "${{ github.api_url }}/repos/${{ github.repository }}/pulls/$pr_number/files")
+        
+        config_file=$(echo "$pr_files" | jq -r '.[] | select(.filename | contains("ReplayOfflineConfiguration.py")) | .filename' | head -1)
+        
+        if [ -n "$config_file" ]; then
+          url="https://raw.githubusercontent.com/${head_repo}/${head_ref}/${config_file}"
+        else
+          url="https://raw.githubusercontent.com/dmwm/T0/refs/heads/master/etc/ReplayOfflineConfiguration.py"
+        fi
+        
+        
+        echo "REPLAY_OPTION=$replay" >> $GITHUB_ENV
+        echo "PATCH_OPTION=$patch" >> $GITHUB_ENV
+        echo "PATCH_URL=$commit" >> $GITHUB_ENV
+        echo "WMCORE_VERSION=$wmcore" >> $GITHUB_ENV
+        echo "T0_VERSION=$t0" >> $GITHUB_ENV
+        echo "PYTHON_VERSION=$python" >> $GITHUB_ENV
+        echo "FORCE_STOP=$force_stop" >> $GITHUB_ENV
+        echo "WGET_URL=$url" >> $GITHUB_ENV
+
+    - name: Authenticate with Kerberos
+      run: |
+        kinit cmst0@CERN.CH -k -t /home/cmsbld/cmst0.keytab
+        echo "Kerberos authentication successful"
+
+    - name: Step 1 - Check running jobs and clean environment
+      run: |
+        echo "=== Step 1: Checking for running jobs and cleaning environment on ${REPLAY_OPTION} ==="
+        
+        ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch FORCE_STOP="${FORCE_STOP}" bash -s << 'STEP1'
+        
+        echo "Terminal environment cleaned up"
+        source env.sh
+        
+        echo "Checking for running HTCondor jobs..."
+        RUNNING_JOBS=$(condor_q -nobatch -format "%s\n" ClusterId 2>/dev/null | wc -l)
+        
+        if [ "$RUNNING_JOBS" -gt 0 ]; then
+            echo "================================================"
+            echo "WARNING: Found $RUNNING_JOBS running jobs!"
+            echo "================================================"
+            
+            echo "Current job status:"
+            condor_q -nobatch
+            
+            echo ""
+            echo "Job summary by status:"
+            condor_q -totals
+            
+            if [ "${FORCE_STOP}" = "Yes" ]; then
+                echo ""
+                echo "FORCE_STOP is enabled - proceeding with job removal..."
+                echo "Removing all running jobs..."
+                condor_rm -all
+                
+                echo "Waiting for jobs to be removed..."
+                sleep 10
+                
+                REMAINING_JOBS=$(condor_q -nobatch -format "%s\n" ClusterId 2>/dev/null | wc -l)
+                if [ "$REMAINING_JOBS" -gt 0 ]; then
+                    echo "Warning: $REMAINING_JOBS jobs still in queue after removal attempt"
+                else
+                    echo "All jobs successfully removed"
+                fi
+            else
+                echo ""
+                echo "=========================================="
+                echo "DEPLOYMENT STOPPED"
+                echo "=========================================="
+                echo "There are $RUNNING_JOBS jobs currently running."
+                echo "Options:"
+                echo "1. Wait for jobs to complete naturally"
+                echo "2. Re-run this pipeline with 'force_stop: true' to override"
+                echo "3. Manually stop jobs with: condor_rm -all"
+                echo ""
+                echo "To check job status: condor_q"
+                echo "To monitor job progress: watch condor_q"
+                echo "=========================================="
+                exit 1
+            fi
+        else
+            echo "No running jobs found - safe to proceed"
+        fi
+        
+        echo "Stopping existing processes..."
+        stop_agent 2>/dev/null || true
+        pkill -9 -f wmcoreD
+        
+        echo "Environment preparation completed"
+        STEP1
+
+    - name: Step 2 - Download and setup configuration
+      run: |
+        echo "=== Step 2: Downloading configuration ==="
+        
+        ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch << STEP2
+        source env.sh
+        cd /data/tier0/ReplayPipeline
+        
+        echo "Current directory contents:"
+        ll
+        
+        echo "Downloading configuration from: ${WGET_URL}"
+        rm -f ReplayOfflineConfiguration.py
+        wget "${WGET_URL}"
+        
+        CONFIG_FILE=\$(ls *ReplayOfflineConfiguration.py 2>/dev/null | head -1)
+        if [ ! -z "\$CONFIG_FILE" ] && [ "\$CONFIG_FILE" != "ReplayOfflineConfiguration.py" ]; then
+            echo "Renaming \$CONFIG_FILE to ReplayOfflineConfiguration.py"
+            mv "\$CONFIG_FILE" "ReplayOfflineConfiguration.py"
+        else
+            echo "Configuration file already named correctly or not found"
+        fi
+        
+        echo "Copying configuration to admin directory..."
+        rm -f /data/tier0/admin/ReplayOfflineConfiguration.py
+        cp /data/tier0/ReplayPipeline/ReplayOfflineConfiguration.py /data/tier0/admin/ReplayOfflineConfiguration.py
+        
+        echo "Configuration setup completed"
+        STEP2
+
+    - name: Step 3 - Deploy WMAgent
+      run: |
+        echo "=== Step 3: Deploying WMAgent ==="
+        
+        ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch << STEP3
+        source env.sh
+        cd /data/tier0/ReplayPipeline
+        
+        export WMAGENT_TAG_VAR="${WMCORE_VERSION}"
+        export TIER0_VERSION_VAR="${T0_VERSION}"
+        export PYTHON_VERSION_VAR="${PYTHON_VERSION}"
+        
+        echo "Environment variables set:"
+        echo "  WMAGENT_TAG_VAR=${WMCORE_VERSION}"
+        echo "  TIER0_VERSION_VAR=${T0_VERSION}"
+        echo "  PYTHON_VERSION_VAR=${PYTHON_VERSION}"
+        
+        echo "Starting deployment..."
+        echo "Y" | source /data/tier0/ReplayPipeline/00_pypi_deploy_replay.sh
+        
+        echo "Deployment completed"
+        STEP3
+
+    - name: Step 4 - Apply patches (if requested)
+      run: |
+        echo "=== Step 4: Patch application ==="
+        
+        if [ "${PATCH_OPTION}" = "Patch" ]; then
+          echo "Patches requested, applying..."
+          
+          ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch \
+            PATCH_URL="${PATCH_URL}" PYTHON_VERSION="${PYTHON_VERSION}" bash -s << 'STEP4'
+          source env.sh
+          
+          echo "About to execute patch logic..."
+          echo "Applying patches: ${PATCH_URL}"
+          
+          IFS=',' read -ra PATCHES <<< "${PATCH_URL}"
+          for patch_num in "${PATCHES[@]}"; do
+              patch_num=$(echo $patch_num | tr -d ' ')
+              echo "Applying patch PR #$patch_num"
+              
+              curl -L "https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/${patch_num}.patch" | \
+                  patch -f -d "/data/tier0/WMAgent.venv3/lib/python${PYTHON_VERSION}/site-packages/" -p 3
+              
+              if [ $? -eq 0 ]; then
+                  echo "Patch $patch_num applied successfully"
+              else
+                  echo "Warning: Patch $patch_num may have failed"
+              fi
+          done
+          
+          echo "All patches processed"
+        STEP4
+        else
+          echo "No patches requested, skipping..."
+        fi
+
+    - name: Step 5 - Start agent and finalize
+      run: |
+        echo "=== Step 5: Starting agent ==="
+        
+        ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch << STEP5
+        source env.sh
+        
+        echo "Starting replace the new configuration file...."
+        cp /data/tier0/ReplayPipeline/checkProxy.py /data/tier0/WMAgent.venv3/deploy/checkProxy.py
+        
+        echo "Starting WMAgent..."
+        source /data/tier0/00_pypi_start_agent.sh
+        
+        echo "Agent started, waiting for stabilization..."
+        sleep 10
+        
+        echo "Checking agent status..."
+        manage status || true
+        
+        echo "Agent started successfully"
+        STEP5
+
+    - name: Step 6 - Monitor logs
+      run: |
+        echo "=== Step 6: Monitoring logs ==="
+        
+        ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch << STEP6
+        source env.sh
+        
+        echo "Agent started, now monitoring logs..."
+        
+        echo "Monitoring Tier0Feeder logs for 30 seconds..."
+        timeout 600 tail -f /data/tier0/WMAgent.venv3/srv/wmagent/${WMCORE_VERSION}/install/Tier0Feeder/ComponentLog 2>/dev/null || true
+        
+        echo "Log monitoring completed"
+        
+        echo "Final agent status:"
+        manage status || true
+        
+        echo "Pipeline execution finished successfully"
+        STEP6
+
+    - name: Summary
+      run: |
+        echo "========================================="
+        echo "Deployment Summary:"
+        echo "  Server: ${REPLAY_OPTION}"
+        echo "  Status: Completed"
+        echo "========================================="
