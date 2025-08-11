@@ -10,7 +10,7 @@ env:
   DEFAULT_PATCH: "No Patch"
   DEFAULT_FORCE_STOP: "No"
   DEFAULT_COMMIT: "5081"
-  ALLOWED_SERVERS: "vocms047, vocmsXXXXX,  vocms05011"
+  ALLOWED_SERVERS: "vocmsXXXXX, vocms047,  vocms05011"
 
 on:
   issue_comment:
@@ -192,8 +192,11 @@ jobs:
     - name: Validate server whitelist
       id: validate
       run: |
+        # Convert comma-separated list to array
         IFS=',' read -ra ALLOWED_SERVERS <<< "${{ env.ALLOWED_SERVERS }}"
+        ALLOWED_SERVERS=()
         for server in "${ALLOWED_SERVERS_RAW[@]}"; do
+          # Trim leading and trailing whitespace
           server=$(echo "$server" | xargs)
           ALLOWED_SERVERS+=("$server")
         done
@@ -362,7 +365,7 @@ jobs:
           
           IFS=',' read -ra PATCHES <<< "${PATCH_URL}"
           for patch_num in "${PATCHES[@]}"; do
-              patch=$(echo "$patch" | xargs) 
+              patch_num=$(echo $patch_num | tr -d ' ')
               echo "Applying patch PR #$patch_num"
               
               curl -L "https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/${patch_num}.patch" | \
