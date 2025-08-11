@@ -560,7 +560,7 @@ jobs:
         
         **Quick Actions:**
         - [View detailed logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-        - Use \`/check\` for valid parameters and examples
+        - Use \`/info\` for valid parameters and examples
         - Try again with corrected parameters"
         
         curl -X POST \
