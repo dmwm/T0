@@ -192,8 +192,7 @@ jobs:
     - name: Validate server whitelist
       id: validate
       run: |
-        # Convert comma-separated list to array
-        IFS=',' read -ra ALLOWED_SERVERS <<< "${{ env.ALLOWED_SERVERS }}"
+        IFS=',' read -ra ALLOWED_SERVERS_RAW <<< "${{ env.ALLOWED_SERVERS }}"
         ALLOWED_SERVERS=()
         for server in "${ALLOWED_SERVERS_RAW[@]}"; do
           server=$(echo $server | tr -d ' ')  
