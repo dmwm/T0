@@ -8,6 +8,7 @@ env:
   DEFAULT_T0: "3.5.1"
   DEFAULT_PYTHON: "3.12"
   DEFAULT_PATCH: "No Patch"
+  DEFAULT_PATCH_REPO: "dmwm/T0"
   DEFAULT_FORCE_STOP: "No"
   DEFAULT_COMMIT: "5081"
   ALLOWED_SERVERS: "vocms047, vocms05011"
@@ -33,6 +34,7 @@ jobs:
         - **T0:** \`${{ env.DEFAULT_T0 }}\`
         - **Python:** \`${{ env.DEFAULT_PYTHON }}\`
         - **Patches:** \`${{ env.DEFAULT_PATCH }}\`
+        - **Patch_repo:** \`${{ env.DEFAULT_PATCH_REPO }}\`
         - **Force Stop:** \`${{ env.DEFAULT_FORCE_STOP }}\`
         
         **Allowed Servers:**
@@ -63,6 +65,7 @@ jobs:
         - \`t0:\` - T0 version  
         - \`python:\` - Python version
         - \`patch:\` - Use \"Patch\" to enable patching
+        - \`patch_repo:\` - GitHub repository for patches (format: owner/repo)
         - \`commit:\` - Comma-separated PR numbers for patches
         - \`force_stop:\` - Use \"Yes\" to force stop running jobs"
         
