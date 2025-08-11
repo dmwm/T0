@@ -36,7 +36,7 @@ jobs:
         - **Force Stop:** \`${{ env.DEFAULT_FORCE_STOP }}\`
         
         **Allowed Servers:**
-$(echo "${{ env.ALLOWED_SERVERS }}" | tr ',' '\n' | sed 's/^/        - `/' | sed 's/$/`/')
+        $(echo "${{ env.ALLOWED_SERVERS }}" | tr ',' '\n' | sed 's/^/        - `/' | sed 's/$/`/')
         
         **Usage Examples:**
         
