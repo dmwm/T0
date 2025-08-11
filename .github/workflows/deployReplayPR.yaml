@@ -8,6 +8,7 @@ env:
   DEFAULT_T0: "3.5.1"
   DEFAULT_PYTHON: "3.12"
   DEFAULT_PATCH: "No Patch"
+  DEFAULT_PATCH_REPO: "dmwm/T0"
   DEFAULT_FORCE_STOP: "No"
   DEFAULT_COMMIT: "5081"
   ALLOWED_SERVERS: "vocms047, vocms05011"
@@ -33,6 +34,7 @@ jobs:
         - **T0:** \`${{ env.DEFAULT_T0 }}\`
         - **Python:** \`${{ env.DEFAULT_PYTHON }}\`
         - **Patches:** \`${{ env.DEFAULT_PATCH }}\`
+        - **PATCH_REPO:** \`${{ DEFAULT_PATCH_REPO }}\`
         - **Force Stop:** \`${{ env.DEFAULT_FORCE_STOP }}\`
         
         **Allowed Servers:**
@@ -63,6 +65,7 @@ jobs:
         - \`t0:\` - T0 version  
         - \`python:\` - Python version
         - \`patch:\` - Use \"Patch\" to enable patching
+        - \`patch_repo:\` - GitHub repository for patches (format: owner/repo)
         - \`commit:\` - Comma-separated PR numbers for patches
         - \`force_stop:\` - Use \"Yes\" to force stop running jobs"
         
@@ -95,6 +98,12 @@ jobs:
           patch="${{ env.DEFAULT_PATCH }}"
         fi
         echo "Patch: $patch"
+
+        patch_repo=$(echo "$comment" | grep -E "^patch_repo:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
+        if [ -z "$patch_repo" ]; then
+          patch_repo="${{ env.DEFAULT_PATCH_REPO }}"
+        fi
+        echo "Patch Repository: $patch_repo"
         
         commit=$(echo "$comment" | grep -E "^commit:" | cut -d' ' -f2- | xargs 2>/dev/null || true)
         if [ -z "$commit" ]; then
@@ -366,7 +375,7 @@ jobs:
               patch_num=$(echo $patch_num | tr -d ' ')
               echo "Applying patch PR #$patch_num"
               
-              curl -L "https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/${patch_num}.patch" | \
+              curl -L "https://patch-diff.githubusercontent.com/raw/${PATCH_REPO}/pull/${patch_num}.patch" | \
                   patch -f -d "/data/tier0/WMAgent.venv3/lib/python${PYTHON_VERSION}/site-packages/" -p 3
               
               if [ $? -eq 0 ]; then
