@@ -10,29 +10,6 @@ jobs:
     runs-on: cmst0
     
     steps:
-    - name: Post deployment start comment
-      run: |
-        COMMENT="🚀 **Deployment Started**
-        
-        **Configuration:**
-        - Server: \`${REPLAY_OPTION}\`
-        - Config: \`${config_name}\`
-        - WMCore: \`${WMCORE_VERSION}\`
-        - T0: \`${T0_VERSION}\`
-        - Python: \`${PYTHON_VERSION}\`
-        - Patches: \`${PATCH_OPTION}\`
-        - Force Stop: \`${FORCE_STOP}\`
-        
-        **Deployment is now in progress...** ⏳
-        
-        [View workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
-        
-        curl -X POST \
-          -H "Authorization: token ${{ github.token }}" \
-          -H "Accept: application/vnd.github.v3+json" \
-          -H "Content-Type: application/json" \
-          "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
-          -d "$(jq -n --arg body "$COMMENT" '{body: $body}')"
           
     - name: Parse comment and get PR file URL
       id: parse
@@ -118,6 +95,31 @@ jobs:
       run: |
         kinit cmst0@CERN.CH -k -t /home/cmsbld/cmst0.keytab
         echo "Kerberos authentication successful"
+
+    - name: Post deployment start comment
+      run: |
+        COMMENT="🚀 **Deployment Started**
+        
+        **Configuration:**
+        - Server: \`${REPLAY_OPTION}\`
+        - Config: \`${config_name}\`
+        - WMCore: \`${WMCORE_VERSION}\`
+        - T0: \`${T0_VERSION}\`
+        - Python: \`${PYTHON_VERSION}\`
+        - Patches: \`${PATCH_OPTION}\`
+        - Force Stop: \`${FORCE_STOP}\`
+        
+        **Deployment is now in progress...** ⏳
+        
+        [View workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+        
+        curl -X POST \
+          -H "Authorization: token ${{ github.token }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Content-Type: application/json" \
+          "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
+          -d "$(jq -n --arg body "$COMMENT" '{body: $body}')"
+
 
     - name: Step 1 - Check running jobs and clean environment
       run: |
@@ -336,9 +338,11 @@ jobs:
         - Patches: \`${PATCH_OPTION}\`
         - Force Stop: \`${FORCE_STOP}\`
 
-        [View workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+        
         
         **Deployment completed successfully!** 🎉"
+
+        [View workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
         
         curl -X POST \
           -H "Authorization: token ${{ github.token }}" \
