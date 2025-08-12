@@ -907,7 +907,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 bindsScenario.append({'SCENARIO': datasetConfig.Scenario})
 
             try:
-                insertEventScenarioDAO.execute(bindsScenario, conn = myThread.transaction.conn, transaction = True)
+                insertEventScenarioDAO.execute(bindsScenario, conn = myThread.transaction.conn)
             except Exception as e:
                 logging.exception('Something went wrong adding the scenario to the event scenario table')
                 raise 
