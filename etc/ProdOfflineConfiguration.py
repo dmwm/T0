@@ -270,7 +270,7 @@ addDataset(tier0Config, "Default",
            archival_node="T0_CH_CERN_MSS",
            tape_node="T1_US_FNAL_MSS",
            disk_node="T1_US_FNAL_Disk",
-           #siteWhitelist = ["T2_CH_CERN", "T1_UK_RAL", "T1_DE_KIT", "T1_FR_CCIN2P3", "T1_ES_PIC", "T1_IT_CNAF", "T2_CH_CERN_P5"],
+           siteWhitelist = ["T2_CH_CERN", "T2_CH_CERN_P5"],
            raw_to_disk=False,
            aod_to_disk=True,
            nano_flavours=['@PHYS', '@L1'],
@@ -1599,12 +1599,18 @@ ignoreStream(tier0Config, "DQMPPSRandom")
 #SECOND_AGENT_STREAMS = STREAMS_ppRef_ZBandFwd_secondAgent
 #THIRD_AGENT_STREAMS = STREAMS_DAQ_TFTEST + STREAMS_DAQ_TFTEST_ppRef
 
+
 SECOND_AGENT_STREAMS = ["ParkingSingleMuon0", "ParkingSingleMuon1", "ParkingSingleMuon2",
                         "ParkingSingleMuon3", "ParkingSingleMuon4", "ParkingSingleMuon5",
                         "ParkingSingleMuon6", "ParkingSingleMuon7", "ParkingSingleMuon8",
                         "ParkingSingleMuon9", "ParkingSingleMuon10", "ParkingSingleMuon11",
                         "ParkingSingleMuon12", "ParkingSingleMuon13", "ParkingSingleMuon14",
-                        "ParkingSingleMuon15"]
+                        "ParkingSingleMuon15",
+                        "ParkingVBF0", "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
+                        "ParkingHH", "ParkingLLP", "ParkingAnomalyDetection",
+                        "ParkingDoubleMuonLowMass0", "ParkingDoubleMuonLowMass1",
+                        "ParkingDoubleMuonLowMass2", "ParkingDoubleMuonLowMass3",
+                        "L1Scouting", "L1ScoutingSelection"]
 
 THIRD_AGENT_STREAMS = []
 setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
