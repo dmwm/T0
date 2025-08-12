@@ -39,7 +39,7 @@ setConfigVersion(tier0Config, "replace with real version")
 
 # Set run number to replay
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
-# 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
+# 386674  Cosmics ~40 minutes in Run2024I with occupancy issues 6666666666
 
 setInjectRuns(tier0Config, [393274]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
 
