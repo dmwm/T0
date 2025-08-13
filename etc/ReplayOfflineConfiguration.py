@@ -1280,7 +1280,7 @@ for dataset in DATASETS:
                do_reco=True,
                dqm_sequences=["@common", "@hltScouting"],
                nano_flavours=['@PHYS', '@L1', '@ScoutMonitor'],
-               write_reco=False, write_aod=False, write_miniaod=True, write_dqm=True,
+               write_reco=False, write_aod=True, write_miniaod=True, write_dqm=True,
                scenario=ppScenario)
 
 DATASETS = ["ScoutingCaloCommissioning", "ScoutingCaloHT", "ScoutingCaloMuon",
