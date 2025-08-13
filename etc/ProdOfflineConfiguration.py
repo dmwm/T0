@@ -246,6 +246,16 @@ addRepackConfig(tier0Config, "ScoutingPF",
                 dataTier="HLTSCOUT",
                 versionOverride=repackVersionOverride)
 
+addRepackConfig(tier0Config, "ScoutingPF0",
+                proc_ver=1, # Should remain 1. Changing it can cause several issues.
+                dataTier="HLTSCOUT",
+                versionOverride=repackVersionOverride)
+
+addRepackConfig(tier0Config, "ScoutingPF1",
+                proc_ver=1, # Should remain 1. Changing it can cause several issues.
+                dataTier="HLTSCOUT",
+                versionOverride=repackVersionOverride)
+
 addRepackConfig(tier0Config, "L1Scouting",
                 proc_ver=1, # Should remain 1. Changing it can cause several issues.
                 dataTier="L1SCOUT",
@@ -1474,7 +1484,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False)
 
-DATASETS = ["ScoutingPFRun3"] # From stream ScoutingPF --> Repacked to HLTSCOUT
+DATASETS = ["ScoutingPF0", "ScoutingPF1"] # From stream ScoutingPF --> Repacked to HLTSCOUT
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
