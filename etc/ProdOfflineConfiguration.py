@@ -241,10 +241,6 @@ addRepackConfig(tier0Config, "Default",
 
 # Stream PhysicsScoutingPFMonitor --> PD ScoutingPFMonitor --> Repacked to RAW
 # Stream ScoutingPF --> PD ScoutingPF_Run3 --> Repacked to HLTSCOUT
-addRepackConfig(tier0Config, "ScoutingPF",
-                proc_ver=1, # Should remain 1. Changing it can cause several issues.
-                dataTier="HLTSCOUT",
-                versionOverride=repackVersionOverride)
 
 addRepackConfig(tier0Config, "ScoutingPF0",
                 proc_ver=1, # Should remain 1. Changing it can cause several issues.
