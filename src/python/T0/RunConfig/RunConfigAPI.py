@@ -287,6 +287,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         insertStreamDatasetDAO = daoFactory(classname = "RunConfig.InsertStreamDataset")
 
         # write stream configuration
+        insertEventScenarioDAO = daoFactory(classname = "RunConfig.InsertEventScenarios")
         insertCMSSWVersionDAO = daoFactory(classname = "RunConfig.InsertCMSSWVersion")
         insertStreamStyleDAO = daoFactory(classname = "RunConfig.InsertStreamStyle")
         insertRepackConfigDAO = daoFactory(classname = "RunConfig.InsertRepackConfig")
@@ -315,6 +316,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
         bindsDatasetScenario = []
         bindsStorageNode = []
         bindsPhEDExConfig = []
+        bindsScenario = []
 
         #
         # for spec creation, details for all outputs
@@ -367,6 +369,15 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
 
             # check for era or run dependent config parameters
             streamConfig.Express.Scenario = extractConfigParameter(streamConfig.Express.Scenario, runInfo['acq_era'], run)
+
+            if streamConfig.Express.Scenario not in {d['SCENARIO'] for d in bindsScenario}:
+                bindsScenario.append({'SCENARIO' : streamConfig.Express.Scenario})
+
+            try:
+                insertEventScenarioDAO.execute(bindsScenario, conn = myThread.transaction.conn)
+            except Exception as e:
+                logging.exception('Something went wrong adding the scenario to the event scenario table')
+                raise 
 
             specialDataset = "Stream%s" % stream
             bindsDataset.append( { 'PRIMDS' : specialDataset } )
@@ -827,6 +838,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                             logger = logging,
                             dbinterface = myThread.dbi)
 
+    insertEventScenarioDAO = daoFactory(classname = "RunConfig.InsertEventScenarios")
     findRecoReleaseDatasetsDAO = daoFactory(classname = "RunConfig.FindRecoReleaseDatasets")
     findRecoReleaseDAO = daoFactory(classname = "RunConfig.FindRecoRelease")
     insertDatasetScenarioDAO = daoFactory(classname = "RunConfig.InsertDatasetScenario")
@@ -867,6 +879,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
         bindsRecoConfig = []
         bindsStorageNode = []
         bindsReleasePromptReco = []
+        bindsScenario = []
 
         # retrieve some basic run information
         getRunInfoDAO = daoFactory(classname = "RunConfig.GetRunInfo")
@@ -889,6 +902,15 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
             datasetConfig.CMSSWVersion = extractConfigParameter(datasetConfig.CMSSWVersion, runInfo['acq_era'], run)
             datasetConfig.GlobalTag = extractConfigParameter(datasetConfig.GlobalTag, runInfo['acq_era'], run)
             datasetConfig.ProcessingVersion = extractConfigParameter(datasetConfig.ProcessingVersion, runInfo['acq_era'], run)
+
+            if datasetConfig.Scenario not in {d['SCENARIO'] for d in bindsScenario}:
+                bindsScenario.append({'SCENARIO': datasetConfig.Scenario})
+
+            try:
+                insertEventScenarioDAO.execute(bindsScenario, conn = myThread.transaction.conn)
+            except Exception as e:
+                logging.exception('Something went wrong adding the scenario to the event scenario table')
+                raise 
 
             bindsDatasetScenario.append( { 'RUN' : run,
                                            'PRIMDS' : dataset,
