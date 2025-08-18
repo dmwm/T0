@@ -234,7 +234,12 @@ addRepackConfig(tier0Config, "Default",
 
 # Stream PhysicsScoutingPFMonitor --> PD ScoutingPFMonitor --> Repacked to RAW
 # Stream ScoutingPF --> PD ScoutingPF_Run3 --> Repacked to HLTSCOUT
-addRepackConfig(tier0Config, "ScoutingPF",
+addRepackConfig(tier0Config, "ScoutingPF0",
+                proc_ver=defaultProcVersion,
+                dataTier="HLTSCOUT",
+                versionOverride=repackVersionOverride)
+
+addRepackConfig(tier0Config, "ScoutingPF1",
                 proc_ver=defaultProcVersion,
                 dataTier="HLTSCOUT",
                 versionOverride=repackVersionOverride)
@@ -1252,7 +1257,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False)
 
-DATASETS = ["ScoutingPFRun3"] # From stream ScoutingPF --> Repacked to HLTSCOUT
+DATASETS = ["ScoutingPF0", "ScoutingPF1"] # From stream ScoutingPF --> Repacked to HLTSCOUT
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1275,7 +1280,7 @@ for dataset in DATASETS:
                do_reco=True,
                dqm_sequences=["@common", "@hltScouting"],
                nano_flavours=['@PHYS', '@L1', '@ScoutMonitor'],
-               write_reco=False, write_aod=False, write_miniaod=True, write_dqm=True,
+               write_reco=False, write_aod=True, write_miniaod=True, write_dqm=True,
                scenario=ppScenario)
 
 DATASETS = ["ScoutingCaloCommissioning", "ScoutingCaloHT", "ScoutingCaloMuon",
