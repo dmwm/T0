@@ -131,7 +131,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_0_12_patch1",
+    'default': "CMSSW_15_0_13",
     #'acqEra': {'Run2024F': "CMSSW_14_0_11"},
     #'maxRun': {maxRunPreviousConfig: "CMSSW_15_0_6"}
 }
@@ -1615,8 +1615,7 @@ SECOND_AGENT_STREAMS = ["ParkingSingleMuon0", "ParkingSingleMuon1", "ParkingSing
                         "ParkingVBF0", "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
                         "ParkingHH", "ParkingLLP", "ParkingAnomalyDetection",
                         "ParkingDoubleMuonLowMass0", "ParkingDoubleMuonLowMass1",
-                        "ParkingDoubleMuonLowMass2", "ParkingDoubleMuonLowMass3",
-                        "L1Scouting", "L1ScoutingSelection"]
+                        "ParkingDoubleMuonLowMass2", "ParkingDoubleMuonLowMass3"]
 
 THIRD_AGENT_STREAMS = []
 setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
