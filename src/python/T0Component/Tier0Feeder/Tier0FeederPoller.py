@@ -425,9 +425,8 @@ class Tier0FeederPoller(BaseWorkerThread):
                     self.updateClosedState(workflowName, workflowId)
                 else :
                     # Check if fileset (which you already know) is closed or not
-                    # FIXME: No better way to do it? what comes from the DAO is a string, casting bool or int doesn't help much.
                     # Works like that :
-                    if filesetOpen == '0':
+                    if filesetOpen == 0:
                         self.updateClosedState(workflowName, workflowId)
 
         return
