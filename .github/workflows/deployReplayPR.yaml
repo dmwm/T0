@@ -1,0 +1,994 @@
+name: Pipeline for deploy the replay
+
+# GLOBAL CONFIGURATION - CHANGE VALUES HERE ONLY
+env:
+  DEFAULT_SERVER: "vocms0500"
+  DEFAULT_CONFIG: "ReplayOfflineConfiguration.py"
+  DEFAULT_WMCORE: "2.4.2"
+  DEFAULT_T0: "3.5.2"
+  DEFAULT_PYTHON: "3.12"
+  DEFAULT_PATCH: "No Patch"
+  DEFAULT_PATCH_REPO: "dmwm/T0"
+  DEFAULT_FORCE_STOP: "No"
+  DEFAULT_COMMIT: "5081"
+  DEFAULT_STREAMS: "[]"
+  ALLOWED_SERVERS: "vocms047, vocms0500, vocms05011, vocms05012"
+  SERVER_SIZES: "vocms047:Big machine, vocms0500:Big machine, vocms05011:Small machine, vocms05012:Small machine"
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  show-defaults:
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '/info')
+    runs-on: cmst0
+    
+    steps:
+    - name: Post default parameters comment
+      run: |
+        COMMENT="📋 **Deploy Replay - Default Parameters**
+        
+        **Current Default Values:**
+        - **server:** \`${{ env.DEFAULT_SERVER }}\`
+        - **config:** \`${{ env.DEFAULT_CONFIG }}\`
+        - **wmcore:** \`${{ env.DEFAULT_WMCORE }}\`
+        - **t0:** \`${{ env.DEFAULT_T0 }}\`
+        - **python:** \`${{ env.DEFAULT_PYTHON }}\`
+        - **patch:** \`${{ env.DEFAULT_PATCH }}\`
+        - **patch_repo:** \`${{ env.DEFAULT_PATCH_REPO }}\`
+        - **commit:** \`${{ env.DEFAULT_COMMIT }}\`
+        - **force_stop:** \`${{ env.DEFAULT_FORCE_STOP }}\`
+        - **streams:** \`${{ env.DEFAULT_STREAMS }} # use single quote only \`
+        
+        **Allowed Servers:**
+        $(echo "${{ env.ALLOWED_SERVERS }}" | tr ',' '\n' | sed 's/^/        - `/' | sed 's/$/`/')
+        
+        **Usage Examples:**
+        
+        **Basic deployment (all defaults):**
+        \`\`\`
+        /deploy-replay
+        \`\`\`
+        
+        **Custom deployment:**
+        \`\`\`
+        /deploy-replay
+        server: $(echo "${{ env.ALLOWED_SERVERS }}" | cut -d',' -f2)
+        config: OXYReplayOfflineConfiguration.py
+        wmcore: 2.4.2
+        t0: 3.5.2
+        python: 3.12
+        patch: Patch
+        patch_repo: dmwm/T0
+        commit: 5081,5090
+        force_stop: No
+        streams: ['ParkingDoubleMuonLowMass0', 'ParkingDoubleMuonLowMass1', 'ParkingDoubleMuonLowMass3', 'ParkingSingleMuon1', 'ParkingSingleMuon0', 'ParkingSingleMuon2', 'ParkingSingleMuon3', 'ParkingSingleMuon4', 'ParkingSingleMuon5', 'ParkingSingleMuon6']
+        \`\`\`
+        
+        **Available Parameters:**
+        - \`server:\` - Target server for deployment
+        - \`config:\` - Configuration file name (from PR or master)
+        - \`wmcore:\` - WMCore version
+        - \`t0:\` - T0 version  
+        - \`python:\` - Python version
+        - \`patch:\` - Use \"Patch\" to enable patching
+        - \`patch_repo:\` - GitHub repository for patches (format: owner/repo)
+        - \`commit:\` - Comma-separated PR numbers for patches
+        - \`force_stop:\` - Use \"Yes\" to force stop running jobs
+        - \`streams:\` - Select specific stream"
+
+        
+        curl -X POST \
+          -H "Authorization: token ${{ github.token }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Content-Type: application/json" \
+          "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
+          -d "$(jq -n --arg body "$COMMENT" '{body: $body}')"
+
+  check-server-status:
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '/check-servers')
+    runs-on: cmst0
+    
+    steps:
+    - name: Authenticate with Kerberos
+      id: kerberos
+      run: |
+        kinit cmst0@CERN.CH -k -t /home/cmsbld/cmst0.keytab
+        echo "Kerberos authentication successful"
+
+    - name: Check all servers status
+      id: check_all_servers
+      run: |
+        echo "=== Checking status of all servers ==="
+        
+
+        get_server_size() {
+          local server=$1
+          echo "${{ env.SERVER_SIZES }}" | tr ',' '\n' | sed 's/^ *//' | grep "^${server}:" | cut -d':' -f2 | sed 's/^ *//; s/ *$//'
+        }
+        
+        EMPTY_SERVERS=""
+        BUSY_SERVERS=""
+        ERROR_SERVERS=""
+        
+        IFS=',' read -ra SERVERS <<< "${{ env.ALLOWED_SERVERS }}"
+        
+        for server_raw in "${SERVERS[@]}"; do
+          server=$(echo $server_raw | tr -d ' ')
+          echo "Checking server: $server"
+          
+          SERVER_STATUS=$(ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 -K cmst0@${server}.cern.ch bash -s << 'SERVER_CHECK'
+            source env.sh 2>/dev/null || echo "WARNING: env.sh not found"
+            
+            if command -v condor_q >/dev/null 2>&1; then
+              RUNNING_JOBS=$(condor_q -nobatch -format "%s\n" ClusterId 2>/dev/null | wc -l)
+              if [ $? -eq 0 ]; then
+                echo "SUCCESS:$RUNNING_JOBS"
+                
+                if [ "$RUNNING_JOBS" -gt 0 ]; then
+                  echo "JOBS_DETAIL:"
+                  condor_q -nobatch -format "JobId: %s, " ClusterId -format "Owner: %s, " Owner -format "Status: %s\n" JobStatus 2>/dev/null | head -10
+                  echo "JOBS_SUMMARY:"
+                  condor_q -totals 2>/dev/null
+                fi
+              else
+                echo "ERROR:condor_q_failed"
+              fi
+            else
+              echo "ERROR:condor_not_available"
+            fi
+        SERVER_CHECK
+        2>&1)
+          
+          size=$(get_server_size "$server")
+          if [ -n "$size" ]; then
+            server_display="${server} (${size})"
+          else
+            server_display="${server}"
+          fi
+          
+          if echo "$SERVER_STATUS" | grep -q "^SUCCESS:"; then
+            JOB_COUNT=$(echo "$SERVER_STATUS" | grep "^SUCCESS:" | cut -d':' -f2)
+            
+            if [ "$JOB_COUNT" -eq 0 ]; then
+              EMPTY_SERVERS="${EMPTY_SERVERS}${server_display}|"
+            else
+              BUSY_SERVERS="${BUSY_SERVERS}${server_display}~${JOB_COUNT}|"
+            fi
+          else
+            ERROR_SERVERS="${ERROR_SERVERS}${server_display}|"
+          fi
+          
+          echo "Server $server checked"
+        done
+        
+        EMPTY_COUNT=$(echo "$EMPTY_SERVERS" | tr -cd '|' | wc -c)
+        BUSY_COUNT=$(echo "$BUSY_SERVERS" | tr -cd '|' | wc -c)
+        ERROR_COUNT=$(echo "$ERROR_SERVERS" | tr -cd '|' | wc -c)
+        TOTAL_SERVERS=${#SERVERS[@]}
+        
+        EMPTY_SERVERS="${EMPTY_SERVERS%|}"
+        BUSY_SERVERS="${BUSY_SERVERS%|}"
+        ERROR_SERVERS="${ERROR_SERVERS%|}"
+        
+        echo "EMPTY_SERVERS=$EMPTY_SERVERS" >> $GITHUB_ENV
+        echo "BUSY_SERVERS=$BUSY_SERVERS" >> $GITHUB_ENV
+        echo "ERROR_SERVERS=$ERROR_SERVERS" >> $GITHUB_ENV
+        echo "EMPTY_COUNT=$EMPTY_COUNT" >> $GITHUB_ENV
+        echo "BUSY_COUNT=$BUSY_COUNT" >> $GITHUB_ENV
+        echo "ERROR_COUNT=$ERROR_COUNT" >> $GITHUB_ENV
+        echo "TOTAL_SERVERS=$TOTAL_SERVERS" >> $GITHUB_ENV
+
+    - name: Post server status report
+      if: always()
+      run: |
+        
+        STATUS_LINES=""
+        
+        if [ -n "$EMPTY_SERVERS" ]; then
+          IFS='|' read -ra EMPTY_ARRAY <<< "$EMPTY_SERVERS"
+          for server in "${EMPTY_ARRAY[@]}"; do
+            if [ -n "$server" ]; then
+              STATUS_LINES="${STATUS_LINES}🟢 **${server}** - Empty (0 jobs)
+        "
+            fi
+          done
+        fi
+        
+        if [ -n "$BUSY_SERVERS" ]; then
+          IFS='|' read -ra BUSY_ARRAY <<< "$BUSY_SERVERS"
+          for server_info in "${BUSY_ARRAY[@]}"; do
+            if [ -n "$server_info" ]; then
+              server=$(echo "$server_info" | cut -d'~' -f1)
+              jobs=$(echo "$server_info" | cut -d'~' -f2)
+              STATUS_LINES="${STATUS_LINES}🔴 **${server}** - ${jobs} jobs running
+        "
+            fi
+          done
+        fi
+        
+        if [ -n "$ERROR_SERVERS" ]; then
+          IFS='|' read -ra ERROR_ARRAY <<< "$ERROR_SERVERS"
+          for server in "${ERROR_ARRAY[@]}"; do
+            if [ -n "$server" ]; then
+              STATUS_LINES="${STATUS_LINES}⚠️ **${server}** - ❌ Connection/Service Error
+        "
+            fi
+          done
+        fi
+        
+        COMMENT="📋 **Server Status Report**
+
+        📊 **Summary:** ${EMPTY_COUNT} empty, ${BUSY_COUNT} busy, ${ERROR_COUNT} errors (of ${TOTAL_SERVERS} total)
+
+        **Detailed Status:**
+        ${STATUS_LINES}
+    
+        ---"
+
+        curl -X POST \
+          -H "Authorization: token ${{ github.token }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Content-Type: application/json" \
+          "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
+          -d "$(jq -n --arg body "$COMMENT" '{body: $body}')"
+
+
+  deploy-the-replay:
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '/deploy-replay')
+    runs-on: cmst0
+    
+    steps:
+    - name: Parse comment and get PR file URL
+      id: parse
+      run: |
+        comment="${{ github.event.comment.body }}"
+        
+        # Use global defaults from workflow env
+        replay=$(echo "$comment" | grep -E "^server:" | cut -d' ' -f2- | tr -d '\n\r' | xargs 2>/dev/null || true)
+        if [ -z "$replay" ]; then
+          replay="${{ env.DEFAULT_SERVER }}"
+        fi
+        echo "Server: $replay"
+        
+        patch=$(echo "$comment" | grep -E "^patch:" | cut -d' ' -f2- | tr -d '\n\r' | xargs 2>/dev/null || true)
+        if [ -z "$patch" ]; then
+          patch="${{ env.DEFAULT_PATCH }}"
+        fi
+        echo "Patch: $patch"
+
+        patch_repo=$(echo "$comment" | grep -E "^patch_repo:" | cut -d' ' -f2- | tr -d '\n\r' | xargs 2>/dev/null || true)
+        if [ -z "$patch_repo" ]; then
+          patch_repo="${{ env.DEFAULT_PATCH_REPO }}"
+        fi
+        echo "Patch Repository: $patch_repo"
+        
+        commit=$(echo "$comment" | grep -E "^commit:" | cut -d' ' -f2- | tr -d '\n\r' | sed 's/, */,/g' | xargs 2>/dev/null || true)
+        if [ -z "$commit" ]; then
+          commit="${{ env.DEFAULT_COMMIT }}"
+        fi
+        echo "Commit: $commit"
+        
+        wmcore=$(echo "$comment" | grep -E "^wmcore:" | cut -d' ' -f2- | tr -d '\n\r' | xargs 2>/dev/null || true)
+        if [ -z "$wmcore" ]; then
+          wmcore="${{ env.DEFAULT_WMCORE }}"
+        fi
+        echo "WMCore: $wmcore"
+        
+        t0=$(echo "$comment" | grep -E "^t0:" | cut -d' ' -f2- | tr -d '\n\r' | xargs 2>/dev/null || true)
+        if [ -z "$t0" ]; then
+          t0="${{ env.DEFAULT_T0 }}"
+        fi
+        echo "T0: $t0"
+        
+        python=$(echo "$comment" | grep -E "^python:" | cut -d' ' -f2- | tr -d '\n\r' | xargs 2>/dev/null || true)
+        if [ -z "$python" ]; then
+          python="${{ env.DEFAULT_PYTHON }}"
+        fi
+        echo "Python: $python"
+        
+        force_stop=$(echo "$comment" | grep -E "^force_stop:" | cut -d' ' -f2- | tr -d '\n\r' | xargs 2>/dev/null || true)
+        if [ -z "$force_stop" ]; then
+          force_stop="${{ env.DEFAULT_FORCE_STOP }}"
+        fi
+        echo "Force Stop: $force_stop"
+
+        echo "Parsing streams parameter..."
+        
+        streams_raw=$(printf '%s\n' "$comment" | sed -n 's/^streams:[[:space:]]*\(\[.*\]\)/\1/p')
+        if [ -z "$streams_raw" ]; then
+          streams_raw="${{ env.DEFAULT_STREAMS }}"
+        fi
+        printf 'Streams: %s\n' "$streams_raw"
+
+
+        config_name=$(echo "$comment" | grep -E "^config:" | cut -d' ' -f2- | tr -d '\n\r' | xargs 2>/dev/null || true)
+        if [ -z "$config_name" ]; then
+          config_name="${{ env.DEFAULT_CONFIG }}"
+        fi
+        echo "Config File: $config_name"
+        
+        pr_number="${{ github.event.issue.number }}"
+        pr_info=$(curl -s -H "Authorization: token ${{ github.token }}" \
+          "${{ github.api_url }}/repos/${{ github.repository }}/pulls/$pr_number")
+        
+        head_sha=$(echo "$pr_info" | jq -r '.head.sha')
+        head_repo=$(echo "$pr_info" | jq -r '.head.repo.full_name')
+        
+        pr_files=$(curl -s -H "Authorization: token ${{ github.token }}" \
+          "${{ github.api_url }}/repos/${{ github.repository }}/pulls/$pr_number/files")
+        
+        config_file=$(echo "$pr_files" | jq -r --arg config "$config_name" '.[] | select(.filename | split("/")[-1] == $config) | .filename' | head -1)
+        if [ -n "$config_file" ]; then
+          url="https://raw.githubusercontent.com/${head_repo}/${head_sha}/${config_file}"
+        else
+          url="https://raw.githubusercontent.com/dmwm/T0/refs/heads/master/etc/ReplayOfflineConfiguration.py"
+        fi
+        
+        echo "REPLAY_OPTION=$replay" >> $GITHUB_ENV
+        echo "PATCH_OPTION=$patch" >> $GITHUB_ENV
+        echo "PATCH_URL=$commit" >> $GITHUB_ENV
+        echo "PATCH_REPO=$patch_repo" >> $GITHUB_ENV
+        echo "WMCORE_VERSION=$wmcore" >> $GITHUB_ENV
+        echo "T0_VERSION=$t0" >> $GITHUB_ENV
+        echo "PYTHON_VERSION=$python" >> $GITHUB_ENV
+        echo "FORCE_STOP=$force_stop" >> $GITHUB_ENV
+        echo "STREAMS_CONFIG=$streams_raw" >> $GITHUB_ENV
+        echo "WGET_URL=$url" >> $GITHUB_ENV
+
+    - name: Authenticate with Kerberos
+      id: kerberos
+      run: |
+        kinit cmst0@CERN.CH -k -t /home/cmsbld/cmst0.keytab
+        echo "Kerberos authentication successful"
+
+    - name: Post deployment start comment
+      id: start_comment
+      run: |
+        COMMENT="🚀 **Deployment Started**
+        
+        
+        **The deployment is in progress. You should receive a response within 5–10 minutes.** ⏳
+        
+        [View workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+        
+        curl -X POST \
+          -H "Authorization: token ${{ github.token }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Content-Type: application/json" \
+          "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
+          -d "$(jq -n --arg body "$COMMENT" '{body: $body}')"
+
+    - name: Validate server whitelist
+      id: validate
+      run: |
+        IFS=',' read -ra ALLOWED_SERVERS_RAW <<< "${{ env.ALLOWED_SERVERS }}"
+        ALLOWED_SERVERS=()
+        for server in "${ALLOWED_SERVERS_RAW[@]}"; do
+          server=$(echo $server | tr -d ' ')  
+          ALLOWED_SERVERS+=("$server")
+        done
+        
+        echo "Checking if server '${REPLAY_OPTION}' is in whitelist..."
+        echo "Allowed servers: ${{ env.ALLOWED_SERVERS }}"
+        
+        SERVER_ALLOWED=false
+        for allowed_server in "${ALLOWED_SERVERS[@]}"; do
+          if [ "${REPLAY_OPTION}" = "$allowed_server" ]; then
+            SERVER_ALLOWED=true
+            break
+          fi
+        done
+        
+        if [ "$SERVER_ALLOWED" = true ]; then
+          echo "✅ Server '${REPLAY_OPTION}' is authorized for deployment"
+        else
+          echo "❌ ERROR: Server '${REPLAY_OPTION}' is not in the whitelist!"
+          echo ""
+          echo "Allowed servers:"
+          for server in "${ALLOWED_SERVERS[@]}"; do
+            echo "  - $server"
+          done
+          echo ""
+          echo "Please use one of the approved servers."
+          exit 1
+        fi
+
+    - name: Step 1 - Check running jobs and clean environment
+      id: check_jobs
+      run: |
+        echo "=== Step 1: Checking for running jobs and cleaning environment on ${REPLAY_OPTION} ==="
+        
+        ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch FORCE_STOP="${FORCE_STOP}" bash -s << 'STEP1'
+        
+        echo "Terminal environment cleaned up"
+        source env.sh
+        
+        echo "Checking for running HTCondor jobs..."
+        RUNNING_JOBS=$(condor_q -nobatch -format "%s\n" ClusterId 2>/dev/null | wc -l)
+        
+        if [ "$RUNNING_JOBS" -gt 0 ]; then
+            echo "================================================"
+            echo "WARNING: Found $RUNNING_JOBS running jobs!"
+            echo "================================================"
+            
+            echo "Current job status:"
+            condor_q -nobatch
+            
+            echo ""
+            echo "Job summary by status:"
+            condor_q -totals
+            
+            if [ "${FORCE_STOP}" = "Yes" ]; then
+                echo ""
+                echo "FORCE_STOP is enabled - proceeding with job removal..."
+                echo "Removing all running jobs..."
+                condor_rm -all
+                
+                echo "Waiting for jobs to be removed..."
+                sleep 10
+                
+                REMAINING_JOBS=$(condor_q -nobatch -format "%s\n" ClusterId 2>/dev/null | wc -l)
+                if [ "$REMAINING_JOBS" -gt 0 ]; then
+                    echo "Warning: $REMAINING_JOBS jobs still in queue after removal attempt"
+                else
+                    echo "All jobs successfully removed"
+                fi
+            else
+                echo ""
+                echo "=========================================="
+                echo "DEPLOYMENT STOPPED"
+                echo "=========================================="
+                echo "There are $RUNNING_JOBS jobs currently running."
+                echo "Options:"
+                echo "1. Wait for jobs to complete naturally"
+                echo "2. Re-run this pipeline with 'force_stop: Yes' to override"
+                echo "3. Manually stop jobs with: condor_rm -all"
+                echo ""
+                echo "To check job status: condor_q"
+                echo "To monitor job progress: watch condor_q"
+                echo "=========================================="
+                exit 1
+            fi
+        else
+            echo "No running jobs found - safe to proceed"
+        fi
+        
+        echo "Stopping existing processes..."
+        stop_agent 2>/dev/null || true
+        pkill -9 -f wmcoreD
+        
+        echo "Environment preparation completed"
+        STEP1
+
+    - name: Step 2 - Download and setup configuration
+      id: download_config
+      run: |
+            echo "=== Step 2: Downloading configuration ==="
+            
+            # Base64 encode the streams config to safely pass through shell
+            STREAMS_B64=$(echo "${STREAMS_CONFIG}" | base64 -w 0)
+
+            ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch WGET_URL="${WGET_URL}" STREAMS_B64="${STREAMS_B64}" bash -s << 'STEP2'
+
+            source env.sh
+            cd /data/tier0/ReplayPipeline
+            
+            echo "Current directory contents:"
+            ls -la || ll || echo "Directory listing failed"
+            
+            echo "Downloading configuration from: ${WGET_URL}"
+            rm -f ReplayOfflineConfiguration.py
+            wget "${WGET_URL}"
+            
+            CONFIG_FILE=$(ls *ReplayOfflineConfiguration.py 2>/dev/null | head -1)
+            if [ ! -z "$CONFIG_FILE" ] && [ "$CONFIG_FILE" != "ReplayOfflineConfiguration.py" ]; then
+                echo "Renaming $CONFIG_FILE to ReplayOfflineConfiguration.py"
+                mv "$CONFIG_FILE" "ReplayOfflineConfiguration.py"
+            else
+                echo "Configuration file already named correctly or not found"
+            fi
+            
+            STREAMS_CONFIG=$(echo "${STREAMS_B64}" | base64 -d)
+            echo "Decoded streams config: $STREAMS_CONFIG"
+            
+            if [ "$STREAMS_CONFIG" != "[]" ] && [ ! -z "$STREAMS_CONFIG" ]; then
+                echo "Adding streams configuration: $STREAMS_CONFIG"
+                
+               
+                
+                if grep -q "if __name__ == '__main__':" ReplayOfflineConfiguration.py; then
+                    echo "Found target insertion point, adding specifyStreams call..."
+                    
+               
+                sed -i "/if __name__ == '__main__':/i\\specifyStreams(tier0Config, $STREAMS_CONFIG)" ReplayOfflineConfiguration.py                    
+                    if [ $? -eq 0 ]; then
+                        echo "Configuration file successfully modified with streams"
+                        echo "Streams added: $STREAMS_CONFIG"
+                        
+                    else
+                        echo "Error: sed command failed, reverting to backup"
+                        mv ReplayOfflineConfiguration.py.backup ReplayOfflineConfiguration.py
+                    fi
+                else
+                    echo "Error: Could not find target insertion point 'if __name__ == \"__main__\":' in configuration file"
+                    echo "Using original configuration without streams"
+                fi
+            else
+                echo "No streams specified, using original configuration"
+            fi
+                    
+            echo "Copying configuration to admin directory..."
+            rm -f /data/tier0/admin/ReplayOfflineConfiguration.py
+            cp /data/tier0/ReplayPipeline/ReplayOfflineConfiguration.py /data/tier0/admin/ReplayOfflineConfiguration.py
+            
+            echo "Configuration setup completed"
+            STEP2
+
+    - name: Step 3 - Apply patches (if requested)
+      id: apply_patches
+      run: |
+        echo "=== Step 3: Patch application ==="
+        
+        if [ "${PATCH_OPTION}" = "Patch" ]; then
+          echo "Patches requested, applying..."
+          
+          ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch \
+            PATCH_URL="${PATCH_URL}" PATCH_REPO="${PATCH_REPO}" PYTHON_VERSION="${PYTHON_VERSION}" bash -s << 'STEP3'
+          source env.sh
+          
+          echo "About to execute patch logic..."
+          echo "Applying patches: ${PATCH_URL}"
+
+          echo -n > /data/tier0/ReplayPipeline/00_pypi_patches.sh
+          
+          IFS=',' read -ra PATCHES <<< "${PATCH_URL}"
+          for patch_num in "${PATCHES[@]}"; do
+              patch_num=$(echo $patch_num | tr -d ' ')
+              echo "Applying patch PR #$patch_num"
+
+              echo "curl -L \"https://patch-diff.githubusercontent.com/raw/${PATCH_REPO}/pull/${patch_num}.patch\" | patch -f -d \"/data/tier0/WMAgent.venv3/lib/python${PYTHON_VERSION}/site-packages/\" -p 3" >> /data/tier0/ReplayPipeline/00_pypi_patches.sh
+
+              if [ $? -eq 0 ]; then
+                  echo "Patch $patch_num applied successfully"
+              else
+                  echo "Warning: Patch $patch_num may have failed"
+              fi
+          done
+          
+          echo "All patches processed"
+        STEP3
+        else
+        
+          echo "No patches requested, skipping..."
+          ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch bash -s << 'STEP3_NO_PATCH'
+          echo "# No patches requested" > /data/tier0/ReplayPipeline/00_pypi_patches.sh
+          echo "Created empty patch file"
+        STEP3_NO_PATCH
+        fi
+
+
+    - name: Step 4 - Deploy WMAgent
+      id: deploy_agent
+      run: |
+        echo "=== Step 4: Deploying WMAgent ==="
+        
+        ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch << STEP4
+        source env.sh
+        cd /data/tier0/ReplayPipeline
+        
+        export WMAGENT_TAG_VAR="${WMCORE_VERSION}"
+        export TIER0_VERSION_VAR="${T0_VERSION}"
+        export PYTHON_VERSION_VAR="${PYTHON_VERSION}"
+        
+        echo "Environment variables set:"
+        echo "  WMAGENT_TAG_VAR=${WMCORE_VERSION}"
+        echo "  TIER0_VERSION_VAR=${T0_VERSION}"
+        echo "  PYTHON_VERSION_VAR=${PYTHON_VERSION}"
+        
+        echo "Starting deployment..."
+        echo "Y" | source /data/tier0/ReplayPipeline/00_pypi_deploy_replay.sh
+        
+        echo "Deployment completed"
+        STEP4
+
+
+    - name: Step 5 - Start agent and finalize
+      id: start_agent
+      run: |
+        echo "=== Step 5: Starting agent ==="
+        
+        ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch << STEP5
+        source env.sh
+        
+        echo "Starting replace the new configuration file...."
+        cp /data/tier0/ReplayPipeline/checkProxy.py /data/tier0/WMAgent.venv3/deploy/checkProxy.py
+        
+        echo "Starting WMAgent..."
+        source /data/tier0/00_pypi_start_agent.sh
+        
+        echo "Agent started, waiting for stabilization..."
+        sleep 10
+        
+        echo "Checking agent status..."
+        manage status || true
+        
+        echo "Agent started successfully"
+        STEP5
+
+    - name: Step 6 - Verify job submission and check for errors
+      id: verify_deployment
+      run: |
+        echo "=== Step 6: Verifying deployment success ==="
+        
+        ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch WMCORE_VERSION="${WMCORE_VERSION}" bash -s << 'STEP6'
+        source env.sh
+        
+        echo "Starting 5-minute verification process..."
+        echo "Checking for job submissions and potential errors..."
+        
+        VERIFICATION_TIMEOUT=600  # 5 minutes
+        CHECK_INTERVAL=5         # Check every 5 seconds
+        START_TIME=$(date +%s)
+        
+        LOG_FILE="/data/tier0/WMAgent.venv3/srv/wmagent/${WMCORE_VERSION}/install/Tier0Feeder/ComponentLog"
+        
+        while true; do
+            CURRENT_TIME=$(date +%s)
+            ELAPSED_TIME=$((CURRENT_TIME - START_TIME))
+            
+            echo "Check iteration at ${ELAPSED_TIME}s..."
+            
+            # Check for tracebacks in Tier0Feeder log
+            if [ -f "$LOG_FILE" ]; then
+                TRACEBACK_COUNT=$(grep -c "Traceback (most recent call last):" "$LOG_FILE" 2>/dev/null || echo "0")
+                if [ "$TRACEBACK_COUNT" -gt 0 ]; then
+                    echo "DEPLOYMENT FAILED: Found $TRACEBACK_COUNT traceback(s) in Tier0Feeder log"
+                    echo ""
+                    echo "Recent traceback(s):"
+                    echo "==================="
+                    grep -A 10 "Traceback (most recent call last):" "$LOG_FILE" | tail -20
+                    echo "==================="
+                    echo ""
+                    echo "Full log location: $LOG_FILE"
+                    exit 1
+                fi
+            else
+                echo "Warning: Tier0Feeder log not found at $LOG_FILE"
+            fi
+            
+            # Check for job submissions via condor_q
+            SUBMITTED_JOBS=$(condor_q -nobatch -format "%s\n" ClusterId 2>/dev/null | wc -l)
+            if [ "$SUBMITTED_JOBS" -gt 0 ]; then
+                echo "DEPLOYMENT SUCCESSFUL: Found $SUBMITTED_JOBS job(s) submitted to HTCondor"
+                echo ""
+                echo "Current job status:"
+                condor_q -nobatch 2>/dev/null || echo "Failed to get detailed job status"
+                echo ""
+                echo "Job summary:"
+                condor_q -totals 2>/dev/null || echo "Failed to get job summary"
+                echo ""
+                echo "Deployment verification completed successfully!"
+                exit 0
+            fi
+            
+            # Check if we've exceeded the timeout
+            if [ "$ELAPSED_TIME" -ge "$VERIFICATION_TIMEOUT" ]; then
+                echo "VERIFICATION TIMEOUT: No jobs submitted and no errors found in 5 minutes"
+                echo ""
+                echo "The pipeline cannot automatically verify success or failure."
+                echo "Manual monitoring is required to determine the final status."
+                echo ""
+                echo "Current agent status:"
+                manage status || echo "Failed to get agent status"
+                echo ""
+                echo "Setting timeout flag and continuing to next steps..."
+                exit 0
+            fi
+            
+            echo "No jobs submitted yet, no errors found. Checking again in ${CHECK_INTERVAL} seconds..."
+            echo "Time remaining: $((VERIFICATION_TIMEOUT - ELAPSED_TIME)) seconds"
+            sleep $CHECK_INTERVAL
+        done
+        
+        echo "Verification phase completed"
+        STEP6
+        
+        # Set deployment status based on verification results
+        JOBS_SUBMITTED=$(ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch bash -s << 'CHECK_FINAL_STATUS'
+        source env.sh >/dev/null 2>&1
+        condor_q -nobatch -format "%s\n" ClusterId 2>/dev/null | wc -l
+        CHECK_FINAL_STATUS
+        )
+        
+        if [ "$JOBS_SUBMITTED" -gt 0 ]; then
+          echo "DEPLOYMENT_STATUS=SUCCESS" >> $GITHUB_ENV
+          echo "JOBS_FOUND=true" >> $GITHUB_ENV
+        else
+          echo "DEPLOYMENT_STATUS=TIMEOUT" >> $GITHUB_ENV
+          echo "JOBS_FOUND=false" >> $GITHUB_ENV
+        fi
+
+    - name: Step 6.5 - Post timeout notification
+      if: always() && steps.verify_deployment.outcome == 'success' && env.DEPLOYMENT_STATUS == 'TIMEOUT'
+      run: |
+        COMMENT="⏰ **Deployment Status - Manual Verification Required**
+          
+          **Verification Timeout Notice:**
+          The 5-minute automated verification period has completed without detecting job submissions or errors.
+          
+          **Current Situation:**
+          - ✅ WMAgent deployment completed successfully
+          - ✅ Agent services started without errors
+          - ⏳ No jobs detected in HTCondor queue yet
+          - ✅ No tracebacks found in Tier0Feeder logs
+          
+          **Next Steps:**
+          
+          1. **Monitor Tier0Feeder logs manually:**
+          2. **Check for job submissions:**
+          3. **Monitor agent status:**
+ 
+          **This is normal behavior when:**
+          - The system needs more time to initialize
+          - No replay jobs are configured to run immediately  
+          - Replay workflow depends on external triggers"
+        
+        curl -X POST \
+          -H "Authorization: token ${{ github.token }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Content-Type: application/json" \
+          "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
+          -d "$(jq -n --arg body "$COMMENT" '{body: $body}')"
+
+
+    - name: Step 7 - Extract Deploy ID and Version from logs
+      id: extract_deploy_id
+      if: success() && steps.verify_deployment.outcome == 'success'
+      run: |
+        echo "=== Step 7: Extracting Deploy ID and Version from Tier0Feeder logs ==="
+        
+        # Extract only the Deploy ID number, filtering out all environment noise
+        DEPLOY_ID=$(ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch WMCORE_VERSION="${WMCORE_VERSION}" bash -s << 'EXTRACT_ID' 2>/dev/null
+        # Source environment quietly
+        source env.sh >/dev/null 2>&1
+        
+        LOG_FILE="/data/tier0/WMAgent.venv3/srv/wmagent/${WMCORE_VERSION}/install/Tier0Feeder/ComponentLog"
+        
+        if [ -f "$LOG_FILE" ]; then
+            # Wait a bit to ensure logs are written
+            
+            # Search for the Deploy ID pattern in the log file
+            DEPLOY_ID=$(grep -o "Deploy ID: [0-9]*" "$LOG_FILE" 2>/dev/null | tail -1 | cut -d' ' -f3)
+            
+            if [ -n "$DEPLOY_ID" ] && [ "$DEPLOY_ID" -ne 0 ] 2>/dev/null; then
+                echo "$DEPLOY_ID"
+                exit 0
+            else
+                # If not found immediately, wait a bit longer and try again
+                sleep 30
+                
+                DEPLOY_ID=$(grep -o "Deploy ID: [0-9]*" "$LOG_FILE" 2>/dev/null | tail -1 | cut -d' ' -f3)
+                
+                if [ -n "$DEPLOY_ID" ] && [ "$DEPLOY_ID" -ne 0 ] 2>/dev/null; then
+                    echo "$DEPLOY_ID"
+                    exit 0
+                fi
+            fi
+        fi
+        
+        echo "NOT_FOUND"
+        EXTRACT_ID
+        )
+        
+        # Clean up the result - only keep numeric values
+        DEPLOY_ID=$(echo "$DEPLOY_ID" | grep -E '^[0-9]+$' | head -1)
+        
+        echo "Deploy ID extraction result: $DEPLOY_ID"
+        
+        if [ -n "$DEPLOY_ID" ] && [[ "$DEPLOY_ID" =~ ^[0-9]+$ ]]; then
+            echo "Successfully extracted Deploy ID: $DEPLOY_ID"
+            echo "DEPLOY_ID=$DEPLOY_ID" >> $GITHUB_ENV
+        else
+            echo "Could not extract Deploy ID from logs"
+            echo "DEPLOY_ID=NOT_FOUND" >> $GITHUB_ENV
+        fi
+
+        # Extract version number from condor_q output
+        echo "=== Extracting Version Number from condor_q ==="
+        
+        VERSION_NUMBER=$(ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch bash -s << 'EXTRACT_VERSION' 2>/dev/null
+        # Source environment quietly
+        source env.sh >/dev/null 2>&1
+        
+        # Get condor_q output and extract version number (v followed by digits)
+        VERSION=$(condor_q 2>/dev/null | head -10 | grep -o "v[0-9]\{8\}" | head -1)
+        
+        if [ -n "$VERSION" ]; then
+            echo "$VERSION"
+        else
+            # If not found in first 10 lines, try more lines
+            VERSION=$(condor_q 2>/dev/null | grep -o "v[0-9]\{8\}" | head -1)
+            if [ -n "$VERSION" ]; then
+                echo "$VERSION"
+            else
+                echo "NOT_FOUND"
+            fi
+        fi
+        EXTRACT_VERSION
+        )
+        
+        echo "Version number extraction result: $VERSION_NUMBER"
+        
+        if [ -n "$VERSION_NUMBER" ] && [[ "$VERSION_NUMBER" =~ ^v[0-9]{8}$ ]]; then
+            echo "Successfully extracted Version: $VERSION_NUMBER"
+            echo "VERSION_NUMBER=$VERSION_NUMBER" >> $GITHUB_ENV
+        else
+            echo "Could not extract version number from condor_q"
+            echo "VERSION_NUMBER=NOT_FOUND" >> $GITHUB_ENV
+        fi
+
+    - name: Analyze failure reason
+      if: failure()
+      run: |
+        echo "Analyzing failure..."
+        
+        # Check which step failed and provide specific guidance
+        FAILED_STEP="Unknown"
+        FAILURE_REASON="Unknown error occurred"
+        FAILURE_DETAILS=""
+        TROUBLESHOOTING=""
+        
+
+        
+        if [[ "${{ steps.validate.outcome }}" == "failure" ]]; then
+          FAILED_STEP="Server Validation"
+          FAILURE_REASON="Server '${REPLAY_OPTION}' is not in whitelist"
+          FAILURE_DETAILS="Allowed servers: ${{ env.ALLOWED_SERVERS }}"
+
+        
+        elif [[ "${{ steps.check_jobs.outcome }}" == "failure" ]]; then
+          FAILED_STEP="Job Environment Check"
+          FAILURE_REASON="Running jobs found and force_stop not enabled"
+          FAILURE_DETAILS="There are active HTCondor jobs on ${REPLAY_OPTION} that must be stopped before deployment"
+
+        
+        elif [[ "${{ steps.download_config.outcome }}" == "failure" ]]; then
+          FAILED_STEP="Configuration Download"
+          FAILURE_REASON="Failed to download configuration file"
+          FAILURE_DETAILS="Could not fetch config from: ${WGET_URL}"
+
+        
+        elif [[ "${{ steps.deploy_agent.outcome }}" == "failure" ]]; then
+          FAILED_STEP="WMAgent Deployment"
+          FAILURE_REASON="WMAgent deployment process failed"
+          FAILURE_DETAILS="Deployment script encountered an error during installation"
+
+        
+        elif [[ "${{ steps.apply_patches.outcome }}" == "failure" ]]; then
+          FAILED_STEP="Patch Application"
+          FAILURE_REASON="Failed to apply one or more patches"
+          FAILURE_DETAILS="Patch PRs ${PATCH_URL} could not be applied"
+
+        
+        elif [[ "${{ steps.start_agent.outcome }}" == "failure" ]]; then
+          FAILED_STEP="Agent Startup"
+          FAILURE_REASON="Failed to start WMAgent services"
+          FAILURE_DETAILS="WMAgent was deployed but failed to start properly"
+
+        
+        elif [[ "${{ steps.verify_deployment.outcome }}" == "failure" ]]; then
+          FAILED_STEP="Deployment Verification"
+          FAILURE_REASON="Tier0Feeder failed"
+          FAILURE_DETAILS="Either traceback errors were found in Tier0Feeder logs or verification process encountered an error"
+
+        
+        else
+          FAILED_STEP="Deployment Process"
+          FAILURE_REASON="Deployment failed during execution"
+          FAILURE_DETAILS="Check workflow logs for specific error messages"
+
+        fi
+        
+        echo "FAILED_STEP=$FAILED_STEP" >> $GITHUB_ENV
+        echo "FAILURE_REASON=$FAILURE_REASON" >> $GITHUB_ENV
+        echo "FAILURE_DETAILS=$FAILURE_DETAILS" >> $GITHUB_ENV
+        echo "TROUBLESHOOTING<<EOF" >> $GITHUB_ENV
+        echo "$TROUBLESHOOTING" >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
+        
+        echo "Failure analysis complete:"
+        echo "  Failed Step: $FAILED_STEP"
+        echo "  Reason: $FAILURE_REASON"
+
+    - name: Post success comment
+      if: success() && steps.verify_deployment.outcome == 'success' && env.JOBS_FOUND == 'true'
+      run: |
+
+        GRAFANA_LINK=""
+        if [ "$DEPLOY_ID" != "NOT_FOUND" ] && [ -n "$DEPLOY_ID" ]; then
+            GRAFANA_LINK="
+        **📊 Monitoring:**
+        [Grafana Dashboard](https://monit-grafana.cern.ch/d/t_jr45h7k/cms-tier0-replayid-monitoring?orgId=11&refresh=1m&var-Bin=5m&var-ReplayID=${DEPLOY_ID}&var-JobType=All&var-WorkflowType=All) (Deploy ID: \`${DEPLOY_ID}\`)"
+        else
+            GRAFANA_LINK="
+        **📊 Monitoring:**
+        Deploy ID not available - check Tier0Feeder logs manually for monitoring"
+        fi
+
+        DAS_LINK=""
+        if [ "$VERSION_NUMBER" != "NOT_FOUND" ] && [ -n "$VERSION_NUMBER" ]; then
+            DAS_LINK="
+        **📊 Output Data (DAS):**
+        [DAS Query Results](https://cmsweb.cern.ch/das/request?view=list&limit=50&instance=prod%2Fglobal&input=dataset%3D%2F*%2F*-${VERSION_NUMBER}%2F*) (Version: \`${VERSION_NUMBER}\`)
+        
+        *Note: Output data will be available in DAS when all jobs are completed*"
+        else
+            DAS_LINK="
+        **📊 Output Data (DAS):**
+        Version number not detected - DAS link will be available once jobs start running"
+        fi
+
+        COMMENT="✅ **Deployment Successful**
+        
+        **Configuration:**
+        - Server: \`${REPLAY_OPTION}\`
+        - Config: \`${WGET_URL##*/}\`
+        - WMCore: \`${WMCORE_VERSION}\`
+        - T0: \`${T0_VERSION}\`
+        - Python: \`${PYTHON_VERSION}\`
+        - Patches: \`${PATCH_OPTION}\`
+        - Force Stop: \`${FORCE_STOP}\`
+        - Streams: \`${STREAMS_CONFIG}\`
+        ${GRAFANA_LINK}
+        ${DAS_LINK}
+        
+        **Deployment completed successfully!** 🎉
+        
+        [View workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+        
+        curl -X POST \
+          -H "Authorization: token ${{ github.token }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Content-Type: application/json" \
+          "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
+          -d "$(jq -n --arg body "$COMMENT" '{body: $body}')"
+
+    - name: Post failure comment
+      if: failure()
+      run: |
+        COMMENT="❌ **Deployment Failed**
+        
+        **Failed Step:** \`${FAILED_STEP:-Unknown Step}\`
+        
+        **Reason:** ${FAILURE_REASON:-Unknown error occurred}
+        
+        **Details:** ${FAILURE_DETAILS:-Check the workflow logs for more details}
+        
+        **Configuration Used:**
+        - Server: \`${REPLAY_OPTION:-"Not set"}\`
+        - Config: \`${WGET_URL##*/}\`
+        - WMCore: \`${WMCORE_VERSION:-"Not set"}\`
+        - T0: \`${T0_VERSION:-"Not set"}\`
+        - Force Stop: \`${FORCE_STOP:-"Not set"}\`
+        - Streams: \`${STREAMS_CONFIG}\`
+        
+        **Troubleshooting Steps:**
+        ${TROUBLESHOOTING:-• Check the workflow logs for detailed error messages}
+        
+        **Quick Actions:**
+        - [View detailed logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+        - Use \`/info\` for valid parameters and examples
+        - Try again with corrected parameters"
+        
+        curl -X POST \
+          -H "Authorization: token ${{ github.token }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Content-Type: application/json" \
+          "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
+          -d "$(jq -n --arg body "$COMMENT" '{body: $body}')"
+
+
+
+    
