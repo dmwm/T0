@@ -21,7 +21,7 @@ on:
 
 jobs:
   show-defaults:
-    if: github.event.issue.pull_request && contains(github.event.comment.body, '/info')
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '/mayIReplay')
     runs-on: cmst0
     
     steps:
@@ -236,7 +236,7 @@ jobs:
 
 
   deploy-the-replay:
-    if: github.event.issue.pull_request && contains(github.event.comment.body, '/deploy-replay')
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '/replay')
     runs-on: cmst0
     
     steps:
