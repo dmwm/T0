@@ -21,12 +21,67 @@ on:
 
 jobs:
   show-defaults:
-    if: github.event.issue.pull_request && contains(github.event.comment.body, '/info')
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '/mayIReplay')
     runs-on: cmst0
     
     steps:
     - name: Post default parameters comment
       run: |
+        get_node_size() {
+          local node=$1
+          echo "${{ env.NODE_SIZES }}" | tr ',' '\n' | sed 's/^ *//' | grep "^${node}:" | cut -d':' -f2 | sed 's/^ *//; s/ *$//'
+        }
+        
+        NODE_STATUS_LINES=""
+        
+        IFS=',' read -ra NODES <<< "${{ env.ALLOWED_NODES }}"
+        
+        for node_raw in "${NODES[@]}"; do
+          node=$(echo $node_raw | tr -d ' ')
+          echo "Checking node: $node"
+          
+          NODE_STATUS=$(ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 -K cmst0@${node}.cern.ch bash -s << 'NODE_CHECK'
+            source env.sh 2>/dev/null || echo "WARNING: env.sh not found"
+            
+            if command -v condor_q >/dev/null 2>&1; then
+              RUNNING_JOBS=$(condor_q -nobatch -format "%s\n" ClusterId 2>/dev/null | wc -l)
+              if [ $? -eq 0 ]; then
+                echo "SUCCESS:$RUNNING_JOBS"
+              else
+                echo "ERROR:condor_q_failed"
+              fi
+            else
+              echo "ERROR:condor_not_available"
+            fi
+        NODE_CHECK
+        2>&1)
+          
+          size=$(get_node_size "$node")
+          if [ -n "$size" ]; then
+            node_display="${node} (${size})"
+          else
+            node_display="${node}"
+          fi
+          
+          if echo "$NODE_STATUS" | grep -q "^SUCCESS:"; then
+            JOB_COUNT=$(echo "$NODE_STATUS" | grep "^SUCCESS:" | cut -d':' -f2)
+            
+            if [ "$JOB_COUNT" -eq 0 ]; then
+              NODE_STATUS_LINES="${NODE_STATUS_LINES}        - 🟢 \`${node_display}\` - **Available** (0 jobs)
+        "
+            else
+              NODE_STATUS_LINES="${NODE_STATUS_LINES}        - 🔴 \`${node_display}\` - **Busy** (${JOB_COUNT} jobs running)
+        "
+            fi
+          else
+            NODE_STATUS_LINES="${NODE_STATUS_LINES}        - ⚠️ \`${node_display}\` - **Error** (Connection/Service issue)
+        "
+          fi
+          
+          echo "Node $node checked"
+        done
+
+
         COMMENT="📋 **Deploy Replay - Default Parameters**
         
         **Current Default Values:**
@@ -41,9 +96,9 @@ jobs:
         - **force_stop:** \`${{ env.DEFAULT_FORCE_STOP }}\`
         - **streams:** \`${{ env.DEFAULT_STREAMS }} # use single quote only \`
         
-        **Allowed Nodes:**
-        $(echo "${{ env.ALLOWED_NODES }}" | tr ',' '\n' | sed 's/^/        - `/' | sed 's/$/`/')
-        
+        **Available Nodes (Real-time Status):**
+        ${NODE_STATUS_LINES}
+
         **Usage Examples:**
         
         **Basic deployment (all defaults):**
@@ -67,16 +122,16 @@ jobs:
         \`\`\`
         
         **Available Parameters:**
-        - \`node:\` - Target node for deployment
-        - \`config:\` - Configuration file name (from PR or master)
-        - \`wmcore:\` - WMCore version
-        - \`t0:\` - T0 version  
-        - \`python:\` - Python version
-        - \`patch:\` - Use \"Patch\" to enable patching
-        - \`patch_repo:\` - GitHub repository for patches (format: owner/repo)
-        - \`commit:\` - Comma-separated PR numbers for patches
-        - \`force_stop:\` - Use \"Yes\" to force stop running jobs
-        - \`streams:\` - Select specific stream"
+        - \`node:\` Target node for deployment
+        - \`config:\` Configuration file name (from PR or master)
+        - \`wmcore:\` WMCore version
+        - \`t0:\` T0 version  
+        - \`python:\` Python version
+        - \`patch:\` Use \"Patch\" to enable patching
+        - \`patch_repo:\` GitHub repository for patches (format: owner/repo)
+        - \`commit:\` Comma-separated PR numbers for patches
+        - \`force_stop:\` Use \"Yes\" to force stop running jobs
+        - \`streams:\` Select specific stream"
 
         
         curl -X POST \
@@ -236,7 +291,7 @@ jobs:
 
 
   deploy-the-replay:
-    if: github.event.issue.pull_request && contains(github.event.comment.body, '/deploy-replay')
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '/replay')
     runs-on: cmst0
     
     steps:
