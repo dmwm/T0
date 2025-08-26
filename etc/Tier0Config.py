@@ -20,6 +20,7 @@ config.JobSubmitter.LsfPluginResourceReq = "select[type==SLC5_64] rusage[pool=10
 config.JobSubmitter.LsfPluginJobGroup = "/groups/tier0/wmagent_testing"
 config.JobSubmitter.LsfPluginBatchOutput = "None"
 config.JobSubmitter.pollInterval = 30
+config.JobSubmitter.maxJobsToCache = 5000
 
 config.RetryManager.section_("PauseAlgo")
 config.RetryManager.PauseAlgo.section_("default")
