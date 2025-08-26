@@ -2,7 +2,7 @@ name: Pipeline for deploy the replay
 
 # GLOBAL CONFIGURATION - CHANGE VALUES HERE ONLY
 env:
-  DEFAULT_SERVER: "vocms0500"
+  DEFAULT_NODE: "vocms0500"
   DEFAULT_CONFIG: "ReplayOfflineConfiguration.py"
   DEFAULT_WMCORE: "2.4.2"
   DEFAULT_T0: "3.5.2"
@@ -12,8 +12,8 @@ env:
   DEFAULT_FORCE_STOP: "No"
   DEFAULT_COMMIT: "5081"
   DEFAULT_STREAMS: "[]"
-  ALLOWED_SERVERS: "vocms047, vocms0500, vocms05011, vocms05012"
-  SERVER_SIZES: "vocms047:Big machine, vocms0500:Big machine, vocms05011:Small machine, vocms05012:Small machine"
+  ALLOWED_NODES: "vocms047, vocms0500, vocms05011, vocms05012"
+  NODE_SIZES: "vocms047:Big machine, vocms0500:Big machine, vocms05011:Small machine, vocms05012:Small machine"
 
 on:
   issue_comment:
@@ -30,7 +30,7 @@ jobs:
         COMMENT="📋 **Deploy Replay - Default Parameters**
         
         **Current Default Values:**
-        - **server:** \`${{ env.DEFAULT_SERVER }}\`
+        - **node:** \`${{ env.DEFAULT_NODE }}\`
         - **config:** \`${{ env.DEFAULT_CONFIG }}\`
         - **wmcore:** \`${{ env.DEFAULT_WMCORE }}\`
         - **t0:** \`${{ env.DEFAULT_T0 }}\`
@@ -41,8 +41,8 @@ jobs:
         - **force_stop:** \`${{ env.DEFAULT_FORCE_STOP }}\`
         - **streams:** \`${{ env.DEFAULT_STREAMS }} # use single quote only \`
         
-        **Allowed Servers:**
-        $(echo "${{ env.ALLOWED_SERVERS }}" | tr ',' '\n' | sed 's/^/        - `/' | sed 's/$/`/')
+        **Allowed Nodes:**
+        $(echo "${{ env.ALLOWED_NODES }}" | tr ',' '\n' | sed 's/^/        - `/' | sed 's/$/`/')
         
         **Usage Examples:**
         
@@ -54,7 +54,7 @@ jobs:
         **Custom deployment:**
         \`\`\`
         /deploy-replay
-        server: $(echo "${{ env.ALLOWED_SERVERS }}" | cut -d',' -f2)
+        node: $(echo "${{ env.ALLOWED_NODES }}" | cut -d',' -f2)
         config: OXYReplayOfflineConfiguration.py
         wmcore: 2.4.2
         t0: 3.5.2
@@ -67,7 +67,7 @@ jobs:
         \`\`\`
         
         **Available Parameters:**
-        - \`server:\` - Target server for deployment
+        - \`node:\` - Target node for deployment
         - \`config:\` - Configuration file name (from PR or master)
         - \`wmcore:\` - WMCore version
         - \`t0:\` - T0 version  
@@ -86,8 +86,8 @@ jobs:
           "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
           -d "$(jq -n --arg body "$COMMENT" '{body: $body}')"
 
-  check-server-status:
-    if: github.event.issue.pull_request && contains(github.event.comment.body, '/check-servers')
+  check-node-status:
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '/check-nodes')
     runs-on: cmst0
     
     steps:
@@ -97,28 +97,28 @@ jobs:
         kinit cmst0@CERN.CH -k -t /home/cmsbld/cmst0.keytab
         echo "Kerberos authentication successful"
 
-    - name: Check all servers status
-      id: check_all_servers
+    - name: Check all nodes status
+      id: check_all_nodes
       run: |
-        echo "=== Checking status of all servers ==="
+        echo "=== Checking status of all nodes ==="
         
 
-        get_server_size() {
-          local server=$1
-          echo "${{ env.SERVER_SIZES }}" | tr ',' '\n' | sed 's/^ *//' | grep "^${server}:" | cut -d':' -f2 | sed 's/^ *//; s/ *$//'
+        get_node_size() {
+          local node=$1
+          echo "${{ env.NODE_SIZES }}" | tr ',' '\n' | sed 's/^ *//' | grep "^${node}:" | cut -d':' -f2 | sed 's/^ *//; s/ *$//'
         }
         
-        EMPTY_SERVERS=""
-        BUSY_SERVERS=""
-        ERROR_SERVERS=""
+        EMPTY_NODES=""
+        BUSY_NODES=""
+        ERROR_NODES=""
         
-        IFS=',' read -ra SERVERS <<< "${{ env.ALLOWED_SERVERS }}"
+        IFS=',' read -ra NODES <<< "${{ env.ALLOWED_NODES }}"
         
-        for server_raw in "${SERVERS[@]}"; do
-          server=$(echo $server_raw | tr -d ' ')
-          echo "Checking server: $server"
+        for node_raw in "${NODES[@]}"; do
+          node=$(echo $node_raw | tr -d ' ')
+          echo "Checking node: $node"
           
-          SERVER_STATUS=$(ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 -K cmst0@${server}.cern.ch bash -s << 'SERVER_CHECK'
+          NODE_STATUS=$(ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 -K cmst0@${node}.cern.ch bash -s << 'NODE_CHECK'
             source env.sh 2>/dev/null || echo "WARNING: env.sh not found"
             
             if command -v condor_q >/dev/null 2>&1; then
@@ -138,89 +138,89 @@ jobs:
             else
               echo "ERROR:condor_not_available"
             fi
-        SERVER_CHECK
+        NODE_CHECK
         2>&1)
           
-          size=$(get_server_size "$server")
+          size=$(get_node_size "$node")
           if [ -n "$size" ]; then
-            server_display="${server} (${size})"
+            node_display="${node} (${size})"
           else
-            server_display="${server}"
+            node_display="${node}"
           fi
           
-          if echo "$SERVER_STATUS" | grep -q "^SUCCESS:"; then
-            JOB_COUNT=$(echo "$SERVER_STATUS" | grep "^SUCCESS:" | cut -d':' -f2)
+          if echo "$NODE_STATUS" | grep -q "^SUCCESS:"; then
+            JOB_COUNT=$(echo "$NODE_STATUS" | grep "^SUCCESS:" | cut -d':' -f2)
             
             if [ "$JOB_COUNT" -eq 0 ]; then
-              EMPTY_SERVERS="${EMPTY_SERVERS}${server_display}|"
+              EMPTY_NODES="${EMPTY_NODES}${node_display}|"
             else
-              BUSY_SERVERS="${BUSY_SERVERS}${server_display}~${JOB_COUNT}|"
+              BUSY_NODES="${BUSY_NODES}${node_display}~${JOB_COUNT}|"
             fi
           else
-            ERROR_SERVERS="${ERROR_SERVERS}${server_display}|"
+            ERROR_NODES="${ERROR_NODES}${node_display}|"
           fi
           
-          echo "Server $server checked"
+          echo "Node $node checked"
         done
         
-        EMPTY_COUNT=$(echo "$EMPTY_SERVERS" | tr -cd '|' | wc -c)
-        BUSY_COUNT=$(echo "$BUSY_SERVERS" | tr -cd '|' | wc -c)
-        ERROR_COUNT=$(echo "$ERROR_SERVERS" | tr -cd '|' | wc -c)
-        TOTAL_SERVERS=${#SERVERS[@]}
+        EMPTY_COUNT=$(echo "$EMPTY_NODES" | tr -cd '|' | wc -c)
+        BUSY_COUNT=$(echo "$BUSY_NODES" | tr -cd '|' | wc -c)
+        ERROR_COUNT=$(echo "$ERROR_NODES" | tr -cd '|' | wc -c)
+        TOTAL_NODES=${#NODES[@]}
         
-        EMPTY_SERVERS="${EMPTY_SERVERS%|}"
-        BUSY_SERVERS="${BUSY_SERVERS%|}"
-        ERROR_SERVERS="${ERROR_SERVERS%|}"
+        EMPTY_NODES="${EMPTY_NODES%|}"
+        BUSY_NODES="${BUSY_NODES%|}"
+        ERROR_NODES="${ERROR_NODES%|}"
         
-        echo "EMPTY_SERVERS=$EMPTY_SERVERS" >> $GITHUB_ENV
-        echo "BUSY_SERVERS=$BUSY_SERVERS" >> $GITHUB_ENV
-        echo "ERROR_SERVERS=$ERROR_SERVERS" >> $GITHUB_ENV
+        echo "EMPTY_NODES=$EMPTY_NODES" >> $GITHUB_ENV
+        echo "BUSY_NODES=$BUSY_NODES" >> $GITHUB_ENV
+        echo "ERROR_NODES=$ERROR_NODES" >> $GITHUB_ENV
         echo "EMPTY_COUNT=$EMPTY_COUNT" >> $GITHUB_ENV
         echo "BUSY_COUNT=$BUSY_COUNT" >> $GITHUB_ENV
         echo "ERROR_COUNT=$ERROR_COUNT" >> $GITHUB_ENV
-        echo "TOTAL_SERVERS=$TOTAL_SERVERS" >> $GITHUB_ENV
+        echo "TOTAL_NODES=$TOTAL_NODES" >> $GITHUB_ENV
 
-    - name: Post server status report
+    - name: Post node status report
       if: always()
       run: |
         
         STATUS_LINES=""
         
-        if [ -n "$EMPTY_SERVERS" ]; then
-          IFS='|' read -ra EMPTY_ARRAY <<< "$EMPTY_SERVERS"
-          for server in "${EMPTY_ARRAY[@]}"; do
-            if [ -n "$server" ]; then
-              STATUS_LINES="${STATUS_LINES}🟢 **${server}** - Empty (0 jobs)
+        if [ -n "$EMPTY_NODES" ]; then
+          IFS='|' read -ra EMPTY_ARRAY <<< "$EMPTY_NODES"
+          for node in "${EMPTY_ARRAY[@]}"; do
+            if [ -n "$node" ]; then
+              STATUS_LINES="${STATUS_LINES}🟢 **${node}** - Empty (0 jobs)
         "
             fi
           done
         fi
         
-        if [ -n "$BUSY_SERVERS" ]; then
-          IFS='|' read -ra BUSY_ARRAY <<< "$BUSY_SERVERS"
-          for server_info in "${BUSY_ARRAY[@]}"; do
-            if [ -n "$server_info" ]; then
-              server=$(echo "$server_info" | cut -d'~' -f1)
-              jobs=$(echo "$server_info" | cut -d'~' -f2)
-              STATUS_LINES="${STATUS_LINES}🔴 **${server}** - ${jobs} jobs running
+        if [ -n "$BUSY_NODES" ]; then
+          IFS='|' read -ra BUSY_ARRAY <<< "$BUSY_NODES"
+          for node_info in "${BUSY_ARRAY[@]}"; do
+            if [ -n "$node_info" ]; then
+              node=$(echo "$node_info" | cut -d'~' -f1)
+              jobs=$(echo "$node_info" | cut -d'~' -f2)
+              STATUS_LINES="${STATUS_LINES}🔴 **${node}** - ${jobs} jobs running
         "
             fi
           done
         fi
         
-        if [ -n "$ERROR_SERVERS" ]; then
-          IFS='|' read -ra ERROR_ARRAY <<< "$ERROR_SERVERS"
-          for server in "${ERROR_ARRAY[@]}"; do
-            if [ -n "$server" ]; then
-              STATUS_LINES="${STATUS_LINES}⚠️ **${server}** - ❌ Connection/Service Error
+        if [ -n "$ERROR_NODES" ]; then
+          IFS='|' read -ra ERROR_ARRAY <<< "$ERROR_NODES"
+          for node in "${ERROR_ARRAY[@]}"; do
+            if [ -n "$node" ]; then
+              STATUS_LINES="${STATUS_LINES}⚠️ **${node}** - ❌ Connection/Service Error
         "
             fi
           done
         fi
         
-        COMMENT="📋 **Server Status Report**
+        COMMENT="📋 **Node Status Report**
 
-        📊 **Summary:** ${EMPTY_COUNT} empty, ${BUSY_COUNT} busy, ${ERROR_COUNT} errors (of ${TOTAL_SERVERS} total)
+        📊 **Summary:** ${EMPTY_COUNT} empty, ${BUSY_COUNT} busy, ${ERROR_COUNT} errors (of ${TOTAL_NODES} total)
 
         **Detailed Status:**
         ${STATUS_LINES}
@@ -246,11 +246,11 @@ jobs:
         comment="${{ github.event.comment.body }}"
         
         # Use global defaults from workflow env
-        replay=$(echo "$comment" | grep -E "^server:" | cut -d' ' -f2- | tr -d '\n\r' | xargs 2>/dev/null || true)
+        replay=$(echo "$comment" | grep -E "^node:" | cut -d' ' -f2- | tr -d '\n\r' | xargs 2>/dev/null || true)
         if [ -z "$replay" ]; then
-          replay="${{ env.DEFAULT_SERVER }}"
+          replay="${{ env.DEFAULT_NODE }}"
         fi
-        echo "Server: $replay"
+        echo "Node: $replay"
         
         patch=$(echo "$comment" | grep -E "^patch:" | cut -d' ' -f2- | tr -d '\n\r' | xargs 2>/dev/null || true)
         if [ -z "$patch" ]; then
@@ -351,7 +351,7 @@ jobs:
         
         **The deployment is in progress. You should receive a response within 5–10 minutes.** ⏳
         
-        [View workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+        [View workflow logs](${{ github.node_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
         
         curl -X POST \
           -H "Authorization: token ${{ github.token }}" \
@@ -360,38 +360,38 @@ jobs:
           "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
           -d "$(jq -n --arg body "$COMMENT" '{body: $body}')"
 
-    - name: Validate server whitelist
+    - name: Validate node whitelist
       id: validate
       run: |
-        IFS=',' read -ra ALLOWED_SERVERS_RAW <<< "${{ env.ALLOWED_SERVERS }}"
-        ALLOWED_SERVERS=()
-        for server in "${ALLOWED_SERVERS_RAW[@]}"; do
-          server=$(echo $server | tr -d ' ')  
-          ALLOWED_SERVERS+=("$server")
+        IFS=',' read -ra ALLOWED_NODES_RAW <<< "${{ env.ALLOWED_NODES }}"
+        ALLOWED_NODES=()
+        for node in "${ALLOWED_NODES_RAW[@]}"; do
+          node=$(echo $node | tr -d ' ')  
+          ALLOWED_NODES+=("$node")
         done
         
-        echo "Checking if server '${REPLAY_OPTION}' is in whitelist..."
-        echo "Allowed servers: ${{ env.ALLOWED_SERVERS }}"
+        echo "Checking if node '${REPLAY_OPTION}' is in whitelist..."
+        echo "Allowed nodes: ${{ env.ALLOWED_NODES }}"
         
-        SERVER_ALLOWED=false
-        for allowed_server in "${ALLOWED_SERVERS[@]}"; do
-          if [ "${REPLAY_OPTION}" = "$allowed_server" ]; then
-            SERVER_ALLOWED=true
+        NODE_ALLOWED=false
+        for allowed_node in "${ALLOWED_NODES[@]}"; do
+          if [ "${REPLAY_OPTION}" = "$allowed_node" ]; then
+            NODE_ALLOWED=true
             break
           fi
         done
         
-        if [ "$SERVER_ALLOWED" = true ]; then
-          echo "✅ Server '${REPLAY_OPTION}' is authorized for deployment"
+        if [ "$NODE_ALLOWED" = true ]; then
+          echo "✅ Node '${REPLAY_OPTION}' is authorized for deployment"
         else
-          echo "❌ ERROR: Server '${REPLAY_OPTION}' is not in the whitelist!"
+          echo "❌ ERROR: Node '${REPLAY_OPTION}' is not in the whitelist!"
           echo ""
-          echo "Allowed servers:"
-          for server in "${ALLOWED_SERVERS[@]}"; do
-            echo "  - $server"
+          echo "Allowed nodes:"
+          for node in "${ALLOWED_NODES[@]}"; do
+            echo "  - $node"
           done
           echo ""
-          echo "Please use one of the approved servers."
+          echo "Please use one of the approved nodes."
           exit 1
         fi
 
@@ -843,9 +843,9 @@ jobs:
 
         
         if [[ "${{ steps.validate.outcome }}" == "failure" ]]; then
-          FAILED_STEP="Server Validation"
-          FAILURE_REASON="Server '${REPLAY_OPTION}' is not in whitelist"
-          FAILURE_DETAILS="Allowed servers: ${{ env.ALLOWED_SERVERS }}"
+          FAILED_STEP="Node Validation"
+          FAILURE_REASON="Node '${REPLAY_OPTION}' is not in whitelist"
+          FAILURE_DETAILS="Allowed nodes: ${{ env.ALLOWED_NODES }}"
 
         
         elif [[ "${{ steps.check_jobs.outcome }}" == "failure" ]]; then
@@ -933,7 +933,7 @@ jobs:
         COMMENT="✅ **Deployment Successful**
         
         **Configuration:**
-        - Server: \`${REPLAY_OPTION}\`
+        - Node: \`${REPLAY_OPTION}\`
         - Config: \`${WGET_URL##*/}\`
         - WMCore: \`${WMCORE_VERSION}\`
         - T0: \`${T0_VERSION}\`
@@ -946,7 +946,7 @@ jobs:
         
         **Deployment completed successfully!** 🎉
         
-        [View workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+        [View workflow logs](${{ github.node_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
         
         curl -X POST \
           -H "Authorization: token ${{ github.token }}" \
@@ -967,7 +967,7 @@ jobs:
         **Details:** ${FAILURE_DETAILS:-Check the workflow logs for more details}
         
         **Configuration Used:**
-        - Server: \`${REPLAY_OPTION:-"Not set"}\`
+        - Node: \`${REPLAY_OPTION:-"Not set"}\`
         - Config: \`${WGET_URL##*/}\`
         - WMCore: \`${WMCORE_VERSION:-"Not set"}\`
         - T0: \`${T0_VERSION:-"Not set"}\`
@@ -978,7 +978,7 @@ jobs:
         ${TROUBLESHOOTING:-• Check the workflow logs for detailed error messages}
         
         **Quick Actions:**
-        - [View detailed logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+        - [View detailed logs](${{ github.node_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
         - Use \`/info\` for valid parameters and examples
         - Try again with corrected parameters"
         
