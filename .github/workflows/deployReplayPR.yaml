@@ -25,6 +25,12 @@ jobs:
     runs-on: cmst0
     
     steps:
+    - name: Authenticate with Kerberos
+      id: kerberos
+      run: |
+        kinit cmst0@CERN.CH -k -t /home/cmsbld/cmst0.keytab
+        echo "Kerberos authentication successful"
+        
     - name: Post default parameters comment
       run: |
         get_node_size() {
