@@ -30,7 +30,7 @@ jobs:
       run: |
         kinit cmst0@CERN.CH -k -t /home/cmsbld/cmst0.keytab
         echo "Kerberos authentication successful"
-        
+
     - name: Post default parameters comment
       run: |
         get_node_size() {
@@ -102,7 +102,7 @@ jobs:
         - **force_stop:** \`${{ env.DEFAULT_FORCE_STOP }}\`
         - **streams:** \`${{ env.DEFAULT_STREAMS }} # use single quote only \`
         
-        **Available Nodes (Real-time Status):**
+        **Available Nodes:**
         ${NODE_STATUS_LINES}
 
         **Usage Examples:**
