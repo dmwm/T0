@@ -66,9 +66,9 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #Any run under maxRunPreviousEra will take the corresponding acquisition era that is not default
 #Any run over maxRunPreviousEra will take the default era
 
-maxRunPreviousEra = 9999999
+#maxRunPreviousEra = 9999999
 acquisitionEra = {
-    'default' : 'Run2025E',
+    'default' : 'Run2025F',
     #'maxRun' : {maxRunPreviousEra : 'NeNeRun2025'}
 }
 setAcquisitionEra(tier0Config, acquisitionEra)
@@ -90,10 +90,10 @@ setBackfill(tier0Config, None)
 #maxRunPreviousBulkData = 388621
 bulkData = { 
 	'default' : "data", 
-	'acqEra' : {'Run2025D' : "data",
-                'pORun2025': "data",
-                'OORun2025': "hidata",
-                'NeNeRun2025': "hidata"}
+	#'acqEra' : {'Run2025D' : "data",
+    #            'pORun2025': "data",
+    #            'OORun2025': "hidata",
+    #            'NeNeRun2025': "hidata"}
 }
 setBulkDataType(tier0Config, bulkData)
 setProcessingSite(tier0Config, processingSite)
@@ -131,7 +131,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_0_13_patch1",
+    'default': "CMSSW_15_0_13_patch2",
     #'acqEra': {'Run2024F': "CMSSW_14_0_11"},
     #'maxRun': {maxRunPreviousConfig: "CMSSW_15_0_6"}
 }
@@ -284,7 +284,7 @@ addDataset(tier0Config, "Default",
            timePerEvent=5,
            sizePerEvent=1500,
            maxMemoryperCore=2000,
-           dataset_lifetime=3*30*24*3600,#lifetime for container rules. Default 3 months
+           dataset_lifetime=15*24*3600,#lifetime for container rules. Default 2 weeks
            scenario=ppScenario)
 
 #############################
@@ -573,6 +573,8 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
+               tape_node="T1_DE_KIT_MSS",
+               disk_node="T1_DE_KIT_Disk",
                dqm_sequences=["@common"],
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
@@ -748,8 +750,8 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               tape_node="T1_US_FNAL_MSS",  # JetHT was in "T1_UK_RAL_MSS" , MET was in "T1_DE_KIT_MSS"
-               disk_node="T1_US_FNAL_Disk", # JetHT was in "T1_UK_RAL_Disk", MET was in "T1_DE_KIT_Disk"
+               tape_node="T1_FR_CCIN2P3_MSS",  # JetHT was in "T1_UK_RAL_MSS" , MET was in "T1_DE_KIT_MSS"
+               disk_node="T1_FR_CCIN2P3_Disk", # JetHT was in "T1_UK_RAL_Disk", MET was in "T1_DE_KIT_Disk"
                alca_producers=["TkAlJetHT", "HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
                physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor", "EXOMONOPOLE", "EXODisplacedJet"],
@@ -796,6 +798,8 @@ for dataset in DATASETS:
                do_reco=True,
                write_reco=False,
                write_dqm=True,
+               tape_node='T1_DE_KIT_MSS',
+               disk_node='T1_DE_KIT_Disk', 
                alca_producers=["TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu",
                                "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
                                "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
@@ -811,8 +815,8 @@ for dataset in DATASETS:
                do_reco=True,
                write_reco=False,
                write_dqm=True,
-               tape_node="T1_US_FNAL_MSS",
-               disk_node="T1_US_FNAL_Disk",
+               tape_node="T1_DE_KIT_MSS",
+               disk_node="T1_DE_KIT_Disk",
                alca_producers=["TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu",
                                "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
                                "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
@@ -872,14 +876,28 @@ for dataset in DATASETS:
                physics_skims=["EXONoBPTXSkim", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["EGamma0", "EGamma1", "EGamma2", "EGamma3"]
+DATASETS = ["EGamma0", "EGamma1", "EGamma2"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               tape_node="T1_US_FNAL_MSS",
-               disk_node="T1_US_FNAL_Disk",
+               tape_node="T1_IT_CNAF_MSS",
+               disk_node="T1_IT_CNAF_Disk",
+               alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym",
+                               "HcalCalIsoTrkProducerFilter", "EcalESAlign"],
+               dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
+               physics_skims=["ZElectron", "WElectron", "EGMJME", "EXOMONOPOLE", "EXODisappTrk", "IsoPhotonEB", "LogError", "LogErrorMonitor"],
+               scenario=ppScenario)
+
+DATASETS = ["EGamma3"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               tape_node="T1_FR_CCIN2P3_MSS",
+               disk_node="T1_FR_CCIN2P3_Disk",
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym",
                                "HcalCalIsoTrkProducerFilter", "EcalESAlign"],
                dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
@@ -892,6 +910,8 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
+               tape_node="T1_IT_CNAF_MSS",
+               disk_node="T1_IT_CNAF_Disk",
                dqm_sequences=["@common"],
                physics_skims=["EXODisappTrk", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
@@ -1505,7 +1525,8 @@ for dataset in DATASETS:
                reco_delay=defaultRecoTimeout,
                dqm_sequences=["@common", "@hltScouting"],
                write_reco=False, write_aod=True, write_miniaod=True, write_dqm=True,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T1_DE_KIT_MSS",
+               disk_node="T1_DE_KIT_Disk",
                nano_flavours=['@PHYS', '@L1', '@ScoutMonitor'],
                scenario=ppScenario)
 
