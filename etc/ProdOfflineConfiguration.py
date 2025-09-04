@@ -66,7 +66,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #Any run under maxRunPreviousEra will take the corresponding acquisition era that is not default
 #Any run over maxRunPreviousEra will take the default era
 
-maxRunPreviousEra = 9999999
+#maxRunPreviousEra = 9999999
 acquisitionEra = {
     'default' : 'Run2025F',
     #'maxRun' : {maxRunPreviousEra : 'NeNeRun2025'}
@@ -90,10 +90,10 @@ setBackfill(tier0Config, None)
 #maxRunPreviousBulkData = 388621
 bulkData = { 
 	'default' : "data", 
-	'acqEra' : {'Run2025D' : "data",
-                'pORun2025': "data",
-                'OORun2025': "hidata",
-                'NeNeRun2025': "hidata"}
+	#'acqEra' : {'Run2025D' : "data",
+    #            'pORun2025': "data",
+    #            'OORun2025': "hidata",
+    #            'NeNeRun2025': "hidata"}
 }
 setBulkDataType(tier0Config, bulkData)
 setProcessingSite(tier0Config, processingSite)
