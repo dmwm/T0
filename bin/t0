@@ -3,6 +3,7 @@
 
 from WMCore.Configuration import loadConfigurationFile
 from T0.RunConfig.RunConfigAPI import getAcquisitionEra
+import socket
 import sys
 import getopt
 import traceback
@@ -69,22 +70,12 @@ def updateT0 (version):
     os.system('manage execute-agent wmcoreD --restart --components Tier0Feeder')
     os.system('echo "Done"')
 
-def updateWMCore ():
-    """
-    _updateWMCore_
-    Updates the T0 version
-    """
-    return
-    print("Updating WMCore")
-    os.system('pip uninstall -y wmagent')
-    os.system('pip install wmagent')
-
 def resetCouch ():
     """
     _resetCouch_
     Cleans couchdb relevant directories and starts a new container
     """
-    os.system('bash /data/tier0/00_pypi_reset_couch.sh')
+    os.system('bash /data/tier0/reset_couch.sh')
 
 def wipeT0ast (userInput='n'):
     """
@@ -96,19 +87,7 @@ def wipeT0ast (userInput='n'):
     else:
         os.system('echo "Not wiping T0AST"')
 
-def tweakConfig (teamname):
-    """
-    _tweakConfig_
-    Modifies config.py file according to type of agent: replay or prod
-    """
-    if teamname == 'Tier0Replay':
-        os.system('bash /data/tier0/00_pypi_tweak_replay_config.sh')
-    elif teamname == 'Tier0Production':
-        os.system('bash /data/tier0/00_pypi_tweak_prod_config.sh')
-    else:
-        os.system('echo "Something is not right with the TEAM provided: {}"'.format(teamname))
-
-def clearDeployment (userInput='n'):
+def clearReplayDeployment (userInput='n'):
     """
     _clearDeployment_
     Avoid re-deploying from scratch when unnecessary
@@ -125,16 +104,15 @@ def clearDeployment (userInput='n'):
     os.system('rm -rf $WMA_CONFIG_DIR/.init*')
     os.system('rm -rf $WMA_INSTALL_DIR/*')
     os.system('rm -rf /data/tier0/admin/Specs/*')
-    init()
-    tweakConfig(teamname)
     os.system('echo "Done. Agent is ready to start"')
+    init()
 
 def init ():
     """
     _init_
     Runs the init.sh script
     """
-    os.system('bash $WMA_DEPLOY_DIR/init.sh')
+    os.system('bash /data/tier0/initialize.sh -R')
 
 def addProcessingSite(site=None):
     """
@@ -144,23 +122,23 @@ def addProcessingSite(site=None):
     addSiteCmd = f"manage execute-agent wmagent-resource-control --pending-slots=10000 --running-slots=10000 --plugin=SimpleCondorPlugin --add-one-site {site}"
     os.system(addSiteCmd)
 
-def modifyCodeFile(file=None):
-    """
-    Simplifies the modification of the agent code
-    Goes to the site-packages directory and looks for file to modify, if given
-    """
-    deployDir = os.getenv('WMA_DEPLOY_DIR')
-    packagePath = os.path.join(deployDir, 'lib/python3.9/site-packages')
-    os.chdir(packagePath)
 
-    findFile = 'find . -name {}'.format(file)
-    with os.popen(findFile) as stream:
-        filePath = stream.read().strip()
-    filePath = os.path.join(packagePath, filePath[2:])
-    os.system('echo "Now modifying {}"'.format(filePath))
-    os.system('sleep 3')
-    os.system('vim {}'.format(filePath))
-    os.system('echo "Done"')
+def setAgentName(agentName):
+    """
+    Sets the agentName parameter of the Tier0Feeder, if such parameter does not exist
+    """
+    configPath = '/data/tier0/WMAgent.venv3/srv/wmagent/current/config/config.py'
+    sys.path.append('/data/tier0/WMAgent.venv3/srv/wmagent/current/config')
+    import config
+    if config.config.Tier0Feeder.agentName and config.config.Tier0Feeder.agentName is not None:
+        os.system('echo "This agent already has an assigned name and this must not be changed"')
+        return
+    else:
+        os.system('echo "Your agent is now a {}"'.format(agentName))
+        with open(configPath, "a") as f:
+            f.write(f'\nconfig.Tier0Feeder.agentName = "{agentName}"\n')
+
+    return
 
 def saveTarball(originTarballPath, destinationTarballPath):
     os.system('mkdir -p {}'.format(destinationTarballPath))
@@ -213,7 +191,7 @@ def main(argv=None):
     try:
         try:
             opts, args = getopt.getopt(argv[1:], "h",
-            ["help", "update-t0=", "start-agent", "stop-agent", "clear-deployment", "resource-control=", "edit-code=", "get-tarball=", "save-tarball=", "get-and-save-tarball="])
+            ["help", "update-t0=", "start-agent", "stop-agent", "reset-couch", "clear-replay-deployment", "resource-control=", "get-tarball=", "save-tarball=", "get-and-save-tarball=", "set-agent-name="])
 
         except getopt.error as msg:
             raise Usage(msg)
@@ -231,28 +209,22 @@ def main(argv=None):
 
             if option == "--stop-agent":
                 stop()
+            
+            if option == "--reset-couch":
+                resetCouch()
 
-            if option == "--clear-deployment":
-                os.system('echo "This will clear T0AST database"')
-                os.system('sleep 3')
-                os.system('echo "This will remove /data/tier0/admin/Specs"')
-                os.system('sleep 3')
-                os.system('echo "This will reset couchdb container"')
-                os.system('sleep 3')
-                os.system('echo "Are you sure you wish to proceed? (Y/n)"')
-                userInput = input()
-                clearDeployment(userInput=userInput)
+            if option == "--clear-replay-deployment":
+                node = socket.gethostname()
+                if node in ['vocms047.cern.ch', 'vocms0500.cern.ch', 'vocms05011.cern.ch', 'vocms05012.cern.ch']:
+                    os.system('echo "This will clear previous deployment. Are you sure you wish to proceed? (Y/n)"')
+                    userInput = input()
+                    clearReplayDeployment(userInput=userInput)
+                else:
+                    os.system('echo "This method is not supported for the current hostname"')
 
             if option == "--resource-control":
                 site = value
                 addProcessingSite(site)
-
-            if option == "--edit-code":
-                if len(value) > 0:
-                    modifyCodeFile(value)
-                else:
-                    os.system('echo "Please provide a file to modify"')
-                    os.system('echo "t0 --edit-code={file}"')
 
             if option == "--get-tarball":
                 job = value
@@ -275,6 +247,11 @@ def main(argv=None):
                 tier0Config = loadConfigurationFile('/data/tier0/admin/ProdOfflineConfiguration.py')
                 destTarballPath = setDestinationPath(tier0Config, pfnTarball)
                 saveTarball(pfnTarball, destTarballPath)
+
+            if option == "--set-agent-name":
+                agentName = value
+                print('setting agent name to "{}"'.format(agentName))
+                setAgentName(agentName=agentName)
 
 
     except Usage as err:
