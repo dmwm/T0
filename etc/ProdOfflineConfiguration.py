@@ -284,7 +284,7 @@ addDataset(tier0Config, "Default",
            timePerEvent=5,
            sizePerEvent=1500,
            maxMemoryperCore=2000,
-           dataset_lifetime=15*24*3600,#lifetime for container rules. Default 2 weeks
+           dataset_lifetime=3*30*24*3600, #lifetime for container rules. Default 3 months
            scenario=ppScenario)
 
 #############################
