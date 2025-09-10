@@ -109,12 +109,12 @@ jobs:
         
         **Basic deployment (all defaults):**
         \`\`\`
-        $$$replayPlease
+        \$\$\$replayPlease
         \`\`\`
         
         **Custom deployment:**
         \`\`\`
-        $$$replayPlease
+        \$\$\$replayPlease
         node: $(echo "${{ env.ALLOWED_NODES }}" | cut -d',' -f2)
         config: OXYReplayOfflineConfiguration.py
         wmcore: 2.4.2
