@@ -41,7 +41,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
 # 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
 
-setInjectRuns(tier0Config, [393274]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
+setInjectRuns(tier0Config, [396421]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
 
 # Use this in order to limit the number of lumisections to process
 #setInjectLimit(tier0Config, 10)
@@ -147,7 +147,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_0_13_patch2"
+    'default': "CMSSW_15_0_14"
 }
 
 # Configure ScramArch
@@ -559,7 +559,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common"],
+               dqm_sequences=["@common", "@miniAODDQMBTagOnly"],
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -725,7 +725,7 @@ for dataset in DATASETS:
                do_reco=True,
                write_dqm=True,
                alca_producers=["TkAlJetHT", "HcalCalNoise"],
-               dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
+               dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal", "@miniAODDQMBTagOnly"],
                physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor", "EXOMONOPOLE", "EXODisplacedJet"],
                timePerEvent=5.7,  # copied from JetHT - should be checked
                sizePerEvent=2250, # copied from JetHT - should be checked
@@ -750,7 +750,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common"],
+               dqm_sequences=["@common", "@miniAODDQMBTagOnly"],
                physics_skims=["TopMuEG", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -764,7 +764,7 @@ for dataset in DATASETS:
                                "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
                                "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
                                "TkAlZMuMu", "TkAlDiMuonAndVertex"],
-               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
+               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet", "@miniAODDQMBTagOnly"],
                physics_skims=["MUOJME", "ZMu", "EXODisappTrk", "EXOCSCCluster", "EXODisappMuon", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
