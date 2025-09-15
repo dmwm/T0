@@ -69,7 +69,7 @@ jobs:
 
 
   show-defaults:
-    if: github.event.issue.pull_request && contains(github.event.comment.body, '$$$mayIReplay')
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '$$$mayIReplay') && needs.check-auth.outputs.authorized == 'true'
     needs: check-auth
     runs-on: cmst0
     
@@ -197,7 +197,7 @@ jobs:
           -d "$(jq -n --arg body "$COMMENT" '{body: $body}')"
 
   check-node-status:
-    if: github.event.issue.pull_request && contains(github.event.comment.body, '$$$checkNodes')
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '$$$checkNodes') && needs.check-auth.outputs.authorized == 'true'
     needs: check-auth
     runs-on: cmst0
     
@@ -347,7 +347,7 @@ jobs:
 
 
   deploy-the-replay:
-    if: github.event.issue.pull_request && contains(github.event.comment.body, '$$$replayPlease')
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '$$$replayPlease') && needs.check-auth.outputs.authorized == 'true'
     needs: check-auth
     runs-on: cmst0
     
