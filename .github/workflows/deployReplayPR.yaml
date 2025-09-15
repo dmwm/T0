@@ -41,14 +41,12 @@ jobs:
         echo "User: $USER"
         echo "Teams: ${{ env.AUTHORIZED_TEAMS }}"
         
-        # Check membership in any of the authorized teams
         IFS=',' read -ra TEAMS <<< "${{ env.AUTHORIZED_TEAMS }}"
         
         for team_raw in "${TEAMS[@]}"; do
           team=$(echo $team_raw | tr -d ' ')
           echo "Checking team: $team"
           
-          # Capture both status code and response body
           RESPONSE=$(curl -s -w "%{http_code}" -o /tmp/team_response.json \
             -H "Authorization: token ${{ github.token }}" \
             "${{ github.api_url }}/orgs/${{ env.ORGANIZATION }}/teams/$team/memberships/$USER")
