@@ -15,13 +15,62 @@ env:
   ALLOWED_NODES: "vocms047, vocms0500, vocms05011, vocms05012"
   NODE_SIZES: "vocms047:Big machine, vocms0500:Big machine, vocms05011:Small machine, vocms05012:Small machine"
 
+  AUTHORIZED_TEAMS: "Tier0-Leaders"
+  ORGANIZATION: "dmwm"
+
 on:
   issue_comment:
     types: [created]
 
+
+
 jobs:
+  check-auth:
+    if: github.event.issue.pull_request && (contains(github.event.comment.body, '$$$mayIReplay') || contains(github.event.comment.body, '$$$checkNodes') || contains(github.event.comment.body, '$$$replayPlease'))
+    runs-on: ubuntu-latest
+    outputs:
+      authorized: ${{ steps.auth.outputs.authorized }}
+    
+    steps:
+    - id: auth
+      run: |
+        USER="${{ github.event.comment.user.login }}"
+        AUTHORIZED=false
+        
+        # Check membership in any of the authorized teams
+        IFS=',' read -ra TEAMS <<< "${{ env.AUTHORIZED_TEAMS }}"
+        
+        for team_raw in "${TEAMS[@]}"; do
+          team=$(echo $team_raw | tr -d ' ')
+          echo "Checking team: $team"
+          
+          RESPONSE=$(curl -s -w "%{http_code}" -o /dev/null \
+            -H "Authorization: token ${{ github.token }}" \
+            "${{ github.api_url }}/orgs/${{ env.ORGANIZATION }}/teams/$team/memberships/$USER")
+          
+          if [ "$RESPONSE" = "200" ]; then
+            echo "User $USER found in team: $team"
+            AUTHORIZED=true
+            break
+          fi
+        done
+        
+        if [ "$AUTHORIZED" = true ]; then
+          echo "authorized=true" >> $GITHUB_OUTPUT
+        else
+          echo "authorized=false" >> $GITHUB_OUTPUT
+          curl -X POST \
+            -H "Authorization: token ${{ github.token }}" \
+            -H "Content-Type: application/json" \
+            "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
+            -d "{\"body\":\"Access denied. Contact admin to join one of these teams: ${{ env.AUTHORIZED_TEAMS }}\"}"
+        fi
+
+
+
   show-defaults:
     if: github.event.issue.pull_request && contains(github.event.comment.body, '$$$mayIReplay')
+    needs: check-auth
     runs-on: cmst0
     
     steps:
@@ -149,6 +198,7 @@ jobs:
 
   check-node-status:
     if: github.event.issue.pull_request && contains(github.event.comment.body, '$$$checkNodes')
+    needs: check-auth
     runs-on: cmst0
     
     steps:
@@ -298,6 +348,7 @@ jobs:
 
   deploy-the-replay:
     if: github.event.issue.pull_request && contains(github.event.comment.body, '$$$replayPlease')
+    needs: check-auth
     runs-on: cmst0
     
     steps:
