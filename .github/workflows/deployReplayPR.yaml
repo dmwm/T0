@@ -37,23 +37,41 @@ jobs:
         USER="${{ github.event.comment.user.login }}"
         AUTHORIZED=false
         
-        # Check membership in any of the authorized teams
+        echo "=== Auth Debug ==="
+        echo "User: $USER"
+        echo "Teams: ${{ env.AUTHORIZED_TEAMS }}"
+        
         IFS=',' read -ra TEAMS <<< "${{ env.AUTHORIZED_TEAMS }}"
         
         for team_raw in "${TEAMS[@]}"; do
           team=$(echo $team_raw | tr -d ' ')
           echo "Checking team: $team"
           
-          RESPONSE=$(curl -s -w "%{http_code}" -o /dev/null \
+          RESPONSE=$(curl -s -w "%{http_code}" -o /tmp/team_response.json \
             -H "Authorization: token ${{ github.token }}" \
             "${{ github.api_url }}/orgs/${{ env.ORGANIZATION }}/teams/$team/memberships/$USER")
+          
+          echo "  HTTP Status: $RESPONSE"
+          
+          if [ -f /tmp/team_response.json ]; then
+            echo "  Response: $(cat /tmp/team_response.json)"
+          fi
           
           if [ "$RESPONSE" = "200" ]; then
             echo "User $USER found in team: $team"
             AUTHORIZED=true
             break
+          elif [ "$RESPONSE" = "404" ]; then
+            echo "  User not in team or no permission to check"
+          elif [ "$RESPONSE" = "403" ]; then
+            echo "  Token lacks permission to check team membership"
+          else
+            echo "  Unexpected response code: $RESPONSE"
           fi
         done
+        
+        echo "Final result: AUTHORIZED=$AUTHORIZED"
+        echo "=============="
         
         if [ "$AUTHORIZED" = true ]; then
           echo "authorized=true" >> $GITHUB_OUTPUT
@@ -65,7 +83,6 @@ jobs:
             "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
             -d "{\"body\":\"Access denied. Contact admin to join one of these teams: ${{ env.AUTHORIZED_TEAMS }}\"}"
         fi
-
 
 
   show-defaults:
