@@ -14,7 +14,7 @@ env:
   DEFAULT_STREAMS: "[]"
   ALLOWED_NODES: "vocms047, vocms0500, vocms05011, vocms05012"
   NODE_SIZES: "vocms047:Big machine, vocms0500:Big machine, vocms05011:Small machine, vocms05012:Small machine"
-  AUTHORIZED_USERS: "viphavafibo, Viphava280444"
+  AUTHORIZED_USERS: "jeyserma, LinaresToine, Viphava280444"
 
 
 on:
