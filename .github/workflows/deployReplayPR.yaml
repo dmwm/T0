@@ -14,6 +14,7 @@ env:
   DEFAULT_STREAMS: "[]"
   ALLOWED_NODES: "vocms047, vocms0500, vocms05011, vocms05012"
   NODE_SIZES: "vocms047:Big machine, vocms0500:Big machine, vocms05011:Small machine, vocms05012:Small machine"
+  AUTHORIZED_USERS: "viphavafibo"
 
 
 on:
@@ -23,6 +24,7 @@ on:
 
 
 jobs:
+
   check-auth:
     if: github.event.issue.pull_request && (contains(github.event.comment.body, '$$$mayIReplay') || contains(github.event.comment.body, '$$$checkNodes') || contains(github.event.comment.body, '$$$replayPlease'))
     runs-on: ubuntu-latest
@@ -36,44 +38,90 @@ jobs:
         
         echo "=== Auth Debug ==="
         echo "User: $USER"
-        echo "Checking repository permissions..."
+        echo "Authorized users: ${{ env.AUTHORIZED_USERS }}"
+        echo "Checking user authorization..."
         
-        RESPONSE=$(curl -s -w "%{http_code}" -o /tmp/repo_perm.json \
-          -H "Authorization: token ${{ github.token }}" \
-          "${{ github.api_url }}/repos/${{ github.repository }}/collaborators/$USER/permission")
+        # Check if user is in the authorized list
+        IFS=',' read -ra AUTHORIZED_ARRAY <<< "${{ env.AUTHORIZED_USERS }}"
+        USER_AUTHORIZED=false
         
-        echo "HTTP Status: $RESPONSE"
-        
-        if [ "$RESPONSE" = "200" ]; then
-          PERMISSION=$(cat /tmp/repo_perm.json | jq -r '.permission // "none"')
-          echo "User permission level: $PERMISSION"
+        for auth_user in "${AUTHORIZED_ARRAY[@]}"; do
+          auth_user=$(echo $auth_user | tr -d ' ')  # Remove spaces
+          echo "Checking against: $auth_user"
           
-          if [[ "$PERMISSION" == "admin" || "$PERMISSION" == "write" ]]; then
-            echo "User has $PERMISSION access - AUTHORIZED"
-            echo "authorized=true" >> $GITHUB_OUTPUT
-          else
-            echo "User has $PERMISSION access - NOT AUTHORIZED"
-            echo "authorized=false" >> $GITHUB_OUTPUT
-            curl -X POST \
-              -H "Authorization: token ${{ github.token }}" \
-              -H "Content-Type: application/json" \
-              "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
-              -d '{"body":"❌ Access denied. You need write or admin access to this repository."}'
+          if [ "$USER" = "$auth_user" ]; then
+            USER_AUTHORIZED=true
+            echo "User $USER found in authorized list"
+            break
           fi
+        done
+        
+        if [ "$USER_AUTHORIZED" = true ]; then
+          echo "User $USER - AUTHORIZED"
+          echo "authorized=true" >> $GITHUB_OUTPUT
         else
-          echo "Could not check permissions - HTTP $RESPONSE"
+          echo "User $USER - NOT AUTHORIZED"
           echo "authorized=false" >> $GITHUB_OUTPUT
-          if [ -f /tmp/repo_perm.json ]; then
-            echo "Error response: $(cat /tmp/repo_perm.json)"
-          fi
           curl -X POST \
             -H "Authorization: token ${{ github.token }}" \
             -H "Content-Type: application/json" \
             "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
-            -d '{"body":"❌ Access denied. Could not verify repository permissions."}'
+            -d '{"body":"❌ Access denied. Contact admin to be added to authorized users list."}'
         fi
         
         echo "=============="
+
+  # check-auth:
+  #   if: github.event.issue.pull_request && (contains(github.event.comment.body, '$$$mayIReplay') || contains(github.event.comment.body, '$$$checkNodes') || contains(github.event.comment.body, '$$$replayPlease'))
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     authorized: ${{ steps.auth.outputs.authorized }}
+    
+  #   steps:
+  #   - id: auth
+  #     run: |
+  #       USER="${{ github.event.comment.user.login }}"
+        
+  #       echo "=== Auth Debug ==="
+  #       echo "User: $USER"
+  #       echo "Checking repository permissions..."
+        
+  #       RESPONSE=$(curl -s -w "%{http_code}" -o /tmp/repo_perm.json \
+  #         -H "Authorization: token ${{ github.token }}" \
+  #         "${{ github.api_url }}/repos/${{ github.repository }}/collaborators/$USER/permission")
+        
+  #       echo "HTTP Status: $RESPONSE"
+        
+  #       if [ "$RESPONSE" = "200" ]; then
+  #         PERMISSION=$(cat /tmp/repo_perm.json | jq -r '.permission // "none"')
+  #         echo "User permission level: $PERMISSION"
+          
+  #         if [[ "$PERMISSION" == "admin" || "$PERMISSION" == "write" ]]; then
+  #           echo "User has $PERMISSION access - AUTHORIZED"
+  #           echo "authorized=true" >> $GITHUB_OUTPUT
+  #         else
+  #           echo "User has $PERMISSION access - NOT AUTHORIZED"
+  #           echo "authorized=false" >> $GITHUB_OUTPUT
+  #           curl -X POST \
+  #             -H "Authorization: token ${{ github.token }}" \
+  #             -H "Content-Type: application/json" \
+  #             "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
+  #             -d '{"body":"❌ Access denied. You need write or admin access to this repository."}'
+  #         fi
+  #       else
+  #         echo "Could not check permissions - HTTP $RESPONSE"
+  #         echo "authorized=false" >> $GITHUB_OUTPUT
+  #         if [ -f /tmp/repo_perm.json ]; then
+  #           echo "Error response: $(cat /tmp/repo_perm.json)"
+  #         fi
+  #         curl -X POST \
+  #           -H "Authorization: token ${{ github.token }}" \
+  #           -H "Content-Type: application/json" \
+  #           "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
+  #           -d '{"body":"❌ Access denied. Could not verify repository permissions."}'
+  #       fi
+        
+  #       echo "=============="
 
 
   show-defaults:
