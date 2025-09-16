@@ -15,8 +15,6 @@ env:
   ALLOWED_NODES: "vocms047, vocms0500, vocms05011, vocms05012"
   NODE_SIZES: "vocms047:Big machine, vocms0500:Big machine, vocms05011:Small machine, vocms05012:Small machine"
 
-  AUTHORIZED_TEAMS: "Tier0-Leaders"
-  ORGANIZATION: "dmwm"
 
 on:
   issue_comment:
@@ -35,54 +33,47 @@ jobs:
     - id: auth
       run: |
         USER="${{ github.event.comment.user.login }}"
-        AUTHORIZED=false
         
         echo "=== Auth Debug ==="
         echo "User: $USER"
-        echo "Teams: ${{ env.AUTHORIZED_TEAMS }}"
+        echo "Checking repository permissions..."
         
-        IFS=',' read -ra TEAMS <<< "${{ env.AUTHORIZED_TEAMS }}"
+        RESPONSE=$(curl -s -w "%{http_code}" -o /tmp/repo_perm.json \
+          -H "Authorization: token ${{ github.token }}" \
+          "${{ github.api_url }}/repos/${{ github.repository }}/collaborators/$USER/permission")
         
-        for team_raw in "${TEAMS[@]}"; do
-          team=$(echo $team_raw | tr -d ' ')
-          echo "Checking team: $team"
+        echo "HTTP Status: $RESPONSE"
+        
+        if [ "$RESPONSE" = "200" ]; then
+          PERMISSION=$(cat /tmp/repo_perm.json | jq -r '.permission // "none"')
+          echo "User permission level: $PERMISSION"
           
-          RESPONSE=$(curl -s -w "%{http_code}" -o /tmp/team_response.json \
-            -H "Authorization: token ${{ github.token }}" \
-            "${{ github.api_url }}/orgs/${{ env.ORGANIZATION }}/teams/$team/memberships/$USER")
-          
-          echo "  HTTP Status: $RESPONSE"
-          
-          if [ -f /tmp/team_response.json ]; then
-            echo "  Response: $(cat /tmp/team_response.json)"
-          fi
-          
-          if [ "$RESPONSE" = "200" ]; then
-            echo "User $USER found in team: $team"
-            AUTHORIZED=true
-            break
-          elif [ "$RESPONSE" = "404" ]; then
-            echo "  User not in team or no permission to check"
-          elif [ "$RESPONSE" = "403" ]; then
-            echo "  Token lacks permission to check team membership"
+          if [[ "$PERMISSION" == "admin" || "$PERMISSION" == "write" ]]; then
+            echo "User has $PERMISSION access - AUTHORIZED"
+            echo "authorized=true" >> $GITHUB_OUTPUT
           else
-            echo "  Unexpected response code: $RESPONSE"
+            echo "User has $PERMISSION access - NOT AUTHORIZED"
+            echo "authorized=false" >> $GITHUB_OUTPUT
+            curl -X POST \
+              -H "Authorization: token ${{ github.token }}" \
+              -H "Content-Type: application/json" \
+              "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
+              -d '{"body":"❌ Access denied. You need write or admin access to this repository."}'
           fi
-        done
-        
-        echo "Final result: AUTHORIZED=$AUTHORIZED"
-        echo "=============="
-        
-        if [ "$AUTHORIZED" = true ]; then
-          echo "authorized=true" >> $GITHUB_OUTPUT
         else
+          echo "Could not check permissions - HTTP $RESPONSE"
           echo "authorized=false" >> $GITHUB_OUTPUT
+          if [ -f /tmp/repo_perm.json ]; then
+            echo "Error response: $(cat /tmp/repo_perm.json)"
+          fi
           curl -X POST \
             -H "Authorization: token ${{ github.token }}" \
             -H "Content-Type: application/json" \
             "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
-            -d "{\"body\":\"Access denied. Contact admin to join one of these teams: ${{ env.AUTHORIZED_TEAMS }}\"}"
+            -d '{"body":"❌ Access denied. Could not verify repository permissions."}'
         fi
+        
+        echo "=============="
 
 
   show-defaults:
