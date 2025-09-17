@@ -131,7 +131,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_0_13_patch2",
+    'default': "CMSSW_15_0_14",
     #'acqEra': {'Run2024F': "CMSSW_14_0_11"},
     #'maxRun': {maxRunPreviousConfig: "CMSSW_15_0_6"}
 }
@@ -575,7 +575,7 @@ for dataset in DATASETS:
                write_dqm=True,
                tape_node="T1_DE_KIT_MSS",
                disk_node="T1_DE_KIT_Disk",
-               dqm_sequences=["@common"],
+               dqm_sequences=["@common", "@miniAODDQMBTagOnly"],
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
@@ -753,7 +753,7 @@ for dataset in DATASETS:
                tape_node="T1_FR_CCIN2P3_MSS",  # JetHT was in "T1_UK_RAL_MSS" , MET was in "T1_DE_KIT_MSS"
                disk_node="T1_FR_CCIN2P3_Disk", # JetHT was in "T1_UK_RAL_Disk", MET was in "T1_DE_KIT_Disk"
                alca_producers=["TkAlJetHT", "HcalCalNoise"],
-               dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal"],
+               dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal", "@miniAODDQMBTagOnly"],
                physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor", "EXOMONOPOLE", "EXODisplacedJet"],
                timePerEvent=5.7,  # copied from JetHT - should be checked
                sizePerEvent=2250, # copied from JetHT - should be checked
@@ -785,7 +785,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               dqm_sequences=["@common"],
+               dqm_sequences=["@common", "@miniAODDQMBTagOnly"],
                tape_node="T1_US_FNAL_MSS",
                disk_node="T1_US_FNAL_Disk",
                physics_skims=["TopMuEG", "LogError", "LogErrorMonitor"],
@@ -804,7 +804,7 @@ for dataset in DATASETS:
                                "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
                                "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
                                "TkAlZMuMu", "TkAlDiMuonAndVertex"],
-               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
+               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet", "@miniAODDQMBTagOnly"],
                physics_skims=["MUOJME", "ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
                scenario=ppScenario)
 
@@ -821,7 +821,7 @@ for dataset in DATASETS:
                                "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
                                "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
                                "TkAlZMuMu", "TkAlDiMuonAndVertex"],
-               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
+               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet", "@miniAODDQMBTagOnly"],
                physics_skims=["MUOJME", "ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
                scenario=ppScenario)
 
