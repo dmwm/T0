@@ -26,7 +26,7 @@ on:
 jobs:
 
   check-auth:
-    if: github.event.issue.pull_request && (contains(github.event.comment.body, 'may I replay?') || contains(github.event.comment.body, 'verify nodes) || contains(github.event.comment.body, 'run autoreplay '))
+    if: github.event.issue.pull_request && (contains(github.event.comment.body, 'may I replay?') || contains(github.event.comment.body, 'verify nodes') || contains(github.event.comment.body, 'run autoreplay'))
     runs-on: ubuntu-latest
     outputs:
       authorized: ${{ steps.auth.outputs.authorized }}
@@ -72,7 +72,7 @@ jobs:
         echo "=============="
 
   # check-auth:
-  #   if: github.event.issue.pull_request && (contains(github.event.comment.body, 'may I replay?') || contains(github.event.comment.body, 'verify nodes) || contains(github.event.comment.body, 'run autoreplay '))
+  #   if: github.event.issue.pull_request && (contains(github.event.comment.body, 'may I replay?') || contains(github.event.comment.body, 'verify nodes') || contains(github.event.comment.body, 'run autoreplay'))
   #   runs-on: ubuntu-latest
   #   outputs:
   #     authorized: ${{ steps.auth.outputs.authorized }}
@@ -253,7 +253,7 @@ jobs:
           -d "$(jq -n --arg body "$COMMENT" '{body: $body}')"
 
   check-node-status:
-    if: github.event.issue.pull_request && contains(github.event.comment.body, 'verify nodes) && needs.check-auth.outputs.authorized == 'true'
+    if: github.event.issue.pull_request && contains(github.event.comment.body, 'verify nodes') && needs.check-auth.outputs.authorized == 'true'
     needs: check-auth
     runs-on: cmst0
     
@@ -403,7 +403,7 @@ jobs:
 
 
   deploy-the-replay:
-    if: github.event.issue.pull_request && contains(github.event.comment.body, 'run autoreplay ') && needs.check-auth.outputs.authorized == 'true'
+    if: github.event.issue.pull_request && contains(github.event.comment.body, 'run autoreplay') && needs.check-auth.outputs.authorized == 'true'
     needs: check-auth
     runs-on: cmst0
     
