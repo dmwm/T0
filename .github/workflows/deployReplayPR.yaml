@@ -200,7 +200,6 @@ jobs:
         - **config:** \`${{ env.DEFAULT_CONFIG }}\`
         - **wmcore:** \`${{ env.DEFAULT_WMCORE }}\`
         - **t0:** \`${{ env.DEFAULT_T0 }}\`
-        - **python:** \`${{ env.DEFAULT_PYTHON }}\`
         - **patch:** \`${{ env.DEFAULT_PATCH }}\`
         - **patch_repo:** \`${{ env.DEFAULT_PATCH_REPO }}\`
         - **commit:** \`${{ env.DEFAULT_COMMIT }}\`
@@ -214,17 +213,16 @@ jobs:
         
         **Basic deployment (all defaults):**
         \`\`\`
-        \$\$\$replayPlease
+        run autoreplay
         \`\`\`
         
         **Custom deployment:**
         \`\`\`
-        \$\$\$replayPlease
+        run autoreplay
         node: $(echo "${{ env.ALLOWED_NODES }}" | cut -d',' -f2)
         config: OXYReplayOfflineConfiguration.py
         wmcore: 2.4.2
         t0: 3.5.2
-        python: 3.12
         patch: Patch
         patch_repo: dmwm/T0
         commit: 5081,5090
@@ -237,7 +235,6 @@ jobs:
         - \`config:\` Configuration file name (from PR or master)
         - \`wmcore:\` WMCore version
         - \`t0:\` T0 version  
-        - \`python:\` Python version
         - \`patch:\` Use \"Patch\" to enable patching
         - \`patch_repo:\` GitHub repository for patches (format: owner/repo)
         - \`commit:\` Comma-separated PR numbers for patches
