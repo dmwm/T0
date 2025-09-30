@@ -172,7 +172,6 @@ alcarawProcVersion = {
 
 defaultProcVersionReco = {
     'default': 2
-   
 }
 
 expressProcVersion = {
