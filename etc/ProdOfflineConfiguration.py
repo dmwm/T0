@@ -167,15 +167,18 @@ hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2024"
 
 # Defaults for processing version
 alcarawProcVersion = {
-    'default': 1
+    'default': 2,
+    'maxRun': {397610: 1}
 }
 
 defaultProcVersionReco = {
-    'default': 1
+    'default': 2,
+     'maxRun': {397610: 1}
 }
 
 expressProcVersion = {
-    'default': 1
+    'default': 2,
+     'maxRun': {397610: 1}
 }
 
 # Defaults for GlobalTag
