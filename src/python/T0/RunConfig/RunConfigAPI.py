@@ -676,6 +676,7 @@ def configureRunStream(tier0Config, run, stream, specDirectory, dqmUploadProxy):
             specArguments['SizePerEvent'] = streamConfig.Express.SizePerEvent
 
             specArguments['Memory'] = streamConfig.Express.MaxMemoryperCore
+            specArguments["HarvestingMemory"] = streamConfig.Express.HarvestingMemory
             if streamConfig.Express.Multicore:
                 specArguments['Multicore'] = streamConfig.Express.Multicore
                 specArguments['Memory'] += (streamConfig.Express.Multicore - 1) * streamConfig.Express.MaxMemoryperCore

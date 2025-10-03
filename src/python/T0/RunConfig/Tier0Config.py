@@ -1103,6 +1103,7 @@ def addExpressConfig(config, streamName, **options):
 
     streamConfig.Express.BlockCloseDelay = options.get("blockCloseDelay", 3600)
 
+    streamConfig.Express.HarvestingMemory = options.get("harvestingMemory", 2300)
     if hasattr(streamConfig.Express, "MaxMemoryperCore"):
         streamConfig.Express.MaxMemoryperCore = options.get("maxMemoryperCore", streamConfig.Express.MaxMemoryperCore)
     else:

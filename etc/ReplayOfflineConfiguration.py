@@ -323,6 +323,7 @@ addExpressConfig(tier0Config, "Express",
                  timePerEvent=4,
                  sizePerEvent=1700,
                  maxMemoryperCore=2000,
+                 harvestingMemory=3000,
                  dataset_lifetime=7*24*3600,#lifetime for container rules. Default 14 days
                  versionOverride=expressVersionOverride)
 
