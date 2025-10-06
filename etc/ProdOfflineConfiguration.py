@@ -68,7 +68,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 
 #maxRunPreviousEra = 9999999
 acquisitionEra = {
-    'default' : 'Run2025F',
+    'default' : 'Run2025G',
     #'maxRun' : {maxRunPreviousEra : 'NeNeRun2025'}
 }
 setAcquisitionEra(tier0Config, acquisitionEra)
@@ -131,7 +131,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_0_14",
+    'default': "CMSSW_15_0_15",
     #'acqEra': {'Run2024F': "CMSSW_14_0_11"},
     #'maxRun': {maxRunPreviousConfig: "CMSSW_15_0_6"}
 }
@@ -167,18 +167,15 @@ hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2024"
 
 # Defaults for processing version
 alcarawProcVersion = {
-    'default': 2,
-    'maxRun': {397610: 1}
+    'default': 1
 }
 
 defaultProcVersionReco = {
-    'default': 2,
-     'maxRun': {397610: 1}
+    'default': 1
 }
 
 expressProcVersion = {
-    'default': 2,
-     'maxRun': {397610: 1}
+    'default': 1
 }
 
 # Defaults for GlobalTag
@@ -754,8 +751,8 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               tape_node="T1_FR_CCIN2P3_MSS",  # JetHT was in "T1_UK_RAL_MSS" , MET was in "T1_DE_KIT_MSS"
-               disk_node="T1_FR_CCIN2P3_Disk", # JetHT was in "T1_UK_RAL_Disk", MET was in "T1_DE_KIT_Disk"
+               tape_node="T1_UK_RAL_MSS",  # JetHT was in "T1_UK_RAL_MSS" , MET was in "T1_DE_KIT_MSS"
+               disk_node="T1_UK_RAL_Disk", # JetHT was in "T1_UK_RAL_Disk", MET was in "T1_DE_KIT_Disk"
                alca_producers=["TkAlJetHT", "HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal", "@miniAODDQMBTagOnly"],
                physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor", "EXOMONOPOLE", "EXODisplacedJet"],
@@ -880,7 +877,7 @@ for dataset in DATASETS:
                physics_skims=["EXONoBPTXSkim", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["EGamma0", "EGamma1", "EGamma2"]
+DATASETS = ["EGamma0", "EGamma1"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -893,6 +890,21 @@ for dataset in DATASETS:
                dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
                physics_skims=["ZElectron", "WElectron", "EGMJME", "EXOMONOPOLE", "EXODisappTrk", "IsoPhotonEB", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
+    
+
+DATASETS = ["EGamma2"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               tape_node="T1_US_FNAL_MSS", # EGamma2 was in T1_IT_CNAF_MSS
+               disk_node="T1_US_FNAL_Disk", # EGamma2 was in T1_IT_CNAF_Disk
+               alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym",
+                               "HcalCalIsoTrkProducerFilter", "EcalESAlign"],
+               dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
+               physics_skims=["ZElectron", "WElectron", "EGMJME", "EXOMONOPOLE", "EXODisappTrk", "IsoPhotonEB", "LogError", "LogErrorMonitor"],
+               scenario=ppScenario)
 
 DATASETS = ["EGamma3"]
 
@@ -900,8 +912,8 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               tape_node="T1_FR_CCIN2P3_MSS",
-               disk_node="T1_FR_CCIN2P3_Disk",
+               tape_node="T1_UK_RAL_MSS", # EGamma3 was in T1_FR_CCIN2P3_MSS
+               disk_node="T1_UK_RAL_Disk", # EGamma3 was in T1_FR_CCIN2P3_Disk
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym",
                                "HcalCalIsoTrkProducerFilter", "EcalESAlign"],
                dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
