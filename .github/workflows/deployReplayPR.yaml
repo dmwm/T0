@@ -4,8 +4,8 @@ name: Pipeline for deploy the replay
 env:
   DEFAULT_NODE: "vocms0500"
   DEFAULT_CONFIG: "ReplayOfflineConfiguration.py"
-  DEFAULT_WMCORE: "2.4.2"
-  DEFAULT_T0: "3.5.2"
+  DEFAULT_WMCORE: "2.4.3"
+  DEFAULT_T0: "3.5.3"
   DEFAULT_PYTHON: "3.12"
   DEFAULT_PATCH: "No Patch"
   DEFAULT_PATCH_REPO: "dmwm/T0"
@@ -15,6 +15,8 @@ env:
   ALLOWED_NODES: "vocms047, vocms0500, vocms05011, vocms05012"
   NODE_SIZES: "vocms047:Big machine, vocms0500:Big machine, vocms05011:Small machine, vocms05012:Small machine"
   AUTHORIZED_USERS: "jeyserma, LinaresToine, Viphava280444"
+  DEFAULT_WMAGENT_PATCH: "No Patch"
+  DEFAULT_WMAGENT_COMMIT: "5081"
 
 
 on:
@@ -203,6 +205,8 @@ jobs:
         - **patch:** \`${{ env.DEFAULT_PATCH }}\`
         - **patch_repo:** \`${{ env.DEFAULT_PATCH_REPO }}\`
         - **commit:** \`${{ env.DEFAULT_COMMIT }}\`
+        - **wmagent_patch:** \`${{ env.DEFAULT_WMAGENT_PATCH }}\`
+        - **wmagent_commit:** \`${{ env.DEFAULT_WMAGENT_COMMIT }}\`
         - **force_stop:** \`${{ env.DEFAULT_FORCE_STOP }}\`
         - **streams:** \`${{ env.DEFAULT_STREAMS }} # use single quote only \`
         
@@ -226,6 +230,8 @@ jobs:
         patch: Patch
         patch_repo: dmwm/T0
         commit: 5081,5090
+        wmagent_patch: Patch
+        wmagent_commit: 1234,5678
         force_stop: No
         streams: ['ParkingDoubleMuonLowMass0', 'ParkingDoubleMuonLowMass1', 'ParkingDoubleMuonLowMass3', 'ParkingSingleMuon1', 'ParkingSingleMuon0', 'ParkingSingleMuon2', 'ParkingSingleMuon3', 'ParkingSingleMuon4', 'ParkingSingleMuon5', 'ParkingSingleMuon6']
         \`\`\`
@@ -238,6 +244,8 @@ jobs:
         - \`patch:\` Use \"Patch\" to enable patching
         - \`patch_repo:\` GitHub repository for patches (format: owner/repo)
         - \`commit:\` Comma-separated PR numbers for patches
+        - \`wmagent_patch:\` Use \"Patch\" to enable WMAgent patching
+        - \`wmagent_commit:\` Comma-separated PR numbers for WMAgent patches
         - \`force_stop:\` Use \"Yes\" to force stop running jobs
         - \`streams:\` Select specific stream"
 
@@ -490,6 +498,20 @@ jobs:
         else
           url="https://raw.githubusercontent.com/dmwm/T0/refs/heads/master/etc/ReplayOfflineConfiguration.py"
         fi
+
+        wmagent_patch=$(echo "$comment" | grep -E "^wmagent_patch:" | cut -d' ' -f2- | tr -d '\n\r' | xargs 2>/dev/null || true)
+        if [ -z "$wmagent_patch" ]; then
+          wmagent_patch="${{ env.DEFAULT_WMAGENT_PATCH }}"
+        fi
+        echo "WMAgent Patch: $wmagent_patch"
+
+        echo "WMAgent Commit: $wmagent_commit"
+        
+        wmagent_commit=$(echo "$comment" | grep -E "^wmagent_commit:" | cut -d' ' -f2- | tr -d '\n\r' | sed 's/, */,/g' | xargs 2>/dev/null || true)
+        if [ -z "$wmagent_commit" ]; then
+          wmagent_commit="${{ env.DEFAULT_WMAGENT_COMMIT }}"
+        fi
+        echo "WMAgent Commit: $wmagent_commit"
         
         echo "REPLAY_OPTION=$replay" >> $GITHUB_ENV
         echo "PATCH_OPTION=$patch" >> $GITHUB_ENV
@@ -501,6 +523,9 @@ jobs:
         echo "FORCE_STOP=$force_stop" >> $GITHUB_ENV
         echo "STREAMS_CONFIG=$streams_raw" >> $GITHUB_ENV
         echo "WGET_URL=$url" >> $GITHUB_ENV
+        echo "WMAGENT_PATCH_OPTION=$wmagent_patch" >> $GITHUB_ENV
+        echo "WMAGENT_PATCH_URL=$wmagent_commit" >> $GITHUB_ENV
+
 
     - name: Authenticate with Kerberos
       id: kerberos
@@ -696,43 +721,72 @@ jobs:
       run: |
         echo "=== Step 3: Patch application ==="
         
+        ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch \
+          PATCH_OPTION="${PATCH_OPTION}" \
+          PATCH_URL="${PATCH_URL}" \
+          PATCH_REPO="${PATCH_REPO}" \
+          WMAGENT_PATCH_OPTION="${WMAGENT_PATCH_OPTION}" \
+          WMAGENT_PATCH_URL="${WMAGENT_PATCH_URL}" \
+          PYTHON_VERSION="${PYTHON_VERSION}" bash -s << 'STEP3'
+        source env.sh
+        
+        echo "About to execute patch logic..."
+        echo "Initializing patch file..."
+        echo -n > /data/tier0/ReplayPipeline/00_pypi_patches.sh
+        
         if [ "${PATCH_OPTION}" = "Patch" ]; then
-          echo "Patches requested, applying..."
-          
-          ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch \
-            PATCH_URL="${PATCH_URL}" PATCH_REPO="${PATCH_REPO}" PYTHON_VERSION="${PYTHON_VERSION}" bash -s << 'STEP3'
-          source env.sh
-          
-          echo "About to execute patch logic..."
-          echo "Applying patches: ${PATCH_URL}"
+          echo "T0 patches requested, applying..."
+          echo "Applying T0 patches: ${PATCH_URL}"
 
-          echo -n > /data/tier0/ReplayPipeline/00_pypi_patches.sh
-          
           IFS=',' read -ra PATCHES <<< "${PATCH_URL}"
           for patch_num in "${PATCHES[@]}"; do
               patch_num=$(echo $patch_num | tr -d ' ')
-              echo "Applying patch PR #$patch_num"
+              echo "Applying T0 patch PR #$patch_num from ${PATCH_REPO}"
 
               echo "curl -L \"https://patch-diff.githubusercontent.com/raw/${PATCH_REPO}/pull/${patch_num}.patch\" | patch -f -d \"/data/tier0/WMAgent.venv3/lib/python${PYTHON_VERSION}/site-packages/\" -p 3" >> /data/tier0/ReplayPipeline/00_pypi_patches.sh
 
               if [ $? -eq 0 ]; then
-                  echo "Patch $patch_num applied successfully"
+                  echo "T0 patch $patch_num applied successfully"
               else
-                  echo "Warning: Patch $patch_num may have failed"
+                  echo "Warning: T0 patch $patch_num may have failed"
               fi
           done
           
-          echo "All patches processed"
-        STEP3
+          echo "All T0 patches processed"
         else
-        
-          echo "No patches requested, skipping..."
-          ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch bash -s << 'STEP3_NO_PATCH'
-          echo "# No patches requested" > /data/tier0/ReplayPipeline/00_pypi_patches.sh
-          echo "Created empty patch file"
-        STEP3_NO_PATCH
+          echo "No T0 patches requested, skipping..."
         fi
 
+        if [ "${WMAGENT_PATCH_OPTION}" = "Patch" ]; then
+          echo "WMAgent patches requested, applying..."
+          echo "Applying WMAgent patches: ${WMAGENT_PATCH_URL}"
+
+          IFS=',' read -ra WMAGENT_PATCHES <<< "${WMAGENT_PATCH_URL}"
+          for patch_num in "${WMAGENT_PATCHES[@]}"; do
+              patch_num=$(echo $patch_num | tr -d ' ')
+
+
+              echo "bash /data/tier0/WMAgent.venv3/bin/patchComponent.sh ${patch_num}" >> /data/tier0/ReplayPipeline/00_pypi_patches.sh
+
+              if [ $? -eq 0 ]; then
+                  echo "WMAgent patch $patch_num applied successfully"
+              else
+                  echo "Warning: WMAgent patch $patch_num may have failed"
+              fi
+          done
+          
+          echo "All WMAgent patches processed"
+        else
+          echo "No WMAgent patches requested, skipping..."
+        fi
+
+        if [ "${PATCH_OPTION}" != "Patch" ] && [ "${WMAGENT_PATCH_OPTION}" != "Patch" ]; then
+          echo "# No patches requested" > /data/tier0/ReplayPipeline/00_pypi_patches.sh
+          echo "Created empty patch file"
+        fi
+        
+        echo "Patch application completed"
+        STEP3
 
     - name: Step 4 - Deploy WMAgent
       id: deploy_agent
