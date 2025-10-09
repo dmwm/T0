@@ -780,8 +780,7 @@ jobs:
               patch_num=$(echo $patch_num | tr -d ' ')
               echo "Applying patch PR #$patch_num"
 
-              echo "bash /data/tier0/WMAgent.venv3/bin/patchComponent.sh ${patch_num}" >> /data/tier0/ReplayPipeline/00_pypi_wmagent_patches.sh
-
+              echo "bash /data/tier0/WMAgent.venv3/bin/patchComponent.sh ${patch_num} < /dev/null" >> /data/tier0/ReplayPipeline/00_pypi_wmagent_patches.sh
               if [ $? -eq 0 ]; then
                   echo "Patch $patch_num applied successfully"
               else
@@ -805,41 +804,24 @@ jobs:
       run: |
         echo "=== Step 4: Deploying WMAgent ==="
         
-        ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch \
-          "export WMCORE_VERSION='${WMCORE_VERSION}' && \
-           export T0_VERSION='${T0_VERSION}' && \
-           export PYTHON_VERSION='${PYTHON_VERSION}' && \
-           source env.sh && \
-           cd /data/tier0/ReplayPipeline && \
-           export WMAGENT_TAG_VAR=\"\${WMCORE_VERSION}\" && \
-           export TIER0_VERSION_VAR=\"\${T0_VERSION}\" && \
-           export PYTHON_VERSION_VAR=\"\${PYTHON_VERSION}\" && \
-           printf 'Y\n' | bash /data/tier0/ReplayPipeline/00_pypi_deploy_replay.sh < /dev/null"
+        ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch << STEP4
+        source env.sh
+        cd /data/tier0/ReplayPipeline
+        
+        export WMAGENT_TAG_VAR="${WMCORE_VERSION}"
+        export TIER0_VERSION_VAR="${T0_VERSION}"
+        export PYTHON_VERSION_VAR="${PYTHON_VERSION}"
+        
+        echo "Environment variables set:"
+        echo "  WMAGENT_TAG_VAR=${WMCORE_VERSION}"
+        echo "  TIER0_VERSION_VAR=${T0_VERSION}"
+        echo "  PYTHON_VERSION_VAR=${PYTHON_VERSION}"
+        
+        echo "Starting deployment..."
+        echo "Y" | source /data/tier0/ReplayPipeline/00_pypi_deploy_replay.sh
         
         echo "Deployment completed"
-    # - name: Step 4 - Deploy WMAgent
-    #   id: deploy_agent
-    #   run: |
-    #     echo "=== Step 4: Deploying WMAgent ==="
-        
-    #     ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch << STEP4
-    #     source env.sh
-    #     cd /data/tier0/ReplayPipeline
-        
-    #     export WMAGENT_TAG_VAR="${WMCORE_VERSION}"
-    #     export TIER0_VERSION_VAR="${T0_VERSION}"
-    #     export PYTHON_VERSION_VAR="${PYTHON_VERSION}"
-        
-    #     echo "Environment variables set:"
-    #     echo "  WMAGENT_TAG_VAR=${WMCORE_VERSION}"
-    #     echo "  TIER0_VERSION_VAR=${T0_VERSION}"
-    #     echo "  PYTHON_VERSION_VAR=${PYTHON_VERSION}"
-        
-    #     echo "Starting deployment..."
-    #     echo "Y" | source /data/tier0/ReplayPipeline/00_pypi_deploy_replay.sh
-        
-    #     echo "Deployment completed"
-    #     STEP4
+        STEP4
 
 
     - name: Step 5 - Start agent and finalize
