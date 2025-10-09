@@ -722,7 +722,7 @@ jobs:
         echo "=== Step 3: Patch application ==="
         
         ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch \
-          PATCH_URL="${PATCH_URL}" PATCH_REPO="${PATCH_REPO}" PYTHON_VERSION="${PYTHON_VERSION}" WMAGENT_PATCH_OPTION="${WMAGENT_PATCH_OPTION}" WMAGENT_PATCH_URL="${WMAGENT_PATCH_URL}" bash -s << 'STEP3'
+          PATCH_URL="${PATCH_URL}" PATCH_REPO="${PATCH_REPO}" PYTHON_VERSION="${PYTHON_VERSION}" WMAGENT_PATCH_OPTION="${WMAGENT_PATCH_OPTION}" WMAGENT_PATCH_URL="${WMAGENT_PATCH_URL}" PATCH_OPTION="${PATCH_OPTION}" bash -s << 'STEP3'
         source env.sh
         echo "About to execute patch logic..."
         echo "Applying patches: ${PATCH_URL}"
