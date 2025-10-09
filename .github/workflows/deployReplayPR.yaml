@@ -721,19 +721,17 @@ jobs:
       run: |
         echo "=== Step 3: Patch application ==="
         
+        echo "Patches requested, applying..."
+          
         ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch \
-          PATCH_OPTION="${PATCH_OPTION}" \
-          PATCH_URL="${PATCH_URL}" \
-          PATCH_REPO="${PATCH_REPO}" \
-          WMAGENT_PATCH_OPTION="${WMAGENT_PATCH_OPTION}" \
-          WMAGENT_PATCH_URL="${WMAGENT_PATCH_URL}" \
-          PYTHON_VERSION="${PYTHON_VERSION}" bash -s << 'STEP3'
+          PATCH_URL="${PATCH_URL}" PATCH_REPO="${PATCH_REPO}" PYTHON_VERSION="${PYTHON_VERSION}" WMAGENT_PATCH_OPTION="${WMAGENT_PATCH_OPTION}" WMAGENT_PATCH_URL="${WMAGENT_PATCH_URL}"bash -s << 'STEP3'
         source env.sh
-        
+          
         echo "About to execute patch logic..."
-        echo "Initializing patch file..."
+        echo "Applying patches: ${PATCH_URL}"
+
         echo -n > /data/tier0/ReplayPipeline/00_pypi_patches.sh
-        
+          
         if [ "${PATCH_OPTION}" = "Patch" ]; then
           echo "T0 patches requested, applying..."
           echo "Applying T0 patches: ${PATCH_URL}"
@@ -765,9 +763,7 @@ jobs:
           for patch_num in "${WMAGENT_PATCHES[@]}"; do
               patch_num=$(echo $patch_num | tr -d ' ')
 
-
               echo "bash /data/tier0/WMAgent.venv3/bin/patchComponent.sh ${patch_num}" >> /data/tier0/ReplayPipeline/00_pypi_patches.sh
-
               if [ $? -eq 0 ]; then
                   echo "WMAgent patch $patch_num applied successfully"
               else
@@ -780,6 +776,7 @@ jobs:
           echo "No WMAgent patches requested, skipping..."
         fi
 
+        # If no patches were applied, create empty patch file
         if [ "${PATCH_OPTION}" != "Patch" ] && [ "${WMAGENT_PATCH_OPTION}" != "Patch" ]; then
           echo "# No patches requested" > /data/tier0/ReplayPipeline/00_pypi_patches.sh
           echo "Created empty patch file"
@@ -787,6 +784,8 @@ jobs:
         
         echo "Patch application completed"
         STEP3
+
+ 
 
     - name: Step 4 - Deploy WMAgent
       id: deploy_agent
