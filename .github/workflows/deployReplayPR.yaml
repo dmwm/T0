@@ -800,30 +800,43 @@ jobs:
         STEP3.5_NO_PATCH
         fi
 
-
     - name: Step 4 - Deploy WMAgent
       id: deploy_agent
       run: |
         echo "=== Step 4: Deploying WMAgent ==="
         
-        ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch << STEP4
-        source env.sh
-        cd /data/tier0/ReplayPipeline
-        
-        export WMAGENT_TAG_VAR="${WMCORE_VERSION}"
-        export TIER0_VERSION_VAR="${T0_VERSION}"
-        export PYTHON_VERSION_VAR="${PYTHON_VERSION}"
-        
-        echo "Environment variables set:"
-        echo "  WMAGENT_TAG_VAR=${WMCORE_VERSION}"
-        echo "  TIER0_VERSION_VAR=${T0_VERSION}"
-        echo "  PYTHON_VERSION_VAR=${PYTHON_VERSION}"
-        
-        echo "Starting deployment..."
-        echo "Y" | source /data/tier0/ReplayPipeline/00_pypi_deploy_replay.sh
+        echo "Y" | ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch \
+          "source env.sh && \
+           cd /data/tier0/ReplayPipeline && \
+           export WMAGENT_TAG_VAR='${WMCORE_VERSION}' && \
+           export TIER0_VERSION_VAR='${T0_VERSION}' && \
+           export PYTHON_VERSION_VAR='${PYTHON_VERSION}' && \
+           bash /data/tier0/ReplayPipeline/00_pypi_deploy_replay.sh"
         
         echo "Deployment completed"
-        STEP4
+    # - name: Step 4 - Deploy WMAgent
+    #   id: deploy_agent
+    #   run: |
+    #     echo "=== Step 4: Deploying WMAgent ==="
+        
+    #     ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch << STEP4
+    #     source env.sh
+    #     cd /data/tier0/ReplayPipeline
+        
+    #     export WMAGENT_TAG_VAR="${WMCORE_VERSION}"
+    #     export TIER0_VERSION_VAR="${T0_VERSION}"
+    #     export PYTHON_VERSION_VAR="${PYTHON_VERSION}"
+        
+    #     echo "Environment variables set:"
+    #     echo "  WMAGENT_TAG_VAR=${WMCORE_VERSION}"
+    #     echo "  TIER0_VERSION_VAR=${T0_VERSION}"
+    #     echo "  PYTHON_VERSION_VAR=${PYTHON_VERSION}"
+        
+    #     echo "Starting deployment..."
+    #     echo "Y" | source /data/tier0/ReplayPipeline/00_pypi_deploy_replay.sh
+        
+    #     echo "Deployment completed"
+    #     STEP4
 
 
     - name: Step 5 - Start agent and finalize
