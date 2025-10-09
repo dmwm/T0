@@ -721,17 +721,12 @@ jobs:
       run: |
         echo "=== Step 3: Patch application ==="
         
-        echo "Patches requested, applying..."
-          
         ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch \
           PATCH_URL="${PATCH_URL}" PATCH_REPO="${PATCH_REPO}" PYTHON_VERSION="${PYTHON_VERSION}" WMAGENT_PATCH_OPTION="${WMAGENT_PATCH_OPTION}" WMAGENT_PATCH_URL="${WMAGENT_PATCH_URL}"bash -s << 'STEP3'
         source env.sh
-          
         echo "About to execute patch logic..."
         echo "Applying patches: ${PATCH_URL}"
-
-        echo -n > /data/tier0/ReplayPipeline/00_pypi_patches.sh
-          
+        echo -n > /data/tier0/ReplayPipeline/00_pypi_patches.sh 
         if [ "${PATCH_OPTION}" = "Patch" ]; then
           echo "T0 patches requested, applying..."
           echo "Applying T0 patches: ${PATCH_URL}"
@@ -776,7 +771,6 @@ jobs:
           echo "No WMAgent patches requested, skipping..."
         fi
 
-        # If no patches were applied, create empty patch file
         if [ "${PATCH_OPTION}" != "Patch" ] && [ "${WMAGENT_PATCH_OPTION}" != "Patch" ]; then
           echo "# No patches requested" > /data/tier0/ReplayPipeline/00_pypi_patches.sh
           echo "Created empty patch file"
@@ -784,8 +778,6 @@ jobs:
         
         echo "Patch application completed"
         STEP3
-
- 
 
     - name: Step 4 - Deploy WMAgent
       id: deploy_agent
