@@ -766,7 +766,7 @@ jobs:
           echo "Patches requested, applying..."
           
           ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch \
-            WMAGENT_PATCH_URL="${WMAGENT_PATCH_URL}" bash -s << 'STEP3.5'
+            WMAGENT_PATCH_URL="${WMAGENT_PATCH_URL}" PYTHON_VERSION="${PYTHON_VERSION}" bash -s << 'STEP3.5'
           source env.sh
           
           echo "About to execute patch logic..."
