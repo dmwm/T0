@@ -761,46 +761,7 @@ jobs:
     
         fi
 
-    - name: Step 3.5 - Apply wmaget patches (if requested)
-      id: apply_wmagent_patches
-      run: |
-        echo "=== Step 3.5: Patch application ==="
-        
-        if [ "${WMAGENT_PATCH_OPTION}" = "Patch" ]; then
-          echo "Patches requested, applying..."
-          
-          ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch \
-            WMAGENT_PATCH_URL="${WMAGENT_PATCH_URL}" PYTHON_VERSION="${PYTHON_VERSION}" bash -s << 'STEP3.5'
-          source env.sh
-          
-          echo "About to execute patch logic..."
-          echo "Applying patches: ${PATCH_URL}"
-          echo "cd" >> /data/tier0/ReplayPipeline/00_pypi_patches.sh
-          echo "source env.sh" >> /data/tier0/ReplayPipeline/00_pypi_patches.sh
 
-          
-          
-          IFS=',' read -ra PATCHES <<< "${WMAGENT_PATCH_URL}"
-          for patch_num in "${PATCHES[@]}"; do
-              patch_num=$(echo $patch_num | tr -d ' ')
-              echo "Applying patch PR #$patch_num"
-
-              echo "bash \$WMA_DEPLOY_DIR/bin/patchComponent.sh ${patch_num}" >> /data/tier0/ReplayPipeline/00_pypi_patches.sh
-              if [ $? -eq 0 ]; then
-                  echo "Patch $patch_num applied successfully"
-              else
-                  echo "Warning: Patch $patch_num may have failed"
-              fi
-          done
-          
-          echo "All patches processed"
-        STEP3.5
-        else
-        
-          echo "No patches requested, skipping..."
-
-
-        fi
 
     - name: Step 4 - Deploy WMAgent
       id: deploy_agent
@@ -825,7 +786,47 @@ jobs:
         
         echo "Deployment completed"
         STEP4
+        
+    - name: Step 4.5 - Apply wmaget patches (if requested)
+      id: apply_wmagent_patches
+      run: |
+        echo "=== Step 4.5: Patch application ==="
+        
+        if [ "${WMAGENT_PATCH_OPTION}" = "Patch" ]; then
+          echo "Patches requested, applying..."
+          
+          ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch \
+            WMAGENT_PATCH_URL="${WMAGENT_PATCH_URL}" PYTHON_VERSION="${PYTHON_VERSION}" bash -s << 'STEP4.5'
+          source env.sh
+          
+          echo "About to execute patch logic..."
+          echo "Applying patches: ${PATCH_URL}"
+          cd
+          echo source env.sh
 
+          
+          
+          IFS=',' read -ra PATCHES <<< "${WMAGENT_PATCH_URL}"
+          for patch_num in "${PATCHES[@]}"; do
+              patch_num=$(echo $patch_num | tr -d ' ')
+              echo "Applying patch PR #$patch_num"
+
+              bash \$WMA_DEPLOY_DIR/bin/patchComponent.sh ${patch_num}
+              if [ $? -eq 0 ]; then
+                  echo "Patch $patch_num applied successfully"
+              else
+                  echo "Warning: Patch $patch_num may have failed"
+              fi
+          done
+          
+          echo "All patches processed"
+        STEP4.5
+        else
+        
+          echo "No patches requested, skipping..."
+
+
+        fi
 
     - name: Step 5 - Start agent and finalize
       id: start_agent
