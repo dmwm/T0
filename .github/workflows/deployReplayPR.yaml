@@ -787,46 +787,76 @@ jobs:
         echo "Deployment completed"
         STEP4
         
-    - name: Step 4.5 - Apply wmaget patches (if requested)
+    # - name: Step 4.5 - Apply wmaget patches (if requested)
+    #   id: apply_wmagent_patches
+    #   run: |
+    #     echo "=== Step 4.5: Patch application ==="
+        
+    #     if [ "${WMAGENT_PATCH_OPTION}" = "Patch" ]; then
+    #       echo "Patches requested, applying..."
+          
+
+          
+    #       echo "About to execute patch logic..."
+    #       echo "Applying patches: ${PATCH_URL}"
+
+    
+          
+    #       IFS=',' read -ra PATCHES <<< "${WMAGENT_PATCH_URL}"
+    #       for patch_num in "${PATCHES[@]}"; do
+    #           patch_num=$(echo $patch_num | tr -d ' ')
+    #           echo "Applying patch PR #$patch_num"
+    #           ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch \
+    #         WMAGENT_PATCH_URL="${WMAGENT_PATCH_URL}" PATCH_NUM="${patch_num}" bash -s << 'STEP4.5'
+    #           source env.sh
+
+    #           $WMA_DEPLOY_DIR/bin/patchComponent.sh ${PATCH_NUM} < /dev/null
+    #           if [ $? -eq 0 ]; then
+    #               echo "Patch $patch_num applied successfully"
+    #           else
+    #               echo "Warning: Patch $patch_num may have failed"
+    #           fi
+    #     STEP4.5
+    #       done
+        
+          
+    #       echo "All patches processed"
+       
+    #     else
+        
+    #       echo "No patches requested, skipping..."
+
+
+    #     fi
+
+    - name: Step 4.5 - Apply wmagent patches (if requested)
       id: apply_wmagent_patches
       run: |
         echo "=== Step 4.5: Patch application ==="
         
         if [ "${WMAGENT_PATCH_OPTION}" = "Patch" ]; then
           echo "Patches requested, applying..."
-          
-
-          
-          echo "About to execute patch logic..."
-          echo "Applying patches: ${PATCH_URL}"
-
+          echo "Applying patches: ${WMAGENT_PATCH_URL}"
     
-          
           IFS=',' read -ra PATCHES <<< "${WMAGENT_PATCH_URL}"
           for patch_num in "${PATCHES[@]}"; do
-              patch_num=$(echo $patch_num | tr -d ' ')
-              echo "Applying patch PR #$patch_num"
-              ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch \
-            WMAGENT_PATCH_URL="${WMAGENT_PATCH_URL}" PATCH_NUM="${patch_num}" bash -s << 'STEP4.5'
-              source env.sh
-
-              $WMA_DEPLOY_DIR/bin/patchComponent.sh ${PATCH_NUM} < /dev/null
-              if [ $? -eq 0 ]; then
-                  echo "Patch $patch_num applied successfully"
-              else
-                  echo "Warning: Patch $patch_num may have failed"
-              fi
-        STEP4.5
+            patch_num=$(echo $patch_num | tr -d ' ')
+            echo "Applying WMAgent patch PR #$patch_num"
+            
+            ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch \
+              "source env.sh && \$WMA_DEPLOY_DIR/bin/patchComponent.sh ${patch_num}"
+            
+            if [ $? -ne 0 ]; then
+              echo "ERROR: Failed to apply patch $patch_num"
+              exit 1
+            else
+              echo "Patch $patch_num applied successfully"
+            fi
           done
-        
           
           echo "All patches processed"
-       
         else
-        
           echo "No patches requested, skipping..."
-
-
         fi
 
     - name: Step 5 - Start agent and finalize
