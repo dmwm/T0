@@ -816,7 +816,7 @@ jobs:
               else
                   echo "Warning: Patch $patch_num may have failed"
               fi
-          STEP4.5
+        STEP4.5
           done
         
           
