@@ -810,7 +810,7 @@ jobs:
             WMAGENT_PATCH_URL="${WMAGENT_PATCH_URL}" PATCH_NUM="${patch_num}" bash -s << 'STEP4.5'
               source env.sh
 
-              source $WMA_DEPLOY_DIR/bin/patchComponent.sh ${PATCH_NUM} 
+              $WMA_DEPLOY_DIR/bin/patchComponent.sh ${PATCH_NUM} < /dev/null
               if [ $? -eq 0 ]; then
                   echo "Patch $patch_num applied successfully"
               else
