@@ -780,7 +780,7 @@ jobs:
               patch_num=$(echo $patch_num | tr -d ' ')
               echo "Applying patch PR #$patch_num"
 
-              echo "curl -L \"https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/${patch_num}.patch\" | patch -f -d \"/data/tier0/WMAgent.venv3/lib/python${PYTHON_VERSION}/site-packages/\" -p 3" >> /data/tier0/ReplayPipeline/00_pypi_wmagent_patches.sh
+              echo "curl -L \"https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/${patch_num}.patch\" | patch -f -d \"/data/tier0/WMAgent.venv3/lib64/python${PYTHON_VERSION}/site-packages/\" -p 3" >> /data/tier0/ReplayPipeline/00_pypi_wmagent_patches.sh
               if [ $? -eq 0 ]; then
                   echo "Patch $patch_num applied successfully"
               else
