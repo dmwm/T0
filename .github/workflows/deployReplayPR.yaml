@@ -719,10 +719,7 @@ jobs:
       id: apply_patches
       run: |
         echo "=== Step 3: Patch application ==="
-        
-        if [ "${PATCH_OPTION}" = "Patch" ]; then
-          echo "Patches requested, applying..."
-          
+
           ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch \
             PATCH_URL="${PATCH_URL}" PATCH_REPO="${PATCH_REPO}" PYTHON_VERSION="${PYTHON_VERSION}" bash -s << 'STEP3'
           source env.sh
@@ -731,6 +728,15 @@ jobs:
           echo "Applying patches: ${PATCH_URL}"
 
           echo -n > /data/tier0/ReplayPipeline/00_pypi_patches.sh
+          echo "#!/bin/bash" >> /data/tier0/ReplayPipeline/00_pypi_patches.sh
+        
+        if [ "${PATCH_OPTION}" = "Patch" ]; then
+          echo "Patches requested, applying..."
+          
+          ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch \
+            PATCH_URL="${PATCH_URL}" PATCH_REPO="${PATCH_REPO}" PYTHON_VERSION="${PYTHON_VERSION}" bash -s << 'STEP3'
+          source env.sh
+          
           
           IFS=',' read -ra PATCHES <<< "${PATCH_URL}"
           for patch_num in "${PATCHES[@]}"; do
@@ -751,9 +757,7 @@ jobs:
         else
         
           echo "No patches requested, skipping..."
-          ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch bash -s << 'STEP3_NO_PATCH'
-          echo "# No patches requested" > /data/tier0/ReplayPipeline/00_pypi_patches.sh
-          echo "Created empty patch file"
+
         STEP3_NO_PATCH
         fi
 
@@ -772,15 +776,14 @@ jobs:
           echo "About to execute patch logic..."
           echo "Applying patches: ${PATCH_URL}"
 
-          echo -n > /data/tier0/ReplayPipeline/00_pypi_wmagent_patches.sh
-          echo "#!/bin/bash" >> /data/tier0/ReplayPipeline/00_pypi_wmagent_patches.sh
+        
           
           IFS=',' read -ra PATCHES <<< "${WMAGENT_PATCH_URL}"
           for patch_num in "${PATCHES[@]}"; do
               patch_num=$(echo $patch_num | tr -d ' ')
               echo "Applying patch PR #$patch_num"
 
-              echo "curl -L \"https://patch-diff.githubusercontent.com/raw/dmwm/WMCore/pull/${patch_num}.patch\" | patch -f -d \"/data/tier0/WMAgent.venv3/lib64/python${PYTHON_VERSION}/site-packages/\" -p 3" >> /data/tier0/ReplayPipeline/00_pypi_wmagent_patches.sh
+              echo "bash /data/tier0/WMAgent.venv3/bin/patchComponent.sh ${patch_num}" >> /data/tier0/ReplayPipeline/00_pypi_patches.sh
               if [ $? -eq 0 ]; then
                   echo "Patch $patch_num applied successfully"
               else
@@ -793,9 +796,7 @@ jobs:
         else
         
           echo "No patches requested, skipping..."
-          ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch bash -s << 'STEP3.5_NO_PATCH'
-          echo "# No patches requested" > /data/tier0/ReplayPipeline/00_pypi_wmagent_patches.sh
-          echo "Created empty patch file"
+
         STEP3.5_NO_PATCH
         fi
 
