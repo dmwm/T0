@@ -801,8 +801,6 @@ jobs:
           
           echo "About to execute patch logic..."
           echo "Applying patches: ${PATCH_URL}"
-          cd
-          echo source env.sh
 
           
           
