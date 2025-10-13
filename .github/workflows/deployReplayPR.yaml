@@ -842,7 +842,7 @@ jobs:
           PATCH_ARGS=$(echo "${WMAGENT_PATCH_URL}" | tr ',' ' ')
           echo "Patch arguments: ${PATCH_ARGS}"
           
-          ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch "source env.sh && \$WMA_DEPLOY_DIR/bin/patchComponent.sh ${PATCH_ARGS}"
+          ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch "source env.sh && \$WMA_DEPLOY_DIR/bin/patchComponent.sh ${PATCH_ARGS}" < /dev/null
           
           if [ $? -ne 0 ]; then
             echo "ERROR: Failed to apply patches"
