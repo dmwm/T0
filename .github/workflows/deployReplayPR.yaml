@@ -809,7 +809,7 @@ jobs:
               patch_num=$(echo $patch_num | tr -d ' ')
               echo "Applying patch PR #$patch_num"
 
-              bash $WMA_DEPLOY_DIR/bin/patchComponent.sh ${patch_num}
+              bash $WMA_DEPLOY_DIR/bin/patchComponent.sh ${patch_num} < /dev/null
               if [ $? -eq 0 ]; then
                   echo "Patch $patch_num applied successfully"
               else
