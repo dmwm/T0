@@ -775,8 +775,8 @@ jobs:
           
           echo "About to execute patch logic..."
           echo "Applying patches: ${PATCH_URL}"
-          echo "cd"
-          echo "source env.sh"
+          echo "cd" >> /data/tier0/ReplayPipeline/00_pypi_patches.sh
+          echo "source env.sh" >> /data/tier0/ReplayPipeline/00_pypi_patches.sh
 
           
           
