@@ -838,22 +838,18 @@ jobs:
           echo "Patches requested, applying..."
           echo "Applying patches: ${WMAGENT_PATCH_URL}"
     
-          IFS=',' read -ra PATCHES <<< "${WMAGENT_PATCH_URL}"
-          for patch_num in "${PATCHES[@]}"; do
-            patch_num=$(echo $patch_num | tr -d ' ')
-            echo "Applying WMAgent patch PR #$patch_num"
-            
-            ssh -t -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch "source env.sh && \$WMA_DEPLOY_DIR/bin/patchComponent.sh ${patch_num}"
-            
-            if [ $? -ne 0 ]; then
-              echo "ERROR: Failed to apply patch $patch_num"
-              exit 1
-            else
-              echo "Patch $patch_num applied successfully"
-            fi
-          done
+          # Convert comma-separated PR numbers into space-separated arguments
+          PATCH_ARGS=$(echo "${WMAGENT_PATCH_URL}" | tr ',' ' ')
+          echo "Patch arguments: ${PATCH_ARGS}"
           
-          echo "All patches processed"
+          ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch "source env.sh && \$WMA_DEPLOY_DIR/bin/patchComponent.sh ${PATCH_ARGS}"
+          
+          if [ $? -ne 0 ]; then
+            echo "ERROR: Failed to apply patches"
+            exit 1
+          else
+            echo "All patches applied successfully"
+          fi
         else
           echo "No patches requested, skipping..."
         fi
