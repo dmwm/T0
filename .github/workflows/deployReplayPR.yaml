@@ -783,7 +783,7 @@ jobs:
               patch_num=$(echo $patch_num | tr -d ' ')
               echo "Applying patch PR #$patch_num"
 
-              echo "bash $WMA_DEPLOY_DIR/bin/patchComponent.sh ${patch_num}" >> /data/tier0/ReplayPipeline/00_pypi_patches.sh
+              echo "bash \$WMA_DEPLOY_DIR/bin/patchComponent.sh ${patch_num}" >> /data/tier0/ReplayPipeline/00_pypi_patches.sh
               if [ $? -eq 0 ]; then
                   echo "Patch $patch_num applied successfully"
               else
