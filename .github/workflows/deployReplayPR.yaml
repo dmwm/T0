@@ -844,7 +844,7 @@ jobs:
             echo "Applying WMAgent patch PR #$patch_num"
             
             ssh -n -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch \
-              "source env.sh && \$WMA_DEPLOY_DIR/bin/patchComponent.sh ${patch_num}" < /dev/null
+              "source env.sh && \$WMA_DEPLOY_DIR/bin/patchComponent.sh ${patch_num}" 
             
             if [ $? -ne 0 ]; then
               echo "ERROR: Failed to apply patch $patch_num"
