@@ -795,30 +795,32 @@ jobs:
         if [ "${WMAGENT_PATCH_OPTION}" = "Patch" ]; then
           echo "Patches requested, applying..."
           
-          ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch \
-            WMAGENT_PATCH_URL="${WMAGENT_PATCH_URL}" PYTHON_VERSION="${PYTHON_VERSION}" bash -s << 'STEP4.5'
-          source env.sh
+
           
           echo "About to execute patch logic..."
           echo "Applying patches: ${PATCH_URL}"
 
-          exec 0<&-
+    
           
           IFS=',' read -ra PATCHES <<< "${WMAGENT_PATCH_URL}"
           for patch_num in "${PATCHES[@]}"; do
               patch_num=$(echo $patch_num | tr -d ' ')
               echo "Applying patch PR #$patch_num"
+              ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch \
+            WMAGENT_PATCH_URL="${WMAGENT_PATCH_URL}" PATCH_NUM="${patch_num}" bash -s << 'STEP4.5'
+              source env.sh
 
-              $WMA_DEPLOY_DIR/bin/patchComponent.sh ${patch_num} 
+              source $WMA_DEPLOY_DIR/bin/patchComponent.sh ${PATCH_NUM} 
               if [ $? -eq 0 ]; then
                   echo "Patch $patch_num applied successfully"
               else
                   echo "Warning: Patch $patch_num may have failed"
               fi
           done
+          STEP4.5
           
           echo "All patches processed"
-        STEP4.5
+       
         else
         
           echo "No patches requested, skipping..."
