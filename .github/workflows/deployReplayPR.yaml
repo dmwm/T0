@@ -721,7 +721,7 @@ jobs:
         echo "=== Step 3: Patch application ==="
 
           ssh -o StrictHostKeyChecking=no -K cmst0@${REPLAY_OPTION}.cern.ch \
-            PATCH_URL="${PATCH_URL}" PATCH_REPO="${PATCH_REPO}" PYTHON_VERSION="${PYTHON_VERSION}" bash -s << 'STEP3'
+            PATCH_URL="${PATCH_URL}" PATCH_REPO="${PATCH_REPO}" PYTHON_VERSION="${PYTHON_VERSION}" bash -s << 'STEP3_PRE'
           source env.sh
           
           echo "About to execute patch logic..."
@@ -729,7 +729,7 @@ jobs:
 
           echo -n > /data/tier0/ReplayPipeline/00_pypi_patches.sh
           echo "#!/bin/bash" >> /data/tier0/ReplayPipeline/00_pypi_patches.sh
-        
+        STEP3_PRE
         if [ "${PATCH_OPTION}" = "Patch" ]; then
           echo "Patches requested, applying..."
           
@@ -758,7 +758,7 @@ jobs:
         
           echo "No patches requested, skipping..."
 
-        STEP3_NO_PATCH
+    
         fi
 
     - name: Step 3.5 - Apply wmaget patches (if requested)
@@ -797,7 +797,7 @@ jobs:
         
           echo "No patches requested, skipping..."
 
-        STEP3.5_NO_PATCH
+
         fi
 
     - name: Step 4 - Deploy WMAgent
