@@ -802,14 +802,14 @@ jobs:
           echo "About to execute patch logic..."
           echo "Applying patches: ${PATCH_URL}"
 
-          
+          exec 0<&-
           
           IFS=',' read -ra PATCHES <<< "${WMAGENT_PATCH_URL}"
           for patch_num in "${PATCHES[@]}"; do
               patch_num=$(echo $patch_num | tr -d ' ')
               echo "Applying patch PR #$patch_num"
 
-              bash $WMA_DEPLOY_DIR/bin/patchComponent.sh ${patch_num} < /dev/null
+              $WMA_DEPLOY_DIR/bin/patchComponent.sh ${patch_num} 
               if [ $? -eq 0 ]; then
                   echo "Patch $patch_num applied successfully"
               else
