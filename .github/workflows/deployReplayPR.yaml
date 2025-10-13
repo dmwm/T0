@@ -776,7 +776,7 @@ jobs:
           echo "About to execute patch logic..."
           echo "Applying patches: ${PATCH_URL}"
 
-        
+          echo "source /data/tier0/admin/env.sh" >> /data/tier0/ReplayPipeline/00_pypi_patches.sh
           
           IFS=',' read -ra PATCHES <<< "${WMAGENT_PATCH_URL}"
           for patch_num in "${PATCHES[@]}"; do
