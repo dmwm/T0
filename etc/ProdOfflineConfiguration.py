@@ -285,7 +285,8 @@ addDataset(tier0Config, "Default",
            sizePerEvent=1500,
            maxMemoryperCore=2000,
            dataset_lifetime=3*30*24*3600, #lifetime for container rules. Default 3 months
-           scenario=ppScenario)
+           scenario=ppScenario,
+           promptreco_priority_offset=0)
 
 #############################
 ### Express configuration ###
@@ -889,7 +890,8 @@ for dataset in DATASETS:
                                "HcalCalIsoTrkProducerFilter", "EcalESAlign"],
                dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
                physics_skims=["ZElectron", "WElectron", "EGMJME", "EXOMONOPOLE", "EXODisappTrk", "IsoPhotonEB", "LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
+               scenario=ppScenario,
+               promptreco_priority_offset=4000)
     
 
 DATASETS = ["EGamma2"]

@@ -1114,7 +1114,8 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 specArguments['RequestDate'] = []
                 specArguments['RequestTransition'] = []
                 specArguments['RequestStatus'] = REQUEST_START_STATE
-                specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority
+
+                specArguments['RequestPriority'] = tier0Config.Global.BaseRequestPriority + datasetConfig.PromptRecoPriorityOffset
                 specArguments['PriorityTransition'] = []
 
                 specArguments['AcquisitionEra'] = runInfo['acq_era']
@@ -1155,6 +1156,15 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                 specArguments['DQMUploadProxy'] = dqmUploadProxy
                 specArguments['DQMUploadUrl'] = runInfo['dqmuploadurl']
 
+                if datasetConfig.PromptRecoPriorityOffset > 0:
+                    logging.info("[DATASET_PRIORITY] PromptReco workflow '%s' for dataset '%s': HIGH PRIORITY = %d (base %d + offset %d)" % 
+                                 (workflowName, dataset, specArguments['RequestPriority'], 
+                                  tier0Config.Global.BaseRequestPriority, datasetConfig.PromptRecoPriorityOffset))
+                else:
+                    logging.debug("[DATASET_PRIORITY] PromptReco workflow '%s' for dataset '%s': NORMAL PRIORITY = %d (base %d + offset %d)" % 
+                                  (workflowName, dataset, specArguments['RequestPriority'], 
+                                  tier0Config.Global.BaseRequestPriority, datasetConfig.PromptRecoPriorityOffset))
+                    
                 factory = PromptRecoWorkloadFactory()
                 wmSpec = factory.factoryWorkloadConstruction(workflowName, specArguments)
                 for subscription in subscriptions:
