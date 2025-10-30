@@ -60,8 +60,8 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "HIRun2024B")
-setEmulationAcquisitionEra(tier0Config, "Emulation2024", repack=False)
+setAcquisitionEra(tier0Config, "HIRun2025A")
+setEmulationAcquisitionEra(tier0Config, "Emulation2025", repack=False)
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "hidata")
@@ -101,8 +101,7 @@ setPromptCalibrationConfig(tier0Config,
 # maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_1_5_patch1",
-    'acqEra': {'Run2024J': "CMSSW_14_1_4_patch1"},
+    'default': "CMSSW_15_1_0_patch2",
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
 
@@ -114,7 +113,7 @@ setDefaultScramArch(tier0Config, "el8_amd64_gcc12")
 
 # Configure scenarios
 #ppScenario = "ppEra_Run3"
-ppScenario = "ppEra_Run3_2024_ppRef"
+ppScenario = "ppEra_Run3_2025_ppRef"
 ppScenarioB0T = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
 hcalnzsScenario = "hcalnzsEra_Run3"
@@ -124,14 +123,14 @@ HIalcaTrackingOnlyScenario = "trackingOnlyEra_Run3_pp_on_PbPb"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
-hltScoutingScenario = "hltScoutingEra_Run3_2024"
-ppRefScenario = "ppEra_Run3_2024_ppRef"
+hltScoutingScenario = "hltScoutingEra_Run3_2025"
+ppRefScenario = "ppEra_Run3_2025_ppRef"
 
-# Heavy Ion Scenarios 2024
+# Heavy Ion Scenarios 2025
 
-hiForwardScenario = "ppEra_Run3_2024_UPC"
-hiScenario = "ppEra_Run3_pp_on_PbPb_2024"
-hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2024"
+hiForwardScenario = "ppEra_Run3_2025_UPC"
+hiScenario = "ppEra_Run3_pp_on_PbPb_2025"
+hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2025"
 
 # Defaults for processing version
 alcarawProcVersion = {
@@ -148,12 +147,13 @@ expressProcVersion = {
 
 # Defaults for GlobalTag
 expressGlobalTag = {
-    'default': "141X_dataRun3_Express_v3"
+    # TO BE CHECKED BEFORE THE ACTUAL HIN
+    'default': "151X_dataRun3_Express_v1"
     #'acqEra': {'Run2024B': "140X_dataRun3_Express_v2"}
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Express_v3"}
 }
 promptrecoGlobalTag = {
-    'default': "141X_dataRun3_Prompt_v3",
+    'default': "151X_dataRun3_Prompt_v1",
     #'acqEra': {'Run2023E': "132X_dataRun3_Prompt_v2"},
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Prompt_v2"}
 }
