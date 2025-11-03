@@ -1328,7 +1328,6 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
                raw_to_disk=True,
-			   disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
 # PPS 2022
