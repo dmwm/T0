@@ -1555,7 +1555,7 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 
-DATASETS = [ "VRRandom0", "VRRandom1", "VRRandom2", "VRRandom3",
+DATASETS = [ "AlCaElectron", "VRRandom", "VRRandom0", "VRRandom1", "VRRandom2", "VRRandom3",
              "VRRandom4", "VRRandom5", "VRRandom6", "VRRandom7", "VRRandom8", "VRRandom9",
              "VRRandom10", "VRRandom11", "VRRandom12", "VRRandom13", "VRRandom14", "VRRandom15"]
 
@@ -1571,7 +1571,8 @@ DATASETS += ["VRZeroBias0", "VRZeroBias1", "VRZeroBias2","VRZeroBias3",
              "VRZeroBias36", "VRZeroBias37", "VRZeroBias38","VRZeroBias39",
              "VRZeroBias40", "VRZeroBias41", "VRZeroBias42","VRZeroBias43",
              "VRZeroBias44", "VRZeroBias45", "VRZeroBias46","VRZeroBias47",
-             "VRZeroBias48", "VRZeroBias49", "VRZeroBias50","VRZeroBias51"]
+             "VRZeroBias48", "VRZeroBias49", "VRZeroBias50","VRZeroBias51",
+			 "VRZeroBias", "VirginRaw"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
