@@ -1305,14 +1305,30 @@ for dataset in DATASETS:
                do_reco=False,
                scenario=ppScenario)
 
-DATASETS = ["AlCaElectron", "VRRandom", "VRRandom0", "VRRandom1", "VRRandom2", "VRRandom3",
+DATASETS = [ "AlCaElectron", "VRRandom", "VRRandom0", "VRRandom1", "VRRandom2", "VRRandom3",
              "VRRandom4", "VRRandom5", "VRRandom6", "VRRandom7", "VRRandom8", "VRRandom9",
-             "VRRandom10", "VRRandom11", "VRRandom12", "VRRandom13", "VRRandom14", "VRRandom15",
-             "VRZeroBias", "VirginRaw"]
+             "VRRandom10", "VRRandom11", "VRRandom12", "VRRandom13", "VRRandom14", "VRRandom15"]
+
+DATASETS += ["VRZeroBias0", "VRZeroBias1", "VRZeroBias2","VRZeroBias3",
+             "VRZeroBias4", "VRZeroBias5", "VRZeroBias6","VRZeroBias7",
+             "VRZeroBias8", "VRZeroBias9", "VRZeroBias10","VRZeroBias11",
+             "VRZeroBias12", "VRZeroBias13", "VRZeroBias14","VRZeroBias15",
+             "VRZeroBias16", "VRZeroBias17", "VRZeroBias18","VRZeroBias19",
+             "VRZeroBias20", "VRZeroBias21", "VRZeroBias22","VRZeroBias23",
+             "VRZeroBias24", "VRZeroBias25", "VRZeroBias26","VRZeroBias27",
+             "VRZeroBias28", "VRZeroBias29", "VRZeroBias30","VRZeroBias31",
+             "VRZeroBias32", "VRZeroBias33", "VRZeroBias34","VRZeroBias35",
+             "VRZeroBias36", "VRZeroBias37", "VRZeroBias38","VRZeroBias39",
+             "VRZeroBias40", "VRZeroBias41", "VRZeroBias42","VRZeroBias43",
+             "VRZeroBias44", "VRZeroBias45", "VRZeroBias46","VRZeroBias47",
+             "VRZeroBias48", "VRZeroBias49", "VRZeroBias50","VRZeroBias51",
+			 "VRZeroBias", "VirginRaw"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
+               raw_to_disk=True,
+			   disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
 # PPS 2022
