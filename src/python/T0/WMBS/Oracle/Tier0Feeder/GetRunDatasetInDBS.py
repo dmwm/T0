@@ -22,35 +22,36 @@ class GetRunDatasetInDBS(DBFormatter):
              WHERE rr.in_datasvc = 3
              AND NOT EXISTS (
                SELECT 1
-               FROM dbsbuffer_file df
-               INNER JOIN dbsbuffer_file_runlumi_map rl ON 
-                 rl.filename = df.id
-               WHERE rl.run = rr.run_id
+               FROM wmbs_subscription sub
+               WHERE sub.fileset = rr.fileset
+                 AND sub.finished = 0
+             )
+             AND NOT EXISTS (
+               SELECT 1
+               FROM wmbs_subscription sub
+               INNER JOIN wmbs_workflow wf ON wf.id = sub.workflow
+               INNER JOIN dbsbuffer_workflow dbsw ON dbsw.name = wf.name
+               INNER JOIN dbsbuffer_file df ON df.workflow = dbsw.id
+               INNER JOIN dbsbuffer_file_runlumi_map rl ON rl.filename = df.id
+               WHERE sub.fileset = rr.fileset
+                 AND rl.run = rr.run_id
                  AND df.status != 'InDBS'
-                 AND EXISTS (
-                   SELECT 1
-                   FROM dbsbuffer_workflow dbsw
-                   WHERE dbsw.id = df.workflow
-                     AND dbsw.name LIKE '%' || pd.name || '%'
-                 )
              )
              AND EXISTS (
                SELECT 1
-               FROM dbsbuffer_file df
-               INNER JOIN dbsbuffer_file_runlumi_map rl ON 
-                 rl.filename = df.id
-               WHERE rl.run = rr.run_id
-                 AND EXISTS (
-                   SELECT 1
-                   FROM dbsbuffer_workflow dbsw
-                   WHERE dbsw.id = df.workflow
-                     AND dbsw.name LIKE '%' || pd.name || '%'
-                 )
+               FROM wmbs_subscription sub
+               INNER JOIN wmbs_workflow wf ON wf.id = sub.workflow
+               INNER JOIN dbsbuffer_workflow dbsw ON dbsw.name = wf.name
+               INNER JOIN dbsbuffer_file df ON df.workflow = dbsw.id
+               INNER JOIN dbsbuffer_file_runlumi_map rl ON rl.filename = df.id
+               WHERE sub.fileset = rr.fileset
+                 AND rl.run = rr.run_id
              )
              GROUP BY rr.run_id,
                       rr.primds_id,
                       pd.name
              """
+
 
     def execute(self, conn = None, transaction = False):
 
