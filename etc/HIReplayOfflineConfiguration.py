@@ -1672,7 +1672,7 @@ for dataset in DATASETS:
                                "SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
-               physics_skims=["PbPbEMu", "PbPbZEE", "PbPbZMu", "PbPbHighPtJets", "LogError", "LogErrorMonitor"],
+               physics_skims=["PbPbEW", "PbPbHighPtJets"],
                scenario=hiRawPrimeScenario)
 
 DATASETS = ["HIPhysicsRawPrime1"]
@@ -1693,7 +1693,7 @@ for dataset in DATASETS:
                                "SiStripCalZeroBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
-               physics_skims=["PbPbEMu", "PbPbZEE", "PbPbZMu", "PbPbHighPtJets", "LogError", "LogErrorMonitor"],
+               physics_skims=["PbPbEW", "PbPbHighPtJets"],
                scenario=hiRawPrimeScenario)
     
 
@@ -1726,7 +1726,22 @@ for dataset in DATASETS:
                                "SiStripCalZeroBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@none"],
-               physics_skims=["PbPbEMu", "PbPbZEE", "PbPbZMu", "PbPbHighPtJets", "LogError", "LogErrorMonitor"],
+               physics_skims=["PbPbEW", "PbPbHighPtJets"],
+               scenario=hiRawPrimeScenario)
+
+DATASETS = ["HIPhysicsRawSecond"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               raw_to_disk=False,
+               aod_to_disk=False,
+               timePerEvent=3,
+               write_nanoaod=False,
+               write_dqm=False,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_US_Vanderbilt",
+               dqm_sequences=["@none"],
                scenario=hiRawPrimeScenario)
 
 DATASETS = ["HIZeroBias0", "HIZeroBias1", "HIZeroBias2"]
