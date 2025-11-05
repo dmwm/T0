@@ -40,7 +40,8 @@ setConfigVersion(tier0Config, "3.2.3")
 # Set run number to replay
 # 374951:    HI 2023 3.8 TB
 # 387456:    Test HI 2024 with memory problems 3.1 TB
-setInjectRuns(tier0Config, [387963])
+# 388621:    Small HI for 2025 replay
+setInjectRuns(tier0Config, [388621])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -65,8 +66,8 @@ addSiteConfig(tier0Config, "EOS_PILOT",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "Tier0_HIREPLAY_2024")
-setEmulationAcquisitionEra(tier0Config, "Tier0_HIREPLAY_2024", repack=False)
+setAcquisitionEra(tier0Config, "Tier0_HIREPLAY_2025")
+setEmulationAcquisitionEra(tier0Config, "Tier0_HIREPLAY_2025", repack=False)
 setBaseRequestPriority(tier0Config, 260000)
 setBackfill(tier0Config, 1)
 setBulkDataType(tier0Config, "hidata")
@@ -90,7 +91,7 @@ defaultRecoTimeout = 10 * 60
 defaultRecoLockTimeout = 5 * 60
 
 # DQM Server
-setDQMUploadUrl(tier0Config, "https://cmsweb.cern.ch/dqm/dev;https://cmsweb-testbed.cern.ch/dqm/offline-test")
+setDQMUploadUrl(tier0Config, "https://cmsweb.cern.ch/dqm/dev")
 
 # PCL parameters
 setPromptCalibrationConfig(tier0Config,
@@ -109,13 +110,13 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_14_1_5_patch1"
+    'default': "CMSSW_15_1_0_patch3"
 }
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "el8_amd64_gcc12")
-setScramArch(tier0Config, "CMSSW_13_2_5", "el8_amd64_gcc11")
-setScramArch(tier0Config, "CMSSW_13_2_6", "el8_amd64_gcc11")
+setScramArch(tier0Config, "CMSSW_15_1_0_patch3", "el8_amd64_gcc12")
+setScramArch(tier0Config, "CMSSW_15_1_0_patch3", "el8_amd64_gcc12")
 # Configure scenarios
 #ppScenario = "ppEra_Run3"
 ppScenario = "ppEra_Run3_2024_ppRef"
@@ -128,14 +129,14 @@ HIalcaTrackingOnlyScenario = "trackingOnlyEra_Run3_pp_on_PbPb"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
-hltScoutingScenario = "hltScoutingEra_Run3_2024"
+hltScoutingScenario = "hltScoutingEra_Run3_2025"
 ppRefScenario = "ppEra_Run3_2024_ppRef"
 
 # Heavy Ion Scenarios 2024
 
-hiForwardScenario = "ppEra_Run3_2024_UPC"
-hiScenario = "ppEra_Run3_pp_on_PbPb_2024"
-hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2024"
+hiForwardScenario = "ppEra_Run3_2025_UPC"
+hiScenario = "ppEra_Run3_pp_on_PbPb_2025"
+hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2025"
 
 
 # Procesing version number replays
@@ -146,8 +147,8 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "141X_dataRun3_Express_v3"
-promptrecoGlobalTag = "141X_dataRun3_Prompt_v3"
+expressGlobalTag = "151X_dataRun3_Express_v1"
+promptrecoGlobalTag = "151X_dataRun3_Prompt_v1"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
