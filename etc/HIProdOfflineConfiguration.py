@@ -127,7 +127,7 @@ alcaPPSScenario = "AlCaPPS_Run3"
 hltScoutingScenario = "hltScoutingEra_Run3_2025"
 ppRefScenario = "ppEra_Run3_2024_ppRef"
 
-# Heavy Ion Scenarios 2024
+# Heavy Ion Scenarios 2025
 
 hiForwardScenario = "ppEra_Run3_2025_UPC"
 hiScenario = "ppEra_Run3_pp_on_PbPb_2025"
@@ -148,6 +148,7 @@ expressProcVersion = {
 
 # Defaults for GlobalTag
 expressGlobalTag = {
+    # TO BE CHECKED BEFORE THE ACTUAL HIN
     'default': "151X_dataRun3_Express_v1"
     #'acqEra': {'Run2024B': "140X_dataRun3_Express_v2"}
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Express_v3"}
@@ -1791,7 +1792,7 @@ for dataset in DATASETS:
                                "SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
-               physics_skims=["PbPbEMu", "PbPbZEE", "PbPbZMu", "PbPbHighPtJets", "LogError", "LogErrorMonitor"],
+               physics_skims=["PbPbEW", "PbPbHighPtJets"],
                scenario=hiRawPrimeScenario)
 
 DATASETS = ["HIPhysicsRawPrime1"]
@@ -1813,7 +1814,7 @@ for dataset in DATASETS:
                                "SiStripCalZeroBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
-               physics_skims=["PbPbEMu", "PbPbZEE", "PbPbZMu", "PbPbHighPtJets", "LogError", "LogErrorMonitor"],
+               physics_skims=["PbPbEW", "PbPbHighPtJets"],
                scenario=hiRawPrimeScenario)
     
 
@@ -1837,7 +1838,7 @@ for dataset in DATASETS:
                                "SiStripCalZeroBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@none"],
-               physics_skims=["PbPbEMu", "PbPbZEE", "PbPbZMu", "PbPbHighPtJets", "LogError", "LogErrorMonitor"],
+               physics_skims=["PbPbEW", "PbPbHighPtJets"],
                scenario=hiRawPrimeScenario)
 
 DATASETS = [  "HIPhysicsRawPrime12", "HIPhysicsRawPrime13", "HIPhysicsRawPrime14", "HIPhysicsRawPrime15",
@@ -1868,7 +1869,22 @@ for dataset in DATASETS:
                                "SiStripCalZeroBias", "HcalCalIsolatedBunchSelector", "HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@none"],
-               physics_skims=["PbPbEMu", "PbPbZEE", "PbPbZMu", "PbPbHighPtJets", "LogError", "LogErrorMonitor"],
+               physics_skims=["PbPbEW", "PbPbHighPtJets"],
+               scenario=hiRawPrimeScenario)
+    
+DATASETS = ["HIPhysicsRawSecond"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               raw_to_disk=False,
+               aod_to_disk=False,
+               timePerEvent=3,
+               write_nanoaod=False,
+               write_dqm=False,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_US_Vanderbilt",
+               dqm_sequences=["@none"],
                scenario=hiRawPrimeScenario)
 
 DATASETS = ["HIZeroBias0", "HIZeroBias1", "HIZeroBias2"]

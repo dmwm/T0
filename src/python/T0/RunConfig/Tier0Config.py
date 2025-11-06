@@ -639,6 +639,19 @@ def addDataset(config, datasetName, **settings):
     else:
         datasetConfig.datasetLifetime = settings.get("dataset_lifetime", 0)
 
+    if hasattr(datasetConfig, "PromptRecoPriorityOffset"):
+        priorityOffset = settings.get("promptreco_priority_offset", datasetConfig.PromptRecoPriorityOffset)
+        if priorityOffset > 4000:
+            raise ValueError(f"PromptRecoPriorityOffset for dataset cannot exceed 4000, got {priorityOffset}")
+        else: 
+            datasetConfig.PromptRecoPriorityOffset = priorityOffset
+    else:
+        priorityOffset = settings.get("promptreco_priority_offset", 0)
+        if priorityOffset > 4000:
+            raise ValueError(f"PromptRecoPriorityOffset for dataset cannot exceed 4000, got {priorityOffset}")
+        else:
+            datasetConfig.PromptRecoPriorityOffset = priorityOffset
+
     return
 
 def setAcquisitionEra(config, acquisitionEra):
