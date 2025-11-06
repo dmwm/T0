@@ -1900,7 +1900,7 @@ DATASETS = ["HIPhysicsRawSecond"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
-               raw_to_disk=False,
+               raw_to_disk=True,
                aod_to_disk=False,
                timePerEvent=3,
                write_nanoaod=False,
