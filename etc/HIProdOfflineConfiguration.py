@@ -1906,7 +1906,7 @@ for dataset in DATASETS:
                write_nanoaod=False,
                write_dqm=False,
                tape_node="T1_US_FNAL_MSS",
-               disk_node="T2_US_Vanderbilt",
+               disk_node="T2_CH_CERN",
                dqm_sequences=["@none"],
                scenario=hiRawPrimeScenario)
 
