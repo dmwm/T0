@@ -159,6 +159,8 @@ promptrecoGlobalTag = {
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Prompt_v2"}
 }
 
+repackGlobalTag = "151X_dataRun3_Prompt_v1"
+
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
 
@@ -205,6 +207,7 @@ addRepackConfig(tier0Config, "Default",
                 maxLatency=1 * 3600,
                 blockCloseDelay=24 * 3600,
                 maxMemory=2000,
+                global_tag=repackGlobalTag,
                 versionOverride=repackVersionOverride)
 
 addRepackConfig(tier0Config, "ScoutingPF",
@@ -1626,11 +1629,6 @@ for dataset in DATASETS:
 
 DATASETS = ["HIForward1"]
 
-StreamsHIForward_SecondAgent = ["PhysicsHIForward0", "PhysicsHIForward1", "PhysicsHIForward2", "PhysicsHIForward3", "PhysicsHIForward4", 
-                                "PhysicsHIForward5", "PhysicsHIForward6", "PhysicsHIForward7", "PhysicsHIForward8", "PhysicsHIForward9", 
-                                "PhysicsHIForward10", "PhysicsHIForward11", "PhysicsHIForward12", "PhysicsHIForward13", "PhysicsHIForward14", 
-                                "PhysicsHIForward15", "PhysicsHIForward16", "PhysicsHIForward17", "PhysicsHIForward18", "PhysicsHIForward19"]
-
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -1700,11 +1698,6 @@ DATASETS = ["HIMinimumBias1", "HIMinimumBias2", "HIMinimumBias3",
             "HIMinimumBias12", "HIMinimumBias13", "HIMinimumBias14", "HIMinimumBias15",
             "HIMinimumBias16", "HIMinimumBias17", "HIMinimumBias18", "HIMinimumBias19"]
 
-StreamsHIMinimumBias = ["PhysicsHIMinimumBias0", "PhysicsHIMinimumBias1", "PhysicsHIMinimumBias2", "PhysicsHIMinimumBias3", "PhysicsHIMinimumBias4", 
-              "PhysicsHIMinimumBias5", "PhysicsHIMinimumBias6", "PhysicsHIMinimumBias7", "PhysicsHIMinimumBias8", "PhysicsHIMinimumBias9", 
-              "PhysicsHIMinimumBias10", "PhysicsHIMinimumBias11", "PhysicsHIMinimumBias12", "PhysicsHIMinimumBias13", "PhysicsHIMinimumBias14", 
-              "PhysicsHIMinimumBias15", "PhysicsHIMinimumBias16", "PhysicsHIMinimumBias17", "PhysicsHIMinimumBias18", "PhysicsHIMinimumBias19"]
-
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -1718,7 +1711,6 @@ for dataset in DATASETS:
                scenario=hiScenario)
 
 DATASETS = ["HIEphemeralHLTPhysics"]
-StreamsHIEphemeralHLTPhysics = ["PhysicsHIHLTPhysics"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1732,7 +1724,6 @@ for dataset in DATASETS:
                scenario=hiScenario)
 
 DATASETS = ["HIEphemeralZeroBias0", "HIEphemeralZeroBias1"]
-StreamsHIEphemeralZeroBias = ["PhysicsHIZeroBias"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1750,24 +1741,6 @@ for dataset in DATASETS:
 #########################
 ### HIPhysicsRawPrime ###
 #########################
-
-StreamsHIRawPrime_MainAgent = [ "PhysicsHIPhysicsRawPrime0", "PhysicsHIPhysicsRawPrime1", "PhysicsHIPhysicsRawPrime2", "PhysicsHIPhysicsRawPrime3",
-                                "PhysicsHIPhysicsRawPrime4", "PhysicsHIPhysicsRawPrime5", "PhysicsHIPhysicsRawPrime6", "PhysicsHIPhysicsRawPrime7", 
-                                "PhysicsHIPhysicsRawPrime8", "PhysicsHIPhysicsRawPrime9", "PhysicsHIPhysicsRawPrime10", "PhysicsHIPhysicsRawPrime11",
-                                "PhysicsHIPhysicsRawPrime12", "PhysicsHIPhysicsRawPrime13", "PhysicsHIPhysicsRawPrime14","PhysicsHIPhysicsRawPrime15", 
-                                "PhysicsHIPhysicsRawPrime16", "PhysicsHIPhysicsRawPrime17", "PhysicsHIPhysicsRawPrime18", "PhysicsHIPhysicsRawPrime19", 
-                                "PhysicsHIPhysicsRawPrime20", "PhysicsHIPhysicsRawPrime21", "PhysicsHIPhysicsRawPrime22", "PhysicsHIPhysicsRawPrime23", 
-                                "PhysicsHIPhysicsRawPrime24", "PhysicsHIPhysicsRawPrime25", "PhysicsHIPhysicsRawPrime26", "PhysicsHIPhysicsRawPrime27", 
-                                "PhysicsHIPhysicsRawPrime28", "PhysicsHIPhysicsRawPrime29"]
-
-StreamsHIRawPrime_SecondAgent = [ "PhysicsHIPhysicsRawPrime30", "PhysicsHIPhysicsRawPrime31", 
-                                  "PhysicsHIPhysicsRawPrime32", "PhysicsHIPhysicsRawPrime33", "PhysicsHIPhysicsRawPrime34", "PhysicsHIPhysicsRawPrime35", 
-                                  "PhysicsHIPhysicsRawPrime36", "PhysicsHIPhysicsRawPrime37", "PhysicsHIPhysicsRawPrime38", "PhysicsHIPhysicsRawPrime39", 
-                                  "PhysicsHIPhysicsRawPrime40", "PhysicsHIPhysicsRawPrime41", "PhysicsHIPhysicsRawPrime42", "PhysicsHIPhysicsRawPrime43", 
-                                  "PhysicsHIPhysicsRawPrime44", "PhysicsHIPhysicsRawPrime45", "PhysicsHIPhysicsRawPrime46", "PhysicsHIPhysicsRawPrime47", 
-                                  "PhysicsHIPhysicsRawPrime48", "PhysicsHIPhysicsRawPrime49", "PhysicsHIPhysicsRawPrime50", "PhysicsHIPhysicsRawPrime51", 
-                                  "PhysicsHIPhysicsRawPrime52", "PhysicsHIPhysicsRawPrime53", "PhysicsHIPhysicsRawPrime54", "PhysicsHIPhysicsRawPrime55", 
-                                  "PhysicsHIPhysicsRawPrime56", "PhysicsHIPhysicsRawPrime57", "PhysicsHIPhysicsRawPrime58", "PhysicsHIPhysicsRawPrime59"]
 
 DATASETS = ["HITestRawPrime0", "HITestRawPrime1", "HITestRawPrime2", "HITestRawPrime3", "HITestRawPrime4",
             "HITestRawPrime5", "HITestRawPrime6", "HITestRawPrime7", "HITestRawPrime8", "HITestRawPrime9",
@@ -1943,8 +1916,45 @@ ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
 
 # Set streams to ignore by agent. These will not be injected
-SECOND_AGENT_STREAMS = StreamsHIRawPrime_SecondAgent + StreamsHIForward_SecondAgent + STREAMS_ppRef_ZBandFwd_secondAgent
-THIRD_AGENT_STREAMS = STREAMS_DAQ_TFTEST + STREAMS_DAQ_TFTEST_ppRef
+
+StreamsHIForward_MainAgent = ["PhysicsHIForward0", "PhysicsHIForward1", "PhysicsHIForward2", "PhysicsHIForward3", "PhysicsHIForward4", 
+                                "PhysicsHIForward5", "PhysicsHIForward6", "PhysicsHIForward7", "PhysicsHIForward8", "PhysicsHIForward9", 
+                                "PhysicsHIForward10", "PhysicsHIForward11", "PhysicsHIForward12", "PhysicsHIForward13", "PhysicsHIForward14", 
+                                "PhysicsHIForward15", "PhysicsHIForward16", "PhysicsHIForward17", "PhysicsHIForward18", "PhysicsHIForward19"]
+
+StreamsHIMinimumBias_MainAgent = ["PhysicsHIMinimumBias0", "PhysicsHIMinimumBias1", "PhysicsHIMinimumBias2", "PhysicsHIMinimumBias3", "PhysicsHIMinimumBias4", 
+              "PhysicsHIMinimumBias5", "PhysicsHIMinimumBias6", "PhysicsHIMinimumBias7", "PhysicsHIMinimumBias8", "PhysicsHIMinimumBias9", 
+              "PhysicsHIMinimumBias10", "PhysicsHIMinimumBias11", "PhysicsHIMinimumBias12", "PhysicsHIMinimumBias13", "PhysicsHIMinimumBias14", 
+              "PhysicsHIMinimumBias15", "PhysicsHIMinimumBias16", "PhysicsHIMinimumBias17", "PhysicsHIMinimumBias18", "PhysicsHIMinimumBias19"]
+
+StreamsHIEphemeralHLTPhysics_MainAgent = ["PhysicsHIHLTPhysics"]
+
+StreamsHIEphemeralZeroBias_MainAgent = ["PhysicsHIZeroBias"]
+
+StreamsHIRawSecond_MainAgent = ["PhysicsHIPhysicsRawSecond"]
+
+StreamsHIRawPrime_SecondAgent = [ "PhysicsHIPhysicsRawPrime0", "PhysicsHIPhysicsRawPrime1", "PhysicsHIPhysicsRawPrime2", "PhysicsHIPhysicsRawPrime3",
+                                "PhysicsHIPhysicsRawPrime4", "PhysicsHIPhysicsRawPrime5", "PhysicsHIPhysicsRawPrime6", "PhysicsHIPhysicsRawPrime7", 
+                                "PhysicsHIPhysicsRawPrime8", "PhysicsHIPhysicsRawPrime9", "PhysicsHIPhysicsRawPrime10", "PhysicsHIPhysicsRawPrime11",
+                                "PhysicsHIPhysicsRawPrime12", "PhysicsHIPhysicsRawPrime13", "PhysicsHIPhysicsRawPrime14","PhysicsHIPhysicsRawPrime15", 
+                                "PhysicsHIPhysicsRawPrime16", "PhysicsHIPhysicsRawPrime17", "PhysicsHIPhysicsRawPrime18", "PhysicsHIPhysicsRawPrime19", 
+                                "PhysicsHIPhysicsRawPrime20", "PhysicsHIPhysicsRawPrime21", "PhysicsHIPhysicsRawPrime22", "PhysicsHIPhysicsRawPrime23", 
+                                "PhysicsHIPhysicsRawPrime24", "PhysicsHIPhysicsRawPrime25", "PhysicsHIPhysicsRawPrime26", "PhysicsHIPhysicsRawPrime27", 
+                                "PhysicsHIPhysicsRawPrime28", "PhysicsHIPhysicsRawPrime29"]
+
+StreamsHIRawPrime_ThirdAgent = [ "PhysicsHIPhysicsRawPrime30", "PhysicsHIPhysicsRawPrime31", 
+                                  "PhysicsHIPhysicsRawPrime32", "PhysicsHIPhysicsRawPrime33", "PhysicsHIPhysicsRawPrime34", "PhysicsHIPhysicsRawPrime35", 
+                                  "PhysicsHIPhysicsRawPrime36", "PhysicsHIPhysicsRawPrime37", "PhysicsHIPhysicsRawPrime38", "PhysicsHIPhysicsRawPrime39", 
+                                  "PhysicsHIPhysicsRawPrime40", "PhysicsHIPhysicsRawPrime41", "PhysicsHIPhysicsRawPrime42", "PhysicsHIPhysicsRawPrime43", 
+                                  "PhysicsHIPhysicsRawPrime44", "PhysicsHIPhysicsRawPrime45", "PhysicsHIPhysicsRawPrime46", "PhysicsHIPhysicsRawPrime47", 
+                                  "PhysicsHIPhysicsRawPrime48", "PhysicsHIPhysicsRawPrime49", "PhysicsHIPhysicsRawPrime50", "PhysicsHIPhysicsRawPrime51", 
+                                  "PhysicsHIPhysicsRawPrime52", "PhysicsHIPhysicsRawPrime53", "PhysicsHIPhysicsRawPrime54", "PhysicsHIPhysicsRawPrime55", 
+                                  "PhysicsHIPhysicsRawPrime56", "PhysicsHIPhysicsRawPrime57", "PhysicsHIPhysicsRawPrime58", "PhysicsHIPhysicsRawPrime59"]
+
+MAIN_AGENT_STREAMS = StreamsHIForward_MainAgent + StreamsHIRawSecond_MainAgent + StreamsHIMinimumBias_MainAgent + StreamsHIEphemeralHLTPhysics_MainAgent + StreamsHIEphemeralZeroBias_MainAgent
+SECOND_AGENT_STREAMS = StreamsHIRawPrime_SecondAgent
+THIRD_AGENT_STREAMS = StreamsHIRawPrime_ThirdAgent
+
 setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
                                     "ThirdAgent" : THIRD_AGENT_STREAMS})
 
