@@ -40,8 +40,7 @@ setConfigVersion(tier0Config, "3.2.3")
 # Set run number to replay
 # 374951:    HI 2023 3.8 TB
 # 387456:    Test HI 2024 with memory problems 3.1 TB
-
-# Small HIN2024B run for tests
+# 388621:    Small HI for 2025 replay
 setInjectRuns(tier0Config, [388621])
 
 # Settings up sites
@@ -111,13 +110,14 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_1_0_patch2"
+    'default': "CMSSW_15_1_0_patch3"
 }
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "el8_amd64_gcc12")
+setScramArch(tier0Config, "CMSSW_15_1_0_patch3", "el8_amd64_gcc12")
 setScramArch(tier0Config, "CMSSW_15_1_0_patch2", "el8_amd64_gcc12")
-setScramArch(tier0Config, "CMSSW_15_1_0_patch2", "el8_amd64_gcc12")
+
 # Configure scenarios
 #ppScenario = "ppEra_Run3"
 ppScenario = "ppEra_Run3_2024_ppRef"
@@ -148,8 +148,8 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "151X_dataRun3_Express_HCALZDC_forT0Replay"
-promptrecoGlobalTag = "151X_dataRun3_Prompt_HCALZDC_forT0Replay"
+expressGlobalTag = "151X_dataRun3_Express_v1"
+promptrecoGlobalTag = "151X_dataRun3_Prompt_v1"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
