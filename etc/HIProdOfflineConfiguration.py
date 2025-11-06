@@ -1624,13 +1624,7 @@ for dataset in DATASETS:
                scenario=hiForwardScenario)
     
 
-DATASETS = ["HIForward1", "HIForward2",
-            "HIForward3", "HIForward4", "HIForward5",
-            "HIForward6", "HIForward7", "HIForward8",
-            "HIForward9", "HIForward10", "HIForward11",
-            "HIForward12", "HIForward13", "HIForward14",
-            "HIForward15", "HIForward16", "HIForward17",
-            "HIForward18", "HIForward19"]
+DATASETS = ["HIForward1"]
 
 StreamsHIForward_SecondAgent = ["PhysicsHIForward0", "PhysicsHIForward1", "PhysicsHIForward2", "PhysicsHIForward3", "PhysicsHIForward4", 
                                 "PhysicsHIForward5", "PhysicsHIForward6", "PhysicsHIForward7", "PhysicsHIForward8", "PhysicsHIForward9", 
@@ -1654,6 +1648,35 @@ for dataset in DATASETS:
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated", "TkAlV0s"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
                physics_skims=["UPCMonopole", "LogError", "LogErrorMonitor"],
+               reco_split=forwardRecoSplitting,
+               scenario=hiForwardScenario)
+    
+
+DATASETS = ["HIForward2",
+            "HIForward3", "HIForward4", "HIForward5",
+            "HIForward6", "HIForward7", "HIForward8",
+            "HIForward9", "HIForward10", "HIForward11",
+            "HIForward12", "HIForward13", "HIForward14",
+            "HIForward15", "HIForward16", "HIForward17",
+            "HIForward18", "HIForward19"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               #reco_delay=defaultRecoTimeout*100,
+               timePerEvent=0.2,
+               raw_to_disk=False,
+               aod_to_disk=True,
+               write_nanoaod=False,
+               write_dqm=True,
+               tape_node="T1_US_FNAL_MSS",
+               disk_node="T2_US_Vanderbilt",
+               alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
+                               "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
+                               "SiStripCalZeroBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
+                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated", "TkAlV0s"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
+               physics_skims=["UPCMonopole"],
                reco_split=forwardRecoSplitting,
                scenario=hiForwardScenario)
 

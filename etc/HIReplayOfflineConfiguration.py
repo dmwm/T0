@@ -1575,6 +1575,30 @@ for dataset in DATASETS:
                physics_skims=["UPCMonopole", "LogError", "LogErrorMonitor"], 
                reco_split=forwardRecoSplitting,
                scenario=hiForwardScenario)
+    
+DATASETS = ["HIForward2",
+            "HIForward3", "HIForward4", "HIForward5",
+            "HIForward6", "HIForward7", "HIForward8",
+            "HIForward9", "HIForward10", "HIForward11",
+            "HIForward12", "HIForward13", "HIForward14",
+            "HIForward15", "HIForward16", "HIForward17",
+            "HIForward18", "HIForward19"]
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               timePerEvent=0.2,
+               raw_to_disk=False,
+               aod_to_disk=True,
+               write_nanoaod=False,
+               write_dqm=True,
+               alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
+                               "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
+                               "SiStripCalZeroBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
+                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated", "TkAlV0s"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
+               physics_skims=["UPCMonopole"], 
+               reco_split=forwardRecoSplitting,
+               scenario=hiForwardScenario)
 
 DATASETS = ["HIMinimumBias0"]
 
