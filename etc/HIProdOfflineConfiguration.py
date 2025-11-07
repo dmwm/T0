@@ -1774,7 +1774,7 @@ DATASETS = ["HIPhysicsRawPrime0"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
-               raw_to_disk=False,
+               raw_to_disk=True,
                aod_to_disk=False,
                write_nanoaod=False,
                write_dqm=True,
@@ -1782,7 +1782,7 @@ for dataset in DATASETS:
                siteWhitelist = ["T2_CH_CERN"],
                maxMemoryperCore=2500,
                tape_node="T0_CH_CERN_MSS",
-               disk_node="T2_US_Vanderbilt",
+               disk_node="T2_CH_CERN",
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
                                "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
                                "SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
@@ -1879,7 +1879,7 @@ for dataset in DATASETS:
                write_nanoaod=False,
                write_dqm=False,
                tape_node="T0_CH_CERN_MSS",
-               disk_node="T2_CH_CERN",
+               disk_node="T2_US_Vanderbilt",
                dqm_sequences=["@none"],
                scenario=hiRawPrimeScenario)
 
