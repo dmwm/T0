@@ -114,7 +114,7 @@ setDefaultScramArch(tier0Config, "el8_amd64_gcc12")
 
 # Configure scenarios
 #ppScenario = "ppEra_Run3"
-ppScenario = "ppEra_Run3_2024_ppRef"
+ppScenario = "ppEra_Run3_pp_on_PbPb_2025"
 ppScenarioB0T = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
 hcalnzsScenario = "hcalnzsEra_Run3"
@@ -135,15 +135,15 @@ hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2025"
 
 # Defaults for processing version
 alcarawProcVersion = {
-    'default': 2
+    'default': 1
 }
 
 defaultProcVersionReco = {
-    'default': 2
+    'default': 1
 }
 
 expressProcVersion = {
-    'default': 2
+    'default': 1
 }
 
 # Defaults for GlobalTag
@@ -158,6 +158,8 @@ promptrecoGlobalTag = {
     #'acqEra': {'Run2023E': "132X_dataRun3_Prompt_v2"},
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Prompt_v2"}
 }
+
+repackGlobalTag = "151X_dataRun3_Prompt_v1"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -205,6 +207,7 @@ addRepackConfig(tier0Config, "Default",
                 maxLatency=1 * 3600,
                 blockCloseDelay=24 * 3600,
                 maxMemory=2000,
+                global_tag=repackGlobalTag,
                 versionOverride=repackVersionOverride)
 
 addRepackConfig(tier0Config, "ScoutingPF",
@@ -233,10 +236,10 @@ addDataset(tier0Config, "Default",
            multicore=numberOfCores,
            global_tag=promptrecoGlobalTag,
            global_tag_connect=globalTagConnect,
-           archival_node="T0_CH_CERN_MSS",
+           archival_node="T1_US_FNAL_MSS",
            tape_node="T0_CH_CERN_MSS",
            disk_node=None,
-           siteWhitelist = ["T2_CH_CERN", "T1_UK_RAL", "T1_DE_KIT", "T1_FR_CCIN2P3", "T1_ES_PIC", "T1_IT_CNAF", "T2_CH_CERN_P5"],
+           siteWhitelist = ["T2_CH_CERN"],
            raw_to_disk=False,
            aod_to_disk=False,
            blockCloseDelay=24 * 3600,
@@ -1151,7 +1154,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
                alca_producers=["TkAlMinBias","LumiPixelsMinBias"],
                physics_skims=["LogError", "LogErrorMonitor"],
-               disk_node="T2_CH_CERN",
+               disk_node="T2_US_Vanderbilt",
                scenario=ppScenario)
 
 DATASETS = ["EphemeralHLTPhysics0","EphemeralHLTPhysics1", "EphemeralHLTPhysics2", "EphemeralHLTPhysics3",
@@ -1246,7 +1249,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
                alca_producers=["TkAlMinBias","LumiPixelsMinBias"],
                physics_skims=["LogError", "LogErrorMonitor"],
-	       disk_node="T2_CH_CERN",
+	       disk_node="T2_US_Vanderbilt",
                scenario=ppScenario)
 
 ########################################################
@@ -1475,14 +1478,30 @@ for dataset in DATASETS:
                do_reco=False,
                scenario=ppScenario)
 
-DATASETS = ["AlCaElectron", "VRRandom", "VRRandom0", "VRRandom1", "VRRandom2", "VRRandom3",
+DATASETS = [ "AlCaElectron", "VRRandom", "VRRandom0", "VRRandom1", "VRRandom2", "VRRandom3",
              "VRRandom4", "VRRandom5", "VRRandom6", "VRRandom7", "VRRandom8", "VRRandom9",
-             "VRRandom10", "VRRandom11", "VRRandom12", "VRRandom13", "VRRandom14", "VRRandom15",
-             "VRZeroBias", "VirginRaw"]
+             "VRRandom10", "VRRandom11", "VRRandom12", "VRRandom13", "VRRandom14", "VRRandom15"]
+
+DATASETS += ["VRZeroBias0", "VRZeroBias1", "VRZeroBias2","VRZeroBias3",
+             "VRZeroBias4", "VRZeroBias5", "VRZeroBias6","VRZeroBias7",
+             "VRZeroBias8", "VRZeroBias9", "VRZeroBias10","VRZeroBias11",
+             "VRZeroBias12", "VRZeroBias13", "VRZeroBias14","VRZeroBias15",
+             "VRZeroBias16", "VRZeroBias17", "VRZeroBias18","VRZeroBias19",
+             "VRZeroBias20", "VRZeroBias21", "VRZeroBias22","VRZeroBias23",
+             "VRZeroBias24", "VRZeroBias25", "VRZeroBias26","VRZeroBias27",
+             "VRZeroBias28", "VRZeroBias29", "VRZeroBias30","VRZeroBias31",
+             "VRZeroBias32", "VRZeroBias33", "VRZeroBias34","VRZeroBias35",
+             "VRZeroBias36", "VRZeroBias37", "VRZeroBias38","VRZeroBias39",
+             "VRZeroBias40", "VRZeroBias41", "VRZeroBias42","VRZeroBias43",
+             "VRZeroBias44", "VRZeroBias45", "VRZeroBias46","VRZeroBias47",
+             "VRZeroBias48", "VRZeroBias49", "VRZeroBias50","VRZeroBias51",
+			 "VRZeroBias", "VirginRaw"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
+               raw_to_disk=True,
+			   disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
 # PPS 2022
@@ -1624,18 +1643,7 @@ for dataset in DATASETS:
                scenario=hiForwardScenario)
     
 
-DATASETS = ["HIForward1", "HIForward2",
-            "HIForward3", "HIForward4", "HIForward5",
-            "HIForward6", "HIForward7", "HIForward8",
-            "HIForward9", "HIForward10", "HIForward11",
-            "HIForward12", "HIForward13", "HIForward14",
-            "HIForward15", "HIForward16", "HIForward17",
-            "HIForward18", "HIForward19"]
-
-StreamsHIForward_SecondAgent = ["PhysicsHIForward0", "PhysicsHIForward1", "PhysicsHIForward2", "PhysicsHIForward3", "PhysicsHIForward4", 
-                                "PhysicsHIForward5", "PhysicsHIForward6", "PhysicsHIForward7", "PhysicsHIForward8", "PhysicsHIForward9", 
-                                "PhysicsHIForward10", "PhysicsHIForward11", "PhysicsHIForward12", "PhysicsHIForward13", "PhysicsHIForward14", 
-                                "PhysicsHIForward15", "PhysicsHIForward16", "PhysicsHIForward17", "PhysicsHIForward18", "PhysicsHIForward19"]
+DATASETS = ["HIForward1"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1654,6 +1662,35 @@ for dataset in DATASETS:
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated", "TkAlV0s"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
                physics_skims=["UPCMonopole", "LogError", "LogErrorMonitor"],
+               reco_split=forwardRecoSplitting,
+               scenario=hiForwardScenario)
+    
+
+DATASETS = ["HIForward2",
+            "HIForward3", "HIForward4", "HIForward5",
+            "HIForward6", "HIForward7", "HIForward8",
+            "HIForward9", "HIForward10", "HIForward11",
+            "HIForward12", "HIForward13", "HIForward14",
+            "HIForward15", "HIForward16", "HIForward17",
+            "HIForward18", "HIForward19"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               #reco_delay=defaultRecoTimeout*100,
+               timePerEvent=0.2,
+               raw_to_disk=False,
+               aod_to_disk=True,
+               write_nanoaod=False,
+               write_dqm=True,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_US_Vanderbilt",
+               alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
+                               "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
+                               "SiStripCalZeroBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
+                               "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated", "TkAlV0s"],
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
+               physics_skims=["UPCMonopole"],
                reco_split=forwardRecoSplitting,
                scenario=hiForwardScenario)
 
@@ -1677,11 +1714,6 @@ DATASETS = ["HIMinimumBias1", "HIMinimumBias2", "HIMinimumBias3",
             "HIMinimumBias12", "HIMinimumBias13", "HIMinimumBias14", "HIMinimumBias15",
             "HIMinimumBias16", "HIMinimumBias17", "HIMinimumBias18", "HIMinimumBias19"]
 
-StreamsHIMinimumBias = ["PhysicsHIMinimumBias0", "PhysicsHIMinimumBias1", "PhysicsHIMinimumBias2", "PhysicsHIMinimumBias3", "PhysicsHIMinimumBias4", 
-              "PhysicsHIMinimumBias5", "PhysicsHIMinimumBias6", "PhysicsHIMinimumBias7", "PhysicsHIMinimumBias8", "PhysicsHIMinimumBias9", 
-              "PhysicsHIMinimumBias10", "PhysicsHIMinimumBias11", "PhysicsHIMinimumBias12", "PhysicsHIMinimumBias13", "PhysicsHIMinimumBias14", 
-              "PhysicsHIMinimumBias15", "PhysicsHIMinimumBias16", "PhysicsHIMinimumBias17", "PhysicsHIMinimumBias18", "PhysicsHIMinimumBias19"]
-
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -1695,7 +1727,6 @@ for dataset in DATASETS:
                scenario=hiScenario)
 
 DATASETS = ["HIEphemeralHLTPhysics"]
-StreamsHIEphemeralHLTPhysics = ["PhysicsHIHLTPhysics"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1709,7 +1740,6 @@ for dataset in DATASETS:
                scenario=hiScenario)
 
 DATASETS = ["HIEphemeralZeroBias0", "HIEphemeralZeroBias1"]
-StreamsHIEphemeralZeroBias = ["PhysicsHIZeroBias"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1727,24 +1757,6 @@ for dataset in DATASETS:
 #########################
 ### HIPhysicsRawPrime ###
 #########################
-
-StreamsHIRawPrime_MainAgent = [ "PhysicsHIPhysicsRawPrime0", "PhysicsHIPhysicsRawPrime1", "PhysicsHIPhysicsRawPrime2", "PhysicsHIPhysicsRawPrime3",
-                                "PhysicsHIPhysicsRawPrime4", "PhysicsHIPhysicsRawPrime5", "PhysicsHIPhysicsRawPrime6", "PhysicsHIPhysicsRawPrime7", 
-                                "PhysicsHIPhysicsRawPrime8", "PhysicsHIPhysicsRawPrime9", "PhysicsHIPhysicsRawPrime10", "PhysicsHIPhysicsRawPrime11",
-                                "PhysicsHIPhysicsRawPrime12", "PhysicsHIPhysicsRawPrime13", "PhysicsHIPhysicsRawPrime14","PhysicsHIPhysicsRawPrime15", 
-                                "PhysicsHIPhysicsRawPrime16", "PhysicsHIPhysicsRawPrime17", "PhysicsHIPhysicsRawPrime18", "PhysicsHIPhysicsRawPrime19", 
-                                "PhysicsHIPhysicsRawPrime20", "PhysicsHIPhysicsRawPrime21", "PhysicsHIPhysicsRawPrime22", "PhysicsHIPhysicsRawPrime23", 
-                                "PhysicsHIPhysicsRawPrime24", "PhysicsHIPhysicsRawPrime25", "PhysicsHIPhysicsRawPrime26", "PhysicsHIPhysicsRawPrime27", 
-                                "PhysicsHIPhysicsRawPrime28", "PhysicsHIPhysicsRawPrime29"]
-
-StreamsHIRawPrime_SecondAgent = [ "PhysicsHIPhysicsRawPrime30", "PhysicsHIPhysicsRawPrime31", 
-                                  "PhysicsHIPhysicsRawPrime32", "PhysicsHIPhysicsRawPrime33", "PhysicsHIPhysicsRawPrime34", "PhysicsHIPhysicsRawPrime35", 
-                                  "PhysicsHIPhysicsRawPrime36", "PhysicsHIPhysicsRawPrime37", "PhysicsHIPhysicsRawPrime38", "PhysicsHIPhysicsRawPrime39", 
-                                  "PhysicsHIPhysicsRawPrime40", "PhysicsHIPhysicsRawPrime41", "PhysicsHIPhysicsRawPrime42", "PhysicsHIPhysicsRawPrime43", 
-                                  "PhysicsHIPhysicsRawPrime44", "PhysicsHIPhysicsRawPrime45", "PhysicsHIPhysicsRawPrime46", "PhysicsHIPhysicsRawPrime47", 
-                                  "PhysicsHIPhysicsRawPrime48", "PhysicsHIPhysicsRawPrime49", "PhysicsHIPhysicsRawPrime50", "PhysicsHIPhysicsRawPrime51", 
-                                  "PhysicsHIPhysicsRawPrime52", "PhysicsHIPhysicsRawPrime53", "PhysicsHIPhysicsRawPrime54", "PhysicsHIPhysicsRawPrime55", 
-                                  "PhysicsHIPhysicsRawPrime56", "PhysicsHIPhysicsRawPrime57", "PhysicsHIPhysicsRawPrime58", "PhysicsHIPhysicsRawPrime59"]
 
 DATASETS = ["HITestRawPrime0", "HITestRawPrime1", "HITestRawPrime2", "HITestRawPrime3", "HITestRawPrime4",
             "HITestRawPrime5", "HITestRawPrime6", "HITestRawPrime7", "HITestRawPrime8", "HITestRawPrime9",
@@ -1778,7 +1790,7 @@ DATASETS = ["HIPhysicsRawPrime0"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
-               raw_to_disk=False,
+               raw_to_disk=True,
                aod_to_disk=False,
                write_nanoaod=False,
                write_dqm=True,
@@ -1786,13 +1798,13 @@ for dataset in DATASETS:
                siteWhitelist = ["T2_CH_CERN"],
                maxMemoryperCore=2500,
                tape_node="T0_CH_CERN_MSS",
-               disk_node="T2_US_Vanderbilt",
+               disk_node="T2_CH_CERN",
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
                                "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
                                "SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
-               physics_skims=["PbPbEW", "PbPbHighPtJets"],
+               physics_skims=["PbPbEW", "PbPbHighPtJets", "LogError", "LogErrorMonitor"],
                scenario=hiRawPrimeScenario)
 
 DATASETS = ["HIPhysicsRawPrime1"]
@@ -1814,7 +1826,7 @@ for dataset in DATASETS:
                                "SiStripCalZeroBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
-               physics_skims=["PbPbEW", "PbPbHighPtJets"],
+               physics_skims=["PbPbEW", "PbPbHighPtJets","LogError", "LogErrorMonitor"],
                scenario=hiRawPrimeScenario)
     
 
@@ -1877,7 +1889,7 @@ DATASETS = ["HIPhysicsRawSecond"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=False,
-               raw_to_disk=False,
+               raw_to_disk=True,
                aod_to_disk=False,
                timePerEvent=3,
                write_nanoaod=False,
@@ -1920,8 +1932,45 @@ ignoreStream(tier0Config, "streamDQMRates")
 ignoreStream(tier0Config, "DQMPPSRandom")
 
 # Set streams to ignore by agent. These will not be injected
-SECOND_AGENT_STREAMS = StreamsHIRawPrime_SecondAgent + StreamsHIForward_SecondAgent + STREAMS_ppRef_ZBandFwd_secondAgent
-THIRD_AGENT_STREAMS = STREAMS_DAQ_TFTEST + STREAMS_DAQ_TFTEST_ppRef
+
+StreamsHIForward_MainAgent = ["PhysicsHIForward0", "PhysicsHIForward1", "PhysicsHIForward2", "PhysicsHIForward3", "PhysicsHIForward4", 
+                                "PhysicsHIForward5", "PhysicsHIForward6", "PhysicsHIForward7", "PhysicsHIForward8", "PhysicsHIForward9", 
+                                "PhysicsHIForward10", "PhysicsHIForward11", "PhysicsHIForward12", "PhysicsHIForward13", "PhysicsHIForward14", 
+                                "PhysicsHIForward15", "PhysicsHIForward16", "PhysicsHIForward17", "PhysicsHIForward18", "PhysicsHIForward19"]
+
+StreamsHIMinimumBias_MainAgent = ["PhysicsHIMinimumBias0", "PhysicsHIMinimumBias1", "PhysicsHIMinimumBias2", "PhysicsHIMinimumBias3", "PhysicsHIMinimumBias4", 
+              "PhysicsHIMinimumBias5", "PhysicsHIMinimumBias6", "PhysicsHIMinimumBias7", "PhysicsHIMinimumBias8", "PhysicsHIMinimumBias9", 
+              "PhysicsHIMinimumBias10", "PhysicsHIMinimumBias11", "PhysicsHIMinimumBias12", "PhysicsHIMinimumBias13", "PhysicsHIMinimumBias14", 
+              "PhysicsHIMinimumBias15", "PhysicsHIMinimumBias16", "PhysicsHIMinimumBias17", "PhysicsHIMinimumBias18", "PhysicsHIMinimumBias19"]
+
+StreamsHIEphemeralHLTPhysics_MainAgent = ["PhysicsHIHLTPhysics"]
+
+StreamsHIEphemeralZeroBias_MainAgent = ["PhysicsHIZeroBias"]
+
+StreamsHIRawSecond_MainAgent = ["PhysicsHIPhysicsRawSecond"]
+
+StreamsHIRawPrime_SecondAgent = [ "PhysicsHIPhysicsRawPrime0", "PhysicsHIPhysicsRawPrime1", "PhysicsHIPhysicsRawPrime2", "PhysicsHIPhysicsRawPrime3",
+                                "PhysicsHIPhysicsRawPrime4", "PhysicsHIPhysicsRawPrime5", "PhysicsHIPhysicsRawPrime6", "PhysicsHIPhysicsRawPrime7", 
+                                "PhysicsHIPhysicsRawPrime8", "PhysicsHIPhysicsRawPrime9", "PhysicsHIPhysicsRawPrime10", "PhysicsHIPhysicsRawPrime11",
+                                "PhysicsHIPhysicsRawPrime12", "PhysicsHIPhysicsRawPrime13", "PhysicsHIPhysicsRawPrime14","PhysicsHIPhysicsRawPrime15", 
+                                "PhysicsHIPhysicsRawPrime16", "PhysicsHIPhysicsRawPrime17", "PhysicsHIPhysicsRawPrime18", "PhysicsHIPhysicsRawPrime19", 
+                                "PhysicsHIPhysicsRawPrime20", "PhysicsHIPhysicsRawPrime21", "PhysicsHIPhysicsRawPrime22", "PhysicsHIPhysicsRawPrime23", 
+                                "PhysicsHIPhysicsRawPrime24", "PhysicsHIPhysicsRawPrime25", "PhysicsHIPhysicsRawPrime26", "PhysicsHIPhysicsRawPrime27", 
+                                "PhysicsHIPhysicsRawPrime28", "PhysicsHIPhysicsRawPrime29"]
+
+StreamsHIRawPrime_ThirdAgent = [ "PhysicsHIPhysicsRawPrime30", "PhysicsHIPhysicsRawPrime31", 
+                                  "PhysicsHIPhysicsRawPrime32", "PhysicsHIPhysicsRawPrime33", "PhysicsHIPhysicsRawPrime34", "PhysicsHIPhysicsRawPrime35", 
+                                  "PhysicsHIPhysicsRawPrime36", "PhysicsHIPhysicsRawPrime37", "PhysicsHIPhysicsRawPrime38", "PhysicsHIPhysicsRawPrime39", 
+                                  "PhysicsHIPhysicsRawPrime40", "PhysicsHIPhysicsRawPrime41", "PhysicsHIPhysicsRawPrime42", "PhysicsHIPhysicsRawPrime43", 
+                                  "PhysicsHIPhysicsRawPrime44", "PhysicsHIPhysicsRawPrime45", "PhysicsHIPhysicsRawPrime46", "PhysicsHIPhysicsRawPrime47", 
+                                  "PhysicsHIPhysicsRawPrime48", "PhysicsHIPhysicsRawPrime49", "PhysicsHIPhysicsRawPrime50", "PhysicsHIPhysicsRawPrime51", 
+                                  "PhysicsHIPhysicsRawPrime52", "PhysicsHIPhysicsRawPrime53", "PhysicsHIPhysicsRawPrime54", "PhysicsHIPhysicsRawPrime55", 
+                                  "PhysicsHIPhysicsRawPrime56", "PhysicsHIPhysicsRawPrime57", "PhysicsHIPhysicsRawPrime58", "PhysicsHIPhysicsRawPrime59"]
+
+MAIN_AGENT_STREAMS = StreamsHIForward_MainAgent + StreamsHIRawSecond_MainAgent + StreamsHIMinimumBias_MainAgent + StreamsHIEphemeralHLTPhysics_MainAgent + StreamsHIEphemeralZeroBias_MainAgent
+SECOND_AGENT_STREAMS = StreamsHIRawPrime_SecondAgent
+THIRD_AGENT_STREAMS = StreamsHIRawPrime_ThirdAgent
+
 setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
                                     "ThirdAgent" : THIRD_AGENT_STREAMS})
 
