@@ -1568,13 +1568,7 @@ for dataset in DATASETS:
                scenario=hiForwardScenario)
     
 
-DATASETS = ["HIForward1", "HIForward2",
-            "HIForward3", "HIForward4", "HIForward5",
-            "HIForward6", "HIForward7", "HIForward8",
-            "HIForward9", "HIForward10", "HIForward11",
-            "HIForward12", "HIForward13", "HIForward14",
-            "HIForward15", "HIForward16", "HIForward17",
-            "HIForward18", "HIForward19"]
+DATASETS = ["HIForward1"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
