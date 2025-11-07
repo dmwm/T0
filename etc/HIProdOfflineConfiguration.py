@@ -236,8 +236,8 @@ addDataset(tier0Config, "Default",
            multicore=numberOfCores,
            global_tag=promptrecoGlobalTag,
            global_tag_connect=globalTagConnect,
-           archival_node="T0_CH_CERN_MSS",
-           tape_node="T1_US_FNAL_MSS",
+           archival_node="T1_US_FNAL_MSS",
+           tape_node="T0_CH_CERN_MSS",
            disk_node=None,
            siteWhitelist = ["T2_CH_CERN"],
            raw_to_disk=False,
@@ -621,7 +621,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                archival_node=None,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
@@ -635,7 +635,7 @@ for dataset in DATASETS:
                do_reco=True,
                aod_to_disk=False,
                archival_node=None,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
@@ -648,7 +648,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                archival_node=None,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
@@ -664,7 +664,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common", "@muon", "@heavyFlavor"],
                alca_producers=["TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                archival_node=None,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
@@ -692,7 +692,7 @@ for dataset in DATASETS:
                aod_to_disk=False,
                dqm_sequences=["@common"],
                archival_node=None,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
     
@@ -705,7 +705,7 @@ for dataset in DATASETS:
                aod_to_disk=False,
                dqm_sequences=["@common", "@jetmet"],
                archival_node=None,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
     
@@ -756,7 +756,7 @@ for dataset in DATASETS:
                physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "LogError", "LogErrorMonitor"],
                timePerEvent=5.7,
                sizePerEvent=2250,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
                scenario=ppRefScenario)
 
@@ -835,7 +835,7 @@ for dataset in DATASETS:
                write_miniaod=True,
                write_nanoaod=False,
                write_dqm=True,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
                alca_producers=["TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu",
                                "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
@@ -856,7 +856,7 @@ for dataset in DATASETS:
                write_miniaod=True,
                write_nanoaod=False,
                write_dqm=True,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
                alca_producers=["TkAlZMuMu", "TkAlDiMuonAndVertex", "TkAlJpsiMuMu", "TkAlUpsilonMuMu"],
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet"],
@@ -1171,7 +1171,7 @@ for dataset in DATASETS:
                write_dqm=False,
                write_aod=False,
                archival_node=None,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
@@ -1195,7 +1195,7 @@ for dataset in DATASETS_DAQ_TFTEST:
                raw_to_disk=False,
                dqm_sequences=["@none"],
                archival_node=None,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
@@ -1221,7 +1221,7 @@ for dataset in DATASETS_DAQ_TFTEST_ppRef:
                raw_to_disk=False,
                dqm_sequences=["@none"],
                archival_node=None,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
@@ -1380,7 +1380,7 @@ for dataset in DATASETS:
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=1,
                sizePerEvent=1500,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
                scenario=ppRefScenario)
 
@@ -1398,7 +1398,7 @@ for dataset in DATASETS:
                write_dqm=False,
                write_aod=False,
                archival_node=None,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
@@ -1427,7 +1427,7 @@ for dataset in DATASETS:
                write_dqm=True,
                dqm_sequences=["@common"],
                archival_node=None,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
@@ -1441,7 +1441,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                archival_node=None,
                aod_to_disk=False,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
@@ -1534,7 +1534,7 @@ for dataset in DATASETS:
                aod_to_disk=False,
                write_nanoaod=False,
                write_dqm=True,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
                alca_producers=["HcalCalMinBias"],
                dqm_sequences=["@common", "@L1TMon", "@hcal"],
@@ -1549,7 +1549,7 @@ for dataset in DATASETS:
                aod_to_disk=False,
                write_nanoaod=False,
                write_dqm=True,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
                alca_producers=["TkAlMinBias"],
                dqm_sequences=["@common"],
@@ -1577,7 +1577,7 @@ for dataset in DATASETS:
                write_dqm=True,
                raw_to_disk=False,
                aod_to_disk=False,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
                dqm_sequences=["@common"],
                scenario=hiScenario)
@@ -1594,7 +1594,7 @@ for dataset in DATASETS:
                aod_to_disk=False,
                write_nanoaod=False,
                write_dqm=True,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias",
                                "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
@@ -1614,7 +1614,7 @@ for dataset in DATASETS:
                aod_to_disk=True,
                write_nanoaod=False,
                write_dqm=True,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
                                "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
@@ -1638,7 +1638,7 @@ for dataset in DATASETS:
                aod_to_disk=True,
                write_nanoaod=False,
                write_dqm=True,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
                                "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
@@ -1667,7 +1667,7 @@ for dataset in DATASETS:
                aod_to_disk=True,
                write_nanoaod=False,
                write_dqm=True,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
                                "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
@@ -1686,7 +1686,7 @@ for dataset in DATASETS:
                raw_to_disk=False,
                write_nanoaod=False,
                write_dqm=True,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
                alca_producers=["SiStripCalZeroBias", "SiStripCalMinBias", "TkAlMinBias"],
                dqm_sequences=["@commonSiStripZeroBias"],
@@ -1704,7 +1704,7 @@ for dataset in DATASETS:
                raw_to_disk=False,
                write_nanoaod=False,
                write_dqm=True,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
                alca_producers=["SiStripCalZeroBias"],
                dqm_sequences=["@commonSiStripZeroBias"],
@@ -1718,7 +1718,7 @@ for dataset in DATASETS:
                raw_to_disk=False,
                write_nanoaod=False,
                write_dqm=True,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
                dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiScenario)
@@ -1732,7 +1732,7 @@ for dataset in DATASETS:
                write_nanoaod=False,
                write_dqm=True,
                timePerEvent=1,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
                dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiScenario)
@@ -1758,7 +1758,7 @@ for dataset in DATASETS:
                write_dqm=True,
                siteWhitelist = ["T2_CH_CERN"],
                maxMemoryperCore=2500,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
                                "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
@@ -1781,7 +1781,7 @@ for dataset in DATASETS:
                timePerEvent=3,
                siteWhitelist = ["T2_CH_CERN"],
                maxMemoryperCore=2500,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
                                "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
@@ -1803,7 +1803,7 @@ for dataset in DATASETS:
                timePerEvent=3,
                siteWhitelist = ["T2_CH_CERN"],
                maxMemoryperCore=2500,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
                                "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
@@ -1827,7 +1827,7 @@ for dataset in DATASETS:
                timePerEvent=3,
                write_nanoaod=False,
                write_dqm=False,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
                                "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
@@ -1858,7 +1858,7 @@ for dataset in DATASETS:
                timePerEvent=3,
                write_nanoaod=False,
                write_dqm=False,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "MuAlCalIsolatedMu",
                                "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
@@ -1878,7 +1878,7 @@ for dataset in DATASETS:
                timePerEvent=3,
                write_nanoaod=False,
                write_dqm=False,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                dqm_sequences=["@none"],
                scenario=hiRawPrimeScenario)
@@ -1892,7 +1892,7 @@ for dataset in DATASETS:
                write_dqm=True,
                raw_to_disk=False,
                aod_to_disk=True,
-               tape_node="T1_US_FNAL_MSS",
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_US_Vanderbilt",
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
                alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias"],
