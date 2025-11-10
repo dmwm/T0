@@ -1773,8 +1773,8 @@ for dataset in DATASETS:
                timePerEvent=3,
                write_nanoaod=False,
                write_dqm=False,
-               tape_node="T0_CH_CERN_MSS",
-               disk_node="T2_US_Vanderbilt",
+               tape_node=None,
+               disk_node=None,
                dqm_sequences=["@none"],
                scenario=hiRawPrimeScenario)
 

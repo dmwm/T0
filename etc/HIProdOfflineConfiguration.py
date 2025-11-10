@@ -1798,7 +1798,7 @@ for dataset in DATASETS:
                siteWhitelist = ["T2_CH_CERN"],
                maxMemoryperCore=2500,
                tape_node="T0_CH_CERN_MSS",
-               disk_node="T2_CH_CERN",
+               disk_node="T2_US_Vanderbilt",
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "EcalESAlign", "MuAlCalIsolatedMu", 
                                "TkAlDiMuonAndVertex", "HcalCalHO", "HcalCalIsoTrkProducerFilter", "HcalCalHBHEMuonProducerFilter",
                                "SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias", "HcalCalIsolatedBunchSelector", "HcalCalIterativePhiSym","HcalCalMinBias",
@@ -1895,7 +1895,7 @@ for dataset in DATASETS:
                write_nanoaod=False,
                write_dqm=False,
                tape_node="T0_CH_CERN_MSS",
-               disk_node="T2_US_Vanderbilt",
+               disk_node="T2_CH_CERN",
                dqm_sequences=["@none"],
                scenario=hiRawPrimeScenario)
 
