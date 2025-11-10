@@ -114,7 +114,7 @@ setDefaultScramArch(tier0Config, "el8_amd64_gcc12")
 
 # Configure scenarios
 #ppScenario = "ppEra_Run3"
-ppScenario = "ppEra_Run3_pp_on_PbPb_2025"
+ppScenario = "ppEra_Run3_2025"
 ppScenarioB0T = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
 hcalnzsScenario = "hcalnzsEra_Run3"
