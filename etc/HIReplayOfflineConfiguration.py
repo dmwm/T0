@@ -120,7 +120,7 @@ setScramArch(tier0Config, "CMSSW_15_1_0_patch2", "el8_amd64_gcc12")
 
 # Configure scenarios
 #ppScenario = "ppEra_Run3"
-ppScenario = "ppEra_Run3_pp_on_PbPb_2025"
+ppScenario = "ppEra_Run3_2025"
 ppScenarioB0T = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
 hcalnzsScenario = "hcalnzsEra_Run3"
@@ -1773,8 +1773,8 @@ for dataset in DATASETS:
                timePerEvent=3,
                write_nanoaod=False,
                write_dqm=False,
-               tape_node="T0_CH_CERN_MSS",
-               disk_node="T2_US_Vanderbilt",
+               tape_node=None,
+               disk_node=None,
                dqm_sequences=["@none"],
                scenario=hiRawPrimeScenario)
 
