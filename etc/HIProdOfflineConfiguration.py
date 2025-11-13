@@ -1571,7 +1571,11 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                scenario=hiScenario)
 
-DATASETS = ["HIOnlineMonitor", "HITrackerNZS"]
+DATASETS = ["HIOnlineMonitor", "HITrackerNZS0", "HITrackerNZS1",
+            "HITrackerNZS2", "HITrackerNZS3", "HITrackerNZS4",
+            "HITrackerNZS5", "HITrackerNZS6", "HITrackerNZS7",
+            "HITrackerNZS8", "HITrackerNZS9"]
+
 StreamsHIOnlineMonitor = ["HIDQM"]
 StreamsHITrackerNZS = ["PhysicsHITrackerNZS"]
 
@@ -1694,6 +1698,21 @@ for dataset in DATASETS:
                reco_split=forwardRecoSplitting,
                scenario=hiForwardScenario)
 
+DATASETS = ["HIMinimumBiasZS0", "HIMinimumBiasZS1", "HIMinimumBiasZS2",
+            "HIMinimumBiasZS3", "HIMinimumBiasZS4", "HIMinimumBiasZS5",
+            "HIMinimumBiasZS6", "HIMinimumBiasZS7", "HIMinimumBiasZS8",
+            "HIMinimumBiasZS9"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               raw_to_disk=False,
+               write_nanoaod=False,
+               write_dqm=True,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_US_Vanderbilt",
+               scenario=hiScenario)
+    
 DATASETS = ["HIMinimumBias0"]
 
 for dataset in DATASETS:
