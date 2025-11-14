@@ -1672,7 +1672,10 @@ DATASETS = ["HIForward2",
             "HIForward9", "HIForward10", "HIForward11",
             "HIForward12", "HIForward13", "HIForward14",
             "HIForward15", "HIForward16", "HIForward17",
-            "HIForward18", "HIForward19"]
+            "HIForward18", "HIForward19", "HIForward20",
+            "HIForward21", "HIForward22", "HIForward23",
+            "HIForward24", "HIForward25", "HIForward26",
+            "HIForward27", "HIForward28", "HIForward29"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
