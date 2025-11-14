@@ -1572,6 +1572,7 @@ for dataset in DATASETS:
                scenario=hiScenario)
 
 DATASETS = ["HIOnlineMonitor", "HITrackerNZS"]
+
 StreamsHIOnlineMonitor = ["HIDQM"]
 StreamsHITrackerNZS = ["PhysicsHITrackerNZS"]
 
@@ -1583,7 +1584,21 @@ for dataset in DATASETS:
                write_nanoaod=False,
                disk_node="T2_US_Vanderbilt",
                scenario=hiScenario)
+    
+DATASETS = ["HITrackerNZS0", "HITrackerNZS1",
+            "HITrackerNZS2", "HITrackerNZS3", "HITrackerNZS4",
+            "HITrackerNZS5", "HITrackerNZS6", "HITrackerNZS7",
+            "HITrackerNZS8", "HITrackerNZS9"]
 
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               aod_to_disk=False,
+               raw_to_disk=True,
+               write_nanoaod=False,
+               disk_node="T2_CH_CERN",
+               scenario=hiScenario)
+    
 DATASETS = ["HIEmptyBX"]
 
 for dataset in DATASETS:
@@ -1708,11 +1723,7 @@ for dataset in DATASETS:
                dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiScenario)
     
-DATASETS = ["HIMinimumBias1", "HIMinimumBias2", "HIMinimumBias3", 
-            "HIMinimumBias4", "HIMinimumBias5", "HIMinimumBias6", "HIMinimumBias7",
-            "HIMinimumBias8", "HIMinimumBias9", "HIMinimumBias10", "HIMinimumBias11",
-            "HIMinimumBias12", "HIMinimumBias13", "HIMinimumBias14", "HIMinimumBias15",
-            "HIMinimumBias16", "HIMinimumBias17", "HIMinimumBias18", "HIMinimumBias19"]
+DATASETS = ["HIMinimumBias1", "HIMinimumBias2", "HIMinimumBias3"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1725,7 +1736,27 @@ for dataset in DATASETS:
                alca_producers=["SiStripCalZeroBias"],
                dqm_sequences=["@commonSiStripZeroBias"],
                scenario=hiScenario)
+    
+DATASETS = ["HIMinimumBias4", "HIMinimumBias5", "HIMinimumBias6", "HIMinimumBias7",
+            "HIMinimumBias8", "HIMinimumBias9"]
 
+DATASETS += ["HIMinimumBiasZS0", "HIMinimumBiasZS1", "HIMinimumBiasZS2",
+            "HIMinimumBiasZS3", "HIMinimumBiasZS4", "HIMinimumBiasZS5",
+            "HIMinimumBiasZS6", "HIMinimumBiasZS7", "HIMinimumBiasZS8",
+            "HIMinimumBiasZS9"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               raw_to_disk=False,
+               write_nanoaod=False,
+               write_dqm=True,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_CH_CERN",
+               alca_producers=["SiStripCalZeroBias"],
+               dqm_sequences=["@commonSiStripZeroBias"],
+               scenario=hiScenario)
+    
 DATASETS = ["HIEphemeralHLTPhysics"]
 
 for dataset in DATASETS:
