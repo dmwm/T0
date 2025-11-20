@@ -615,6 +615,7 @@ class Tier0FeederPoller(BaseWorkerThread):
         getRunDatasetNewDAO = self.daoFactory(classname = "Tier0Feeder.GetRunDatasetNew")
         getRunDatasetReleasedDAO = self.daoFactory(classname = "Tier0Feeder.GetRunDatasetReleased")
         getRunDatasetDoneDAO = self.daoFactory(classname = "Tier0Feeder.GetRunDatasetDone")
+        getRunDatasetInDBSDAO = self.daoFactory(classname = "Tier0Feeder.GetRunDatasetInDBS")
 
         updateRecoReleaseConfigsDAO = self.daoFactory(classname = "Tier0Feeder.UpdateRecoReleaseConfigs")
 
@@ -623,6 +624,7 @@ class Tier0FeederPoller(BaseWorkerThread):
 
         insertRunDatasetDoneDAO = self.daoFactoryT0DataSvc(classname = "T0DataSvc.InsertRunDatasetDone")
         updateRunDatasetDoneDAO = self.daoFactoryT0DataSvc(classname = "T0DataSvc.UpdateRunDatasetDone")
+        updateRunDatasetInDBSDAO = self.daoFactoryT0DataSvc(classname = "T0DataSvc.UpdateRunDatasetInDBS")
 
         # first check for records that are completely new
         # insert the two Tier0 Data Service records for them
@@ -684,6 +686,18 @@ class Tier0FeederPoller(BaseWorkerThread):
             updateRunDatasetDoneDAO.execute(binds = bindsUpdateDone, transaction = False)
         if len(bindsUpdate) > 0:
             updateRecoReleaseConfigsDAO.execute(binds = bindsUpdate, transaction = False)
+
+        runDatasetInDBS = getRunDatasetInDBSDAO.execute(transaction = False)
+        bindsUpdateInDBS = []
+        
+        for runDataset in runDatasetInDBS:
+            bindsUpdateInDBS.append( { 'RUN' : runDataset['run'],
+                                    'PRIMDS' : runDataset['primds'] } )
+        
+        if len(bindsUpdateInDBS) > 0:
+            updateRunDatasetInDBSDAO.execute(binds = bindsUpdateInDBS, transaction = False)
+        
+   
 
         return
 
