@@ -1,5 +1,6 @@
 # pylint: skip-file
 config.component_('Tier0Feeder')
+
 config.Tier0Feeder.namespace = "T0Component.Tier0Feeder.Tier0Feeder"
 config.Tier0Feeder.componentDir = config.General.workDir + "/Tier0Feeder"
 config.Tier0Feeder.pollInterval = 30
@@ -45,6 +46,8 @@ config.TaskArchiver.useWorkQueue = False
 
 config.DBS3Upload.primaryDatasetType = "data"
 config.DBS3Upload.datasetType = 'VALID'
+config.DBS3Upload.DBSUploadPoller.runTimeEst = 10800
+
 
 config.DBSInterface.primaryDatasetType = "data"
 
@@ -55,11 +58,27 @@ config.AgentStatusWatcher.pendingSlotsTaskPercent = 30
 config.AgentStatusWatcher.pendingSlotsSitePercent = 40
 config.AgentStatusWatcher.runningExpressPercent = 25
 config.AgentStatusWatcher.runningRepackPercent = 10
-config.AgentStatusWatcher.enabled = True
+config.AgentStatusWatcher.enabled = False
 config.AgentStatusWatcher.onlySSB = False
 
 config.RucioInjector.blockRuleParams = {}
 config.RucioInjector.useDsetReplicaDeep = True
+config.RucioInjector.RucioInjectorPoller.runTimeEst = 2400
 
 config.BossAir.pluginNames = ["SimpleCondorPlugin"]
 
+config.Alert.alertDestinationMap = {'alertAgentWatchdogPoller': 'cms-tier0-monitoring-alerts', 'alertAgentWatchdogScanner': 'cms-tier0-monitoring-alerts'}
+
+config.AgentWatchdog.componentDir = '/data/tier0/WMAgent.venv3/srv/wmagent/2.4.5/install/AgentWatchdog'
+config.AgentWatchdog.section_('AgentWatchdogPoller')
+config.AgentWatchdog.AgentWatchdogPoller.pollInterval = 20
+config.AgentWatchdog.AgentWatchdogPoller.enabled = True
+config.AgentWatchdog.watchedComponents = ['AgentStatusWatcher', 'AnalyticsDataCollector', 'ArchiveDataReporter', 'DBS3Upload', 'ErrorHandler', 'JobAccountant', 'JobArchiver', 'JobCreator', 'JobSubmitter', 'JobTracker', 'JobUpdater', 'RetryManager', 'RucioInjector', 'TaskArchiver', 'WorkflowUpdater', 'WorkQueueManager']
+config.AgentWatchdog.runTimeCorrFactor = 1.5
+config.AgentWatchdog.section_('AgentWatchdogScanner')
+config.AgentWatchdog.AgentWatchdogScanner.pollInterval = 3600
+config.AgentWatchdog.AgentWatchdogScanner.enabled = True
+config.AgentWatchdog.logLevel = 'INFO'
+config.AgentWatchdog.namespace = 'WMComponent.AgentWatchdog.AgentWatchdog'
+config.AgentWatchdog.actionLimit = 3
+config.AgentWatchdog.watchdogTimeout = 60
