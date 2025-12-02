@@ -41,7 +41,7 @@ setConfigVersion(tier0Config, "3.2.3")
 # 374951:    HI 2023 3.8 TB
 # 387456:    Test HI 2024 with memory problems 3.1 TB
 # 388621:    Small HI for 2025 replay
-setInjectRuns(tier0Config, [388621])
+setInjectRuns(tier0Config, [400007])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -110,7 +110,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_1_0_patch3"
+    'default': "CMSSW_15_1_0_patch4"
 }
 
 # Configure ScramArch
