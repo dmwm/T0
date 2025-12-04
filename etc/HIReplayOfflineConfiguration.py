@@ -1516,6 +1516,22 @@ for dataset in DATASETS:
                raw_to_disk=False,
                write_nanoaod=False,
                scenario=hiScenario)
+    
+DATASETS = ["HITrackerNZS0", "HITrackerNZS1",
+            "HITrackerNZS2", "HITrackerNZS3", "HITrackerNZS4",
+            "HITrackerNZS5", "HITrackerNZS6", "HITrackerNZS7",
+            "HITrackerNZS8", "HITrackerNZS9"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               aod_to_disk=False,
+               raw_to_disk=True,
+               write_nanoaod=False,
+               disk_node="T2_CH_CERN",
+               scenario=hiScenario)
+
+
 
 DATASETS = ["HIEmptyBX"]
 
