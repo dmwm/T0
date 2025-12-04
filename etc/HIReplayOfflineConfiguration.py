@@ -1538,7 +1538,7 @@ for dataset in DATASETS:
                aod_to_disk=False,
                raw_to_disk=True,
                write_nanoaod=False,
-               disk_node="T2_CH_CERN",
+               disk_node="T0_CH_CERN_Disk",
                dataset_lifetime=3*30*24*3600,
                scenario=hiScenario)
 
