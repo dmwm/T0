@@ -41,7 +41,17 @@ setConfigVersion(tier0Config, "3.2.3")
 # 374951:    HI 2023 3.8 TB
 # 387456:    Test HI 2024 with memory problems 3.1 TB
 # 388621:    Small HI for 2025 replay
-setInjectRuns(tier0Config, [400007])
+setInjectRuns(tier0Config, [400006, 400194, 400196])
+specifyStreams(tier0Config, ['PhysicsHITrackerNZS0', 
+                             'PhysicsHITrackerNZS1', 
+                             'PhysicsHITrackerNZS2', 
+                             'PhysicsHITrackerNZS3', 
+                             'PhysicsHITrackerNZS4', 
+                             'PhysicsHITrackerNZS5', 
+                             'PhysicsHITrackerNZS6', 
+                             'PhysicsHITrackerNZS7', 
+                             'PhysicsHITrackerNZS8', 
+                             'PhysicsHITrackerNZS9'])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -1529,6 +1539,7 @@ for dataset in DATASETS:
                raw_to_disk=True,
                write_nanoaod=False,
                disk_node="T2_CH_CERN",
+               dataset_lifetime=3*30*24*3600,
                scenario=hiScenario)
 
 
