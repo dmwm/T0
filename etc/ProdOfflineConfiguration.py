@@ -68,11 +68,11 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 
 #maxRunPreviousEra = 9999999
 acquisitionEra = {
-    'default' : 'Run2025G',
+    'default' : 'Commissioning2026',
     #'maxRun' : {maxRunPreviousEra : 'NeNeRun2025'}
 }
 setAcquisitionEra(tier0Config, acquisitionEra)
-setEmulationAcquisitionEra(tier0Config, "Emulation2025", repack=False)
+setEmulationAcquisitionEra(tier0Config, "Emulation2026", repack=False)
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 
@@ -131,7 +131,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_0_15_patch4"
+    'default': "CMSSW_15_1_0_patch4"
     #'acqEra': {'Run2024F': "CMSSW_14_0_11"},
     #'maxRun': {maxRunPreviousConfig: "CMSSW_15_0_6"}
 }
@@ -180,12 +180,12 @@ expressProcVersion = {
 
 # Defaults for GlobalTag
 expressGlobalTag = {
-    'default': "150X_dataRun3_Express_v2"
+    'default': "151X_dataRun3_Express_v1"
     #'acqEra': {'Run2024B': "140X_dataRun3_Express_v2"}
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Express_v3"}
 }
 promptrecoGlobalTag = {
-    'default': "150X_dataRun3_Prompt_v1",
+    'default': "151X_dataRun3_Prompt_v1",
     #'acqEra': {'Run2023E': "132X_dataRun3_Prompt_v2"},
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Prompt_v2"}
 }
@@ -1662,19 +1662,19 @@ ignoreStream(tier0Config, "DQMPPSRandom")
 #THIRD_AGENT_STREAMS = STREAMS_DAQ_TFTEST + STREAMS_DAQ_TFTEST_ppRef
 
 
-SECOND_AGENT_STREAMS = ["ParkingSingleMuon0", "ParkingSingleMuon1", "ParkingSingleMuon2",
-                        "ParkingSingleMuon3", "ParkingSingleMuon4", "ParkingSingleMuon5",
-                        "ParkingSingleMuon6", "ParkingSingleMuon7", "ParkingSingleMuon8",
-                        "ParkingSingleMuon9", "ParkingSingleMuon10", "ParkingSingleMuon11",
-                        "ParkingSingleMuon12", "ParkingSingleMuon13", "ParkingSingleMuon14",
-                        "ParkingSingleMuon15",
-                        "ParkingVBF0", "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
-                        "ParkingHH", "ParkingLLP", "ParkingAnomalyDetection",
-                        "ParkingDoubleMuonLowMass0", "ParkingDoubleMuonLowMass1",
-                        "ParkingDoubleMuonLowMass2", "ParkingDoubleMuonLowMass3"]
+#SECOND_AGENT_STREAMS = ["ParkingSingleMuon0", "ParkingSingleMuon1", "ParkingSingleMuon2",
+#                        "ParkingSingleMuon3", "ParkingSingleMuon4", "ParkingSingleMuon5",
+#                        "ParkingSingleMuon6", "ParkingSingleMuon7", "ParkingSingleMuon8",
+#                        "ParkingSingleMuon9", "ParkingSingleMuon10", "ParkingSingleMuon11",
+#                        "ParkingSingleMuon12", "ParkingSingleMuon13", "ParkingSingleMuon14",
+#                        "ParkingSingleMuon15",
+#                        "ParkingVBF0", "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
+#                        "ParkingHH", "ParkingLLP", "ParkingAnomalyDetection",
+#                        "ParkingDoubleMuonLowMass0", "ParkingDoubleMuonLowMass1",
+#                        "ParkingDoubleMuonLowMass2", "ParkingDoubleMuonLowMass3"]
 
-THIRD_AGENT_STREAMS = []
-setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
+#THIRD_AGENT_STREAMS = []
+setHelperAgentStreams(tier0Config, {"SecondAgent" : [],
                                     "ThirdAgent" : []})
 
 
