@@ -97,7 +97,7 @@ addSiteConfig(tier0Config, "EOS_PILOT",
 
 #maxRunPreviousEra = 392206
 acquisitionEra = {
-    'default' : 'Tier0_REPLAY_2025',
+    'default' : 'Tier0_REPLAY_2026',
     #'maxRun' : {maxRunPreviousEra : 'Tier0_REPLAY_2025A'}
 }
 setAcquisitionEra(tier0Config, acquisitionEra)
@@ -160,7 +160,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_0_15_patch4"
+    'default': "CMSSW_15_1_0_patch4"
 }
 
 # Configure ScramArch
@@ -194,8 +194,8 @@ alcarawProcVersion = dt
 # Defaults for GlobalTag
 
 
-expressGlobalTag = "150X_dataRun3_Express_v2"
-promptrecoGlobalTag = "150X_dataRun3_Prompt_v1"
+expressGlobalTag = "151X_dataRun3_Express_v1"
+promptrecoGlobalTag = "151X_dataRun3_Prompt_v1"
 repackGlobalTag = "150X_dataRun3_Prompt_v1_ParkingDoubleMuonLowMass_v2"
 
 # Mandatory for CondDBv2
