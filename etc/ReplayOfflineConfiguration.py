@@ -41,7 +41,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
 # 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
 
-setInjectRuns(tier0Config, [396421]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
+setInjectRuns(tier0Config, [390094]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
 
 # Use this function to limit the number of lumisections to process.
 #
@@ -101,7 +101,7 @@ acquisitionEra = {
     #'maxRun' : {maxRunPreviousEra : 'Tier0_REPLAY_2025A'}
 }
 setAcquisitionEra(tier0Config, acquisitionEra)
-setEmulationAcquisitionEra(tier0Config, "Emulation2025", repack=False)
+setEmulationAcquisitionEra(tier0Config, "Emulation2026", repack=False)
 setBaseRequestPriority(tier0Config, 260000)
 setBackfill(tier0Config, 1)
 
@@ -160,7 +160,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_1_0_patch4"
+    'default': "CMSSW_16_0_0_patch1"
 }
 
 # Configure ScramArch
@@ -194,8 +194,8 @@ alcarawProcVersion = dt
 # Defaults for GlobalTag
 
 
-expressGlobalTag = "151X_dataRun3_Express_v1"
-promptrecoGlobalTag = "151X_dataRun3_Prompt_v1"
+expressGlobalTag = "160X_dataRun3_Express_v1"
+promptrecoGlobalTag = "160X_dataRun3_Prompt_v1"
 repackGlobalTag = "150X_dataRun3_Prompt_v1_ParkingDoubleMuonLowMass_v2"
 
 # Mandatory for CondDBv2
