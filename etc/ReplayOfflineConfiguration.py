@@ -164,7 +164,7 @@ defaultCMSSWVersion = {
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "el8_amd64_gcc12")
+setDefaultScramArch(tier0Config, "el8_amd64_gcc13")
 setScramArch(tier0Config, "CMSSW_12_4_9", "el8_amd64_gcc10")
 setScramArch(tier0Config, "CMSSW_12_3_0", "cs8_amd64_gcc10")
 setScramArch(tier0Config, "CMSSW_13_0_9", "el8_amd64_gcc11")
