@@ -986,6 +986,7 @@ def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
                     skimDataTiers.add("USER")
                     skimDataTiers.add("RECO")
                     skimDataTiers.add("AOD")
+                    skimDataTiers.add('MINIAOD')
                 if len(datasetConfig.AlcaSkims) > 0:
                     alcaDataTiers.add("ALCARECO")
 
