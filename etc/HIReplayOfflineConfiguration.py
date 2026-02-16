@@ -150,6 +150,8 @@ alcarawProcVersion = dt
 # Defaults for GlobalTag
 expressGlobalTag = "151X_dataRun3_Express_v1"
 promptrecoGlobalTag = "151X_dataRun3_Prompt_v1"
+repackGlobalTag = "151X_dataRun3_Prompt_v1"
+
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -187,6 +189,7 @@ setExtraStreamDatasetMap(tier0Config,{
 
 addRepackConfig(tier0Config, "Default",
                 proc_ver=defaultProcVersion,
+                global_tag=repackGlobalTag,
                 maxSizeSingleLumi=24 * 1024 * 1024 * 1024,
                 maxSizeMultiLumi=8 * 1024 * 1024 * 1024,
                 minInputSize=2.1 * 1024 * 1024 * 1024,
