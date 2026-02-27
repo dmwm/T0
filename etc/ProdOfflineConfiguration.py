@@ -131,14 +131,16 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_16_0_2"
+    'default': "CMSSW_16_0_2_patch1"
     #'acqEra': {'Run2024F': "CMSSW_14_0_11"},
     #'maxRun': {maxRunPreviousConfig: "CMSSW_15_0_6"}
 }
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "el8_amd64_gcc13")
-#setScramArch(tier0Config, "CMSSW_13_3_2_patch1", "el8_amd64_gcc12")
+setScramArch(tier0Config, "CMSSW_15_1_0", "el8_amd64_gcc12")
+setScramArch(tier0Config, "CMSSW_15_1_0_patch3", "el8_amd64_gcc12")
+setScramArch(tier0Config, "CMSSW_15_1_0_patch4", "el8_amd64_gcc12")
 #setScramArch(tier0Config, "CMSSW_13_3_2", "el8_amd64_gcc12")
 #setScramArch(tier0Config, "CMSSW_13_3_0", "el8_amd64_gcc12")
 
