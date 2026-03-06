@@ -41,7 +41,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
 # 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
 
-setInjectRuns(tier0Config, [390094]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
+setInjectRuns(tier0Config, [390094, 398191]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
 
 # Use this function to limit the number of lumisections to process.
 #
@@ -1326,8 +1326,10 @@ DATASETS += ["VRZeroBias0", "VRZeroBias1", "VRZeroBias2","VRZeroBias3",
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
-               raw_to_disk=True,
+               do_reco=True,
+               write_dqm=True,
+               alca_producers=["SiStripCalMinBias"],
+               dqm_sequences=["@commonSiStripZeroBias"],
                scenario=ppScenario)
 
 # PPS 2022
