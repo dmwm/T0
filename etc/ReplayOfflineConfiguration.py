@@ -1326,8 +1326,10 @@ DATASETS += ["VRZeroBias0", "VRZeroBias1", "VRZeroBias2","VRZeroBias3",
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
-               raw_to_disk=True,
+               do_reco=True,
+               write_dqm=True,
+               alca_producers=["SiStripCalMinBias"],
+               dqm_sequences=["@commonSiStripZeroBias"],
                scenario=ppScenario)
 
 # PPS 2022

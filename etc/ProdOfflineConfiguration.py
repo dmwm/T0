@@ -37,7 +37,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "3.4.0")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 9999999)
+setInjectMinRun(tier0Config, 400454)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
@@ -1580,9 +1580,12 @@ DATASETS += ["VRZeroBias0", "VRZeroBias1", "VRZeroBias2","VRZeroBias3",
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False,
+               do_reco=True,
+               write_dqm=True,
                raw_to_disk=True,
 			   disk_node="T2_CH_CERN",
+               alca_producers=["SiStripCalMinBias"],
+               dqm_sequences=["@commonSiStripZeroBias"],
                scenario=ppScenario)
 
 # PPS 2022
@@ -1702,4 +1705,3 @@ setHelperAgentStreams(tier0Config, {"SecondAgent" : [],
 
 if __name__ == '__main__':
     print(tier0Config)
-
