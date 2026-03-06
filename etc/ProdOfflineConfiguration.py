@@ -68,8 +68,8 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 
 #maxRunPreviousEra = 9999999
 acquisitionEra = {
-    'default' : 'Commissioning2026',
-    #'maxRun' : {maxRunPreviousEra : 'NeNeRun2025'}
+    'default' : 'Run2026A',
+    #'maxRun' : {maxRunPreviousEra : 'Commissioning2026'}
 }
 setAcquisitionEra(tier0Config, acquisitionEra)
 setEmulationAcquisitionEra(tier0Config, "Emulation2026", repack=False)
