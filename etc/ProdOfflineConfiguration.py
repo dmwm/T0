@@ -37,7 +37,7 @@ tier0Config = createTier0Config()
 setConfigVersion(tier0Config, "3.4.0")
 
 # Set the min run number:
-setInjectMinRun(tier0Config, 400454)
+setInjectMinRun(tier0Config, 9999999)
 
 # Set the max run number:
 setInjectMaxRun(tier0Config, 9999999)
