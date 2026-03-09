@@ -695,7 +695,7 @@ for dataset in DATASETS:
                physics_skims=["EXOCSCCluster"],
                scenario=ppScenario)
 
-DATASETS = ["ParkingLLP0", "ParkingLLP1"]
+DATASETS = ["ParkingLLP0", "ParkingLLP1", "ParkingLLP3", "ParkingLLP4"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
