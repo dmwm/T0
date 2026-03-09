@@ -637,7 +637,10 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
     
-DATASETS = ["ParkingAnomalyDetection"]
+DATASETS = ["ParkingAnomalyDetection0","ParkingAnomalyDetection1","ParkingAnomalyDetection2",
+            "ParkingAnomalyDetection3","ParkingAnomalyDetection4","ParkingAnomalyDetection5",
+            "ParkingAnomalyDetection6","ParkingAnomalyDetection7","ParkingAnomalyDetection8"]
+
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -717,6 +720,20 @@ for dataset in DATASETS:
                scenario=ppScenario)
     
 DATASETS = ["ParkingLLP0", "ParkingLLP1"]
+PARKING_PDS += DATASETS
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               aod_to_disk=False,
+               dqm_sequences=["@common", "@jetmet"],
+               physics_skims=["EXODelayedJet", "EXODTCluster", "EXOLLPJetHCAL"],
+               archival_node=None,
+               tape_node="T0_CH_CERN_MSS",
+               disk_node="T2_CH_CERN",
+               scenario=ppScenario)
+    
+DATASETS = ["ParkingLLP3", "ParkingLLP4"]
 PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -828,6 +845,24 @@ for dataset in DATASETS:
                dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet", "@miniAODDQMBTagOnly"],
                physics_skims=["MUOJME", "ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
                scenario=ppScenario)
+    
+DATASETS = ["Muon2", "Muon3"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_reco=False,
+               write_dqm=True,
+               tape_node="T1_DE_KIT_MSS",
+               disk_node="T1_DE_KIT_Disk",
+               alca_producers=["TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu",
+                               "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
+                               "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
+                               "TkAlZMuMu", "TkAlDiMuonAndVertex"],
+               dqm_sequences=["@common", "@muon", "@lumi", "@L1TMuon", "@jetmet", "@miniAODDQMBTagOnly"],
+               physics_skims=["MUOJME", "ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
+               scenario=ppScenario)
+    
 
 DATASETS = ["PPRefSingleMuon0", "PPRefSingleMuon1", "PPRefSingleMuon2", "PPRefSingleMuon3"]
 
@@ -923,6 +958,21 @@ for dataset in DATASETS:
                dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
                physics_skims=["ZElectron", "WElectron", "EGMJME", "EXOMONOPOLE", "EXODisappTrk", "IsoPhotonEB", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
+    
+DATASETS = ["EGamma4", "EGamma5"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               tape_node="T1_IT_CNAF_MSS",
+               disk_node="T1_IT_CNAF_Disk",
+               alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym",
+                               "HcalCalIsoTrkProducerFilter", "EcalESAlign"],
+               dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
+               physics_skims=["ZElectron", "WElectron", "EGMJME", "EXOMONOPOLE", "EXODisappTrk", "IsoPhotonEB", "LogError", "LogErrorMonitor"],
+               scenario=ppScenario,
+               promptreco_priority_offset=4000)
 
 DATASETS = ["Tau"]
 

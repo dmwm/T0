@@ -40,8 +40,8 @@ setConfigVersion(tier0Config, "replace with real version")
 # Set run number to replay
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
 # 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
-
-setInjectRuns(tier0Config, [390094, 398191]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
+# 398191 Collisions 13.6 TeV, 2448 bunches, Run2025
+setInjectRuns(tier0Config, [398191]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
 
 # Use this function to limit the number of lumisections to process.
 #
@@ -635,7 +635,10 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 
-DATASETS = ["ParkingAnomalyDetection"]
+DATASETS = ["ParkingAnomalyDetection0","ParkingAnomalyDetection1","ParkingAnomalyDetection2",
+            "ParkingAnomalyDetection3","ParkingAnomalyDetection4","ParkingAnomalyDetection5",
+            "ParkingAnomalyDetection6","ParkingAnomalyDetection7","ParkingAnomalyDetection8"]
+
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -692,7 +695,7 @@ for dataset in DATASETS:
                physics_skims=["EXOCSCCluster"],
                scenario=ppScenario)
 
-DATASETS = ["ParkingLLP0", "ParkingLLP1"]
+DATASETS = ["ParkingLLP0", "ParkingLLP1", "ParkingLLP3", "ParkingLLP4"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -768,7 +771,7 @@ for dataset in DATASETS:
                physics_skims=["TopMuEG", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["Muon0", "Muon1"]
+DATASETS = ["Muon0", "Muon1", "Muon2", "Muon3"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -822,7 +825,7 @@ for dataset in DATASETS:
                physics_skims=["EXONoBPTXSkim", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["EGamma0", "EGamma1", "EGamma2", "EGamma3"]
+DATASETS = ["EGamma0", "EGamma1", "EGamma2", "EGamma3", "EGamma4"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
