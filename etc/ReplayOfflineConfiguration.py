@@ -40,9 +40,9 @@ setConfigVersion(tier0Config, "replace with real version")
 # Set run number to replay
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
 # 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
-# 398191 Collisions 13.6 TeV, 2448 bunches, Run2025
-setInjectRuns(tier0Config, [398191]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
 
+setInjectRuns(tier0Config, [382686])  # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
+#specifyStreams(tier0Config, ['L1ScoutingSelection', 'L1Scouting'])
 # Use this function to limit the number of lumisections to process.
 #
 # - To specify the maximum number of lumisections, provide an integer:
@@ -164,7 +164,8 @@ defaultCMSSWVersion = {
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "el8_amd64_gcc13")
+setDefaultScramArch(tier0Config, "el8_amd64_gcc13");
+setScramArch(tier0Config, "CMSSW_15_0_15", "el8_amd64_gcc12")
 setScramArch(tier0Config, "CMSSW_12_4_9", "el8_amd64_gcc10")
 setScramArch(tier0Config, "CMSSW_12_3_0", "cs8_amd64_gcc10")
 setScramArch(tier0Config, "CMSSW_13_0_9", "el8_amd64_gcc11")
@@ -183,6 +184,7 @@ hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
 hltScoutingScenario = "hltScoutingEra_Run3_2025"
 AlCaHcalIsoTrkScenario = "AlCaHcalIsoTrk_Run3"
+l1ScoutingScenario = "l1ScoutingEra_Run3_2026"
 
 # Procesing version number replays
 # Taking Replay processing ID from the last 8 digits of the DeploymentID
@@ -635,10 +637,7 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 
-DATASETS = ["ParkingAnomalyDetection0","ParkingAnomalyDetection1","ParkingAnomalyDetection2",
-            "ParkingAnomalyDetection3","ParkingAnomalyDetection4","ParkingAnomalyDetection5",
-            "ParkingAnomalyDetection6","ParkingAnomalyDetection7","ParkingAnomalyDetection8"]
-
+DATASETS = ["ParkingAnomalyDetection"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -695,7 +694,7 @@ for dataset in DATASETS:
                physics_skims=["EXOCSCCluster"],
                scenario=ppScenario)
 
-DATASETS = ["ParkingLLP0", "ParkingLLP1", "ParkingLLP3", "ParkingLLP4"]
+DATASETS = ["ParkingLLP0", "ParkingLLP1"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
@@ -771,7 +770,7 @@ for dataset in DATASETS:
                physics_skims=["TopMuEG", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["Muon0", "Muon1", "Muon2", "Muon3"]
+DATASETS = ["Muon0", "Muon1"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -825,7 +824,7 @@ for dataset in DATASETS:
                physics_skims=["EXONoBPTXSkim", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["EGamma0", "EGamma1", "EGamma2", "EGamma3", "EGamma4"]
+DATASETS = ["EGamma0", "EGamma1", "EGamma2", "EGamma3"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1267,12 +1266,22 @@ for dataset in DATASETS:
 DATASETS = ["L1Scouting"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False)
+               do_reco=True,
+               write_miniaod=False,
+               write_aod=False,
+               nano_flavours=["@L1Scout"],
+               scenario=l1ScoutingScenario
+                )
 
 DATASETS = ["L1ScoutingSelection"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False)
+               do_reco=True,
+               write_miniaod=False,
+               write_aod=False,
+               nano_flavours=["@L1ScoutSelect"],
+               scenario=l1ScoutingScenario
+)
 
 DATASETS = ["ScoutingPF0", "ScoutingPF1"] # From stream ScoutingPF --> Repacked to HLTSCOUT
 
@@ -1329,10 +1338,8 @@ DATASETS += ["VRZeroBias0", "VRZeroBias1", "VRZeroBias2","VRZeroBias3",
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_dqm=True,
-               alca_producers=["SiStripCalMinBias"],
-               dqm_sequences=["@commonSiStripZeroBias"],
+               do_reco=False,
+               raw_to_disk=True,
                scenario=ppScenario)
 
 # PPS 2022
@@ -1369,7 +1376,7 @@ for rawSkimDataset in RAWSKIM_DATASETS:
 #######################
 
 # Define streams to be ignored by MainAgent and processed by a HelperAgent if any.
-setHelperAgentStreams(tier0Config, {'SecondAgent': [],
+setHelperAgentStreams(tier0Config, {'SecondAgent': ["L1Scouting", "L1ScoutingSelection"],
                                     'ThirdAgent' : []
                                    })
 
