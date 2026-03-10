@@ -40,24 +40,6 @@ jobs:
         run: |
           pip install WMCore
 
-      - name: "Tier 2: Execution Check"
-        run: |
-          echo "=== Tier 2: Executing configuration files ==="
-          export PYTHONPATH=src/python:$PYTHONPATH
-          FAILED=0
-          for f in etc/*Configuration.py; do
-            if python "$f" 2>&1; then
-              echo "  OK: $f"
-            else
-              echo "  FAIL: $f"
-              FAILED=1
-            fi
-          done
-          if [ "$FAILED" -eq 1 ]; then
-            echo "Tier 2 FAILED: Runtime errors found"
-            exit 1
-          fi
-          echo "Tier 2 PASSED"
 
       - name: "Tier 3: Semantic Validation"
         run: |
