@@ -1,0 +1,65 @@
+name: Validate Configuration Files
+
+on:
+  pull_request:
+    paths:
+      - 'etc/*Configuration.py'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: "Tier 1: Syntax Check"
+        run: |
+          echo "=== Tier 1: Compile-checking configuration files ==="
+          FAILED=0
+          for f in etc/*Configuration.py; do
+            if python -m py_compile "$f" 2>&1; then
+              echo "  OK: $f"
+            else
+              echo "  FAIL: $f"
+              FAILED=1
+            fi
+          done
+          if [ "$FAILED" -eq 1 ]; then
+            echo "Tier 1 FAILED: Syntax errors found"
+            exit 1
+          fi
+          echo "Tier 1 PASSED"
+
+      - name: Install dependencies for Tier 2
+        run: |
+          pip install WMCore
+
+      - name: "Tier 2: Execution Check"
+        run: |
+          echo "=== Tier 2: Executing configuration files ==="
+          export PYTHONPATH=src/python:$PYTHONPATH
+          FAILED=0
+          for f in etc/*Configuration.py; do
+            if python "$f" 2>&1; then
+              echo "  OK: $f"
+            else
+              echo "  FAIL: $f"
+              FAILED=1
+            fi
+          done
+          if [ "$FAILED" -eq 1 ]; then
+            echo "Tier 2 FAILED: Runtime errors found"
+            exit 1
+          fi
+          echo "Tier 2 PASSED"
+
+      - name: "Tier 3: Semantic Validation"
+        run: |
+          echo "=== Tier 3: Semantic validation ==="
+          python test/python/validate_config.py etc/*Configuration.py
