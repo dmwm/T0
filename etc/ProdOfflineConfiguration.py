@@ -719,7 +719,7 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
     
-DATASETS = ["ParkingLLP0", "ParkingLLP2"]
+DATASETS = ["ParkingLLP0", "ParkingLLP1"]
 PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -733,7 +733,7 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
     
-DATASETS = ["ParkingLLP3", "ParkingLLP4"]
+DATASETS = ["ParkingLLP2", "ParkingLLP3"]
 PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -959,7 +959,7 @@ for dataset in DATASETS:
                physics_skims=["ZElectron", "WElectron", "EGMJME", "EXOMONOPOLE", "EXODisappTrk", "IsoPhotonEB", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
     
-DATASETS = ["EGamma4", "EGamma7"]
+DATASETS = ["EGamma4", "EGamma5"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
