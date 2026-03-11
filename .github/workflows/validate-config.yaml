@@ -61,12 +61,12 @@ jobs:
           EXIT_CODE=${EXIT_CODE:-0}
           echo "$OUTPUT"
 
-          echo "$OUTPUT" | grep "^  ERROR" | while read -r line; do
-            echo "::error::$line"
-          done
+          echo "$OUTPUT" | grep "^  ERROR" | while read -r line; do [ -n "$line" ] && echo "::error::$line"; done
+          echo "$OUTPUT" | grep "^  WARNING" | while read -r line; do [ -n "$line" ] && echo "::warning::$line"; done
 
-          echo "$OUTPUT" | grep "^  WARNING" | while read -r line; do
-            echo "::warning::$line"
-          done
+          WARN_COUNT=$(echo "$OUTPUT" | grep -c "^  WARNING" || true)
+          if [ "$WARN_COUNT" -gt 0 ]; then
+            echo "## :warning: Validation passed with $WARN_COUNT warning(s). Check the logs for details." >> "$GITHUB_STEP_SUMMARY"
+          fi
 
           exit $EXIT_CODE
