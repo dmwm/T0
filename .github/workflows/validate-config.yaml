@@ -12,21 +12,38 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed config files
+        id: changed
+        run: |
+          FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- 'etc/*ProdOfflineConfiguration.py')
+          if [ -z "$FILES" ]; then
+            echo "No *ProdOfflineConfiguration.py files changed"
+            echo "files=" >> "$GITHUB_OUTPUT"
+          else
+            echo "Changed files:"
+            echo "$FILES"
+            echo "files=$FILES" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Set up Python
+        if: steps.changed.outputs.files != ''
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
       - name: "Tier 1: Syntax Check"
+        if: steps.changed.outputs.files != ''
         run: |
-          echo "=== Tier 1: Compile-checking configuration files ==="
+          echo "=== Tier 1: Compile-checking changed configuration files ==="
           FAILED=0
-          for f in etc/*ProdOfflineConfiguration.py; do
+          for f in ${{ steps.changed.outputs.files }}; do
             if python -m py_compile "$f" 2>&1; then
               echo "  OK: $f"
             else
-              echo "  FAIL: $f"
+              echo "::error file=$f::Syntax error in $f"
               FAILED=1
             fi
           done
@@ -36,8 +53,20 @@ jobs:
           fi
           echo "Tier 1 PASSED"
 
-
       - name: "Tier 2: Semantic Validation"
+        if: steps.changed.outputs.files != ''
         run: |
           echo "=== Tier 2: Semantic validation ==="
-          python test/python/validate_config.py etc/*ProdOfflineConfiguration.py
+          OUTPUT=$(python test/python/validate_config.py ${{ steps.changed.outputs.files }} 2>&1) || EXIT_CODE=$?
+          EXIT_CODE=${EXIT_CODE:-0}
+          echo "$OUTPUT"
+
+          echo "$OUTPUT" | grep "^  ERROR" | while read -r line; do
+            echo "::error::$line"
+          done
+
+          echo "$OUTPUT" | grep "^  WARNING" | while read -r line; do
+            echo "::warning::$line"
+          done
+
+          exit $EXIT_CODE
