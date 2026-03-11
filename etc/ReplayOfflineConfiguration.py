@@ -194,7 +194,7 @@ alcarawProcVersion = dt
 # Defaults for GlobalTag
 
 
-expressGlobalTag = "160X_dataRun3_Express_v1"
+expressGlobalTag = "160X_dataRun3_Express_v2"
 promptrecoGlobalTag = "160X_dataRun3_Prompt_v1"
 repackGlobalTag = "150X_dataRun3_Prompt_v1_ParkingDoubleMuonLowMass_v2"
 
