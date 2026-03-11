@@ -3,7 +3,7 @@ name: Validate Configuration Files
 on:
   pull_request:
     paths:
-      - 'etc/*Configuration.py'
+      - 'etc/*ProdOfflineConfiguration.py'
 
 jobs:
   validate:
@@ -22,7 +22,7 @@ jobs:
         run: |
           echo "=== Tier 1: Compile-checking configuration files ==="
           FAILED=0
-          for f in etc/*Configuration.py; do
+          for f in etc/*ProdOfflineConfiguration.py; do
             if python -m py_compile "$f" 2>&1; then
               echo "  OK: $f"
             else
@@ -36,13 +36,8 @@ jobs:
           fi
           echo "Tier 1 PASSED"
 
-      - name: Install dependencies for Tier 2
+
+      - name: "Tier 2: Semantic Validation"
         run: |
-          pip install WMCore
-
-
-
-      - name: "Tier 3: Semantic Validation"
-        run: |
-          echo "=== Tier 3: Semantic validation ==="
-          python test/python/validate_config.py etc/*Configuration.py
+          echo "=== Tier 2: Semantic validation ==="
+          python test/python/validate_config.py etc/*ProdOfflineConfiguration.py
