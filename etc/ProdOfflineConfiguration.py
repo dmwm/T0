@@ -69,7 +69,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #maxRunPreviousEra = 9999999
 acquisitionEra = {
     'default' : 'Run2026A',
-    #'maxRun' : {maxRunPreviousEra : 'Commissioning2026'}
+    'maxRun' : {maxRunPreviousEra : 'Commissioning2026'}
 }
 setAcquisitionEra(tier0Config, acquisitionEra)
 setEmulationAcquisitionEra(tier0Config, "Emulation2026", repack=False)
@@ -733,6 +733,7 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
     
+DATASETS = ["ParkingLLP2", "ParkingLLP3"]
 DATASETS = ["ParkingLLP2", "ParkingLLP3", "ParkingLLP4"]
 PARKING_PDS += DATASETS
 for dataset in DATASETS:
