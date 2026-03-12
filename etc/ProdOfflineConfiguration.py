@@ -182,7 +182,7 @@ expressProcVersion = {
 
 # Defaults for GlobalTag
 expressGlobalTag = {
-    'default': "160X_dataRun3_Express_v1"
+    'default': "160X_dataRun3_Express_v2"
     #'acqEra': {'Run2024B': "140X_dataRun3_Express_v2"}
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Express_v3"}
 }
@@ -734,6 +734,7 @@ for dataset in DATASETS:
                scenario=ppScenario)
     
 DATASETS = ["ParkingLLP2", "ParkingLLP3"]
+DATASETS = ["ParkingLLP2", "ParkingLLP3", "ParkingLLP4"]
 PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
