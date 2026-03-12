@@ -733,7 +733,7 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
     
-DATASETS = ["ParkingLLP3", "ParkingLLP4"]
+DATASETS = ["ParkingLLP2", "ParkingLLP3", "ParkingLLP4"]
 PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
