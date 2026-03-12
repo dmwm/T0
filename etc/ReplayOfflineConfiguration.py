@@ -165,6 +165,7 @@ defaultCMSSWVersion = {
 
 # Configure ScramArch
 setDefaultScramArch(tier0Config, "el8_amd64_gcc13")
+setScramArch(tier0Config, "CMSSW_15_0_15", "el8_amd64_gcc12")
 setScramArch(tier0Config, "CMSSW_12_4_9", "el8_amd64_gcc10")
 setScramArch(tier0Config, "CMSSW_12_3_0", "cs8_amd64_gcc10")
 setScramArch(tier0Config, "CMSSW_13_0_9", "el8_amd64_gcc11")
@@ -194,7 +195,7 @@ alcarawProcVersion = dt
 # Defaults for GlobalTag
 
 
-expressGlobalTag = "160X_dataRun3_Express_v1"
+expressGlobalTag = "160X_dataRun3_Express_v2"
 promptrecoGlobalTag = "160X_dataRun3_Prompt_v1"
 repackGlobalTag = "150X_dataRun3_Prompt_v1_ParkingDoubleMuonLowMass_v2"
 
@@ -695,7 +696,7 @@ for dataset in DATASETS:
                physics_skims=["EXOCSCCluster"],
                scenario=ppScenario)
 
-DATASETS = ["ParkingLLP0", "ParkingLLP1", "ParkingLLP3", "ParkingLLP4"]
+DATASETS = ["ParkingLLP0", "ParkingLLP1", "ParkingLLP2", "ParkingLLP3", "ParkingLLP4"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
