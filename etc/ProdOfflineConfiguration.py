@@ -1717,19 +1717,21 @@ ignoreStream(tier0Config, "DQMPPSRandom")
 #THIRD_AGENT_STREAMS = STREAMS_DAQ_TFTEST + STREAMS_DAQ_TFTEST_ppRef
 
 
-#SECOND_AGENT_STREAMS = ["ParkingSingleMuon0", "ParkingSingleMuon1", "ParkingSingleMuon2",
-#                        "ParkingSingleMuon3", "ParkingSingleMuon4", "ParkingSingleMuon5",
-#                        "ParkingSingleMuon6", "ParkingSingleMuon7", "ParkingSingleMuon8",
-#                        "ParkingSingleMuon9", "ParkingSingleMuon10", "ParkingSingleMuon11",
-#                        "ParkingSingleMuon12", "ParkingSingleMuon13", "ParkingSingleMuon14",
-#                        "ParkingSingleMuon15",
-#                        "ParkingVBF0", "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
-#                        "ParkingHH", "ParkingLLP", "ParkingAnomalyDetection",
-#                        "ParkingDoubleMuonLowMass0", "ParkingDoubleMuonLowMass1",
-#                        "ParkingDoubleMuonLowMass2", "ParkingDoubleMuonLowMass3"]
+SECOND_AGENT_STREAMS = ["ParkingSingleMuon0", "ParkingSingleMuon1", "ParkingSingleMuon2",
+                       "ParkingSingleMuon3", "ParkingSingleMuon4", "ParkingSingleMuon5",
+                       "ParkingSingleMuon6", "ParkingSingleMuon7", "ParkingSingleMuon8",
+                       "ParkingSingleMuon9", "ParkingSingleMuon10", "ParkingSingleMuon11",
+                       "ParkingSingleMuon12", "ParkingSingleMuon13", "ParkingSingleMuon14",
+                       "ParkingSingleMuon15",
+                       "ParkingVBF0", "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
+                       "ParkingHH", "ParkingLLP0", "ParkingLLP1", 
+                       "ParkingAnomalyDetection0", "ParkingAnomalyDetection1", "ParkingAnomalyDetection2", 
+                       "ParkingAnomalyDetection3",
+                       "ParkingDoubleMuonLowMass0", "ParkingDoubleMuonLowMass1",
+                       "ParkingDoubleMuonLowMass2", "ParkingDoubleMuonLowMass3"]
 
 #THIRD_AGENT_STREAMS = []
-setHelperAgentStreams(tier0Config, {"SecondAgent" : [],
+setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
                                     "ThirdAgent" : []})
 
 
