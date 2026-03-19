@@ -34,6 +34,10 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Install flake8
+        if: steps.changed.outputs.files != ''
+        run: pip install flake8 flake8-implicit-str-concat
+
       - name: "Tier 1: Syntax Check"
         if: steps.changed.outputs.files != ''
         run: |
@@ -52,6 +56,33 @@ jobs:
             exit 1
           fi
           echo "Tier 1 PASSED"
+
+      - name: "Tier 1.5: Lint Check"
+        if: steps.changed.outputs.files != ''
+        run: |
+          echo "=== Tier 1.5: Lint-checking changed configuration files ==="
+          FAILED=0
+          for f in ${{ steps.changed.outputs.files }}; do
+            OUTPUT=$(flake8 --select=ISC001,F821,F811,E999,W605 "$f" 2>&1) || LINT_EXIT=$?
+            LINT_EXIT=${LINT_EXIT:-0}
+            if [ "$LINT_EXIT" -ne 0 ]; then
+              echo "$OUTPUT"
+              echo "$OUTPUT" | while IFS= read -r line; do
+                file=$(echo "$line" | cut -d: -f1)
+                row=$(echo "$line" | cut -d: -f2)
+                msg=$(echo "$line" | cut -d: -f4-)
+                echo "::error file=$file,line=$row::$msg"
+              done
+              FAILED=1
+            else
+              echo "  OK: $f"
+            fi
+          done
+          if [ "$FAILED" -eq 1 ]; then
+            echo "Tier 1.5 FAILED: Lint issues found"
+            exit 1
+          fi
+          echo "Tier 1.5 PASSED"
 
       - name: "Tier 2: Semantic Validation"
         if: steps.changed.outputs.files != ''
