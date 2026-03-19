@@ -68,7 +68,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 
 maxRunPreviousEra = 9999999
 acquisitionEra = {
-    'default' : 'Run2026A'
+    'default' : 'Run2026A',
     'maxRun' : {maxRunPreviousEra : 'Commissioning2026'}
 }
 setAcquisitionEra(tier0Config, acquisitionEra)
