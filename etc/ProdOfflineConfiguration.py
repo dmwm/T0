@@ -68,9 +68,10 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 
 maxRunPreviousEra = 9999999
 acquisitionEra = {
-    'default' : 'Run2026A',
-    'maxRun' : {maxRunPreviousEra : 'Commissioning2026'}
+    'default' : 'Run2026B',
+    'maxRun' : {maxRunPreviousEra : 'Run2026A'}
 }
+
 setAcquisitionEra(tier0Config, acquisitionEra)
 setEmulationAcquisitionEra(tier0Config, "Emulation2026", repack=False)
 setBaseRequestPriority(tier0Config, 251000)
@@ -637,7 +638,7 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
     
-DATASETS = ["ParkingAnomalyDetection0","ParkingAnomalyDetection1","ParkingAnomalyDetection2",
+DATASETS = ["ParkingAnomalyDetection0","ParkingAnomalyDetection2",
             "ParkingAnomalyDetection3","ParkingAnomalyDetection4","ParkingAnomalyDetection5",
             "ParkingAnomalyDetection6","ParkingAnomalyDetection7","ParkingAnomalyDetection8"]
 
@@ -733,7 +734,7 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
     
-DATASETS = ["ParkingLLP2", "ParkingLLP3"]
+DATASETS = ["ParkingLLP2", "ParkingLLP4"]
 PARKING_PDS += DATASETS
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -885,7 +886,7 @@ for dataset in DATASETS:
                physics_skims=["MUOJME", "ZMu", "EXODisappTrk", "LogError", "LogErrorMonitor", "EXOCSCCluster", "EXODisappMuon"],
                scenario=ppRefScenario)
 
-DATASETS = ["PPRefDoubleMuon0", "PPRefDoubleMuon1", "PPRefDoubleMuon2", "PPRefDoubleMuon3"]
+DATASETS = ["PPRefDoubleMuon0", "PPRefDoubleMuon2", "PPRefDoubleMuon3"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
