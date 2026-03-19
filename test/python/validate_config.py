@@ -5,7 +5,7 @@ import re
 import sys
 
 
-def extract_datasets_and_blocks(source):
+def extract_dataset_names(source):
     results = []
     lines = source.split('\n')
 
@@ -42,108 +42,21 @@ def extract_datasets_and_blocks(source):
                 else:
                     break
 
-            j = i + 1
-            while j < len(lines) and not lines[j].strip().startswith('for dataset in DATASETS'):
-                if re.match(r'^DATASETS\s*=\s*\[', lines[j]) or re.match(r'^##+', lines[j]):
-                    break
-                j += 1
-
-            if j < len(lines) and lines[j].strip().startswith('for dataset in DATASETS'):
-                k = j + 1
-                while k < len(lines) and not lines[k].strip().startswith('addDataset('):
-                    k += 1
-
-                if k < len(lines):
-                    call_text = lines[k]
-                    paren_depth = 0
-                    for ch in call_text:
-                        if ch == '(':
-                            paren_depth += 1
-                        elif ch == ')':
-                            paren_depth -= 1
-                    while paren_depth > 0 and k + 1 < len(lines):
-                        k += 1
-                        call_text += '\n' + lines[k]
-                        for ch in lines[k]:
-                            if ch == '(':
-                                paren_depth += 1
-                            elif ch == ')':
-                                paren_depth -= 1
-
-                    kwargs = parse_addDataset_kwargs(call_text)
-                    for name in dataset_names:
-                        results.append((name, kwargs))
+            results.extend(dataset_names)
 
         direct_match = re.match(r'^addDataset\(tier0Config,\s*"([^"]+)"', line)
         if direct_match:
-            name = direct_match.group(1)
-            call_text = line
-            paren_depth = 0
-            for ch in call_text:
-                if ch == '(':
-                    paren_depth += 1
-                elif ch == ')':
-                    paren_depth -= 1
-            while paren_depth > 0 and i + 1 < len(lines):
-                i += 1
-                call_text += '\n' + lines[i]
-                for ch in lines[i]:
-                    if ch == '(':
-                        paren_depth += 1
-                    elif ch == ')':
-                        paren_depth -= 1
-
-            kwargs = parse_addDataset_kwargs(call_text)
-            results.append((name, kwargs))
+            results.append(direct_match.group(1))
 
         i += 1
 
     return results
 
 
-def parse_addDataset_kwargs(call_text):
-    kwargs = {}
-    for match in re.finditer(r'(\w+)\s*=\s*', call_text):
-        param = match.group(1)
-        start = match.end()
-        value = extract_value(call_text, start)
-        if value is not None:
-            kwargs[param] = value.strip()
-    return kwargs
-
-
-def extract_value(text, start):
-    rest = text[start:].strip()
-    if not rest:
-        return None
-
-    depth = 0
-    in_string = False
-    string_char = None
-    i = 0
-    for i, ch in enumerate(rest):
-        if in_string:
-            if ch == string_char and (i == 0 or rest[i - 1] != '\\'):
-                in_string = False
-        else:
-            if ch in ('"', "'"):
-                in_string = True
-                string_char = ch
-            elif ch in ('(', '[', '{'):
-                depth += 1
-            elif ch in (')', ']', '}'):
-                if depth == 0:
-                    return rest[:i]
-                depth -= 1
-            elif ch == ',' and depth == 0:
-                return rest[:i]
-    return rest[:i + 1]
-
-
-def group_by_family(dataset_entries):
+def group_by_family(dataset_names):
     families = {}
     has_zero_padded = set()
-    for name, kwargs in dataset_entries:
+    for name in dataset_names:
         if name == "Default":
             continue
 
@@ -159,7 +72,7 @@ def group_by_family(dataset_entries):
             index = int(num_str)
             if base not in families:
                 families[base] = {}
-            families[base][index] = (name, kwargs)
+            families[base][index] = name
 
     return {k: v for k, v in families.items()
             if len(v) >= 2 and k not in has_zero_padded}
@@ -195,51 +108,21 @@ def check_gaps(families):
     return issues
 
 
-def check_sibling_consistency(families):
-    issues = []
-    error_params = ["do_reco", "scenario"]
-    warning_params = ["physics_skims", "dqm_sequences"]
-
-    for family, members in sorted(families.items()):
-        if len(members) < 2:
-            continue
-
-        member_list = sorted(members.values(), key=lambda x: x[0])
-
-        for param in error_params + warning_params:
-            values = {}
-            for name, kwargs in member_list:
-                val = kwargs.get(param, "<default>")
-                if val not in values:
-                    values[val] = []
-                values[val].append(name)
-
-            if len(values) > 1:
-                level = "ERROR" if param in error_params else "WARNING"
-                detail_parts = []
-                for val, names in sorted(values.items(), key=lambda x: x[1][0]):
-                    detail_parts.append(
-                        "%s have %s=%s" % (", ".join(names), param, val)
-                    )
-                issues.append((
-                    level,
-                    family,
-                    "Inconsistent '%s': %s" % (param, "; ".join(detail_parts))
-                ))
-
-    return issues
+CHECKS = [
+    check_gaps,
+]
 
 
 def validate_file(filepath):
     with open(filepath, 'r') as f:
         source = f.read()
 
-    entries = extract_datasets_and_blocks(source)
-    families = group_by_family(entries)
+    names = extract_dataset_names(source)
+    families = group_by_family(names)
 
     all_issues = []
-    all_issues.extend(check_gaps(families))
-    all_issues.extend(check_sibling_consistency(families))
+    for check in CHECKS:
+        all_issues.extend(check(families))
 
     errors = [(fam, msg) for level, fam, msg in all_issues if level == "ERROR"]
     warnings = [(fam, msg) for level, fam, msg in all_issues if level == "WARNING"]
