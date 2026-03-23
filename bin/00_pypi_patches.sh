@@ -35,3 +35,5 @@ curl https://patch-diff.githubusercontent.com/raw/Viphava280444/WMCore/pull/1.pa
 
 #bash $WMA_DEPLOY_DIR/bin/patchComponent.sh 12058 
 
+#Alca harvest PFN fix
+bash $WMA_DEPLOY_DIR/bin/patchComponent.sh 12478
