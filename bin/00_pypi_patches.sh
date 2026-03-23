@@ -30,10 +30,11 @@ curl https://patch-diff.githubusercontent.com/raw/Viphava280444/WMCore/pull/1.pa
 ### WMCore patches ###
 ######################
 
-# On top of 2.3.5
-## xrdcp exit code capture by Andrea Piccineli
 
-#bash $WMA_DEPLOY_DIR/bin/patchComponent.sh 12058 
+# On top of 2.3.5
+
+# JobSubmitter patch for older jobs to have higher priority
+curl https://patch-diff.githubusercontent.com/raw/LinaresToine/WMCore/pull/21.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.12/site-packages/ -p 3
 
 #Alca harvest PFN fix
 bash $WMA_DEPLOY_DIR/bin/patchComponent.sh 12478
