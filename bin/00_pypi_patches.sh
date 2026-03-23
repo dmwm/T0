@@ -12,19 +12,6 @@ DEPLOY_DIR=$BASE_DIR/WMAgent.venv3
 
 #Dummy demonstrative Patch for new alma 9 agent
 #curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4961.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.12/site-packages/ -p 3
-#curl https://patch-diff.githubusercontent.com/raw/germanfgv/WMCore/pull/16.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.12/site-packages/ -p 3
-
-#Nano Flavours
-#curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/5031.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.12/site-packages/ -p 3
-
-#Raw skims
-#curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/5041.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.12/site-packages/ -p 3
-
-#Automatic Scenarios
-#curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/5112.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.12/site-packages/ -p 3
-
-# RetryManager bug fix
-curl https://patch-diff.githubusercontent.com/raw/Viphava280444/WMCore/pull/1.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.12/site-packages/ -p 3
 
 ######################
 ### WMCore patches ###
@@ -32,6 +19,9 @@ curl https://patch-diff.githubusercontent.com/raw/Viphava280444/WMCore/pull/1.pa
 
 
 # On top of 2.3.5
+
+# RetryManager bug fix
+curl https://patch-diff.githubusercontent.com/raw/Viphava280444/WMCore/pull/1.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.12/site-packages/ -p 3
 
 # JobSubmitter patch for older jobs to have higher priority
 curl https://patch-diff.githubusercontent.com/raw/LinaresToine/WMCore/pull/21.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.12/site-packages/ -p 3
