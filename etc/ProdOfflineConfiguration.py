@@ -107,7 +107,7 @@ setDQMDataTier(tier0Config, "DQMIO")
 # First timeout is used directly for reco release
 # Second timeout is used for the data service PromptReco start check
 # (to basically say we started PromptReco even though we haven't)
-defaultRecoTimeout = 48 * 3600
+defaultRecoTimeout = 4800 * 3600
 defaultRecoLockTimeout = 1800
 
 # DQM Server
@@ -130,10 +130,11 @@ setPromptCalibrationConfig(tier0Config,
 #   'default': Value5 }
 
 # Defaults for CMSSW version
+maxRunPreviousConfig = 402249
 defaultCMSSWVersion = {
-    'default': "CMSSW_16_0_2_patch1"
+    'default': "CMSSW_16_0_4",
     #'acqEra': {'Run2024F': "CMSSW_14_0_11"},
-    #'maxRun': {maxRunPreviousConfig: "CMSSW_15_0_6"}
+    'maxRun': {maxRunPreviousConfig: "CMSSW_16_0_2_patch1"}
 }
 
 # Configure ScramArch
