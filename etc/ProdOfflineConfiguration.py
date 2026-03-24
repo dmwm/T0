@@ -66,10 +66,10 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #Any run under maxRunPreviousEra will take the corresponding acquisition era that is not default
 #Any run over maxRunPreviousEra will take the default era
 
-maxRunPreviousEra = 9999999
+#maxRunPreviousEra = 0
 acquisitionEra = {
     'default' : 'Run2026B',
-    'maxRun' : {maxRunPreviousEra : 'Run2026A'}
+    #'maxRun' : {maxRunPreviousEra : 'Run2026A'}
 }
 setAcquisitionEra(tier0Config, acquisitionEra)
 setEmulationAcquisitionEra(tier0Config, "Emulation2026", repack=False)
@@ -107,7 +107,7 @@ setDQMDataTier(tier0Config, "DQMIO")
 # First timeout is used directly for reco release
 # Second timeout is used for the data service PromptReco start check
 # (to basically say we started PromptReco even though we haven't)
-defaultRecoTimeout = 48 * 3600
+defaultRecoTimeout = 4800 * 3600
 defaultRecoLockTimeout = 1800
 
 # DQM Server
@@ -130,10 +130,11 @@ setPromptCalibrationConfig(tier0Config,
 #   'default': Value5 }
 
 # Defaults for CMSSW version
+maxRunPreviousConfig = 402249
 defaultCMSSWVersion = {
-    'default': "CMSSW_16_0_2_patch1"
+    'default': "CMSSW_16_0_4",
     #'acqEra': {'Run2024F': "CMSSW_14_0_11"},
-    #'maxRun': {maxRunPreviousConfig: "CMSSW_15_0_6"}
+    'maxRun': {maxRunPreviousConfig: "CMSSW_16_0_2_patch1"}
 }
 
 # Configure ScramArch
@@ -943,7 +944,8 @@ for dataset in DATASETS:
                                "HcalCalIsoTrkProducerFilter", "EcalESAlign"],
                dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
                physics_skims=["ZElectron", "WElectron", "EGMJME", "EXOMONOPOLE", "EXODisappTrk", "IsoPhotonEB", "LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
+               scenario=ppScenario,
+               promptreco_priority_offset=4000)
 
 DATASETS = ["EGamma3"]
 
@@ -957,7 +959,8 @@ for dataset in DATASETS:
                                "HcalCalIsoTrkProducerFilter", "EcalESAlign"],
                dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
                physics_skims=["ZElectron", "WElectron", "EGMJME", "EXOMONOPOLE", "EXODisappTrk", "IsoPhotonEB", "LogError", "LogErrorMonitor"],
-               scenario=ppScenario)
+               scenario=ppScenario,
+               promptreco_priority_offset=4000)
     
 DATASETS = ["EGamma4", "EGamma5"]
 
@@ -1717,19 +1720,20 @@ ignoreStream(tier0Config, "DQMPPSRandom")
 #THIRD_AGENT_STREAMS = STREAMS_DAQ_TFTEST + STREAMS_DAQ_TFTEST_ppRef
 
 
-#SECOND_AGENT_STREAMS = ["ParkingSingleMuon0", "ParkingSingleMuon1", "ParkingSingleMuon2",
-#                        "ParkingSingleMuon3", "ParkingSingleMuon4", "ParkingSingleMuon5",
-#                        "ParkingSingleMuon6", "ParkingSingleMuon7", "ParkingSingleMuon8",
-#                        "ParkingSingleMuon9", "ParkingSingleMuon10", "ParkingSingleMuon11",
-#                        "ParkingSingleMuon12", "ParkingSingleMuon13", "ParkingSingleMuon14",
-#                        "ParkingSingleMuon15",
-#                        "ParkingVBF0", "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
-#                        "ParkingHH", "ParkingLLP", "ParkingAnomalyDetection",
-#                        "ParkingDoubleMuonLowMass0", "ParkingDoubleMuonLowMass1",
-#                        "ParkingDoubleMuonLowMass2", "ParkingDoubleMuonLowMass3"]
+SECOND_AGENT_STREAMS = ["ParkingSingleMuon0", "ParkingSingleMuon1", "ParkingSingleMuon2",
+                        "ParkingSingleMuon3", "ParkingSingleMuon4", "ParkingSingleMuon5",
+                        "ParkingSingleMuon6", "ParkingSingleMuon7", "ParkingSingleMuon8",
+                        "ParkingSingleMuon9", "ParkingSingleMuon10", "ParkingSingleMuon11",
+                        "ParkingSingleMuon12", "ParkingSingleMuon13", "ParkingSingleMuon14",
+                        "ParkingSingleMuon15",
+                        "ParkingVBF0", "ParkingVBF1", "ParkingVBF2", "ParkingVBF3",
+                        "ParkingHH", "ParkingLLP", "ParkingLLP0", "ParkingLLP1", "ParkingAnomalyDetection",
+                        "ParkingDoubleMuonLowMass0", "ParkingDoubleMuonLowMass1",
+                        "ParkingDoubleMuonLowMass2", "ParkingDoubleMuonLowMass3", 
+                        "ParkingAnomalyDetection0", "ParkingAnomalyDetection1", "ParkingAnomalyDetection2", "ParkingAnomalyDetection3"]
 
 #THIRD_AGENT_STREAMS = []
-setHelperAgentStreams(tier0Config, {"SecondAgent" : [],
+setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
                                     "ThirdAgent" : []})
 
 
