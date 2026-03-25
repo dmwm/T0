@@ -68,7 +68,7 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 
 #maxRunPreviousEra = 0
 acquisitionEra = {
-    'default' : 'Run2026B',
+    'default' : 'Run2026C',
     #'maxRun' : {maxRunPreviousEra : 'Run2026A'}
 }
 setAcquisitionEra(tier0Config, acquisitionEra)
@@ -130,11 +130,11 @@ setPromptCalibrationConfig(tier0Config,
 #   'default': Value5 }
 
 # Defaults for CMSSW version
-maxRunPreviousConfig = 402249
+# maxRunPreviousConfig = 402249
 defaultCMSSWVersion = {
     'default': "CMSSW_16_0_4",
     #'acqEra': {'Run2024F': "CMSSW_14_0_11"},
-    'maxRun': {maxRunPreviousConfig: "CMSSW_16_0_2_patch1"}
+    # 'maxRun': {maxRunPreviousConfig: "CMSSW_16_0_2_patch1"}
 }
 
 # Configure ScramArch
@@ -1732,9 +1732,9 @@ SECOND_AGENT_STREAMS = ["ParkingSingleMuon0", "ParkingSingleMuon1", "ParkingSing
                         "ParkingDoubleMuonLowMass2", "ParkingDoubleMuonLowMass3", 
                         "ParkingAnomalyDetection0", "ParkingAnomalyDetection1", "ParkingAnomalyDetection2", "ParkingAnomalyDetection3"]
 
-#THIRD_AGENT_STREAMS = []
+THIRD_AGENT_STREAMS = []
 setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
-                                    "ThirdAgent" : []})
+                                    "ThirdAgent" : THIRD_AGENT_STREAMS})
 
 
 ###################################
