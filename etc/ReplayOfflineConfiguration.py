@@ -1245,7 +1245,7 @@ for dataset in DATASETS:
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=3.5,
                sizePerEvent=1500,
-               scenario=ppRefScenario)
+               scenario=ppScenario)
 
 DATASETS = ["EphemeralZeroBias0", "EphemeralZeroBias1", "EphemeralZeroBias2", "EphemeralZeroBias3",
             "EphemeralZeroBias4", "EphemeralZeroBias5", "EphemeralZeroBias6", "EphemeralZeroBias7",
