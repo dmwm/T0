@@ -1732,9 +1732,9 @@ SECOND_AGENT_STREAMS = ["ParkingSingleMuon0", "ParkingSingleMuon1", "ParkingSing
                         "ParkingDoubleMuonLowMass2", "ParkingDoubleMuonLowMass3", 
                         "ParkingAnomalyDetection0", "ParkingAnomalyDetection1", "ParkingAnomalyDetection2", "ParkingAnomalyDetection3"]
 
-THIRD_AGENT_STREAMS = []
+# THIRD_AGENT_STREAMS = []
 setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
-                                    "ThirdAgent" : THIRD_AGENT_STREAMS})
+                                    "ThirdAgent" : []})
 
 
 ###################################
