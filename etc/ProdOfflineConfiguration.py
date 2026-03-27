@@ -132,7 +132,7 @@ setPromptCalibrationConfig(tier0Config,
 # Defaults for CMSSW version
 # maxRunPreviousConfig = 402249
 defaultCMSSWVersion = {
-    'default': "CMSSW_16_0_4",
+    'default': "CMSSW_16_0_4_patch2",
     #'acqEra': {'Run2024F': "CMSSW_14_0_11"},
     # 'maxRun': {maxRunPreviousConfig: "CMSSW_16_0_2_patch1"}
 }
@@ -780,6 +780,36 @@ for dataset in DATASETS:
                timePerEvent=5.7,  # copied from JetHT - should be checked
                sizePerEvent=2250, # copied from JetHT - should be checked
                scenario=ppScenario)
+    
+DATASETS = ["JetMET2", "JetMET3", "JetMET4"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               tape_node="T1_FR_IN2P3_MSS",  # JetHT was in "T1_UK_RAL_MSS" , MET was in "T1_DE_KIT_MSS"
+               disk_node="T1_FR_IN2P3_Disk", # JetHT was in "T1_UK_RAL_Disk", MET was in "T1_DE_KIT_Disk"
+               alca_producers=["TkAlJetHT", "HcalCalNoise"],
+               dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal", "@miniAODDQMBTagOnly"],
+               physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor", "EXOMONOPOLE", "EXODisplacedJet"],
+               timePerEvent=5.7,  # copied from JetHT - should be checked
+               sizePerEvent=2250, # copied from JetHT - should be checked
+               scenario=ppScenario)
+    
+DATASETS = ["JetMET5"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_dqm=True,
+               tape_node="T1_ES_PIC_MSS",  # JetHT was in "T1_UK_RAL_MSS" , MET was in "T1_DE_KIT_MSS"
+               disk_node="T1_ES_PIC_Disk", # JetHT was in "T1_UK_RAL_Disk", MET was in "T1_DE_KIT_Disk"
+               alca_producers=["TkAlJetHT", "HcalCalNoise"],
+               dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal", "@miniAODDQMBTagOnly"],
+               physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor", "EXOMONOPOLE", "EXODisplacedJet"],
+               timePerEvent=5.7,  # copied from JetHT - should be checked
+               sizePerEvent=2250, # copied from JetHT - should be checked
+               scenario=ppScenario)
 
 DATASETS = ["PPRefHardProbes0", "PPRefHardProbes1", "PPRefHardProbes2", "PPRefHardProbes3", "PPRefHardProbes4"]
 
@@ -854,8 +884,8 @@ for dataset in DATASETS:
                do_reco=True,
                write_reco=False,
                write_dqm=True,
-               tape_node="T1_DE_KIT_MSS",
-               disk_node="T1_DE_KIT_Disk",
+               tape_node="T1_US_FNAL_MSS",
+               disk_node="T1_US_FNAL_Disk",
                alca_producers=["TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu",
                                "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
                                "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
@@ -938,8 +968,8 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               tape_node="T1_US_FNAL_MSS", # EGamma2 was in T1_IT_CNAF_MSS
-               disk_node="T1_US_FNAL_Disk", # EGamma2 was in T1_IT_CNAF_Disk
+               tape_node="T1_IT_CNAF_MSS", # EGamma2 was in T1_IT_CNAF_MSS
+               disk_node="T1_IT_CNAF_Disk", # EGamma2 was in T1_IT_CNAF_Disk
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym",
                                "HcalCalIsoTrkProducerFilter", "EcalESAlign"],
                dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
@@ -953,8 +983,8 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               tape_node="T1_UK_RAL_MSS", # EGamma3 was in T1_FR_CCIN2P3_MSS
-               disk_node="T1_UK_RAL_Disk", # EGamma3 was in T1_FR_CCIN2P3_Disk
+               tape_node="T1_IT_CNAF_MSS", # EGamma3 was in T1_FR_CCIN2P3_MSS
+               disk_node="T1_IT_CNAF_Disk", # EGamma3 was in T1_FR_CCIN2P3_Disk
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym",
                                "HcalCalIsoTrkProducerFilter", "EcalESAlign"],
                dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
@@ -968,8 +998,8 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               tape_node="T1_IT_CNAF_MSS",
-               disk_node="T1_IT_CNAF_Disk",
+               tape_node="T1_US_FNAL_MSS",
+               disk_node="T1_US_FNAL_Disk",
                alca_producers=["EcalUncalZElectron", "EcalUncalWElectron", "HcalCalIterativePhiSym",
                                "HcalCalIsoTrkProducerFilter", "EcalESAlign"],
                dqm_sequences=["@common", "@ecal", "@egamma", "@L1TEgamma"],
@@ -1730,9 +1760,10 @@ SECOND_AGENT_STREAMS = ["ParkingSingleMuon0", "ParkingSingleMuon1", "ParkingSing
                         "ParkingHH", "ParkingLLP", "ParkingLLP0", "ParkingLLP1", "ParkingAnomalyDetection",
                         "ParkingDoubleMuonLowMass0", "ParkingDoubleMuonLowMass1",
                         "ParkingDoubleMuonLowMass2", "ParkingDoubleMuonLowMass3", 
-                        "ParkingAnomalyDetection0", "ParkingAnomalyDetection1", "ParkingAnomalyDetection2", "ParkingAnomalyDetection3"]
+                        "ParkingAnomalyDetection0", "ParkingAnomalyDetection1", "ParkingAnomalyDetection2", "ParkingAnomalyDetection3",
+                        "PhysicsMuon0", "PhysicsMuon1", "PhysicsMuon2", "PhysicsMuon3"]
 
-# THIRD_AGENT_STREAMS = []
+#THIRD_AGENT_STREAMS = []
 setHelperAgentStreams(tier0Config, {"SecondAgent" : SECOND_AGENT_STREAMS,
                                     "ThirdAgent" : []})
 
