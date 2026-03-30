@@ -107,7 +107,7 @@ setDQMDataTier(tier0Config, "DQMIO")
 # First timeout is used directly for reco release
 # Second timeout is used for the data service PromptReco start check
 # (to basically say we started PromptReco even though we haven't)
-defaultRecoTimeout = 4800 * 3600
+defaultRecoTimeout = 48 * 3600
 defaultRecoLockTimeout = 1800
 
 # DQM Server
