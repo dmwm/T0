@@ -160,7 +160,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_16_0_4"
+    'default': "CMSSW_16_0_4_patch2"
 }
 
 # Configure ScramArch
@@ -736,7 +736,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                scenario=ppScenario)
 
-DATASETS = ["JetMET0", "JetMET1"]
+DATASETS = ["JetMET0", "JetMET1", "JetMET2", "JetMET3", "JetMET4", "JetMET5"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1245,7 +1245,7 @@ for dataset in DATASETS:
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=3.5,
                sizePerEvent=1500,
-               scenario=ppRefScenario)
+               scenario=ppScenario)
 
 DATASETS = ["EphemeralZeroBias0", "EphemeralZeroBias1", "EphemeralZeroBias2", "EphemeralZeroBias3",
             "EphemeralZeroBias4", "EphemeralZeroBias5", "EphemeralZeroBias6", "EphemeralZeroBias7",
