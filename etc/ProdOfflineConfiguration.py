@@ -779,7 +779,7 @@ for dataset in DATASETS:
                sizePerEvent=2250, # copied from JetHT - should be checked
                scenario=ppScenario)
     
-DATASETS = ["JetMET2", "JetMET3", "JetMET4"]
+DATASETS = ["JetMET2", "JetMET3"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -794,7 +794,7 @@ for dataset in DATASETS:
                sizePerEvent=2250, # copied from JetHT - should be checked
                scenario=ppScenario)
     
-DATASETS = ["JetMET5"]
+DATASETS = ["JetMET4", "JetMET5"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
