@@ -773,7 +773,7 @@ for dataset in DATASETS:
                tape_node="T0_CH_CERN_MSS",  
                disk_node="T2_CH_CERN", 
                archival_node=None,
-               aod_to_disk=False
+               aod_to_disk=False,
                alca_producers=["TkAlJetHT", "HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal", "@miniAODDQMBTagOnly"],
                physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor", "EXOMONOPOLE", "EXODisplacedJet"],
@@ -837,6 +837,8 @@ for dataset in DATASETS:
                do_reco=True,
                write_reco=False,
                write_dqm=True,
+               tape_node='T1_FR_IN2P3_MSS',
+               disk_node='T1_FR_IN2P3_Disk', 
                alca_producers=["TkAlMuonIsolated", "HcalCalIterativePhiSym", "MuAlCalIsolatedMu",
                                "HcalCalHO", "HcalCalHBHEMuonProducerFilter",
                                "SiPixelCalSingleMuonLoose", "SiPixelCalSingleMuonTight",
