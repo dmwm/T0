@@ -41,7 +41,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
 # 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
 # 398191 Collisions 13.6 TeV, 2448 bunches, Run2025
-setInjectRuns(tier0Config, [398191]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
+setInjectRuns(tier0Config, [402263]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
 
 # Use this function to limit the number of lumisections to process.
 #
@@ -160,7 +160,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_16_0_4_patch2"
+    'default': "CMSSW_16_0_5_patch1"
 }
 
 # Configure ScramArch
@@ -184,6 +184,7 @@ hiTestppScenario = "ppEra_Run3_pp_on_PbPb_2023"
 hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
 hltScoutingScenario = "hltScoutingEra_Run3_2025"
 AlCaHcalIsoTrkScenario = "AlCaHcalIsoTrk_Run3"
+l1ScoutingScenario = "l1ScoutingEra_Run3_2026"
 
 # Procesing version number replays
 # Taking Replay processing ID from the last 8 digits of the DeploymentID
@@ -195,8 +196,10 @@ alcarawProcVersion = dt
 # Defaults for GlobalTag
 
 
-expressGlobalTag = "160X_dataRun3_Express_v2"
-promptrecoGlobalTag = "160X_dataRun3_Prompt_v1"
+#expressGlobalTag = "160X_dataRun3_Express_v2"
+#promptrecoGlobalTag = "160X_dataRun3_Prompt_v1"
+expressGlobalTag = "160X_dataRun3_Express_forT0Reply_GenPixelCPE"
+promptrecoGlobalTag = "160X_dataRun3_Prompt_forT0Reply_GenPixelCPE"
 repackGlobalTag = "150X_dataRun3_Prompt_v1_ParkingDoubleMuonLowMass_v2"
 
 # Mandatory for CondDBv2
@@ -1268,12 +1271,22 @@ for dataset in DATASETS:
 DATASETS = ["L1Scouting"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False)
+               do_reco=True,
+               write_miniaod=False,
+               write_aod=False,
+               nano_flavours=["@L1Scout"],
+               scenario=l1ScoutingScenario
+               )
 
 DATASETS = ["L1ScoutingSelection"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False)
+               do_reco=True,
+               write_miniaod=False,
+               write_aod=False,
+               nano_flavours=["@L1ScoutSelect"],
+               scenario=l1ScoutingScenario
+               )
 
 DATASETS = ["ScoutingPF0", "ScoutingPF1"] # From stream ScoutingPF --> Repacked to HLTSCOUT
 
