@@ -1190,6 +1190,8 @@ for dataset in DATASETS:
                dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
                alca_producers=["TkAlMinBias","LumiPixelsMinBias"],
                physics_skims=["LogError", "LogErrorMonitor"],
+               archival_node=None,
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
@@ -1388,6 +1390,8 @@ for dataset in DATASETS:
                physics_skims=["LogError", "LogErrorMonitor"],
                timePerEvent=1,
                sizePerEvent=1500,
+               archival_node=None,
+               tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
