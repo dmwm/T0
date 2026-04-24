@@ -1441,7 +1441,6 @@ for dataset in DATASETS:
                raw_to_disk=True,
                dqm_sequences=["@none"],
                write_dqm=False,
-               write_aod=False,
                archival_node=None,
                tape_node="T0_CH_CERN_MSS",
                disk_node="T2_CH_CERN",
