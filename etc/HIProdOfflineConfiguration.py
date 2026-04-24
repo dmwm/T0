@@ -1653,7 +1653,7 @@ for dataset in DATASETS:
                                "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated", "TkAlV0s"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
-               physics_skims=["LogError", "LogErrorMonitor"],
+               physics_skims=["UPCMonopole"],
                reco_split=forwardRecoSplitting,
                scenario=hiForwardScenario)
     
@@ -1676,7 +1676,7 @@ for dataset in DATASETS:
                                "SiStripCalZeroBias", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated", "TkAlV0s"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
-               physics_skims=["LogError", "LogErrorMonitor"],
+               physics_skims=["UPCMonopole"],
                reco_split=forwardRecoSplitting,
                scenario=hiForwardScenario)
     
@@ -1707,6 +1707,7 @@ for dataset in DATASETS:
                                "TkAlDiMuonAndVertex", "SiStripCalZeroBias", 
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated", "TkAlV0s"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
+               physics_skims=["UPCMonopole"],
                reco_split=forwardRecoSplitting,
                scenario=hiForwardScenario)
 
@@ -1834,7 +1835,7 @@ for dataset in DATASETS:
                                "SiStripCalZeroBias", "SiStripCalMinBias","TkAlMinBias", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
-               physics_skims=["PbPbEW", "PbPbHighPtJets", "LogError", "LogErrorMonitor"],
+               physics_skims=["PbPbEW", "PbPbHighPtJets"],
                scenario=hiRawPrimeScenario)
 
 DATASETS = ["HIPhysicsRawPrime1"]
@@ -1856,7 +1857,7 @@ for dataset in DATASETS:
                                "SiStripCalZeroBias", "HcalCalIterativePhiSym","HcalCalMinBias",
                                "TkAlJpsiMuMu", "TkAlUpsilonMuMu","TkAlZMuMu","TkAlMuonIsolated"],
                dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@egamma"],
-               physics_skims=["PbPbEW", "PbPbHighPtJets","LogError", "LogErrorMonitor"],
+               physics_skims=["PbPbEW", "PbPbHighPtJets"],
                scenario=hiRawPrimeScenario)
     
 
