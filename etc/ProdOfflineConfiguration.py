@@ -773,7 +773,7 @@ for dataset in DATASETS:
                write_dqm=True,
                tape_node="T1_ES_PIC_MSS",  
                disk_node="T1_ES_PIC_Disk", 
-               archival_node=None,
+               archival_node="T0_CH_CERN_MSS",
                aod_to_disk=False,
                alca_producers=["TkAlJetHT", "HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal", "@miniAODDQMBTagOnly"],
