@@ -1218,7 +1218,9 @@ DATASETS = ["Special2p4TeVZeroBias0", "Special2p4TeVZeroBias1",
             "Special2p4TeVZeroBias8", "Special2p4TeVZeroBias9", "Special2p4TeVZeroBias10",
             "Special2p4TeVZeroBias11", "Special2p4TeVZeroBias12", "Special2p4TeVZeroBias13",
             "Special2p4TeVZeroBias14", "Special2p4TeVZeroBias15", "Special2p4TeVZeroBias16",
-            "Special2p4TeVZeroBias17", "Special2p4TeVZeroBias18", "Special2p4TeVZeroBias19"]
+            "Special2p4TeVZeroBias17", "Special2p4TeVZeroBias18", "Special2p4TeVZeroBias19",
+            "Special2p4TeVZeroBias20", "Special2p4TeVZeroBias21", "Special2p4TeVZeroBias22",
+            "Special2p4TeVZeroBias23", "Special2p4TeVZeroBias24"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
