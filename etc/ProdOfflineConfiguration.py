@@ -788,8 +788,9 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                write_dqm=True,
-               tape_node="T0_CH_CERN_MSS",  
-               disk_node="T2_CH_CERN", 
+               archival_node="T0_CH_CERN_MSS",
+               tape_node="T1_FR_IN2P3_MSS",  
+               disk_node="T1_FR_IN2P3_Disk", 
                aod_to_disk=False,
                alca_producers=["TkAlJetHT", "HcalCalNoise"],
                dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal", "@miniAODDQMBTagOnly"],
@@ -799,21 +800,7 @@ for dataset in DATASETS:
                scenario=ppScenario)
 
 
-DATASETS = ["JetMET2", "JetMET3", "JetMET4", "JetMET5"]
 
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_dqm=True,
-               tape_node="T0_CH_CERN_MSS",  
-               disk_node="T2_CH_CERN", 
-               aod_to_disk=False,
-               alca_producers=["TkAlJetHT", "HcalCalNoise"],
-               dqm_sequences=["@common", "@jetmet", "@L1TMon", "@hcal", "@miniAODDQMBTagOnly"],
-               physics_skims=["EXOHighMET", "EXODelayedJetMET", "JetHTJetPlusHOFilter", "EXODisappTrk", "EXOSoftDisplacedVertices", "TeVJet", "LogError", "LogErrorMonitor", "EXOMONOPOLE", "EXODisplacedJet"],
-               timePerEvent=5.7,  # copied from JetHT - should be checked
-               sizePerEvent=2250, # copied from JetHT - should be checked
-               scenario=ppScenario)
 
 
 DATASETS = ["PPRefHardProbes0", "PPRefHardProbes1", "PPRefHardProbes2", "PPRefHardProbes3", "PPRefHardProbes4"]
