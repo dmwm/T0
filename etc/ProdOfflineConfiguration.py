@@ -161,6 +161,7 @@ hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
 hltScoutingScenario = "hltScoutingEra_Run3_2025"
 AlCaHcalIsoTrkScenario = "AlCaHcalIsoTrk_Run3"
 OXYScenario = "ppEra_Run3_2025_OXY"
+L1ScoutNanoScenario = "l1ScoutingEra_Run3_2026"
 
 # Heavy Ion Scenarios 2024
 
