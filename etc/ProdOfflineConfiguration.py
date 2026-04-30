@@ -1170,7 +1170,18 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
-DATASETS = ["SpecialHLTPhysics"]
+
+DATASETS = ["SpecialHLTPhysics", "SpecialHLTPhysics0", "SpecialHLTPhysics1",
+            "SpecialHLTPhysics2", "SpecialHLTPhysics3", "SpecialHLTPhysics4",
+            "SpecialHLTPhysics5", "SpecialHLTPhysics6", "SpecialHLTPhysics7",
+            "SpecialHLTPhysics8", "SpecialHLTPhysics9", "SpecialHLTPhysics10",
+            "SpecialHLTPhysics11", "SpecialHLTPhysics12", "SpecialHLTPhysics13",
+            "SpecialHLTPhysics14", "SpecialHLTPhysics15", "SpecialHLTPhysics16",
+            "SpecialHLTPhysics17", "SpecialHLTPhysics18", "SpecialHLTPhysics19",
+            "SpecialHLTPhysics20", "SpecialHLTPhysics21", "SpecialHLTPhysics22",
+            "SpecialHLTPhysics23", "SpecialHLTPhysics24", "SpecialHLTPhysics25",
+            "SpecialHLTPhysics26", "SpecialHLTPhysics27", "SpecialHLTPhysics28",
+            "SpecialHLTPhysics29", "SpecialHLTPhysics30", "SpecialHLTPhysics31"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1186,34 +1197,6 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=ppScenario)
 
-DATASETS = ["SpecialHLTPhysics0", "SpecialHLTPhysics1",
-            "SpecialHLTPhysics2", "SpecialHLTPhysics3", "SpecialHLTPhysics4",
-            "SpecialHLTPhysics5", "SpecialHLTPhysics6", "SpecialHLTPhysics7",
-            "SpecialHLTPhysics8", "SpecialHLTPhysics9", "SpecialHLTPhysics10",
-            "SpecialHLTPhysics11", "SpecialHLTPhysics12", "SpecialHLTPhysics13",
-            "SpecialHLTPhysics14", "SpecialHLTPhysics15", "SpecialHLTPhysics16",
-            "SpecialHLTPhysics17", "SpecialHLTPhysics18", "SpecialHLTPhysics19",
-            "SpecialHLTPhysics20", "SpecialHLTPhysics21", "SpecialHLTPhysics22",
-            "SpecialHLTPhysics23", "SpecialHLTPhysics24", "SpecialHLTPhysics25",
-            "SpecialHLTPhysics26", "SpecialHLTPhysics27", "SpecialHLTPhysics28",
-            "SpecialHLTPhysics29", "SpecialHLTPhysics30", "SpecialHLTPhysics31"]
-
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
-               raw_to_disk=False,
-			   aod_to_disk=True,
-               write_reco=False,
-               write_dqm=True,
-               write_miniaod=True,
-               write_aod=True,
-               dqm_sequences=["@common", "@ecal", "@jetmet", "@L1TMon", "@hcal", "@L1TEgamma"],
-               alca_producers=["TkAlMinBias","LumiPixelsMinBias"],
-               physics_skims=["LogError", "LogErrorMonitor"],
-               tape_node="T0_CH_CERN_MSS",  
-               disk_node="T2_CH_CERN", 
-               archival_node=None,
-               scenario=ppScenario)
 
 DATASETS = ["Special2p4TeVZeroBias0", "Special2p4TeVZeroBias1",
             "Special2p4TeVZeroBias2", "Special2p4TeVZeroBias3", "Special2p4TeVZeroBias4",
