@@ -161,7 +161,7 @@ hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2023"
 hltScoutingScenario = "hltScoutingEra_Run3_2025"
 AlCaHcalIsoTrkScenario = "AlCaHcalIsoTrk_Run3"
 OXYScenario = "ppEra_Run3_2025_OXY"
-L1ScoutNanoScenario = "l1ScoutingEra_Run3_2026"
+l1ScoutingScenario = "l1ScoutingEra_Run3_2026"
 
 # Heavy Ion Scenarios 2024
 
@@ -1556,7 +1556,7 @@ for dataset in DATASETS:
                write_miniaod=False,
                write_dqm=False,
                nano_flavours=['@L1Scout'],
-               scenario=L1ScoutNanoScenario)
+               scenario=l1ScoutingScenario)
 
 DATASETS = ["L1ScoutingSelection"]
 for dataset in DATASETS:
@@ -1566,7 +1566,7 @@ for dataset in DATASETS:
                write_miniaod=False,
                write_dqm=False,
                nano_flavours=['@L1ScoutSelect'],
-               scenario=L1ScoutNanoScenario)
+               scenario=l1ScoutingScenario)
 
 DATASETS = ["ScoutingPF0", "ScoutingPF1"] # From stream ScoutingPF --> Repacked to HLTSCOUT
 for dataset in DATASETS:
