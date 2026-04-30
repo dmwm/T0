@@ -1475,7 +1475,7 @@ for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
                raw_to_disk=True,
-               write_aod=True,
+               write_aod=False,
                dqm_sequences=["@none"],
                write_dqm=False,
                archival_node=None,
