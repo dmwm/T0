@@ -1553,8 +1553,7 @@ for dataset in DATASETS:
 DATASETS = ["L1Scouting"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=True,
-               cmssw_version={'default': 'CMSSW_16_0_5'},                         
+               do_reco=True,                     
                write_aod=False,
                write_miniaod=False,
                write_dqm=False,
@@ -1565,7 +1564,6 @@ DATASETS = ["L1ScoutingSelection"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
                do_reco=True,
-               cmssw_version={'default': 'CMSSW_16_0_5'},
                write_aod=False,
                write_miniaod=False,
                write_dqm=False,
