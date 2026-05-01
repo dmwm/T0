@@ -1299,22 +1299,19 @@ for dataset in DATASETS:
 DATASETS = ["L1Scouting"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_miniaod=False,
+               do_reco=True,                     
                write_aod=False,
-               nano_flavours=["@L1Scout"],
-               scenario=l1ScoutingScenario
-               )
+               write_miniaod=False,
+               write_dqm=False,
+               nano_flavours=['@L1Scout'],
+               scenario=l1ScoutingScenario)
 
 DATASETS = ["L1ScoutingSelection"]
 for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
                write_miniaod=False,
-               write_aod=False,
-               nano_flavours=["@L1ScoutSelect"],
-               scenario=l1ScoutingScenario
-               )
+               write_dqm=False,
+               nano_flavours=['@L1ScoutSelect'],
+               scenario=l1ScoutingScenario)
 
 DATASETS = ["ScoutingPF0", "ScoutingPF1"] # From stream ScoutingPF --> Repacked to HLTSCOUT
 
