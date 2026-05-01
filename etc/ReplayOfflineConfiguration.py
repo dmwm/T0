@@ -284,6 +284,7 @@ addDataset(tier0Config, "Default",
            multicore=numberOfCores,
            global_tag=promptrecoGlobalTag,
            global_tag_connect=globalTagConnect,
+           dqm_sequences=['@none'],
            #archival_node="T0_CH_CERN_MSS",
            tape_node="T0_CH_CERN_Disk",
            disk_node="T0_CH_CERN_Disk",
@@ -741,7 +742,7 @@ for dataset in DATASETS:
                dqm_sequences=["@common"],
                scenario=ppScenario)
 
-DATASETS = ["JetMET0", "JetMET1", "JetMET2", "JetMET3", "JetMET4", "JetMET5"]
+DATASETS = ["JetMET0", "JetMET1"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -831,7 +832,7 @@ for dataset in DATASETS:
                physics_skims=["EXONoBPTXSkim", "LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
-DATASETS = ["EGamma0", "EGamma1", "EGamma2", "EGamma3", "EGamma4"]
+DATASETS = ["EGamma0", "EGamma1", "EGamma2", "EGamma3", "EGamma4", "EGamma5"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1083,6 +1084,31 @@ for dataset in DATASETS:
                physics_skims=["LogError", "LogErrorMonitor"],
                scenario=ppScenario)
 
+DATASETS = ["Special2p4TeVZeroBias0", "Special2p4TeVZeroBias1",
+            "Special2p4TeVZeroBias2", "Special2p4TeVZeroBias3", "Special2p4TeVZeroBias4",
+            "Special2p4TeVZeroBias5", "Special2p4TeVZeroBias6", "Special2p4TeVZeroBias7",
+            "Special2p4TeVZeroBias8", "Special2p4TeVZeroBias9", "Special2p4TeVZeroBias10",
+            "Special2p4TeVZeroBias11", "Special2p4TeVZeroBias12", "Special2p4TeVZeroBias13",
+            "Special2p4TeVZeroBias14", "Special2p4TeVZeroBias15", "Special2p4TeVZeroBias16",
+            "Special2p4TeVZeroBias17", "Special2p4TeVZeroBias18", "Special2p4TeVZeroBias19",
+            "Special2p4TeVZeroBias20", "Special2p4TeVZeroBias21", "Special2p4TeVZeroBias22",
+            "Special2p4TeVZeroBias23", "Special2p4TeVZeroBias24"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               raw_to_disk=False,
+               write_reco=False,
+               write_dqm=True,
+               write_miniaod=True,
+               write_aod=True,
+               dqm_sequences=["@commonSiStripZeroBias", "@ecal", "@hcal", "@muon", "@jetmet", "@ctpps"],
+               alca_producers=["SiStripCalZeroBias", "TkAlMinBias", "SiStripCalMinBias", "LumiPixelsMinBias",
+                               "HcalCalIsolatedBunchSelector"],
+               physics_skims=["LogError", "LogErrorMonitor"],
+               scenario=ppScenario)
+
+
 DATASETS = ["EphemeralHLTPhysics0","EphemeralHLTPhysics1", "EphemeralHLTPhysics2", "EphemeralHLTPhysics3",
             "EphemeralHLTPhysics4", "EphemeralHLTPhysics5", "EphemeralHLTPhysics6","EphemeralHLTPhysics7",
             "EphemeralHLTPhysics8", "EphemeralHLTPhysics9","EphemeralHLTPhysics10","EphemeralHLTPhysics11",
@@ -1273,22 +1299,19 @@ for dataset in DATASETS:
 DATASETS = ["L1Scouting"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=True,
-               write_miniaod=False,
+               do_reco=True,                     
                write_aod=False,
-               nano_flavours=["@L1Scout"],
-               scenario=l1ScoutingScenario
-               )
+               write_miniaod=False,
+               write_dqm=False,
+               nano_flavours=['@L1Scout'],
+               scenario=l1ScoutingScenario)
 
 DATASETS = ["L1ScoutingSelection"]
 for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=True,
                write_miniaod=False,
-               write_aod=False,
-               nano_flavours=["@L1ScoutSelect"],
-               scenario=l1ScoutingScenario
-               )
+               write_dqm=False,
+               nano_flavours=['@L1ScoutSelect'],
+               scenario=l1ScoutingScenario)
 
 DATASETS = ["ScoutingPF0", "ScoutingPF1"] # From stream ScoutingPF --> Repacked to HLTSCOUT
 
