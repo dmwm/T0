@@ -1308,6 +1308,9 @@ for dataset in DATASETS:
 
 DATASETS = ["L1ScoutingSelection"]
 for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_aod=False,
                write_miniaod=False,
                write_dqm=False,
                nano_flavours=['@L1ScoutSelect'],
