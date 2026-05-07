@@ -629,8 +629,374 @@ setInjectRuns(tier0Config, [402263]) # 386925: 2024 Collisions, 390094: 2025 Cos
 
   </section>
   <section id="chapter-3"><h2>Chapter 3 · The Tier0Feeder heartbeat</h2>
-    <div id="ch3-setup"></div><div id="ch3-diagrams"></div><div id="ch3-code"></div>
-    <div id="ch3-deeper-dive"></div><div id="ch3-takeaways"></div><div id="ch3-self-check"></div>
+
+    <div id="ch3-setup">
+      <h3>Setup</h3>
+      <p class="meta">~6h reading time · By the end you'll know exactly what one tick of <code>Tier0FeederPoller.algorithm</code> does, what each DAO is for, and how Main/Helper agents partition the load.</p>
+      <p>Everything in T0 happens because <code>Tier0FeederPoller.algorithm()</code> is invoked. The WMAgent harness's <code>WorkerThreadManager</code> calls it every <code>config.Tier0Feeder.pollInterval</code> seconds (typically 30) on the worker thread. There is no event-driven architecture, no message bus, no triggers; just a polling loop that asks "is there anything new since last time?" against several Oracle databases and acts on whatever it finds. If you want to predict T0's behavior, you read this method.</p>
+      <p>The four phases of one tick, paraphrasing the file's docstring: <em>(1) discover new data from the Storage Manager and inject it into T0AST; (2) populate run-config rows for any new runs; (3) set up subscriptions for new run/streams; (4) feed streamer files into the configured subscriptions.</em> A few additional steps run after that for monitoring, conditions release, and PromptReco release. These are sequential, not concurrent — each phase finishes before the next begins, and a try/except around the inner blocks ensures one failed phase doesn't stop the next tick from running on the same data.</p>
+      <p>Why the same component owns both <em>configuration</em> (calling <code>configureRun*</code>) and <em>data flow</em> (feeding streamers): keeping the two transactionally close means a row's existence in <code>RUN_STREAM_FILESET_ASSOC</code> is always preceded by the matching <code>STREAM_DATASET_ASSOC</code> rows in the same Oracle session. Splitting these into two pollers would have meant inventing a wait-for-config gate. The single-component design is simpler.</p>
+      <p>The DAO convention is uniform: every SQL touch is a class in <code>src/python/T0/WMBS/Oracle/&lt;area&gt;/&lt;Verb&gt;&lt;Noun&gt;.py</code>, with a class body that holds a <code>sql = """…"""</code> string and an <code>execute(...)</code> method. There is no raw SQL anywhere in the poller — the poller only ever calls <code>self.daoFactory(classname="…")(...).execute(...)</code>. This is the WMCore pattern; once you've read three DAOs, you've read them all. We sample a few below.</p>
+      <p>Finally, the <strong>Main vs Helper agent split</strong>: T0 in production runs as one MainAgent on one host and zero or more HelperAgents on other hosts. They share a Tier0Config (so they agree on which streams exist) but partition the workload by stream name: each helper agent processes only the streams listed for its name in <code>tier0Config.Global.HelperAgentStreams[helperName]</code>; the main agent processes everything <em>not</em> claimed by a helper. The mechanism is filter-based: same DAO/splitter code paths, just different <code>filterStreamerFiles</code> and <code>filterHltConfigStreams</code> implementations.</p>
+    </div>
+
+    <div id="ch3-diagrams">
+      <h3>Diagrams</h3>
+
+      <pre class="mermaid">
+flowchart TB
+  S([algorithm tick]) --> N0[Load Tier0Config<br/>loadConfigurationFile]
+  N0 --> N1[Choose agent type<br/>MainAgent or HelperAgent]
+  N1 --> N2[Inject new data from SM<br/>StorageManagerAPI.injectNewData]
+  N2 --> N3[Discover new runs<br/>FindNewRuns DAO]
+  N3 --> N4[Configure new runs<br/>RunConfigAPI.configureRun]
+  N4 --> N5[Discover new run-streams<br/>FindNewRunStreams DAO]
+  N5 --> N6[Configure new run-streams<br/>RunConfigAPI.configureRunStream]
+  N6 --> N7[Feed streamers<br/>FeedStreamers DAO]
+  N7 --> N8[Release Express runs<br/>FindNewExpressRuns + ReleaseExpress]
+  N8 --> N9[Release PromptReco<br/>RunConfigAPI.releasePromptReco]
+  N9 --> NA[Upload conditions<br/>ConditionUploadAPI.uploadConditions]
+  NA --> NB[Mark workflows injected<br/>MarkWorkflowsInjected DAO]
+  NB --> NC[Update monitoring<br/>T0DataSvc and WorkflowMonitoring DAOs]
+  NC --> E([end tick])
+      </pre>
+      <p class="caption"><strong>D3.1 — Per-tick flowchart of <code>algorithm()</code>.</strong> Each box is a phase; arrows are sequential ordering. The first phase reloads the Tier0Config every tick — that's by design, so an operator editing <code>etc/ReplayOfflineConfiguration.py</code> on the deploy host doesn't need to restart the agent for changes to take effect on the next tick. The conditions/PromptReco/monitoring phases at the bottom are the bridge to Chapters 4 and 5; we cover their internals there. Note that try/except boundaries (not shown) wrap each numbered phase, so one phase failing on this tick doesn't prevent the next phase from running.</p>
+
+      <pre class="mermaid">
+graph LR
+  Poll[Tier0FeederPoller]
+  subgraph Discovery
+    F1[FindNewRuns]
+    F2[FindNewRunStreams]
+    F3[FindNewExpressRuns]
+    F4[GetExpressReadyRuns *opt*]
+  end
+  subgraph Inserts
+    I1[InsertRun]
+    I2[InsertStream]
+    I3[InsertRepackConfig]
+    I4[InsertExpressConfig]
+    I5[InsertPrimaryDataset]
+    I6[InsertDatasetScenario]
+  end
+  subgraph DataFlow
+    D1[FeedStreamers]
+    D2[ReleaseExpress]
+    D3[MarkWorkflowsInjected]
+  end
+  subgraph Monitoring
+    M1[GetStreamerWorkflowsForMonitoring]
+    M2[GetPromptRecoWorkflowsForMonitoring]
+    M3[MarkTrackedWorkflowMonitoring]
+    M4[MarkCloseoutWorkflowMonitoring]
+  end
+  Poll --> Discovery
+  Poll --> Inserts
+  Poll --> DataFlow
+  Poll --> Monitoring
+      </pre>
+      <p class="caption"><strong>D3.2 — DAO call graph, clustered by responsibility.</strong> A single tick of <code>algorithm()</code> instantiates and invokes around 15–20 DAOs depending on what it finds. They cluster naturally into discovery (find what's changed), inserts (configure new runs), data flow (move streamer rows through subscriptions), and monitoring (publish state for dashboards). All of them resolve through <code>self.daoFactory(classname=...)</code> with <code>package="T0.WMBS"</code> — so the file at <code>src/python/T0/WMBS/Oracle/Tier0Feeder/FindNewRuns.py</code> is the implementation of <code>classname="Tier0Feeder.FindNewRuns"</code>. The mapping is one-to-one and predictable.</p>
+
+      <pre class="mermaid">
+flowchart LR
+  Cfg[(tier0Config.Global<br/>.HelperAgentStreams)]
+  Cfg --> Routes
+  subgraph Routes[Stream routing]
+    direction TB
+    R1[stream_a → MainAgent fallback]
+    R2[stream_b → SecondAgent helper]
+    R3[stream_c → ThirdAgent helper]
+    R4[stream_d → MainAgent fallback]
+  end
+  R1 --> Main[MainAgent host]
+  R4 --> Main
+  R2 --> H1[SecondAgent host]
+  R3 --> H2[ThirdAgent host]
+  Main -. ignores .-> R2
+  Main -. ignores .-> R3
+      </pre>
+      <p class="caption"><strong>D3.3 — Main / Helper agent stream routing.</strong> The Tier0Config dictates which streams each helper claims. At runtime, <code>config.Tier0Feeder.agentName</code> in the <em>WMAgent</em> config selects which subclass instantiates: <code>"MainAgent"</code> creates a <code>MainAgent</code>, anything else creates a <code>HelperAgent</code> with that <code>helperName</code>. <code>HelperAgent.filterStreamerFiles</code> keeps only streams in <em>its</em> claim list; <code>MainAgent.filterStreamerFiles</code> keeps everything <em>not</em> in any helper's claim list. Helper claims are disjoint by convention; Main is the catch-all. Both use the same DAOs and same splitter code — only the input filter differs.</p>
+    </div>
+
+    <div id="ch3-code">
+      <h3>Annotated code</h3>
+
+      <p class="excerpt-head">src/python/T0Component/Tier0Feeder/Tier0FeederPoller.py:130-200</p>
+      <!-- excerpt: src/python/T0Component/Tier0Feeder/Tier0FeederPoller.py:130-200 -->
+<pre><code class="language-python">    @timeFunction
+    def algorithm(self, parameters = None):
+        """
+        _algorithm_
+
+        """
+        logging.debug("Running Tier0Feeder algorithm...")
+        myThread = threading.currentThread()
+
+        findNewRunsDAO = self.daoFactory(classname = "Tier0Feeder.FindNewRuns")
+        findNewRunStreamsDAO = self.daoFactory(classname = "Tier0Feeder.FindNewRunStreams")
+        findNewExpressRunsDAO = self.daoFactory(classname = "Tier0Feeder.FindNewExpressRuns")
+        releaseExpressDAO = self.daoFactory(classname = "Tier0Feeder.ReleaseExpress")
+        feedStreamersDAO = self.daoFactory(classname = "Tier0Feeder.FeedStreamers")
+        markWorkflowsInjectedDAO = self.daoFactory(classname = "Tier0Feeder.MarkWorkflowsInjected")
+
+        tier0Config = None
+        try:
+            tier0Config = loadConfigurationFile(self.tier0ConfigFile)
+        except:
+            # usually happens when there are syntax errors in the configuration
+            logging.exception("Cannot load Tier0 configuration file, not configuring new runs and run/streams")
+
+        # only configure new runs and run/streams if we have a valid Tier0 configuration
+        if tier0Config != None:
+
+            #
+            # we don't inject data if the Tier0Config is unreadable
+            #
+            # discover new data from StorageManager and inject into Tier0
+            # (if the config specifies a list of runs do it only once)
+            #
+            # replays call data discovery only once (and ignore data status)
+            #
+
+            # If no helper agents are given in the configuration,
+            # this is a main agent that will ignore no streams
+            if not tier0Config.Global.HelperAgentStreams:
+                logging.info("No HelperAgent provided. This is a MainAgent. Processing all streams")
+                self.agentName = "MainAgent"
+
+            # If HelperAgent is specified, but the name is not specified,
+            # a HelperAgent is started and will not process anything
+            if self.agentName == "MainAgent":
+                self.agentType = MainAgent(tier0Config)
+            else:
+                self.agentType = HelperAgent(tier0Config, helperName=self.agentName)
+
+
+            try:
+                if tier0Config.Global.InjectRuns == None:
+                    StorageManagerAPI.injectNewData(self.dbInterfaceStorageManager,
+                                                    self.dbInterfaceHltConf,
+                                                    self.dbInterfaceSMNotify,
+                                                    streamerPNN = tier0Config.Global.StreamerPNN,
+                                                    minRun = tier0Config.Global.InjectMinRun,
+                                                    maxRun = tier0Config.Global.InjectMaxRun,
+                                                    agentType = self.agentType,
+                                                    emulationRepack = tier0Config.Global.EmulationRepack)
+                else:
+                    injectRuns = set()
+                    for injectRun in tier0Config.Global.InjectRuns:
+                        if injectRun not in self.injectedRuns:
+                            injectRuns.add(injectRun)
+                    for injectRun in injectRuns:
+                        StorageManagerAPI.injectNewData(self.dbInterfaceStorageManager,
+                                                        self.dbInterfaceHltConf,
+                                                        self.dbInterfaceSMNotify,
+                                                        streamerPNN = tier0Config.Global.StreamerPNN,
+                                                        injectRun = injectRun,
+                                                        injectLimit= tier0Config.Global.InjectLimit,
+</code></pre>
+      <p>The opening of the heartbeat method, all you need to read to understand phases 1 and 2 of D3.1. The <code>@timeFunction</code> decorator (from <code>WMCore.Utils.Timers</code>) emits a per-tick latency log line — that's how the Grafana dashboards measure "is the agent keeping up?". The DAO factory calls at the top mean "give me callables for these classnames"; the actual SQL only runs when one of them is invoked further down. The <em>agent dispatch</em> in lines 167-176 is the runtime branch on Main vs Helper: if the operator's config has no <code>HelperAgentStreams</code>, force MainAgent; otherwise pick whichever subclass matches <code>self.agentName</code>. <code>StorageManagerAPI.injectNewData</code> is the bridge to the StorageManagerDB — it pulls fresh streamer-file rows that nobody has ingested yet and inserts the corresponding rows into T0AST's <code>STREAMER</code> table.</p>
+
+      <p class="excerpt-head">src/python/T0Component/Tier0Feeder/MultipleAgents/MainAgent.py:1-49</p>
+      <!-- excerpt: src/python/T0Component/Tier0Feeder/MultipleAgents/MainAgent.py:1-49 -->
+<pre><code class="language-python">import logging
+from T0Component.Tier0Feeder.MultipleAgents.BaseAgent import BaseAgent
+
+class MainAgent(BaseAgent):
+    """
+    Main agent. The streams processed by this agent are implicitely defined in the tier0Config
+    * This agent will process streams that are not defined in any of the other agents
+    * tier0Config.Global.HelperAgentStreams = {'SecondAgent' : ["stream_1", "stream_2"],
+                                                 'ThirdAgent' : ["stream_3", "stream_4"]}
+    Note: This agent will ignore all streams in the helper agents, regardless of the helper agents status
+    """
+    def __init__(self, tier0Config):
+
+        BaseAgent.__init__(self, tier0Config)
+        self.name = "MainAgent"
+        self.findUnwantedStreams()
+        logging.info("This is a MainAgent. Ignoring streams {}".format(self.rejectStreams))
+
+    def filterStreamerFiles (self, streamerFiles):
+        """
+        _filterStreamerFiles_
+
+        When running multiple agents, filter out data from Storage Manager to avoid duplicates
+        Returns the streamers the agent want to process
+        """
+        filteredStreamers = [streamer for streamer in streamerFiles if streamer['stream'] not in self.rejectStreams]
+
+        return filteredStreamers
+
+    def filterHltConfigStreams (self, hltStreamMapping = {}):
+        """
+        _filterHltConfigStreams_
+
+        When running multiple agents, populate databases with the streams information relevant to the given agent
+        """
+        filteredHltStreamMapping = {stream: hltStreamMapping[stream] for stream in hltStreamMapping if stream not in self.rejectStreams}
+
+        return filteredHltStreamMapping
+
+    def findUnwantedStreams (self):
+        """
+        _findUnwantedStreams_
+
+        Returns a list of streams that will not be processed by any other agent
+        """
+        self.rejectStreams = []
+        for agent in self.helperAgentStreams.keys():
+            self.rejectStreams += self.helperAgentStreams[agent]
+
+</code></pre>
+      <p>MainAgent in full. The interesting line is <code>findUnwantedStreams</code>: it builds <em>one flat list</em> of every stream claimed by any helper, then both filter methods use a <code>not in self.rejectStreams</code> check. So even if a helper agent is offline, the main agent will still skip its streams — by design. That avoids both agents racing on the same data when a helper restarts; the price is that streams claimed by a dead helper get stuck. (This is why the <code>cmst0_late_workflows</code> bin script exists.)</p>
+
+      <p class="excerpt-head">src/python/T0Component/Tier0Feeder/MultipleAgents/HelperAgent.py:1-45</p>
+      <!-- excerpt: src/python/T0Component/Tier0Feeder/MultipleAgents/HelperAgent.py:1-45 -->
+<pre><code class="language-python">import logging
+from T0Component.Tier0Feeder.MultipleAgents.BaseAgent import BaseAgent
+
+class HelperAgent(BaseAgent):
+    """
+    Helper agent. The streams processed by this one are explicitely defined in the tier0Config.
+    helperRole has to match
+
+    Use it with
+    config.Tier0Feeder.AgentRole = "SecondAgent" (or "ThirdAgent" ..., follow the configuration file)
+    Note: if the helperName is none or unknown, returned values will be empty and no data is injected
+    """
+    def __init__(self, tier0Config, helperName = None):
+
+        BaseAgent.__init__(self, tier0Config)
+        self.name = helperName
+        if self.name and self.name in self.helperAgentStreams:
+            self.streams = self.helperAgentStreams[self.name]
+        else:
+            self.streams = []
+
+        logging.info("This is a HelperAgent named {}. Processing streams {}".format(self.name, self.streams))
+
+    def filterStreamerFiles (self, streamerFiles = []):
+        """
+        _filterStreamerFiles_
+
+        When running multiple agents, filter out data from Storage Manager to avoid duplicates
+        Returns streamers the agent wants to process
+        """
+
+        filteredStreamers = [streamer for streamer in streamerFiles if streamer['stream'] in self.streams]
+
+        return filteredStreamers
+
+    def filterHltConfigStreams (self, hltStreamMapping = {}):
+        """
+        _filterHltConfigStreams_
+
+        When running multiple agents, populate databases with the streams information relevant to the given agent
+        """
+
+        filteredHltStreamMapping = {stream: hltStreamMapping[stream] for stream in hltStreamMapping if stream in self.streams}
+</code></pre>
+      <p>HelperAgent: the symmetric counterpart. The filters use <code>stream in self.streams</code> rather than <code>not in</code>. The defensive <code>if self.name and self.name in self.helperAgentStreams</code> means a HelperAgent with an unknown name gets <code>self.streams = []</code> — every filter returns an empty list — every DAO call inserts zero rows. That is intentional: a misconfigured helper agent <em>safely does nothing</em> rather than ingesting random data. If you ever see a HelperAgent boot but never process anything, check its <code>config.Tier0Feeder.agentName</code> against the keys in <code>tier0Config.Global.HelperAgentStreams</code>.</p>
+
+      <p class="excerpt-head">src/python/T0/WMBS/Oracle/Tier0Feeder/FindNewRuns.py:1-29</p>
+      <!-- excerpt: src/python/T0/WMBS/Oracle/Tier0Feeder/FindNewRuns.py:1-29 -->
+<pre><code class="language-python">"""
+_FindNewRuns_
+
+Oracle implementation of FindNewRuns
+
+Return a dictionary of run:hltkey for all runs
+that are not configured.
+
+"""
+
+from WMCore.Database.DBFormatter import DBFormatter
+
+class FindNewRuns(DBFormatter):
+
+    def execute(self, conn = None, transaction = False):
+
+        sql = """SELECT run_id, hltkey
+                 FROM run
+                 WHERE acq_era IS NULL
+                 """
+
+        results = self.dbi.processData(sql, {}, conn = conn,
+                                       transaction = transaction)[0].fetchall()
+
+        runHltkeys = {}
+        for result in results:
+            runHltkeys[result[0]] = result[1]
+
+        return runHltkeys
+</code></pre>
+      <p>One DAO in full. The pattern: subclass <code>DBFormatter</code>, expose <code>execute(...)</code>, hold the SQL as a class-body string. Notice how <em>"new runs"</em> is operationally defined here: a run row exists in <code>RUN</code> but its <code>acq_era</code> column is still <code>NULL</code>. <code>configureRun</code>'s <code>UpdateRun</code> DAO is what fills <code>acq_era</code> in, so once a run has been configured it stops being "new". This is the kind of two-line invariant every operator should know — every DAO encodes one. The next excerpt shows the schema side of this.</p>
+
+      <p class="excerpt-head">src/python/T0/WMBS/Oracle/Create.py:112-135</p>
+      <!-- excerpt: src/python/T0/WMBS/Oracle/Create.py:112-135 -->
+<pre><code class="language-python">            """CREATE TABLE run (
+                 run_id             int           not null,
+                 status             int           default 1 not null,
+                 express_released   int           default 0 not null,
+                 hltkey             varchar2(255) not null,
+                 setup_label        varchar2(255) not null,
+                 start_time         int           default 0 not null,
+                 stop_time          int           default 0 not null,
+                 close_time         int           default 0 not null,
+                 lumicount          int           default 0 not null,
+                 in_datasvc         int           default 0 not null,
+                 process            varchar2(255),
+                 acq_era            varchar2(255),
+                 backfill           varchar2(255),
+                 bulk_data_type     varchar2(50),
+                 dqmuploadurl       varchar2(255),
+                 ah_timeout         int,
+                 ah_cond_lfnbase    varchar2(255),
+                 ah_lumi_url        varchar2(255),
+                 cond_timeout       int,
+                 db_host            varchar2(255),
+                 valid_mode         int,
+                 primary key(run_id)
+               ) ORGANIZATION INDEX"""
+</code></pre>
+      <p>The <code>RUN</code> table schema. Connect this to the previous excerpt: the <code>FindNewRuns</code> DAO uses <code>WHERE acq_era IS NULL</code>, which corresponds to the nullable <code>acq_era varchar2(255)</code> column above (no <code>not null</code> annotation). Many T0AST tables follow this pattern — a "configuration not yet applied" state expressed as <code>NULL</code> in some discriminator column. <code>Create.py</code> is the schema bootstrap: when <code>WMQuality.TestInit.setSchema(customModules=["T0.WMBS"])</code> runs in a unit test, this is where the tables come from. In production the schema is migrated separately and this file's CREATE statements aren't executed.</p>
+    </div>
+
+    <div id="ch3-deeper-dive">
+      <h3>Deeper dive</h3>
+      <details>
+        <summary>What stops Main and Helper from racing on the same row?</summary>
+        <p>Two layers. (1) Filter-based partitioning: as shown above, MainAgent and HelperAgent can never agree to process the same stream — Main's reject list is the union of all helpers' claim lists, and a helper's claim list is its only allowed input. (2) Row-level uniqueness in T0AST: every <code>Insert*</code> DAO either uses <code>MERGE</code> or has a unique constraint on the natural key (e.g. <code>STREAM(stream_id, name)</code>). If a race did somehow occur, the loser would hit a constraint violation rather than corrupt the row. (3) The optional <code>SetDeploymentID</code> DAO writes a per-deployment ID into a few rows so cross-deployment debugging can identify which agent wrote what.</p>
+      </details>
+      <details>
+        <summary>Why is <code>Tier0Config</code> reloaded every tick instead of cached?</summary>
+        <p>So that operators can edit <code>etc/ReplayOfflineConfiguration.py</code> live during a replay and see the change applied on the next tick (typically within 30 seconds). The cost is a small file read + Python parse per tick, which is negligible compared to the Oracle round trips. If the file is malformed the <code>try/except</code> around <code>loadConfigurationFile</code> falls back to "skip configuration but still process already-known runs" — meaning a bad config is non-destructive. (This is also why the <code>validate-config.yaml</code> CI workflow exists for production configs: production cannot self-heal in the same way without operator intervention.)</p>
+      </details>
+    </div>
+
+    <div id="ch3-takeaways">
+      <h3>Key takeaways</h3>
+      <ul>
+        <li>Every tick: load Tier0Config → choose agent type → discover/inject → configure → feed → release → upload → mark monitoring. Sequential, idempotent, predictable.</li>
+        <li>All SQL lives in DAOs under <code>src/python/T0/WMBS/Oracle/&lt;area&gt;/</code>; the poller is pure Python orchestration. The classname-to-file mapping is one-to-one.</li>
+        <li>The Main/Helper split is configured in the <em>Tier0Config</em> (<code>HelperAgentStreams</code>) but selected at runtime by the <em>WMAgent config</em>'s <code>agentName</code>. The two configurations must agree.</li>
+        <li>A misconfigured HelperAgent does nothing rather than ingesting random data — defensive emptiness is on purpose.</li>
+        <li>"New" is a property of T0AST state (e.g. <code>RUN.acq_era IS NULL</code>), not a property of the agent's memory. Restarting the agent re-discovers everything that's still in that state.</li>
+      </ul>
+    </div>
+
+    <div id="ch3-self-check">
+      <h3>Self-check</h3>
+      <ol class="self-check">
+        <li>Trace one streamer file from arrival in the StorageManager DB to its row in T0AST's <code>STREAMER</code> table — name the API call and at least one DAO involved.</li>
+        <li>If a HelperAgent's <code>agentName</code> doesn't appear as a key in <code>tier0Config.Global.HelperAgentStreams</code>, what happens — and why is that the chosen behavior?</li>
+        <li>Why is <code>RunConfigAPI.releasePromptReco</code> invoked from inside <code>algorithm()</code> instead of from a separate poller?</li>
+        <li>Where would you add instrumentation to see how long each phase of one tick takes? (Hint: look at the decorator on <code>algorithm</code>.)</li>
+        <li>If you stop the agent mid-tick, what happens to a streamer that was being inserted? What guarantees the next tick recovers cleanly?</li>
+      </ol>
+    </div>
+
   </section>
   <section id="chapter-4"><h2>Chapter 4 · JobSplitting</h2>
     <div id="ch4-setup"></div><div id="ch4-diagrams"></div><div id="ch4-code"></div>
