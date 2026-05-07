@@ -98,7 +98,7 @@ Write this exact content to `docs/superpowers/scripts/extract_excerpt.py`:
 """Print a `path:start-end` excerpt from the repo, with line numbers.
 
 Usage:
-    python docs/superpowers/scripts/extract_excerpt.py src/python/T0/__init__.py:1-9
+    python docs/superpowers/scripts/extract_excerpt.py src/python/T0/__init__.py:1-8
 """
 from __future__ import annotations
 import sys
@@ -142,7 +142,7 @@ if __name__ == "__main__":
 
 - [ ] **Step 2: Smoke-test it**
 
-Run: `python3 docs/superpowers/scripts/extract_excerpt.py src/python/T0/__init__.py:1-9`
+Run: `python3 docs/superpowers/scripts/extract_excerpt.py src/python/T0/__init__.py:1-8`
 
 Expected output (line numbers may render with leading spaces):
 
@@ -680,7 +680,7 @@ Caption (~150 words): the solid lines are mandatory connections; the dashed line
 
 **Code excerpts:**
 
-- `src/python/T0/__init__.py:1-9` — the version stamp; annotation: "this is what `pip install T0=={version}` resolves to and what the CI tag/release workflows watch."
+- `src/python/T0/__init__.py:1-8` — the version stamp; annotation: "this is what `pip install T0=={version}` resolves to and what the CI tag/release workflows watch."
 - `src/python/T0Component/Tier0Feeder/Tier0Feeder.py:21-50` — the `Harness` subclass; annotation: "the entire role of this file is to register one worker thread; the actual work is in the next file."
 - `src/python/T0Component/Tier0Feeder/Tier0FeederPoller.py:38-100` — the constructor showing six DB connections; annotation: each `if hasattr(config, "...Database"):` corresponds to a dashed edge in D1.3.
 
