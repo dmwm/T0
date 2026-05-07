@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { CHAPTERS, SIMULATORS } from "@/lib/routes";
+import { D1_1_PipelineHero } from "@/diagrams/D1_1_PipelineHero";
 import styles from "./Home.module.css";
 
 const stagger = {
@@ -61,7 +62,12 @@ export function Home() {
       </section>
 
       <div className={styles.body}>
-        <div className={styles.sectionLabel}>The six chapters</div>
+        <div className={styles.sectionLabel}>The whole pipeline at a glance</div>
+        <D1_1_PipelineHero />
+
+        <div className={styles.sectionLabel} style={{ marginTop: 56 }}>
+          The six chapters
+        </div>
         <motion.div
           className={styles.grid}
           variants={stagger}
