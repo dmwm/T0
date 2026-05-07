@@ -57,8 +57,247 @@
   <p class="meta">A self-contained tour of the CMS Tier-0 codebase. Read top to bottom, ~5 hours per chapter.</p>
 
   <section id="chapter-1"><h2>Chapter 1 · Foundations</h2>
-    <div id="ch1-setup"></div><div id="ch1-diagrams"></div><div id="ch1-code"></div>
-    <div id="ch1-deeper-dive"></div><div id="ch1-takeaways"></div><div id="ch1-self-check"></div>
+
+    <div id="ch1-setup">
+      <h3>Setup</h3>
+      <p class="meta">~5h reading time · By the end you'll know what T0 is, where it sits in CMS, what's in the two source roots, and the shape of the processing chain.</p>
+      <p>The CMS detector at the LHC produces particle-collision data continuously while the accelerator is running. The online data-acquisition system (DAQ + High-Level Trigger) reduces raw collisions into <em>streamer files</em> — binary files of events grouped by trigger stream — and writes them, plus rich metadata, into the <strong>online Storage Manager database</strong>. <strong>Tier-0 (T0)</strong> is the first offline workload-management agent that reads from the Storage Manager database and drives every offline processing step required to turn streamer files into archive-ready RECO datasets and calibration conditions. T0 is also where the operational decisions about acquisition era, processing site, stream-by-stream quotas, and conditions upload all live.</p>
+      <p>Vocabulary you need before going further: a <em>run</em> is one continuous data-taking interval (often a few hours); a <em>lumi-section</em> ("lumi") is a fixed sub-interval of a run, ~23 seconds long, used as the unit for accounting and bookkeeping; a <em>stream</em> is the trigger-defined output channel from the HLT (e.g. <code>Express</code>, <code>PhysicsCommissioning</code>, <code>ParkingDoubleMuonLowMass0</code>); a <em>primary dataset</em> ("PD") is the physics-defined slice of events written into a stream; a <em>streamer file</em> is the on-disk file of a stream's events for one or more lumis. Every concept in this guide attaches to one of those.</p>
+      <p>Operationally, T0 is a deployment of the CMS WMAgent stack on a small set of <code>vocms*.cern.ch</code> hosts under the <code>cmst0</code> user, with code, scripts, and configs all sourced from this repository at <code>/data/tier0/</code>. There is no monolithic "T0 server" — there are agents (one MainAgent and zero or more HelperAgents) polling Oracle databases on a schedule.</p>
+      <p>The codebase splits into two source roots. <code>src/python/T0/</code> is the pure-library half: configuration DSL, run-configuration translation, job splitters, closeout APIs, condition-upload code, and the entire Oracle DAO tree. <code>src/python/T0Component/</code> is the runtime half: WMAgent harness components (<code>Tier0Feeder</code> and the stub <code>Tier0Auditor</code>) that subclass <code>WMCore.Agent.Harness</code> and register polling worker threads. The split exists so the libraries can be unit-tested and reused without booting an agent.</p>
+      <p>The chain you'll spend the rest of the guide unpacking, in one sentence: <strong>Storage Manager → (Tier0Feeder discovers the run, configures it, ingests streamer files) → Repack → Express → PromptReco → AlcaHarvest → ConditionUpload → archive</strong>. Everything that follows is detail filling in arrows and boxes.</p>
+    </div>
+
+    <div id="ch1-diagrams">
+      <h3>Diagrams</h3>
+
+      <pre class="mermaid">
+flowchart LR
+  LHC([LHC collisions]) --> Det[CMS detector]
+  Det --> DAQ[DAQ / HLT]
+  DAQ --> SM[(Storage Manager DB<br/>+ streamer files)]
+  SM --> T0[T0 / Tier0Feeder]
+  subgraph T0Chain[T0 processing chain]
+    direction LR
+    T0 --> Repack
+    T0 --> Express
+    Repack --> Merge[RepackMerge]
+    Merge --> PR[PromptReco]
+    Express --> Alca[AlcaHarvest]
+    Alca --> CU[ConditionUpload]
+  end
+  PR --> Tape[(Tape archive<br/>via Rucio)]
+  CU --> CondDB[(Conditions DB<br/>via dropbox)]
+  classDef store fill:#fff5d6,stroke:#bca94d,color:#222;
+  class SM,Tape,CondDB store
+      </pre>
+      <p class="caption"><strong>D1.1 — The CMS data flow at 30,000 ft.</strong> Everything to the left of "T0 / Tier0Feeder" is the online side; we treat it as a black-box source. The boxes inside <code>T0Chain</code> are the offline steps T0 owns end-to-end. The two yellow stores on the right are downstream consumers — once data lands there, T0's job for that run is done. The whole rest of the guide is filling in detail behind these arrows: how does Tier0Feeder discover a run, how does Repack split streamer files into jobs, when does PromptReco actually start, how do conditions get uploaded? Keep this picture in mind; whenever a chapter feels deep-in-the-weeds, locate the box and arrow it's about and re-orient.</p>
+
+      <pre class="mermaid">
+classDiagram
+  class Harness { +preInitialization() +start() }
+  class BaseWorkerThread { +algorithm(parameters) +setup() +terminate() }
+  class WorkerThreadManager { +addWorker(worker, pollInterval) }
+  class Tier0Feeder
+  class Tier0FeederPoller
+  Harness &lt;|-- Tier0Feeder
+  BaseWorkerThread &lt;|-- Tier0FeederPoller
+  Tier0Feeder ..&gt; WorkerThreadManager : addWorker(Tier0FeederPoller, pollInterval)
+  WorkerThreadManager o-- BaseWorkerThread
+      </pre>
+      <p class="caption"><strong>D1.2 — WMAgent harness anatomy.</strong> Every WMAgent component in the CMS workload-management ecosystem follows this two-layer pattern. The <em>component wrapper</em> (here <code>Tier0Feeder</code>) subclasses <code>Harness</code> and exists only to register a worker thread; the <em>actual work</em> lives in a <code>BaseWorkerThread</code> subclass (here <code>Tier0FeederPoller</code>) whose <code>algorithm()</code> method runs every <code>pollInterval</code> seconds. <code>WorkerThreadManager</code> is supplied by WMCore and you almost never touch it. This pattern is reused by every other WMAgent component (RucioInjector, JobAccountant, …) — once you've internalised it for Tier0Feeder, you've internalised the rest.</p>
+
+      <pre class="mermaid">
+flowchart TB
+  TF[Tier0FeederPoller]
+  T0AST[(T0AST<br/>local Oracle)]
+  HLT[(HLTConfDB<br/>HLT menu)]
+  SMDB[(StorageManagerDB<br/>streamer rows)]
+  SMNotify[(SMNotifyDB<br/>optional)]
+  PopCon[(PopConLogDB<br/>CMSSW announcements)]
+  T0DataSvc[(T0DataSvcDB<br/>cross-agent state)]
+  TF -- read+write --> T0AST
+  TF -- read --> HLT
+  TF -- read --> SMDB
+  TF -. write streamer notifications .-> SMNotify
+  TF -. read PromptReco signals .-> PopCon
+  TF -. publish summary state .-> T0DataSvc
+  classDef opt stroke-dasharray: 4 3;
+  class SMNotify,PopCon,T0DataSvc opt
+      </pre>
+      <p class="caption"><strong>D1.3 — T0 database topology.</strong> Tier0Feeder talks to as many as six Oracle databases on every tick. Solid arrows are <em>mandatory</em> connections — if any of T0AST, HLTConfDB, or StorageManagerDB is missing or unreachable, the agent will not start. Dashed arrows are <em>optional</em>: each is gated by an <code>if hasattr(config, "&lt;Name&gt;Database"):</code> block in the constructor (see the code excerpt below). T0AST is the only database T0 writes to in any volume — it holds the run/stream/dataset configuration, all the streamer-to-job bookkeeping, and the closeout state. The others are read-mostly inputs (HLT menu, streamer arrival notifications, CMSSW release announcements) plus a single cross-agent publishing channel (T0DataSvc).</p>
+    </div>
+
+    <div id="ch1-code">
+      <h3>Annotated code</h3>
+
+      <p class="excerpt-head">src/python/T0/__init__.py:1-8</p>
+      <!-- excerpt: src/python/T0/__init__.py:1-8 -->
+<pre><code class="language-python">"""
+_T0_
+
+Core libraries for Workload Management Packages
+
+"""
+__version__ = '3.5.5'
+__all__ = []
+</code></pre>
+      <p>The version stamp is the load-bearing line in this file: it is what <code>pip install T0=={version}</code> resolves to and what the <code>create_tag_and_release.yaml</code> + <code>pypi_build_publish_template.yaml</code> CI workflows watch (both trigger only on changes to this file). Note: this is the <em>publishable</em> version. The version <em>actually deployed</em> on a given vocms* host is pinned separately at the top of <code>bin/00_pypi_deploy_replay.sh</code> / <code>00_pypi_deploy_prod.sh</code>; the two drift, and Chapter 6 explains why.</p>
+
+      <p class="excerpt-head">src/python/T0Component/Tier0Feeder/Tier0Feeder.py:21-50</p>
+      <!-- excerpt: src/python/T0Component/Tier0Feeder/Tier0Feeder.py:21-50 -->
+<pre><code class="language-python">class Tier0Feeder(Harness):
+    """
+    Creates jobs for new subscriptions
+    Handler implementation for polling
+
+    """
+
+    def __init__(self, config):
+        # call the base class
+        Harness.__init__(self, config)
+        self.pollTime = 1
+
+        print("Tier0Feeder.__init__")
+
+    def preInitialization(self):
+        """
+        Step that actually adds the worker thread properly
+
+        """
+        print("Tier0Feeder.preInitialization")
+
+
+        # Add event loop to worker manager
+        myThread = threading.currentThread()
+
+        pollInterval = self.config.Tier0Feeder.pollInterval
+        logging.info("Setting poll interval to %s seconds" % pollInterval)
+        myThread.workerThreadManager.addWorker(Tier0FeederPoller(self.config), \
+                                               pollInterval)
+        return
+</code></pre>
+      <p>This is the <em>entire</em> component wrapper. Its job: register one worker thread (<code>Tier0FeederPoller</code>) with the manager, at <code>pollInterval</code> seconds. That is it. Every line of "what T0 actually does" is in <code>Tier0FeederPoller</code>. The two-layer split (compare D1.2) keeps the WMAgent harness contract minimal and the algorithmic code unit-testable. Note that <code>self.pollTime = 1</code> is a vestigial attribute; the real polling cadence is <code>config.Tier0Feeder.pollInterval</code> (typically 30s).</p>
+
+      <p class="excerpt-head">src/python/T0Component/Tier0Feeder/Tier0FeederPoller.py:38-110</p>
+      <!-- excerpt: src/python/T0Component/Tier0Feeder/Tier0FeederPoller.py:38-110 -->
+<pre><code class="language-python">class Tier0FeederPoller(BaseWorkerThread):
+
+    def __init__(self, config):
+        """
+        _init_
+
+        """
+        BaseWorkerThread.__init__(self)
+
+        myThread = threading.currentThread()
+
+        self.daoFactory = DAOFactory(package = "T0.WMBS",
+                                     logger = logging,
+                                     dbinterface = myThread.dbi)
+
+        self.tier0ConfigFile = config.Tier0Feeder.tier0ConfigFile
+
+        self.agentName = getattr(config.Tier0Feeder, "agentName", None)
+
+        self.specDirectory = config.Tier0Feeder.specDirectory
+        self.dropboxuser = getattr(config.Tier0Feeder, "dropboxuser", None)
+        self.dropboxpass = getattr(config.Tier0Feeder, "dropboxpass", None)
+
+        self.dqmUploadProxy = getattr(config.Tier0Feeder, "dqmUploadProxy", None)
+        self.serviceProxy = getattr(config.Tier0Feeder, "serviceProxy", None)
+
+        self.localRequestCouchDB = RequestDBWriter(config.AnalyticsDataCollector.localT0RequestDBURL,
+                                                   couchapp = config.AnalyticsDataCollector.RequestCouchApp)
+
+        self.injectedRuns = set()
+
+        hltConfConnectUrl = config.HLTConfDatabase.connectUrl
+        dbFactoryHltConf = DBFactory(logging, dburl = hltConfConnectUrl, options = {})
+        self.dbInterfaceHltConf = dbFactoryHltConf.connect()
+        daoFactoryHltConf = DAOFactory(package = "T0.WMBS",
+                                       logger = logging,
+                                       dbinterface = self.dbInterfaceHltConf)
+        self.getHLTConfigDAO = daoFactoryHltConf(classname = "RunConfig.GetHLTConfig")
+
+        storageManagerConnectUrl = config.StorageManagerDatabase.connectUrl
+        dbFactoryStorageManager = DBFactory(logging, dburl = storageManagerConnectUrl, options = {})
+        self.dbInterfaceStorageManager = dbFactoryStorageManager.connect()
+
+        self.dbInterfaceSMNotify = None
+        if hasattr(config, "SMNotifyDatabase"):
+            smNotifyConnectUrl = config.SMNotifyDatabase.connectUrl
+            dbFactorySMNotify = DBFactory(logging, dburl = smNotifyConnectUrl, options = {})
+            self.dbInterfaceSMNotify = dbFactorySMNotify.connect()
+
+        self.getExpressReadyRunsDAO = None
+        if hasattr(config, "PopConLogDatabase"):
+            popConLogConnectUrl = getattr(config.PopConLogDatabase, "connectUrl", None)
+            if popConLogConnectUrl != None:
+                dbFactoryPopConLog = DBFactory(logging, dburl = popConLogConnectUrl, options = {})
+                dbInterfacePopConLog = dbFactoryPopConLog.connect()
+                daoFactoryPopConLog = DAOFactory(package = "T0.WMBS",
+                                                 logger = logging,
+                                                 dbinterface = dbInterfacePopConLog)
+                self.getExpressReadyRunsDAO = daoFactoryPopConLog(classname = "Tier0Feeder.GetExpressReadyRuns")
+
+        self.haveT0DataSvc = False
+        if hasattr(config, "T0DataSvcDatabase"):
+            t0datasvcConnectUrl = getattr(config.T0DataSvcDatabase, "connectUrl", None)
+            if t0datasvcConnectUrl != None:
+                self.haveT0DataSvc = True
+                dbFactoryT0DataSvc = DBFactory(logging, dburl = t0datasvcConnectUrl, options = {})
+                dbInterfaceT0DataSvc = dbFactoryT0DataSvc.connect()
+                self.daoFactoryT0DataSvc = DAOFactory(package = "T0.WMBS",
+                                                      logger = logging,
+                                                      dbinterface = dbInterfaceT0DataSvc)
+
+
+        #
+</code></pre>
+      <p>The poller's constructor is where the database topology of D1.3 lands in code. The first three connections (T0AST via the implicit <code>myThread.dbi</code>, then HLTConfDB, then StorageManagerDB) are unconditional — if any one's connect URL is missing the agent crashes here. The last three (SMNotifyDB, PopConLogDB, T0DataSvcDB) are wrapped in <code>if hasattr(config, "&lt;Name&gt;Database"):</code> blocks, matching the dashed arrows in D1.3. Notice the consistent pattern: build a <code>DBFactory</code>, call <code>.connect()</code>, build a <code>DAOFactory</code> with <code>package="T0.WMBS"</code>, store both on <code>self</code>. Every later <code>self.daoFactory(classname="…")</code> call resolves into the per-package class tree under <code>src/python/T0/WMBS/Oracle/</code> — Chapter 3 picks this up.</p>
+    </div>
+
+    <div id="ch1-deeper-dive">
+      <h3>Deeper dive</h3>
+      <details>
+        <summary>Why is <code>Tier0Auditor</code> a stub?</summary>
+        <p>Open <code>src/python/T0Component/Tier0Auditor/Tier0AuditorPoller.py</code> and you'll find that <code>algorithm()</code> does essentially nothing:</p>
+        <pre><code class="language-python">def algorithm(self, parameters = None):
+    """
+    _algorithm_
+
+    """
+    logging.debug("Running Tier0Auditor algorithm...")
+    myThread = threading.currentThread()
+
+    return
+</code></pre>
+        <p>This is intentional. Registering a no-op WMAgent component reserves the namespace and configuration block (<code>config.Tier0Auditor.*</code>) so future audit logic can be slotted in without changing the deployment shape. In practice, the real "auditing" T0 does — late-workflow detection, paused-job triage, backlog scanning — happens in standalone scripts under <code>bin/</code> (<code>cmst0_late_workflows</code>, <code>cmst0_paused_jobs</code>, <code>cmst0_backlog_wma</code>), not inside this component. If you ever see "Tier0Auditor" in operator chatter, it's almost certainly the <code>bin/</code> scripts being meant.</p>
+      </details>
+    </div>
+
+    <div id="ch1-takeaways">
+      <h3>Key takeaways</h3>
+      <ul>
+        <li>T0 is a polling agent on top of WMCore's WMAgent framework, deployed on a small fixed set of <code>vocms*</code> hosts under <code>cmst0</code>.</li>
+        <li>The codebase splits into <code>src/python/T0/</code> (pure libraries, unit-testable) and <code>src/python/T0Component/</code> (WMAgent harness components: <code>Tier0Feeder</code> active, <code>Tier0Auditor</code> stub).</li>
+        <li>Every WMAgent component is a thin <code>Harness</code> subclass that registers a <code>BaseWorkerThread</code> subclass; T0 follows this pattern exactly.</li>
+        <li>Tier0Feeder connects to up to six Oracle databases per tick: T0AST, HLTConfDB, StorageManagerDB are mandatory; SMNotifyDB, PopConLogDB, T0DataSvcDB are optional (gated by <code>hasattr(config, …)</code>).</li>
+        <li>The publishable T0 version (<code>src/python/T0/__init__.py</code>) and the deployed T0 version (pinned in <code>bin/00_pypi_deploy_*.sh</code>) drift independently. Always check both.</li>
+      </ul>
+    </div>
+
+    <div id="ch1-self-check">
+      <h3>Self-check</h3>
+      <ol class="self-check">
+        <li>What goes in <code>src/python/T0/</code> and what goes in <code>src/python/T0Component/</code>? Why is the split there?</li>
+        <li>Name the three Oracle databases Tier0Feeder <em>must</em> connect to and what each provides.</li>
+        <li>Where does <code>Tier0FeederPoller</code>'s poll interval come from at runtime — Tier0Config, the WMAgent config, or hard-coded?</li>
+        <li>What is the relationship between <code>Harness</code>, <code>BaseWorkerThread</code>, and <code>WorkerThreadManager</code>? Which ones live in WMCore vs T0?</li>
+      </ol>
+    </div>
+
   </section>
   <section id="chapter-2"><h2>Chapter 2 · The Tier0Config DSL</h2>
     <div id="ch2-setup"></div><div id="ch2-diagrams"></div><div id="ch2-code"></div>
