@@ -1,5 +1,105 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><title>T0 Architecture Guide (placeholder)</title></head>
-<body><p>Placeholder. Chapters will be added by the implementation plan.</p></body>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T0 Architecture Guide</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+<style>
+  :root {
+    --bg: #0d1117; --fg: #c9d1d9; --muted: #8b949e;
+    --accent: #58a6ff; --rule: #30363d; --code-bg: #161b22;
+    --max: 880px; --nav-w: 280px;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --mono: "SF Mono", Menlo, Consolas, monospace;
+  }
+  html, body { background: var(--bg); color: var(--fg); }
+  body { font: 16px/1.6 var(--font); margin: 0; }
+  a { color: var(--accent); }
+  code, pre { font-family: var(--mono); }
+  pre { background: var(--code-bg); padding: 12px 16px; border-radius: 6px; overflow-x: auto; }
+  .layout { display: grid; grid-template-columns: var(--nav-w) 1fr; gap: 32px; max-width: 1280px; margin: 0 auto; padding: 24px; }
+  nav.toc { position: sticky; top: 24px; align-self: start; max-height: calc(100vh - 48px); overflow-y: auto; border-right: 1px solid var(--rule); padding-right: 16px; font-size: 14px; }
+  nav.toc ol { list-style: none; padding: 0; margin: 0; }
+  nav.toc li { margin: 4px 0; }
+  nav.toc li.l2 { margin-left: 16px; color: var(--muted); }
+  nav.toc a { text-decoration: none; }
+  nav.toc a.active { font-weight: 600; color: var(--fg); }
+  main { max-width: var(--max); }
+  main h1 { font-size: 28px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+  main h2 { font-size: 22px; margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--rule); }
+  main h3 { font-size: 17px; margin-top: 32px; color: var(--muted); }
+  .meta { color: var(--muted); font-size: 14px; margin: -8px 0 24px; }
+  .excerpt-head { color: var(--muted); font-size: 13px; font-family: var(--mono); margin: 16px 0 4px; }
+  details { margin: 16px 0; padding: 12px 16px; background: var(--code-bg); border-radius: 6px; }
+  summary { cursor: pointer; font-weight: 600; }
+  ol.self-check { padding-left: 20px; }
+  ol.self-check li { margin: 8px 0; }
+  pre.mermaid { background: #f6f8fa; color: #24292f; padding: 16px; }
+  .caption { color: var(--muted); font-size: 14px; margin-top: 4px; }
+</style>
+</head>
+<body>
+<div class="layout">
+<nav class="toc" aria-label="Table of contents">
+  <ol>
+    <li><a href="#top">T0 Architecture Guide</a></li>
+    <li><a href="#chapter-1">Ch 1 · Foundations</a></li>
+    <li><a href="#chapter-2">Ch 2 · The Tier0Config DSL</a></li>
+    <li><a href="#chapter-3">Ch 3 · The Tier0Feeder heartbeat</a></li>
+    <li><a href="#chapter-4">Ch 4 · JobSplitting</a></li>
+    <li><a href="#chapter-5">Ch 5 · Closeout</a></li>
+    <li><a href="#chapter-6">Ch 6 · Operator surface &amp; recap</a></li>
+  </ol>
+</nav>
+<main id="top">
+  <h1>T0 Architecture Guide</h1>
+  <p class="meta">A self-contained tour of the CMS Tier-0 codebase. Read top to bottom, ~5 hours per chapter.</p>
+
+  <section id="chapter-1"><h2>Chapter 1 · Foundations</h2>
+    <div id="ch1-setup"></div><div id="ch1-diagrams"></div><div id="ch1-code"></div>
+    <div id="ch1-deeper-dive"></div><div id="ch1-takeaways"></div><div id="ch1-self-check"></div>
+  </section>
+  <section id="chapter-2"><h2>Chapter 2 · The Tier0Config DSL</h2>
+    <div id="ch2-setup"></div><div id="ch2-diagrams"></div><div id="ch2-code"></div>
+    <div id="ch2-deeper-dive"></div><div id="ch2-takeaways"></div><div id="ch2-self-check"></div>
+  </section>
+  <section id="chapter-3"><h2>Chapter 3 · The Tier0Feeder heartbeat</h2>
+    <div id="ch3-setup"></div><div id="ch3-diagrams"></div><div id="ch3-code"></div>
+    <div id="ch3-deeper-dive"></div><div id="ch3-takeaways"></div><div id="ch3-self-check"></div>
+  </section>
+  <section id="chapter-4"><h2>Chapter 4 · JobSplitting</h2>
+    <div id="ch4-setup"></div><div id="ch4-diagrams"></div><div id="ch4-code"></div>
+    <div id="ch4-deeper-dive"></div><div id="ch4-takeaways"></div><div id="ch4-self-check"></div>
+  </section>
+  <section id="chapter-5"><h2>Chapter 5 · Closeout</h2>
+    <div id="ch5-setup"></div><div id="ch5-diagrams"></div><div id="ch5-code"></div>
+    <div id="ch5-deeper-dive"></div><div id="ch5-takeaways"></div><div id="ch5-self-check"></div>
+  </section>
+  <section id="chapter-6"><h2>Chapter 6 · Operator surface and recap</h2>
+    <div id="ch6-setup"></div><div id="ch6-diagrams"></div><div id="ch6-code"></div>
+    <div id="ch6-deeper-dive"></div><div id="ch6-takeaways"></div><div id="ch6-self-check"></div>
+  </section>
+</main>
+</div>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "loose" });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+<script>
+  // Scrollspy: highlight the TOC link nearest the top of the viewport.
+  const links = [...document.querySelectorAll('nav.toc a')];
+  const targets = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const obs = new IntersectionObserver(entries => {
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
+    }
+  }, { rootMargin: '0px 0px -70% 0px', threshold: 0 });
+  targets.forEach(t => obs.observe(t));
+</script>
+</body>
 </html>
