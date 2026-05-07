@@ -1291,8 +1291,348 @@ class InsertSplitLumis(DBFormatter):
 
   </section>
   <section id="chapter-5"><h2>Chapter 5 · Closeout</h2>
-    <div id="ch5-setup"></div><div id="ch5-diagrams"></div><div id="ch5-code"></div>
-    <div id="ch5-deeper-dive"></div><div id="ch5-takeaways"></div><div id="ch5-self-check"></div>
+
+    <div id="ch5-setup">
+      <h3>Setup</h3>
+      <p class="meta">~5h reading time · By the end you'll know exactly what has to happen for a run to go from "active" to "archived" — and where most "stuck run" tickets land.</p>
+      <p>"Closeout" is the convergence of four independent signals into the answer to one question: <em>is run N completely done?</em> Most operator triage tickets boil down to "this run won't close out — why?". The four signals come from four different subsystems, all driven by the same <code>Tier0FeederPoller</code> tick:</p>
+      <ol>
+        <li><strong>PromptReco release</strong> (<code>RunConfigAPI.releasePromptReco</code>). PromptReco workflows for a run are <em>deferred</em> at run discovery — created in T0AST but not yet handed to JobCreator. They are released when (a) the relevant CMSSW release is announced (signal arrives via <code>PopConLogDB</code>) <em>and</em> (b) the configured <code>RecoDelay</code> for each dataset has elapsed since the run's stop time. Until both are true, no PromptReco jobs run for the run.</li>
+        <li><strong>AlcaHarvest</strong> (<code>JobSplitting/AlcaHarvest.py</code>). For each Express stream that produces calibration outputs, AlcaHarvest emits a single job that combines all the lumi-by-lumi alca outputs into one sqlite payload. Normally it waits for the input fileset to close (i.e. all Express jobs for the run are done). The <code>AlcaHarvestTimeout</code> setting on the stream is an escape hatch: if the run's stop time + timeout elapses, the splitter emits a partial-input job rather than waiting indefinitely.</li>
+        <li><strong>ConditionUpload</strong> (<code>ConditionUpload/{ConditionUploadAPI.py,upload.py}</code>). Once AlcaHarvest output (a sqlite + metadata pair) lands on EOS, the upload step copies it to the conditions dropbox over HTTPS. Two operational modes: <em>validation mode</em> writes to a side destination for human inspection; <em>prompt mode</em> writes to the live destination so PromptReco picks the conditions up immediately. The <code>ValidationMode</code> flag on the run controls which.</li>
+        <li><strong>RunLumi closeout</strong> (<code>RunLumiCloseout/RunLumiCloseoutAPI.py</code>). Marks lumis closed once their fileset has no more streamers, marks streams closed once all lumis are closed, and finally marks the run closed once every stream is closed and conditions are uploaded. Several "find active/stopped/closed" DAOs feed this — <code>StopRuns</code> sets <code>stop_time</code>, <code>CloseRuns</code> flips the run's <code>close_time</code>, etc.</li>
+      </ol>
+      <p>The four signals are <em>independent</em>: each can complete in any order. The state machine doesn't advance until <em>all</em> have. So when an operator says "the run is stuck", the question is "stuck on which signal?" — and answering that question requires reading T0AST. Knowing this layer in detail is what makes such tickets tractable.</p>
+      <p>One more nuance: archival (the final step that frees up T0AST rows for cleanup) is owned by <code>WMCore.WMComponent.TaskArchiver</code>, not T0. T0's responsibility ends at <em>closeout</em>; archival happens N hours later (configurable via <code>config.TaskArchiver.archiveDelayHours</code> — 720 hours / 30 days in production).</p>
+    </div>
+
+    <div id="ch5-diagrams">
+      <h3>Diagrams</h3>
+
+      <pre class="mermaid">
+stateDiagram-v2
+  [*] --> Active: run discovered, configureRun done
+  Active --> Stopped: stop_time set (StopRuns DAO)
+  Stopped --> StreamsClosed: every stream's fileset closed (CloseRunStreamFilesets)
+  StreamsClosed --> AlcaDone: AlcaHarvest jobs all completed
+  AlcaDone --> CondUploaded: ConditionUpload reports success or timeout
+  CondUploaded --> ClosedOut: RunLumiCloseoutAPI marks run closed (CloseRuns)
+  ClosedOut --> Archived: TaskArchiver removes workflow state
+  Archived --> [*]
+      </pre>
+      <p class="caption"><strong>D5.1 — Run closeout state machine.</strong> Six T0-owned states plus an external "Archived" terminal owned by TaskArchiver. The transitions are <em>polled</em>, not event-driven: every Tier0Feeder tick re-evaluates "can this run advance?" by re-running the relevant DAOs. The implication: a stuck transition costs at most <code>pollInterval</code> seconds of extra latency once its blocker is resolved. This is also why agent restarts are non-destructive — the state lives in T0AST, not in the agent's memory.</p>
+
+      <pre class="mermaid">
+sequenceDiagram
+  participant TF as Tier0FeederPoller
+  participant API as ConditionUploadAPI.uploadConditions
+  participant Up as upload.py worker
+  participant Drop as Conditions DropBox HTTPS
+  participant Cond as Conditions DB eventual
+  TF->>API: uploadConditions(user, pass, proxy)
+  API->>API: GetConditions DAO → list of pending sqlite/meta pairs
+  loop for each (sqlite, meta) pair
+    API->>Up: uploadToDropbox(condFiles, host, validationMode, …)
+    Up->>Up: xrdcp from EOS to local
+    Up->>Drop: HTTPS POST sqlite + metadata
+    Drop-->>Up: 200 OK
+    Up-->>API: completeFiles list
+  end
+  API->>API: CompleteFiles DAO → mark uploaded in T0AST
+  Note over Drop,Cond: dropbox ingestion (out of scope)
+  Drop-->>Cond: eventually publishes to global tag
+      </pre>
+      <p class="caption"><strong>D5.2 — ConditionUpload sequence.</strong> The contract: T0 stages the sqlite + metadata files on EOS (AlcaHarvest's job), <code>uploadConditions</code> finds them via the <code>GetConditions</code> DAO, <code>uploadToDropbox</code> copies them locally and POSTs them to the conditions dropbox, and the run's row in T0AST is marked uploaded via <code>CompleteFiles</code>. Everything past the dropbox is owned by a different team — the dropbox ingestion pipeline eventually publishes payloads to the conditions DB and tags them with the right global tag. The T0 contract ends at "POST returned 200".</p>
+
+      <pre class="mermaid">
+flowchart LR
+  subgraph SignalSources[Closeout signals — 4 independent inputs]
+    P[(PopConLogDB:<br/>CMSSW release announced)]
+    A[AlcaHarvest jobs:<br/>completed]
+    C[ConditionUpload:<br/>uploaded or timed out]
+    F[Filesets:<br/>closed - no more streamers]
+  end
+  P -- releasePromptReco --> Convert[Deferred PromptReco<br/>workflows become live]
+  F -- StreamsClosed --> Closeout
+  A -- AlcaDone --> Closeout
+  C -- CondUploaded --> Closeout
+  Closeout[RunLumiCloseoutAPI<br/>advances run state]
+      </pre>
+      <p class="caption"><strong>D5.3 — Closeout signals and where they originate.</strong> Four independent inputs feeding two consumers. Three of them feed <code>RunLumiCloseoutAPI</code>'s state advancement; the fourth (CMSSW release) feeds <code>releasePromptReco</code> separately, because PromptReco can run <em>before</em> closeout completes (and usually does — PromptReco is the bulk of the offline reconstruction). If any signal in the bottom three is missing, the run stays in its current state. The diagnostic flow when a run is stuck: identify the current state from D5.1, then look up which signal would advance it, then check why that signal hasn't fired.</p>
+    </div>
+
+    <div id="ch5-code">
+      <h3>Annotated code</h3>
+
+      <p class="excerpt-head">src/python/T0/RunConfig/RunConfigAPI.py:822-880</p>
+      <!-- excerpt: src/python/T0/RunConfig/RunConfigAPI.py:822-880 -->
+<pre><code class="language-python">def releasePromptReco(tier0Config, specDirectory, dqmUploadProxy):
+    """
+    _releasePromptReco_
+
+    Called by Tier0Feeder
+
+    Finds all run/primds that need to be released for PromptReco
+    ( run.stop_time + reco_release_config.delay > now AND run.stop_time > 0 )
+
+    Create workflows and subscriptions for the processing
+    of runs/datasets.
+
+    """
+    logging.debug("releasePromptReco()")
+    myThread = threading.currentThread()
+
+    daoFactory = DAOFactory(package = "T0.WMBS",
+                            logger = logging,
+                            dbinterface = myThread.dbi)
+
+    insertEventScenarioDAO = daoFactory(classname = "RunConfig.InsertEventScenarios")
+    findRecoReleaseDatasetsDAO = daoFactory(classname = "RunConfig.FindRecoReleaseDatasets")
+    findRecoReleaseDAO = daoFactory(classname = "RunConfig.FindRecoRelease")
+    insertDatasetScenarioDAO = daoFactory(classname = "RunConfig.InsertDatasetScenario")
+    insertCMSSWVersionDAO = daoFactory(classname = "RunConfig.InsertCMSSWVersion")
+    insertRecoConfigDAO = daoFactory(classname = "RunConfig.InsertRecoConfig")
+    insertStorageNodeDAO = daoFactory(classname = "RunConfig.InsertStorageNode")
+    insertPhEDExConfigDAO = daoFactory(classname = "RunConfig.InsertPhEDExConfig")
+    releasePromptRecoDAO = daoFactory(classname = "RunConfig.ReleasePromptReco")
+    insertWorkflowMonitoringDAO = daoFactory(classname = "RunConfig.InsertWorkflowMonitoring")
+
+    # mark workflows as injected
+    wmbsDaoFactory = DAOFactory(package = "WMCore.WMBS",
+                                logger = logging,
+                                dbinterface = myThread.dbi)
+    markWorkflowsInjectedDAO   = wmbsDaoFactory(classname = "Workflow.MarkInjectedWorkflows")
+
+    #
+    # handle PromptReco release for datasets
+    #
+    recoReleaseDatasets = findRecoReleaseDatasetsDAO.execute(transaction = False)
+
+    datasetDelays = {}
+    for dataset in recoReleaseDatasets:
+        datasetConfig = retrieveDatasetConfig(tier0Config, dataset)
+        datasetDelays[dataset] = (datasetConfig.RecoDelay, datasetConfig.RecoDelayOffset)
+
+    recoRelease = findRecoReleaseDAO.execute(datasetDelays, transaction = False)
+    for run in sorted(recoRelease.keys()):
+
+        # for creating PromptReco specs
+        recoSpecs = {}
+
+        # for PhEDEx subscription settings
+        subscriptions = []
+
+        bindsDatasetScenario = []
+        bindsCMSSWVersion = []
+        bindsRecoConfig = []
+</code></pre>
+      <p>The opening of <code>releasePromptReco</code>. The docstring summarises the release condition: <code>run.stop_time + reco_release_config.delay > now AND run.stop_time > 0</code>. Notice <em>both</em> halves of the condition: the run must have stopped (<code>stop_time > 0</code>, set by <code>StopRuns</code>) <em>and</em> enough time must have passed for each dataset's configured <code>RecoDelay</code> to elapse. The function reaches for <code>retrieveDatasetConfig(tier0Config, dataset)</code> — Chapter 2's DSL again — to fetch each dataset's specific <code>RecoDelay</code>. Different datasets in the same run can release at different times.</p>
+
+      <p class="excerpt-head">src/python/T0/JobSplitting/AlcaHarvest.py:1-65</p>
+      <!-- excerpt: src/python/T0/JobSplitting/AlcaHarvest.py:1-65 -->
+<pre><code class="language-python">"""
+_AlcaHarvest_
+
+"""
+import os
+import time
+import threading
+import logging
+
+from WMCore.WMBS.File import File
+
+from WMCore.JobSplitting.JobFactory import JobFactory
+from WMCore.DAOFactory import DAOFactory
+from WMCore.Services.UUIDLib import makeUUID
+
+class AlcaHarvest(JobFactory):
+    """
+    _AlcaHarvest_
+
+    Under normal circumstance wait until the end of processing (input fileset
+    is closed) and then issue a single job for all files.
+
+    If the timeout parameter is specified and the current time is more than
+    the runs stop time plus timeout, issue a job for all available files,
+    then issue another job at the end of processing.
+
+    """
+    def algorithm(self, *args, **kwargs):
+        """
+        _algorithm_
+
+        """
+        self.jobNamePrefix = kwargs.get('jobNamePrefix', "AlcaHarvest")
+        run = kwargs['runNumber']
+        alcapromptdataset = kwargs['alcapromptdataset']
+        timeout = kwargs['timeout']
+
+        myThread = threading.currentThread()
+
+        self.daoFactory = DAOFactory(package = "T0.WMBS",
+                                     logger = logging,
+                                     dbinterface = myThread.dbi)
+
+        fileset = self.subscription.getFileset()
+        fileset.load()
+
+        if fileset.open:
+
+            if timeout != None:
+
+                haveAlcaHarvestJobGroupDAO = self.daoFactory(classname = "Subscriptions.HaveJobGroup")
+                previousAlcaHarvest = haveAlcaHarvestJobGroupDAO.execute(self.subscription["id"])
+
+                if not previousAlcaHarvest:
+
+                    getRunStopTimeDAO = self.daoFactory(classname = "ConditionUpload.GetRunStopTime")
+                    stopTime = getRunStopTimeDAO.execute(run, transaction = False)
+
+                    if stopTime + timeout < time.time():
+
+                        self.createJob(self.getInputFilesForJob(), alcapromptdataset)
+
+        else:
+
+            haveAlcaHarvestJobGroupDAO = self.daoFactory(classname = "Subscriptions.HaveJobGroup")
+</code></pre>
+      <p>AlcaHarvest's two-mode logic, in code. The default branch is "fileset closed" (<code>else</code>): emit a single job over all input files. The escape branch is "fileset still open <em>and</em> timeout has elapsed" — emit a partial-input job <em>once</em> (gated by <code>previousAlcaHarvest</code>, which checks if a job group already exists for this subscription). The timeout-driven path is what unblocks closeout for runs where Express has stalled or the fileset hasn't received a final close signal. <code>timeout</code> comes from <code>tier0Config</code> via <code>setPromptCalibrationConfig(cfg, alcaHarvestTimeout=…)</code>; the default is <code>None</code>, meaning wait indefinitely.</p>
+
+      <p class="excerpt-head">src/python/T0/ConditionUpload/ConditionUploadAPI.py:21-60</p>
+      <!-- excerpt: src/python/T0/ConditionUpload/ConditionUploadAPI.py:21-60 -->
+<pre><code class="language-python">def uploadConditions(username, password, serviceProxy):
+    """
+    _uploadConditions_
+
+    Called by Tier0Feeder in every polling cycle
+
+    Determine PCL status incl. files for upload for all
+    run/stream combos that are not finished yet.
+
+    Loop through the runs, uploading files for all
+    streams. If the run/stream  upload subscription
+    is finished, mark that run/stream PCL as finished.
+
+    Terminate the loop on the first run that has
+    not completely finished streams, but only
+    within a certain timeout based on the runs
+    end time (either from the EoR record or based
+    on the insertion time of the last streamer file).
+
+    """
+    logging.debug("uploadConditions()")
+    myThread = threading.currentThread()
+
+    daoFactory = DAOFactory(package = "T0.WMBS",
+                            logger = logging,
+                            dbinterface = myThread.dbi)
+
+    getConditionsDAO = daoFactory(classname = "ConditionUpload.GetConditions")
+    completeFilesDAO = daoFactory(classname = "ConditionUpload.CompleteFiles")
+
+    finishPCLforEmptyExpressDAO = daoFactory(classname = "ConditionUpload.FinishPCLforEmptyExpress")
+
+    isPromptCalibrationFinishedDAO = daoFactory(classname = "ConditionUpload.IsPromptCalibrationFinished")
+    markPromptCalibrationFinishedDAO = daoFactory(classname = "ConditionUpload.MarkPromptCalibrationFinished")
+
+    # look at all runs which are finished with deeperconditions uploads
+    # check for late arriving payloads and upload them
+    conditions = getConditionsDAO.execute(finished = True, transaction = False)
+
+    for (index, run) in enumerate(sorted(conditions.keys()), 1):
+</code></pre>
+      <p>The opening of <code>uploadConditions</code>. The interesting structural detail: it processes <em>finished</em> runs first (<code>getConditionsDAO.execute(finished=True, ...)</code>) — the rationale is that late-arriving payloads on already-closed runs should be uploaded as a priority before opening new run/stream upload work. Two specialised DAOs (<code>FinishPCLforEmptyExpress</code>, <code>IsPromptCalibrationFinished</code>) handle the cases where Express produced no input or where the prompt-calibration step has reported done. This is one of the few places where T0 has a "late-arriving" code path — most subsystems assume monotonic progress.</p>
+
+      <p class="excerpt-head">src/python/T0/RunLumiCloseout/RunLumiCloseoutAPI.py:14-63</p>
+      <!-- excerpt: src/python/T0/RunLumiCloseout/RunLumiCloseoutAPI.py:14-63 -->
+<pre><code class="language-python">def stopRuns(dbInterfaceStorageManager):
+    """
+    _stopRuns_
+
+    Called by Tier0Feeder
+
+    For all active runs check the RunSummary records to see if the
+    run has stoppedended. If it has, update T0AST to reflect this.
+
+    Replays are handled differently, they will update start_time and
+    stop_time with the min and max streamer insert times.
+
+    """
+    logging.debug("stopRuns()")
+    myThread = threading.currentThread()
+
+    daoFactory = DAOFactory(package = "T0.WMBS",
+                            logger = logging,
+                            dbinterface = myThread.dbi)
+
+    daoFactoryStorageManager = DAOFactory(package = "T0.WMBS",
+                                          logger = logging,
+                                          dbinterface = dbInterfaceStorageManager)
+
+    findActiveRunsDAO = daoFactory(classname = "RunLumiCloseout.FindActiveRuns")
+    findStoppedRunsDAO = daoFactoryStorageManager(classname = "RunLumiCloseout.FindStoppedRuns")
+    stopRunsDAO = daoFactory(classname = "RunLumiCloseout.StopRuns")
+
+    # find all active runs
+    #
+    # for replays this does all the work of checking close_time
+    # and setting stop_time to the same (skipped the other checks)
+    activeRuns = findActiveRunsDAO.execute(transaction = False)
+
+    # then check which one of them have ended
+    if len(activeRuns) > 0:
+
+        stoppedRuns = findStoppedRunsDAO.execute(runs = activeRuns, transaction = False)
+
+        bindVarList = []
+        for run, (start_time, stop_time) in list(stoppedRuns.items()):
+            bindVarList.append( { 'RUN' : run,
+                                  'START_TIME' : start_time,
+                                  'STOP_TIME' : stop_time } )
+
+        # and mark them as stopped in T0AST
+        if len(bindVarList) > 0:
+            stopRunsDAO.execute(binds = bindVarList, transaction = False)
+
+        return
+</code></pre>
+      <p>The simplest closeout phase: <code>stopRuns</code>. Every tick, find runs that are still <code>active</code> in T0AST (no <code>stop_time</code> set), ask the StorageManagerDB which of them have ended (the <code>FindStoppedRuns</code> DAO is bound to <code>dbInterfaceStorageManager</code>, not T0AST), and update those rows in T0AST with their <code>start_time</code> and <code>stop_time</code>. This is the very first state-machine transition (Active → Stopped in D5.1). Notice that the function has two <em>different</em> DAOFactories — one bound to T0AST, one bound to the StorageManagerDB — which is how T0 keeps the per-database logic explicit. The replay docstring note ("for replays this does all the work…") is the reminder that replay timing is synthesised from streamer insert times, not from run-summary records.</p>
+    </div>
+
+    <div id="ch5-deeper-dive">
+      <h3>Deeper dive</h3>
+      <details>
+        <summary>What does <code>AlcaHarvestTimeout</code> actually unblock?</summary>
+        <p>Without a timeout, AlcaHarvest waits for the input fileset to close — which requires every Express job for the run to finish. If even one Express job is paused (e.g. on a transient error that exhausted retries), the fileset stays open and AlcaHarvest never runs. <code>AlcaHarvestTimeout</code> says: if the run's <code>stop_time + timeout</code> is in the past, emit a partial-input AlcaHarvest job <em>once</em> (the <code>previousAlcaHarvest</code> guard prevents emitting more than one). The cost: the calibration is computed from a possibly-incomplete set of Express outputs. The benefit: closeout proceeds. Operationally this is set per-stream via <code>setPromptCalibrationConfig(cfg, alcaHarvestTimeout=N)</code>; production typically uses a few hours.</p>
+      </details>
+      <details>
+        <summary>ValidationMode vs prompt — what changes for the operator?</summary>
+        <p>In <em>validation mode</em> (<code>setValidationMode(cfg, validationMode=True)</code>), <code>uploadToDropbox</code> filters the <code>destDB</code> in the metadata file to point at the validation tag, not the production tag. The conditions still upload — they just land where physicists can inspect them before they're used by PromptReco. In <em>prompt mode</em>, the production tag is used, and PromptReco picks up the new conditions on its next workflow run. Replays default to validation; production defaults to prompt. The flag is set per-run via the Tier0Config DSL and stamped on the <code>run.valid_mode</code> column at <code>configureRun</code> time.</p>
+      </details>
+    </div>
+
+    <div id="ch5-takeaways">
+      <h3>Key takeaways</h3>
+      <ul>
+        <li>Closeout is the convergence of four independent signals: streams closed, AlcaHarvest done, conditions uploaded, CMSSW release announced. Missing any one stalls the run.</li>
+        <li>PromptReco release is signal-driven (waits for CMSSW announcement via PopConLogDB) <em>and</em> time-delayed (per-dataset <code>RecoDelay</code> after <code>stop_time</code>). Both must be true.</li>
+        <li>AlcaHarvest defaults to "wait for fileset close"; <code>AlcaHarvestTimeout</code> is the per-stream escape hatch when Express is stuck.</li>
+        <li>The T0 ↔ Conditions DB contract ends at the dropbox HTTPS POST. Anything past that is a different team's pipeline.</li>
+        <li>"Closed-out" and "Archived" are different states. Archival is owned by <code>WMCore.WMComponent.TaskArchiver</code> and happens hours-to-weeks later, not immediately.</li>
+      </ul>
+    </div>
+
+    <div id="ch5-self-check">
+      <h3>Self-check</h3>
+      <ol class="self-check">
+        <li>List the four signals that must arrive before a run is marked closed-out. Which DAO would you query to check each one?</li>
+        <li>What's the difference between "closed-out" and "archived"? Who owns each transition?</li>
+        <li>If a run is stuck at <code>AlcaDone</code> in D5.1 for hours but never advances to <code>CondUploaded</code>, what would you check first — the dropbox HTTPS endpoint, the EOS sqlite file, or the T0AST <code>condition_upload</code> rows? Why that order?</li>
+        <li>Why is <code>releasePromptReco</code> invoked from <code>Tier0FeederPoller.algorithm</code> instead of from PromptReco workflow code itself?</li>
+        <li>If <code>AlcaHarvestTimeout</code> is set to one hour and Express jobs are paused, when exactly does AlcaHarvest emit its (partial) job — measured from what reference time?</li>
+      </ol>
+    </div>
+
   </section>
   <section id="chapter-6"><h2>Chapter 6 · Operator surface and recap</h2>
     <div id="ch6-setup"></div><div id="ch6-diagrams"></div><div id="ch6-code"></div>
