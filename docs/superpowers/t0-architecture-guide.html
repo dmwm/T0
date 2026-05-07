@@ -300,8 +300,333 @@ __all__ = []
 
   </section>
   <section id="chapter-2"><h2>Chapter 2 · The Tier0Config DSL</h2>
-    <div id="ch2-setup"></div><div id="ch2-diagrams"></div><div id="ch2-code"></div>
-    <div id="ch2-deeper-dive"></div><div id="ch2-takeaways"></div><div id="ch2-self-check"></div>
+
+    <div id="ch2-setup">
+      <h3>Setup</h3>
+      <p class="meta">~5h reading time · By the end you'll know how operator-edited Python configs in <code>etc/</code> become rows in T0AST, and which DSL setters to reach for when.</p>
+      <p>An operator running T0 never writes SQL. They write Python — specifically, a single file under <code>etc/</code> (the canonical examples are <code>etc/ReplayOfflineConfiguration.py</code> and <code>etc/ProdOfflineConfiguration.py</code>) that imports a small set of setter functions from <code>T0.RunConfig.Tier0Config</code> and calls them in sequence. The result is an in-memory <code>Tier0Configuration</code> object — a deeply-nested <code>WMCore.Configuration.Configuration</code> tree — that captures every operational decision: which runs to inject, which acquisition era to stamp, what the per-stream Repack and Express thresholds should be, where conditions should be uploaded.</p>
+      <p>The Tier0Feeder loads this file at startup (<code>config.Tier0Feeder.tier0ConfigFile</code> points at it; the WMAgent <code>config.py</code> tweak scripts in <code>bin/</code> set that path). Then, every time the feeder discovers a new run via <code>FindNewRuns</code>, it calls <code>RunConfigAPI.configureRun(tier0Config, run, hltConfig)</code> — and <em>that</em> is where the in-memory tree is translated into INSERTs against T0AST. The same applies stream-by-stream via <code>configureRunStream</code>. Once the inserts complete, the run is "configured" — bookkeeping rows exist for every stream, dataset, and trigger, and per-stream Repack/Express config is stamped on T0AST. From then on, every other component (job splitters, closeout APIs, conditions) reads only from T0AST; the in-memory tree is no longer consulted for that run.</p>
+      <p>The DSL is <em>imperative</em>, not declarative — calling <code>addDataset</code> mutates the tree by side effect, and order matters (e.g. <code>setHelperAgentStreams</code> must be called before any helper agent attempts to read). The full schema is documented as a giant ASCII tree at the very top of <code>Tier0Config.py</code>; that docstring is the single canonical reference. Reading it once is the highest-leverage 30 minutes you'll spend on T0 — every operational lever is named there.</p>
+      <p>Why it matters: when an incident comes in saying "stream X is using the wrong CMSSW version" or "PromptReco for run N never started" or "conditions aren't uploading", the answer is almost always either (a) something in the operator's <code>etc/</code> Python is wrong, or (b) something in <code>configureRun</code> didn't translate it the way you'd expect. Knowing the DSL in detail is what makes those tickets tractable.</p>
+    </div>
+
+    <div id="ch2-diagrams">
+      <h3>Diagrams</h3>
+
+      <pre class="mermaid">
+flowchart LR
+  Cfg[Tier0Configuration]
+  Cfg --> Sites
+  Cfg --> Global
+  Cfg --> Streams
+  Cfg --> Datasets
+  Sites --> SiteX["site config<br/>SiteLocalConfig<br/>OverrideCatalog<br/>SiteLocalRucioConfig"]
+  Global --> GFields["AcquisitionEra<br/>Backfill BulkDataType<br/>InjectRuns ProcessingSite<br/>HelperAgentStreams<br/>extraStreamDatasetMap"]
+  Streams --> Default["Default fallback config"]
+  Streams --> StreamN["per-stream config<br/>ProcessingStyle<br/>Repack sizes lumis<br/>Express alca dqm<br/>VersionOverride"]
+  Datasets --> DatasetN["per-dataset overrides<br/>scenario custodial<br/>Reco config alcaSkim"]
+      </pre>
+      <p class="caption"><strong>D2.1 — Tier0Config object tree.</strong> This matches the canonical ASCII tree at the top of <code>Tier0Config.py</code>. Four top-level sections, each one a sub-Configuration. The <code>Default</code> entry inside <code>Streams</code> is a silent fallback: if you ask <code>retrieveStreamConfig(cfg, "SomeStream")</code> for a stream nobody explicitly configured, the function deep-copies <code>Streams.Default</code>, renames it, and returns it (you'll see this in the code excerpts below). Most production configurations rely heavily on <code>Default</code> for parking PDs and other "boring" streams, then override only the special ones (Express, ALCALumi, etc.) with named entries.</p>
+
+      <pre class="mermaid">
+flowchart LR
+  subgraph DSL[DSL setters in etc&#47;*.py]
+    A1[createTier0Config]
+    A2[addDataset]
+    A3[addRepackConfig]
+    A4[addExpressConfig]
+    A5[setInjectRuns]
+    A6[setAcquisitionEra]
+  end
+  subgraph DAOs[DAO inserts during configureRun]
+    B1[InsertRun.dao]
+    B2[InsertStream.dao]
+    B3[InsertPrimaryDataset.dao]
+    B4[InsertDatasetScenario.dao]
+    B5[InsertRepackConfig.dao]
+    B6[InsertExpressConfig.dao]
+  end
+  subgraph T0AST[T0AST tables]
+    T1[(RUN)]
+    T2[(STREAM)]
+    T3[(PRIMARY_DATASET)]
+    T4[(DATASET_SCENARIO)]
+    T5[(REPACK_CONFIG)]
+    T6[(EXPRESS_CONFIG)]
+  end
+  A2 --> B3 --> T3
+  A2 --> B4 --> T4
+  A3 --> B5 --> T5
+  A4 --> B6 --> T6
+  A5 --> B1 --> T1
+  A2 --> B2 --> T2
+      </pre>
+      <p class="caption"><strong>D2.2 — Setter → DAO → T0AST table mapping</strong> for the most-used DSL calls. Operator code on the left, the DAOs <code>configureRun</code> invokes in the middle, the resulting T0AST tables on the right. This is not exhaustive — <code>addExpressConfig</code> for example fans out into several inserts (<code>InsertExpressConfig</code>, <code>InsertEventScenarios</code>, possibly <code>InsertPromptCalibration</code>) — but the shape is correct: every DSL call you make today shows up as one or more SQL inserts later. Chapter 3 picks up where the DAOs themselves live and how they're loaded.</p>
+
+      <pre class="mermaid">
+sequenceDiagram
+  participant TF as Tier0FeederPoller
+  participant API as RunConfigAPI.configureRun
+  participant Cfg as Tier0Config (in-memory)
+  participant T0AST as T0AST (Oracle)
+  TF->>API: configureRun(cfg, run, hltConfig)
+  API->>API: getRunInfo(run) → setup_label
+  API->>Cfg: walk Streams, Datasets, Global
+  API->>T0AST: InsertStream / InsertPrimaryDataset / InsertTrigger
+  API->>T0AST: InsertStreamDataset / InsertDatasetTrigger
+  API->>T0AST: InsertRepackConfig / InsertExpressConfig / InsertRecoConfig
+  API->>T0AST: UpdateRun (era, backfill, processing site, …)
+  API-->>TF: done
+      </pre>
+      <p class="caption"><strong>D2.3 — <code>configureRun</code> sequence.</strong> Triggered once per run, the first time <code>FindNewRuns</code> sees that run number. The function fetches the HLT mapping (which streams exist, which triggers go to which dataset), walks the in-memory Tier0Config, and emits the inserts in a fixed order: streams → datasets → triggers → mappings → per-stream configs → run-global update. Idempotency is enforced at the DAO level (every <code>Insert*</code> DAO uses <code>MERGE</code> or has unique constraints), so re-running <code>configureRun</code> on an already-configured run is safe.</p>
+    </div>
+
+    <div id="ch2-code">
+      <h3>Annotated code</h3>
+
+      <p class="excerpt-head">src/python/T0/RunConfig/Tier0Config.py:1-50</p>
+      <!-- excerpt: src/python/T0/RunConfig/Tier0Config.py:1-50 -->
+<pre><code class="language-python">"""
+_Tier0Config_
+
+Utility methods for creating and manipulating a Tier0 configuration
+
+The Tier0 configuration has the following form:
+
+Tier0Configuration - Global configuration object
+| | | |--> Sites - Configuration parameter for sites that are going
+| | |        |     to be use for processing and storage
+| | |        |
+| | |        |--> OverrideCatalog - RucioCatalog string, TrivialCatalog string, or a dict containing both strings in separate keys
+| | |        |                      TrivialCatalog: Path to this site's trivial catalog file
+| | |        |                      RucioCatalog: String describing Rucio storage wit comma-separated values as follows:
+| | |        |                                    SITE,SUBSITE,STORAGE_SITE,VOLUME,PROTOCOL
+| | |        |
+| | |        |--> SiteLocalConfig - Path to this site's site local config file
+| | |        |--> SiteLocalRucioConfig - Path to this site's local Rucio storage json file
+| | |
+| | |--> Global - Configuration parameters that do not belong to a particular
+| |       |       stream or dataset and can be applied to an entire run.
+| |       |
+| |       |--> Version - The configuration version (not used at the moment)
+| |       |
+| |       |--> InjectRuns - The runs to be injected into the system from the SM database (default is auto-discovery)
+| |       |
+| |       |--> InjectMinRun - Lowest run number to be injected into the system from the SM database (default is unlimited)
+| |       |
+| |       |--> InjectMaxRun - Highest run number to be injected into the system from the SM database (default is unlimited)
+| |       |
+| |       |--> InjectLimit - Maximum number of lumis to be injected into the system
+| |       |                  from the SM database (default is unlimited) (used for small functional test)
+| |       |
+| |       |--> SpecifiedStreamNames - Streamer names list to be ran exclusivley. (default is None)
+| |       |                           If it is None, all streamer will processed except which is set to be ignored.
+| |       |
+| |       |--> AcquisitionEra - The acquisition era for the run
+| |       |
+| |       |--> EmulationAcquisitionEra - The acquisition era for emulated runs
+| |       |--> EmulationRepack - switch on/off repack for emulation runs
+| |       |
+| |       |--> Backfill - The backfill mode, can be None, 1 or 2
+| |       |
+| |       |--> ProcessingSite - Main (CERN) site where processing is done.
+| |       |
+| |       |--> StreamerPNN - PNN where streamer file are located
+| |       |
+| |       |--> BulkDataType - The bulk data type for the run
+| |       |
+| |       |--> DQMDataTier - The data tier used for DQM (default is DQMIO).
+</code></pre>
+      <p>Just the first 50 lines of a docstring that runs to ~270 lines. <em>This is the schema reference.</em> The rest of the file is the implementation: setters that mutate this tree (about 40 of them), retrievers that look up nodes safely, and a couple of utility functions like <code>retrieveStreamConfig</code>. When something in the DSL is unclear, re-read the docstring; it is more authoritative than any of the setter implementations.</p>
+
+      <p class="excerpt-head">etc/ReplayOfflineConfiguration.py:1-44</p>
+      <!-- excerpt: etc/ReplayOfflineConfiguration.py:1-44 -->
+<pre><code class="language-python">"""
+_OfflineConfiguration_
+Processing configuration for the Tier0 - Replay version
+"""
+from __future__ import print_function
+
+from T0.RunConfig.Tier0Config import addDataset
+from T0.RunConfig.Tier0Config import createTier0Config
+from T0.RunConfig.Tier0Config import setAcquisitionEra
+from T0.RunConfig.Tier0Config import setEmulationAcquisitionEra
+from T0.RunConfig.Tier0Config import setDefaultScramArch
+from T0.RunConfig.Tier0Config import setScramArch
+from T0.RunConfig.Tier0Config import setBaseRequestPriority
+from T0.RunConfig.Tier0Config import setBackfill
+from T0.RunConfig.Tier0Config import setBulkDataType
+from T0.RunConfig.Tier0Config import setProcessingSite
+from T0.RunConfig.Tier0Config import setDQMDataTier
+from T0.RunConfig.Tier0Config import setDQMUploadUrl
+from T0.RunConfig.Tier0Config import setPromptCalibrationConfig
+from T0.RunConfig.Tier0Config import setConfigVersion
+from T0.RunConfig.Tier0Config import ignoreStream
+from T0.RunConfig.Tier0Config import specifyStreams
+from T0.RunConfig.Tier0Config import addRepackConfig
+from T0.RunConfig.Tier0Config import addExpressConfig
+from T0.RunConfig.Tier0Config import setInjectRuns
+from T0.RunConfig.Tier0Config import setInjectLimit
+from T0.RunConfig.Tier0Config import setStreamerPNN
+from T0.RunConfig.Tier0Config import setEnableUniqueWorkflowName
+from T0.RunConfig.Tier0Config import addSiteConfig
+from T0.RunConfig.Tier0Config import setStorageSite
+from T0.RunConfig.Tier0Config import setExtraStreamDatasetMap
+from T0.RunConfig.Tier0Config import setHelperAgentStreams
+
+# Create the Tier0 configuration object
+tier0Config = createTier0Config()
+
+# Set the verstion configuration (not used at the moment)
+setConfigVersion(tier0Config, "replace with real version")
+
+# Set run number to replay
+# 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
+# 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
+# 398191 Collisions 13.6 TeV, 2448 bunches, Run2025
+setInjectRuns(tier0Config, [402263]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
+</code></pre>
+      <p>This is what an operator file actually looks like at the top: imports for every setter the file uses, then <code>createTier0Config()</code> which returns a fresh empty tree, then a sequence of mutating calls. The file as a whole is ~1450 lines (because every per-stream and per-dataset configuration is repeated explicitly), but the pattern doesn't change: import, create, mutate, hand off to the agent. Notice the <code>setInjectRuns(tier0Config, [402263])</code> call — that's the operator pinning the replay to one specific run. In production, that line is empty/commented and runs flow in continuously from the StorageManager DB.</p>
+
+      <p class="excerpt-head">src/python/T0/RunConfig/Tier0Config.py:272-312</p>
+      <!-- excerpt: src/python/T0/RunConfig/Tier0Config.py:272-312 -->
+<pre><code class="language-python">def createTier0Config():
+    """
+    _createTier0Config_
+
+    Create a configuration object to hold the Tier0 configuration.  Currently,
+    the configuration has two sections: Streams and Global.
+    """
+    tier0Config = Configuration()
+    tier0Config.section_("Streams")
+    tier0Config.section_("Datasets")
+    tier0Config.section_("Sites")
+    tier0Config.section_("Global")
+
+    tier0Config.Global.InjectRuns = None
+    tier0Config.Global.InjectLimit = None
+    tier0Config.Global.InjectMinRun = None
+    tier0Config.Global.InjectMaxRun = None
+
+    tier0Config.Global.HelperAgentStreams = {}
+    tier0Config.Global.SpecifiedStreamNames = None
+
+    tier0Config.Global.ScramArches = {}
+    tier0Config.Global.Backfill = None
+
+    tier0Config.Global.ProcessingSite = "T2_CH_CERN"
+
+    tier0Config.Global.StreamerPNN = "T0_CH_CERN_Disk"
+
+    tier0Config.Global.StorageSite = "T0_CH_CERN_Disk"
+
+    tier0Config.Global.DQMDataTier = "DQMIO"
+
+    tier0Config.Global.BaseRequestPriority = 150000
+
+    tier0Config.Global.EnableUniqueWorkflowName = False
+
+    tier0Config.Global.DeploymentID = 1
+
+    tier0Config.Global.extraStreamDatasetMap = None
+
+    return tier0Config
+</code></pre>
+      <p>The constructor: four top-level sections, then a fixed set of <code>Global</code> defaults that the operator can later override (everything is keyed by attribute, no explicit "set" call required to overwrite). The docstring is wrong — it says "two sections" but the function actually creates four. The defaults shown here are the operational baseline: T2_CH_CERN as the processing site, T0_CH_CERN_Disk as both the streamer PNN and storage site, base priority 150,000, deployment ID 1. When an operator's file doesn't explicitly call e.g. <code>setProcessingSite(…)</code>, these defaults are what runs.</p>
+
+      <p class="excerpt-head">src/python/T0/RunConfig/RunConfigAPI.py:78-130</p>
+      <!-- excerpt: src/python/T0/RunConfig/RunConfigAPI.py:78-130 -->
+<pre><code class="language-python">def configureRun(tier0Config, run, hltConfig, referenceHltConfig = None):
+    """
+    _configureRun_
+
+    Called by Tier0Feeder for new runs.
+
+    Retrieve HLT config and configure global run
+    settings and stream/dataset/trigger mapping
+
+    """
+    logging.debug("configureRun() : %d" % run)
+    myThread = threading.currentThread()
+
+    daoFactory = DAOFactory(package = "T0.WMBS",
+                            logger = logging,
+                            dbinterface = myThread.dbi)
+
+    # DAO to get run info. In particular, setup label
+    getRunInfoDAO = daoFactory(classname = "RunConfig.GetRunInfo")
+
+    # dao to update global run settings
+    updateRunDAO = daoFactory(classname = "RunConfig.UpdateRun")
+
+    # workaround to make unit test work without HLTConfDatabase
+    if hltConfig == None and referenceHltConfig != None:
+        hltConfig = referenceHltConfig
+
+    # Get run info
+    runInfo = getRunInfoDAO.execute(run, transaction = False)[0]
+
+    # treat centralDAQ or miniDAQ runs (have an HLT key) different from local runs
+    if hltConfig != None:
+
+        # write stream/dataset/trigger mapping
+        insertStreamDAO = daoFactory(classname = "RunConfig.InsertStream")
+        insertDatasetDAO = daoFactory(classname = "RunConfig.InsertPrimaryDataset")
+        insertStreamDatasetDAO = daoFactory(classname = "RunConfig.InsertStreamDataset")
+        insertTriggerDAO = daoFactory(classname = "RunConfig.InsertTrigger")
+        insertDatasetTriggerDAO = daoFactory(classname = "RunConfig.InsertDatasetTrigger")
+
+        # partition AlcaHarvest upload by year
+        alcaHarvestCondLFNBase = None
+        alcaHarvestCondLFNBase = None
+        alcaHarvestLumiURL = None
+        if tier0Config.Global.AlcaHarvestCondLFNBase:
+            alcaHarvestCondLFNBase = os.path.join(tier0Config.Global.AlcaHarvestCondLFNBase, str(datetime.now().year))
+        if tier0Config.Global.AlcaHarvestLumiURL:
+            alcaHarvestLumiURL = rootUrlJoin(tier0Config.Global.AlcaHarvestLumiURL, str(datetime.now().year))
+            if not alcaHarvestLumiURL:
+                raise RuntimeError("Problem in configureRun() : Invalid AlcaHarvestLumiURL !")
+        # Select bulkData by run number
+        # Use different acquisition era for emulated data
+        if runInfo["setup_label"] == "Emulation":
+            era = tier0Config.Global.EmulationAcquisitionEra
+</code></pre>
+      <p>The opening of <code>configureRun</code>. Notice the structure: build a DAOFactory, declare every Insert/Update DAO it will need up front (this saves repeated factory lookups inside loops further down), then branch on <code>hltConfig</code> (only "real" runs from the central or mini DAQ have an HLT key; emulation/local runs go down a simpler path further down the function). The <code>setup_label</code> dispatch on <code>"Emulation"</code> selects between <code>AcquisitionEra</code> and <code>EmulationAcquisitionEra</code>; this is how a single replay configuration can host both real-data and emulated-data runs without operator interaction. (This matches D2.3's first arrow.)</p>
+    </div>
+
+    <div id="ch2-deeper-dive">
+      <h3>Deeper dive</h3>
+      <details>
+        <summary><code>extraStreamDatasetMap</code> — when does it apply?</summary>
+        <p>The HLT menu defines which trigger paths fire which streams and which datasets receive which paths. Sometimes operators need to add a stream-to-dataset mapping <em>that is not in the HLT menu</em> — typically for parking PDs or special-purpose calibration streams that are routed differently downstream than the menu would imply. <code>setExtraStreamDatasetMap(cfg, mapping)</code> stuffs a dict into <code>tier0Config.Global.extraStreamDatasetMap</code>; <code>configureRun</code> reads it after walking the HLT menu and inserts additional <code>STREAM_DATASET</code> rows. The mapping has the shape <code>{ "StreamName": [{"Dataset": "DatasetName", "Path": "HLT_…"}] }</code> — the optional <code>Path</code> is what makes this powerful: it can constrain event selection at PromptReco time. If the path is omitted, the entire stream's contents flow into the dataset.</p>
+      </details>
+      <details>
+        <summary>Why is the DSL imperative?</summary>
+        <p>Because <code>WMCore.Configuration.Configuration</code> is an attribute-mutable object, and the existing CMS WMAgent ecosystem builds <em>all</em> its configs imperatively (look at any WMAgent <code>config.py</code> tweak script in <code>bin/</code>). The advantage is that operators can use ordinary Python (loops, conditionals, comments) inside the configuration — see for example the <code>for pd in PARKING_PDS:</code> blocks in production configs. The disadvantage is no static validation: typos in attribute names just create new attributes that nobody reads. The <code>validate-config.yaml</code> CI workflow exists to catch the most common form of this (gaps in dataset family numbering).</p>
+      </details>
+    </div>
+
+    <div id="ch2-takeaways">
+      <h3>Key takeaways</h3>
+      <ul>
+        <li>The Tier0Config object is built imperatively in Python by the operator's <code>etc/*.py</code> file. It is not a static config file format.</li>
+        <li>The docstring at the top of <code>Tier0Config.py</code> is the canonical schema reference. Re-read it whenever the DSL surprises you.</li>
+        <li><code>RunConfigAPI.configureRun</code> is the bridge: it walks the in-memory tree once per run and emits all the SQL INSERTs against T0AST.</li>
+        <li><code>Streams.Default</code> is a silent fallback for any stream not explicitly configured; deep-copy semantics, with the original <code>Default</code> never mutated by callers.</li>
+        <li>Once <code>configureRun</code> has finished, the in-memory Tier0Config is no longer consulted for that run — every other component reads from T0AST.</li>
+      </ul>
+    </div>
+
+    <div id="ch2-self-check">
+      <h3>Self-check</h3>
+      <ol class="self-check">
+        <li>If you call <code>addRepackConfig(cfg, 'StreamX', maxSizeSingleLumi=2_000_000_000)</code>, when does that value reach T0AST and via which DAO?</li>
+        <li>What's the difference between mutating <code>cfg.Streams.Default</code> and <code>cfg.Streams.StreamX</code>? Which one affects streams the operator never named?</li>
+        <li>Why does <code>configureRun</code> need both the Tier0Config <em>and</em> the HLT config? What does each contribute?</li>
+        <li>Name three operational changes you can make purely by editing <code>etc/ReplayOfflineConfiguration.py</code> — no DAO change, no splitter change, no agent restart logic involved.</li>
+      </ol>
+    </div>
+
   </section>
   <section id="chapter-3"><h2>Chapter 3 · The Tier0Feeder heartbeat</h2>
     <div id="ch3-setup"></div><div id="ch3-diagrams"></div><div id="ch3-code"></div>
