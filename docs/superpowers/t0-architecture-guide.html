@@ -35,8 +35,22 @@
   summary { cursor: pointer; font-weight: 600; }
   ol.self-check { padding-left: 20px; }
   ol.self-check li { margin: 8px 0; }
-  pre.mermaid { background: #f6f8fa; color: #24292f; padding: 16px; }
+  pre.mermaid { background: #f6f8fa; color: #24292f; padding: 16px; overflow-x: auto; }
   .caption { color: var(--muted); font-size: 14px; margin-top: 4px; }
+  nav.toc a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+  @media (max-width: 720px) {
+    .layout { grid-template-columns: 1fr; gap: 16px; padding: 16px; }
+    nav.toc { position: static; max-height: none; border-right: none; border-bottom: 1px solid var(--rule); padding-right: 0; padding-bottom: 12px; }
+    main h1 { font-size: 24px; }
+    main h2 { font-size: 20px; margin-top: 40px; }
+  }
+  @media print {
+    .layout { display: block; }
+    nav.toc { display: none; }
+    html, body { background: #fff; color: #000; }
+    pre, pre.mermaid { background: #f4f4f4; color: #000; }
+    a { color: #000; }
+  }
 </style>
 </head>
 <body>
@@ -45,11 +59,41 @@
   <ol>
     <li><a href="#top">T0 Architecture Guide</a></li>
     <li><a href="#chapter-1">Ch 1 · Foundations</a></li>
+    <li class="l2"><a href="#ch1-setup">Setup</a></li>
+    <li class="l2"><a href="#ch1-diagrams">Diagrams</a></li>
+    <li class="l2"><a href="#ch1-code">Code</a></li>
+    <li class="l2"><a href="#ch1-takeaways">Takeaways</a></li>
+    <li class="l2"><a href="#ch1-self-check">Self-check</a></li>
     <li><a href="#chapter-2">Ch 2 · The Tier0Config DSL</a></li>
+    <li class="l2"><a href="#ch2-setup">Setup</a></li>
+    <li class="l2"><a href="#ch2-diagrams">Diagrams</a></li>
+    <li class="l2"><a href="#ch2-code">Code</a></li>
+    <li class="l2"><a href="#ch2-takeaways">Takeaways</a></li>
+    <li class="l2"><a href="#ch2-self-check">Self-check</a></li>
     <li><a href="#chapter-3">Ch 3 · The Tier0Feeder heartbeat</a></li>
+    <li class="l2"><a href="#ch3-setup">Setup</a></li>
+    <li class="l2"><a href="#ch3-diagrams">Diagrams</a></li>
+    <li class="l2"><a href="#ch3-code">Code</a></li>
+    <li class="l2"><a href="#ch3-takeaways">Takeaways</a></li>
+    <li class="l2"><a href="#ch3-self-check">Self-check</a></li>
     <li><a href="#chapter-4">Ch 4 · JobSplitting</a></li>
+    <li class="l2"><a href="#ch4-setup">Setup</a></li>
+    <li class="l2"><a href="#ch4-diagrams">Diagrams</a></li>
+    <li class="l2"><a href="#ch4-code">Code</a></li>
+    <li class="l2"><a href="#ch4-takeaways">Takeaways</a></li>
+    <li class="l2"><a href="#ch4-self-check">Self-check</a></li>
     <li><a href="#chapter-5">Ch 5 · Closeout</a></li>
+    <li class="l2"><a href="#ch5-setup">Setup</a></li>
+    <li class="l2"><a href="#ch5-diagrams">Diagrams</a></li>
+    <li class="l2"><a href="#ch5-code">Code</a></li>
+    <li class="l2"><a href="#ch5-takeaways">Takeaways</a></li>
+    <li class="l2"><a href="#ch5-self-check">Self-check</a></li>
     <li><a href="#chapter-6">Ch 6 · Operator surface &amp; recap</a></li>
+    <li class="l2"><a href="#ch6-setup">Setup</a></li>
+    <li class="l2"><a href="#ch6-diagrams">Diagrams</a></li>
+    <li class="l2"><a href="#ch6-code">Code</a></li>
+    <li class="l2"><a href="#ch6-takeaways">Takeaways</a></li>
+    <li class="l2"><a href="#ch6-self-check">Self-check</a></li>
   </ol>
 </nav>
 <main id="top">
@@ -67,6 +111,12 @@
       <p class="meta">~5h reading time · By the end you'll know what T0 is, where it sits in CMS, what's in the two source roots, and the shape of the processing chain.</p>
       <p>The CMS detector at the LHC produces particle-collision data continuously while the accelerator is running. The online data-acquisition system (DAQ + High-Level Trigger) reduces raw collisions into <em>streamer files</em> — binary files of events grouped by trigger stream — and writes them, plus rich metadata, into the <strong>online Storage Manager database</strong>. <strong>Tier-0 (T0)</strong> is the first offline workload-management agent that reads from the Storage Manager database and drives every offline processing step required to turn streamer files into archive-ready RECO datasets and calibration conditions. T0 is also where the operational decisions about acquisition era, processing site, stream-by-stream quotas, and conditions upload all live.</p>
       <p>Vocabulary you need before going further: a <em>run</em> is one continuous data-taking interval (often a few hours); a <em>lumi-section</em> ("lumi") is a fixed sub-interval of a run, ~23 seconds long, used as the unit for accounting and bookkeeping; a <em>stream</em> is the trigger-defined output channel from the HLT (e.g. <code>Express</code>, <code>PhysicsCommissioning</code>, <code>ParkingDoubleMuonLowMass0</code>); a <em>primary dataset</em> ("PD") is the physics-defined slice of events written into a stream; a <em>streamer file</em> is the on-disk file of a stream's events for one or more lumis. Every concept in this guide attaches to one of those.</p>
+      <p>Three more terms you'll see in every chapter and which deserve up-front definitions:</p>
+      <ul>
+        <li><strong>DAO (Data Access Object).</strong> A class in <code>src/python/T0/WMBS/Oracle/&lt;area&gt;/&lt;Verb&gt;&lt;Noun&gt;.py</code> that holds <em>one</em> SQL statement and exposes an <code>execute(...)</code> method. T0 has no raw SQL anywhere outside DAO classes — every database touch goes through one. DAOs are loaded by classname (<code>"Tier0Feeder.FindNewRuns"</code>) which resolves one-to-one to a file path. <a href="#chapter-3">Chapter 3</a> covers the pattern in detail; for now, just know that "DAO" means "one SQL statement wrapped as a class".</li>
+        <li><strong>WMBS (Workload Management Bookkeeping System).</strong> The Oracle schema WMCore uses to track all workload state — workflows, subscriptions, filesets, files, jobs. T0 extends WMBS with additional tables (run/stream/dataset config, conditions tracking) under the same Oracle instance. When you see <code>package="T0.WMBS"</code>, that's the T0-specific DAO tree; <code>package="WMCore.WMBS"</code> is the shared WMCore one.</li>
+        <li><strong>Replay vs production.</strong> Two distinct deployment modes. In <em>production</em>, T0 ingests real LHC collision data continuously as the StorageManager reports new streamer files. In a <em>replay</em>, T0 re-processes one or more historic runs identified by run number in <code>setInjectRuns</code>. Replays use <code>etc/ReplayOfflineConfiguration.py</code> + <code>00_pypi_deploy_replay.sh</code>; production uses <code>etc/ProdOfflineConfiguration.py</code> + <code>00_pypi_deploy_prod.sh</code>. Replays also use a different retry policy (<code>PauseAlgo</code> vs <code>SquaredAlgo</code> in production) and target different vocms hosts. The two modes share ~95% of the codebase — only the entry-point configs and a few tweak scripts differ.</li>
+      </ul>
       <p>Operationally, T0 is a deployment of the CMS WMAgent stack on a small set of <code>vocms*.cern.ch</code> hosts under the <code>cmst0</code> user, with code, scripts, and configs all sourced from this repository at <code>/data/tier0/</code>. There is no monolithic "T0 server" — there are agents (one MainAgent and zero or more HelperAgents) polling Oracle databases on a schedule.</p>
       <p>The codebase splits into two source roots. <code>src/python/T0/</code> is the pure-library half: configuration DSL, run-configuration translation, job splitters, closeout APIs, condition-upload code, and the entire Oracle DAO tree. <code>src/python/T0Component/</code> is the runtime half: WMAgent harness components (<code>Tier0Feeder</code> and the stub <code>Tier0Auditor</code>) that subclass <code>WMCore.Agent.Harness</code> and register polling worker threads. The split exists so the libraries can be unit-tested and reused without booting an agent.</p>
       <p>The chain you'll spend the rest of the guide unpacking, in one sentence: <strong>Storage Manager → (Tier0Feeder discovers the run, configures it, ingests streamer files) → Repack → Express → PromptReco → AlcaHarvest → ConditionUpload → archive</strong>. Everything that follows is detail filling in arrows and boxes.</p>
@@ -146,7 +196,7 @@ Core libraries for Workload Management Packages
 __version__ = '3.5.5'
 __all__ = []
 </code></pre>
-      <p>The version stamp is the load-bearing line in this file: it is what <code>pip install T0=={version}</code> resolves to and what the <code>create_tag_and_release.yaml</code> + <code>pypi_build_publish_template.yaml</code> CI workflows watch (both trigger only on changes to this file). Note: this is the <em>publishable</em> version. The version <em>actually deployed</em> on a given vocms* host is pinned separately at the top of <code>bin/00_pypi_deploy_replay.sh</code> / <code>00_pypi_deploy_prod.sh</code>; the two drift, and Chapter 6 explains why.</p>
+      <p>The version stamp is the load-bearing line in this file: it is what <code>pip install T0=={version}</code> resolves to and what the <code>create_tag_and_release.yaml</code> + <code>pypi_build_publish_template.yaml</code> CI workflows watch (both trigger only on changes to this file). Note: this is the <em>publishable</em> version. The version <em>actually deployed</em> on a given vocms* host is pinned separately at the top of <code>bin/00_pypi_deploy_replay.sh</code> / <code>00_pypi_deploy_prod.sh</code>; the two drift, and <a href="#chapter-6">Chapter 6</a> explains why.</p>
 
       <p class="excerpt-head">src/python/T0Component/Tier0Feeder/Tier0Feeder.py:21-50</p>
       <!-- excerpt: src/python/T0Component/Tier0Feeder/Tier0Feeder.py:21-50 -->
@@ -259,7 +309,7 @@ __all__ = []
 
         #
 </code></pre>
-      <p>The poller's constructor is where the database topology of D1.3 lands in code. The first three connections (T0AST via the implicit <code>myThread.dbi</code>, then HLTConfDB, then StorageManagerDB) are unconditional — if any one's connect URL is missing the agent crashes here. The last three (SMNotifyDB, PopConLogDB, T0DataSvcDB) are wrapped in <code>if hasattr(config, "&lt;Name&gt;Database"):</code> blocks, matching the dashed arrows in D1.3. Notice the consistent pattern: build a <code>DBFactory</code>, call <code>.connect()</code>, build a <code>DAOFactory</code> with <code>package="T0.WMBS"</code>, store both on <code>self</code>. Every later <code>self.daoFactory(classname="…")</code> call resolves into the per-package class tree under <code>src/python/T0/WMBS/Oracle/</code> — Chapter 3 picks this up.</p>
+      <p>The poller's constructor is where the database topology of D1.3 lands in code. The first three connections (T0AST via the implicit <code>myThread.dbi</code>, then HLTConfDB, then StorageManagerDB) are unconditional — if any one's connect URL is missing the agent crashes here. The last three (SMNotifyDB, PopConLogDB, T0DataSvcDB) are wrapped in <code>if hasattr(config, "&lt;Name&gt;Database"):</code> blocks, matching the dashed arrows in D1.3. Notice the consistent pattern: build a <code>DBFactory</code>, call <code>.connect()</code>, build a <code>DAOFactory</code> with <code>package="T0.WMBS"</code>, store both on <code>self</code>. Every later <code>self.daoFactory(classname="…")</code> call resolves into the per-package class tree under <code>src/python/T0/WMBS/Oracle/</code> — <a href="#chapter-3">Chapter 3</a> picks this up.</p>
     </div>
 
     <div id="ch1-deeper-dive">
@@ -335,54 +385,65 @@ flowchart LR
       <pre class="mermaid">
 flowchart LR
   subgraph DSL[DSL setters in etc&#47;*.py]
-    A1[createTier0Config]
+    A6[setAcquisitionEra]
+    A7[setProcessingSite]
     A2[addDataset]
     A3[addRepackConfig]
     A4[addExpressConfig]
-    A5[setInjectRuns]
-    A6[setAcquisitionEra]
   end
-  subgraph DAOs[DAO inserts during configureRun]
-    B1[InsertRun.dao]
-    B2[InsertStream.dao]
-    B3[InsertPrimaryDataset.dao]
-    B4[InsertDatasetScenario.dao]
-    B5[InsertRepackConfig.dao]
-    B6[InsertExpressConfig.dao]
+  HLT[HLT mapping<br>per-run input]
+  SM[StorageManagerDB<br>discovers new run rows]
+  subgraph configureRun[configureRun]
+    B0[UpdateRun]
+    B2[InsertStream]
+    B3[InsertPrimaryDataset]
+  end
+  subgraph configureRunStream[configureRunStream]
+    B4[InsertDatasetScenario]
+    B5[InsertRepackConfig]
+    B6[InsertExpressConfig]
   end
   subgraph T0AST[T0AST tables]
     T1[(RUN)]
     T2[(STREAM)]
     T3[(PRIMARY_DATASET)]
-    T4[(DATASET_SCENARIO)]
+    T4[(RUN_PRIMDS_SCENARIO_ASSOC)]
     T5[(REPACK_CONFIG)]
     T6[(EXPRESS_CONFIG)]
   end
-  A2 --> B3 --> T3
+  SM ==> InsertRun==>T1
+  A6 --> B0 --> T1
+  A7 --> B0
+  HLT --> B2 --> T2
+  HLT --> B3 --> T3
   A2 --> B4 --> T4
   A3 --> B5 --> T5
   A4 --> B6 --> T6
-  A5 --> B1 --> T1
-  A2 --> B2 --> T2
       </pre>
-      <p class="caption"><strong>D2.2 — Setter → DAO → T0AST table mapping</strong> for the most-used DSL calls. Operator code on the left, the DAOs <code>configureRun</code> invokes in the middle, the resulting T0AST tables on the right. This is not exhaustive — <code>addExpressConfig</code> for example fans out into several inserts (<code>InsertExpressConfig</code>, <code>InsertEventScenarios</code>, possibly <code>InsertPromptCalibration</code>) — but the shape is correct: every DSL call you make today shows up as one or more SQL inserts later. Chapter 3 picks up where the DAOs themselves live and how they're loaded.</p>
+      <p class="caption"><strong>D2.2 — Setter → DAO → T0AST table mapping</strong> for the most-used DSL calls. Two important nuances:
+        (a) the <code>RUN</code> row itself is created by <code>StorageManagerAPI.injectNewData</code> when a new run shows up in the StorageManager DB — not by any DSL call (<code>setInjectRuns</code> only puts a list of run numbers into the in-memory tree). Once the row exists, <code>UpdateRun</code> stamps the era / processing-site / backfill / data-type columns from the DSL.
+        (b) <code>InsertStream</code> and <code>InsertPrimaryDataset</code> get their inputs from the <em>HLT mapping</em>, not from <code>addDataset</code>. <code>addDataset</code>'s contribution is the <em>scenario / per-PD overrides</em> consumed later by <code>configureRunStream</code> (and by <code>releasePromptReco</code> for Reco). The split between <code>configureRun</code> and <code>configureRunStream</code> matters: run-global state (era, stream/PD existence) is written first; per-stream config (Repack/Express thresholds) is written when each stream is configured. <code>addExpressConfig</code> fans out further into <code>InsertEventScenarios</code> and <code>InsertPromptCalibration</code>; not shown.</p>
 
       <pre class="mermaid">
 sequenceDiagram
   participant TF as Tier0FeederPoller
   participant API as RunConfigAPI.configureRun
-  participant Cfg as Tier0Config (in-memory)
-  participant T0AST as T0AST (Oracle)
+  participant Cfg as Tier0Config in-memory
+  participant T0AST as T0AST Oracle
   TF->>API: configureRun(cfg, run, hltConfig)
-  API->>API: getRunInfo(run) → setup_label
-  API->>Cfg: walk Streams, Datasets, Global
-  API->>T0AST: InsertStream / InsertPrimaryDataset / InsertTrigger
-  API->>T0AST: InsertStreamDataset / InsertDatasetTrigger
-  API->>T0AST: InsertRepackConfig / InsertExpressConfig / InsertRecoConfig
-  API->>T0AST: UpdateRun (era, backfill, processing site, …)
+  API->>API: getRunInfo(run) reads setup_label
+  API->>Cfg: walk Datasets and Global
+  API->>API: build binds from HLT mapping + Tier0Config
+  Note over API,T0AST: single transaction
+  API->>T0AST: 1. UpdateRun (era backfill processing-site)
+  API->>T0AST: 2. InsertStream
+  API->>T0AST: 3. InsertPrimaryDataset
+  API->>T0AST: 4. InsertStreamDataset
+  API->>T0AST: 5. InsertTrigger
+  API->>T0AST: 6. InsertDatasetTrigger
   API-->>TF: done
       </pre>
-      <p class="caption"><strong>D2.3 — <code>configureRun</code> sequence.</strong> Triggered once per run, the first time <code>FindNewRuns</code> sees that run number. The function fetches the HLT mapping (which streams exist, which triggers go to which dataset), walks the in-memory Tier0Config, and emits the inserts in a fixed order: streams → datasets → triggers → mappings → per-stream configs → run-global update. Idempotency is enforced at the DAO level (every <code>Insert*</code> DAO uses <code>MERGE</code> or has unique constraints), so re-running <code>configureRun</code> on an already-configured run is safe.</p>
+      <p class="caption"><strong>D2.3 — <code>configureRun</code> sequence.</strong> Triggered once per run, the first time <code>FindNewRuns</code> sees that run number's row arrive (the row itself was inserted by <code>StorageManagerAPI.injectNewData</code> a few moments earlier). All six DAO executes happen inside one Oracle transaction; if any fails the whole thing rolls back. The order matters in code: <code>UpdateRun</code> runs first because the dataset/trigger inserts reference fields (era, backfill) that have to be in place. <em>Per-stream</em> configuration (<code>InsertRepackConfig</code>, <code>InsertExpressConfig</code>, <code>InsertDatasetScenario</code>) happens later in a different function — <code>configureRunStream</code>, called once per (run, stream) pair. <em>Reco</em> configuration (<code>InsertRecoConfig</code>) is later still, in <code>releasePromptReco</code> (<a href="#chapter-5">Chapter 5</a>). Idempotency is enforced at the DAO level, so re-running these is safe.</p>
     </div>
 
     <div id="ch2-code">
@@ -582,7 +643,6 @@ setInjectRuns(tier0Config, [402263]) # 386925: 2024 Collisions, 390094: 2025 Cos
 
         # partition AlcaHarvest upload by year
         alcaHarvestCondLFNBase = None
-        alcaHarvestCondLFNBase = None
         alcaHarvestLumiURL = None
         if tier0Config.Global.AlcaHarvestCondLFNBase:
             alcaHarvestCondLFNBase = os.path.join(tier0Config.Global.AlcaHarvestCondLFNBase, str(datetime.now().year))
@@ -641,6 +701,7 @@ setInjectRuns(tier0Config, [402263]) # 386925: 2024 Collisions, 390094: 2025 Cos
       <p>The four phases of one tick, paraphrasing the file's docstring: <em>(1) discover new data from the Storage Manager and inject it into T0AST; (2) populate run-config rows for any new runs; (3) set up subscriptions for new run/streams; (4) feed streamer files into the configured subscriptions.</em> A few additional steps run after that for monitoring, conditions release, and PromptReco release. These are sequential, not concurrent — each phase finishes before the next begins, and a try/except around the inner blocks ensures one failed phase doesn't stop the next tick from running on the same data.</p>
       <p>Why the same component owns both <em>configuration</em> (calling <code>configureRun*</code>) and <em>data flow</em> (feeding streamers): keeping the two transactionally close means a row's existence in <code>RUN_STREAM_FILESET_ASSOC</code> is always preceded by the matching <code>STREAM_DATASET_ASSOC</code> rows in the same Oracle session. Splitting these into two pollers would have meant inventing a wait-for-config gate. The single-component design is simpler.</p>
       <p>The DAO convention is uniform: every SQL touch is a class in <code>src/python/T0/WMBS/Oracle/&lt;area&gt;/&lt;Verb&gt;&lt;Noun&gt;.py</code>, with a class body that holds a <code>sql = """…"""</code> string and an <code>execute(...)</code> method. There is no raw SQL anywhere in the poller — the poller only ever calls <code>self.daoFactory(classname="…")(...).execute(...)</code>. This is the WMCore pattern; once you've read three DAOs, you've read them all. We sample a few below.</p>
+      <p>Two WMCore concepts you'll see by name in this chapter and need to recognise: a <em>fileset</em> is a tracked collection of files in WMBS — one fileset corresponds to one logical input collection (e.g. "all streamer files for run N stream X"). A <em>subscription</em> is the pairing of a fileset with a workflow task (e.g. "the Repack task is subscribed to streamer fileset for run N stream X"). The splitters in <a href="#chapter-4">Chapter 4</a> work over subscriptions: their job is to decide which files in the fileset to bundle into the next batch of jobs. <code>FeedStreamers</code> in this chapter is the DAO that adds new streamer rows to the relevant fileset.</p>
       <p>Finally, the <strong>Main vs Helper agent split</strong>: T0 in production runs as one MainAgent on one host and zero or more HelperAgents on other hosts. They share a Tier0Config (so they agree on which streams exist) but partition the workload by stream name: each helper agent processes only the streams listed for its name in <code>tier0Config.Global.HelperAgentStreams[helperName]</code>; the main agent processes everything <em>not</em> claimed by a helper. The mechanism is filter-based: same DAO/splitter code paths, just different <code>filterStreamerFiles</code> and <code>filterHltConfigStreams</code> implementations.</p>
     </div>
 
@@ -995,7 +1056,7 @@ class FindNewRuns(DBFormatter):
       <ol class="self-check">
         <li>Trace one streamer file from arrival in the StorageManager DB to its row in T0AST's <code>STREAMER</code> table — name the API call and at least one DAO involved.</li>
         <li>If a HelperAgent's <code>agentName</code> doesn't appear as a key in <code>tier0Config.Global.HelperAgentStreams</code>, what happens — and why is that the chosen behavior?</li>
-        <li>Why is <code>RunConfigAPI.releasePromptReco</code> invoked from inside <code>algorithm()</code> instead of from a separate poller?</li>
+        <li>List the four phases of one tick (D3.1) in order. For each phase, name a DAO it would invoke.</li>
         <li>Where would you add instrumentation to see how long each phase of one tick takes? (Hint: look at the decorator on <code>algorithm</code>.)</li>
         <li>If you stop the agent mid-tick, what happens to a streamer that was being inserted? What guarantees the next tick recovers cleanly?</li>
       </ol>
@@ -1038,7 +1099,7 @@ flowchart TB
   SplitMulti --> Done
   ForceClose --> Done
       </pre>
-      <p class="caption"><strong>D4.1 — Repack splitter decision tree.</strong> Three threshold families + a latency override + a lumi-hole guard. "Lumi hole" means: a missing lumi number between two present ones — symptomatic of streamer files lost or delayed upstream. By default Repack waits indefinitely for the hole to fill, but <code>maxLatency</code> is the escape hatch: once the oldest data in the buffer is older than <code>maxLatency</code> seconds, the splitter emits whatever it has (with <code>forceClose=True</code>). Connect each threshold to its DSL setter: <code>addRepackConfig(cfg, stream, maxSizeSingleLumi=…, maxLatency=…)</code> from Chapter 2's D2.2.</p>
+      <p class="caption"><strong>D4.1 — Repack splitter decision tree.</strong> Three threshold families + a latency override + a lumi-hole guard. "Lumi hole" means: a missing lumi number between two present ones — symptomatic of streamer files lost or delayed upstream. By default Repack waits indefinitely for the hole to fill, but <code>maxLatency</code> is the escape hatch: once the oldest data in the buffer is older than <code>maxLatency</code> seconds, the splitter emits whatever it has (with <code>forceClose=True</code>). Connect each threshold to its DSL setter: <code>addRepackConfig(cfg, stream, maxSizeSingleLumi=…, maxLatency=…)</code> from <a href="#ch2-diagrams">Chapter 2's D2.2</a>.</p>
 
       <pre class="mermaid">
 flowchart TB
@@ -1109,7 +1170,7 @@ stateDiagram-v2
         getAvailableFilesDAO = daoFactory(classname = "Subscriptions.GetAvailableRepackFiles")
         availableFiles = getAvailableFilesDAO.execute(self.subscription["id"])
 </code></pre>
-      <p>The <em>contract</em> of every T0 splitter: subclass <code>JobFactory</code>, implement <code>algorithm(*args, **kwargs)</code>, accept thresholds via <code>kwargs</code>, build a per-package <code>DAOFactory</code>, fetch input files via the appropriate <code>Subscriptions.GetAvailable…Files</code> DAO. Notice how the thresholds are <em>required</em> kwargs (using bracket access, not <code>.get(…)</code>) — a misconfigured stream will crash here loudly rather than silently using a wrong default. This is the hook D2.2 from Chapter 2 was pointing at: <code>addRepackConfig(cfg, stream, maxSizeSingleLumi=…)</code> sets the value that lands here.</p>
+      <p>The <em>contract</em> of every T0 splitter: subclass <code>JobFactory</code>, implement <code>algorithm(*args, **kwargs)</code>, accept thresholds via <code>kwargs</code>, build a per-package <code>DAOFactory</code>, fetch input files via the appropriate <code>Subscriptions.GetAvailable…Files</code> DAO. Notice how the thresholds are <em>required</em> kwargs (using bracket access, not <code>.get(…)</code>) — a misconfigured stream will crash here loudly rather than silently using a wrong default. This is the hook <a href="#ch2-diagrams">D2.2 from Chapter 2</a> was pointing at: <code>addRepackConfig(cfg, stream, maxSizeSingleLumi=…)</code> sets the value that lands here.</p>
 
       <p class="excerpt-head">src/python/T0/JobSplitting/Repack.py:80-141</p>
       <!-- excerpt: src/python/T0/JobSplitting/Repack.py:80-141 -->
@@ -1287,7 +1348,7 @@ class InsertSplitLumis(DBFormatter):
       <ol class="self-check">
         <li>If you set <code>maxLatency = 5 * 60</code> on a Repack stream, what behavior does that <em>unlock</em> — and what's the trade-off vs the default of two hours?</li>
         <li>What is the smallest set of Tier0Config knobs that controls Repack output file size?</li>
-        <li>Why does Express usually skip the merge step? When would you change that?</li>
+        <li>Repack accepts <code>maxInputEvents</code>, <code>maxInputFiles</code>, and several size thresholds; Express has only <code>maxInputRate</code> and <code>maxInputEvents</code>. Why does Express need a per-lumi-rate cap that Repack doesn't?</li>
         <li>Trace a Repack job that fails with a transient error: which WMBS states does it visit, and which T0-specific retry policy decides whether it ends in <code>paused</code> or back in <code>submitted</code>?</li>
         <li>If you wanted to add a brand-new splitter for a hypothetical <em>UltraExpress</em> stream, what files would you need to create or modify?</li>
       </ol>
@@ -1302,7 +1363,7 @@ class InsertSplitLumis(DBFormatter):
       <p>"Closeout" is the convergence of four independent signals into the answer to one question: <em>is run N completely done?</em> Most operator triage tickets boil down to "this run won't close out — why?". The four signals come from four different subsystems, all driven by the same <code>Tier0FeederPoller</code> tick:</p>
       <ol>
         <li><strong>PromptReco release</strong> (<code>RunConfigAPI.releasePromptReco</code>). PromptReco workflows for a run are <em>deferred</em> at run discovery — created in T0AST but not yet handed to JobCreator. They are released when (a) the relevant CMSSW release is announced (signal arrives via <code>PopConLogDB</code>) <em>and</em> (b) the configured <code>RecoDelay</code> for each dataset has elapsed since the run's stop time. Until both are true, no PromptReco jobs run for the run.</li>
-        <li><strong>AlcaHarvest</strong> (<code>JobSplitting/AlcaHarvest.py</code>). For each Express stream that produces calibration outputs, AlcaHarvest emits a single job that combines all the lumi-by-lumi alca outputs into one sqlite payload. Normally it waits for the input fileset to close (i.e. all Express jobs for the run are done). The <code>AlcaHarvestTimeout</code> setting on the stream is an escape hatch: if the run's stop time + timeout elapses, the splitter emits a partial-input job rather than waiting indefinitely.</li>
+        <li><strong>AlcaHarvest</strong> (<code>JobSplitting/AlcaHarvest.py</code>). For each Express stream that produces calibration outputs, AlcaHarvest emits a single job that combines all the lumi-by-lumi alca outputs into one sqlite payload. Normally it waits for the input fileset to close (i.e. all Express jobs for the run are done). The <em>global</em> <code>AlcaHarvestTimeout</code> (set via <code>setPromptCalibrationConfig</code> on <code>tier0Config.Global</code>) is an escape hatch: if the run's reference time + timeout elapses, the splitter emits a partial-input job rather than waiting indefinitely. The reference time is the run's <code>stop_time</code> if it has been set; otherwise the splitter falls back to <code>MAX(streamer.insert_time)</code> for the run — the practical timing on replays where <code>stop_time</code> is 0 for much of the processing window.</li>
         <li><strong>ConditionUpload</strong> (<code>ConditionUpload/{ConditionUploadAPI.py,upload.py}</code>). Once AlcaHarvest output (a sqlite + metadata pair) lands on EOS, the upload step copies it to the conditions dropbox over HTTPS. Two operational modes: <em>validation mode</em> writes to a side destination for human inspection; <em>prompt mode</em> writes to the live destination so PromptReco picks the conditions up immediately. The <code>ValidationMode</code> flag on the run controls which.</li>
         <li><strong>RunLumi closeout</strong> (<code>RunLumiCloseout/RunLumiCloseoutAPI.py</code>). Marks lumis closed once their fileset has no more streamers, marks streams closed once all lumis are closed, and finally marks the run closed once every stream is closed and conditions are uploaded. Several "find active/stopped/closed" DAOs feed this — <code>StopRuns</code> sets <code>stop_time</code>, <code>CloseRuns</code> flips the run's <code>close_time</code>, etc.</li>
       </ol>
@@ -1430,7 +1491,7 @@ flowchart LR
         bindsCMSSWVersion = []
         bindsRecoConfig = []
 </code></pre>
-      <p>The opening of <code>releasePromptReco</code>. The docstring summarises the release condition: <code>run.stop_time + reco_release_config.delay > now AND run.stop_time > 0</code>. Notice <em>both</em> halves of the condition: the run must have stopped (<code>stop_time > 0</code>, set by <code>StopRuns</code>) <em>and</em> enough time must have passed for each dataset's configured <code>RecoDelay</code> to elapse. The function reaches for <code>retrieveDatasetConfig(tier0Config, dataset)</code> — Chapter 2's DSL again — to fetch each dataset's specific <code>RecoDelay</code>. Different datasets in the same run can release at different times.</p>
+      <p>The opening of <code>releasePromptReco</code>. The docstring summarises the release condition: <code>run.stop_time + reco_release_config.delay > now AND run.stop_time > 0</code>. Notice <em>both</em> halves of the condition: the run must have stopped (<code>stop_time > 0</code>, set by <code>StopRuns</code>) <em>and</em> enough time must have passed for each dataset's configured <code>RecoDelay</code> to elapse. The function reaches for <code>retrieveDatasetConfig(tier0Config, dataset)</code> — <a href="#chapter-2">Chapter 2</a>'s DSL again — to fetch each dataset's specific <code>RecoDelay</code>. Different datasets in the same run can release at different times.</p>
 
       <p class="excerpt-head">src/python/T0/JobSplitting/AlcaHarvest.py:1-65</p>
       <!-- excerpt: src/python/T0/JobSplitting/AlcaHarvest.py:1-65 -->
@@ -1492,7 +1553,7 @@ class AlcaHarvest(JobFactory):
                     getRunStopTimeDAO = self.daoFactory(classname = "ConditionUpload.GetRunStopTime")
                     stopTime = getRunStopTimeDAO.execute(run, transaction = False)
 
-                    if stopTime + timeout < time.time():
+                    if stopTime + timeout &lt; time.time():
 
                         self.createJob(self.getInputFilesForJob(), alcapromptdataset)
 
@@ -1539,7 +1600,7 @@ class AlcaHarvest(JobFactory):
     isPromptCalibrationFinishedDAO = daoFactory(classname = "ConditionUpload.IsPromptCalibrationFinished")
     markPromptCalibrationFinishedDAO = daoFactory(classname = "ConditionUpload.MarkPromptCalibrationFinished")
 
-    # look at all runs which are finished with deeperconditions uploads
+    # look at all runs which are finished with conditions uploads
     # check for late arriving payloads and upload them
     conditions = getConditionsDAO.execute(finished = True, transaction = False)
 
@@ -1607,11 +1668,11 @@ class AlcaHarvest(JobFactory):
       <h3>Deeper dive</h3>
       <details>
         <summary>What does <code>AlcaHarvestTimeout</code> actually unblock?</summary>
-        <p>Without a timeout, AlcaHarvest waits for the input fileset to close — which requires every Express job for the run to finish. If even one Express job is paused (e.g. on a transient error that exhausted retries), the fileset stays open and AlcaHarvest never runs. <code>AlcaHarvestTimeout</code> says: if the run's <code>stop_time + timeout</code> is in the past, emit a partial-input AlcaHarvest job <em>once</em> (the <code>previousAlcaHarvest</code> guard prevents emitting more than one). The cost: the calibration is computed from a possibly-incomplete set of Express outputs. The benefit: closeout proceeds. Operationally this is set per-stream via <code>setPromptCalibrationConfig(cfg, alcaHarvestTimeout=N)</code>; production typically uses a few hours.</p>
+        <p>Without a timeout, AlcaHarvest waits for the input fileset to close — which requires every Express job for the run to finish. If even one Express job is paused (e.g. on a transient error that exhausted retries), the fileset stays open and AlcaHarvest never runs. <code>AlcaHarvestTimeout</code> says: if a reference time + timeout is in the past, emit a partial-input AlcaHarvest job <em>once</em> (the <code>previousAlcaHarvest</code> guard prevents emitting more than one). The reference time comes from the <code>GetRunStopTime</code> DAO, which returns the run's <code>stop_time</code> if non-zero, else <code>MAX(streamer.insert_time)</code> for the run — important on replays, where <code>stop_time</code> is 0 for the bulk of processing. The cost of timing out: the calibration is computed from a possibly-incomplete set of Express outputs. The benefit: closeout proceeds. Operationally this is a <strong>global</strong> setting (not per-stream): <code>setPromptCalibrationConfig(cfg, alcaHarvestTimeout=N, ...)</code> writes <code>tier0Config.Global.AlcaHarvestTimeout</code>. Production typically uses a few hours.</p>
       </details>
       <details>
         <summary>ValidationMode vs prompt — what changes for the operator?</summary>
-        <p>In <em>validation mode</em> (<code>setValidationMode(cfg, validationMode=True)</code>), <code>uploadToDropbox</code> filters the <code>destDB</code> in the metadata file to point at the validation tag, not the production tag. The conditions still upload — they just land where physicists can inspect them before they're used by PromptReco. In <em>prompt mode</em>, the production tag is used, and PromptReco picks up the new conditions on its next workflow run. Replays default to validation; production defaults to prompt. The flag is set per-run via the Tier0Config DSL and stamped on the <code>run.valid_mode</code> column at <code>configureRun</code> time.</p>
+        <p>In <em>validation mode</em>, <code>uploadToDropbox</code> filters the <code>destDB</code> in the metadata file to point at the validation tag, not the production tag. The conditions still upload — they just land where physicists can inspect them before they're used by PromptReco. In <em>prompt mode</em>, the production tag is used, and PromptReco picks up the new conditions on its next workflow run. Replays default to validation; production defaults to prompt. The flag is set via <code>setPromptCalibrationConfig(cfg, validationMode=True, ...)</code> — the same setter that controls <code>AlcaHarvestTimeout</code>. There is no standalone <code>setValidationMode</code> function; both flags are tuned together because they're operationally coupled (the dropbox destination must match the prompt-calibration policy). The value is stamped on the <code>run.valid_mode</code> column at <code>configureRun</code> time.</p>
       </details>
     </div>
 
@@ -1857,7 +1918,6 @@ help_message = '''
 - t0 --save-tarball=&lt;tarball path&gt;   : Saves the provided tarball in the PausedJobs directory
 -
 - t0 --get-and-save-tarball=&lt;job_id&gt; : Performs get-tarball and save-tarball in one
--
 '''
 
 class Usage(Exception):
@@ -1947,7 +2007,7 @@ jobs:
         <li>Where exactly would you change the default node for new replays?</li>
         <li>How does <code>bin/pypi_update.sh</code> close the loop between this repo and the deploy hosts? What does it <em>not</em> sync?</li>
         <li>Why does the replay workflow need <code>runs-on: cmst0</code> instead of <code>ubuntu-latest</code>? What would break if you switched it?</li>
-        <li>Name three changes that would force a full redeploy (vs a patch-and-restart). Hint: things that make <code>00_pypi_patches.sh</code> insufficient.</li>
+        <li>Looking at the deploy-script orchestration in D6.1, which step is destructive to the target host's running state? What does that imply for an operator who triggers <code>run autoreplay</code> on a node that already has Tier0 jobs running?</li>
         <li><strong>Capstone exercise:</strong> Without re-opening earlier chapters, explain in your own words the journey of a single streamer file from arrival in the Storage Manager DB to its outputs being archived. Mention at least one component, one DAO, one splitter, one closeout signal, and one operator-layer file along the way.</li>
       </ol>
     </div>
@@ -1957,7 +2017,7 @@ jobs:
 </div>
 
 <script type="module">
-  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
   mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "loose" });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
