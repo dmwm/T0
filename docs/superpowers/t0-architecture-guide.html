@@ -9,10 +9,21 @@
   :root {
     --bg: #0d1117; --fg: #c9d1d9; --muted: #8b949e;
     --accent: #58a6ff; --rule: #30363d; --code-bg: #161b22;
+    --hero-bg: #161b22; --hero-stage: #21262d; --hero-stage-active: #1f6feb;
+    --hero-streamer: #ffd33d; --hero-text: #c9d1d9; --hero-text-active: #ffffff;
+    --stepper-bg: #161b22; --stepper-active: #1f6feb;
     --max: 880px; --nav-w: 280px;
     --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --mono: "SF Mono", Menlo, Consolas, monospace;
   }
+  html[data-theme="light"] {
+    --bg: #ffffff; --fg: #1f2328; --muted: #59636e;
+    --accent: #0969da; --rule: #d0d7de; --code-bg: #f6f8fa;
+    --hero-bg: #f6f8fa; --hero-stage: #ffffff; --hero-stage-active: #0969da;
+    --hero-streamer: #d4a72c; --hero-text: #1f2328; --hero-text-active: #ffffff;
+    --stepper-bg: #f6f8fa; --stepper-active: #0969da;
+  }
+  html { scroll-behavior: smooth; }
   html, body { background: var(--bg); color: var(--fg); }
   body { font: 16px/1.6 var(--font); margin: 0; }
   a { color: var(--accent); }
@@ -35,8 +46,62 @@
   summary { cursor: pointer; font-weight: 600; }
   ol.self-check { padding-left: 20px; }
   ol.self-check li { margin: 8px 0; }
-  pre.mermaid { background: #f6f8fa; color: #24292f; padding: 16px; overflow-x: auto; }
+  pre.mermaid { background: #f6f8fa; color: #24292f; padding: 16px; overflow-x: auto; transition: transform .2s ease, box-shadow .2s ease; }
+  pre.mermaid:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.25); }
   .caption { color: var(--muted); font-size: 14px; margin-top: 4px; }
+
+  /* Theme toggle */
+  .theme-toggle { position: fixed; top: 12px; right: 16px; z-index: 50; background: var(--code-bg); color: var(--fg); border: 1px solid var(--rule); border-radius: 999px; padding: 6px 12px; font: 13px var(--font); cursor: pointer; transition: background .2s, transform .15s; }
+  .theme-toggle:hover { background: var(--accent); color: #fff; transform: translateY(-1px); }
+
+  /* Hero animated chain */
+  .hero { background: var(--hero-bg); border-radius: 12px; padding: 24px; margin: 24px 0 32px; border: 1px solid var(--rule); }
+  .hero h3 { margin: 0 0 4px; font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; border: none; }
+  .hero-svg { width: 100%; height: 140px; display: block; }
+  .hero-stage { fill: var(--hero-stage); stroke: var(--rule); stroke-width: 1.5; transition: fill .3s; }
+  .hero-stage.active { fill: var(--hero-stage-active); stroke: var(--accent); }
+  .hero-label { fill: var(--hero-text); font: 11px var(--font); pointer-events: none; transition: fill .3s; }
+  .hero-stage.active + .hero-label { fill: var(--hero-text-active); font-weight: 600; }
+  .hero-arrow { stroke: var(--muted); stroke-width: 1.5; fill: none; marker-end: url(#hero-arrowhead); }
+  .hero-streamer { fill: var(--hero-streamer); filter: drop-shadow(0 0 6px var(--hero-streamer)); }
+  .hero-caption { color: var(--muted); font-size: 13px; margin-top: 8px; min-height: 1.4em; transition: color .2s; }
+  .hero-caption strong { color: var(--fg); }
+  @keyframes streamerFlow {
+    0%   { transform: translateX(0); }
+    14%  { transform: translateX(150px); }
+    28%  { transform: translateX(300px); }
+    42%  { transform: translateX(450px); }
+    57%  { transform: translateX(600px); }
+    71%  { transform: translateX(750px); }
+    85%  { transform: translateX(900px); }
+    100% { transform: translateX(1050px); }
+  }
+  .hero-streamer.playing { animation: streamerFlow 14s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1);} 50% { opacity: .6; transform: scale(1.15);} }
+  .hero-streamer.playing { animation-name: streamerFlow, pulse; animation-duration: 14s, 1.6s; animation-iteration-count: infinite, infinite; animation-timing-function: ease-in-out, ease-in-out; }
+
+  /* Tick stepper widget */
+  .stepper { background: var(--stepper-bg); border: 1px solid var(--rule); border-radius: 12px; padding: 20px; margin: 24px 0; }
+  .stepper-controls { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+  .stepper-btn { background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 6px 14px; font: 13px var(--font); cursor: pointer; transition: background .15s, transform .15s; }
+  .stepper-btn:hover { transform: translateY(-1px); }
+  .stepper-btn:disabled { background: var(--muted); cursor: not-allowed; transform: none; }
+  .stepper-btn.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+  .stepper-progress { color: var(--muted); font-size: 13px; margin-left: auto; font-family: var(--mono); }
+  .stepper-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 6px; margin-bottom: 16px; }
+  .stepper-phase { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px; padding: 8px 10px; font-size: 12px; transition: all .3s; cursor: default; position: relative; }
+  .stepper-phase.done { border-color: var(--muted); opacity: .55; }
+  .stepper-phase.active { background: var(--stepper-active); color: #fff; border-color: var(--stepper-active); transform: scale(1.04); box-shadow: 0 0 0 3px rgba(31,111,235,0.25); }
+  .stepper-phase .phase-num { font-family: var(--mono); color: var(--muted); margin-right: 4px; font-size: 11px; }
+  .stepper-phase.active .phase-num { color: rgba(255,255,255,0.8); }
+  .stepper-detail { background: var(--code-bg); border-left: 3px solid var(--accent); padding: 12px 16px; border-radius: 0 6px 6px 0; min-height: 4em; font-size: 14px; }
+  .stepper-detail h4 { margin: 0 0 4px; font-size: 14px; color: var(--accent); }
+  .stepper-detail code { font-size: 13px; }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-streamer.playing { animation: none; }
+    html { scroll-behavior: auto; }
+    .stepper-phase, .pre.mermaid { transition: none; }
+  }
   nav.toc a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
   @media (max-width: 720px) {
     .layout { grid-template-columns: 1fr; gap: 16px; padding: 16px; }
@@ -54,6 +119,7 @@
 </style>
 </head>
 <body>
+<button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">🌙 Dark</button>
 <div class="layout">
 <nav class="toc" aria-label="Table of contents">
   <ol>
@@ -99,6 +165,59 @@
 <main id="top">
   <h1>T0 Architecture Guide</h1>
   <p class="meta">A self-contained tour of the CMS Tier-0 codebase. Read top to bottom, ~5 hours per chapter.</p>
+
+  <div class="hero" aria-hidden="false">
+    <h3>The chain — animated</h3>
+    <svg class="hero-svg" viewBox="0 0 1200 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Animated streamer file flowing through T0 processing chain">
+      <defs>
+        <marker id="hero-arrowhead" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+          <polygon points="0 0, 8 4, 0 8" fill="#8b949e"/>
+        </marker>
+      </defs>
+      <line class="hero-arrow" x1="100" y1="70" x2="155" y2="70"/>
+      <line class="hero-arrow" x1="245" y1="70" x2="305" y2="70"/>
+      <line class="hero-arrow" x1="395" y1="70" x2="455" y2="70"/>
+      <line class="hero-arrow" x1="545" y1="70" x2="605" y2="70"/>
+      <line class="hero-arrow" x1="695" y1="70" x2="755" y2="70"/>
+      <line class="hero-arrow" x1="845" y1="70" x2="905" y2="70"/>
+      <line class="hero-arrow" x1="995" y1="70" x2="1055" y2="70"/>
+      <g class="hero-stage-group" data-stage="0">
+        <rect class="hero-stage" x="20" y="50" width="80" height="40" rx="6"/>
+        <text class="hero-label" x="60" y="75" text-anchor="middle">Storage Mgr</text>
+      </g>
+      <g class="hero-stage-group" data-stage="1">
+        <rect class="hero-stage" x="155" y="50" width="90" height="40" rx="6"/>
+        <text class="hero-label" x="200" y="75" text-anchor="middle">Tier0Feeder</text>
+      </g>
+      <g class="hero-stage-group" data-stage="2">
+        <rect class="hero-stage" x="305" y="50" width="90" height="40" rx="6"/>
+        <text class="hero-label" x="350" y="75" text-anchor="middle">Repack</text>
+      </g>
+      <g class="hero-stage-group" data-stage="3">
+        <rect class="hero-stage" x="455" y="50" width="90" height="40" rx="6"/>
+        <text class="hero-label" x="500" y="75" text-anchor="middle">Express</text>
+      </g>
+      <g class="hero-stage-group" data-stage="4">
+        <rect class="hero-stage" x="605" y="50" width="90" height="40" rx="6"/>
+        <text class="hero-label" x="650" y="75" text-anchor="middle">PromptReco</text>
+      </g>
+      <g class="hero-stage-group" data-stage="5">
+        <rect class="hero-stage" x="755" y="50" width="90" height="40" rx="6"/>
+        <text class="hero-label" x="800" y="75" text-anchor="middle">AlcaHarvest</text>
+      </g>
+      <g class="hero-stage-group" data-stage="6">
+        <rect class="hero-stage" x="905" y="50" width="90" height="40" rx="6"/>
+        <text class="hero-label" x="950" y="75" text-anchor="middle">CondUpload</text>
+      </g>
+      <g class="hero-stage-group" data-stage="7">
+        <rect class="hero-stage" x="1055" y="50" width="90" height="40" rx="6"/>
+        <text class="hero-label" x="1100" y="75" text-anchor="middle">Archive</text>
+      </g>
+      <circle class="hero-streamer playing" cx="60" cy="70" r="7"/>
+    </svg>
+    <p class="hero-caption" id="hero-caption"><strong>Streamer file</strong> flows through the offline processing chain. Hover stages to inspect; the dot represents one streamer file's journey.</p>
+  </div>
+
 
   <aside class="how-to-read" style="background: var(--code-bg); padding: 12px 16px; border-radius: 6px; border-left: 3px solid var(--accent); margin: 16px 0 32px;">
     <strong>How to read this guide.</strong> Six chapters, ~5–6 hours each. Read top to bottom — every chapter assumes the previous ones. Self-check questions at the end of each chapter have no answer key on purpose: if a question stumps you, that's the chapter to re-read. Code excerpts are tagged with <code>file:line</code> headers — open the same file in your editor while you read so you can scroll the surrounding context. Diagrams render via Mermaid (CDN); if you see raw text instead of pictures, your network is blocking <code>cdn.jsdelivr.net</code>.
@@ -180,6 +299,35 @@ flowchart TB
   class SMNotify,PopCon,T0DataSvc opt
       </pre>
       <p class="caption"><strong>D1.3 — T0 database topology.</strong> Tier0Feeder talks to as many as six Oracle databases on every tick. Solid arrows are <em>mandatory</em> connections — if any of T0AST, HLTConfDB, or StorageManagerDB is missing or unreachable, the agent will not start. Dashed arrows are <em>optional</em>: each is gated by an <code>if hasattr(config, "&lt;Name&gt;Database"):</code> block in the constructor (see the code excerpt below). T0AST is the only database T0 writes to in any volume — it holds the run/stream/dataset configuration, all the streamer-to-job bookkeeping, and the closeout state. The others are read-mostly inputs (HLT menu, streamer arrival notifications, CMSSW release announcements) plus a single cross-agent publishing channel (T0DataSvc).</p>
+
+      <pre class="mermaid">
+flowchart TB
+  subgraph Repo["dmwm/T0 repo on master"]
+    direction LR
+    bin["bin/00_pypi_*.sh"]
+    src["src/python/T0/**"]
+    etc["etc/*.py"]
+  end
+  subgraph Hosts["vocms*.cern.ch under cmst0 user"]
+    direction LR
+    h1["vocms047 (big)"]
+    h2["vocms0500 (big)"]
+    h3["vocms05011 (small)"]
+    h4["vocms05012 (small)"]
+  end
+  subgraph Data["/data/tier0/ — same layout on every host"]
+    direction TB
+    install["WMAgent.venv3/<br>installed venv"]
+    admin["admin/<br>ReplayOfflineConfiguration.py<br>WMAgent.secrets"]
+    scripts["00_pypi_*.sh<br>synced from repo"]
+    pjobs["PausedJobs/<br>failure tarballs"]
+  end
+  Repo -- pypi_update.sh wgets --> scripts
+  Repo -- pip install T0==pin --> install
+  PR["GitHub PR + 'run autoreplay' comment"] -- self-hosted runner SSH+Kerberos --> Hosts
+  Hosts -.-> Data
+      </pre>
+      <p class="caption"><strong>D1.4 — T0 deployment topology.</strong> Where the code in this repo actually runs. The <em>same code</em> runs on all four <code>vocms*</code> hosts under the <code>cmst0</code> Linux user, with the same <code>/data/tier0/</code> directory layout. Differences between hosts are only the WMAgent config (which assigns each host's <code>agentName</code> as <code>MainAgent</code>, <code>SecondAgent</code>, etc.). The two paths from the repo to the host are: (1) <code>bin/pypi_update.sh</code> wgets every <code>00_pypi_*.sh</code> shell script from <code>master</code>, overwriting whatever was on disk; (2) <code>pip install T0=={pin}</code> from the deploy script's <code>TIER0_VERSION</code> populates the venv. Operators trigger replays via PR comment; the GitHub Action's self-hosted runner does the SSH-into-vocms work with a Kerberos keytab. Chapter 6 covers all this in detail.</p>
     </div>
 
     <div id="ch1-code">
@@ -444,6 +592,34 @@ sequenceDiagram
   API-->>TF: done
       </pre>
       <p class="caption"><strong>D2.3 — <code>configureRun</code> sequence.</strong> Triggered once per run, the first time <code>FindNewRuns</code> sees that run number's row arrive (the row itself was inserted by <code>StorageManagerAPI.injectNewData</code> a few moments earlier). All six DAO executes happen inside one Oracle transaction; if any fails the whole thing rolls back. The order matters in code: <code>UpdateRun</code> runs first because the dataset/trigger inserts reference fields (era, backfill) that have to be in place. <em>Per-stream</em> configuration (<code>InsertRepackConfig</code>, <code>InsertExpressConfig</code>, <code>InsertDatasetScenario</code>) happens later in a different function — <code>configureRunStream</code>, called once per (run, stream) pair. <em>Reco</em> configuration (<code>InsertRecoConfig</code>) is later still, in <code>releasePromptReco</code> (<a href="#chapter-5">Chapter 5</a>). Idempotency is enforced at the DAO level, so re-running these is safe.</p>
+
+      <pre class="mermaid">
+sequenceDiagram
+  participant Op as Operator (writes etc/*.py)
+  participant Tree as Tier0Config (in-memory)
+  participant Feeder as Tier0FeederPoller (every 30s)
+  participant API as RunConfigAPI
+  participant DB as T0AST
+  Op->>Tree: createTier0Config()
+  Op->>Tree: setAcquisitionEra / setBackfill / setProcessingSite
+  Op->>Tree: addSiteConfig / setStorageSite
+  Op->>Tree: addDataset(name, scenario, ...)
+  Op->>Tree: addRepackConfig / addExpressConfig (per stream)
+  Op->>Tree: setHelperAgentStreams / specifyStreams
+  Note over Op,Tree: file ends — agent boots, polls every 30 seconds
+  loop every tick
+    Feeder->>Tree: loadConfigurationFile (re-read from disk)
+    alt new run discovered
+      Feeder->>API: configureRun(cfg, run, hltConfig)
+      API->>DB: UpdateRun + InsertStream + InsertPrimaryDataset
+    end
+    alt new run-stream discovered
+      Feeder->>API: configureRunStream(cfg, run, stream)
+      API->>DB: InsertRepackConfig + InsertExpressConfig + InsertDatasetScenario
+    end
+  end
+      </pre>
+      <p class="caption"><strong>D2.4 — DSL setter timeline.</strong> The full operator-to-database lifecycle in one picture. Setters at the top run <em>once</em>, when the operator's Python file is loaded (which happens on every tick, but the resulting tree is identical until the operator edits the file). DAO inserts happen <em>conditionally</em> on what's new in T0AST — already-configured runs and run-streams are skipped, so a steady-state tick is mostly a no-op. The interesting consequence: editing <code>etc/*.py</code> mid-replay propagates to the next tick (~30 seconds), but <em>only for runs/streams that haven't been configured yet</em>. To re-apply a setter to an in-flight run requires either deleting the relevant T0AST row or running <code>diagnoseActiveRuns</code> from <code>bin/</code>.</p>
     </div>
 
     <div id="ch2-code">
@@ -707,6 +883,22 @@ setInjectRuns(tier0Config, [402263]) # 386925: 2024 Collisions, 390094: 2025 Cos
 
     <div id="ch3-diagrams">
       <h3>Diagrams</h3>
+
+      <div class="stepper" id="tick-stepper" role="region" aria-label="Interactive tick stepper">
+        <strong style="display: block; margin-bottom: 8px;">Step through one tick of <code>Tier0FeederPoller.algorithm()</code></strong>
+        <div class="stepper-controls">
+          <button class="stepper-btn" id="step-prev" disabled>← Previous</button>
+          <button class="stepper-btn" id="step-next">Next →</button>
+          <button class="stepper-btn secondary" id="step-reset">Reset</button>
+          <button class="stepper-btn secondary" id="step-auto">▶ Auto-play</button>
+          <span class="stepper-progress" id="step-progress">step 0 / 12</span>
+        </div>
+        <div class="stepper-grid" id="stepper-grid"></div>
+        <div class="stepper-detail" id="stepper-detail">
+          <h4>Click "Next →" to begin</h4>
+          <p>This widget walks through every phase of one <code>algorithm()</code> tick. The first three phases load configuration and choose the agent type; the middle phases inject and configure new data; the final phases release Express, release PromptReco, upload conditions, and update monitoring.</p>
+        </div>
+      </div>
 
       <pre class="mermaid">
 flowchart TB
@@ -1128,6 +1320,42 @@ stateDiagram-v2
   cleanedUp --> [*]
       </pre>
       <p class="caption"><strong>D4.3 — WMBS job state machine.</strong> Splitters produce jobs in the <code>created</code> state. Everything to the right is owned by other WMAgent components (JobSubmitter, RetryManager, JobCleaner) and is mostly identical between WMAgent flavors. T0's distinguishing feature is the <em>RetryManager plugin</em>: on production deployments it's <code>SquaredAlgo</code>, but on replays it's <code>PauseAlgo</code> — meaning a job that fails enough times goes to <code>paused</code> instead of being retried indefinitely. <code>paused</code> jobs are how operator triage works: <code>bin/cmst0_paused_jobs</code> lists them; <code>bin/t0 --get-tarball</code> pulls their failure tarballs.</p>
+
+      <pre class="mermaid">
+flowchart LR
+  subgraph Knobs["Threshold knobs (set per-stream via DSL)"]
+    direction TB
+    K1[maxSizeSingleLumi]
+    K2[maxSizeMultiLumi]
+    K3[maxInputEvents]
+    K4[maxInputFiles]
+    K5[maxLatency]
+    K6[maxInputRate]
+    K7[timeout / AlcaHarvestTimeout]
+  end
+  subgraph Splitters["Splitter classes"]
+    Repack["Repack"]
+    RepackMerge["RepackMerge"]
+    Express["Express"]
+    ExpressMerge["ExpressMerge"]
+    Condition["Condition"]
+    AlcaHarvest["AlcaHarvest"]
+  end
+  K1 --> Repack
+  K2 --> Repack
+  K3 --> Repack
+  K3 --> Express
+  K4 --> Repack
+  K5 --> Repack
+  K5 --> RepackMerge
+  K6 --> Express
+  K7 --> AlcaHarvest
+  RepackMerge -. consumes Repack output .-> Repack
+  ExpressMerge -. consumes Express output .-> Express
+  Condition -. consumes Express alca outputs .-> Express
+  AlcaHarvest -. consumes Express alca outputs .-> Express
+      </pre>
+      <p class="caption"><strong>D4.4 — Splitter feature matrix.</strong> Which threshold knobs apply to which splitter, and how the splitters compose. Repack has the most knobs (size, lumi, file, latency); Express has the fewest (rate + events). The merge splitters (<code>RepackMerge</code>, <code>ExpressMerge</code>) are downstream consumers — they don't see streamers directly. <code>Condition</code> and <code>AlcaHarvest</code> share a quirk: they both <em>consume Express's alca output</em>, not Express's primary output, so they only run for streams Express was configured to produce calibration data for. <code>AlcaHarvest</code>'s <code>timeout</code> threshold is the only one that's <em>global</em>, not per-stream — see <a href="#chapter-5">Chapter 5</a>.</p>
     </div>
 
     <div id="ch4-code">
@@ -1424,6 +1652,24 @@ flowchart LR
   Closeout[RunLumiCloseoutAPI<br/>advances run state]
       </pre>
       <p class="caption"><strong>D5.3 — Closeout signals and where they originate.</strong> Four independent inputs feeding two consumers. Three of them feed <code>RunLumiCloseoutAPI</code>'s state advancement; the fourth (CMSSW release) feeds <code>releasePromptReco</code> separately, because PromptReco can run <em>before</em> closeout completes (and usually does — PromptReco is the bulk of the offline reconstruction). If any signal in the bottom three is missing, the run stays in its current state. The diagnostic flow when a run is stuck: identify the current state from D5.1, then look up which signal would advance it, then check why that signal hasn't fired.</p>
+
+      <pre class="mermaid">
+flowchart LR
+  T0["t = 0<br>run starts<br>configureRun"]
+  T1["t = stop<br>StopRuns sets stop_time"]
+  T2["t = stop + ε<br>last streamer arrives,<br>filesets close"]
+  T3["t = stop + ε + α<br>AlcaHarvest jobs<br>complete"]
+  T4["t = stop + ε + α + β<br>conditions uploaded<br>to dropbox"]
+  T5["t = stop + RecoDelay<br>PromptReco released<br>per dataset"]
+  T6["t = stop + max(ε+α+β,<br>RecoDelay+γ)<br>RunLumiCloseoutAPI<br>marks closed"]
+  T7["t = closed + 30 days<br>TaskArchiver<br>removes workflow rows"]
+  T0 --> T1 --> T2 --> T3 --> T4
+  T2 -.-> T5
+  T4 --> T6
+  T5 --> T6
+  T6 --> T7
+      </pre>
+      <p class="caption"><strong>D5.4 — Closeout timing in symbols.</strong> Same state machine as D5.1, but laid out on a time axis with the latency variables named. <code>ε</code> is the gap between the run's official stop time and the last streamer's arrival — usually seconds in production, longer on replays. <code>α</code> is AlcaHarvest job duration (~1h typical). <code>β</code> is the dropbox upload step (seconds). <code>RecoDelay</code> is configurable per-dataset; <code>γ</code> is PromptReco workflow duration (hours). The closeout time is <em>max</em> of the upper and lower paths because <code>RunLumiCloseoutAPI</code> waits for both. Archival is +30 days from closeout (<code>config.TaskArchiver.archiveDelayHours = 720</code> in production).</p>
     </div>
 
     <div id="ch5-code">
@@ -2023,7 +2269,7 @@ jobs:
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
 <script>
-  // Scrollspy: highlight the TOC link nearest the top of the viewport.
+  // ───── Scrollspy ─────
   const links = [...document.querySelectorAll('nav.toc a')];
   const targets = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
   const obs = new IntersectionObserver(entries => {
@@ -2033,6 +2279,142 @@ jobs:
     }
   }, { rootMargin: '0px 0px -70% 0px', threshold: 0 });
   targets.forEach(t => obs.observe(t));
+
+  // ───── Theme toggle ─────
+  (function() {
+    const root = document.documentElement;
+    const btn = document.getElementById('theme-toggle');
+    const stored = localStorage.getItem('t0-theme');
+    if (stored === 'light') { root.setAttribute('data-theme', 'light'); btn.textContent = '☀ Light'; }
+    btn.addEventListener('click', () => {
+      const isLight = root.getAttribute('data-theme') === 'light';
+      if (isLight) { root.removeAttribute('data-theme'); btn.textContent = '🌙 Dark'; localStorage.setItem('t0-theme', 'dark'); }
+      else { root.setAttribute('data-theme', 'light'); btn.textContent = '☀ Light'; localStorage.setItem('t0-theme', 'light'); }
+    });
+  })();
+
+  // ───── Hero chain animation: stage highlighting synced with streamer ─────
+  (function() {
+    const stages = [...document.querySelectorAll('.hero-stage-group')];
+    const streamer = document.querySelector('.hero-streamer');
+    const caption = document.getElementById('hero-caption');
+    if (!stages.length || !streamer) return;
+
+    const stageInfo = [
+      { name: 'Storage Manager DB', desc: 'Streamer file lands here from the online HLT, with metadata in Oracle.' },
+      { name: 'Tier0Feeder', desc: 'Polls every 30s, ingests new streamer rows into T0AST via FeedStreamers DAO.' },
+      { name: 'Repack', desc: 'Splits streamer files into size/lumi-bounded jobs; raw output written to disk.' },
+      { name: 'Express', desc: 'Latency-driven path: rapid feedback for detector experts, also produces alca outputs.' },
+      { name: 'PromptReco', desc: 'Released after CMSSW announcement + RecoDelay; produces RECO datasets for analysis.' },
+      { name: 'AlcaHarvest', desc: 'Combines per-lumi alca outputs from Express into a single calibration sqlite payload.' },
+      { name: 'ConditionUpload', desc: 'HTTPS POST of sqlite + metadata to the conditions dropbox; T0 contract ends here.' },
+      { name: 'Archive', desc: 'TaskArchiver removes workflow state ~30 days after closeout. Run is now historical.' },
+    ];
+
+    // Animation timing: 14s total, 8 stages → ~1.75s per stage
+    let active = -1;
+    function tick() {
+      const t = (Date.now() / 1000) % 14;
+      const idx = Math.min(7, Math.floor(t / 1.75));
+      if (idx !== active) {
+        active = idx;
+        stages.forEach((g, i) => {
+          g.querySelector('.hero-stage').classList.toggle('active', i === idx);
+        });
+        const info = stageInfo[idx];
+        caption.innerHTML = `<strong>${info.name}</strong> — ${info.desc}`;
+      }
+      requestAnimationFrame(tick);
+    }
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      requestAnimationFrame(tick);
+    } else {
+      // Static mode: set the first stage active and show its description.
+      stages[0].querySelector('.hero-stage').classList.add('active');
+      caption.innerHTML = `<strong>${stageInfo[0].name}</strong> — ${stageInfo[0].desc}`;
+    }
+
+    // Click any stage to focus on it (pauses auto-rotation by setting a flag — simple approach: just show its info)
+    stages.forEach((g, i) => {
+      g.style.cursor = 'pointer';
+      g.addEventListener('click', () => {
+        const info = stageInfo[i];
+        caption.innerHTML = `<strong>${info.name}</strong> — ${info.desc}`;
+      });
+    });
+  })();
+
+  // ───── Tick-stepper widget ─────
+  (function() {
+    const grid = document.getElementById('stepper-grid');
+    const detail = document.getElementById('stepper-detail');
+    const prev = document.getElementById('step-prev');
+    const next = document.getElementById('step-next');
+    const reset = document.getElementById('step-reset');
+    const auto = document.getElementById('step-auto');
+    const progress = document.getElementById('step-progress');
+    if (!grid) return;
+
+    const phases = [
+      { name: 'Load Tier0Config', code: 'loadConfigurationFile()', desc: 'Re-reads <code>etc/ReplayOfflineConfiguration.py</code> from disk every tick. A bad config falls through to the next tick non-destructively.' },
+      { name: 'Choose agent type', code: 'MainAgent or HelperAgent', desc: 'Branch on <code>config.Tier0Feeder.agentName</code>: <code>"MainAgent"</code> instantiates MainAgent; anything else creates a HelperAgent with that name.' },
+      { name: 'Inject new data', code: 'StorageManagerAPI.injectNewData', desc: 'Discovers new streamer rows in the Storage Manager DB, applies the agent\'s stream filter, inserts <code>STREAMER</code> rows into T0AST.' },
+      { name: 'Discover new runs', code: 'FindNewRuns DAO', desc: 'Selects <code>RUN</code> rows where <code>acq_era IS NULL</code> — runs that exist but haven\'t been configured yet.' },
+      { name: 'Configure new runs', code: 'RunConfigAPI.configureRun', desc: 'For each new run: walk the in-memory Tier0Config + HLT mapping, emit <code>UpdateRun</code> + stream/dataset/trigger inserts in one Oracle transaction.' },
+      { name: 'Discover new run-streams', code: 'FindNewRunStreams DAO', desc: 'Finds (run, stream) pairs that haven\'t been configured yet at the per-stream level.' },
+      { name: 'Configure new run-streams', code: 'configureRunStream', desc: 'For each (run, stream): insert <code>InsertRepackConfig</code>, <code>InsertExpressConfig</code>, <code>InsertDatasetScenario</code>, set up filesets and subscriptions.' },
+      { name: 'Feed streamers', code: 'FeedStreamers DAO', desc: 'Attaches new streamer rows to the appropriate fileset; this is what makes splitters see them.' },
+      { name: 'Release Express runs', code: 'FindNewExpressRuns + ReleaseExpress', desc: 'Marks runs as ready for Express processing once enough streamer data has arrived.' },
+      { name: 'Release PromptReco', code: 'releasePromptReco', desc: 'For each closed run where <code>stop_time + RecoDelay &lt; now</code>, convert deferred PromptReco config into live workflows.' },
+      { name: 'Upload conditions', code: 'ConditionUploadAPI.uploadConditions', desc: 'For each (run, stream) with completed AlcaHarvest output: stage from EOS, HTTPS POST to dropbox, mark uploaded in T0AST.' },
+      { name: 'Mark monitoring', code: 'MarkWorkflowsInjected + monitoring DAOs', desc: 'Update Tier0DataSvc + workflow-monitoring tables so dashboards reflect this tick\'s state.' },
+    ];
+
+    let cursor = 0;
+
+    phases.forEach((p, i) => {
+      const el = document.createElement('div');
+      el.className = 'stepper-phase';
+      el.innerHTML = `<span class="phase-num">${i + 1}.</span>${p.name}`;
+      el.dataset.idx = i;
+      el.addEventListener('click', () => { cursor = i + 1; render(); });
+      grid.appendChild(el);
+    });
+
+    function render() {
+      [...grid.children].forEach((el, i) => {
+        el.classList.remove('active', 'done');
+        if (i < cursor - 1) el.classList.add('done');
+        else if (i === cursor - 1) el.classList.add('active');
+      });
+      progress.textContent = `step ${cursor} / ${phases.length}`;
+      prev.disabled = cursor === 0;
+      next.disabled = cursor === phases.length;
+      if (cursor === 0) {
+        detail.innerHTML = `<h4>Click "Next →" to begin</h4><p>This widget walks through every phase of one <code>algorithm()</code> tick.</p>`;
+      } else {
+        const p = phases[cursor - 1];
+        detail.innerHTML = `<h4>${cursor}. ${p.name}</h4><p><code>${p.code}</code></p><p>${p.desc}</p>`;
+      }
+    }
+
+    let autoTimer = null;
+    function stopAuto() { if (autoTimer) { clearInterval(autoTimer); autoTimer = null; auto.textContent = '▶ Auto-play'; } }
+
+    next.addEventListener('click', () => { if (cursor < phases.length) cursor++; render(); });
+    prev.addEventListener('click', () => { if (cursor > 0) cursor--; render(); });
+    reset.addEventListener('click', () => { cursor = 0; stopAuto(); render(); });
+    auto.addEventListener('click', () => {
+      if (autoTimer) { stopAuto(); return; }
+      auto.textContent = '⏸ Pause';
+      autoTimer = setInterval(() => {
+        if (cursor >= phases.length) { stopAuto(); return; }
+        cursor++; render();
+      }, 1500);
+    });
+
+    render();
+  })();
 </script>
 </body>
 </html>
