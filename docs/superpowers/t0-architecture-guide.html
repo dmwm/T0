@@ -1635,8 +1635,319 @@ class AlcaHarvest(JobFactory):
 
   </section>
   <section id="chapter-6"><h2>Chapter 6 · Operator surface and recap</h2>
-    <div id="ch6-setup"></div><div id="ch6-diagrams"></div><div id="ch6-code"></div>
-    <div id="ch6-deeper-dive"></div><div id="ch6-takeaways"></div><div id="ch6-self-check"></div>
+
+    <div id="ch6-setup">
+      <h3>Setup</h3>
+      <p class="meta">~6h reading time · By the end you'll know how operators actually run T0, why the deploy scripts and replay workflow look the way they do, and you'll have a single mind-map that ties the whole guide together.</p>
+      <p>Up to now we've treated T0 as a Python codebase. This chapter zooms out: T0 is also a small <em>operating system</em>. The deploy hosts (<code>vocms047</code>, <code>vocms0500</code>, <code>vocms05011</code>, <code>vocms05012</code>) all run under user <code>cmst0</code>, with everything orchestrated from <code>/data/tier0/</code>. The shell scripts you'll find there — <code>00_pypi_deploy_replay.sh</code>, <code>00_pypi_start_agent.sh</code>, <code>00_pypi_patches.sh</code>, etc. — are <em>not</em> separate from this repo. They're synced from <code>master</code> by <code>bin/pypi_update.sh</code>. So when an operator edits a deploy script on a vocms host without committing it back here, that change disappears the next time someone runs <code>pypi_update.sh</code>. The repo is the source of truth.</p>
+      <p>Each deploy script <em>pins its own T0 and WMCore versions</em> at the top. <code>00_pypi_deploy_replay.sh</code> currently has <code>WMAGENT_TAG=2.4.5</code> and <code>TIER0_VERSION=3.5.5</code>. <code>00_pypi_deploy_prod.sh</code> may have different values. These pins are what controls what <code>pip install T0=={version}</code> resolves to during a deploy — separate from the version in <code>src/python/T0/__init__.py</code>, which controls what gets <em>published</em> to PyPI by the CI workflow. Drift between the two is normal: a new T0 version can be published days before a deploy script is updated to pull it in.</p>
+      <p>The single most operationally significant file in <code>bin/</code> is <code>00_pypi_patches.sh</code>. It is a <em>plain</em> shell script that <code>curl | patch</code>s WMCore PRs from contributor forks into the deployed virtualenv at deploy time. The patch URLs in that file are <em>live operational state</em> — they get rotated whenever a hotfix is needed, and the file as it sits in <code>master</code> is what the next deploy will apply. If you see surprising agent behaviour, read the patches file before reading the WMCore source on disk.</p>
+      <p>Operator UX for replays: the <code>deployReplayPR.yaml</code> GitHub workflow lets authorized operators trigger a replay deployment by commenting on a PR. The PR's job is to host the modified <code>etc/*ReplayOfflineConfiguration.py</code> file; the comment chooses the node, the T0/WMCore versions, the patches list, and the streams to run. The workflow runs on a self-hosted runner (<code>runs-on: cmst0</code>) with a Kerberos keytab — only authorized GitHub users (named in the workflow <code>env.AUTHORIZED_USERS</code>) can fire it; only whitelisted nodes (<code>env.ALLOWED_NODES</code>) can be targeted. This is why the replay flow can't be reproduced from a forked repo or external CI.</p>
+      <p>Finally, three small CI workflows backstop the codebase: <code>validate-config.yaml</code> gates PRs that touch any <code>etc/*ProdOfflineConfiguration.py</code>, running py_compile + a narrow flake8 rule subset + the dataset-family-gap detector at <code>test/python/validate_config.py</code>. <code>create_tag_and_release.yaml</code> tags+releases on changes to <code>src/python/T0/__init__.py</code>. <code>pypi_build_publish_template.yaml</code> publishes to PyPI on the same trigger.</p>
+    </div>
+
+    <div id="ch6-diagrams">
+      <h3>Diagrams</h3>
+
+      <pre class="mermaid">
+flowchart TB
+  Op[Operator on vocms*]
+  Op --> deploy["00_pypi_deploy_replay.sh<br/>or _prod.sh"]
+  deploy --> couch[00_pypi_reset_couch.sh]
+  deploy --> wipe[00_wipe_t0ast.sh]
+  deploy --> wmadeploy["deploy-wmagent-venv.sh<br/>fetched from WMCore master"]
+  deploy --> resource[00_pypi_resource_control.sh]
+  deploy --> patches["00_pypi_patches.sh<br/>**live operational state**"]
+  deploy --> tweak["00_pypi_tweak_replay_config.sh<br/>or _prod_config.sh"]
+  Op --> start[00_pypi_start_agent.sh]
+  Op --> stop[00_pypi_stop_agent.sh]
+  Op --> t0cli[bin/t0]
+  t0cli --> start
+  t0cli --> stop
+  Sync[bin/pypi_update.sh] -. wgets all .-> deploy
+  Sync -. wgets all .-> couch
+  Sync -. wgets all .-> patches
+      </pre>
+      <p class="caption"><strong>D6.1 — Deploy script call graph.</strong> Solid arrows are runtime invocations: an operator runs <code>00_pypi_deploy_replay.sh</code>, which orchestrates the others in sequence. Dashed arrows show the sync direction: <code>bin/pypi_update.sh</code> is the only way the scripts on the vocms hosts ever change — it <code>wget</code>s every <code>00_pypi_*.sh</code> from <code>master</code> on this repo. The bold "live operational state" annotation on <code>00_pypi_patches.sh</code> is the file you should expect to drift between deploys; everything else is stable. <code>bin/t0</code> is the per-operator CLI used <em>between</em> deploys — it doesn't redeploy, it just starts/stops the agent and helps with paused-job triage.</p>
+
+      <pre class="mermaid">
+flowchart TB
+  PR["Operator opens PR<br/>modifying etc&#47;*ReplayOfflineConfiguration.py"]
+  PR --> Comment["Operator comments<br/>'run autoreplay<br/>node: vocmsXXXX'"]
+  Comment --> Auth{"Author in<br/>AUTHORIZED_USERS?"}
+  Auth -- no --> Deny["❌ Access denied comment"]
+  Auth -- yes --> Validate{"Node in<br/>ALLOWED_NODES?"}
+  Validate -- no --> Reject["❌ Whitelist rejection"]
+  Validate -- yes --> Steps
+  subgraph Steps["6 deploy steps via SSH+Kerberos"]
+    direction TB
+    S1["1 stop existing agent + condor_rm"]
+    S2["2 download config from PR HEAD"]
+    S3["3 apply patches"]
+    S4["4 deploy WMAgent"]
+    S5["5 start agent"]
+    S6["6 verify: tail Tier0Feeder logs<br/>+ wait for jobs in condor"]
+  end
+  Steps --> Result{"Verification?"}
+  Result -- jobs found --> Success["✅ Success comment with<br/>Grafana + DAS links"]
+  Result -- timeout --> Manual["⏰ Manual verification needed"]
+  Result -- failure --> Fail["❌ Failure comment with<br/>step-specific guidance"]
+      </pre>
+      <p class="caption"><strong>D6.2 — Replay-by-PR-comment workflow.</strong> The full operator UX in one picture. Three trigger phrases (<code>may I replay?</code>, <code>verify nodes</code>, <code>run autoreplay</code>) are recognised by string match against PR comments. Auth is a flat list of GitHub usernames in <code>env.AUTHORIZED_USERS</code>; the node whitelist is <code>env.ALLOWED_NODES</code>. The actual deploy is six SSH steps from the self-hosted runner to the target node; verification waits up to 5 minutes for jobs to appear in HTCondor before either reporting success (with auto-built Grafana + DAS links) or asking the operator to verify manually. Failures are categorised by step so the comment can tell the operator <em>which</em> step failed, not just "deploy failed".</p>
+
+      <pre class="mermaid">
+mindmap
+  root((T0))
+    Inputs
+      WMCore framework
+      Storage Manager DB
+      HLT confDB
+      Tier0Config DSL
+    Components
+      Tier0Feeder
+        per-tick algorithm
+        DAO layer
+        Main / Helper split
+      Tier0Auditor stub
+    Processing chain
+      Repack
+      RepackMerge
+      Express
+      PromptReco
+      AlcaHarvest
+      ConditionUpload
+    Closeout signals
+      streams closed
+      AlcaHarvest done
+      conditions uploaded
+      RunLumiCloseout marks closed
+    Operator layer
+      bin&#47;00_pypi_*.sh
+      bin&#47;t0
+      replay-by-PR-comment
+      validate-config CI
+      tag + PyPI publish CI
+    Versioning
+      __init__.py published
+      deploy script pins deployed
+      patches.sh live state
+      they drift on purpose
+      </pre>
+      <p class="caption"><strong>D6.3 — Recap mind-map.</strong> Every concept covered in chapters 1–5, in one picture, with the operator layer added on top. Try this exercise: cover the diagram and try to <em>narrate</em> each branch from memory — explain what the input is, what the components do with it, what the processing chain produces, what the closeout signals are, and how the operator layer wraps everything in a deployable package. If you can do that without re-opening the earlier chapters, you understand T0 as well as anyone working on it daily.</p>
+    </div>
+
+    <div id="ch6-code">
+      <h3>Annotated code</h3>
+
+      <p class="excerpt-head">bin/00_pypi_deploy_replay.sh:18-60</p>
+      <!-- excerpt: bin/00_pypi_deploy_replay.sh:18-60 -->
+<pre><code class="language-bash">WMAGENT_TAG=2.4.5
+TIER0_VERSION=3.5.5
+COUCH_TAG=3.2.2
+
+BASE_DIR=/data/tier0
+DEPLOY_DIR=$BASE_DIR/WMAgent.venv3
+SPEC_DIR=$BASE_DIR/admin/Specs
+CURRENT_DIR=$DEPLOY_DIR/srv/wmagent/$WMAGENT_TAG
+
+CONFIGURATION_FILE='/data/tier0/admin/ReplayOfflineConfiguration.py'
+WMAGENT_SECRETS=$BASE_DIR/admin/WMAgent.secrets.replay
+CERT=/data/certs/robot-cert-cmst0.pem
+KEY=/data/certs/robot-key-cmst0.pem
+PROXY=/data/certs/robot-proxy-vocms001.pem
+RUCIO_CONFIG=$DEPLOY_DIR/etc/rucio.cfg
+RUCIO_HOST=$(grep '^RUCIO_HOST=' $WMAGENT_SECRETS | cut -d'=' -f2)
+RUCIO_AUTH=$(grep '^RUCIO_AUTH=' $WMAGENT_SECRETS | cut -d'=' -f2)
+RUCIO_ACCOUNT=$(grep '^RUCIO_ACCOUNT=' $WMAGENT_SECRETS | cut -d'=' -f2)
+WMA_VENV_DEPLOY_SCRIPT=https://raw.githubusercontent.com/dmwm/WMCore/$WMAGENT_TAG/deploy/deploy-wmagent-venv.sh
+
+echo "Resetting couchdb for new deployment"
+sleep 1
+rm -rf /data/dockerMount/srv/couchdb/*
+bash $BASE_DIR/00_pypi_reset_couch.sh -t $COUCH_TAG
+
+cd $BASE_DIR
+
+echo "Removing deploy directory"
+sleep 1
+rm -rf $DEPLOY_DIR
+
+echo "Clearing Specs directory"
+sleep 1
+rm -rf $SPEC_DIR/*
+
+echo "Clearing Oracle Database"
+sleep 1
+bash $BASE_DIR/00_wipe_t0ast.sh
+
+echo "Installing new wmagent"
+echo "WMAgent version $WMAGENT_TAG"
+sleep 1
+
+</code></pre>
+      <p>The version pins at the top of <code>00_pypi_deploy_replay.sh</code> are operationally significant: they decide which T0 and WMCore versions a fresh deploy actually installs. They drift independently from <code>src/python/T0/__init__.py</code> — that file controls what gets <em>published</em> to PyPI by CI; this script controls what gets <em>installed</em> on a vocms host. After version 3.5.5 is published to PyPI, this script keeps installing 3.5.5 until an operator opens a PR bumping <code>TIER0_VERSION</code> here. The orchestration sequence below the pins (couchdb reset, deploy-dir nuke, T0AST wipe, WMAgent install) is the same on every deploy: <em>this is destructive — running it on a host with active jobs will lose them.</em> The replay workflow's "stop existing agent" step exists because of this.</p>
+
+      <p class="excerpt-head">bin/00_pypi_patches.sh:1-30</p>
+      <!-- excerpt: bin/00_pypi_patches.sh:1-30 -->
+<pre><code class="language-bash">#!/bin/bash
+
+# Keeping this as a separate script intentionally to avoid complexity in the deployment script.
+# PLEASE CHECK T0 TWIKI COOKBOOK TO SEE MORE INFORMATION ABOUT PATCHING THE T0 WMAGENT
+
+BASE_DIR=/data/tier0
+DEPLOY_DIR=$BASE_DIR/WMAgent.venv3
+
+##################
+### T0 patches ###
+##################
+
+#Dummy demonstrative Patch for new alma 9 agent
+#curl https://patch-diff.githubusercontent.com/raw/dmwm/T0/pull/4961.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.12/site-packages/ -p 3
+
+######################
+### WMCore patches ###
+######################
+
+
+# On top of 2.3.5
+
+# RetryManager bug fix
+curl https://patch-diff.githubusercontent.com/raw/Viphava280444/WMCore/pull/1.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.12/site-packages/ -p 3
+
+# JobSubmitter patch for older jobs to have higher priority
+curl https://patch-diff.githubusercontent.com/raw/LinaresToine/WMCore/pull/21.patch | patch -f -d $WMA_DEPLOY_DIR/lib/python3.12/site-packages/ -p 3
+
+#Alca harvest PFN fix
+bash $WMA_DEPLOY_DIR/bin/patchComponent.sh 12478
+</code></pre>
+      <p>The whole live patches file. Three operationally-important patches at this snapshot: a RetryManager bug fix from a contributor fork, a JobSubmitter priority tweak, and an Alca harvest PFN fix applied via the WMCore <code>patchComponent.sh</code> helper. Each <code>curl | patch</code> grabs a PR diff from a contributor fork and applies it into the deployed venv's <code>site-packages</code>. <strong>Read this file whenever you're debugging T0 behaviour that doesn't match the tagged source.</strong> The patches here override what <code>pip install T0/WMCore</code> just put on disk. The file's diff history in <code>git log bin/00_pypi_patches.sh</code> is the closest thing T0 has to a "production hotfix log".</p>
+
+      <p class="excerpt-head">bin/t0:1-50</p>
+      <!-- excerpt: bin/t0:1-50 -->
+<pre><code class="language-python">#!/usr/bin/env python
+# encoding: utf-8
+
+from WMCore.Configuration import loadConfigurationFile
+from T0.RunConfig.RunConfigAPI import getAcquisitionEra
+import sys
+import getopt
+import traceback
+import os
+import re
+
+help_message = '''
+- t0 --update-t0=&lt;version&gt;           : Uninstalls current T0 to install sepcified T0 version
+-
+- t0 --start-agent                   : Starts the agent
+-
+- t0 --stop-agent                    : Stops the agent
+-
+- t0 --clear-deployment              : Start a new deployment without re-installing the software
+-
+- t0 --resource-control=&lt;site&gt;       : Adds input site to resource control only for processing jobs
+-
+- t0 --edit-code=&lt;file&gt;              : Looks for input file within site-packages directory and opens it for edit using vim
+-
+- t0 --get-tarball=&lt;job id&gt;          : Queries the T0 database for the latest tarball of a given job id. Use for paused jobs for better results
+-
+- t0 --save-tarball=&lt;tarball path&gt;   : Saves the provided tarball in the PausedJobs directory
+-
+- t0 --get-and-save-tarball=&lt;job_id&gt; : Performs get-tarball and save-tarball in one
+-
+'''
+
+class Usage(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+
+
+def start ():
+    """
+    _start_
+    starts the agent
+    """
+    print("Starting the agent")
+    os.system('manage start-agent')
+
+def stop ():
+    """
+    _stop_
+    stops the agent
+    """
+    print("Stopping the agent")
+</code></pre>
+      <p>The operator CLI. <code>t0 --start-agent</code> / <code>t0 --stop-agent</code> are thin wrappers over <code>manage start-agent</code> / <code>manage stop-agent</code>. The two interesting commands for triage are <code>--get-tarball=&lt;jobId&gt;</code> and <code>--get-and-save-tarball=&lt;jobId&gt;</code>: a paused job's failure tarball lives on EOS at a path that depends on the run's acquisition era and primary dataset, which is why the script imports <code>getAcquisitionEra</code> from <code>RunConfigAPI</code> — the CLI uses the same Tier0Config DSL the agent does, just to construct the EOS path. Operationally this is the bridge from a Grafana dashboard (which gives you a job ID) to the human-readable failure output (the tarball contents).</p>
+
+      <p class="excerpt-head">.github/workflows/deployReplayPR.yaml:1-30</p>
+      <!-- excerpt: .github/workflows/deployReplayPR.yaml:1-30 -->
+<pre><code class="language-yaml">name: Pipeline for deploy the replay
+
+# GLOBAL CONFIGURATION - CHANGE VALUES HERE ONLY
+env:
+  DEFAULT_NODE: "vocms0500"
+  DEFAULT_CONFIG: "ReplayOfflineConfiguration.py"
+  DEFAULT_WMCORE: "2.4.3"
+  DEFAULT_T0: "3.5.3"
+  DEFAULT_PYTHON: "3.12"
+  DEFAULT_PATCH: "No Patch"
+  DEFAULT_PATCH_REPO: "dmwm/T0"
+  DEFAULT_FORCE_STOP: "No"
+  DEFAULT_COMMIT: "5081"
+  DEFAULT_STREAMS: "[]"
+  ALLOWED_NODES: "vocms047, vocms0500, vocms05011, vocms05012"
+  NODE_SIZES: "vocms047:Big machine, vocms0500:Big machine, vocms05011:Small machine, vocms05012:Small machine"
+  AUTHORIZED_USERS: "jeyserma, LinaresToine, Viphava280444"
+  DEFAULT_WMAGENT_PATCH: "No Patch"
+  DEFAULT_WMAGENT_COMMIT: "5081"
+
+
+on:
+  issue_comment:
+    types: [created]
+
+
+
+jobs:
+
+  check-auth:
+</code></pre>
+      <p>The <code>env</code> block of the replay workflow is the <em>only</em> registry of who can deploy and where. Change the default node? Edit <code>DEFAULT_NODE</code>. Add a new authorised user? Edit <code>AUTHORIZED_USERS</code> (comma-separated). Add a new replay node? Edit both <code>ALLOWED_NODES</code> and <code>NODE_SIZES</code>. The defaults here also drift from the deploy-script pins: this workflow has <code>DEFAULT_T0: "3.5.3"</code> right now, while <code>00_pypi_deploy_replay.sh</code> has <code>TIER0_VERSION=3.5.5</code> — the workflow default is what runs if an operator types <code>run autoreplay</code> with no version override; the deploy-script pin is what runs if a different version isn't piped in via the workflow's parameter parsing. Both can be overridden per-comment with <code>t0: 3.5.5</code> on a new line in the comment body.</p>
+    </div>
+
+    <div id="ch6-deeper-dive">
+      <h3>Deeper dive</h3>
+      <details>
+        <summary>Why does the replay workflow run on a self-hosted runner (<code>runs-on: cmst0</code>)?</summary>
+        <p>Because the workflow's deploy steps SSH into the target vocms host with Kerberos credentials. Those credentials live as a keytab on a CERN-side runner; pushing them into a public-cloud GitHub-hosted runner would expose them. So CMS provisions a small private runner (<code>cmst0</code>) inside the CERN network with the keytab on disk, and only that runner accepts the workflow. Side effect: a fork of this repo cannot reproduce the workflow — it has no runner labeled <code>cmst0</code> available to it. Side effect 2: when the runner is offline, replays cannot deploy via the workflow (operators have to SSH manually).</p>
+      </details>
+      <details>
+        <summary>What happens when <code>__init__.py</code> drifts from the deploy-script T0 pin?</summary>
+        <p>Two independent things. (1) The <em>published</em> version (whatever's in <code>__init__.py</code> when CI fires) lands on PyPI as <code>T0=={version}</code>. (2) The <em>deployed</em> version (whatever's in <code>00_pypi_deploy_*.sh</code>) is what the next deploy installs. If <code>__init__.py</code> says <code>3.5.6</code> but the deploy script still says <code>TIER0_VERSION=3.5.5</code>, then PyPI has both 3.5.5 and 3.5.6 but every fresh deploy still installs 3.5.5. To roll forward, you commit a PR bumping the deploy script's pin. To roll <em>back</em>, you do the same but to a lower version that's still on PyPI. Yanked versions (rare) require a different recovery path. This is the divergence that lets ops decouple "publishable" from "deployable" — useful when a version is on PyPI but operationally not yet ready.</p>
+      </details>
+    </div>
+
+    <div id="ch6-takeaways">
+      <h3>Key takeaways</h3>
+      <ul>
+        <li>The repo is the source of truth for both code <em>and</em> ops scripts. <code>bin/pypi_update.sh</code> closes the loop between this repo's <code>master</code> and <code>/data/tier0/</code> on the vocms hosts.</li>
+        <li>Deploy-script version pins (<code>TIER0_VERSION</code>) drift from <code>__init__.py</code> by design — published vs deployed are independent levers.</li>
+        <li><code>bin/00_pypi_patches.sh</code> is live operational state; read it before debugging unexpected agent behaviour.</li>
+        <li>The replay-by-PR-comment workflow is the operator UX. Its <code>env</code> block is the only registry of authorised users, allowed nodes, and per-parameter defaults.</li>
+        <li>The recap mind-map (D6.3) is your one-glance summary. If you can narrate every branch from memory, you understand T0.</li>
+      </ul>
+    </div>
+
+    <div id="ch6-self-check">
+      <h3>Self-check</h3>
+      <ol class="self-check">
+        <li>Where exactly would you change the default node for new replays?</li>
+        <li>How does <code>bin/pypi_update.sh</code> close the loop between this repo and the deploy hosts? What does it <em>not</em> sync?</li>
+        <li>Why does the replay workflow need <code>runs-on: cmst0</code> instead of <code>ubuntu-latest</code>? What would break if you switched it?</li>
+        <li>Name three changes that would force a full redeploy (vs a patch-and-restart). Hint: things that make <code>00_pypi_patches.sh</code> insufficient.</li>
+        <li><strong>Capstone exercise:</strong> Without re-opening earlier chapters, explain in your own words the journey of a single streamer file from arrival in the Storage Manager DB to its outputs being archived. Mention at least one component, one DAO, one splitter, one closeout signal, and one operator-layer file along the way.</li>
+      </ol>
+    </div>
+
   </section>
 </main>
 </div>
