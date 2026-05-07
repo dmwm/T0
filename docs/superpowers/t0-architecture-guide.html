@@ -999,8 +999,296 @@ class FindNewRuns(DBFormatter):
 
   </section>
   <section id="chapter-4"><h2>Chapter 4 · JobSplitting</h2>
-    <div id="ch4-setup"></div><div id="ch4-diagrams"></div><div id="ch4-code"></div>
-    <div id="ch4-deeper-dive"></div><div id="ch4-takeaways"></div><div id="ch4-self-check"></div>
+
+    <div id="ch4-setup">
+      <h3>Setup</h3>
+      <p class="meta">~5h reading time · By the end you'll know how streamer rows in T0AST become HTCondor jobs, and which DSL knobs drive each splitter's decisions.</p>
+      <p>A <em>splitter</em> is the function that takes a WMBS subscription (a fileset of input data attached to a workflow) and emits <em>job groups</em> — concrete units of work that JobSubmitter hands to HTCondor. Splitters do not run jobs; they decide <em>which</em> jobs to create, <em>when</em>, and with <em>which inputs</em>. Each phase of the T0 chain has its own splitter: Repack, RepackMerge, Express, ExpressMerge, Condition, AlcaHarvest. They all subclass <code>WMCore.JobSplitting.JobFactory</code> and implement a single method, <code>algorithm(*args, **kwargs)</code>.</p>
+      <p>Discovery happens through WMCore's <code>SplitterFactory</code> plugin pattern: when JobCreator wants to make jobs for a subscription, it calls <code>SplitterFactory(package="T0.JobSplitting")</code> and the factory imports the module matching the subscription's <code>splitAlgo</code> attribute (e.g. <code>"Repack"</code> resolves to <code>T0/JobSplitting/Repack.py</code>). This is the same hook every WMAgent component uses — there's nothing T0-specific about the registration mechanism.</p>
+      <p>The four shapes you'll encounter:</p>
+      <ul>
+        <li><strong>Repack</strong> (<code>Repack.py</code>) — size-/lumi-/file-bounded. The biggest splitter, with the most knobs: <code>maxSizeSingleLumi</code>, <code>maxSizeMultiLumi</code>, <code>maxInputEvents</code>, <code>maxInputFiles</code>, <code>maxLatency</code>. Decides whether to split a single huge lumi into multiple jobs, accumulate small lumis into one job, or wait for more data.</li>
+        <li><strong>RepackMerge</strong> (<code>RepackMerge.py</code>) — combines small Repack outputs into target-size files for storage. Same threshold style, different inputs (Repack outputs, not raw streamers).</li>
+        <li><strong>Express</strong> (<code>Express.py</code>) — latency-bounded. Two thresholds (<code>maxInputRate</code>, <code>maxInputEvents</code>) plus an over-rate failure case. Designed to produce rapid feedback to detector experts; never waits if data is available.</li>
+        <li><strong>ExpressMerge</strong>, <strong>Condition</strong>, <strong>AlcaHarvest</strong> — simpler shapes. ExpressMerge is usually a near-no-op; Condition produces calibration outputs; AlcaHarvest emits a single job per run/dataset. Skim them once, then return when needed.</li>
+      </ul>
+      <p>The shared decision pattern across all of them: <em>"wait for more, split now, or split-and-leave-some-behind"</em>. "Wait" is an active choice — if the splitter sees data but the thresholds aren't met, it returns no jobs; the next tick will see the same data plus whatever arrived since, and re-evaluate. There is no buffering inside the splitter; every decision is recomputed from current T0AST state.</p>
+      <p>Threshold values come from the Tier0Config DSL via <code>configureRunStream</code>, which reads <code>tier0Config.Streams.&lt;StreamName&gt;.Repack.maxSizeSingleLumi</code> (etc.) and writes them into per-stream rows in T0AST's config tables. By the time the splitter runs, those values arrive as <code>kwargs</code> on the <code>algorithm</code> call. So changing a threshold means: edit <code>etc/*.py</code>, wait for the next configureRun (next new run), and the new value applies.</p>
+    </div>
+
+    <div id="ch4-diagrams">
+      <h3>Diagrams</h3>
+
+      <pre class="mermaid">
+flowchart TB
+  S([algorithm tick has new streamers]) --> Q1{single-lumi size<br/>≥ maxSizeSingleLumi?}
+  Q1 -- yes --> SplitOne[split THIS lumi<br/>into multiple Repack jobs]
+  Q1 -- no --> Q2{accumulated size<br/>≥ maxSizeMultiLumi<br/>or files ≥ maxInputFiles<br/>or events ≥ maxInputEvents?}
+  Q2 -- yes --> SplitMulti[emit one multi-lumi job]
+  Q2 -- no --> Q3{data age<br/>≥ maxLatency?}
+  Q3 -- yes --> ForceClose[forceClose: emit whatever you have]
+  Q3 -- no --> Q4{lumi hole detected<br/>upstream?}
+  Q4 -- yes --> Hold[hold data, wait]
+  Q4 -- no --> Wait([wait for next tick])
+  SplitOne --> Done([job group emitted])
+  SplitMulti --> Done
+  ForceClose --> Done
+      </pre>
+      <p class="caption"><strong>D4.1 — Repack splitter decision tree.</strong> Three threshold families + a latency override + a lumi-hole guard. "Lumi hole" means: a missing lumi number between two present ones — symptomatic of streamer files lost or delayed upstream. By default Repack waits indefinitely for the hole to fill, but <code>maxLatency</code> is the escape hatch: once the oldest data in the buffer is older than <code>maxLatency</code> seconds, the splitter emits whatever it has (with <code>forceClose=True</code>). Connect each threshold to its DSL setter: <code>addRepackConfig(cfg, stream, maxSizeSingleLumi=…, maxLatency=…)</code> from Chapter 2's D2.2.</p>
+
+      <pre class="mermaid">
+flowchart TB
+  S([algorithm tick has new streamers]) --> Q1{lumi event rate<br/>&gt; maxInputRate?}
+  Q1 -- yes --> Fail[mark streamers FAILED<br/>do not emit job]
+  Q1 -- no --> Pack[pack streamers into job<br/>up to maxInputEvents]
+  Pack --> Q2{streamers left over<br/>after first job?}
+  Q2 -- yes --> Pack2[create another job<br/>same lumi]
+  Q2 -- no --> Done([job group emitted])
+  Pack2 --> Done
+      </pre>
+      <p class="caption"><strong>D4.2 — Express splitter decision tree.</strong> Strikingly simpler than Repack. Express has no concept of latency-as-trigger because it is <em>always</em> latency-driven by design: any data found this tick gets jobs this tick. The interesting wrinkle is the <code>maxInputRate</code> failure case — if a single lumi's event count exceeds the rate cap, the streamers for that lumi are marked FAILED rather than processed. The reasoning: such a lumi would dominate downstream resources and produce useless feedback (the rate is high enough that physics analysts can't keep up anyway). Failures here propagate to operators via the late-workflow detector, not via a job retry.</p>
+
+      <pre class="mermaid">
+stateDiagram-v2
+  [*] --> created: JobCreator (splitter algorithm)
+  created --> submitted: JobSubmitter
+  submitted --> running: HTCondor schedd
+  running --> completed: success
+  running --> failed: error code
+  failed --> cooloff: RetryManager
+  cooloff --> submitted: retry
+  failed --> paused: max retries exceeded (PauseAlgo)
+  completed --> cleanedUp: JobCleaner
+  paused --> [*]
+  cleanedUp --> [*]
+      </pre>
+      <p class="caption"><strong>D4.3 — WMBS job state machine.</strong> Splitters produce jobs in the <code>created</code> state. Everything to the right is owned by other WMAgent components (JobSubmitter, RetryManager, JobCleaner) and is mostly identical between WMAgent flavors. T0's distinguishing feature is the <em>RetryManager plugin</em>: on production deployments it's <code>SquaredAlgo</code>, but on replays it's <code>PauseAlgo</code> — meaning a job that fails enough times goes to <code>paused</code> instead of being retried indefinitely. <code>paused</code> jobs are how operator triage works: <code>bin/cmst0_paused_jobs</code> lists them; <code>bin/t0 --get-tarball</code> pulls their failure tarballs.</p>
+    </div>
+
+    <div id="ch4-code">
+      <h3>Annotated code</h3>
+
+      <p class="excerpt-head">src/python/T0/JobSplitting/Repack.py:23-55</p>
+      <!-- excerpt: src/python/T0/JobSplitting/Repack.py:23-55 -->
+<pre><code class="language-python">    def algorithm(self, groupInstance = None, jobInstance = None,
+                  *args, **kwargs):
+        """
+        _algorithm_
+
+        A file based splitting algorithm
+
+        """
+        # extract some global scheduling parameters
+        self.jobNamePrefix = kwargs.get('jobNamePrefix', "Repack")
+        self.maxSizeSingleLumi = kwargs['maxSizeSingleLumi']
+        self.maxSizeMultiLumi = kwargs['maxSizeMultiLumi']
+        self.maxInputEvents = kwargs['maxInputEvents']
+        self.maxInputFiles = kwargs['maxInputFiles']
+        self.maxLatency = kwargs['maxLatency']
+
+        self.currentTime = time.time()
+
+        self.createdGroup = False
+
+        timePerEvent, sizePerEvent, memoryRequirement = \
+                    self.getPerformanceParameters(kwargs.get('performance', {}))
+
+        myThread = threading.currentThread()
+        daoFactory = DAOFactory(package = "T0.WMBS",
+                                logger = logging,
+                                dbinterface = myThread.dbi)
+
+        # keep for later
+        self.insertSplitLumisDAO = daoFactory(classname = "JobSplitting.InsertSplitLumis")
+
+        # data discovery
+        getAvailableFilesDAO = daoFactory(classname = "Subscriptions.GetAvailableRepackFiles")
+        availableFiles = getAvailableFilesDAO.execute(self.subscription["id"])
+</code></pre>
+      <p>The <em>contract</em> of every T0 splitter: subclass <code>JobFactory</code>, implement <code>algorithm(*args, **kwargs)</code>, accept thresholds via <code>kwargs</code>, build a per-package <code>DAOFactory</code>, fetch input files via the appropriate <code>Subscriptions.GetAvailable…Files</code> DAO. Notice how the thresholds are <em>required</em> kwargs (using bracket access, not <code>.get(…)</code>) — a misconfigured stream will crash here loudly rather than silently using a wrong default. This is the hook D2.2 from Chapter 2 was pointing at: <code>addRepackConfig(cfg, stream, maxSizeSingleLumi=…)</code> sets the value that lands here.</p>
+
+      <p class="excerpt-head">src/python/T0/JobSplitting/Repack.py:80-141</p>
+      <!-- excerpt: src/python/T0/JobSplitting/Repack.py:80-141 -->
+<pre><code class="language-python">        haveLumiHole = False
+        filesByLumi = {}
+        maxUsedLumi = max(usedLumis) if usedLumis else 0
+        for lumi in range(1, 1+max(maxUsedLumi,max(availableFileLumiDict.keys()))):
+
+            # lumi contains data => remember it for potential processing
+            if lumi in availableFileLumiDict:
+
+                filesByLumi[lumi] = availableFileLumiDict[lumi]
+
+            # lumi is used and we have data => trigger processing
+            elif lumi in usedLumis:
+
+                if len(filesByLumi) > 0:
+
+                    if haveLumiHole:
+                        # if lumi hole check for maxLatency first
+                        if self.getDataAge(filesByLumi) > self.maxLatency:
+                            self.defineJobs(filesByLumi, True, memoryRequirement)
+                            filesByLumi = {}
+                        # if maxLatency not met ignore data for now
+                        else:
+                            filesByLumi = {}
+                    else:
+                        self.defineJobs(filesByLumi, True, memoryRequirement)
+                        filesByLumi = {}
+
+                # if we had a lumi hole it is now not relevant anymore
+                # the next data will have a used lumi in front of it
+                haveLumiHole = False
+
+            # lumi has no data and isn't used, ie. we have a lumi hole
+            # also has an impact on how to handle later data
+            else:
+
+                if len(filesByLumi) > 0:
+
+                    if self.getDataAge(filesByLumi) > self.maxLatency:
+                        self.defineJobs(filesByLumi, True, memoryRequirement)
+                        filesByLumi = {}
+                    elif not haveLumiHole:
+                        self.defineJobs(filesByLumi, False, memoryRequirement)
+                        filesByLumi = {}
+                    else:
+                        filesByLumi = {}
+
+                haveLumiHole = True
+
+        # now handle whatever data is still left (at the high end of the lumi range)
+        if haveLumiHole:
+            if self.getDataAge(filesByLumi) > self.maxLatency:
+                self.defineJobs(filesByLumi, True, memoryRequirement)
+        else:
+            fileset = self.subscription.getFileset()
+            fileset.load()
+            self.defineJobs(filesByLumi, not fileset.open, memoryRequirement)
+
+        return
+</code></pre>
+      <p>The Repack main loop: walk every lumi number from 1 to the max seen, dispatch on three cases — the lumi has new data; the lumi was already processed; the lumi is missing (a hole). The <code>haveLumiHole</code> flag is the load-bearing piece: once a hole is detected, accumulated data is held back until either the hole closes or <code>maxLatency</code> elapses. The <em>second</em> argument to <code>defineJobs</code> is <code>forceClose</code> — true when the splitter is committing under timeout; false when it's a normal threshold trip. <code>forceClose</code> changes the policy in <code>defineJobs</code> for whether to emit small final groups vs. carry them to the next tick.</p>
+
+      <p class="excerpt-head">src/python/T0/JobSplitting/Express.py:17-67</p>
+      <!-- excerpt: src/python/T0/JobSplitting/Express.py:17-67 -->
+<pre><code class="language-python">class Express(JobFactory):
+    """
+    Split jobs by set of files
+
+    """
+    def algorithm(self, groupInstance = None, jobInstance = None,
+                  *args, **kwargs):
+        """
+        _algorithm_
+
+        A file based splitting algorithm
+
+        """
+        # extract some global scheduling parameters
+        self.jobNamePrefix = kwargs.get('jobNamePrefix', "Express")
+        self.maxInputRate = kwargs['maxInputRate']
+        self.maxInputEvents = kwargs['maxInputEvents']
+
+        self.createdGroup = False
+
+        timePerEvent, sizePerEvent, memoryRequirement = \
+                    self.getPerformanceParameters(kwargs.get('performance', {}))
+
+        myThread = threading.currentThread()
+        daoFactory = DAOFactory(package = "T0.WMBS",
+                                logger = logging,
+                                dbinterface = myThread.dbi)
+
+        # keep for later
+        self.insertSplitLumisDAO = daoFactory(classname = "JobSplitting.InsertSplitLumis")
+
+        # data discovery
+        getFilesDAO = daoFactory(classname = "Subscriptions.GetAvailableExpressFiles")
+        availableFiles = getFilesDAO.execute(self.subscription["id"])
+
+        # nothing to do, stop immediately
+        if len(availableFiles) == 0:
+            return
+
+        # sort by lumi
+        streamersByLumi = {}
+        for result in availableFiles:
+            lumi = result['lumi']
+            if lumi in streamersByLumi:
+                streamersByLumi[lumi].append(result)
+            else:
+                streamersByLumi[lumi] = [ result ]
+
+        self.defineJobs(streamersByLumi, timePerEvent, sizePerEvent, memoryRequirement)
+
+        return
+</code></pre>
+      <p>Express in full (almost). Compare with Repack: same JobFactory contract, same DAOFactory pattern, but only two threshold knobs and no waiting logic. <code>algorithm</code> just groups streamers by lumi and hands them to <code>defineJobs</code> immediately. Express never waits — if there are streamers, jobs get emitted this tick. The reason: Express output is consumed by detector experts watching live for problems with the run; latency is the entire point of the stream. The <code>maxInputRate</code> threshold appears only in <code>defineJobs</code>, where it is used to <em>fail</em> over-rate lumis rather than to hold them.</p>
+
+      <p class="excerpt-head">src/python/T0/WMBS/Oracle/JobSplitting/InsertSplitLumis.py:1-23</p>
+      <!-- excerpt: src/python/T0/WMBS/Oracle/JobSplitting/InsertSplitLumis.py:1-23 -->
+<pre><code class="language-python">"""
+_InsertSplitLumis_
+
+Oracle implementation of InsertSplitLumis
+
+"""
+
+from WMCore.Database.DBFormatter import DBFormatter
+
+class InsertSplitLumis(DBFormatter):
+
+    sql = """INSERT INTO lumi_section_split_active
+             (run_id, subscription, lumi_id, nfiles)
+             SELECT run_id, :SUB, :LUMI, :NFILES
+             FROM run_stream_fileset_assoc
+             WHERE fileset = (SELECT fileset FROM wmbs_subscription WHERE id = :SUB)
+             """
+
+    def execute(self, binds, conn = None, transaction = False):
+
+        self.dbi.processData(self.sql, binds, conn = conn,
+                             transaction = transaction)
+        return
+</code></pre>
+      <p>The bookkeeping a splitter does when it fans out a single lumi across multiple jobs: insert one row into <code>lumi_section_split_active</code> per (subscription, lumi) pair, recording how many files were used. This row is what allows downstream merge logic (RepackMerge) to know "this lumi had multiple parts that need reassembling". Without this insert, a single-lumi split would lose the connection between its outputs. Notice the trick: the <code>SELECT run_id … FROM run_stream_fileset_assoc WHERE fileset = (subquery)</code> uses the subscription's fileset to derive the run_id without requiring the caller to know it. That's the kind of small-but-load-bearing detail that makes DAOs worth reading line by line.</p>
+    </div>
+
+    <div id="ch4-deeper-dive">
+      <h3>Deeper dive</h3>
+      <details>
+        <summary>Why is RepackMerge a separate splitter instead of a flag on Repack?</summary>
+        <p>Because in WMBS, a <em>workflow</em> is a directed graph of <em>tasks</em>, each of which runs over the outputs of its parent. Repack and RepackMerge are <em>separate tasks</em> with separate filesets and separate subscriptions. Combining them into one splitter would require a single subscription to ingest both streamers and Repack output files — incompatible with the subscription/fileset abstraction. By keeping them separate, each splitter has a single input shape, single threshold set, and produces a single output shape. The same applies to Express vs ExpressMerge: ExpressMerge consumes Express output, not streamers.</p>
+      </details>
+      <details>
+        <summary>What does <code>defineJobs</code> in Express actually do with <code>maxInputRate</code>?</summary>
+        <p>It iterates each lumi's streamers and computes <code>lumiEventsTotal</code>. If that total exceeds <code>maxInputRate</code>, the streamers for that lumi are passed to <code>self.markFailed(lumiStreamerList)</code> and the loop <code>continue</code>s — no job is created for that lumi. Otherwise, streamers are packed into jobs respecting <code>maxInputEvents</code>: the first streamer always goes in; subsequent streamers are added only if the running event total stays under the cap. So a single huge streamer can still produce a job (it goes in alone), but a long pile of small streamers gets fan-out across multiple jobs. The implementation is in <code>Express.py:70-140</code> if you want to read it.</p>
+      </details>
+    </div>
+
+    <div id="ch4-takeaways">
+      <h3>Key takeaways</h3>
+      <ul>
+        <li>Splitters are pure decision functions: given current T0AST state and threshold values, decide which jobs to emit. No internal buffering.</li>
+        <li>Repack is size-driven with a latency override and a lumi-hole guard. Express is latency-driven with no waiting. The remaining splitters are simpler shapes.</li>
+        <li>Every threshold value originates in the operator's <code>etc/*.py</code> via the Tier0Config DSL; it reaches the splitter as kwargs on <code>algorithm</code>.</li>
+        <li>RepackMerge and ExpressMerge are <em>separate</em> splitters consuming the previous stage's output, not flags on Repack/Express.</li>
+        <li>Splitters produce jobs in WMBS state <code>created</code>; everything beyond is WMCore. The T0-specific retry policy (<code>PauseAlgo</code> on replays, <code>SquaredAlgo</code> on prod) decides what happens when a job fails repeatedly.</li>
+      </ul>
+    </div>
+
+    <div id="ch4-self-check">
+      <h3>Self-check</h3>
+      <ol class="self-check">
+        <li>If you set <code>maxLatency = 5 * 60</code> on a Repack stream, what behavior does that <em>unlock</em> — and what's the trade-off vs the default of two hours?</li>
+        <li>What is the smallest set of Tier0Config knobs that controls Repack output file size?</li>
+        <li>Why does Express usually skip the merge step? When would you change that?</li>
+        <li>Trace a Repack job that fails with a transient error: which WMBS states does it visit, and which T0-specific retry policy decides whether it ends in <code>paused</code> or back in <code>submitted</code>?</li>
+        <li>If you wanted to add a brand-new splitter for a hypothetical <em>UltraExpress</em> stream, what files would you need to create or modify?</li>
+      </ol>
+    </div>
+
   </section>
   <section id="chapter-5"><h2>Chapter 5 · Closeout</h2>
     <div id="ch5-setup"></div><div id="ch5-diagrams"></div><div id="ch5-code"></div>
