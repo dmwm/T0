@@ -29,13 +29,49 @@
   a { color: var(--accent); }
   code, pre { font-family: var(--mono); }
   pre { background: var(--code-bg); padding: 12px 16px; border-radius: 6px; overflow-x: auto; }
-  .layout { display: grid; grid-template-columns: var(--nav-w) 1fr; gap: 32px; max-width: 1280px; margin: 0 auto; padding: 24px; }
-  nav.toc { position: sticky; top: 24px; align-self: start; max-height: calc(100vh - 48px); overflow-y: auto; border-right: 1px solid var(--rule); padding-right: 16px; font-size: 14px; }
+  .layout { display: grid; grid-template-columns: var(--nav-w) 1fr; gap: 40px; max-width: 1280px; margin: 0 auto; padding: 24px; }
+  nav.toc {
+    position: sticky; top: 16px; align-self: start;
+    max-height: calc(100vh - 32px); overflow-y: auto;
+    background: linear-gradient(180deg, var(--code-bg) 0%, color-mix(in oklab, var(--code-bg) 80%, transparent) 100%);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 16px 12px;
+    font-size: 13px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  nav.toc::-webkit-scrollbar { width: 6px; }
+  nav.toc::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
   nav.toc ol { list-style: none; padding: 0; margin: 0; }
-  nav.toc li { margin: 4px 0; }
-  nav.toc li.l2 { margin-left: 16px; color: var(--muted); }
-  nav.toc a { text-decoration: none; }
-  nav.toc a.active { font-weight: 600; color: var(--fg); }
+  nav.toc li { margin: 0; }
+  nav.toc a {
+    display: block;
+    padding: 6px 10px 6px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--fg);
+    border-left: 2px solid transparent;
+    margin-left: 2px;
+    transition: background .15s, border-color .15s, color .15s, padding-left .15s;
+    line-height: 1.35;
+  }
+  nav.toc li:not(.l2) > a { font-weight: 500; margin-top: 6px; }
+  nav.toc li:first-child > a { margin-top: 0; font-weight: 700; font-size: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--rule); border-radius: 0; margin-bottom: 6px; }
+  nav.toc a:hover { background: color-mix(in oklab, var(--accent) 10%, transparent); padding-left: 18px; }
+  nav.toc a.active {
+    background: color-mix(in oklab, var(--accent) 18%, transparent);
+    border-left-color: var(--accent);
+    color: var(--fg);
+    font-weight: 600;
+  }
+  nav.toc li.l2 > a {
+    padding: 4px 10px 4px 30px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.3;
+  }
+  nav.toc li.l2 > a:hover { color: var(--fg); padding-left: 32px; }
+  nav.toc li.l2 > a.active { color: var(--fg); background: color-mix(in oklab, var(--accent) 12%, transparent); border-left-color: var(--accent); }
   main { max-width: var(--max); }
   main h1 { font-size: 28px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
   main h2 { font-size: 22px; margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--rule); }
@@ -46,9 +82,48 @@
   summary { cursor: pointer; font-weight: 600; }
   ol.self-check { padding-left: 20px; }
   ol.self-check li { margin: 8px 0; }
-  pre.mermaid { background: #f6f8fa; color: #24292f; padding: 16px; overflow-x: auto; transition: transform .2s ease, box-shadow .2s ease; }
+  pre.mermaid { background: #f6f8fa; color: #24292f; padding: 16px; overflow-x: auto; transition: transform .2s ease, box-shadow .2s ease; cursor: zoom-in; }
   pre.mermaid:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.25); }
   .caption { color: var(--muted); font-size: 14px; margin-top: 4px; }
+
+  /* Diagram wrapper with controls (post-render) */
+  .diagram-wrap { position: relative; margin: 16px 0; }
+  .diagram-wrap.revealed pre.mermaid { animation: fadeUp .5s ease-out; }
+  .diagram-controls { position: absolute; top: 8px; right: 8px; display: flex; gap: 4px; z-index: 2; opacity: 0; transition: opacity .15s; }
+  .diagram-wrap:hover .diagram-controls, .diagram-wrap:focus-within .diagram-controls { opacity: 1; }
+  .diagram-controls button {
+    background: rgba(13,17,23,0.85); color: #fff; border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px; padding: 4px 10px; font: 12px var(--font); cursor: pointer;
+    transition: background .15s, transform .1s;
+  }
+  .diagram-controls button:hover { background: var(--accent); transform: translateY(-1px); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Hover highlights on Mermaid SVG elements (post-render) */
+  pre.mermaid svg .node, pre.mermaid svg .actor, pre.mermaid svg .messageText,
+  pre.mermaid svg .messageLine0, pre.mermaid svg .messageLine1,
+  pre.mermaid svg g.cluster, pre.mermaid svg .stateGroup, pre.mermaid svg .section {
+    transition: filter .2s, opacity .2s;
+  }
+  pre.mermaid svg .node:hover, pre.mermaid svg .actor:hover, pre.mermaid svg .stateGroup:hover {
+    filter: drop-shadow(0 0 8px var(--accent)) brightness(1.05);
+    cursor: pointer;
+  }
+  pre.mermaid svg.dimmed .node:not(.pulse), pre.mermaid svg.dimmed .stateGroup:not(.pulse), pre.mermaid svg.dimmed .actor:not(.pulse) {
+    opacity: 0.35;
+  }
+  pre.mermaid svg .node.pulse, pre.mermaid svg .stateGroup.pulse, pre.mermaid svg .actor.pulse {
+    filter: drop-shadow(0 0 12px var(--accent)) brightness(1.1);
+  }
+  pre.mermaid svg .edgePath.pulse path { stroke: var(--accent) !important; stroke-width: 3px !important; }
+
+  /* Diagram zoom modal */
+  .diagram-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100; display: none; padding: 24px; overflow: auto; }
+  .diagram-modal.open { display: flex; align-items: center; justify-content: center; animation: fadeIn .2s; }
+  .diagram-modal-inner { background: #fff; border-radius: 12px; padding: 32px; max-width: 95vw; max-height: 92vh; overflow: auto; position: relative; }
+  .diagram-modal-inner svg { max-width: 100%; height: auto; }
+  .diagram-modal-close { position: absolute; top: 8px; right: 12px; background: transparent; border: none; font-size: 24px; cursor: pointer; color: #1f2328; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
   /* Theme toggle */
   .theme-toggle { position: fixed; top: 12px; right: 16px; z-index: 50; background: var(--code-bg); color: var(--fg); border: 1px solid var(--rule); border-radius: 999px; padding: 6px 12px; font: 13px var(--font); cursor: pointer; transition: background .2s, transform .15s; }
@@ -2264,7 +2339,10 @@ jobs:
 
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
-  mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "loose" });
+  mermaid.initialize({ startOnLoad: false, theme: "neutral", securityLevel: "loose" });
+  await mermaid.run();
+  // Signal that Mermaid finished, so the post-render script can wrap each diagram.
+  window.dispatchEvent(new CustomEvent('mermaid-rendered'));
 </script>
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
@@ -2343,6 +2421,103 @@ jobs:
       });
     });
   })();
+
+  // ───── Universal diagram interactivity (after Mermaid renders) ─────
+  function enhanceDiagrams() {
+    const blocks = document.querySelectorAll('pre.mermaid');
+    blocks.forEach((pre, idx) => {
+      // Skip if already wrapped
+      if (pre.parentElement.classList.contains('diagram-wrap')) return;
+
+      const wrap = document.createElement('div');
+      wrap.className = 'diagram-wrap';
+      pre.parentNode.insertBefore(wrap, pre);
+      wrap.appendChild(pre);
+
+      const controls = document.createElement('div');
+      controls.className = 'diagram-controls';
+      controls.innerHTML = `
+        <button class="diag-play" title="Play sequential walk-through">▶ Play</button>
+        <button class="diag-zoom" title="Open in fullscreen">⛶ Zoom</button>
+      `;
+      wrap.appendChild(controls);
+
+      const playBtn = controls.querySelector('.diag-play');
+      const zoomBtn = controls.querySelector('.diag-zoom');
+
+      // Sequential pulse animation
+      playBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const svg = pre.querySelector('svg');
+        if (!svg) return;
+        const nodes = [
+          ...svg.querySelectorAll('g.node'),
+          ...svg.querySelectorAll('g.stateGroup'),
+          ...svg.querySelectorAll('g.actor'),
+        ];
+        if (!nodes.length) return;
+        svg.classList.add('dimmed');
+        nodes.forEach(n => n.classList.remove('pulse'));
+        let i = 0;
+        const step = () => {
+          if (i > 0 && nodes[i - 1]) nodes[i - 1].classList.remove('pulse');
+          if (i >= nodes.length) {
+            svg.classList.remove('dimmed');
+            return;
+          }
+          nodes[i].classList.add('pulse');
+          i++;
+          setTimeout(step, 700);
+        };
+        step();
+      });
+
+      // Click-to-zoom modal
+      const openZoom = (e) => {
+        if (e) e.stopPropagation();
+        const svg = pre.querySelector('svg');
+        if (!svg) return;
+        const modal = document.getElementById('diagram-modal') || (() => {
+          const m = document.createElement('div');
+          m.id = 'diagram-modal';
+          m.className = 'diagram-modal';
+          m.innerHTML = `
+            <div class="diagram-modal-inner">
+              <button class="diagram-modal-close" aria-label="Close">×</button>
+              <div class="diagram-modal-body"></div>
+            </div>
+          `;
+          document.body.appendChild(m);
+          m.querySelector('.diagram-modal-close').addEventListener('click', () => m.classList.remove('open'));
+          m.addEventListener('click', (ev) => { if (ev.target === m) m.classList.remove('open'); });
+          document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') m.classList.remove('open'); });
+          return m;
+        })();
+        const body = modal.querySelector('.diagram-modal-body');
+        body.innerHTML = '';
+        body.appendChild(svg.cloneNode(true));
+        modal.classList.add('open');
+      };
+      zoomBtn.addEventListener('click', openZoom);
+      pre.addEventListener('click', openZoom);
+    });
+
+    // Scroll-reveal: reveal each diagram-wrap when it enters the viewport.
+    const reveal = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add('revealed'); });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.diagram-wrap').forEach((w) => reveal.observe(w));
+  }
+
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    // Still wrap for zoom but skip the play animation by hiding play button.
+    window.addEventListener('mermaid-rendered', () => {
+      enhanceDiagrams();
+      document.querySelectorAll('.diag-play').forEach((b) => b.style.display = 'none');
+    });
+  } else {
+    window.addEventListener('mermaid-rendered', enhanceDiagrams);
+  }
 
   // ───── Tick-stepper widget ─────
   (function() {
