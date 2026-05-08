@@ -1,0 +1,346 @@
+.wrap {
+  margin: 28px 0;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  background: var(--bg-elevated);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--rule);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent) 4%, transparent) 0%,
+    transparent 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tag {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.modePicker {
+  display: inline-flex;
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 3px;
+}
+
+.modeBtn {
+  padding: 6px 14px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.modeBtnActive {
+  background: var(--accent);
+  color: #fff;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: 240px 1fr 240px;
+  gap: 18px;
+  padding: 22px 24px;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sliderGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.sliderLabel {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.sliderValue {
+  font-family: "SF Mono", Menlo, monospace;
+  font-size: 12.5px;
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.slider {
+  width: 100%;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.sliderHint {
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-top: 1px;
+}
+
+.canvas {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+  background: var(--bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--rule);
+  position: relative;
+  overflow: hidden;
+  min-height: 220px;
+}
+
+.canvasLabel {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.bucketWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bucketTrack {
+  position: relative;
+  height: 38px;
+  background: color-mix(in srgb, var(--accent) 5%, var(--bg-elevated));
+  border-radius: 8px;
+  border: 1px solid var(--rule);
+  overflow: hidden;
+}
+
+.bucketFill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--accent) 25%, transparent),
+    var(--accent)
+  );
+  border-radius: 8px;
+}
+
+.bucketText {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--fg);
+  z-index: 1;
+}
+
+.streamerLane {
+  position: relative;
+  height: 28px;
+  background: var(--code-bg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.streamerToken {
+  position: absolute;
+  top: 4px;
+  height: 20px;
+  border-radius: 4px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+}
+
+.jobStream {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.jobCardsLabel {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.jobsList {
+  height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-right: 4px;
+}
+
+.jobCard {
+  padding: 8px 10px;
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg-elevated));
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--rule));
+  border-radius: 8px;
+  font-size: 11.5px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.jobN {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.jobMeta {
+  color: var(--muted);
+  font-family: "SF Mono", Menlo, monospace;
+  font-size: 10.5px;
+}
+
+.stats {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stat {
+  padding: 12px 14px;
+  background: var(--bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--rule);
+}
+
+.statN {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--fg);
+  line-height: 1.1;
+}
+
+.statLabel {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.statHint {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.footer {
+  padding: 12px 18px;
+  border-top: 1px solid var(--rule);
+  background: var(--stepper-bg);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  background: var(--bg-elevated);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--fg);
+  cursor: pointer;
+}
+
+.btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btnPrimary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.btnPrimary:hover:not(:disabled) {
+  color: #fff;
+  filter: brightness(1.05);
+}
+
+.autoToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+}
+
+.toggle {
+  width: 34px;
+  height: 20px;
+  background: var(--rule);
+  border-radius: 999px;
+  position: relative;
+  flex-shrink: 0;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+.toggleActive {
+  background: var(--accent);
+}
+
+.thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 900px) {
+  .body {
+    grid-template-columns: 1fr;
+  }
+}
