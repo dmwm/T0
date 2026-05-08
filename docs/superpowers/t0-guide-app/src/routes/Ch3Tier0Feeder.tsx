@@ -1,6 +1,7 @@
 import { ChapterShell } from "@/components/ChapterShell";
 import { Tier0FeederTickSim } from "@/simulators/Tier0FeederTickSim";
 import { D3_1_Tier0FeederTick } from "@/diagrams/D3_1_Tier0FeederTick";
+import { D3_2_MultiAgentSplit } from "@/diagrams/D3_2_MultiAgentSplit";
 
 export function Ch3Tier0Feeder() {
   return (
@@ -29,17 +30,27 @@ export function Ch3Tier0Feeder() {
         left off.
       </p>
 
+      <h2>The Main / Helper agent split</h2>
+      <p>
+        Tier-0 doesn't run as a single agent — it runs as one Main agent
+        plus N Helper agents. The split is declared in the Tier0Config:{" "}
+        <code>HelperAgentStreams</code> maps each Helper to the streams it
+        owns, and Main takes everything else. Each agent is a separate
+        process on a separate <code>vocms</code> host.
+      </p>
+
+      <D3_2_MultiAgentSplit />
+
       <h2>Multi-DB connectivity</h2>
       <p>
-        The Tier0Feeder talks to several Oracle databases on every tick:
-        T0AST (local agent state), HLTConfDB (which streams exist for which
-        runs), the Storage Manager DB (streamer files), and optionally
-        SMNotifyDB / PopConLogDB / T0DataSvcDB depending on configuration.
+        Every tick may reach into up to six Oracle DBs (we covered them in
+        Chapter 1). All connections are configured at agent start; the
+        Tier0Feeder caches them and re-uses them across ticks.
       </p>
 
       <p style={{ color: "var(--muted)" }}>
-        D3.1 phase flow + D3.2 multi-DB layout + D3.3 Main vs Helper agent
-        diagrams land here next.
+        D3.3 (Storage Manager polling) and D3.4 (splitter dispatch detail)
+        land here next.
       </p>
     </ChapterShell>
   );

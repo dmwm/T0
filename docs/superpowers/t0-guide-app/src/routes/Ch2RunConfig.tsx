@@ -1,5 +1,6 @@
 import { ChapterShell } from "@/components/ChapterShell";
 import { D2_1_RunConfigFlow } from "@/diagrams/D2_1_RunConfigFlow";
+import { D2_4_DSLTimeline } from "@/diagrams/D2_4_DSLTimeline";
 import { LifecycleSim } from "@/simulators/LifecycleSim";
 
 export function Ch2RunConfig() {
@@ -21,6 +22,17 @@ export function Ch2RunConfig() {
 
       <D2_1_RunConfigFlow />
 
+      <h2>What the setters look like in practice</h2>
+      <p>
+        A typical <code>ProdOfflineConfiguration.py</code> reads top-down:
+        global settings, dataset list, per-dataset Repack / Express config,
+        helper-agent partition. The diagram below walks through one such
+        file and shows which field of <code>Tier0Config</code> each setter
+        mutates.
+      </p>
+
+      <D2_4_DSLTimeline />
+
       <h2>The run / stream / job state machine</h2>
       <p>
         Once the run row exists in T0AST, every later state transition lives
@@ -31,8 +43,8 @@ export function Ch2RunConfig() {
       <LifecycleSim />
 
       <p style={{ color: "var(--muted)" }}>
-        D2.2 / D2.3 / D2.4 detail diagrams (state machine, DSL setter
-        timeline) land here next.
+        D2.2 / D2.3 (run / stream state machine reference diagrams) land here
+        next.
       </p>
     </ChapterShell>
   );

@@ -1,5 +1,6 @@
 import { ChapterShell } from "@/components/ChapterShell";
 import { D6_1_OperatorCLI } from "@/diagrams/D6_1_OperatorCLI";
+import { D6_2_ReplayByPR } from "@/diagrams/D6_2_ReplayByPR";
 
 export function Ch6Operator() {
   return (
@@ -21,7 +22,14 @@ export function Ch6Operator() {
         For pre-production validation, operators run replays — re-processing
         archived data with new code. The workflow{" "}
         <code>.github/workflows/deployReplayPR.yaml</code> turns this into a
-        PR-comment interaction:
+        PR-comment interaction. The diagram below walks through the trigger
+        path from a comment to a running replay.
+      </p>
+
+      <D6_2_ReplayByPR />
+
+      <p>
+        The three magic comments:
       </p>
       <ul>
         <li>
