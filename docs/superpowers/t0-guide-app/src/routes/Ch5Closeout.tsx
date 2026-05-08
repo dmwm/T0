@@ -1,6 +1,9 @@
 import { ChapterShell } from "@/components/ChapterShell";
 import { CloseoutSim } from "@/simulators/CloseoutSim";
 import { D5_1_CloseoutFlow } from "@/diagrams/D5_1_CloseoutFlow";
+import { D5_2_AlcaHarvestPipe } from "@/diagrams/D5_2_AlcaHarvestPipe";
+import { D5_3_ConditionUpload } from "@/diagrams/D5_3_ConditionUpload";
+import { D5_4_CloseoutTiming } from "@/diagrams/D5_4_CloseoutTiming";
 
 export function Ch5Closeout() {
   return (
@@ -22,17 +25,33 @@ export function Ch5Closeout() {
 
       <CloseoutSim />
 
-      <h2>From AlcaHarvest output to PCL conditions</h2>
+      <h2>AlcaHarvest: from Express output to condition payloads</h2>
       <p>
-        The AlcaHarvest workflow aggregates per-run histograms into{" "}
-        <em>condition payloads</em>. The <code>ConditionUploadAPI</code>{" "}
-        picks them up, normalises tag names, and posts them to Frontier — the
-        production conditions database. PromptReco can then consume them.
+        The AlcaHarvest workflow aggregates per-run histograms emitted by
+        Express jobs into <em>condition payloads</em>. Each payload is a
+        pickled IOV record keyed by tag.
       </p>
 
-      <p style={{ color: "var(--muted)" }}>
-        D5.2 (AlcaHarvest pipe) and D5.3 (Condition upload) land here next.
+      <D5_2_AlcaHarvestPipe />
+
+      <h2>The upload tick-loop</h2>
+      <p>
+        On each tick, <code>ConditionUploadAPI</code> picks up payloads in{" "}
+        <code>READY</code> state and POSTs them to Frontier — the production
+        conditions database. PromptReco can then consume them.
       </p>
+
+      <D5_3_ConditionUpload />
+
+      <h2>When does closeout actually fire?</h2>
+      <p>
+        Closeout doesn't fire as soon as data taking ends — it has to wait
+        for downstream pipelines (Express, AlcaHarvest, ConditionUpload, plus
+        the manual CMSSW release announcement). The timing diagram below
+        sketches a typical run.
+      </p>
+
+      <D5_4_CloseoutTiming />
     </ChapterShell>
   );
 }

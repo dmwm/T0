@@ -1,6 +1,7 @@
 import { ChapterShell } from "@/components/ChapterShell";
 import { D6_1_OperatorCLI } from "@/diagrams/D6_1_OperatorCLI";
 import { D6_2_ReplayByPR } from "@/diagrams/D6_2_ReplayByPR";
+import { D6_3_DeployScript } from "@/diagrams/D6_3_DeployScript";
 
 export function Ch6Operator() {
   return (
@@ -50,6 +51,16 @@ export function Ch6Operator() {
         <code>AUTHORIZED_USERS</code> env var in the workflow); only those
         users can trigger a deploy.
       </p>
+
+      <h2>What the deploy script actually does</h2>
+      <p>
+        The script <code>bin/00_pypi_deploy_prod.sh</code> is a single shell
+        script that pins versions, installs from PyPI, applies live patches,
+        sets up the WMAgent config, and finally calls{" "}
+        <code>bin/t0 --start-agent</code>. Step through it below.
+      </p>
+
+      <D6_3_DeployScript />
 
       <h2>Recap</h2>
       <p>

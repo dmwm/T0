@@ -2,6 +2,7 @@ import { ChapterShell } from "@/components/ChapterShell";
 import { Tier0FeederTickSim } from "@/simulators/Tier0FeederTickSim";
 import { D3_1_Tier0FeederTick } from "@/diagrams/D3_1_Tier0FeederTick";
 import { D3_2_MultiAgentSplit } from "@/diagrams/D3_2_MultiAgentSplit";
+import { D3_3_StorageManagerPolling } from "@/diagrams/D3_3_StorageManagerPolling";
 
 export function Ch3Tier0Feeder() {
   return (
@@ -41,16 +42,21 @@ export function Ch3Tier0Feeder() {
 
       <D3_2_MultiAgentSplit />
 
+      <h2>Pulling from the Storage Manager</h2>
+      <p>
+        Phase 1 of the tick polls the Storage Manager DB for new streamer
+        files. The pattern is a left-anti join: anything in the SM table
+        without a corresponding T0AST <code>STREAMER</code> row is
+        considered "new" and inserted. This is what makes restarts safe.
+      </p>
+
+      <D3_3_StorageManagerPolling />
+
       <h2>Multi-DB connectivity</h2>
       <p>
         Every tick may reach into up to six Oracle DBs (we covered them in
         Chapter 1). All connections are configured at agent start; the
         Tier0Feeder caches them and re-uses them across ticks.
-      </p>
-
-      <p style={{ color: "var(--muted)" }}>
-        D3.3 (Storage Manager polling) and D3.4 (splitter dispatch detail)
-        land here next.
       </p>
     </ChapterShell>
   );
