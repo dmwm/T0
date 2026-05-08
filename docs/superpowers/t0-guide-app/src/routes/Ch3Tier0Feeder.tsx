@@ -1,5 +1,6 @@
 import { ChapterShell } from "@/components/ChapterShell";
 import { Tier0FeederTickSim } from "@/simulators/Tier0FeederTickSim";
+import { D3_1_Tier0FeederTick } from "@/diagrams/D3_1_Tier0FeederTick";
 
 export function Ch3Tier0Feeder() {
   return (
@@ -12,9 +13,11 @@ export function Ch3Tier0Feeder() {
       <p>
         <code>T0Component.Tier0Feeder.Tier0FeederPoller.algorithm</code> is the
         heart of the agent. It runs every poll interval (default 30s) and
-        fires the same five phases. Press <strong>Tick</strong> below to see
-        a single iteration; <strong>Auto-tick</strong> to watch the loop run.
+        fires the same five phases — the diagram below walks through them
+        one at a time, and the simulator below it lets you fire ticks live.
       </p>
+
+      <D3_1_Tier0FeederTick />
 
       <Tier0FeederTickSim />
 
