@@ -1,5 +1,7 @@
 import { ChapterShell } from "@/components/ChapterShell";
 import { D2_1_RunConfigFlow } from "@/diagrams/D2_1_RunConfigFlow";
+import { D2_2_RunStates } from "@/diagrams/D2_2_RunStates";
+import { D2_3_StreamStates } from "@/diagrams/D2_3_StreamStates";
 import { D2_4_DSLTimeline } from "@/diagrams/D2_4_DSLTimeline";
 import { LifecycleSim } from "@/simulators/LifecycleSim";
 
@@ -42,10 +44,22 @@ export function Ch2RunConfig() {
 
       <LifecycleSim />
 
-      <p style={{ color: "var(--muted)" }}>
-        D2.2 / D2.3 (run / stream state machine reference diagrams) land here
-        next.
+      <h2>Run state machine reference</h2>
+      <p>
+        Five states a run passes through. The simulator above lets you fire
+        them interactively; the diagram below shows them all together.
       </p>
+
+      <D2_2_RunStates />
+
+      <h2>Stream state machine reference</h2>
+      <p>
+        Streams have a flatter four-state shape. The Storage Manager's
+        end-of-run record is what triggers the SPLITTING → SPLIT_DONE
+        transition.
+      </p>
+
+      <D2_3_StreamStates />
     </ChapterShell>
   );
 }

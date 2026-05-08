@@ -1,6 +1,8 @@
 import { ChapterShell } from "@/components/ChapterShell";
 import { JobSplittingSim } from "@/simulators/JobSplittingSim";
 import { D4_1_SplitterFactory } from "@/diagrams/D4_1_SplitterFactory";
+import { D4_2_RepackSplitter } from "@/diagrams/D4_2_RepackSplitter";
+import { D4_3_ExpressSplitter } from "@/diagrams/D4_3_ExpressSplitter";
 import { D4_4_SplitterMatrix } from "@/diagrams/D4_4_SplitterMatrix";
 
 export function Ch4JobSplitting() {
@@ -41,10 +43,22 @@ export function Ch4JobSplitting() {
 
       <D4_4_SplitterMatrix />
 
-      <p style={{ color: "var(--muted)" }}>
-        D4.2 (Repack splitter detail) and D4.3 (Express splitter detail)
-        land here next.
+      <h2>Inside RepackJobSplitter.split()</h2>
+      <p>
+        Repack's <code>split()</code> walks streamers in lumi order, keeps a
+        running tally, and cuts a job whenever any cap fires. Step through
+        the algorithm below.
       </p>
+
+      <D4_2_RepackSplitter />
+
+      <h2>Inside ExpressJobSplitter.split()</h2>
+      <p>
+        Express has the same loop shape but tighter caps and emits two jobs
+        per cap hit — one for fast reco, one for the AlCa skim.
+      </p>
+
+      <D4_3_ExpressSplitter />
     </ChapterShell>
   );
 }
