@@ -60,8 +60,8 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "HIRun2025A")
-setEmulationAcquisitionEra(tier0Config, "Emulation2025", repack=False)
+setAcquisitionEra(tier0Config, "HIRun2026A")
+setEmulationAcquisitionEra(tier0Config, "Emulation2026", repack=False)
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "hidata")
@@ -101,20 +101,20 @@ setPromptCalibrationConfig(tier0Config,
 # maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_1_0_patch4",
+    'default': "CMSSW_16_1_1",
     # 'acqEra': {'HIRun2025A': "CMSSW_15_1_0_patch3"},
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "el8_amd64_gcc12")
+setDefaultScramArch(tier0Config, "el8_amd64_gcc13")
 #setScramArch(tier0Config, "CMSSW_13_3_2_patch1", "el8_amd64_gcc12")
 #setScramArch(tier0Config, "CMSSW_13_3_2", "el8_amd64_gcc12")
 #setScramArch(tier0Config, "CMSSW_13_3_0", "el8_amd64_gcc12")
 
 # Configure scenarios
 #ppScenario = "ppEra_Run3"
-ppScenario = "ppEra_Run3_2025"
+ppScenario = "ppEra_Run3_2026"
 ppScenarioB0T = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
 hcalnzsScenario = "hcalnzsEra_Run3"
@@ -124,14 +124,14 @@ HIalcaTrackingOnlyScenario = "trackingOnlyEra_Run3_pp_on_PbPb"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
-hltScoutingScenario = "hltScoutingEra_Run3_2025"
+hltScoutingScenario = "hltScoutingEra_Run3_2026"
 ppRefScenario = "ppEra_Run3_2024_ppRef"
 
-# Heavy Ion Scenarios 2025
+# Heavy Ion Scenarios 2026
 
-hiForwardScenario = "ppEra_Run3_2025_UPC"
-hiScenario = "ppEra_Run3_pp_on_PbPb_2025"
-hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2025"
+hiForwardScenario = "ppEra_Run3_2026_UPC"
+hiScenario = "ppEra_Run3_pp_on_PbPb_2026"
+hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2026"
 
 # Defaults for processing version
 alcarawProcVersion = {
