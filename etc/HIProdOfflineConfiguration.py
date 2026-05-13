@@ -149,17 +149,17 @@ expressProcVersion = {
 # Defaults for GlobalTag
 expressGlobalTag = {
     # TO BE CHECKED BEFORE THE ACTUAL HIN
-    'default': "151X_dataRun3_Express_v1"
+    'default': "161X_dataRun3_Express_v1"
     #'acqEra': {'Run2024B': "140X_dataRun3_Express_v2"}
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Express_v3"}
 }
 promptrecoGlobalTag = {
-    'default': "151X_dataRun3_Prompt_v1",
+    'default': "161X_dataRun3_Prompt_v1",
     #'acqEra': {'Run2023E': "132X_dataRun3_Prompt_v2"},
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Prompt_v2"}
 }
 
-repackGlobalTag = "151X_dataRun3_Prompt_v1"
+repackGlobalTag = "161X_dataRun3_Prompt_v1"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
