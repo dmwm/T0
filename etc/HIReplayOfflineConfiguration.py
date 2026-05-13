@@ -110,7 +110,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_1_0_patch4"
+    'default': "CMSSW_16_1_1"
 }
 
 # Configure ScramArch
@@ -133,11 +133,11 @@ alcaPPSScenario = "AlCaPPS_Run3"
 hltScoutingScenario = "hltScoutingEra_Run3_2025"
 ppRefScenario = "ppEra_Run3_2024_ppRef"
 
-# Heavy Ion Scenarios 2024
+# Heavy Ion Scenarios 2026
 
-hiForwardScenario = "ppEra_Run3_2025_UPC"
-hiScenario = "ppEra_Run3_pp_on_PbPb_2025"
-hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2025"
+hiForwardScenario = "ppEra_Run3_2026_UPC"
+hiScenario = "ppEra_Run3_pp_on_PbPb_2026"
+hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2026"
 
 
 # Procesing version number replays
