@@ -118,6 +118,8 @@ setDefaultScramArch(tier0Config, "el8_amd64_gcc13")
 setScramArch(tier0Config, "CMSSW_15_1_0_patch4", "el8_amd64_gcc12")
 setScramArch(tier0Config, "CMSSW_15_1_0_patch3", "el8_amd64_gcc12")
 setScramArch(tier0Config, "CMSSW_15_1_0_patch2", "el8_amd64_gcc12")
+setScramArch(tier0Config, "CMSSW_15_1_0", "el8_amd64_gcc12")
+
 
 # Configure scenarios
 #ppScenario = "ppEra_Run3"
@@ -149,9 +151,9 @@ expressProcVersion = dt
 alcarawProcVersion = dt
 
 # Defaults for GlobalTag
-expressGlobalTag = "151X_dataRun3_Express_v1"
-promptrecoGlobalTag = "151X_dataRun3_Prompt_v1"
-repackGlobalTag = "151X_dataRun3_Prompt_v1"
+expressGlobalTag = "161X_dataRun3_Express_v1"
+promptrecoGlobalTag = "161X_dataRun3_Prompt_v1"
+repackGlobalTag = "161X_dataRun3_Prompt_v1"
 
 
 # Mandatory for CondDBv2
