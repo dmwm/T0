@@ -1606,10 +1606,10 @@ for dataset in DATASETS:
                do_reco=True,
                write_nanoaod=False,
                write_dqm=True,
-               raw_to_disk=False,
-               aod_to_disk=False,
+               raw_to_disk=True,
+               aod_to_disk=True,
                tape_node="T0_CH_CERN_MSS",
-               disk_node="T2_US_Vanderbilt",
+               disk_node="T2_CH_CERN",
                dqm_sequences=["@common"],
                scenario=hiScenario)
 
