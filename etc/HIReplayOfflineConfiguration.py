@@ -135,6 +135,7 @@ alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
 hltScoutingScenario = "hltScoutingEra_Run3_2026"
 ppRefScenario = "ppEra_Run3_2024_ppRef"
+l1ScoutingScenario = "l1ScoutingEra_Run3_2026"
 
 # Heavy Ion Scenarios 2024
 
@@ -1378,10 +1379,25 @@ for dataset in DATASETS:
 ### Parking and Scouting PDs                         ###
 ########################################################
 
-DATASETS = ["L1Scouting","L1ScoutingSelection"]
+DATASETS = ["L1Scouting"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False)
+               do_reco=True,                     
+               write_aod=False,
+               write_miniaod=False,
+               write_dqm=False,
+               nano_flavours=['@L1Scout'],
+               scenario=l1ScoutingScenario)
+
+DATASETS = ["L1ScoutingSelection"]
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_aod=False,
+               write_miniaod=False,
+               write_dqm=False,
+               nano_flavours=['@L1ScoutSelect'],
+               scenario=l1ScoutingScenario)
 
 DATASETS = ["ScoutingPFRun3"]
 for dataset in DATASETS:
