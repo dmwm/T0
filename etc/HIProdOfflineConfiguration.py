@@ -1602,10 +1602,27 @@ for dataset in DATASETS:
                disk_node="T2_US_Vanderbilt",
                scenario=hiScenario)
     
-DATASETS = ["HITrackerNZS0", "HITrackerNZS1",
-            "HITrackerNZS2", "HITrackerNZS3", "HITrackerNZS4",
-            "HITrackerNZS5", "HITrackerNZS6", "HITrackerNZS7",
-            "HITrackerNZS8", "HITrackerNZS9"]
+DATASETS = ["HITrackerNZS0", "HITrackerNZS1", "HITrackerNZS2", "HITrackerNZS3", "HITrackerNZS4",
+            "HITrackerNZS5", "HITrackerNZS6", "HITrackerNZS7", "HITrackerNZS8", "HITrackerNZS9",
+            "HITrackerNZS10", "HITrackerNZS11", "HITrackerNZS12", "HITrackerNZS13", "HITrackerNZS14",
+            "HITrackerNZS15", "HITrackerNZS16", "HITrackerNZS17", "HITrackerNZS18", "HITrackerNZS19",
+            "HITrackerNZS20", "HITrackerNZS21", "HITrackerNZS22", "HITrackerNZS23", "HITrackerNZS24",
+            "HITrackerNZS25", "HITrackerNZS26", "HITrackerNZS27", "HITrackerNZS28", "HITrackerNZS29",
+            "HITrackerNZS30", "HITrackerNZS31", "HITrackerNZS32", "HITrackerNZS33", "HITrackerNZS34",
+            "HITrackerNZS35", "HITrackerNZS36", "HITrackerNZS37", "HITrackerNZS38", "HITrackerNZS39",
+            "HITrackerNZS40", "HITrackerNZS41", "HITrackerNZS42", "HITrackerNZS43", "HITrackerNZS44",
+            "HITrackerNZS45", "HITrackerNZS46", "HITrackerNZS47", "HITrackerNZS48", "HITrackerNZS49"]
+
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=False,
+               aod_to_disk=False,
+               raw_to_disk=True,
+               write_nanoaod=False,
+               disk_node="T2_CH_CERN",
+               scenario=hiScenario)
+    
+DATASETS = ["TestDataRaw"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
