@@ -60,8 +60,8 @@ addSiteConfig(tier0Config, "T0_CH_CERN_Disk",
 #  Data type
 #  Processing site (where jobs run)
 #  PhEDEx locations
-setAcquisitionEra(tier0Config, "HIRun2025A")
-setEmulationAcquisitionEra(tier0Config, "Emulation2025", repack=False)
+setAcquisitionEra(tier0Config, "HIRun2026A")
+setEmulationAcquisitionEra(tier0Config, "Emulation2026", repack=False)
 setBaseRequestPriority(tier0Config, 251000)
 setBackfill(tier0Config, None)
 setBulkDataType(tier0Config, "hidata")
@@ -101,20 +101,20 @@ setPromptCalibrationConfig(tier0Config,
 # maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_15_1_0_patch4",
+    'default': "CMSSW_16_1_1",
     # 'acqEra': {'HIRun2025A': "CMSSW_15_1_0_patch3"},
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "el8_amd64_gcc12")
+setDefaultScramArch(tier0Config, "el8_amd64_gcc13")
 #setScramArch(tier0Config, "CMSSW_13_3_2_patch1", "el8_amd64_gcc12")
 #setScramArch(tier0Config, "CMSSW_13_3_2", "el8_amd64_gcc12")
 #setScramArch(tier0Config, "CMSSW_13_3_0", "el8_amd64_gcc12")
 
 # Configure scenarios
 #ppScenario = "ppEra_Run3"
-ppScenario = "ppEra_Run3_2025"
+ppScenario = "ppEra_Run3_2026"
 ppScenarioB0T = "ppEra_Run3"
 cosmicsScenario = "cosmicsEra_Run3"
 hcalnzsScenario = "hcalnzsEra_Run3"
@@ -124,14 +124,15 @@ HIalcaTrackingOnlyScenario = "trackingOnlyEra_Run3_pp_on_PbPb"
 alcaTestEnableScenario = "AlCaTestEnable"
 alcaLumiPixelsScenario = "AlCaLumiPixels_Run3"
 alcaPPSScenario = "AlCaPPS_Run3"
-hltScoutingScenario = "hltScoutingEra_Run3_2025"
+hltScoutingScenario = "hltScoutingEra_Run3_2026"
 ppRefScenario = "ppEra_Run3_2024_ppRef"
+l1ScoutingScenario = "l1ScoutingEra_Run3_2026"
 
-# Heavy Ion Scenarios 2025
+# Heavy Ion Scenarios 2026
 
-hiForwardScenario = "ppEra_Run3_2025_UPC"
-hiScenario = "ppEra_Run3_pp_on_PbPb_2025"
-hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2025"
+hiForwardScenario = "ppEra_Run3_2026_UPC"
+hiScenario = "ppEra_Run3_pp_on_PbPb_2026"
+hiRawPrimeScenario = "ppEra_Run3_pp_on_PbPb_approxSiStripClusters_2026"
 
 # Defaults for processing version
 alcarawProcVersion = {
@@ -149,17 +150,17 @@ expressProcVersion = {
 # Defaults for GlobalTag
 expressGlobalTag = {
     # TO BE CHECKED BEFORE THE ACTUAL HIN
-    'default': "151X_dataRun3_Express_v1"
+    'default': "161X_dataRun3_Express_v1"
     #'acqEra': {'Run2024B': "140X_dataRun3_Express_v2"}
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Express_v3"}
 }
 promptrecoGlobalTag = {
-    'default': "151X_dataRun3_Prompt_v1",
+    'default': "161X_dataRun3_Prompt_v1",
     #'acqEra': {'Run2023E': "132X_dataRun3_Prompt_v2"},
     #'maxRun': {maxRunPreviousConfig: "132X_dataRun3_Prompt_v2"}
 }
 
-repackGlobalTag = "151X_dataRun3_Prompt_v1"
+repackGlobalTag = "161X_dataRun3_Prompt_v1"
 
 # Mandatory for CondDBv2
 globalTagConnect = "frontier://PromptProd/CMS_CONDITIONS"
@@ -242,6 +243,7 @@ addDataset(tier0Config, "Default",
            siteWhitelist = ["T2_CH_CERN"],
            raw_to_disk=False,
            aod_to_disk=False,
+           dqm_sequences=['@none'],
            blockCloseDelay=24 * 3600,
            timePerEvent=5,
            sizePerEvent=1500,
@@ -1406,10 +1408,25 @@ for dataset in DATASETS:
 ### Parking and Scouting PDs                         ###
 ########################################################
 
-DATASETS = ["L1Scouting","L1ScoutingSelection"]
+DATASETS = ["L1Scouting"]
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
-               do_reco=False)
+               do_reco=True,                     
+               write_aod=False,
+               write_miniaod=False,
+               write_dqm=False,
+               nano_flavours=['@L1Scout'],
+               scenario=l1ScoutingScenario)
+
+DATASETS = ["L1ScoutingSelection"]
+for dataset in DATASETS:
+    addDataset(tier0Config, dataset,
+               do_reco=True,
+               write_aod=False,
+               write_miniaod=False,
+               write_dqm=False,
+               nano_flavours=['@L1ScoutSelect'],
+               scenario=l1ScoutingScenario)
 
 DATASETS = ["ScoutingPFRun3"]
 for dataset in DATASETS:
@@ -1585,10 +1602,16 @@ for dataset in DATASETS:
                disk_node="T2_US_Vanderbilt",
                scenario=hiScenario)
     
-DATASETS = ["HITrackerNZS0", "HITrackerNZS1",
-            "HITrackerNZS2", "HITrackerNZS3", "HITrackerNZS4",
-            "HITrackerNZS5", "HITrackerNZS6", "HITrackerNZS7",
-            "HITrackerNZS8", "HITrackerNZS9"]
+DATASETS = ["HITrackerNZS0", "HITrackerNZS1", "HITrackerNZS2", "HITrackerNZS3", "HITrackerNZS4",
+            "HITrackerNZS5", "HITrackerNZS6", "HITrackerNZS7", "HITrackerNZS8", "HITrackerNZS9",
+            "HITrackerNZS10", "HITrackerNZS11", "HITrackerNZS12", "HITrackerNZS13", "HITrackerNZS14",
+            "HITrackerNZS15", "HITrackerNZS16", "HITrackerNZS17", "HITrackerNZS18", "HITrackerNZS19",
+            "HITrackerNZS20", "HITrackerNZS21", "HITrackerNZS22", "HITrackerNZS23", "HITrackerNZS24",
+            "HITrackerNZS25", "HITrackerNZS26", "HITrackerNZS27", "HITrackerNZS28", "HITrackerNZS29",
+            "HITrackerNZS30", "HITrackerNZS31", "HITrackerNZS32", "HITrackerNZS33", "HITrackerNZS34",
+            "HITrackerNZS35", "HITrackerNZS36", "HITrackerNZS37", "HITrackerNZS38", "HITrackerNZS39",
+            "HITrackerNZS40", "HITrackerNZS41", "HITrackerNZS42", "HITrackerNZS43", "HITrackerNZS44",
+            "HITrackerNZS45", "HITrackerNZS46", "HITrackerNZS47", "HITrackerNZS48", "HITrackerNZS49"]
 
 for dataset in DATASETS:
     addDataset(tier0Config, dataset,
@@ -1598,6 +1621,8 @@ for dataset in DATASETS:
                write_nanoaod=False,
                disk_node="T2_CH_CERN",
                scenario=hiScenario)
+    
+
     
 DATASETS = ["HIEmptyBX"]
 
