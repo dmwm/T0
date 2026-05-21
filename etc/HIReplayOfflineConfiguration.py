@@ -1560,16 +1560,7 @@ for dataset in DATASETS:
                disk_node="T2_CH_CERN",
                scenario=hiScenario)
 
-DATASETS = ["TestDataRaw"]
 
-for dataset in DATASETS:
-    addDataset(tier0Config, dataset,
-               do_reco=False,
-               aod_to_disk=False,
-               raw_to_disk=True,
-               write_nanoaod=False,
-               disk_node="T2_CH_CERN",
-               scenario=hiScenario)
 
 DATASETS = ["HIEmptyBX"]
 
