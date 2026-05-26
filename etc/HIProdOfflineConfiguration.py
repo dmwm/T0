@@ -459,7 +459,7 @@ addExpressConfig(tier0Config, "HIExpress",
                                  "PromptCalibProd", "PromptCalibProdSiStrip", "PromptCalibProdSiPixelAli",
                                  "PromptCalibProdSiStripGains", "PromptCalibProdSiStripGainsAAG", "PromptCalibProdSiPixel",
                                  "PromptCalibProdSiPixelLA", "PromptCalibProdSiStripHitEff", "PromptCalibProdSiPixelAliHG",
-								 "PromptCalibProdSiPixelAliHGComb"
+								 "PromptCalibProdSiPixelAliHGComb", "TkAlZMuMu"
                                 ],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
