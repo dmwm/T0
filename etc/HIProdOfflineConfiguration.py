@@ -101,7 +101,7 @@ setPromptCalibrationConfig(tier0Config,
 # maxRunPreviousConfig = 999999 # Last run before era change 08/09/23
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_16_1_1",
+    'default': "CMSSW_16_1_1_patch3",
     # 'acqEra': {'HIRun2025A': "CMSSW_15_1_0_patch3"},
     #'maxRun': {maxRunPreviousConfig: "CMSSW_13_2_2"}
 }
@@ -534,7 +534,7 @@ addExpressConfig(tier0Config, "HIHLTMonitor",
                  diskNode="T2_CH_CERN",
                  data_tiers=["FEVTHLTALL"],
                  write_dqm=True,
-                 alca_producers=[],
+                 alca_producers=["TkAlHLTTracks", "TkAlHLTTracksZMuMu", "PromptCalibProdSiPixelAliHLTHGC"],
                  dqm_sequences=["@HLTMon"],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
