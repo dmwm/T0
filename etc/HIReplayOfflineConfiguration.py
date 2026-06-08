@@ -41,7 +41,7 @@ setConfigVersion(tier0Config, "3.2.3")
 # 374951:    HI 2023 3.8 TB
 # 387456:    Test HI 2024 with memory problems 3.1 TB
 # 388621:    Small HI for 2025 replay
-setInjectRuns(tier0Config, [400007])
+setInjectRuns(tier0Config, [404616])
 
 # Settings up sites
 processingSite = "T2_CH_CERN"
@@ -110,7 +110,7 @@ setPromptCalibrationConfig(tier0Config,
 
 # Defaults for CMSSW version
 defaultCMSSWVersion = {
-    'default': "CMSSW_16_1_1"
+    'default': "CMSSW_16_1_1_patch3"
 }
 
 # Configure ScramArch
@@ -524,7 +524,7 @@ addExpressConfig(tier0Config, "HIHLTMonitor",
                  diskNode="T0_CH_CERN_Disk",
                  data_tiers=["FEVTHLTALL"],
                  write_dqm=True,
-                 alca_producers=[],
+                 alca_producers=["TkAlHLTTracks", "TkAlHLTTracksZMuMu", "PromptCalibProdSiPixelAliHLTHGC"],
                  dqm_sequences=["@HLTMon"],
                  reco_version=defaultCMSSWVersion,
                  multicore=numberOfCores,
