@@ -41,7 +41,7 @@ setConfigVersion(tier0Config, "replace with real version")
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
 # 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
 # 398191 Collisions 13.6 TeV, 2448 bunches, Run2025
-setInjectRuns(tier0Config, [402263]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
+setInjectRuns(tier0Config, [398191]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
 
 # Use this function to limit the number of lumisections to process.
 #
@@ -196,7 +196,7 @@ alcarawProcVersion = dt
 # Defaults for GlobalTag
 
 
-expressGlobalTag = "160X_dataRun3_Express_v2"
+expressGlobalTag = "114X_dataRun3_Express_v1"
 promptrecoGlobalTag = "160X_dataRun3_Prompt_v1"
 
 #expressGlobalTag = "160X_dataRun3_Express_forT0Reply_GenPixelCPE"
@@ -293,7 +293,7 @@ addDataset(tier0Config, "Default",
            blockCloseDelay=1200,
            timePerEvent=5,
            sizePerEvent=1500,
-           maxMemoryperCore=2000,
+           maxMemoryperCore=20,
            dataset_lifetime=replayDatasetLifetime,#lifetime for container rules. Default 14 days
            scenario=ppScenario)
 
