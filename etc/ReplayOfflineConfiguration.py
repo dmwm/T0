@@ -41,7 +41,9 @@ setConfigVersion(tier0Config, "replace with real version")
 # 382686 - Collisions, 43.3 pb-1, 23.9583 TB NEW
 # 386674  Cosmics ~40 minutes in Run2024I with occupancy issues
 # 398191 Collisions 13.6 TeV, 2448 bunches, Run2025
-setInjectRuns(tier0Config, [402263]) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
+setInjectRuns(
+    tier0Config, [398191]
+) # 386925: 2024 Collisions, 390094: 2025 Cosmics, 390951: 2025 900 GeV Collisions
 
 # Use this function to limit the number of lumisections to process.
 #
@@ -164,11 +166,28 @@ defaultCMSSWVersion = {
 }
 
 # Configure ScramArch
-setDefaultScramArch(tier0Config, "el8_amd64_gcc13")
-setScramArch(tier0Config, "CMSSW_15_0_15", "el8_amd64_gcc12")
+setDefaultScramArch(tier0Config, "el8_amd64_gcc13")  # CMSSW_16_0_x
+# 2022
+setScramArch(tier0Config, "CMSSW_12_3_7", "el8_amd64_gcc10")
+setScramArch(tier0Config, "CMSSW_12_4_3", "el8_amd64_gcc10")
 setScramArch(tier0Config, "CMSSW_12_4_9", "el8_amd64_gcc10")
-setScramArch(tier0Config, "CMSSW_12_3_0", "cs8_amd64_gcc10")
+setScramArch(tier0Config, "CMSSW_12_4_11", "el8_amd64_gcc10")
+# 2023
+setScramArch(tier0Config, "CMSSW_13_0_3", "el8_amd64_gcc11")
+setScramArch(tier0Config, "CMSSW_13_0_5", "el8_amd64_gcc11")
+setScramArch(tier0Config, "CMSSW_13_0_7", "el8_amd64_gcc11")
 setScramArch(tier0Config, "CMSSW_13_0_9", "el8_amd64_gcc11")
+# 2024
+setScramArch(tier0Config, "CMSSW_14_0_3", "el8_amd64_gcc12")
+setScramArch(tier0Config, "CMSSW_14_0_5", "el8_amd64_gcc12")
+setScramArch(tier0Config, "CMSSW_14_0_9", "el8_amd64_gcc12")
+setScramArch(tier0Config, "CMSSW_14_0_15", "el8_amd64_gcc12")
+# 2025
+setScramArch(tier0Config, "CMSSW_15_0_4", "el8_amd64_gcc12")
+setScramArch(tier0Config, "CMSSW_15_0_6", "el8_amd64_gcc12")
+setScramArch(tier0Config, "CMSSW_15_0_7", "el8_amd64_gcc12")
+setScramArch(tier0Config, "CMSSW_15_0_12", "el8_amd64_gcc12")
+setScramArch(tier0Config, "CMSSW_15_0_15", "el8_amd64_gcc12")
 
 # Configure scenarios
 ppScenario = "ppEra_Run3_2026"
