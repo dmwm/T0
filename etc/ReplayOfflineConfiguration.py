@@ -137,7 +137,7 @@ setEnableUniqueWorkflowName(tier0Config)
 # First timeout is used directly for reco release
 # Second timeout is used for the data service PromptReco start check
 # (to basically say we started PromptReco even though we haven't)
-defaultRecoTimeout = 10 * 60
+defaultRecoTimeout = 99999 * 60 * 60
 defaultRecoLockTimeout = 5 * 60
 
 # DQM Server
